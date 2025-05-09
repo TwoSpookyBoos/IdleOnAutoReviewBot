@@ -303,6 +303,8 @@ def getCharacterDetails(inputJSON, runType):
     equipped_lab_chips = {}
     inventory_bags = {}
     kill_lists = {}
+    obols_list = {}
+    obol_upgrades_list = {}
     big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * maxCharacters))
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * maxCharacters))
 
@@ -315,6 +317,8 @@ def getCharacterDetails(inputJSON, runType):
         characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f'SLpre_{character_index}', {}))
         inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
         kill_lists[character_index] = safe_loads(inputJSON.get(f'KLA_{character_index}', []))
+        obols_list[character_index] = safe_loads(inputJSON.get(f'ObolEqO0_{character_index}', []))
+        obol_upgrades_list[character_index] = safe_loads(inputJSON.get(f'ObolEqMAP_{character_index}', {}))
         try:
             equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index+1]
         except:
@@ -341,6 +345,8 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips=equipped_lab_chips[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
+            obols=obols_list[character_index],
+            obol_upgrades=obol_upgrades_list[character_index],
             big_alch_bubbles=big_alch_bubbles_dict[character_index],
             alchemy_job=alchemy_jobs_list[character_index]
         )

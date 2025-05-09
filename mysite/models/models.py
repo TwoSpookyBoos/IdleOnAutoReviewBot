@@ -10,7 +10,7 @@ from flask import g
 from config import app
 from consts import (
     # General
-    lavaFunc, ignorable_labels, cards_max_level,
+    lavaFunc, ignorable_labels, cards_max_level, obols_dict,
     greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
@@ -139,6 +139,8 @@ class Character:
         secondary_preset_talents: dict,
         current_preset_talent_bar: dict,
         secondary_preset_talent_bar: dict,
+        obols: list[str],
+        obol_upgrades: dict,
         po_boxes: list[int],
         equipped_lab_chips: list[str],
         inventory_bags: dict,
@@ -210,6 +212,23 @@ class Character:
         self.divinity_link: str = "Unlinked"
         self.current_polytheism_link = "Unlinked"
         self.secondary_polytheism_link = "Unlinked"
+        self.obols = {}
+        # This returns incomplete data, since the obols_dict currently only contains DR obols
+        # Dispite this, the function is written to work with whatever data is added to the obols_dict
+        for obol_index, obol_name in enumerate(obols):
+            obol_index = str(obol_index)
+            # Adds the base values for each equipped obol
+            for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
+                self.obols[f"Total_{obol_base_name}"] = self.obols.get(f"Total_{obol_base_name}", 0) + obol_base_value
+            # Adds any upgrade value for each equipped obol
+            if obol_index in obol_upgrades.keys():
+                if 'UQ1txt' in obol_upgrades[obol_index] and obol_upgrades[obol_index]['UQ1txt'] != 0:
+                    self.obols[f"Total_{obol_upgrades[obol_index]['UQ1txt']}"] = self.obols.get(f"Total_{obol_upgrades[obol_index]['UQ1txt']}", 0) + obol_upgrades[obol_index]['UQ1val']
+                elif 'UQ2txt' in obol_upgrades[obol_index] and obol_upgrades[obol_index]['UQ2txt'] != 0:
+                    self.obols[f"Total_{obol_upgrades[obol_index]['UQ2txt']}"] = self.obols.get(f"Total_{obol_upgrades[obol_index]['UQ1txt']}", 0) + obol_upgrades[obol_index]['UQ2val']
+                for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK']:
+                    self.obols[f"Total_{upgrade_val}"] = self.obols.get(f"Total_{upgrade_val}", 0) + obol_upgrades.get(upgrade_val, 0)
+
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():
             try:

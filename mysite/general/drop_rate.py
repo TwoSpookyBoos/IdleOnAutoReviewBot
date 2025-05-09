@@ -2,48 +2,38 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
 	lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
     class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict,
-    equipment_by_bonus_dict
+    equipment_by_bonus_dict, poBoxDict, prayersDict, starsignsDict, obols_max_bonuses_dict
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
-from math import floor
+from math import floor, ceil
 from flask import g as session_data
 
 logger = get_logger(__name__)
-general = 'General'
-w1 = 'World 1'
-w2 = 'World 2'
-w3 = 'World 3'
-w4 = 'World 4'
-w5 = 'World 5'
-w6 = 'World 6'
 
-# All of the cards that affect Drop Rate
 
-drop_rate_cards = [
-    'Emperor',
-    'Minichief Spirit',
-    'King Doot',
-    'Mister Brightside',
-    'Crystal Carrot',
-    'Bop Box',
-    'Mr Blueberry',
-    'Giftmas Blobulyte',
-    'Mimic'
-]
-passive_drop_rate_cards = [
-    'Domeo Magmus',
-    'Ancient Golem',
-    'IdleOn Fourth Anniversary'
-]
+drop_rate_shiny_base = 1
+infinite_star_sign_shiny_base = 2
 
 def get_drop_rate_account_advice_group() -> AdviceGroup:
-    drop_rate_shiny_base = 1
     missing_companion_data_txt = ''
+    passive_drop_rate_cards = [
+        'Domeo Magmus',
+        'Ancient Golem',
+        'IdleOn Fourth Anniversary'
+    ]
+
     if not session_data.account.companions['Companion Data Present']:
         missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!'
 
+    general = 'General'
+    w1 = 'World 1'
+    w2 = 'World 2'
+    w3 = 'World 3'
+    w4 = 'World 4'
+    w5 = 'World 5'
+    w6 = 'World 6'
     drop_rate_aw_advice = {
         general: [],
         w1: [],
@@ -294,14 +284,19 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     ))
 
     # Obols - Family - Drop Rate
-    obol_family_drop_rate = session_data.account.obols['BonusTotals']['%_DROP_CHANCE']
-    obol_family_drop_rate_max = max(124, obol_family_drop_rate)
+    obols_family_drop_rate = session_data.account.obols['BonusTotals']['%_DROP_CHANCE']
+    obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRatePractical']
+    obols_family_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
+    if obols_family_drop_rate >= obols_family_drop_rate_max:
+        obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
+        obols_family_note = '<br>Note: true max is rare and hyper, obols each with +1 DR upgrade'
     drop_rate_aw_advice[w2].append(Advice(
         label=f"Obols- Family Obols:"
-              f"<br>+{obol_family_drop_rate}/{obol_family_drop_rate_max}% Drop Rate",
+              f"<br>+{obols_family_drop_rate}/{obols_family_drop_rate_max}% Drop Rate"
+              f"{obols_family_note}",
         picture_class='hyper-six-obol',
-        progression=obol_family_drop_rate,
-        goal=124
+        progression=obols_family_drop_rate,
+        goal=obols_family_drop_rate_max
     ))
 
     # Question: Maybe up the goal to 6930 for +39.6% at 99% or 2730 for a nice round +39%?
@@ -424,7 +419,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     caverns_measurements_yards = session_data.account.caverns['Measurements'][caverns_measurements_yards_id]
     drop_rate_aw_advice[w5].append(Advice(
         label=f"Caverns Measurements- Yards:"
-              f"<br>+{round(caverns_measurements_yards['Value'], 1)}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
+              f"<br>+{round(caverns_measurements_yards['Value'], 1):g}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
         picture_class=caverns_measurements_yards['Image'],
         progression=caverns_measurements_yards['Level'],
         goal='∞'
@@ -559,7 +554,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     summoning_drop_rate_max = round((7 + 10.5 + 17.5 + 35) * total_summon_bonus_multi, 2)
     drop_rate_aw_advice[w6].append(Advice(
         label=f"Summoning Bonuses- Drop Rate:"
-              f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max:g} Drop Rate",
+              f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max:g}% Drop Rate",
         picture_class='summoning',
         progression=summoning_battles['Endless'],
         goal='∞'
@@ -571,13 +566,26 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     drop_rate_ag = AdviceGroup(
         tier="",
-        pre_string="Info- Account wide sources of Drop Rate",
+        pre_string="Info- Account wide sources of Drop Rate. Bonus modifiers are only shown if missing",
         advices=drop_rate_aw_advice,
         informational=True,
     )
     return drop_rate_ag
 
 def get_drop_rate_player_advice_group():
+    # All of the cards that affect Drop Rate
+    drop_rate_cards = [
+        'Emperor',
+        'Minichief Spirit',
+        'King Doot',
+        'Mister Brightside',
+        'Crystal Carrot',
+        'Bop Box',
+        'Mr Blueberry',
+        'Giftmas Blobulyte',
+        'Mimic'
+    ]
+
     bnn_cardset = []
     events_cardset = []
     for card in session_data.account.cards:
@@ -588,9 +596,11 @@ def get_drop_rate_player_advice_group():
 
     cards = 'Cards'
     eqp = 'Equipment'
+    misc = 'Miscellaneous'
     drop_rate_pp_advice = {
         cards: [],
-        eqp: []
+        eqp: [],
+        misc: []
     }
 
     # Cards - Drop Rate
@@ -614,7 +624,7 @@ def get_drop_rate_player_advice_group():
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
     drop_rate_pp_advice[cards].append(Advice(
-        label=f"Bosses n Nightmares- Card Set:"
+        label=f"Card Sets- Bosses n Nightmares:"
               f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
         picture_class='bosses-n-nightmares',
@@ -628,7 +638,7 @@ def get_drop_rate_player_advice_group():
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
     drop_rate_pp_advice[cards].append(Advice(
-        label=f"Events- Card Set:"
+        label=f"Card Sets- Events:"
               f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
               f"<br>Cards until next set level {events_stars_sum}/{events_star_next}",
         picture_class='events',
@@ -647,6 +657,7 @@ def get_drop_rate_player_advice_group():
             drop_rate_equipment[equipment_data['Type']] = []
         drop_rate_equipment[equipment_data['Type']].append({
             'Name': equipment_name,
+            'Limited': equipment_data['Limited'],
             'Type': equipment_data['Type'],
             'Owned': next((a.amount > 0 for a in session_data.account.all_assets.values() if a.name == equipment_name), False),
             'Value': equipment_drop_rate,
@@ -654,21 +665,144 @@ def get_drop_rate_player_advice_group():
             'Note': equipment_data.get('Note', '')
         })
 
+    # Equipment - Drop Rate
     for slot_list in drop_rate_equipment.values():
+        # Once the player has a piece of DR gear for a slot, it won't list _worse_ items for the same slot.
+        # Each slot is already sorted best to worst so we just break out of the slot loop once we have an owned item
+        # Because of the lack of availability, we'll show ALL limited items all the time. Even if something better is owned
+        bis_owned = False
         for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
-            drop_rate_pp_advice[eqp].append(Advice(
-                label=f"{equipment['Type']}- {equipment['Name']}:"
-                      f"<br>+{equipment['Value']}% Drop Rate"
-                      f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
-                picture_class=equipment['Image'],
-                progression=int(equipment['Owned']),
-                goal=1
-            ))
+            if not bis_owned or equipment['Limited']:
+                drop_rate_pp_advice[eqp].append(Advice(
+                    label=f"{equipment['Type']}- {equipment['Name']}:"
+                        f"<br>+{equipment['Value']}% Drop Rate{' (limited availability)' if equipment['Limited'] else ''}"
+                        f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
+                    picture_class=equipment['Image'],
+                    progression=int(equipment['Owned']),
+                    goal=1
+                ))
+            if equipment['Owned']:
+                bis_owned = True
 
-    # TODO
-    # Star Signs
-    # Post Office
-    # Prayers
+    # Lab Chips - Silkrode Nanochip
+    # Modifier for Star Signs below, must be equipped so we always show 
+    silkroad_chip_owned = session_data.account.labChips['Silkrode Nanochip'] > 0
+    silkroad_chip_starsign_mod = 2 if silkroad_chip_owned else 1
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Lab Chips- Silkrode Nanochip:"
+                f"<br>x{silkroad_chip_starsign_mod} Star Sign Bonuses while equipped"
+                f"<br>Note: improves the Star Signs below, only if Star Sign is equipped",
+        picture_class='silkrode-nanochip',
+        progression=int(silkroad_chip_owned),
+        goal=1
+    ))
+
+    # Star Signs - Seraph Cosmos
+    # Always shown because the modifier can grow based on Summoning levels
+    saraph_cosmos_starsign_unlocked = session_data.account.star_signs['Seraph Cosmos']['Unlocked']
+    saraph_cosmod_starsign_mod = (1.1 ** max(3, ceil((session_data.account.all_skills['Summoning'][0]+1)/20))) if saraph_cosmos_starsign_unlocked else 1.0
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Star Signs- Seraph Cosmos:"
+                f"<br>x{round(saraph_cosmod_starsign_mod, 2)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
+                f"<br>Note: improves the Star Signs below",
+        picture_class='seraph-cosmos',
+        progression=int(saraph_cosmos_starsign_unlocked),
+        goal=1
+    ))
+
+    # Add up Infinite Star Sign levels
+    infinite_star_sign_levels = 0
+    for world_species in session_data.account.breeding['Species'].values():
+        for pet_species in world_species.values():
+            if pet_species['ShinyBonus'] == 'Infinite Star Signs':
+                infinite_star_sign_levels += infinite_star_sign_shiny_base * pet_species['ShinyLevel']
+    
+    # Passive Star Signs are skipped by infinite star signs. The easiest way to account for this is to
+    # just +1 the total ISS for each passive that WOULD have been counted. Then we can just compare index to ISS
+    i = 1
+    while i < min(len(starsignsDict), infinite_star_sign_levels):
+        infinite_star_sign_levels += int(starsignsDict[i]['Passive'])
+        i += 1
+
+    # Star Sign - Druipi Major
+    pirate_booty_starsign = session_data.account.star_signs['Seraph Cosmos']
+    pirate_booty_starsign_unlocked = pirate_booty_starsign['Unlocked']
+    pirate_booty_infinite_unlocked = pirate_booty_starsign['Index'] <= infinite_star_sign_levels
+    pirate_booty_starsign_value_nochip = 5 * saraph_cosmod_starsign_mod
+    pirate_booty_starsign_value_chip = 5 * saraph_cosmod_starsign_mod * silkroad_chip_starsign_mod
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Star Signs- Pirate Booty:"
+              f"<br>+{round(pirate_booty_starsign_value_nochip, 1)}% Drop Rate {'PASSIVE' if pirate_booty_infinite_unlocked else 'if equipped'}"
+              f"<br>+{round(pirate_booty_starsign_value_chip, 1)}% Drop Rate if equiped WITH Silkrode Lab Chip" if silkroad_chip_owned and pirate_booty_infinite_unlocked else '',
+        picture_class='blue-hedgehog',
+        progression=int(pirate_booty_starsign_unlocked),
+        goal=1
+    ))
+
+    # Star Sign - Druipi Major
+    druipi_majox_starsign = session_data.account.star_signs['Druipi Major']
+    druipi_major_starsign_unlocked = druipi_majox_starsign['Unlocked']
+    druipi_major_infinite_unlocked = druipi_majox_starsign['Index'] <= infinite_star_sign_levels
+    druipi_major_starsign_value_nochip = 12 * saraph_cosmod_starsign_mod
+    druipi_major_starsign_value_chip = 12 * saraph_cosmod_starsign_mod * silkroad_chip_starsign_mod
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Star Signs- Druipi Major:"
+              f"<br>+{round(druipi_major_starsign_value_nochip, 1)}% Drop Rate {'PASSIVE' if druipi_major_infinite_unlocked else 'if equipped'}"
+              f"<br>+{round(druipi_major_starsign_value_chip, 1)}% Drop Rate if equiped WITH Silkrode Lab Chip" if silkroad_chip_owned and druipi_major_infinite_unlocked else '',
+        picture_class='og-signalais',
+        progression=int(druipi_major_starsign_unlocked),
+        goal=1
+    ))
+
+    # Post Office - Non Predatory Loot Box
+    nplb_po_box_index = 11
+    nplb_po_box_level_max = poBoxDict[nplb_po_box_index]['Max Level']
+    nplb_po_box_level_total = 0
+    nplb_po_box_value_total = 0
+    num_chars = session_data.account.character_count
+    for toon in session_data.account.all_characters:
+        nplb_po_box_level_total += toon.po_boxes_invested['Non Predatory Loot Box']['Level']
+        nplb_po_box_value_total += toon.po_boxes_invested['Non Predatory Loot Box']['Bonus1Value']
+    nplb_po_box_level_avg = floor(nplb_po_box_level_total/num_chars)
+    nplb_po_box_value_avg = round(nplb_po_box_value_total/num_chars, 2)
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"PO Boxes- Non Predatory Loot Box:"
+              f"<br>+{nplb_po_box_value_avg}% Drop Rate (average across all characters)",
+        picture_class='non-predatory-loot-box',
+        progression=nplb_po_box_level_avg,
+        goal=nplb_po_box_level_max
+    ))
+
+    # Prayers - Midas Minded
+    midas_minded_data = next(p for p in prayersDict.values() if p['Name'] == 'Midas Minded')
+    midas_minded_prayer = session_data.account.prayers['Midas Minded']
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Prayers- Midas Minded:"
+              f"<br>+{midas_minded_prayer['BonusValue']}% Drop Rate | +{midas_minded_prayer['CurseValue']}% Max HP for Monsters"
+              f"<br>Note: do NOT use with Master Class modes, they only gain curse",
+        picture_class='midas-minded',
+        progression=midas_minded_prayer['Level'],
+        goal=midas_minded_data['MaxLevel']
+    ))
+
+    # Obols - Personal
+    obols_player_drop_rate_total = 0
+    for char in session_data.account.all_characters:
+        obols_player_drop_rate_total += char.obols.get('Total_%_DROP_CHANCE', 0)
+    obols_player_drop_rate_avg = floor(obols_player_drop_rate_total/num_chars)
+    player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRatePractical']
+    player_obol_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
+    if obols_player_drop_rate_avg >= player_obol_drop_rate_max:
+        player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
+        player_obol_note = '<br>Note: true max is rare and hyper, obols each with +1 DR upgrade'
+    drop_rate_pp_advice[misc].append(Advice(
+        label=f"Obols- Personal Obols:"
+              f"<br>+{obols_player_drop_rate_avg}/{player_obol_drop_rate_max}% Drop Rate (average across all characters)"
+              f"{player_obol_note}",
+        picture_class='dementia-obol-of-infinisixes',
+        progression=obols_player_drop_rate_avg,
+        goal=player_obol_drop_rate_max
+    ))
 
     for subgroup in drop_rate_pp_advice:
         for advice in drop_rate_pp_advice[subgroup]:
@@ -707,7 +841,6 @@ def get_drop_rate_advice_section() -> AdviceSection:
     drop_rate_advice_group_dict['Player'] = get_drop_rate_player_advice_group()
 
     # Generate AdviceSection
-
     tier_section = f"{overall_section_tier}/{max_tier}"
     drop_rate_advice_section = AdviceSection(
         name="Drop Rate",
