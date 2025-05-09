@@ -28,7 +28,7 @@ from consts import (
     # Caverns
 
 )
-from utils.data_formatting import safe_loads, safer_get
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -212,22 +212,7 @@ class Character:
         self.divinity_link: str = "Unlinked"
         self.current_polytheism_link = "Unlinked"
         self.secondary_polytheism_link = "Unlinked"
-        self.obols = {}
-        # This returns incomplete data, since the obols_dict currently only contains DR obols
-        # Dispite this, the function is written to work with whatever data is added to the obols_dict
-        for obol_index, obol_name in enumerate(obols):
-            obol_index = str(obol_index)
-            # Adds the base values for each equipped obol
-            for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
-                self.obols[f"Total_{obol_base_name}"] = self.obols.get(f"Total_{obol_base_name}", 0) + obol_base_value
-            # Adds any upgrade value for each equipped obol
-            if obol_index in obol_upgrades.keys():
-                if 'UQ1txt' in obol_upgrades[obol_index] and obol_upgrades[obol_index]['UQ1txt'] != 0:
-                    self.obols[f"Total_{obol_upgrades[obol_index]['UQ1txt']}"] = self.obols.get(f"Total_{obol_upgrades[obol_index]['UQ1txt']}", 0) + obol_upgrades[obol_index]['UQ1val']
-                elif 'UQ2txt' in obol_upgrades[obol_index] and obol_upgrades[obol_index]['UQ2txt'] != 0:
-                    self.obols[f"Total_{obol_upgrades[obol_index]['UQ2txt']}"] = self.obols.get(f"Total_{obol_upgrades[obol_index]['UQ1txt']}", 0) + obol_upgrades[obol_index]['UQ2val']
-                for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK']:
-                    self.obols[f"Total_{upgrade_val}"] = self.obols.get(f"Total_{upgrade_val}", 0) + obol_upgrades.get(upgrade_val, 0)
+        self.obols = get_obol_totals(obols, obol_upgrades)
 
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():

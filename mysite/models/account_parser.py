@@ -57,7 +57,7 @@ from consts import (
     caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges,
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, numberToLetter
 
@@ -1456,21 +1456,7 @@ def _parse_w2_obols(account):
     
     raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
     raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
-    # Only adding Drop Chance for now, there is way too much to add it all for it only to go unused
-    family_obols_totals = {
-        '%_DROP_CHANCE': 0
-    }
-    for i, obol_name in enumerate(raw_family_obols_list):
-        upg_index = str(i)
-        # We only care about Drop Rate obols
-        if obol_name in obols_dict:
-            obol_base = obols_dict[obol_name]['Base']
-            family_obols_totals['%_DROP_CHANCE'] += obol_base['%_DROP_CHANCE']
-            if  upg_index in raw_family_obols_upgrades.keys() \
-                and 'UQ1txt' in raw_family_obols_upgrades[upg_index].keys() \
-                and raw_family_obols_upgrades[upg_index]['UQ1txt'] == '%_DROP_CHANCE':
-                family_obols_totals['%_DROP_CHANCE'] += raw_family_obols_upgrades[upg_index]['UQ1val']
-    account.obols['BonusTotals'] = family_obols_totals
+    account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
 
 
 def _parse_w2_islands(account):

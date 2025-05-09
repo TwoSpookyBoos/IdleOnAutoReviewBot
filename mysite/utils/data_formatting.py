@@ -10,7 +10,7 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters
+from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters, obols_dict
 from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnectionFailed, WtfDataException
 
 from .logging import get_logger
@@ -376,6 +376,24 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
                 logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skillIndexList[skillCounter]}")
     return allSkillsDict
 
+# This returns incomplete data, since the obols_dict currently only contains DR obols
+# Dispite this, the function is written to work with whatever data is added to the obols_dict
+def get_obol_totals(obol_list, obol_upgrade_dict):
+    obols_totals = {}
+    for obol_index, obol_name in enumerate(obol_list):
+        obol_index = str(obol_index)
+        # Adds the base values for each equipped obol
+        for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
+            obols_totals[f"Total{obol_base_name}"] = obols_totals.get(f"Total{obol_base_name}", 0) + obol_base_value
+        # Adds any upgrade value for each equipped obol
+        if obol_index in obol_upgrade_dict.keys():
+            if 'UQ1txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ1txt'] != 0:
+                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0) + obol_upgrade_dict[obol_index]['UQ1val']
+            elif 'UQ2txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ2txt'] != 0:
+                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0) + obol_upgrade_dict[obol_index]['UQ2val']
+            for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK', 'Defence', 'Weapon_Power', 'Reach', 'Speed']:
+                obols_totals[f"Total{upgrade_val}"] = obols_totals.get(f"Total{upgrade_val}", 0) + obol_upgrade_dict.get(upgrade_val, 0)
+    return obols_totals
 
 def getHumanReadableClasses(classNumber):
     return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
