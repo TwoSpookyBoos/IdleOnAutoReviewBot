@@ -134,12 +134,11 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
 
     questGStacks_AdviceSection = AdviceSection(
         name="Endangered Greenstacks",
-        tier=tier_obtainable,
+        tier=f"{int(still_obtainable == 0)}",
         header=header_obtainable,
         picture="wiki/Greenstack.png",
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
-        unrated=True,
         completed=still_obtainable == 0
     )
 

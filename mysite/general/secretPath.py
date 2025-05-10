@@ -521,6 +521,7 @@ def getProgressionTiersAdviceGroup(jmans, maestros):
         )
     }
 
+    no_catchup_needed = True
     if len(maestros) > 0:
         secret_class_advice_groups['RightHandsCatchup'], no_catchup_needed, secret_class_advice_groups['RightHandsStayAhead'] = getRightHandsAdviceGroups(true_max)
 

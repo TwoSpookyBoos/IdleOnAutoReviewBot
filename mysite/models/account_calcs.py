@@ -511,7 +511,7 @@ def _calculate_w1_upgrade_vault(account):
                 * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']}"
+                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
             account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(

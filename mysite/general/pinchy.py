@@ -140,6 +140,8 @@ class Placements(dict):
     SECRET_CLASS_PATH = "Secret Class Path"
     ACHIEVEMENTS = "Achievements"
     GSTACKS = "Greenstacks"
+    Q_GSTACKS = "Endangered Greenstacks"
+    VAULT = "Upgrade Vault"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -168,8 +170,8 @@ class Placements(dict):
     #GAMING = "Gaming"
     FARMING = "Farming"
     sections = [
-        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS,
-        STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
+        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
+        VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, POST_OFFICE, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
@@ -184,6 +186,8 @@ class Placements(dict):
         SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,     true_max_tiers[SECRET_CLASS_PATH], 99],
         ACHIEVEMENTS:  [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,     true_max_tiers[ACHIEVEMENTS], 99],
         GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
+        Q_GSTACKS:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,     true_max_tiers[Q_GSTACKS], 99],
+        VAULT:         [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      3,  3,  3,      3,     true_max_tiers[VAULT], 99],
         STAMPS:        [0,   1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,     12, 13, 14,     15, 16, 17,     20,    true_max_tiers[STAMPS], 99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,     true_max_tiers[SMITHING], 99],

@@ -802,6 +802,29 @@ statues_progressionTiers = {
         },
     },
 }
+vault_progressionTiers = {
+    1: {
+        'Include': [
+            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday$',
+            'Baby on Board', 'Bored to Death', 'Stamp Bonanza', 'Drops for Days', 'Slice N Dice', 'Go Go Secret Owl',
+            'Boss Decimation', 'Sleepy Time', 'Production Revolution', 'Statue Bonanza', 'Stick Snapping', 'Liquid Knowledge',
+            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish$", 'Straight to Storage', 'Bubble Money',
+            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse$', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
+        ]
+    },
+    2: {
+        'Include': [
+            'Major Discount', 'Monster Tax', 'Recipe for Profit', 'Stunning Talent', 'All Armoured Up', 'Buildie Sheepie'
+            # Stuff I'm intentionally excluding here for visibility
+            # 'Beeg Forge' because having too large of Ore capacity can be annoying
+            # 'Knockout!' because it includes an exact stack number in the name and I don't wanna deal with it
+            # 'Card Retirement' because some people choose to not pick this up so they can continue to Double CDR cards
+        ]  #This list generated from Acecow's alt account when they first entered World 6
+    },
+    3: {
+        'Ignore': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge']
+    }
+}
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [
@@ -10267,6 +10290,8 @@ true_max_tiers = {
     "Secret Class Path": max(secret_class_progressionTiers.keys()),
     "Achievements": max(achievements_progressionTiers.keys()),
     "Greenstacks": max(greenstack_progressionTiers.keys()),
+    "Endangered Greenstacks": 1,
+    "Upgrade Vault": max(vault_progressionTiers.keys()),
     "Stamps": max(stamps_progressionTiers.keys()),
     "Bribes": bribes_progressionTiers[-1][0],
     "Smithing": smithing_progressionTiers[-1][0],
