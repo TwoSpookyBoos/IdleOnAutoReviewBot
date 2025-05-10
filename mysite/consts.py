@@ -1113,6 +1113,104 @@ islands_progressionTiers = {
     3: {'Islands': ['Crystal Island', 'Rando Island']},
     4: {'Islands': ['Fractal Island']},
 }
+post_office_progression_tiers = {
+    0: {},
+    1: {
+        'Class Specific': {
+            # STR
+            'Death Bringer': {
+                'Deaths Storage Unit': 400,
+                'Magician Starterpack': 400,
+            },
+            'Blood Berserker': {
+                'Chefs Essentials': 400,
+            },
+            'Barbarian': {
+                'Sealed Fishheads': 400,
+                'Utilitarian Capsule': 400,
+            },
+            'Divine Knight': {
+                'Gaming Lootcrate': 800,
+                'Non Predatory Loot Box': 400,
+                'Magician Starterpack': 400,
+            },
+            'Squire': {
+                'Construction Container': 400,
+                'Dwarven Supplies': 400,
+                'Utilitarian Capsule': 400,
+            },
+            'Warrior': {
+                'Carepack From Mum': 400,
+                'Locally Sourced Organs': 400,
+                'Gaming Lootcrate': 800,
+                'Dwarven Supplies': 400,  #Barbarian prioritizes this lower than Squire as it focuses on Cooking+Fishing first
+            },
+
+            # WIS
+            'Elemental Sorcerer': {
+                'Magician Starterpack': 400,
+            },
+            'Wizard': {
+                'Crate of the Creator': 400
+            },
+            'Bubonic Conjuror': {
+                'Magician Starterpack': 400,
+                'Potion Package': 400,
+                'Non Predatory Loot Box': 400,
+                'Science Spare Parts': 400,
+            },
+            'Shaman': {},
+            'Mage': {
+                'Taped Up Timber': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+                'Box of Gosh': 800,
+            },
+
+            # AGI
+            'Wind Walker': {},
+            'Beast Master': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Hunter': {
+                'Trapping Lockbox': 400,
+            },
+            'Siege Breaker': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Bowman': {
+                'Bug Hunting Supplies': 400,
+            },
+            'Archer': {
+                'Magician Starterpack': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+                'Blacksmith Box': 400,
+                "Scurvy C'arr'ate": 800
+            },
+
+            # LUK
+            'Voidwalker': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Maestro': {
+                'Non Predatory Loot Box': 400,
+                'Magician Starterpack': 400,
+            },
+            'Journeyman': {
+                'Non Predatory Loot Box': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+            },
+        }
+    },
+    2: {
+        'Myriad': False  #Everything else not specified in Tier 1, except Myriad
+    },
+    3: {
+        'Myriad': True  #Just Myriad
+    },
+}
 
 ###WORLD 3 PROGRESSION TIERS###
 saltLick_progressionTiers = [
@@ -10302,7 +10400,7 @@ true_max_tiers = {
     "Vials": vials_progressionTiers[-1][0],
     "Pay2Win": 1,
     "Sigils": max(sigils_progressionTiers.keys()),
-    # "Post Office": ,
+    "Post Office": max(post_office_progression_tiers.keys()),
     "Islands": max(islands_progressionTiers.keys()),
     "Refinery": 1,
     "Sampling": max(sampling_progressionTiers.keys()),

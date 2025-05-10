@@ -61,7 +61,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         if len(vault_AdviceDict['Tiers'][subgroup_label]) == 0 and tier_Vault == tier - 1:
             tier_Vault = tier
 
-    logger.debug(maxed_upgrades)
+    #logger.debug(maxed_upgrades)
 
     tiers_ag = AdviceGroup(
         tier=tier_Vault,
