@@ -658,6 +658,14 @@ smithing_progressionTiers = [
     [5, 200, 500, 291, "bottle-cap"],
     [6, 600, 700, 291, "condensed-zap"]
 ]
+owl_bonuses_of_orion = {
+    'Class XP': {'BaseValue': 5},
+    'Base Damage': {'BaseValue': 10},
+    'Total Damage': {'BaseValue': 2},
+    'Skill XP': {'BaseValue': 4},
+    'Drop Rate': {'BaseValue': 1},
+    'All Stat': {'BaseValue': 2}
+}
 owl_progressionTiers = {
     0: {},
     1: {
@@ -2227,6 +2235,7 @@ for item_name in gstackable_codenames_expected:
 #     print(f"Reminder: Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
 greenstack_progressionTiers[5]['Required Stacks'] = len(gstack_unique_expected)
 quest_items_codenames = expectedStackables["Missable Quest Items"]
+max_card_stars = 5
 key_cards = "Cards0"
 cards_max_level = 6
 cardset_names = [
@@ -3251,11 +3260,27 @@ gem_shop_bundles_dict = {
     'bon_e': 'Lush Emerald Anniversary Pack',
     'bon_f': 'Eternal Hunter Pack'
 }
-guildBonusesList = [
-    "Guild Gifts", "Stat Runes", "Rucksack", "Power of Pow", "REM Fighting", "Make or Break",
-    "Multi Tool", "Sleepy Skiller", "Coin Supercharger", "Bonus GP for small guilds", "Gold Charm", "Star Dazzle",
-    "C2 Card Spotter", "Bestone", "Skilley Skillet", "Craps", "Anotha One", "Wait A Minute"
-]
+
+guild_bonuses_dict = {
+    'Guild Gifts': {'Picture': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
+    'Stat Runes': {'Picture': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
+    'Rucksack': {'Picture': 'rucksack', 'MaxLevel': 50, 'MaxValue': 35, 'FuncType': 'decay', 'X1': 70, 'X2': 50},
+    'Power of Pow': {'Picture': 'power-of-pow', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
+    'REM Fighting': {'Picture': 'rem-fighting', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
+    'Make or Break': {'Picture': 'make-or-break', 'MaxLevel': 50, 'MaxValue': 15, 'FuncType': 'decay', 'X1': 30, 'X2': 50},
+    'Multi Tool': {'Picture': 'multi-tool', 'MaxLevel': 50, 'MaxValue': 15, 'FuncType': 'decay', 'X1': 30, 'X2': 50},
+    'Skilley Skiller': {'Picture': 'skilley-skiller', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
+    'Coin Supercharger': {'Picture': 'coin-supercharger', 'MaxLevel': 100, 'MaxValue': 16.667, 'FuncType': 'decay', 'X1': 20, 'X2': 20},
+    'Bonus GP for small guilds': {'Picture': 'bonus-gp-for-small-guilds', 'MaxLevel': 50, 'MaxValue': 0, 'FuncType': 'special1', 'X1': 200, 'X2': 50}, # This value decreases to a min value of 0
+    'Gold Charm': {'Picture': 'gold-charm', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
+    'Star Dazzle': {'Picture': 'star-dazzle', 'MaxLevel': 50, 'MaxValue': 60, 'FuncType': 'decay', 'X1': 120, 'X2': 50},
+    'C2 Card Spotter': {'Picture': 'c2-card-spotter', 'MaxLevel': 50, 'MaxValue': 30, 'FuncType': 'decay', 'X1': 60, 'X2': 50},
+    'Bestone': {'Picture': 'bestone', 'MaxLevel': 50, 'MaxValue': 8, 'FuncType': 'decay', 'X1': 16, 'X2': 50},
+    'Sleepy Skillet': {'Picture': 'sleepy-skillet', 'MaxLevel': 200, 'MaxValue': 18.75, 'FuncType': 'decay', 'X1': 30, 'X2': 120},
+    'Craps': {'Picture': 'craps', 'MaxLevel': 50, 'MaxValue': 14, 'FuncType': 'decay', 'X1': 28, 'X2': 50},
+    'Anotha One': {'Picture': 'anotha-one', 'MaxLevel': 50, 'MaxValue': 13, 'FuncType': 'decay', 'X1': 26, 'X2': 50},
+    'Wait A Minute': {'Picture': 'wait-a-minute', 'MaxLevel': 0, 'MaxValue': 0, 'FuncType': 'add', 'X1': 1, 'X2': 0}
+}
 familyBonusClassTierLevelReductions = [9, 29, 69, 999]  #Character must be this high of a level to get bonuses
 familyBonusesDict = {
     #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': familyBonusClassTierLevelReductions[0]},
@@ -4627,6 +4652,11 @@ combat_talentsDict = {
         }
     },
 }
+class_kill_talents_dict = {
+    'Archlord of the Pirates': {'BonusType': 'Drop Rate', 'FuncType': 'decay', 'X1': 6, 'X2': 150},
+    'King of the Remembered': {'BonusType': 'Printer Output', 'FuncType': 'decay', 'X1': 5, 'X2': 150 },
+    'Wormhole Emperor': {'BonusType': 'Damage', 'FuncType': 'decay', 'X1': 1.5, 'X2': 150}
+}
 unbookable_talents_list = [
     10, 11, 12,  #Tab 1 STR, AGI, WIS
     75, 79,      #Beginner tab1 Happy Dude and Sleepin' on the Job
@@ -4714,6 +4744,53 @@ companions = [
     # Exclusives
     'Cool Bird', 'Axolotl', 'Mallay', 'Reindeer'
 ]
+equipment_by_bonus_dict = {
+    'DropRate': {
+        # Weapons
+        'Mittens of the Gods': {'Type': 'Fisticuffs', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 120}, 'Misc2': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'mittens-of-the-gods'},
+        'Massive Godbreaker': {'Type': 'Spear', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'massive-godbreaker'},
+        'Doublestring Godshooter': {'Type': 'Bow', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'doublestring-godshooter'},
+        'Magnifique Godcaster': {'Type': 'Wand', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'magnifique-godcaster'},
+        # Tools
+        'Destroyer of the Mollo Gomme': {'Type': 'Pickaxe', 'Limited': False, 'Misc1': {'Bonus': 'MiningEff', 'Value': 35}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'destroyer-of-the-mollo-gomme'},
+        'Annihilator of the Yggdrasil': {'Type': 'Hatchet', 'Limited': False, 'Misc1': {'Bonus': 'ChoppingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'annihilator-of-the-yggdrasil'},
+        'Angler of the Iliunne': {'Type': 'Rod', 'Limited': False, 'Misc1': {'Bonus': 'FishingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'angler-of-the-iliunne'},
+        'Wrangler of the Qoxzul': {'Type': 'Net', 'Limited': False, 'Misc1': {'Bonus': 'CatchingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'wrangler-of-the-qoxzul'},
+        'Containment of the Zrgyios': {'Type': 'Trap', 'Limited': False, 'Misc1': {'Bonus': 'AfkGain', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'containment-of-the-zrgyios'},
+        # Helmets
+        '3rd Anniversary Ice Cream Topper': {'Type': 'Helmet', 'Limited': True, 'Misc1': {'Bonus': 'MonsterXp', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-ice-cream-topper'},
+        'Efaunt Helmet': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'efaunt-helmet'},
+        'Skulled Helmet of the Divine': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'skulled-helmet-of-the-divine'},
+        'Crown of the Gods': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}, 'Image': 'crown-of-the-gods'},
+        # Pendants
+        'Chaotic Amarok Pendant': {'Type': 'Pendant', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 20}, 'Misc2': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'chaotic-amarok-pendant'},
+        # Chests
+        'Robe of the Gods': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}, 'Image': 'robe-of-the-gods'},
+        # Legs
+        'Tatters of the Gods': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}, 'Image': 'tatters-of-the-gods'},
+        # Feet
+        'Devious Slippers of the Divine': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}, 'Image': 'devious-slippers-of-the-divine'},
+        'Drip of the Gods': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}, 'Image': 'drip-of-the-gods'},
+        # Premium Hats
+        'Siege Captain Cap': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'siege-captain-cap'},
+        'Goldberry': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'goldberry'},
+        # Trophies
+        'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
+        'Luckier Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}, 'Image': 'luckier-lad'},
+        'One of the Divine': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}, 'Image': 'one-of-the-divine'},
+        # Capes
+        'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
+        # Nametags
+        '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-idleon-nametag'},
+        'Balling Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'balling-nametag'},
+        'Aethermoon Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'aethermoon-nametag'},
+        # Attire
+        'Cobalt Robe':    {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
+        'Evergreen Robe': {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}, 'Image': 'evergreen-robe'},
+        # Keychains
+        'Relic Chain': {'Type': 'Keychain', 'Limited': False, 'Note': 'Relic can roll up to a POSSIBLE +16% Drop Rate<br>All other key chains can roll up to +8% Drop Rate', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
+    }
+}
 
 def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
     match funcType:
@@ -5318,30 +5395,30 @@ vialsDict = {
     74: {"Name": "Turtle Tisane", "Material": "Critter11", "x1": 4, "x2": 0, "funcType": "add"},
 }
 sigilsDict = {
-    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000]},
-    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000]},
-    "Odd Litearture":   {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000]},
-    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000]},
-    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000]},
-    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000]},
-    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000]},
-    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000]},
-    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000]},
-    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000]},
-    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000]},
-    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000]},
-    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000]},
-    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000]},
-    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000]},
-    "VIP Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000]},
-    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000]},
-    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000]},
-    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000]},
-    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000]},
-    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000]},
-    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000]},
-    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000]},
-    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000]},
+    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000], 'Values': [10, 20, 40]},
+    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000], 'Values': [10, 20, 40]},
+    "Odd Litearture":   {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000], 'Values': [10, 20, 40]},
+    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000], 'Values': [10, 20, 40]},
+    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000], 'Values': [75, 225, 1000]},
+    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000], 'Values': [10, 20, 30]},
+    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000], 'Values': [10, 25, 40]},
+    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000], 'Values': [2, 2, 5]},
+    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000], 'Values': [6, 12, 20]},
+    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000], 'Values': [10, 25, 45]},
+    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000], 'Values': [10, 20, 30]},
+    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000], 'Values': [10, 20, 30]},
+    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000], 'Values': [25, 50, 100]},
+    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000], 'Values': [3, 6, 10]},
+    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000], 'Values': [10, 25, 40]},
+    "VIP Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000], 'Values': [10, 25, 50]},
+    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000], 'Values': [1, 2, 4]},
+    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000], 'Values': [3, 7, 15]},
+    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000], 'Values': [15, 25, 60]},
+    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000], 'Values': [8, 20, 35]},
+    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000], 'Values': [15, 25, 35]},
+    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000], 'Values': [10, 20, 30]},
+    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000], 'Values': [10, 30, 50]},
+    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000], 'Values': [10, 30, 100]},
 }
 bubbleCauldronColorList = ['Orange', 'Green', 'Purple', 'Yellow']
 alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
@@ -5818,18 +5895,24 @@ fishingToolkitDict = {
         'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
     ],
 }
-obolsDict = {
+obols_dict = {
     #Drop Rate
-    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop")},
-    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop")},
-    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
-    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck")},
-    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck")},
-    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight")},
-    "ObolHyperB0":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0")},
-    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck")},
-    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava")},
-    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck")},
+    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop"), 'Base': {'LUK': 1, 'DEF': 1, '%_DROP_CHANCE': 2}},
+    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop"), 'Base': {'LUK': 3, 'DEF': 2, '%_DROP_CHANCE': 3}},
+    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 1, '%_DROP_CHANCE': 4}},
+    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck"), 'Base': {'LUK': 2, '%_DROP_CHANCE': 5}},
+    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck"), 'Base': {'LUK': 3, '%_DROP_CHANCE': 7}},
+    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight"), 'Base': {'WP': 2, 'STR': 3, 'AGI': 3, 'WIS': 3, 'LUK': 3, 'DEF': 5, '%_DROP_CHANCE': 8}},
+    "ObolHyperB0":      {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 5, '%_DROP_CHANCE': 10}},
+    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck"), 'Base': {'LUK': 5, '%_DROP_CHANCE': 10}},
+    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava"), 'Base': {'LUK': 10, '%_DROP_CHANCE': 14}},
+    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_CHANCE': 15}},
+}
+obols_max_bonuses_dict = {
+    'PlayerDropRatePractical': 134,
+    'PlayerDropRateTrue': 172,
+    'FamilyDropRatePractical': 188,
+    'FamilyDropRateTrue': 228
 }
 ignorable_obols_list = [
     'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',
@@ -6011,61 +6094,61 @@ prayersList: list[str] = [
     "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
 ]
 prayersDict = {
-    0: {"Name": "Big Brain Time", "Material": "Forest Soul", "Display": "Big Brain Time (Forest Soul)",
+    0: {"Name": "Big Brain Time", "Material": "Forest Soul", "Display": "Big Brain Time (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Class EXP', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 225, 'curse_x2': 25, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
-    1: {"Name": "Skilled Dimwit", "Material": "Forest Soul", "Display": "Skilled Dimwit (Forest Soul)",
+    1: {"Name": "Skilled Dimwit", "Material": "Forest Soul", "Display": "Skilled Dimwit (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Skill Efficiency', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill EXP Gain', 'curse_pre': '-', 'curse_post': '%'},
-    2: {"Name": "Unending Energy", "Material": "Forest Soul", "Display": "Unending Energy (Forest Soul)",
+    2: {"Name": "Unending Energy", "Material": "Forest Soul", "Display": "Unending Energy (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 22.5, 'bonus_x2': 2.5, 'bonus_stat': 'Class and Skill EXP', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Max AFK time is now 10 hours. Use with caution', 'curse_pre': '', 'curse_post': ''},
-    3: {"Name": "Shiny Snitch", "Material": "Forest Soul", "Display": "Shiny Snitch (Forest Soul)",
+    3: {"Name": "Shiny Snitch", "Material": "Forest Soul", "Display": "Shiny Snitch (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Shiny Critters per trap', 'bonus_pre': '+', 'bonus_post': '',
         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'lower', 'curse_pre': 'Your Shiny chance is now ', 'curse_post': 'x'},
-    4: {"Name": "Zerg Rushogen", "Material": "Forest Soul", "Display": "Zerg Rushogen (Forest Soul)",
+    4: {"Name": "Zerg Rushogen", "Material": "Forest Soul", "Display": "Zerg Rushogen (Forest Soul)", "MaxLevel": 20,
         "bonus_funcType": 'bigBase', 'bonus_x1': 4.5, 'bonus_x2': 0.5, 'bonus_stat': 'All AFK Gain Rate', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 10.8, 'curse_x2': 1.2, 'curse_stat': 'Carry Capacity', 'curse_pre': '-', 'curse_post': '%'},
-    5: {"Name": "Tachion of the Titans", "Material": "Dune Soul", "Display": "Tachion of the Titans (Dune Soul)",
+    5: {"Name": "Tachion of the Titans", "Material": "Dune Soul", "Display": "Tachion of the Titans (Dune Soul)", "MaxLevel": 2,
         "bonus_funcType": 'bigBase', 'bonus_x1': 1, 'bonus_x2': 0, 'bonus_stat': 'Giant Monsters can now spawn on Monster Kill', 'bonus_pre': '', 'bonus_post': '',
         "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Giant Monsters can now spawn...', 'curse_pre': '', 'curse_post': ''},
-    6: {"Name": "Balance of Precision", "Material": "Dune Soul", "Display": "Balance of Precision (Dune Soul)",
+    6: {"Name": "Balance of Precision", "Material": "Dune Soul", "Display": "Balance of Precision (Dune Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Total Accuracy', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 4.5, 'curse_x2': 0.5, 'curse_stat': 'Total Damage', 'curse_pre': '-', 'curse_post': '%'},
-    7: {"Name": "Midas Minded", "Material": "Dune Soul", "Display": "Midas Minded (Dune Soul)",
+    7: {"Name": "Midas Minded", "Material": "Dune Soul", "Display": "Midas Minded (Dune Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Drop Rate', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 225, 'curse_x2': 2.5, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
-    8: {"Name": "Jawbreaker", "Material": "Dune Soul", "Display": "Jawbreaker (Dune Soul)",
+    8: {"Name": "Jawbreaker", "Material": "Dune Soul", "Display": "Jawbreaker (Dune Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 36, 'bonus_x2': 4, 'bonus_stat': 'Coins from Monsters', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 180, 'curse_x2': 20, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
-    9: {"Name": "The Royal Sampler", "Material": "Rooted Soul", "Display": "The Royal Sampler (Rooted Soul)",
+    9: {"Name": "The Royal Sampler", "Material": "Rooted Soul", "Display": "The Royal Sampler (Rooted Soul)", "MaxLevel": 20,
         "bonus_funcType": 'bigBase', 'bonus_x1': 13.5, 'bonus_x2': 1.5, 'bonus_stat': 'Printer Sample Rate', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 27, 'curse_x2': 3, 'curse_stat': 'All EXP gain. Remove all samples on this character to Unequip.', 'curse_pre': '-', 'curse_post': '%'},
-    10: {"Name": "Antifun Spirit", "Material": "Rooted Soul", "Display": "Antifun Spirit (Rooted Soul)",
+    10: {"Name": "Antifun Spirit", "Material": "Rooted Soul", "Display": "Antifun Spirit (Rooted Soul)", "MaxLevel": 10,
          "bonus_funcType": 'bigBase', 'bonus_x1': 630, 'bonus_x2': 70, 'bonus_stat': 'Minigame Reward Multi', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 8.1, 'curse_x2': 0.9, 'curse_stat': 'plays per attempt', 'curse_pre': 'Minigames cost ', 'curse_post': ''},
-    11: {"Name": "Circular Criticals", "Material": "Rooted Soul", "Display": "Circular Criticals (Rooted Soul)",
+    11: {"Name": "Circular Criticals", "Material": "Rooted Soul", "Display": "Circular Criticals (Rooted Soul)", "MaxLevel": 20,
          "bonus_funcType": 'bigBase', 'bonus_x1': 9, 'bonus_x2': 1, 'bonus_stat': 'Critical Hit Chance', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Critical Damage', 'curse_pre': '-', 'curse_post': '%'},
-    12: {"Name": "Ruck Sack", "Material": "Rooted Soul", "Display": "Ruck Sack (Rooted Soul)",
+    12: {"Name": "Ruck Sack", "Material": "Rooted Soul", "Display": "Ruck Sack (Rooted Soul)", "MaxLevel": 50,
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Carry Capacity', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'All AFK Gain Rate', 'curse_pre': '-', 'curse_post': '%'},
-    13: {"Name": "Fibers of Absence", "Material": "Frigid Soul", "Display": "Fibers of Absence (Frigid Soul)",
+    13: {"Name": "Fibers of Absence", "Material": "Frigid Soul", "Display": "Fibers of Absence (Frigid Soul)", "MaxLevel": 50,
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Kills for Deathnote and opening portals', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Total Damage', 'curse_pre': '-', 'curse_post': '%'},
-    14: {"Name": "Vacuous Tissue", "Material": "Frigid Soul", "Display": "Vacuous Tissue (Frigid Soul)",
+    14: {"Name": "Vacuous Tissue", "Material": "Frigid Soul", "Display": "Vacuous Tissue (Frigid Soul)", "MaxLevel": 1,
          "bonus_funcType": 'bigBase', 'bonus_x1': 100, 'bonus_x2': 0, 'bonus_stat': 'Dungeon Credits and Flurbos from Boosted Runs', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 2, 'curse_x2': 0, 'curse_stat': 'Dungeon Passes per run', 'curse_pre': 'Use ', 'curse_post': 'x'},
-    15: {"Name": "Beefy For Real", "Material": "Frigid Soul", "Display": "Beefy For Real (Frigid Soul)",
+    15: {"Name": "Beefy For Real", "Material": "Frigid Soul", "Display": "Beefy For Real (Frigid Soul)", "MaxLevel": 40,
          "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Total Damage', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 9, 'curse_x2': 1, 'curse_stat': 'Total Defence and Accuracy', 'curse_pre': '-', 'curse_post': '%'},
-    16: {"Name": "Balance of Pain", "Material": "Squishy Soul", "Display": "Balance of Pain (Squishy Soul)",
+    16: {"Name": "Balance of Pain", "Material": "Squishy Soul", "Display": "Balance of Pain (Squishy Soul)", "MaxLevel": 30,
          "bonus_funcType": 'bigBase', 'bonus_x1': 7.2, 'bonus_x2': 0.8, 'bonus_stat': 'Multikill per Damage Tier', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Total Defence and Accuracy', 'curse_pre': '-', 'curse_post': '%'},
-    17: {"Name": "Balance of Proficiency", "Material": "Squishy Soul", "Display": "Balance of Proficiency (Squishy Soul)",
+    17: {"Name": "Balance of Proficiency", "Material": "Squishy Soul", "Display": "Balance of Proficiency (Squishy Soul)", "MaxLevel": 50,
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Skill EXP Gain', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill Efficiency', 'curse_pre': '-', 'curse_post': '%'},
-    18: {"Name": "Glitterbug", "Material": "Squishy Soul", "Display": "Glitterbug (Squishy Soul)",
+    18: {"Name": "Glitterbug", "Material": "Squishy Soul", "Display": "Glitterbug (Squishy Soul)", "MaxLevel": 30,
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'chance for Giant Mobs to summon 2 Crystal Mobs', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'less likely to spawn', 'curse_pre': 'Giant Mobs are ', 'curse_post': '%'},
 }
@@ -8102,6 +8185,7 @@ sneaking_gemstones_all_values = {
 
 maxFarmingCrops = 230  # Last verified as of 2.26 Death Bringer
 maxFarmingValue = 10000  # Last verified as of 2.21 The Fixening
+max_land_rank_level = 11
 landrankDict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},
