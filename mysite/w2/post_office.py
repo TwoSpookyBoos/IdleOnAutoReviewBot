@@ -123,10 +123,10 @@ def getPostOfficeAdviceSection() -> AdviceSection:
         name="Post Office",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=f"Best Post Office tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture="wiki/Postboy_Pablob.gif",
         groups=postOffice_AdviceGroupDict.values(),
     )
     return postOffice_AdviceSection
-
-

@@ -20,6 +20,10 @@ def getEquinoxDreams() -> dict:
 
 
 def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
+    info_tiers = 0
+    true_max = 1
+    max_tier = true_max - info_tiers
+
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
     advice_MissedQuestGStacks = []
@@ -132,9 +136,15 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
             informational=True
         )
 
+    overall_SectionTier = int(still_obtainable == 0)
+
+    tier_section = f"{overall_SectionTier}/{max_tier}"
     questGStacks_AdviceSection = AdviceSection(
         name="Endangered Greenstacks",
-        tier=f"{int(still_obtainable == 0)}",
+        tier=tier_section,
+        pinchy_rating=int(still_obtainable == 0),
+        max_tier=1,
+        true_max_tier=1,
         header=header_obtainable,
         picture="wiki/Greenstack.png",
         note=note,

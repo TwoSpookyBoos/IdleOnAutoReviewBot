@@ -1,4 +1,4 @@
-from consts import vault_progressionTiers
+from consts import vault_progressionTiers, break_you_best
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -16,7 +16,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
         'Tiers': {},
     }
     info_tiers = 1
-    max_tier = max(vault_progressionTiers.keys(), default=0) - info_tiers
+    true_max = max(vault_progressionTiers.keys(), default=0)
+    max_tier = true_max - info_tiers
     tier_Vault = 0
 
     upgrades = session_data.account.vault['Upgrades']
@@ -70,8 +71,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     )
     tiers_ag.remove_empty_subgroups()
 
-    overall_SectionTier = min(max_tier + info_tiers, tier_Vault)
-    return tiers_ag, overall_SectionTier, max_tier
+    overall_SectionTier = min(true_max, tier_Vault)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 
 def getVaultUpgradesAdviceGroup():
@@ -112,7 +113,7 @@ def getVaultUpgradesAdviceGroup():
 def getVaultAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     vault_AdviceGroupDict = {}
-    vault_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    vault_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     vault_AdviceGroupDict['Upgrades'] = getVaultUpgradesAdviceGroup()
 
     #Generate AdviceSection
@@ -121,7 +122,9 @@ def getVaultAdviceSection() -> AdviceSection:
         name="Upgrade Vault",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Upgrade Vault Information",  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        max_tier=max_tier,
+        true_max_tier=true_max,
+        header=f"Best Upgrade Vault tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='data/VaultBut.png',
         groups=vault_AdviceGroupDict.values(),
         completed=None,
