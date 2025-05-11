@@ -127,7 +127,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[general].append(Advice(
         label=f"Death Bringer Grimoire- Skull of Major Droprate:"
               f"<br>+{round(skull_drop_rate_grimoire['Total Value'], 1):g}% Drop Rate"
-              f"{f'<br>{skull_drop_rate_grimoire_upgrades_unlock} Upgrades till unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
+              f"{f'<br>{skull_drop_rate_grimoire_upgrades_unlock} more upgrades till unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
         picture_class=skull_drop_rate_grimoire['Image'],
         progression=skull_drop_rate_grimoire['Level'],
         goal=skull_drop_rate_grimoire['Max Level']
