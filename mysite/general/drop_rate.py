@@ -632,9 +632,9 @@ def get_drop_rate_player_advice_group():
         end_note = ''
         if best_2_cards < 2:
             if best_2_cards == 0 and session_data.account.labChips['Omega Nanochip'] > 0:
-                end_note = 'Note: place in the TOP LEFT card slot with Omega Nanochip Lab Chip'
+                end_note = 'Note: place in TOP LEFT card slot with Omega Nanochip Lab Chip'
             elif best_2_cards != 0 and session_data.account.labChips['Omega Motherboard'] > 0:
-                end_note = 'Note: place in the BOTTOM RIGHT card slot with Omega Motherboard Lab Chip'
+                end_note = 'Note: place in BOT RIGHT card slot with Omega Motherboard Lab Chip'
             best_2_cards += 1
         drop_rate_pp_advice[cards].append(card.getAdvice(optional_ending_note=end_note))
 
