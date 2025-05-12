@@ -395,7 +395,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ))
     evo_advices[stamp].append(Advice(
         label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp']['Value']:.0f}%"
-              f"<br>Total Value after multis: {farming['Evo']['Stamp Value']:.2f}%",
+              f"<br>Total Value after multis: {session_data.account.stamps['Crop Evo Stamp']['Total Value']:.2f}%",
         picture_class='crop-evo-stamp',
         progression=session_data.account.stamps['Crop Evo Stamp']['Level'],
         goal=stamp_maxes['Crop Evo Stamp'],

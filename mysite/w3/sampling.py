@@ -38,15 +38,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
     stample_baseValue = session_data.account.stamps['Stample Stamp']['Value']
-    stampleValue = session_data.account.stamps['Stample Stamp']['Value']
+    stampleValue = session_data.account.stamps['Stample Stamp']['Total Value']
     amplestample_baseValue = session_data.account.stamps['Amplestample Stamp']['Value']
-    amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Value']
-    if session_data.account.labBonuses['Certified Stamp Book']['Enabled']:
-        stampleValue *= 2
-        amplestampleValue *= 2
-    if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']:
-        stampleValue *= 1.25
-        amplestampleValue *= 1.25
+    amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Total Value']
     account_sum += stampleValue
     account_sum += amplestampleValue
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))

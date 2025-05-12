@@ -2,7 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
     lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
     cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict, equipment_by_bonus_dict, poBoxDict,
-    prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes, ValueToMulti, approx_max_talent_level_non_es
+    prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes, ValueToMulti, approx_max_talent_level_non_es, infinity_string
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -17,15 +17,15 @@ drop_rate_shiny_base = 1
 infinite_star_sign_shiny_base = 2
 
 def get_drop_rate_account_advice_group() -> AdviceGroup:
-    missing_companion_data_txt = ''
+    missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''
+    missing_companion_data = not session_data.account.companions['Companion Data Present']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
+    missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
     passive_drop_rate_cards = [
         'Domeo Magmus',
         'Ancient Golem',
         'IdleOn Fourth Anniversary'
     ]
-
-    if not session_data.account.companions['Companion Data Present']:
-        missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!'
 
     general = 'General'
     w1 = 'World 1'
@@ -106,11 +106,11 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Seige Breaker - Talents -  Archlord of the Pirates
     sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
-    goal_string = notateNumber("Basic", 1e6, 2)
+    goal_string = notateNumber('Basic', 1e6, 2)
     sb_talent_bonus_max = lavaFunc(sb_talent['funcType'], approx_max_talent_level_non_es, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Siege Breaker talent- Archlord of the Pirates:"
-              f"<br>Level {sb_talent['Highest Preset Level']}/{approx_max_talent_level_non_es}"
+              f"<br>Level {sb_talent['Highest Preset Level']}/{approx_max_talent_level_non_es} with your current kills gives"
               f"<br>{round(ValueToMulti(sb_talent['Total Value']), 5):g}/{round(ValueToMulti(sb_talent_bonus_max), 5):g}x Drop Rate MULTI",
         picture_class='archlord-of-the-pirates',
         progression=notateNumber('Match', sb_talent['Kills'], 2, '', goal_string),
@@ -124,7 +124,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[general].append(Advice(
         label=f"Death Bringer {{{{Grimoire|#the-grimoire}}}}- Skull of Major Droprate:"
               f"<br>+{round(skull_drop_rate_grimoire['Total Value'], 1):g}% Drop Rate"
-              f"{f'<br>{skull_drop_rate_grimoire_upgrades_unlock} more upgrades till unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
+              f"{f'<br>Requires {skull_drop_rate_grimoire_upgrades_unlock} more upgrades to unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
         picture_class=skull_drop_rate_grimoire['Image'],
         progression=skull_drop_rate_grimoire['Level'],
         goal=skull_drop_rate_grimoire['Max Level']
@@ -137,7 +137,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{100 if has_crystal_custard_companion else 0}/100% Drop Rate"
               f"{missing_companion_data_txt}",
         picture_class='crystal-custard',
-        progression=int(has_crystal_custard_companion),
+        progression=int(has_crystal_custard_companion) if not missing_companion_data else 'IDK',
         goal=1
     ))
 
@@ -148,7 +148,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{15 if has_quenchie_companion else 0}/15% Drop Rate"
               f"{missing_companion_data_txt}",
         picture_class='quenchie',
-        progression=int(has_quenchie_companion),
+        progression=int(has_quenchie_companion) if not missing_companion_data else 'IDK',
         goal=1
     ))
 
@@ -159,32 +159,29 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>x{1.30 if has_mallay_companion else 0}/x1.3 Drop Rate MULTI"
               f"{missing_companion_data_txt}",
         picture_class='mallay',
-        progression=int(has_mallay_companion),
+        progression=int(has_mallay_companion) if not missing_companion_data else 'IDK',
         goal=1
     ))
 
     # Gem Shop - Deathbringer Pack
-    has_bundle_data = session_data.account.gemshop['Bundle Data Present']
-    has_db_pack = next((b['Owned'] for b in session_data.account.gemshop['Bundles'].values() if b['Display'] == 'Deathbringer Pack'), False)
-    db_pack_drop_rate_text = f"+{200 if has_db_pack else 0}/200% Drop Rate" if has_bundle_data \
-                          else "+200% Drop Rate<br>Note: Could be inaccurate. Bundle data not found!"
+    has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Gemshop- Deathbringer Pack:"
-              f"<br>{db_pack_drop_rate_text}",
+              f"<br>+{200 if has_db_pack else 0}/200% Drop Rate"
+              f"{missing_bundle_data_txt}",
         picture_class='gem',
-        progression=int(has_db_pack) if has_bundle_data else 'IDK',
+        progression=int(has_db_pack) if not missing_bundle_data else 'IDK',
         goal=1
     ))
 
     # Gem Shop - Island Explorer Pack
-    has_island_explorer_pack = next((b['Owned'] for b in session_data.account.gemshop['Bundles'].values() if b['Display'] == 'Island Explorer Pack'), False)
-    island_explorer_drop_rate_text = f"x{1.2 if has_island_explorer_pack else 0}/x1.2 Drop Rate MULTI" if has_bundle_data \
-                                 else "x1.2 Drop Rate MULTI<br>Note: Could be inaccurate. Bundle data not found!"
+    has_island_explorer_pack = session_data.account.gemshop['Bundles']['bun_p']['Owned']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Gemshop- Island Explorer Pack:"
-              f"<br>{island_explorer_drop_rate_text}",
+              f"<br>{1.2 if has_island_explorer_pack else 0}/1.2x Drop Rate MULTI"
+              f"{missing_bundle_data_txt}",
         picture_class='gem',
-        progression=int(has_island_explorer_pack) if session_data.account.gemshop['Bundle Data Present'] else 'IDK',
+        progression=int(has_island_explorer_pack) if not missing_bundle_data else 'IDK',
         goal=1
     ))
 
@@ -198,7 +195,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         picture_class='the-great-horned-owl',
         progression=max(0, session_data.account.owl['MegaFeathersOwned']-10),
         resource='megafeather-9',
-        goal='∞'
+        goal=infinity_string
     ))
 
     # Lab Nodes- Certified Stamp Book
@@ -209,53 +206,41 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         golden_sixes_buffs.append('Lab')
         drop_rate_aw_advice[w1].append(Advice(
             label=f"{{{{ Lab Nodes|#lab }}}}- Certified Stamp Book:"
-                  "<br>x2 Non Misc Stamp Bonuses"
-                  "<br>Note: improves the stamp below",
+                  "<br>x2 Non-Misc Stamp Bonuses"
+                  "<br>Note: Improves the stamp below",
             picture_class='certified-stamp-book',
-            progression=0, # we're only showing if it's missing, so just assume 0
+            progression=int(has_certified_stamp_book),
             goal=1
         ))
-    # Pristine Charm- Ligorice Rolle
+    # Pristine Charm- Liqorice Rolle
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     has_liqorice_rolle = session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']
     if not has_liqorice_rolle:
         golden_sixes_buffs.append('Pristine Charm')
         drop_rate_aw_advice[w1].append(Advice(
             label="Pristine Charms- Liqorice Rolle:"
-                  f"<br>x{1.25 if has_liqorice_rolle else 0}/1.25 Non Misc Stamp Bonuses"
+                  f"<br>{1.25 if has_liqorice_rolle else 0}/1.25x Non Misc Stamp Bonuses"
                   "<br>Note: improves the stamp below",
             picture_class='liqorice-rolle',
-            progression=0, # we're only showing if it's missing, so just assume 0
+            progression=int(has_liqorice_rolle),
             goal=1
         ))
     # Stamps - Golden Sixes
     golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
-    has_exalted_golden_sixes = golden_sixes_stamp['Exalted']
-    if not has_exalted_golden_sixes:
-        golden_sixes_buffs.append('Exalted Stamps')
-    match len(golden_sixes_buffs):
-        case 0:
-            golden_sixes_addl_text = "Note: can be further increased by Exalted Stamp bonuses"
-        case 1:
-            golden_sixes_addl_text = f"Note: can be increased by {golden_sixes_buffs[0]}"
-        case 2:
-            golden_sixes_addl_text = f"Note: can be increased by {golden_sixes_buffs[0]} and {golden_sixes_buffs[1]}"
-        case 3:
-            golden_sixes_addl_text = f"Note: can be increased by {golden_sixes_buffs[0]}, {golden_sixes_buffs[1]}, and {golden_sixes_buffs[2]}"
-    abomination_slayer_17 = session_data.account.compass['Upgrades']['Abomination Slayer XVII']
-    exalted_stamp_bonus_value = ((abomination_slayer_17['Level'] * abomination_slayer_17['Value Per Level'])/100)
-    exalted_stamp_multi = 2 + exalted_stamp_bonus_value
-    # The exalted multiplier is the only multiplier that actually changes the base value on the stamp, we have to add the other 2 manually
-    golden_sixes_value = round(golden_sixes_stamp['Value'] * \
-            (2 if has_certified_stamp_book else 1) * \
-            (1.25 if has_liqorice_rolle else 1) \
-        , 2)
+    if not golden_sixes_stamp['Exalted']:
+        golden_sixes_buffs.append('Exalting the stamp')
+    if len(golden_sixes_buffs) == 0:
+        golden_sixes_addl_text = f"Note: Can be further increased by Exalted {{{{Stamp|#stamps}}}} bonuses"
+    else:
+        golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
+
+    exalted_stamp_multi = session_data.account.exalted_stamp_multi
     golden_sixes_stamp_data = stampsDict['Combat'][37]
     golden_sixes_max_base = lavaFunc(golden_sixes_stamp_data['funcType'], stamp_maxes['Golden Sixes Stamp'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
-    golden_sixes_max_value = round((golden_sixes_max_base * 2 * 1.35 * exalted_stamp_multi), 2)
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{golden_sixes_value:g}/{golden_sixes_max_value}% Drop Rate"
+              f"<br>+{round(golden_sixes_stamp['Total Value'], 2):g}"
+              f"/{round((golden_sixes_max_base * 2 * 1.35 * exalted_stamp_multi), 2):g}% Drop Rate"
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
@@ -271,11 +256,11 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     if not has_reindeer_companion:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"Companions- Reindeer:"
-                f"<br>x{2 if has_reindeer_companion else 0}/x2 Arcade Bonus MULTI"
-                f"<br>Note: increases the Arcade Bonus value below"
-                f"{missing_companion_data_txt}",
+                  f"<br>{2 if has_reindeer_companion else 0}/2x Arcade Bonus MULTI"
+                  f"<br>Note: increases the Arcade Bonus value below"
+                  f"{missing_companion_data_txt}",
             picture_class='spirit-reindeer',
-            progression=int(has_reindeer_companion),
+            progression=int(has_reindeer_companion) if not missing_companion_data else 'IDK',
             goal=1
         ))
     drop_rate_arcade_bonus_id = 27

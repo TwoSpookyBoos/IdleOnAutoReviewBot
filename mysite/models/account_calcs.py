@@ -613,14 +613,21 @@ def _calculate_w1_stamps(account):
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
     )
 
-    for stamp_name in account.stamps:
-        if account.stamps[stamp_name]['Exalted']:
-            try:
-                account.stamps[stamp_name]['Value'] *= account.exalted_stamp_multi
-            except:
-                logger.exception(f"Failed to upgrade the Value of {stamp_name}")
-                continue
-            
+    for stamp_name, stamp_values in account.stamps.items():
+        try:
+            account.stamps[stamp_name]['Total Value'] = (
+                stamp_values['Value']
+                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp_values['StampType'] != 'Misc' else 1)
+                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp_values['StampType'] != 'Misc' else 1)
+                * (account.exalted_stamp_multi if stamp_values['Exalted'] else 1)
+            )
+        except:
+            account.stamps[stamp_name]['Total Value'] = stamp_values['Value']
+            logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
+            continue
+
+
+
 def _calculate_w1_owl_bonuses(account):
     bonuses_of_orion_num = len(owl_bonuses_of_orion)
     bonuses_of_orion_owned = account.owl['BonusesOfOrion']
@@ -1700,12 +1707,7 @@ def _calculate_w6_farming_crop_evo(account):
         * ValueToMulti(account.farming['Evo']['Vial Value'])
     )
     # Stamp
-    account.farming['Evo']['Stamp Value'] = (
-            max(1, 2 * account.labBonuses['Certified Stamp Book']['Enabled'])
-            * max(1, 1.25 * account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])
-            * account.stamps['Crop Evo Stamp']['Value']
-    )
-    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.farming['Evo']['Stamp Value'])
+    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp']['Total Value'])
     # Meals
     account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
     account.farming['Evo']['Meals Multi'] = (
