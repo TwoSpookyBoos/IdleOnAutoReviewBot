@@ -7,7 +7,7 @@ from consts import (
     lavaFunc, ValueToMulti, items_codes_and_names,
     maxCharacters,
     gfood_codes,
-    card_data, card_raw_data, cardset_names, decode_enemy_name,
+    card_raw_data, cardset_names, decode_enemy_name,
     gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
     guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
@@ -172,7 +172,7 @@ def _parse_switches(account):
     else:
         account.autoloot = False
 
-    account.maxSubgroupsPerGroup = 1 if g.overwhelmed else 3
+    account.maxSubgroupsPerGroup = 3  #1 if g.single_tier else 3
     account.library_group_characters = g.library_group_characters
 
 def _parse_companions(account):

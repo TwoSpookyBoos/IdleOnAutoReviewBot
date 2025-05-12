@@ -15,6 +15,7 @@ class Tier:
         section_complete: bool = False,
         section_informational: bool = False,
         section_unrated: bool = False,
+        section_overwhelming: bool = False,
         current: 'Threshold' = None,
         previous: 'Threshold' = None,
         next: 'Threshold' = None
@@ -24,6 +25,7 @@ class Tier:
         self.section_complete = section_complete
         self.section_informational = section_informational
         self.section_unrated = section_unrated
+        self.section_overwhelming = section_overwhelming
         self.current = current
         self.previous = previous
         self.next = next
@@ -138,6 +140,8 @@ class Placements(dict):
     SECRET_CLASS_PATH = "Secret Class Path"
     ACHIEVEMENTS = "Achievements"
     GSTACKS = "Greenstacks"
+    Q_GSTACKS = "Endangered Greenstacks"
+    VAULT = "Upgrade Vault"
     STAMPS = "Stamps"
     BRIBES = "Bribes"
     SMITHING = "Smithing"
@@ -166,8 +170,8 @@ class Placements(dict):
     #GAMING = "Gaming"
     FARMING = "Farming"
     sections = [
-        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS,
-        STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
+        COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
+        VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, POST_OFFICE, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
@@ -182,6 +186,8 @@ class Placements(dict):
         SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,     true_max_tiers[SECRET_CLASS_PATH], 99],
         ACHIEVEMENTS:  [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,     true_max_tiers[ACHIEVEMENTS], 99],
         GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
+        Q_GSTACKS:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,     true_max_tiers[Q_GSTACKS], 99],
+        VAULT:         [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      3,  3,  3,      3,     true_max_tiers[VAULT], 99],
         STAMPS:        [0,   1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,     12, 13, 14,     15, 16, 17,     20,    true_max_tiers[STAMPS], 99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,     true_max_tiers[SMITHING], 99],
@@ -192,6 +198,7 @@ class Placements(dict):
         VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,    true_max_tiers[VIALS], 99],
         P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[P2W], 99],
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,     true_max_tiers[SIGILS], 99],
+        POST_OFFICE:   [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,     true_max_tiers[POST_OFFICE], 99],
         ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,     true_max_tiers[ISLANDS], 99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
@@ -292,8 +299,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_max_tier, section_true_max_tier) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated)
+    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier) in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming)
         placements.place(tier)
 
     placements.finalise()
@@ -344,7 +351,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     try:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 25:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 24:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
             expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
@@ -372,7 +379,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             as_link=True,
             completed=section.section_complete,
             informational=section.section_informational,
-            unrated=section.section_unrated
+            unrated=section.section_unrated,
+            overwhelming=section.section_overwhelming
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.TRUE_MAX):
@@ -395,7 +403,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        if not session_data.overwhelmed or (session_data.overwhelmed and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
+        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
             advice_groups.append(advice_group)
 
     return advice_groups
@@ -445,6 +453,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
             section.completed,
             section.informational,
             section.unrated,
+            section.overwhelming,
             section.max_tier,
             section.true_max_tier
         ] for section in pinchable_sections if not section.unreached
@@ -477,7 +486,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
         pinchyExpected = f"Expected Progression, based on highest enemy map: {expectedThreshold}"
 
     advice_groups = generate_advice_groups(sectionPlacements.final)
-    if not session_data.overwhelmed:
+    if not session_data.hide_overwhelming:
         advice_groups.append(getUnratedLinksAdviceGroup(unrated_sections))
     advice_groups.insert(0, getAlertsAdviceGroup())
 

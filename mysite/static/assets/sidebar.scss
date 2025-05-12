@@ -88,7 +88,7 @@ form {
     align-items: stretch;
     gap: 20px;
 
-    #switchbox-wrapper {
+    #switchbox-wrapper, #dynamic-switchbox-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -107,12 +107,12 @@ form {
                 display: none;
             }
 
-            #switchbox {
+            #switchbox, #dynamic-switchbox {
                 flex-grow: unset;
             }
         }
 
-        #switchbox {
+        #switchbox, #dynamic-switchbox {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -126,6 +126,13 @@ form {
             [type="checkbox"] {
                 display: none;
             }
+        }
+    }
+
+    #dynamic-switchbox-wrapper {
+        display: none;
+        &.open {
+            display: flex;
         }
     }
 

@@ -478,7 +478,7 @@ class AdviceBase:
 
     @property
     def dataset(self) -> list:
-        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "unrated", "unreached"]]
+        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "unrated", "unreached", "overwhelming"]]
 
 
 class LabelBuilder:
@@ -520,6 +520,7 @@ class Advice(AdviceBase):
             resource: str = "",
             completed: bool = None,
             unrated: bool = False,
+            overwhelming: bool | None = False,
             **extra
     ):
         super().__init__(**extra)
@@ -550,7 +551,7 @@ class Advice(AdviceBase):
             self.status = "gilded"
 
         self.percent = self.__calculate_progress_box_width()
-
+        self.overwhelming = overwhelming
 
     @property
     def css_class(self) -> str:
@@ -615,6 +616,7 @@ class AdviceGroup(AdviceBase):
         self.advices = advices
         self.completed = completed
         self.informational = informational
+        self.overwhelming = None
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
@@ -713,6 +715,17 @@ class AdviceGroup(AdviceBase):
                 temp_advices = []
             self.completed = len(temp_advices) == 0  #True if 0 length, False otherwise
 
+    def set_overwhelming(self, overwhelming):
+        self.overwhelming = overwhelming
+        if isinstance(self.advices, list):
+            for advice in self.advices:
+                advice.overwhelming = overwhelming
+        if isinstance(self.advices, dict):
+            for value in self.advices.values():
+                for advice in value:
+                    advice.overwhelming = overwhelming
+
+
 class AdviceSection(AdviceBase):
     """
     Contains a list of `AdviceGroup` objects
@@ -745,6 +758,7 @@ class AdviceSection(AdviceBase):
         unreached: bool = False,
         unrated: bool = False,
         informational: bool | None = None,
+        overwhelming: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -761,6 +775,7 @@ class AdviceSection(AdviceBase):
         self.unreached = unreached
         self.unrated = unrated
         self.informational = informational
+        self.overwhelming = overwhelming
 
     @property
     def header(self) -> str:
@@ -827,6 +842,12 @@ class AdviceSection(AdviceBase):
             #print(f"{self.name}: {len([group for group in self.groups if group and group.informational])} Info groups / {len([group for group in self.groups if group])} total Truthy groups")
             self.informational = len([group for group in self.groups if group and not group.informational]) == 0 and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
 
+    def set_overwhelming(self, overwhelming):
+        self.overwhelming = overwhelming
+        for group in self.groups:
+            group.set_overwhelming(overwhelming)
+
+
 class AdviceWorld(AdviceBase):
     """
     World-level advice container
@@ -850,6 +871,7 @@ class AdviceWorld(AdviceBase):
         completed: bool | None = None,
         informational: bool | None = None,
         unrated: bool | None = None,
+        overwhelming: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -870,6 +892,10 @@ class AdviceWorld(AdviceBase):
             self.unrated = unrated
         else:
             self.check_for_unratedness()
+        if overwhelming is not None:
+            self.overwhelming = overwhelming
+        else:
+            self.check_for_overwhelming()
 
     @property
     def id(self):
@@ -892,6 +918,8 @@ class AdviceWorld(AdviceBase):
         self.unrated = len([section for section in self.sections if not section.unrated]) == 0 and len(
             [section for section in self.sections if section]) > 0
 
+    def check_for_overwhelming(self):
+        self.overwhelming = len([section for section in self.sections if not section.overwhelming]) == 0  #True if ALL sections are Overwhelming
 
 class Asset:
     def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):

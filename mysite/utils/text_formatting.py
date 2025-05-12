@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from config import app
+from models.custom_exceptions import UserDataException
 from .logging import get_logger, log_unknown_item
 
 
@@ -79,7 +80,10 @@ $                                                                # line end
 
 def format_character_name(name: str) -> tuple[str, InputType]:
     """match group dict looks like e.g. {'all': None, 'IT': 'NikoKoni', 'IE': None, 'LB': None}"""
-    groups = pattern.match(name).groupdict()
+    try:
+        groups = pattern.match(name).groupdict()
+    except AttributeError:
+        raise UserDataException("Submitted data not valid.", name)
     input_type, formatted_name = next(group for group in groups.items() if group[1])
     input_type = InputType(input_type)
     formatted_name = re.sub(r'\W', "_", formatted_name)

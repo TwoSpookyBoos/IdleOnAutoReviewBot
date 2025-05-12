@@ -159,34 +159,47 @@ def getShinySpeedSourcesAdviceGroup(fasterShinyPetTotalLevels) -> AdviceGroup:
 
 def getBreedabilityAdviceGroup():
     b_advices = []
-    all_breedability = {
-        k:v
-        for worldIndex in session_data.account.breeding['Species'].keys()
-        for k,v in session_data.account.breeding['Species'][worldIndex].items()
-    }
+    all_breedability = {}
+    for world_index in session_data.account.breeding['Species'].keys():
+        for k, v in session_data.account.breeding['Species'][world_index].items():
+            all_breedability[k] = v
+            all_breedability[k]['World'] = world_index
+    # all_breedability = {
+    #     k:v
+    #     for worldIndex in session_data.account.breeding['Species'].keys()
+    #     for k,v in session_data.account.breeding['Species'][worldIndex].items()
+    # }
     sorted_breedability = sorted(
         all_breedability.items(),
         key=lambda pet: pet[1]['BreedabilityDays'],
         reverse=True
     )
     total_7s = 0
+    achievement_7s = 0
     for pet in sorted_breedability:
         total_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] else 0
+        achievement_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] and pet[1]['World'] != 4 else 0
         b_advices.append(Advice(
-            label=f"{pet[0]}"
+            label=f"W{pet[1]['World']} {pet[0]}"
                   f"<br>Breedability Multi: {pet[1]['BreedabilityMulti']:.3f}x"
                   f"<br>Heart VII: {notateNumber('Match', pet[1]['BreedabilityDays'], 0, 'K' if pet[1]['BreedabilityDays'] >= 1000 else '')} / "
                   f"{notateNumber('Match', breedabilityDaysList[-4], 0, 'K')}",
             picture_class=pet[0],
-            progression=f"{pet[1]['BreedabilityDays'] / breedabilityDaysList[-4]:.2%}",
+            progression=f"{min(1, pet[1]['BreedabilityDays'] / breedabilityDaysList[-4]):.2%}",
+            goal='100%',
             resource=pet[1]['BreedabilityHeart']
         ))
     b_advices.insert(0, Advice(
-        label=f"Total Heart VII+ pets: {total_7s}/15",
+        label=f"Total Heart VII+ pets: {total_7s}/{len(sorted_breedability)}",
+        picture_class='breedability-heart-7',
+        progression=total_7s,
+        goal=len(sorted_breedability),
+    ))
+    b_advices.insert(1, Advice(
+        label=f"I LOVE These Pets achievement: {achievement_7s}/15",
         picture_class='i-love-these-pets',
         progression=int(session_data.account.achievements['I LOVE These Pets']['Complete']),
         goal=1,
-        resource='breedability-heart-7'
     ))
 
     for advice in b_advices:
@@ -195,6 +208,11 @@ def getBreedabilityAdviceGroup():
     b_ag = AdviceGroup(
         tier='',
         pre_string="Informational- Breedability Multi and Heart VII Progress",
+        post_string=(
+            "Note: W4 pets don't count toward the achievement 🙁"
+            if not session_data.account.achievements['I LOVE These Pets']['Complete'] else
+            ''
+        ),
         advices=b_advices,
         informational=True
     )
