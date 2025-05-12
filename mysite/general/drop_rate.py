@@ -234,13 +234,12 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     else:
         golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
 
-    exalted_stamp_multi = session_data.account.exalted_stamp_multi
     golden_sixes_stamp_data = stampsDict['Combat'][37]
     golden_sixes_max_base = lavaFunc(golden_sixes_stamp_data['funcType'], stamp_maxes['Golden Sixes Stamp'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
               f"<br>+{round(golden_sixes_stamp['Total Value'], 2):g}"
-              f"/{round((golden_sixes_max_base * 2 * 1.35 * exalted_stamp_multi), 2):g}% Drop Rate"
+              f"/{round((golden_sixes_max_base * 2 * 1.25 * session_data.account.exalted_stamp_multi), 2):g}% Drop Rate"
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
