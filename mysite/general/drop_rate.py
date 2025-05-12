@@ -73,10 +73,10 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     gold_charm_bonus = session_data.account.guild_bonuses['Gold Charm']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Guild Bonus- Gold Charm:"
-              f"<br>+{gold_charm_bonus['Value']:g}/{gold_charm_bonus['MaxValue']:g}% Drop Rate",
-        picture_class=gold_charm_bonus['Picture'],
+              f"<br>+{gold_charm_bonus['Value']:g}/{gold_charm_bonus['Max Value']:g}% Drop Rate",
+        picture_class=gold_charm_bonus['Image'],
         progression=gold_charm_bonus['Level'],
-        goal=gold_charm_bonus['MaxLevel']
+        goal=gold_charm_bonus['Max Level']
     ))
 
     # Upgrade Vault - Vault Mastery

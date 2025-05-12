@@ -3261,24 +3261,24 @@ gem_shop_bundles_dict = {
 }
 
 guild_bonuses_dict = {
-    'Guild Gifts': {'Image': 'guild-gifts', 'MaxLevel': 100, 'MaxValue': 350, 'FuncType': 'decay', 'X1': 700, 'X2': 100},
-    'Stat Runes': {'Image': 'stat-runes', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
-    'Rucksack': {'Image': 'rucksack', 'MaxLevel': 50, 'MaxValue': 35, 'FuncType': 'decay', 'X1': 70, 'X2': 50},
-    'Power of Pow': {'Image': 'power-of-pow', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
-    'REM Fighting': {'Image': 'rem-fighting', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
-    'Make or Break': {'Image': 'make-or-break', 'MaxLevel': 50, 'MaxValue': 15, 'FuncType': 'decay', 'X1': 30, 'X2': 50},
-    'Multi Tool': {'Image': 'multi-tool', 'MaxLevel': 50, 'MaxValue': 15, 'FuncType': 'decay', 'X1': 30, 'X2': 50},
-    'Skilley Skiller': {'Image': 'skilley-skiller', 'MaxLevel': 50, 'MaxValue': 5, 'FuncType': 'decay', 'X1': 10, 'X2': 50},
-    'Coin Supercharger': {'Image': 'coin-supercharger', 'MaxLevel': 100, 'MaxValue': 16.667, 'FuncType': 'decay', 'X1': 20, 'X2': 20},
-    'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'MaxLevel': 50, 'MaxValue': 0, 'FuncType': 'special1', 'X1': 200, 'X2': 50}, # This value decreases to a min value of 0
-    'Gold Charm': {'Image': 'gold-charm', 'MaxLevel': 50, 'MaxValue': 20, 'FuncType': 'decay', 'X1': 40, 'X2': 50},
-    'Star Dazzle': {'Image': 'star-dazzle', 'MaxLevel': 50, 'MaxValue': 60, 'FuncType': 'decay', 'X1': 120, 'X2': 50},
-    'C2 Card Spotter': {'Image': 'c2-card-spotter', 'MaxLevel': 50, 'MaxValue': 30, 'FuncType': 'decay', 'X1': 60, 'X2': 50},
-    'Bestone': {'Image': 'bestone', 'MaxLevel': 50, 'MaxValue': 8, 'FuncType': 'decay', 'X1': 16, 'X2': 50},
-    'Sleepy Skillet': {'Image': 'sleepy-skillet', 'MaxLevel': 200, 'MaxValue': 18.75, 'FuncType': 'decay', 'X1': 30, 'X2': 120},
-    'Craps': {'Image': 'craps', 'MaxLevel': 50, 'MaxValue': 14, 'FuncType': 'decay', 'X1': 28, 'X2': 50},
-    'Anotha One': {'Image': 'anotha-one', 'MaxLevel': 50, 'MaxValue': 13, 'FuncType': 'decay', 'X1': 26, 'X2': 50},
-    'Wait A Minute': {'Image': 'wait-a-minute', 'MaxLevel': 0, 'MaxValue': 0, 'FuncType': 'add', 'X1': 1, 'X2': 0}
+    'Guild Gifts': {'Image': 'guild-gifts', 'Max Level': 100, 'Max Value': 350, 'funcType': 'decay', 'x1': 700, 'x2': 100},
+    'Stat Runes': {'Image': 'stat-runes', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
+    'Rucksack': {'Image': 'rucksack', 'Max Level': 50, 'Max Value': 35, 'funcType': 'decay', 'x1': 70, 'x2': 50},
+    'Power of Pow': {'Image': 'power-of-pow', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
+    'REM Fighting': {'Image': 'rem-fighting', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
+    'Make or Break': {'Image': 'make-or-break', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
+    'Multi Tool': {'Image': 'multi-tool', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
+    'Skilley Skiller': {'Image': 'skilley-skiller', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
+    'Coin Supercharger': {'Image': 'coin-supercharger', 'Max Level': 100, 'Max Value': 16.667, 'funcType': 'decay', 'x1': 20, 'x2': 20},
+    'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'Max Level': 50, 'Max Value': 0, 'funcType': 'special1', 'x1': 200, 'x2': 50}, # This value decreases to a min value of 0
+    'Gold Charm': {'Image': 'gold-charm', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
+    'Star Dazzle': {'Image': 'star-dazzle', 'Max Level': 50, 'Max Value': 60, 'funcType': 'decay', 'x1': 120, 'x2': 50},
+    'C2 Card Spotter': {'Image': 'c2-card-spotter', 'Max Level': 50, 'Max Value': 30, 'funcType': 'decay', 'x1': 60, 'x2': 50},
+    'Bestone': {'Image': 'bestone', 'Max Level': 50, 'Max Value': 8, 'funcType': 'decay', 'x1': 16, 'x2': 50},
+    'Sleepy Skillet': {'Image': 'sleepy-skillet', 'Max Level': 200, 'Max Value': 18.75, 'funcType': 'decay', 'x1': 30, 'x2': 120},
+    'Craps': {'Image': 'craps', 'Max Level': 50, 'Max Value': 14, 'funcType': 'decay', 'x1': 28, 'x2': 50},
+    'Anotha One': {'Image': 'anotha-one', 'Max Level': 50, 'Max Value': 13, 'funcType': 'decay', 'x1': 26, 'x2': 50},
+    'Wait A Minute': {'Image': 'wait-a-minute', 'Max Level': 0, 'Max Value': 0, 'funcType': 'add', 'x1': 1, 'x2': 0}
 }
 familyBonusClassTierLevelReductions = [9, 29, 69, 999]  #Character must be this high of a level to get bonuses
 familyBonusesDict = {
