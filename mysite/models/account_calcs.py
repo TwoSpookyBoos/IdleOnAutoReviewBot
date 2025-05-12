@@ -19,7 +19,7 @@ from consts import (
     # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
-    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue, getGemstonePercent,
+    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
@@ -396,12 +396,12 @@ def _calculate_master_classes_grimoire_bone_sources(account):
         x1=all_talentsDict[196]['x1'],
         x2=all_talentsDict[196]['x2'],
     )
-    tombstone_percent = lavaFunc(
-        funcType=all_talentsDict[198]['funcX'],
-        level=tombstone_preset_level,
-        x1=all_talentsDict[198]['x1'],
-        x2=all_talentsDict[198]['x2'],
-    )
+    # tombstone_percent = lavaFunc(
+    #     funcType=all_talentsDict[198]['funcX'],
+    #     level=tombstone_preset_level,
+    #     x1=all_talentsDict[198]['x1'],
+    #     x2=all_talentsDict[198]['x2'],
+    # )
     account.grimoire['Bone Calc'] = {
         'mga': ValueToMulti(30 if account.sneaking['PristineCharms']['Glimmerchain']['Obtained'] else 0),
         'mgb': ValueToMulti(grimoire_percent),
@@ -432,7 +432,7 @@ def _calculate_master_classes_compass_upgrades(account):
         if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
             account.compass['Upgrades'][upgrade_name]['Total Value'] = value
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']}"
+                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
             account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(value)
@@ -511,7 +511,7 @@ def _calculate_w1_upgrade_vault(account):
                 * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
             )
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']}"
+                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
             account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
@@ -1325,7 +1325,8 @@ def _calculate_caverns_motherlode_layers(account):
 def _calculate_caverns_monuments_bravery(account):
     monument_name = 'Bravery Monument'
     account.caverns['Caverns'][monument_name]['Sword Count'] = (
-        min(9, 3  # Starting amount
+        min(9,
+            3  # Starting amount
             + (2 * (account.caverns['Caverns'][monument_name]['Hours'] >= 80))
             + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 750))
             + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 5000))
@@ -1467,6 +1468,8 @@ def _calculate_caverns_jar_collectibles(account):
                 account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
                     '}', f"{ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value'])}"
                 )
+            else:
+                scaling_note = ''
             account.caverns['Collectibles'][collectible_name]['Description'] += scaling_note
         except:
             logger.exception(f"Unable to update description for Collectible: {collectible_name}")
@@ -1481,6 +1484,8 @@ def _calculate_caverns_gambit(account):
         + account.caverns['Studies'][13]['Value']  # + Gambit Study bonus
         + (10 * account.caverns['Schematics']['The Sicilian']['Purchased'])  # + The Sicilian schematic
         + account.caverns['Caverns']['Wisdom Monument']['Bonuses'][27]['Value']  # + Wisdom Monument bonus
+        + account.caverns['Collectibles']['Deep Blue Square']['Value']
+        + account.caverns['Collectibles']['Murky Fabrege Egg']['Value']
     )
 
     #Total PTS

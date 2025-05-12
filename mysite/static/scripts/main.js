@@ -21,13 +21,13 @@ const opts = {
 
 const defaults = {
     player: "",
-    overwhelmed: "off",
     autoloot: "off",
     doot: "off",
     riftslug: "off",
     sheepie: "off",
     order_tiers: "off",
     library_group_characters: "off",
+    hide_overwhelming: "off",
     hide_completed: "off",
     hide_informational: "off",
     hide_unrated: "off",
@@ -102,14 +102,14 @@ function setupSidebarToggling() {
     document.addEventListener("keydown", (e) => {
         const escPressed = e.code === "Escape",
             searchOpen = document.querySelector("#searchbar-wrapper").classList.contains("search-open"),
-            settingsOpen = document.querySelector("#switchbox-wrapper").classList.contains("open");
+            settingsOpen = document.querySelector("#dynamic-switchbox-wrapper").classList.contains("open");
 
         if (!escPressed) return;
 
         if (searchOpen) {
             document.querySelector("#searchbar-wrapper").classList.remove("search-open");
         } else if (settingsOpen) {
-            document.querySelector("#switchbox-wrapper").classList.remove("open");
+            document.querySelector("#dynamic-switchbox-wrapper").classList.remove("open");
             // fucker won't go under the backdrop...
             document.querySelector("#drawer-handle").style.zIndex = "98"
         } else {
@@ -200,6 +200,9 @@ function setupSwitchesActions() {
             progressBox.classList.remove('hidden')
         }
     })
+
+    // On Click Listener for the Hide Overwhelming switch
+    document.querySelector('label[for="hide_overwhelming"]').addEventListener('click', hideComposite);
 
     // On Click Listener for the Hide Completed switch
     document.querySelector('label[for="hide_completed"]').addEventListener('click', hideComposite);
@@ -329,7 +332,7 @@ function setupDataClock() {
 }
 
 function hideElements() {
-    ["completed", "informational", "unrated"].forEach(cls => hideComposite({
+    ["completed", "informational", "unrated", "overwhelming"].forEach(cls => hideComposite({
         currentTarget: document.querySelector(`[data-hides="${cls}"]`)
     }));
 }
@@ -672,9 +675,8 @@ function setupSearchBar() {
 }
 
 function setupSwitchBox() {
-    const switchBox = document.querySelector("#switchbox-wrapper");
+    const switchBox = document.querySelector("#dynamic-switchbox-wrapper");
     switchBox.addEventListener('click', e => {
-        document.querySelector("#drawer-handle").style.zIndex = "98"
         e.target.classList.remove("open")
     })
     document.querySelector("#settings").onclick = () => {

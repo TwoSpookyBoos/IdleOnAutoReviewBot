@@ -48,6 +48,21 @@ combatLevels_progressionTiers = [
     [32, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
 
 ]
+secret_class_progressionTiers = {
+    0: {},
+    1: {
+        'Required Class': 'Journeyman'
+    },
+    2: {
+        'Required Class': 'Maestro'
+    },
+    3: {
+        'Required Class': 'Voidwalker'
+    },
+    4: {
+        'No Catchup Needed': True
+    }
+}
 gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
     [0, "", {}, ""],
@@ -787,6 +802,29 @@ statues_progressionTiers = {
         },
     },
 }
+vault_progressionTiers = {
+    1: {
+        'Include': [
+            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday$',
+            'Baby on Board', 'Bored to Death', 'Stamp Bonanza', 'Drops for Days', 'Slice N Dice', 'Go Go Secret Owl',
+            'Boss Decimation', 'Sleepy Time', 'Production Revolution', 'Statue Bonanza', 'Stick Snapping', 'Liquid Knowledge',
+            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish$", 'Straight to Storage', 'Bubble Money',
+            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse$', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
+        ]
+    },
+    2: {
+        'Include': [
+            'Major Discount', 'Monster Tax', 'Recipe for Profit', 'Stunning Talent', 'All Armoured Up', 'Buildie Sheepie'
+            # Stuff I'm intentionally excluding here for visibility
+            # 'Beeg Forge' because having too large of Ore capacity can be annoying
+            # 'Knockout!' because it includes an exact stack number in the name and I don't wanna deal with it
+            # 'Card Retirement' because some people choose to not pick this up so they can continue to Double CDR cards
+        ]  #This list generated from Acecow's alt account when they first entered World 6
+    },
+    3: {
+        'Ignore': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge']
+    }
+}
 
 ###WORLD 2 PROGRESSION TIERS###
 bubbles_progressionTiers = [
@@ -1074,6 +1112,104 @@ islands_progressionTiers = {
     2: {'Islands': ['Seasalt Island', 'Shimmer Island']},
     3: {'Islands': ['Crystal Island', 'Rando Island']},
     4: {'Islands': ['Fractal Island']},
+}
+post_office_progression_tiers = {
+    0: {},
+    1: {
+        'Class Specific': {
+            # STR
+            'Death Bringer': {
+                'Deaths Storage Unit': 400,
+                'Magician Starterpack': 400,
+            },
+            'Blood Berserker': {
+                'Chefs Essentials': 400,
+            },
+            'Barbarian': {
+                'Sealed Fishheads': 400,
+                'Utilitarian Capsule': 400,
+            },
+            'Divine Knight': {
+                'Gaming Lootcrate': 800,
+                'Non Predatory Loot Box': 400,
+                'Magician Starterpack': 400,
+            },
+            'Squire': {
+                'Construction Container': 400,
+                'Dwarven Supplies': 400,
+                'Utilitarian Capsule': 400,
+            },
+            'Warrior': {
+                'Carepack From Mum': 400,
+                'Locally Sourced Organs': 400,
+                'Gaming Lootcrate': 800,
+                'Dwarven Supplies': 400,  #Barbarian prioritizes this lower than Squire as it focuses on Cooking+Fishing first
+            },
+
+            # WIS
+            'Elemental Sorcerer': {
+                'Magician Starterpack': 400,
+            },
+            'Wizard': {
+                'Crate of the Creator': 400
+            },
+            'Bubonic Conjuror': {
+                'Magician Starterpack': 400,
+                'Potion Package': 400,
+                'Non Predatory Loot Box': 400,
+                'Science Spare Parts': 400,
+            },
+            'Shaman': {},
+            'Mage': {
+                'Taped Up Timber': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+                'Box of Gosh': 800,
+            },
+
+            # AGI
+            'Wind Walker': {},
+            'Beast Master': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Hunter': {
+                'Trapping Lockbox': 400,
+            },
+            'Siege Breaker': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Bowman': {
+                'Bug Hunting Supplies': 400,
+            },
+            'Archer': {
+                'Magician Starterpack': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+                'Blacksmith Box': 400,
+                "Scurvy C'arr'ate": 800
+            },
+
+            # LUK
+            'Voidwalker': {
+                'Non Predatory Loot Box': 400,
+            },
+            'Maestro': {
+                'Non Predatory Loot Box': 400,
+                'Magician Starterpack': 400,
+            },
+            'Journeyman': {
+                'Non Predatory Loot Box': 400,
+                'Utilitarian Capsule': 400,
+                'Carepack From Mum': 400,
+            },
+        }
+    },
+    2: {
+        'Myriad': False  #Everything else not specified in Tier 1, except Myriad
+    },
+    3: {
+        'Myriad': True  #Just Myriad
+    },
 }
 
 ###WORLD 3 PROGRESSION TIERS###
@@ -1942,13 +2078,6 @@ farming_progressionTiers = {
 #If you add a new switch here, you need to also add a default in \static\scripts\main.js:defaults
 switches = [
     {
-        "label": "Display lowest rated sections only",
-        "name": "overwhelmed",
-        "true": "",
-        "false": "",
-        "static": "true",
-    },
-    {
         "label": "Autoloot purchased",
         "name": "autoloot",
         "true": "",
@@ -1989,6 +2118,20 @@ switches = [
         "true": "",
         "false": "",
         "static": "true",
+    },
+    # {
+    #     "label": "Display 1 tier at a time",
+    #     "name": "single_tier",
+    #     "true": "",
+    #     "false": "",
+    #     "static": "true",
+    # },
+    {
+        "label": "Display lowest rated sections only",
+        "name": "hide_overwhelming",
+        "true": "",
+        "false": "",
+        "static": "false",
     },
     {
         "label": "Hide Completed",
@@ -2996,8 +3139,8 @@ card_data = {
         "xmasEvent3": ["Golden Giftmas Box", 1],
         'anni4Event1': ['IdleOn Fourth Anniversary', 4]
     },
-}
-numberOfSecretClasses = 3  # Last verified as of v2.10
+}  #DO NOT USE ANY LONGER
+
 humanReadableClasses = {
     1: "Beginner",
     2: "Journeyman",
@@ -5915,7 +6058,7 @@ def getReadableBubbleNames(inputNumber, color):
 
 ###WORLD 3 CONSTS###
 max_printer_sample_rate = 90
-arbitrary_shrine_goal = 26
+arbitrary_shrine_goal = 30
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
 max_implemented_dreams = 36  # Last verified as of v2.30
 max_possible_dreams = 35  # Last verified as of v2.30. The dream to complete Killroy Prime is impossible
@@ -7113,7 +7256,7 @@ HolesInfo = [
     "21 14 8 3 3 3 3 0".split(" "),
     "Contains_a_random_basic_rupie Has_a_{%_chance_to_contain_an_Opal Has_a_{%_chance_to_contain_a_new_collectible Contains_a_random_decent_rupie Has_a_{%_chance_to_enchant_a_collectible_doubling_its_bonus Contains_a_white_rupee Contains_a_random_elegant_rupie Doubles_the_amount_of_rupies_from_the_next_jar_opened Contains_a_dark_rupie Contains_the_one_and_only_master_rupie".split(" "),
     "7 3 20 17 22 11 14 5 17 13".split(" "),
-    "ABNORMAL_RUPIE|20|Filler|Rupies_found_are_worth_+{%_more._@_Current_Rupie_Value:$ SAPPHIRE_DROPLET|10|Filler|Jar_production_rate_is_+{%_faster. EFFERVESCENT_DIAMOND|20|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. TORTOLE_ROCK|25|Filler|All_rupies_found_are_worth_a_whopping_}x_more! NATURAL_PEARL|15|Filler|All_villagers_gain_+{%_more_EXP. AMETHYST_HEARTSTONE|10|Filler|All_skilling_caverns_require_{%_less_Resources_to_get_opals! AMBER_SQUARE|25|Filler|Rupies_found_are_worth_+{%_more. VERDANT_THORNS|25|Filler|}x_higher_chance_to_find_new_Collectibles. VIOLENT_VIOLETS|20|Filler|All_buckets_get_}x_Bucket_Fill_Rate! BLUE_FABERGE_EGG|15|Filler|}x_higher_chance_to_enchant_a_Collectible SHADOW_PRISM|20|Filler|All_villagers_gain_+{%_more_EXP. BIG_BEEF_ROCK|25|Filler|}x_faster_Bell_Ring_Rate! EMERALD_ORE|30|Filler|All_villagers_gain_+{%_more_EXP. DAWN_PRISM|30|Filler|Rupies_found_are_worth_+{%_more. SWAMPSTONE|25|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. FROST_SPIRESTONE|12|Filler|Jar_production_rate_is_+{%_faster. ROSEMERALD|10|Filler|}x_Faster_study_rate_for_villager_Bolaia BLOOD_GLASS|40|Filler|All_rupies_found_are_worth_a_whopping_}x_more! SUNRISE_DIAMOND|25|Filler|}x_higher_chance_to_enchant_a_Collectible MINCERAFT_GEM|20|Filler|+{%_Monument_AFK_Gain_rate. CRIMSON_SPADE|20|Filler|The_harp_produces_}x_more_Notes! STAINED_GLASSDROP|35|Filler|Rupies_found_are_worth_+{%_more. TABULA_RASASTONE|32|Filler|All_villagers_gain_+{%_more_EXP. DEEP_BLUE_SQUARE|12|Filler|Something_something_Gambit_Cavern. EARTHBOUND_GEODE|15|Filler|Jar_production_rate_is_+{%_faster. INFERNO_DROPLET|40|Filler|}x_higher_chance_to_find_new_Collectibles. OCTOGONAL_GEM|30|Filler|}x_higher_chance_to_enchant_a_Collectible SOLARFANG|32|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. MYSTIC_ORE|50|Filler|All_rupies_found_are_worth_a_whopping_}x_more! ARCANE_PRISM|38|Filler|All_villagers_gain_+{%_more_EXP. MURKY_FABREGE_EGG|20|Filler|Something_something_Gambit_Cavern. CORPORE_ROCK|1|Filler|Boosts_a_future_cavern..._futuuure..! TWILIGHT_PRISM|1|Filler|Boosts_a_future_cavern..._futuuure..! TEWBALL_ORBSTONE|40|Filler|Rupies_found_are_worth_+{%_more. MAD_MUSCLE_ROCK|40|Filler|}x_higher_chance_to_enchant_a_Collectible SUNROOT_SPLINTERS|40|Filler|All_villagers_gain_+{%_more_EXP. TWISTED_RUPIE|75|Filler|}x_faster_Bell_Ring_Rate! OVERLOADED_RELIC|1|Filler|Boosts_a_future_cavern..._futuuure..! SUNBURST_PEARL|1|Filler|Boosts_a_future_cavern..._futuuure..! BLOODFANG_SPIRES|1|Filler|Boosts_a_future_cavern..._futuuure..!".split(" "),
+    "ABNORMAL_RUPIE|20|Filler|Rupies_found_are_worth_+{%_more._@_Current_Rupie_Value:$ SAPPHIRE_DROPLET|10|Filler|Jar_production_rate_is_+{%_faster. EFFERVESCENT_DIAMOND|20|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. TORTOLE_ROCK|25|Filler|All_rupies_found_are_worth_a_whopping_}x_more! NATURAL_PEARL|15|Filler|All_villagers_gain_+{%_more_EXP. AMETHYST_HEARTSTONE|10|Filler|All_skilling_caverns_require_{%_less_Resources_to_get_opals! AMBER_SQUARE|25|Filler|Rupies_found_are_worth_+{%_more. VERDANT_THORNS|25|Filler|}x_higher_chance_to_find_new_Collectibles. VIOLENT_VIOLETS|20|Filler|All_buckets_get_}x_Bucket_Fill_Rate! BLUE_FABERGE_EGG|15|Filler|}x_higher_chance_to_enchant_a_Collectible SHADOW_PRISM|20|Filler|All_villagers_gain_+{%_more_EXP. BIG_BEEF_ROCK|25|Filler|}x_faster_Bell_Ring_Rate! EMERALD_ORE|30|Filler|All_villagers_gain_+{%_more_EXP. DAWN_PRISM|30|Filler|Rupies_found_are_worth_+{%_more. SWAMPSTONE|25|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. FROST_SPIRESTONE|12|Filler|Jar_production_rate_is_+{%_faster. ROSEMERALD|10|Filler|}x_Faster_study_rate_for_villager_Bolaia BLOOD_GLASS|40|Filler|All_rupies_found_are_worth_a_whopping_}x_more! SUNRISE_DIAMOND|25|Filler|}x_higher_chance_to_enchant_a_Collectible MINCERAFT_GEM|20|Filler|+{%_Monument_AFK_Gain_rate. CRIMSON_SPADE|20|Filler|The_harp_produces_}x_more_Notes! STAINED_GLASSDROP|35|Filler|Rupies_found_are_worth_+{%_more. TABULA_RASASTONE|32|Filler|All_villagers_gain_+{%_more_EXP. DEEP_BLUE_SQUARE|1|Filler|+{%_Gambit_PTS EARTHBOUND_GEODE|15|Filler|Jar_production_rate_is_+{%_faster. INFERNO_DROPLET|40|Filler|}x_higher_chance_to_find_new_Collectibles. OCTOGONAL_GEM|30|Filler|}x_higher_chance_to_enchant_a_Collectible SOLARFANG|32|Filler|}x_higher_chance_to_find_Opals_in_Tall_Jars. MYSTIC_ORE|50|Filler|All_rupies_found_are_worth_a_whopping_}x_more! ARCANE_PRISM|38|Filler|All_villagers_gain_+{%_more_EXP. MURKY_FABREGE_EGG|1|Filler|+{%_Gambit_PTS CORPORE_ROCK|1|Filler|Boosts_a_future_cavern..._futuuure..! TWILIGHT_PRISM|1|Filler|Boosts_a_future_cavern..._futuuure..! TEWBALL_ORBSTONE|40|Filler|Rupies_found_are_worth_+{%_more. MAD_MUSCLE_ROCK|40|Filler|}x_higher_chance_to_enchant_a_Collectible SUNROOT_SPLINTERS|40|Filler|All_villagers_gain_+{%_more_EXP. TWISTED_RUPIE|75|Filler|}x_faster_Bell_Ring_Rate! OVERLOADED_RELIC|1|Filler|Boosts_a_future_cavern..._futuuure..! SUNBURST_PEARL|1|Filler|Boosts_a_future_cavern..._futuuure..! BLOODFANG_SPIRES|1|Filler|Boosts_a_future_cavern..._futuuure..!".split(" "),
     "THE_WELL MOTHERLODE THE_DEN BRAVERY THE_BELL THE_HARP THE_LAMP THE_HIVE GROTTO JUSTICE THE_JARS EVERTREE WISDOM GAMBIT TEMPLE".split(" "),
     "You_only_lose_25%_sediment_when_bar_expanding_instead_of_50%_Also,_+{%_Bucket_Fill_Rate_per_Bar_Expansion Every_layer_destroyed_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% Defeating_the_Golden_Hound_gives_a_}x_score_multi_and_spawns_another_Golden_Hound! Minimum_DMG_is_at_least_{%_of_Max,_and_you_now_skip_trivial_fights! Every_20th_Bell_Ring_gives_a_random_bonus_+{_LVs._Biiig_Ring_baby! All_strings_give_2x_EXP,_and_have_a_1%_chance_of_getting_a_massive_{x_EXP_multi Get_{_more_lamp_wishes_every_day._No,_you_can't_wish_to_change_this! Every_hive_harvested_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% Each_Gloomie_kill_counts_for_}x_more_toward_challenging_the_Monarch Justice_Reward_Multi_goes_up_100%_every_day_for_+14_more_days!_Also,_}x_chance_for_opal_reward! Double_click_to_choose_a_collectible_to_be_most_likely_enchanted!_Also,_}x_Enchantment_Chance! Every_trunk_whittled_lowers_the_resources_needed_to_destroy_other_skilling_caverns_by_{% If_you_end_a_round_with_no_instamatches,_you_get_one!_Also,_start_with_{_more_attempts! +{%_Total_Gambit_Points._Also,_50%_chance_to_not_use_up_your_daily_Gambit_attempt_when_starting_a_Gambit! There_is_an_extra_+{%_chance_to_get_double_torches_when_picking_them_up!".split(" "),
     "10 2 5 3 20 100 1 5 1 50 25 5 1 5 30".split(" "),
@@ -10242,9 +10385,11 @@ anvilTabs = {
 
 true_max_tiers = {
     "Combat Levels": combatLevels_progressionTiers[-1][0],
-    "Secret Class Path": numberOfSecretClasses,
+    "Secret Class Path": max(secret_class_progressionTiers.keys()),
     "Achievements": max(achievements_progressionTiers.keys()),
     "Greenstacks": max(greenstack_progressionTiers.keys()),
+    "Endangered Greenstacks": 1,
+    "Upgrade Vault": max(vault_progressionTiers.keys()),
     "Stamps": max(stamps_progressionTiers.keys()),
     "Bribes": bribes_progressionTiers[-1][0],
     "Smithing": smithing_progressionTiers[-1][0],
@@ -10255,7 +10400,7 @@ true_max_tiers = {
     "Vials": vials_progressionTiers[-1][0],
     "Pay2Win": 1,
     "Sigils": max(sigils_progressionTiers.keys()),
-    # "Post Office": ,
+    "Post Office": max(post_office_progression_tiers.keys()),
     "Islands": max(islands_progressionTiers.keys()),
     "Refinery": 1,
     "Sampling": max(sampling_progressionTiers.keys()),

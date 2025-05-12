@@ -231,7 +231,7 @@ def getCompassCurrenciesAdviceGroup(compass):
     ]:
         currency_advices[mgf_label].append(Advice(
             label=f"{compass['Upgrades'][bonus_name]['Path Name']}-{compass['Upgrades'][bonus_name]['Path Ordering']}: "
-                  f"Spire of Dust: <br>{compass['Upgrades'][bonus_name]['Description']}",
+                  f"{bonus_name}: <br>{compass['Upgrades'][bonus_name]['Description']}",
             picture_class=compass['Upgrades'][bonus_name]['Image'],
             progression=compass['Upgrades'][bonus_name]['Level'],
             goal=compass['Upgrades'][bonus_name]['Max Level'],
