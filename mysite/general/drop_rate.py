@@ -1,8 +1,8 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts import (
-	lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
-    class_kill_talents_dict, cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict,
-    equipment_by_bonus_dict, poBoxDict, prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes
+    lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
+    cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict, equipment_by_bonus_dict, poBoxDict,
+    prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes, ValueToMulti, approx_max_talent_level_non_es
 )
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
@@ -57,8 +57,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         rift_level = session_data.account.rift['Level']
         drop_rate_aw_advice[general].append(Advice(
             label=f"Rift- Ruby Cards:"
-                f"<br>+1 Max Card Level"
-                f"<br>Note: increases the max card level for the cards below",
+                  f"<br>+1 Max Card Level"
+                  f"<br>Note: increases the max card level for the cards below",
             picture_class='ruby-cards',
             progression=rift_level,
             goal=ruby_cards_rift_level
@@ -73,7 +73,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     gold_charm_bonus = session_data.account.guild_bonuses['Gold Charm']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Guild Bonus- Gold Charm:"
-              f"<br>+{gold_charm_bonus['Value']:g}/{gold_charm_bonus['Max Value']:g}% Drop Rate",
+              f"<br>+{round(gold_charm_bonus['Value'], 2):g}/{round(gold_charm_bonus['Max Value'], 2):g}% Drop Rate",
         picture_class=gold_charm_bonus['Image'],
         progression=gold_charm_bonus['Level'],
         goal=gold_charm_bonus['Max Level']
@@ -82,18 +82,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    vault_mastery_vault_level = vault_mastery_vault['Level']
-    vault_mastery_vault_level_max = vault_mastery_vault['Max Level']
-    vault_mastery_vault_value = 1 + (vault_mastery_vault_level * vault_mastery_vault['Value Per Level'])/100
-    vault_mastery_vault_value_max = 1 + (vault_mastery_vault_level_max * vault_mastery_vault['Value Per Level'])/100
-    if vault_mastery_vault_level < vault_mastery_vault_level_max:
+    vault_mastery_vault_value_max = ValueToMulti(vault_mastery_vault['Max Level'] * vault_mastery_vault['Value Per Level'])
+    if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
         drop_rate_aw_advice[general].append(Advice(
             label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Vault Mastery:"
-                f"<br>x{vault_mastery_vault_value:g}/x{vault_mastery_vault_value_max:g} blue highlighted vault bonuses"
-                f"<br>(increases the value of the Vault upgrade below)",
+                  f"<br>{round(vault_mastery_vault['Total Value'], 2):g}/{round(vault_mastery_vault_value_max, 2):g}x blue highlighted vault bonuses"
+                  f"<br>(increases the value of the Vault upgrade below)",
             picture_class=vault_mastery_vault['Image'],
-            progression=vault_mastery_vault_level,
-            goal=vault_mastery_vault_level_max
+            progression=vault_mastery_vault['Level'],
+            goal=vault_mastery_vault['Max Level']
         ))
     # Upgrade Vault - Drops for Days
     drops_for_days_vault = session_data.account.vault['Upgrades']['Drops for Days']
@@ -101,7 +98,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drops_for_days_vault_value_max = vault_mastery_vault_value_max * drops_for_days_vault_level_max * drops_for_days_vault['Value Per Level']
     drop_rate_aw_advice[general].append(Advice(
         label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Drops for Days:"
-              f"<br>+{drops_for_days_vault['Total Value']:g}/{drops_for_days_vault_value_max:g}% Drop Rate",
+              f"<br>+{round(drops_for_days_vault['Total Value'], 2):g}/{round(drops_for_days_vault_value_max, 2):g}% Drop Rate",
         picture_class=drops_for_days_vault['Image'],
         progression=drops_for_days_vault['Level'],
         goal=drops_for_days_vault_level_max
@@ -109,15 +106,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Seige Breaker - Talents -  Archlord of the Pirates
     sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
-    goalString = notateNumber("Basic", 1e6, 1)
-    sb_dict = class_kill_talents_dict['Archlord of the Pirates']
-    sb_talent_bonus_max = lavaFunc(sb_dict['FuncType'], max(1000000, sb_talent['Kills']), sb_dict['X1'], sb_dict['X2'])
+    goal_string = notateNumber("Basic", 1e6, 2)
+    sb_talent_bonus_max = lavaFunc(sb_talent['funcType'], approx_max_talent_level_non_es, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
     drop_rate_aw_advice[general].append(Advice(
-        label=f"Siege Breaker Talents- Archlord of the Pirates:"
-              f"<br>+{round(sb_talent['Value'], 3):g}/{round(sb_talent_bonus_max, 3):g}% Drop Rate MULTI",
+        label=f"Siege Breaker talent- Archlord of the Pirates:"
+              f"<br>Level {sb_talent['Highest Preset Level']}/{approx_max_talent_level_non_es}"
+              f"<br>{round(ValueToMulti(sb_talent['Total Value']), 5):g}/{round(ValueToMulti(sb_talent_bonus_max), 5):g}x Drop Rate MULTI",
         picture_class='archlord-of-the-pirates',
-        progression=notateNumber("Match", sb_talent['Kills'], 2, '', goalString),
-        goal=goalString,
+        progression=notateNumber('Match', sb_talent['Kills'], 2, '', goal_string),
+        goal=goal_string,
         resource='pirate-flag'
     ))
 
@@ -125,7 +122,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     skull_drop_rate_grimoire = session_data.account.grimoire['Upgrades']['Skull of Major Droprate']
     skull_drop_rate_grimoire_upgrades_unlock = skull_drop_rate_grimoire['Unlock Requirement']-session_data.account.grimoire['Total Upgrades']
     drop_rate_aw_advice[general].append(Advice(
-        label=f"Death Bringer Grimoire- Skull of Major Droprate:"
+        label=f"Death Bringer {{{{Grimoire|#the-grimoire}}}}- Skull of Major Droprate:"
               f"<br>+{round(skull_drop_rate_grimoire['Total Value'], 1):g}% Drop Rate"
               f"{f'<br>{skull_drop_rate_grimoire_upgrades_unlock} more upgrades till unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
         picture_class=skull_drop_rate_grimoire['Image'],

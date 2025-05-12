@@ -495,6 +495,10 @@ def mark_advice_completed(advice, force=False):
         except:
             pass
 
+    elif advice.percent == '100%':
+        #If the progress bar is set to 100%
+        complete()
+
     else:
         try:
             prog = str(advice.progression).strip('x%')

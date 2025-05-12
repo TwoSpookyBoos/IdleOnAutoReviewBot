@@ -4652,9 +4652,9 @@ combat_talentsDict = {
     },
 }
 class_kill_talents_dict = {
-    'Archlord of the Pirates': {'BonusType': 'Drop Rate', 'FuncType': 'decay', 'X1': 6, 'X2': 150},
-    'King of the Remembered': {'BonusType': 'Printer Output', 'FuncType': 'decay', 'X1': 5, 'X2': 150 },
-    'Wormhole Emperor': {'BonusType': 'Damage', 'FuncType': 'decay', 'X1': 1.5, 'X2': 150}
+    'Archlord of the Pirates': {'BonusType': 'Drop Rate', 'funcType': 'decay', 'x1': 6, 'x2': 150},
+    'King of the Remembered': {'BonusType': 'Printer Output', 'funcType': 'decay', 'x1': 5, 'x2': 150},
+    'Wormhole Emperor': {'BonusType': 'Damage', 'funcType': 'decay', 'x1': 1.5, 'x2': 150}
 }
 unbookable_talents_list = [
     10, 11, 12,  #Tab 1 STR, AGI, WIS
@@ -6161,6 +6161,18 @@ maxStaticBookLevels = 140
 maxScalingBookLevels = 30
 maxSummoningBookLevels = 29
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
+approx_max_talent_level_non_es = (
+    maxOverallBookLevels
+    + 30  #Grimoire
+    + 25  #Equinox
+    + 20  #Arctis
+    + 15  #Symbols of Beyond
+    + 14  #ES Family Bonus (Note: Not Family Guy!)
+    + 25  #Companion: Rift Slug
+    + 5   #Sneak Mastery III
+    + 1   #Maroon Warship achievement
+)
+approx_max_talent_level_es = approx_max_talent_level_non_es + 4  #Family Guy
 dnSkullRequirementList = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
 dn_miniboss_names = [

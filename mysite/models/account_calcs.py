@@ -1,8 +1,9 @@
+import copy
 from math import ceil, floor, log2, prod
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
-    base_crystal_chance,
+    base_crystal_chance, class_kill_talents_dict,
     filter_recipes, filter_never,
     # Master Classes
     grimoire_stack_types,
@@ -19,7 +20,7 @@ from consts import (
     # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
-    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue, getGemstonePercent,
+    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue,
     # Caverns
     caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
     infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
@@ -1849,6 +1850,7 @@ def _calculate_wave_3(account):
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
     _calculate_master_classes_grimoire_bone_sources(account)
+    _calculate_class_unique_kill_stacks(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
@@ -2028,3 +2030,45 @@ def _calculate_general_crystal_spawn_chance(account):
     account.highest_jman_crystal_spawn_chance = max(
         [char.crystal_spawn_chance for char in account.all_characters if "Journeyman" in char.all_classes], default=base_crystal_chance
     )
+
+def _calculate_class_unique_kill_stacks(account):
+    abc = {
+        'King of the Remembered': {
+            'Talent Number': 178,
+            'Class List': account.dks,
+            'Bonus': 'Printer Output',
+        },
+        'Archlord of the Pirates': {
+            'Talent Number': 328,
+            'Class List': account.sbs,
+            'Bonus': 'Drop Rate and Class EXP',
+        },
+        'Wormhole Emperor': {
+            'Talent Number': 508,
+            'Class List': account.sorcs,
+            'Bonus': 'Damage',
+        }
+    }
+    for talent_name, talent_details in abc.items():
+        talent_levels = []
+        for char in talent_details['Class List']:
+            talent_levels.append(char.current_preset_talents.get(f"{talent_details['Talent Number']}", 0) + char.total_bonus_talent_levels)
+            talent_levels.append(char.secondary_preset_talents.get(f"{talent_details['Talent Number']}", 0) + char.total_bonus_talent_levels)
+
+        account.class_kill_talents[talent_name]['Bonus Type'] = abc[talent_name]['Bonus']
+        account.class_kill_talents[talent_name]['funcType'] = all_talentsDict[talent_details['Talent Number']]['funcX']
+        account.class_kill_talents[talent_name]['x1'] = all_talentsDict[talent_details['Talent Number']]['x1']
+        account.class_kill_talents[talent_name]['x2'] = all_talentsDict[talent_details['Talent Number']]['x2']
+        account.class_kill_talents[talent_name]['Highest Preset Level'] = max(talent_levels)
+        account.class_kill_talents[talent_name]['Talent Value'] = lavaFunc(
+            funcType=account.class_kill_talents[talent_name]['funcType'],
+            level=account.class_kill_talents[talent_name]['Highest Preset Level'],
+            x1=account.class_kill_talents[talent_name]['x1'],
+            x2=account.class_kill_talents[talent_name]['x2']
+        )
+        account.class_kill_talents[talent_name]['Kill Stacks'] = safer_math_log(account.class_kill_talents[talent_name]['Kills'], 'Lava')
+        account.class_kill_talents[talent_name]['Total Value'] = (
+            account.class_kill_talents[talent_name]['Talent Value'] * account.class_kill_talents[talent_name]['Kill Stacks']
+        )
+        # logger.debug(f"{account.class_kill_talents[talent_name] = }")
+

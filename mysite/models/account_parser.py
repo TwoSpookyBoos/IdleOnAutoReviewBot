@@ -7,13 +7,12 @@ from consts import (
     lavaFunc, ValueToMulti, items_codes_and_names,
     maxCharacters,
     gfood_codes,
-    card_data, card_raw_data, cardset_names, decode_enemy_name,
+    card_raw_data, cardset_names, decode_enemy_name,
     gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
     guild_bonuses_dict, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
     companions,
-    class_kill_talents_dict,
     # Master Classes
     grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
     compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans, compass_medallions,
@@ -234,7 +233,6 @@ def _parse_characters(account, run_type):
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
-
     account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
     account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
     account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
@@ -247,8 +245,10 @@ def _parse_character_class_lists(account):
 
     account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
     account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
+    account.sorcs = [toon for toon in account.all_characters if 'Elemental Sorcerer' in toon.all_classes]
 
     account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
+    account.sbs = [toon for toon in account.all_characters if 'Siege Breaker' in toon.all_classes]
 
 def _parse_general(account):
     # General / Multiple uses
@@ -355,27 +355,15 @@ def _parse_general_npc_tokens(account):
     #     account.all_assets.get(tokenName).add(tokenCount)
 
 def _parse_class_unique_kill_stacks(account):
-    dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
-    dk_dict = class_kill_talents_dict['King of the Remembered']
-    es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
-    es_dict = class_kill_talents_dict['Wormhole Emperor']
-    sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
-    sb_dict = class_kill_talents_dict['Archlord of the Pirates']
     account.class_kill_talents = {
         'Archlord of the Pirates': {
-            'BonusType': sb_dict['BonusType'],
-            'Kills': sb_plunder_kills,
-            'Value': lavaFunc(sb_dict['FuncType'], sb_plunder_kills, sb_dict['X1'], sb_dict['X2'])
+            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
         },
         'King of the Remembered': {
-            'BonusType': dk_dict['BonusType'],
-            'Kills': dk_orb_kills,
-            'Value': lavaFunc(dk_dict['FuncType'], dk_orb_kills, dk_dict['X1'], dk_dict['X2'])
+            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
         },
         'Wormhole Emperor': {
-            'BonusType': es_dict['BonusType'],
-            'Kills': es_wormhole_kills,
-            'Value': lavaFunc(es_dict['FuncType'], es_wormhole_kills, es_dict['X1'], es_dict['X2'])
+            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
         }
     }
 
