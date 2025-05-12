@@ -257,7 +257,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                     collider_AdviceDict['Atoms'][subgroupName] = []
                 if subgroupName in collider_AdviceDict['Atoms']:
                     collider_AdviceDict['Atoms'][subgroupName].append(Advice(
-                        label=f"{rAtom}: {pAtoms[rAtom]['Description']}",
+                        label=f"{rAtom}",
                         picture_class=rAtom.split(' - ')[0],
                         progression=pAtoms[rAtom]['Level'],
                         goal=rLevel

@@ -5,7 +5,8 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts import bubbles_progressionTiers, vials_progressionTiers, max_IndexOfVials, maxFarmingCrops, atrisk_basicBubbles, \
     atrisk_lithiumBubbles, cookingCloseEnough, break_you_best, sigils_progressionTiers, max_IndexOfSigils, max_VialLevel, numberOfArtifactTiers, stamp_maxes, \
-    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles, maxable_vials
+    lavaFunc, vial_costs, min_NBLB, max_NBLB, nblb_skippable, nblb_max_index, ValueToMulti, atrisk_advancedBubbles, atrisk_lithiumAdvancedBubbles, \
+    maxable_vials, arcade_max_level
 
 logger = get_logger(__name__)
 
@@ -92,7 +93,7 @@ def getVialsProgressionTiersAdviceGroup():
                               f"{'<br>NEEDS TO BE UNLOCKED!' if alchemyVialsDict[requiredVial]['Level'] == 0 else ''}"
                               f"{'<br>Ready for level ' if prog >= 100 else ' toward level '}"
                               f"{alchemyVialsDict[requiredVial]['Level'] + 1 if prog >= 100 else alchemyVialsDict[requiredVial]['Level']+1}",
-                        picture_class=getItemDisplayName(alchemyVialsDict[requiredVial]['Material']),
+                        picture_class=alchemyVialsDict[requiredVial]['Image'],
                         progression=f"{min(1000, prog):.1f}{'+' if min(1000, prog) == 1000 else ''}",
                         goal=100,
                         unit='%'
@@ -721,13 +722,19 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mgd = ballot_multi_active
     mgd_label = f"Multi Group D: {mgd:.3f}x"
 
-    total_multi = max(1, mga * mgb * mgc * mgd)
+    # Multi Group E = Arcade
+    ab43 = session_data.account.arcade[43]
+    mge = ValueToMulti(ab43['Value'])
+    mge_label = f"Multi Group E: {mge:.3f}x"
+
+    total_multi = max(1, mga * mgb * mgc * mgd * mge)
 
     speed_Advice = {
         mga_label: [],
         mgb_label: [],
         mgc_label: [],
         mgd_label: [],
+        mge_label: [],
     }
 
     # Multi Group A
@@ -811,6 +818,15 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=int(ballot_active),
         goal=1,
         completed=True
+    ))
+
+    # Multi Group E
+    speed_Advice[mge_label].append(Advice(
+        label=f"Arcade Bonus 43: {ab43['Display']}",
+        picture_class=ab43['Image'],
+        progression=ab43['Level'],
+        goal=arcade_max_level + 1,
+        resource=ab43['Material'],
     ))
 
     for group_name in speed_Advice:

@@ -8,14 +8,15 @@ from consts import (
     maxCharacters,
     gfood_codes,
     card_data, card_raw_data, cardset_names, decode_enemy_name,
-    gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_list,
-    guild_bonuses_list, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
+    gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
+    guild_bonuses_dict, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
     companions,
+    class_kill_talents_dict,
     # Master Classes
     grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
-    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans,
+    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans, compass_medallions,
     # W1
     stampsDict, stampTypes, bribesDict,
     forgeUpgradesDict,
@@ -27,7 +28,7 @@ from consts import (
     sigilsDict,
     arcadeBonuses, arcade_max_level,
     ballotDict,
-    obolsDict, ignorable_obols_list,
+    obols_dict, ignorable_obols_list,
     islands_dict, killroy_dict,
     # W3
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
@@ -56,7 +57,7 @@ from consts import (
     caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges,
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, numberToLetter
 
@@ -138,7 +139,7 @@ def _all_stored_items(account) -> Assets:
 def _all_worn_items(account) -> Assets:
     stuff_worn = defaultdict(int)
     for toon in account.safe_characters:
-        for item in [*toon.equipment.foods, *toon.equipment.equips]:
+        for item in [*toon.equipment.foods, *toon.equipment.equips, *toon.equipment.tools]:
             if item.codename == 'Blank':
                 continue
             stuff_worn[item.codename] += item.amount
@@ -186,6 +187,7 @@ def _parse_companions(account):
     # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
     raw_companions = account.raw_data.get('companions', None)
     if raw_companion is not None:
+        account.companions['Companion Data Present'] = True
         for companionInfo in raw_companion.get('l', []):
             try:
                 companionID = int(companionInfo.split(',')[0])
@@ -193,9 +195,11 @@ def _parse_companions(account):
             except:
                 continue
     elif raw_companions is not None:
+        account.companions['Companion Data Present'] = True
         for companionID in raw_companions:
             simplified_companion_set.add(companionID)
     else:
+        account.companions['Companion Data Present'] = False
         logger.debug(f"No companion data present in JSON. Relying only on Switches")
 
     # Match the Companion IDs to their names
@@ -231,18 +235,20 @@ def _parse_characters(account, run_type):
 
 def _parse_character_class_lists(account):
 
-    account.beginners = [toon for toon in account.all_characters if "Beginner" in toon.all_classes or "Journeyman" in toon.all_classes]
-    account.jmans = [toon for toon in account.all_characters if "Journeyman" in toon.all_classes]
-    account.maestros = [toon for toon in account.all_characters if "Maestro" in toon.all_classes]
-    account.vmans = [toon for toon in account.all_characters if "Voidwalker" in toon.all_classes]
+    account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
+    account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
+    account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
+    account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
 
-    account.barbs = [toon for toon in account.all_characters if "Barbarian" in toon.all_classes]
-    account.bbs = [toon for toon in account.all_characters if "Blood Berserker" in toon.all_classes]
-    account.dbs = [toon for toon in account.all_characters if "Death Bringer" in toon.all_classes]
-    account.dks = [toon for toon in account.all_characters if "Divine Knight" in toon.all_classes]
+    account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
+    account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
+    account.dbs = [toon for toon in account.all_characters if 'Death Bringer' in toon.all_classes]
+    account.dks = [toon for toon in account.all_characters if 'Divine Knight' in toon.all_classes]
 
-    account.mages = [toon for toon in account.all_characters if "Mage" in toon.all_classes]
-    account.bubos = [toon for toon in account.all_characters if "Bubonic Conjuror" in toon.all_classes]
+    account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
+    account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
+
+    account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
 
 def _parse_general(account):
     # General / Multiple uses
@@ -301,14 +307,18 @@ def _parse_general_gem_shop_optlacc(account):
                 account.gemshop[purchase_name] = 0
 
 def _parse_general_gem_shop_bundles(account):
-    raw_gem_bundles_purchased = safe_loads(account.raw_data.get("BundlesReceived", []))
-    print(raw_gem_bundles_purchased)
-    account.gemshop['Bundles'] = []
-    for purchase_id, _ in raw_gem_bundles_purchased:
-        if purchase_id in gem_shop_bundles_list.values():
-            account.gemshop['Bundles'].append(gem_shop_bundles_list[purchase_id])
-        else:
-            logger.exception(f"Error finding '{purchase_id}': Could not find in gem_shop_bundles_list")
+    raw_gem_shop_bundles = safe_loads(account.raw_data.get('BundlesReceived', []))
+    account.gemshop['Bundle Data Present'] = 'BundlesReceived' in account.raw_data
+    account.gemshop['Bundles'] = {}
+    for code_name, display_name in gem_shop_bundles_dict.items():
+        account.gemshop['Bundles'][code_name] = {
+            'Display': display_name,
+            'Owned': code_name in raw_gem_shop_bundles
+        }
+    #logger.debug(f"{account.gemshop['Bundles'] = }")
+    unknown_bundles = [v for v in account.gemshop['Bundles'] if v not in gem_shop_bundles_dict]
+    if unknown_bundles:
+        logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
 
 def _parse_general_quests(account):
     account.compiled_quests = {}
@@ -345,9 +355,29 @@ def _parse_general_npc_tokens(account):
     #     account.all_assets.get(tokenName).add(tokenCount)
 
 def _parse_class_unique_kill_stacks(account):
-    account.dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
-    account.sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
-    account.es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
+    dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
+    dk_dict = class_kill_talents_dict['King of the Remembered']
+    es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
+    es_dict = class_kill_talents_dict['Wormhole Emperor']
+    sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
+    sb_dict = class_kill_talents_dict['Archlord of the Pirates']
+    account.class_kill_talents = {
+        'Archlord of the Pirates': {
+            'BonusType': sb_dict['BonusType'],
+            'Kills': sb_plunder_kills,
+            'Value': lavaFunc(sb_dict['FuncType'], sb_plunder_kills, sb_dict['X1'], sb_dict['X2'])
+        },
+        'King of the Remembered': {
+            'BonusType': dk_dict['BonusType'],
+            'Kills': dk_orb_kills,
+            'Value': lavaFunc(dk_dict['FuncType'], dk_orb_kills, dk_dict['X1'], dk_dict['X2'])
+        },
+        'Wormhole Emperor': {
+            'BonusType': es_dict['BonusType'],
+            'Kills': es_wormhole_kills,
+            'Value': lavaFunc(es_dict['FuncType'], es_wormhole_kills, es_dict['X1'], es_dict['X2'])
+        }
+    }
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -458,19 +488,18 @@ def _parse_general_merits(account):
 def _parse_general_guild_bonuses(account):
     account.guild_bonuses = {}
     raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_list.items()):
+    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_dict.items()):
         try:
             guild_bonus_level = safer_convert(raw_guild[0][bonus_index], 0)
         except Exception as e:
             logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
             guild_bonus_level = 0
-        
         account.guild_bonuses[bonus_name] = {
             'Level': guild_bonus_level,
-            'Value': lavaFunc(bonus['FuncType'], guild_bonus_level, bonus['X1'], bonus['X2']),
-            'MaxLevel': bonus['MaxLevel'],
-            'MaxValue': bonus['MaxValue'],
-            'Picture': bonus['Picture']
+            'Value': lavaFunc(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
+            'Max Level': bonus['Max Level'],
+            'Max Value': bonus['Max Value'],
+            'Image': bonus['Image']
         }
 
 def _parse_general_printer(account):
@@ -647,14 +676,15 @@ def _parse_master_classes_grimoire(account):
     account.grimoire = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Bones Collected': safer_get(account.raw_optlacc_dict, 329, 0),
-        'Bone1': safer_get(account.raw_optlacc_dict, 330, 0),
-        'Bone2': safer_get(account.raw_optlacc_dict, 331, 0),
-        'Bone3': safer_get(account.raw_optlacc_dict, 332, 0),
-        'Bone4': safer_get(account.raw_optlacc_dict, 333, 0),
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 334, 0),
-        'Elimination Stacks': safer_get(account.raw_optlacc_dict, 335, 0),
-        'Annihilation Stacks': safer_get(account.raw_optlacc_dict, 336, 0),
+        'Total Bones Collected': safer_convert(safer_get(account.raw_optlacc_dict, 329, 0), 0.0),
+        'Bone1': safer_convert(safer_get(account.raw_optlacc_dict, 330, 0), 0.0),
+        'Bone2': safer_convert(safer_get(account.raw_optlacc_dict, 331, 0), 0.0),
+        'Bone3': safer_convert(safer_get(account.raw_optlacc_dict, 332, 0), 0.0),
+        'Bone4': safer_convert(safer_get(account.raw_optlacc_dict, 333, 0), 0.0),
+        'Knockout Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 334, 0), 0),
+        'Elimination Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 335, 0), 0),
+        'Annihilation Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 336, 0), 0),
+        'Charred Bones Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 367, False), False)
     }
     #Parse Grimoire Upgrades
     raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
@@ -711,13 +741,13 @@ def _parse_master_classes_compass(account):
     account.compass = {
         'Upgrades': {},
         'Total Upgrades': 0,
-        'Total Dust Collected': safer_get(account.raw_optlacc_dict, 362, 0),
-        'Dust1': safer_get(account.raw_optlacc_dict, 357, 0),
-        'Dust2': safer_get(account.raw_optlacc_dict, 358, 0),
-        'Dust3': safer_get(account.raw_optlacc_dict, 359, 0),
-        'Dust4': safer_get(account.raw_optlacc_dict, 360, 0),
-        'Dust5': safer_get(account.raw_optlacc_dict, 361, 0),
-        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 361, 0),0)),
+        'Total Dust Collected': safer_convert(safer_get(account.raw_optlacc_dict, 362, 0), 0.0),
+        'Dust1': safer_convert(safer_get(account.raw_optlacc_dict, 357, 0), 0.0),
+        'Dust2': safer_convert(safer_get(account.raw_optlacc_dict, 358, 0), 0.0),
+        'Dust3': safer_convert(safer_get(account.raw_optlacc_dict, 359, 0), 0.0),
+        'Dust4': safer_convert(safer_get(account.raw_optlacc_dict, 360, 0), 0.0),
+        'Dust5': safer_convert(safer_get(account.raw_optlacc_dict, 361, 0), 0.0),
+        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 365, 0),0)),
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
         'Medallions': {},
@@ -782,7 +812,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
         for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
             upgrade_values_list = compass_upgrades_list[upgrade_index]
             clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-            clean_description = upgrade_values_list[11].replace('_', ' ')
+            clean_description = upgrade_values_list[11].replace('_', ' ')  #.replace('@', '<br>')
             # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
             try:
                 account.compass['Upgrades'][clean_name] = {
@@ -827,6 +857,10 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Path Ordering': path_ordering,
                     'Description': clean_description,
                 }
+            account.compass['Upgrades'][clean_name]['Base Value'] = (
+                account.compass['Upgrades'][clean_name]['Level']
+                * account.compass['Upgrades'][clean_name]['Value Per Level']
+            )
 
     # Determine Unlock Status
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
@@ -864,25 +898,6 @@ def _parse_master_classes_medallions(account, raw_medallions):
         'iceknight': ['Random Event Boss: Glacial Guild', 'ice-guard'],
         'snakeZ': ['Random Event Boss: Snake Swarm', 'snake-swarm'],
         'frogGR': ['Random Event Boss: Angry Frogs', 'angry-frogs'],
-        'BugNest1': ['Fly Nest', 'fly-nest'],
-        'BugNest2': ['Butterfly Nest', 'butterfly-bar'],
-        'BugNest3': ['Sentient Cereal Nest', 'sentient-bowl'],
-        'BugNest4': ['Fruitfly Nest', 'grocery-bag'],
-        'BugNest5': ['Mosquisnow Nest', 'snowden'],
-        'BugNest6': ['Flycicle Nest', 'icicle-nest'],
-        'BugNest7': ['Bee Nest', 'bee-hive'],
-        'BugNest8': ['Fairy Nest', 'fairy-hovel'],
-        'BugNest9': ['Scarab Nest', 'scarab-nest'],
-        'BugNest10': ['Dust Mote Nest', 'mote-hovel'],
-        # 'BugNest11': ['Equinox Nest', 'dream-particulate'],  #Doesn't spawn a nest to destroy
-        'BugNest12': ['Ladybug Nest', 'ladybug-nest'],
-        'BugNest13': ['Firefly Nest', 'firefly-nest'],
-        # 'BugNest14': ['Fractal (Cavern) Nest', 'fractal-fly'],  #Doesn't spawn a nest to destroy
-        # 'rift1': ['Rift Spooker', 'rift-spooker'],  #WW cannot enter the Rift
-        # 'rift2': ['Rift Slug', 'rift-slug'],
-        # 'rift3': ['Rift Jocund', 'rift-jocund'],
-        # 'rift4': ['Rift Hivemind', 'rift-hivemind'],
-        # 'rift5': ['Rift Stalker', 'rift-stalker'],
         'ChestA1': ['W1 Colo: Bronze Chest', 'colo-bronze-chest'],
         'ChestB1': ['W1 Colo: Silver Chest', 'colo-silver-chest'],
         'ChestC1': ['W1 Colo: Gold Chest', 'colo-gold-chest'],
@@ -903,83 +918,19 @@ def _parse_master_classes_medallions(account, raw_medallions):
         'ChestC6': ['W6 Colo: Gold Chest', 'colo-gold-chest'],
     }
 
-    for extra_name in known_extras:
-        try:
-            account.compass['Medallions'][extra_name] = {
-                'Obtained': extra_name in raw_medallions,
-                'Card Name': extra_name,
-                'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name][0],
-                'Image': known_extras[extra_name][1],
-            }
-        except:
-            account.compass['Medallions'][extra_name] = {
-                'Obtained': False,
-                'Card Name': extra_name,
-                'Card Set': 'Extras',
-                'Enemy Name': known_extras[extra_name][0],
-                'Image': known_extras[extra_name][1],
-            }
-
-    ignore_sets = ['Easy Resources', 'Medium Resources', 'Hard Resources', 'Dungeons']
-    ignore_cards = [
-        #W1
-        'Crystal Carrot',
-        #W2
-        'Bandit Bob', 'Crystal Crabal',
-        #W3
-        'Crystal Cattle',
-        #W4
-        'Crystal Custard',
-        #W5
-        'Crystal Capybara',
-        #W6
-        'Crystal Candalight',
-        #World Bosses
-        'Amarok', 'Chaotic Amarok', 'Radiant Amarok',
-        'Efaunt', 'Chaotic Efaunt', 'Gilded Efaunt',
-        'Chizoar', 'Chaotic Chizoar', 'Blighted Chizoar',
-        'Massive Troll', 'Chaotic Troll', 'Blitzkrieg Troll',
-        'Kattlekruk', 'Chaotic Kattlekruk', 'Sacrilegious Kattlekruk',
-        'Emperor', 'Chaotic Emperor', 'Sovereign Emperor',
-        #Events
-        'Giftmas Blobulyte', 'Meaning of Giftmas', 'Golden Giftmas Box',
-        'Loveulyte', 'Chocco Box', 'Giant Rose',
-        'Egggulyte', 'Egg Capsule',
-        'Coastiolyte', 'Summer Spirit',
-        'Bubbulyte', 'Spring Spirit', 'Spring Splendor', 'Falloween Pumpkin',
-        'IdleOn Fourth Anniversary'
-    ]
-    for set_name, set_cards in card_data.items():
-        if set_name not in ignore_sets:
-            for card_name, card_values in set_cards.items():
-                if card_values[0] not in ignore_cards:
-                    try:
-                        account.compass['Medallions'][card_name] = {
-                            'Obtained': card_name in raw_medallions,
-                            'Card Name': card_name,
-                            'Card Set': set_name,
-                            'Enemy Name': card_values[0],
-                            'Image': f"{card_values[0]}-card"
-                        }
-                    except:
-                        account.compass['Medallions'][card_name] = {
-                            'Obtained': False,
-                            'Card Name': card_name,
-                            'Card Set': set_name,
-                            'Enemy Name': card_values[0],
-                            'Image': f"{card_values[0]}-card"
-                        }
-
-    for raw_enemy_name in raw_medallions:
-        if raw_enemy_name not in account.compass['Medallions']:
-            logger.warning(f"Unexpected Medallion for {raw_enemy_name} found")
+    for raw_enemy_name in compass_medallions:
+        if raw_enemy_name in known_extras:  #Anything that isn't a standard Card
             account.compass['Medallions'][raw_enemy_name] = {
-                'Obtained': True,
-                'Card Name': raw_enemy_name,
-                'Card Set': 'Unexpected (Tell Scoli if this was legit!)',
-                'Enemy Name': raw_enemy_name,
-                'Image': raw_enemy_name
+                'Obtained': raw_enemy_name in raw_medallions,
+                'Enemy Name': known_extras[raw_enemy_name][0],
+                'Image': known_extras[raw_enemy_name][1],
+            }
+        else:
+            decoded_name = decode_enemy_name(raw_enemy_name)
+            account.compass['Medallions'][raw_enemy_name] = {
+                'Obtained': raw_enemy_name in raw_medallions,
+                'Enemy Name': decoded_name,
+                'Image': f"{decoded_name}-card"
             }
 
 def _parse_master_classes_exalted_stamps(account):
@@ -1091,21 +1042,21 @@ def _parse_w1_stamps(account):
         for stampIndex, stampValuesDict in stampsDict[stampType].items():
             try:
                 account.stamps[stampValuesDict['Name']] = {
-                    "Index": int(stampIndex),
-                    "Material": stampValuesDict['Material'],
-                    "Level": int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Max": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
-                    "Delivered": int(floor(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))) > 0,
-                    "StampType": stampType,
-                    "Value": lavaFunc(
+                    'Index': stampIndex,
+                    'Material': stampValuesDict['Material'],
+                    'Level': safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Max': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Delivered': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0) > 0,
+                    'StampType': stampType,
+                    'Value': lavaFunc(
                         stampValuesDict['funcType'],
-                        int(floor(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0))),
+                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
                     ),
                 }
-                account.stamp_totals["Total"] += account.stamps[stampValuesDict['Name']]["Level"]
-                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]["Level"]
+                account.stamp_totals['Total'] += account.stamps[stampValuesDict['Name']]['Level']
+                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]['Level']
             except Exception as e:
                 logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
                 account.stamps[stampValuesDict['Name']] = {
@@ -1215,14 +1166,16 @@ def _parse_w2_vials(account):
                         vialsDict[int(vialKey)]['x1'],
                         vialsDict[int(vialKey)]['x2'],
                     ),
-                    'Material': vialsDict[int(vialKey)]['Material']
+                    'Material': vialsDict[int(vialKey)]['Material'],
+                    'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
                 }
         except Exception as e:
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
-                "Level": 0,
-                "BaseValue": 0,
-                'Material': vialsDict.get(int(vialKey), {}).get('Material', '')
+                'Level': 0,
+                'BaseValue': 0,
+                'Material': vialsDict[int(vialKey)]['Material'],
+                'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
             }
 
     account.maxed_vials = 0
@@ -1383,61 +1336,63 @@ def _parse_w2_arcade(account):
     }
 
     account.arcade = {}
-    raw_arcade_upgrades = safe_loads(account.raw_data.get("ArcadeUpg", []))
-    for upgradeIndex, upgradeDetails in arcadeBonuses.items():
+    raw_arcade_upgrades = safe_loads(account.raw_data.get('ArcadeUpg', []))
+    for upgrade_index, upgrade_details in arcadeBonuses.items():
         try:
-            account.arcade[upgradeIndex] = {
-                'Level': raw_arcade_upgrades[upgradeIndex],
+            account.arcade[upgrade_index] = {
+                'Level': raw_arcade_upgrades[upgrade_index],
                 'Value': lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    min(arcade_max_level, raw_arcade_upgrades[upgradeIndex]),
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                    upgrade_details['funcType'],
+                    min(arcade_max_level, raw_arcade_upgrades[upgrade_index]),
+                    upgrade_details['x1'],
+                    upgrade_details['x2']
                 ),
-                'MaxValue': 2 * lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    arcade_max_level,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                'MaxValue':(
+                    2  #Royale
+                    * 2  #Reindeer Companion
+                    * lavaFunc(
+                        upgrade_details['funcType'],
+                        arcade_max_level,
+                        upgrade_details['x1'],
+                        upgrade_details['x2']
+                    )
                 ),
-                'Royale': raw_arcade_upgrades[upgradeIndex] > arcade_max_level,
+                'Royale': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
                 'Material': (
-                    '' if raw_arcade_upgrades[upgradeIndex] == 101
-                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgradeIndex] == 100
+                    '' if raw_arcade_upgrades[upgrade_index] == 101
+                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgrade_index] == 100
                     else 'arcade-gold-ball'
                 ),
-                'Image': f'arcade-bonus-{upgradeIndex}'
+                'Image': f'arcade-bonus-{upgrade_index}',
+                'Display Type': upgrade_details['displayType'],
+                'Stat': upgrade_details['Stat']
             }
-            if account.arcade[upgradeIndex]['Royale']:
-                account.arcade[upgradeIndex]['Value'] *= 2
-            account.arcade[upgradeIndex]["Display"] = (
-                f"+{account.arcade[upgradeIndex]['Value']:.2f}{upgradeDetails['displayType']} {upgradeDetails['Stat']}"
-            )
         except Exception as e:
-            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
-            account.arcade[upgradeIndex] = {
+            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgrade_index {upgrade_index}: {e}. Defaulting to 0")
+            account.arcade[upgrade_index] = {
                 'Level': 0,
                 'Value': lavaFunc(
-                    upgradeDetails.get("funcType"),
+                    upgrade_details['funcType'],
                     0,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                    upgrade_details['x1'],
+                    upgrade_details['x2']
                 ),
-                'MaxValue': 2 * lavaFunc(
-                    upgradeDetails.get("funcType"),
-                    arcade_max_level,
-                    upgradeDetails.get("x1"),
-                    upgradeDetails.get("x2")
+                'MaxValue':(
+                    2  #Royale
+                    * 2  #Reindeer Companion
+                    * lavaFunc(
+                        upgrade_details['funcType'],
+                        arcade_max_level,
+                        upgrade_details['x1'],
+                        upgrade_details['x2']
+                    )
                 ),
                 'Royale': False,
                 'Material': 'arcade-gold-ball',
-                'Image': f'arcade-bonus-{upgradeIndex}'
+                'Image': f'arcade-bonus-{upgrade_index}',
+                'Display Type': upgrade_details['displayType'],
+                'Stat': upgrade_details['Stat']
             }
-            account.arcade[upgradeIndex]["Display"] = (
-                f"+{account.arcade[upgradeIndex]['Value']:.2f}{arcadeBonuses[upgradeIndex]['displayType']} {arcadeBonuses[upgradeIndex]['Stat']}"
-            )
-    # for entry_name, entry_details in account.arcade.items():
-    #     logger.debug(f"{entry_name}: {entry_details}")
 
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
@@ -1481,8 +1436,8 @@ def _parse_w2_obols(account):
     }
     raw_owned_obols = []
     for jsonkey in [
-        "ObolEqO1", "ObolEqO2", "ObolEqO0_0", "ObolEqO0_1", "ObolEqO0_2", "ObolEqO0_3", "ObolEqO0_4",
-        "ObolEqO0_5", "ObolEqO0_6", "ObolEqO0_7", "ObolEqO0_8", "ObolEqO0_9"
+        'ObolEqO1', 'ObolEqO2', 'ObolEqO0_0', 'ObolEqO0_1', 'ObolEqO0_2', 'ObolEqO0_3', 'ObolEqO0_4',
+        'ObolEqO0_5', 'ObolEqO0_6', 'ObolEqO0_7', 'ObolEqO0_8', 'ObolEqO0_9'
     ]:
         raw_owned_obols += safe_loads(account.raw_data.get(jsonkey, []))
     raw_obol_inventory_list = safe_loads(account.raw_data.get("ObolInvOr"))
@@ -1490,13 +1445,17 @@ def _parse_w2_obols(account):
         raw_owned_obols += subdict.values()
     for obol in raw_owned_obols:
         if obol not in ignorable_obols_list:
-            obolBonusType = obolsDict.get(obol, {}).get('Bonus', 'Unknown')
-            obolShape = obolsDict.get(obol, {}).get('Shape', 'Unknown')
+            obolBonusType = obols_dict.get(obol, {}).get('Bonus', 'Unknown')
+            obolShape = obols_dict.get(obol, {}).get('Shape', 'Unknown')
             account.obols[obolBonusType][obolShape]['Total'] += 1
             if obol not in account.obols[obolBonusType][obolShape]:
                 account.obols[obolBonusType][obolShape][obol] = {'Count': 1}
             else:
                 account.obols[obolBonusType][obolShape][obol]['Count'] += 1
+    
+    raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
+    raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
+    account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
 
 def _parse_w2_islands(account):
     account.islands = {
@@ -2169,17 +2128,15 @@ def _parse_w4_breeding_pets(account, rawBreeding):
 
     # Breedability Days
     for index in range(13, 21):
-        try:
-            account.breeding['Breedability Days'][f"W{index - 12}"] = [float(v) for v in rawBreeding[index]]
-        except:
-            continue  # Already default to [] during initialization
+        account.breeding['Breedability Days'][f"W{index - 12}"] = []
+        for entry in rawBreeding[index]:
+            account.breeding['Breedability Days'][f"W{index - 12}"].append(safer_convert(entry, 0.0))
 
     # Shiny Days
     for index in range(22, 30):
-        try:
-            account.breeding['Shiny Days'][f"W{index - 21}"] = rawBreeding[index]
-        except:
-            continue  # Already defaulted to [] during initialization
+        account.breeding['Shiny Days'][f"W{index - 21}"] = []
+        for entry in rawBreeding[index]:
+            account.breeding['Shiny Days'][f"W{index - 21}"].append(safer_convert(entry, 0.0))
 
     # Parse data for each individual pet, increase their shiny bonus level, and mark their Genetic as obtained
     for worldIndex, worldPetsDict in breedingSpeciesDict.items():

@@ -90,6 +90,14 @@
     --general-bg-advice-group-even: hsl(15deg 21.16% 54.09%);
     --general-progress-color: var(--progress-color);
 
+    --master-classes-fg-subheading: fg-subheading-dark-mode(120deg);
+    --master-classes-bg-subheading: none;
+
+    --master-classes-fg-advice-group: var(--fg-advice-group);
+    --master-classes-bg-advice-group-odd: hsl(173.79deg 15.18% 37.45%);
+    --master-classes-bg-advice-group-even: hsl(148.75deg 20.34% 53.73%);
+    --master-classes-progress-color: var(--progress-color);
+
     --blunder-hills-fg-subheading: fg-subheading-dark-mode(120deg);
     --blunder-hills-bg-subheading: none;
 
@@ -224,6 +232,14 @@
     --general-bg-advice-group-even: #{bg-advice-group-light-mode(0deg)};
     --general-progress-color: #{fg-progress-bar-light-mode(0deg)};
 
+    --master-classes-fg-subheading: #{fg-subheading-light-mode(15deg)};
+    --master-classes-bg-subheading: #{bg-advice-group-light-mode(24deg)};
+
+    --master-classes-fg-advice-group: var(--fg-advice-group);
+    --master-classes-bg-advice-group-odd: #{bg-advice-group-light-mode(24deg)};
+    --master-classes-bg-advice-group-even: #{bg-advice-group-light-mode(24deg)};
+    --master-classes-progress-color: #{fg-progress-bar-light-mode(24deg)};
+
     --blunder-hills-fg-subheading: #{fg-subheading-light-mode(120deg)};
     --blunder-hills-bg-subheading: #{bg-advice-group-light-mode(117deg)};
 
@@ -312,6 +328,7 @@
 $worlds: (
     "pinchy",
     "general",
+    "master-classes",
     "blunder-hills",
     "yum-yum-desert",
     "frostbite-tundra",
@@ -660,7 +677,7 @@ body {
                                         column-gap: var(--col-gap);
                                         row-gap: 5px;
                                         overflow-y: auto;
-                                        scrollbar-width: thin;
+                                        scrollbar-width: auto;
                                         scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
                                         & > *:not(.progress-bar) {
@@ -925,7 +942,7 @@ body {
 
 ::-webkit-scrollbar {
     background-color: transparent;
-    width: 5px;
+    width: 15px;
 }
 
 ::-webkit-scrollbar-track {

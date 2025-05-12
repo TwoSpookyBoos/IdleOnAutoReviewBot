@@ -249,13 +249,13 @@ def getLongTermAdviceList() -> list[Advice]:
 
     # SB Plunder Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.sb_plunder_kills:
+        if killTarget > session_data.account.class_kill_talents['Archlord of the Pirates']['Kills']:
             goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Plunder Kills with Siege Breaker for Drop Rate"
                       f"<br>Crystal Setup at W5 Citringes for ~20k per day",
                 picture_class='archlord-of-the-pirates',
-                progression=notateNumber("Match", session_data.account.sb_plunder_kills, 2, '', goalString),
+                progression=notateNumber("Match", session_data.account.class_kill_talents['Archlord of the Pirates']['Kills'], 2, '', goalString),
                 goal=goalString,
                 resource='pirate-flag'
             ))
@@ -263,13 +263,13 @@ def getLongTermAdviceList() -> list[Advice]:
 
     # DK Orb Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.dk_orb_kills:
+        if killTarget > session_data.account.class_kill_talents['King of the Remembered']['Kills']:
             goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Orb stacks with Divine Knight for Printer Output"
                       f"<br>Crystal Setup at any world you need Crystal loot from",
                 picture_class='king-of-the-remembered',
-                progression=notateNumber("Match", session_data.account.dk_orb_kills, 2, '', goalString),
+                progression=notateNumber("Match", session_data.account.class_kill_talents['King of the Remembered']['Kills'], 2, '', goalString),
                 goal=goalString,
                 resource='orb-of-remembrance'
             ))
@@ -277,13 +277,13 @@ def getLongTermAdviceList() -> list[Advice]:
 
     # ES Wormhole Kills
     for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.es_wormhole_kills:
+        if killTarget > session_data.account.class_kill_talents['Wormhole Emperor']['Kills']:
             goalString = notateNumber("Basic", killTarget, 1)
             longterm.append(Advice(
                 label=f"Farm more Wormhole kills with Elemental Sorcerer for Damage"
                       f"<br>Generally alongside farming Rare Drops, such as Dark Lanterns",
                 picture_class='wormhole-emperor',
-                progression=notateNumber("Match", session_data.account.es_wormhole_kills, 2, '', goalString),
+                progression=notateNumber("Match", session_data.account.class_kill_talents['Wormhole Emperor']['Kills'], 2, '', goalString),
                 goal=goalString,
                 resource='dimensional-wormhole'
             ))
@@ -669,8 +669,9 @@ def getBuboAdviceGroup() -> AdviceGroup:
                     progression=prog,
                     goal=1
                 ))
-            except:
-                logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
+            except Exception as e:
+                if e != IndexError:
+                    logger.exception(f"Stuff went wrong at {talent_index = }, {good_talent_number = }")
                 bubo_advice[alch_talents].append(Advice(
                     label=f"Set {all_talentsDict[good_talent_number]['name']} {nth[talent_index + 1]} on your Attack Bar",
                     picture_class=all_talentsDict[good_talent_number]['name'],
@@ -681,16 +682,21 @@ def getBuboAdviceGroup() -> AdviceGroup:
         #Optional talent ordering check
         for talent_index, optional_talent_number in enumerate(optional_talent_numbers):
             try:
+                prog = int(ccing_bar[talent_index+len(good_talent_numbers)] == optional_talent_number)
+            except:
+                prog = 0
+            try:
                 bubo_advice[optional_talents].append(Advice(
                     label=f"Consider setting {all_talentsDict[optional_talent_number]['name']} "
                           f"{nth[talent_index+1+len(good_talent_numbers)]} on your Attack Bar",
                     picture_class=all_talentsDict[optional_talent_number]['name'],
-                    progression=int(ccing_bar[talent_index+len(good_talent_numbers)] == optional_talent_number),
+                    progression=prog,
                     goal=1,
                     completed=True
                 ))
-            except:
-                logger.exception(f"Stuff went wrong at {talent_index = }, {optional_talent_number = }")
+            except Exception as e:
+                if e != IndexError:
+                    logger.exception(f"Stuff went wrong at {talent_index = }, {optional_talent_number = }")
                 continue
 
         #Talent Library book levels and checkouts

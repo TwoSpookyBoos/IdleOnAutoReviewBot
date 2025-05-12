@@ -10,7 +10,7 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters
+from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters, obols_dict
 from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnectionFailed, WtfDataException
 
 from .logging import get_logger
@@ -303,6 +303,8 @@ def getCharacterDetails(inputJSON, runType):
     equipped_lab_chips = {}
     inventory_bags = {}
     kill_lists = {}
+    obols_list = {}
+    obol_upgrades_list = {}
     big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * maxCharacters))
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * maxCharacters))
 
@@ -315,6 +317,8 @@ def getCharacterDetails(inputJSON, runType):
         characterSecondaryPresetTalents[character_index] = safe_loads(inputJSON.get(f'SLpre_{character_index}', {}))
         inventory_bags[character_index] = safe_loads(inputJSON.get(f'InvBagsUsed_{character_index}', {}))
         kill_lists[character_index] = safe_loads(inputJSON.get(f'KLA_{character_index}', []))
+        obols_list[character_index] = safe_loads(inputJSON.get(f'ObolEqO0_{character_index}', []))
+        obol_upgrades_list[character_index] = safe_loads(inputJSON.get(f'ObolEqMAP_{character_index}', {}))
         try:
             equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index+1]
         except:
@@ -341,6 +345,8 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips=equipped_lab_chips[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
+            obols=obols_list[character_index],
+            obol_upgrades=obol_upgrades_list[character_index],
             big_alch_bubbles=big_alch_bubbles_dict[character_index],
             alchemy_job=alchemy_jobs_list[character_index]
         )
@@ -370,6 +376,24 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
                 logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skillIndexList[skillCounter]}")
     return allSkillsDict
 
+# This returns incomplete data, since the obols_dict currently only contains DR obols
+# Dispite this, the function is written to work with whatever data is added to the obols_dict
+def get_obol_totals(obol_list, obol_upgrade_dict):
+    obols_totals = {}
+    for obol_index, obol_name in enumerate(obol_list):
+        obol_index = str(obol_index)
+        # Adds the base values for each equipped obol
+        for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
+            obols_totals[f"Total{obol_base_name}"] = obols_totals.get(f"Total{obol_base_name}", 0) + obol_base_value
+        # Adds any upgrade value for each equipped obol
+        if obol_index in obol_upgrade_dict.keys():
+            if 'UQ1txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ1txt'] != 0:
+                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0) + obol_upgrade_dict[obol_index]['UQ1val']
+            elif 'UQ2txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ2txt'] != 0:
+                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0) + obol_upgrade_dict[obol_index]['UQ2val']
+            for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK', 'Defence', 'Weapon_Power', 'Reach', 'Speed']:
+                obols_totals[f"Total{upgrade_val}"] = obols_totals.get(f"Total{upgrade_val}", 0) + obol_upgrade_dict.get(upgrade_val, 0)
+    return obols_totals
 
 def getHumanReadableClasses(classNumber):
     return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
@@ -439,7 +463,11 @@ def safer_math_pow(base, exponent, default=1e100):
         return 1e100
 
 def safer_math_log(input_value, base):
-    if base == 'Lava':
+    """
+    :param input_value:
+    :param base: Lava, lava, or 10 will all use Lava's pow10 estimate
+    """
+    if base == 'Lava' or base == 'lava' or base == 10:
         # When you see _customBlock_getLOG called in source code, use base='Lava' here
         return math.log(max(input_value, 1)) / 2.30259
     elif input_value <= 0:

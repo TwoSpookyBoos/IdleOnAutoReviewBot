@@ -1,9 +1,10 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
 from consts import (
-    break_you_best, infinity_string, compass_dusts_list, compass_path_ordering, compass_upgrades_list,
+    break_you_best, infinity_string, compass_dusts_list, compass_path_ordering, compass_upgrades_list, compass_medallions, lavaFunc, ValueToMulti,
+    arcade_max_level,
     # compass_progressionTiers
 )
 from utils.text_formatting import notateNumber
@@ -37,7 +38,10 @@ def getCompassGeneralInfoAdviceGroup(compass):
     return general_ag
 
 def getCompassCurrenciesAdviceGroup(compass):
-    currencies_advices = [
+    currency_advices = {}
+
+    #Basic Currencies
+    currency_advices['Currencies'] = [
         Advice(
             label=f"{dust_name}: {notateNumber('Basic', compass[f'Dust{dust_index}'], 3)}",
             picture_class=f'compass-dust-{dust_index-1}',
@@ -45,27 +49,202 @@ def getCompassCurrenciesAdviceGroup(compass):
             completed=True
         ) for dust_index, dust_name in enumerate(compass_dusts_list, start=1)
     ]
-    currencies_advices.insert(0, Advice(
+    currency_advices['Currencies'].insert(0, Advice(
         label=f"Total Dusts Collected: {notateNumber('Basic', compass['Total Dust Collected'], 3)}",
         picture_class='dustwalker',
         informational=True,
         completed=True
     ))
-    currencies_advices.insert(0, Advice(
+    currency_advices['Currencies'].insert(0, Advice(
         label=(
             f"""Daily Top of the Mornin' kills: """
             f"""{compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value']}"""
             f"""<br>Remaining: {compass["Top of the Mornin'"]}"""
         ),
         picture_class=compass['Upgrades']["Top of the Mornin'"]['Image'],
-        informational=True,
-        completed=True
+        progression=compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value'] - compass["Top of the Mornin'"],
+        goal=compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value'],
+        informational=True
     ))
+
+    # Dust Multi calculation groups
+    currency_advices['Currencies'].append(Advice(
+        label=f"Total Dust multi: {compass['Dust Calc']['Total']:.3f}x",
+        picture_class='compass'
+    ))
+
+    mga_label = f"Dust Multi Group A: {compass['Dust Calc']['mga']:.3f}x"
+    currency_advices[mga_label] = [
+        Advice(
+            label=f"{compass['Upgrades']['Mountains of Dust']['Path Name']}-{compass['Upgrades']['Mountains of Dust']['Path Ordering']}: "
+                  f"Mountains of Dust: <br>{compass['Upgrades']['Mountains of Dust']['Description']}",
+            picture_class=compass['Upgrades']['Mountains of Dust']['Image'],
+            progression=compass['Upgrades']['Mountains of Dust']['Level'],
+            goal=compass['Upgrades']['Mountains of Dust']['Max Level'],
+            resource=compass['Upgrades']['Mountains of Dust']['Dust Image'],
+        ),
+        Advice(
+            label=f"{compass['Upgrades']['Solardust Hoarding']['Path Name']}-{compass['Upgrades']['Solardust Hoarding']['Path Ordering']}: "
+                  f"Solardust Hoarding: <br>{compass['Upgrades']['Solardust Hoarding']['Description']}"
+                  f"<br>{safer_math_log(compass['Dust3'], 'Lava'):.3f} stacks = "
+                  f"{compass['Upgrades']['Solardust Hoarding']['Total Value'] * safer_math_log(compass['Dust3'], 'Lava'):.3f}% total",
+            picture_class=compass['Upgrades']['Solardust Hoarding']['Image'],
+            progression=compass['Upgrades']['Solardust Hoarding']['Level'],
+            goal=compass['Upgrades']['Solardust Hoarding']['Max Level'],
+            resource=compass['Upgrades']['Solardust Hoarding']['Dust Image'],
+        ),
+    ]
+
+    mgb_label = f"Dust Multi Group B: {compass['Dust Calc']['mgb']:.2f}x"
+    currency_advices[mgb_label] = [
+        Advice(
+            label=f"{compass['Upgrades']['Spire of Dust']['Path Name']}-{compass['Upgrades']['Spire of Dust']['Path Ordering']}: "
+                  f"Spire of Dust: <br>{compass['Upgrades']['Spire of Dust']['Description']}",
+            picture_class=compass['Upgrades']['Spire of Dust']['Image'],
+            progression=compass['Upgrades']['Spire of Dust']['Level'],
+            goal=compass['Upgrades']['Spire of Dust']['Max Level'],
+            resource=compass['Upgrades']['Spire of Dust']['Dust Image'],
+        ),
+    ]
+
+    mgc_label = f"Dust Multi Group C: {compass['Dust Calc']['mgc']:.2f}x"
+    currency_advices[mgc_label] = [
+        Advice(
+            label=f"{{{{Sneaking|#sneaking}}}}: Pristine Charm: Twinkle Taffy"
+                  f"<br>{session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Bonus']}",
+            picture_class=session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Image'],
+            progression=int(session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Obtained']),
+            goal=1
+        )
+    ]
+
+    mgd_label = f"Dust Multi Group D: {compass['Dust Calc']['mgd']:.2f}x"
+    currency_advices[mgd_label] = [
+        Advice(
+            label=f"Windwalker Hood: +25%",
+            picture_class='windwalker-hood',
+            progression=int(session_data.account.all_assets.get('EquipmentHats118').amount > 0),
+            goal=1,
+            resource='gem'
+        ),
+        Advice(
+            label=f"Tempest Bow of Dust:"
+                  f"<br>Base Range: 15 - 50%"
+                  f"<br>Max + 5/5 10 PCT stones: 300%",
+            picture_class='tempest-bow-of-dust',
+            progression=int(session_data.account.all_assets.get('EquipmentBowsTempest0').amount > 0),
+            goal=1,
+            resource='tempest-bow-stone-10-pct',
+        ),
+        Advice(
+            label=f"Tempest Ring of Gold:"
+                  f"<br>Base Range: 20 - 50%"
+                  f"<br>Max + 3/3 10 PCT stones: 125%",
+            picture_class='tempest-ring-of-gold',
+            progression=min(session_data.account.all_assets.get('EquipmentRingsTempest6').amount, 2),
+            goal=2,
+            resource='tempest-ring-stone-10-pct'
+        )
+    ]
+
+    mge_label = f"Dust Multi Group E: {compass['Dust Calc']['mge']:.2f}x"
+    currency_advices[mge_label] = []
+    ww_index = None
+    eternal_hunt_preset_level = 100
+    for ww in session_data.account.wws:
+        if ww_index is None:
+            ww_index = ww.character_index
+        if ww.current_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
+            ww_index = ww.character_index
+            eternal_hunt_preset_level = ww.current_preset_talents.get('423', 0)
+        if ww.secondary_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
+            ww_index = ww.character_index
+            eternal_hunt_preset_level = ww.secondary_preset_talents.get('423', 0)
+    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
+    ww_per_stack = lavaFunc(
+        funcType='decay',
+        level=eternal_hunt_preset_level + bonus_talent_levels,
+        x1=3,
+        x2=200
+    )
+
+    currency_advices[mge_label].append(Advice(
+        label=f"{eternal_hunt_preset_level}/{session_data.account.library['MaxBookLevel']} booked Eternal Hunt:"
+              f"<br>Max Preset Level {eternal_hunt_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels} on "
+              f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels",
+        picture_class='eternal-hunt',
+        progression=eternal_hunt_preset_level,
+        goal=session_data.account.library['MaxBookLevel']
+    ))
+    currency_advices[mge_label].append(Advice(
+        label=f"<br>Per stack: +{ww_per_stack:.3f}%"
+              f"<br>10 stacks: {ValueToMulti(10 * ww_per_stack):.3f}x"
+              f"<br>20 stacks: {ValueToMulti(20 * ww_per_stack):.3f}x"
+              f"<br>30 stacks: {ValueToMulti(30 * ww_per_stack):.3f}x"
+              f"<br>40 stacks: {ValueToMulti(40 * ww_per_stack):.3f}x"
+              f"<br>50 stacks: {ValueToMulti(50 * ww_per_stack):.3f}x",
+        picture_class='eternal-hunt-grave',
+        completed=True,
+        informational=True
+    ))
+
+    mgf_label = f"Dust Multi Group F: {compass['Dust Calc']['mgf']:.2f}x"
+    currency_advices[mgf_label] = []
+    ww_index = None
+    compass_preset_level = 100
+    for ww in session_data.account.wws:
+        if ww_index is None:
+            ww_index = ww.character_index
+        if ww.current_preset_talents.get('421', 0) >= compass_preset_level:
+            ww_index = ww.character_index
+            compass_preset_level = ww.current_preset_talents.get('421', 0)
+        if ww.secondary_preset_talents.get('421', 0) >= compass_preset_level:
+            ww_index = ww.character_index
+            compass_preset_level = ww.secondary_preset_talents.get('421', 0)
+    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
+    compass_percent = lavaFunc(
+        funcType='decay',
+        level=compass_preset_level + bonus_talent_levels,
+        x1=150,
+        x2=300
+    )
+    currency_advices[mgf_label].append(Advice(
+        label=f"{compass_preset_level}/{session_data.account.library['MaxBookLevel']} booked Compass:"
+              f"<br>Max Preset Level {compass_preset_level + bonus_talent_levels} on "
+              f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels"
+              f"<br>+{compass_percent:.3f}% boost to Dust found",
+        picture_class='compass',
+        progression=compass_preset_level,
+        goal=session_data.account.library['MaxBookLevel']
+    ))
+    ab47 = session_data.account.arcade[47]
+    currency_advices[mgf_label].append(Advice(
+        label=f"Arcade Bonus 47: {ab47['Display']}",
+        picture_class=ab47['Image'],
+        progression=ab47['Level'],
+        goal=arcade_max_level + 1,
+        resource=ab47['Material'],
+    ))
+    for bonus_name in [
+        'De Dust I', 'De Dust II', 'De Dust III', 'De Dust IV', 'De Dust V',
+        'Abomination Slayer IX', 'Abomination Slayer XXX', 'Abomination Slayer XXXIV'
+    ]:
+        currency_advices[mgf_label].append(Advice(
+            label=f"{compass['Upgrades'][bonus_name]['Path Name']}-{compass['Upgrades'][bonus_name]['Path Ordering']}: "
+                  f"Spire of Dust: <br>{compass['Upgrades'][bonus_name]['Description']}",
+            picture_class=compass['Upgrades'][bonus_name]['Image'],
+            progression=compass['Upgrades'][bonus_name]['Level'],
+            goal=compass['Upgrades'][bonus_name]['Max Level'],
+            resource=compass['Upgrades'][bonus_name]['Dust Image'],
+        ))
+    for subgroup in currency_advices:
+        for advice in currency_advices[subgroup]:
+            mark_advice_completed(advice)
 
     currencies_ag = AdviceGroup(
         tier='',
         pre_string="Compass Currencies",
-        advices=currencies_advices
+        advices=currency_advices
     )
     currencies_ag.remove_empty_subgroups()
     return currencies_ag
@@ -103,38 +282,29 @@ def getCompassAbominationsAdviceGroup(compass):
     return abom_ag
 
 def getCompassMedallionsAdviceGroup(compass):
-    medallion_advice = {
-        'Total': [],
-        'Unexpected (Tell Scoli if this was legit!)': [],
-        'Extras': [],
-    }
+    medallion_advice = []
 
-    medallion_advice['Total'] = [
-        Advice(
-            label=f"Total Medallions Collected: {compass['Total Medallions']}/???",
-            picture_class='wind-walker-medallion',
-            progression=compass['Total Medallions'],
-            goal=infinity_string
-        )
-    ]
+    medallion_advice.append(Advice(
+        label=f"Total Medallions Collected: {compass['Total Medallions']}/{len(compass_medallions)}",
+        picture_class='wind-walker-medallion',
+        progression=compass['Total Medallions'],
+        goal=len(compass_medallions)
+    ))
 
     for code_name, enemy_details in compass['Medallions'].items():
-        if enemy_details['Card Set'] not in medallion_advice:
-            medallion_advice[enemy_details['Card Set']] = []
-        medallion_advice[enemy_details['Card Set']].append(Advice(
+        medallion_advice.append(Advice(
             label=f"{enemy_details['Enemy Name']}",
             picture_class=f"{enemy_details['Image']}",
             progression=int(enemy_details['Obtained']),
             goal=1
         ))
 
-    for subgroup in medallion_advice:
-        for advice in medallion_advice[subgroup]:
-            mark_advice_completed(advice)
+    for advice in medallion_advice:
+        mark_advice_completed(advice)
 
     medallion_ag = AdviceGroup(
         tier='',
-        pre_string="Medallions (All cards. Will filter as we learn more!)",
+        pre_string="Medallions",
         advices=medallion_advice
     )
     medallion_ag.remove_empty_subgroups()

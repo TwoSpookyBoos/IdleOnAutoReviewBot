@@ -245,7 +245,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     vialBonus = session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Value']
     checkoutSpeedAdvices.append(Advice(
         label=f"Chonker Chug vial: +{vialBonus:.1f}%",
-        picture_class='chonker-chug',
+        picture_class=session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Image'],
         progression=session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Level'],
         goal=max_VialLevel
     ))

@@ -315,13 +315,15 @@ def parseInventoryBagSlots() -> AdviceGroup:
     characters_missing_usable_bag_slots = []
 
     fourth_anni_bag_owned = any([char.character_name for char in session_data.account.all_characters if '112' in char.inventory_bags])
+    bon_f_owned = session_data.account.gemshop['Bundles']['bon_f']['Owned']
     aw_total = (
         defaultInventorySlots
         + (5 * session_data.account.autoloot)
         + (3 * session_data.account.event_points_shop['Bonuses']['Secret Pouch']['Owned'])
         + (8 * fourth_anni_bag_owned)
+        + (8 * bon_f_owned)
     )
-    aw_max = defaultInventorySlots + 5 + 3 + 8
+    aw_max = defaultInventorySlots + 5 + 3 + 8 + 8
     aw_label = f"Account Wide: {aw_total}/{aw_max} Inventory Slots for all characters"
     inventorySlots_AdviceDict[aw_label] = [
         Advice(
@@ -347,6 +349,13 @@ def parseInventoryBagSlots() -> AdviceGroup:
             picture_class='fourth-anniversary-bag',
             progression=int(fourth_anni_bag_owned),
             goal=1
+        ),
+        Advice(
+            label=f"Eternal Hunter Bundle: 8 slots"
+                  f"{'<br>Note: Could be inaccurate: Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''}",
+            picture_class='eternal-hunter-bag',
+            progression=int(bon_f_owned),
+            goal=1
         )
     ]
 
@@ -354,33 +363,33 @@ def parseInventoryBagSlots() -> AdviceGroup:
         character_bag_dict[character.character_index] = character.inventory_bags
         character_missing_bags_dict[character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
 
-    for chararacter_index, bagDict in character_bag_dict.items():
-        sumSlots = aw_total
-        for bag in bagDict:
+    for character_index, bag_dict in character_bag_dict.items():
+        sum_slots = aw_total
+        for bag in bag_dict:
             if bag in ['112', 112]:
                 # The 4th anniversary bag is funky. If you claim it on Character1 but don't log into EVERY other character once, they wouldn't be
                 # marked as owning it in the JSON. The alternative here is moving it to Account Wide and checking if it is present on ANY character,
                 # instead of each individual character.
                 continue
-            if isinstance(bagDict[bag], int | float | str):
+            if isinstance(bag_dict[bag], int | float | str):
                 try:
-                    sumSlots += int(bagDict[bag])
+                    sum_slots += int(bag_dict[bag])
                 except:
-                    logger.exception(f"Could not increase character {chararacter_index}'s bagslots by {type(bagDict[bag])} {bagDict[bag]}")
+                    logger.exception(f"Could not increase character {character_index}'s bagslots by {type(bag_dict[bag])} {bag_dict[bag]}")
             else:
-                logger.warning(f"Funky bag value found in {chararacter_index}'s bagsDict for bag {bag}: {type(bagDict[bag])} {bagDict[bag]}. Searching for expected value.")
+                logger.warning(f"Funky bag value found in {character_index}'s bagsDict for bag {bag}: {type(bag_dict[bag])} {bag_dict[bag]}. Searching for expected value.")
                 if int(bag) in expectedInventoryBagValuesDict:
                     logger.debug(f"Bag {bag} has a known value: {expectedInventoryBagValuesDict.get(int(bag), 0)}. All is well :)")
                 else:
                     logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
-                sumSlots += expectedInventoryBagValuesDict.get(int(bag), 0)
-        character_bag_slots_dict[chararacter_index] = sumSlots
-        if sumSlots >= currentMaxUsableInventorySlots:
-            characters_with_max_bag_slots.append(chararacter_index)
-        elif sumSlots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
-            characters_with_max_bag_slots.append(chararacter_index)
+                sum_slots += expectedInventoryBagValuesDict.get(int(bag), 0)
+        character_bag_slots_dict[character_index] = sum_slots
+        if sum_slots >= currentMaxUsableInventorySlots:
+            characters_with_max_bag_slots.append(character_index)
+        elif sum_slots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
+            characters_with_max_bag_slots.append(character_index)
         else:
-            characters_missing_usable_bag_slots.append(chararacter_index)
+            characters_missing_usable_bag_slots.append(character_index)
     # logger.info(f"character_bag_dict: {character_bag_dict}")
     # logger.info(f"characters_missing_usable_bag_slots: {characters_missing_usable_bag_slots}")
     for character_index in characters_missing_usable_bag_slots:

@@ -1,4 +1,4 @@
-from math import ceil, floor, log2
+from math import ceil, floor, log2, prod
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
@@ -28,6 +28,7 @@ from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
+from utils.all_talentsDict import all_talentsDict
 
 logger = get_logger(__name__)
 
@@ -39,6 +40,7 @@ def calculate_account(account):
 def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
+    _calculate_w2_arcade(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -221,6 +223,16 @@ def _calculate_w6_summoning_winner_bonuses(account):
             account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name])
     #logger.debug(f"Final Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
 
+def _calculate_w2_arcade(account):
+    for upgrade_index, upgrade_details in account.arcade.items():
+        account.arcade[upgrade_index]['Value'] *= (
+            max(1, 2 * account.arcade[upgrade_index]['Royale'])
+            * max(1, 2 * account.companions['Reindeer'])
+        )
+        account.arcade[upgrade_index]['Display'] = (
+            f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
+        )
+
 def _calculate_wave_2(account):
     _calculate_general(account)
     _calculate_master_classes(account)
@@ -322,7 +334,9 @@ def _calculate_general_highest_world_reached(account):
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire(account)
+    # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
     _calculate_master_classes_compass_upgrades(account)
+    _calculate_master_classes_compass_dust_sources(account)
 
 def _calculate_master_classes_grimoire(account):
     grimoire_multi = ValueToMulti(
@@ -368,36 +382,107 @@ def _calculate_master_classes_grimoire(account):
             f"{' after Writhing Grimoire' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire'})"
         )
 
+def _calculate_master_classes_grimoire_bone_sources(account):
+    grimoire_preset_level = 100
+    tombstone_preset_level = 100
+
+    for db in account.dbs:
+        grimoire_preset_level = max(grimoire_preset_level, db.current_preset_talents.get('196', 0), db.secondary_preset_talents.get('196', 0))
+        tombstone_preset_level = max(tombstone_preset_level, db.current_preset_talents.get('198', 0), db.secondary_preset_talents.get('198', 0))
+
+    grimoire_percent = lavaFunc(
+        funcType=all_talentsDict[196]['funcX'],
+        level=grimoire_preset_level,
+        x1=all_talentsDict[196]['x1'],
+        x2=all_talentsDict[196]['x2'],
+    )
+    tombstone_percent = lavaFunc(
+        funcType=all_talentsDict[198]['funcX'],
+        level=tombstone_preset_level,
+        x1=all_talentsDict[198]['x1'],
+        x2=all_talentsDict[198]['x2'],
+    )
+    account.grimoire['Bone Calc'] = {
+        'mga': ValueToMulti(30 if account.sneaking['PristineCharms']['Glimmerchain']['Obtained'] else 0),
+        'mgb': ValueToMulti(grimoire_percent),
+        'mgc': ValueToMulti(100 * account.caverns['Caverns']['Gambit']['Bonuses'][12]['Unlocked']),
+        'mgd': ValueToMulti((25 * min(1, account.all_assets.get('EquipmentHats112').amount))),
+        'mge': ValueToMulti(
+            account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
+            + (account.grimoire['Upgrades']['Bovinae Hoarding']['Total Value'] * safer_math_log(account.grimoire['Bone4'], 'Lava'))
+            + account.arcade[40]['Value']
+        ),
+        'mgf': 1
+    }
+    account.grimoire['Bone Calc']['Total'] = prod(account.grimoire['Bone Calc'].values())
+
 def _calculate_master_classes_compass_upgrades(account):
     compass_circle_multi = ValueToMulti(
-        account.compass['Upgrades']['Circle Supremacy']['Level']
-        * account.compass['Upgrades']['Circle Supremacy']['Value Per Level']
+        account.compass['Upgrades']['Circle Supremacy']['Base Value']
+        + account.compass['Upgrades']['Abomination Slayer XXI']['Base Value']
     )
 
     for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
+        value = (
+            account.compass['Upgrades'][upgrade_name]['Base Value']
+            * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
+            * (pow(2, account.compass['Upgrades'][upgrade_name]['Level']//50) if upgrade_name == 'Moon of Sneak' else 1)
+        )
         # Update description with total value, stack counts, and scaling info
         if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = (
-                account.compass['Upgrades'][upgrade_name]['Level']
-                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
-                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            )
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = value
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']}"
             )
         if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.compass['Upgrades'][upgrade_name]['Level']
-                * account.compass['Upgrades'][upgrade_name]['Value Per Level']
-                * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            )
+            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(value)
             account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         account.compass['Upgrades'][upgrade_name]['Description'] += (
             f"<br>({account.compass['Upgrades'][upgrade_name]['Value Per Level'] * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1):.2f} per level"
-            f"{' after Circle Supremacy' if upgrade_details['Shape'] == 'Circle' else ''})"
+            f"{' after Circle Multis' if upgrade_details['Shape'] == 'Circle' else ''})"
         )
+
+def _calculate_master_classes_compass_dust_sources(account):
+    # _customBlock_Windwalker if ("ExtraDust" == e)
+    ww_preset_level = 100
+    for ww in account.wws:
+        if ww.current_preset_talents.get('421', 0) >= ww_preset_level:
+            ww_preset_level = ww.current_preset_talents.get('421', 0)
+        if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
+            ww_preset_level = ww.secondary_preset_talents.get('421', 0)
+    compass_percent = lavaFunc(
+        funcType=all_talentsDict[421]['funcX'],
+        level=ww_preset_level,
+        x1=all_talentsDict[421]['x1'],
+        x2=all_talentsDict[421]['x2'],
+    )
+    account.compass['Dust Calc'] = {
+        'mga': ValueToMulti(
+            account.compass['Upgrades']['Mountains of Dust']['Total Value']
+            + (account.compass['Upgrades']['Solardust Hoarding']['Total Value'] * safer_math_log(account.compass['Dust3'], 'Lava'))
+        ),
+        'mgb': account.compass['Upgrades']['Spire of Dust']['Total Value'],
+        'mgc': ValueToMulti(30 if account.sneaking['PristineCharms']['Twinkle Taffy']['Obtained'] else 0),
+        'mgd': ValueToMulti(
+            (25 * min(1, account.all_assets.get('EquipmentHats118').amount))
+        ),
+        'mge': 1,
+        'mgf': ValueToMulti(
+            + compass_percent
+            + account.arcade[47]['Value']
+            + account.compass['Upgrades']['De Dust I']['Total Value']
+            + account.compass['Upgrades']['De Dust II']['Total Value']
+            + account.compass['Upgrades']['De Dust III']['Total Value']
+            + account.compass['Upgrades']['De Dust IV']['Total Value']
+            + account.compass['Upgrades']['De Dust V']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer IX']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer XXX']['Total Value']
+            + account.compass['Upgrades']['Abomination Slayer XXXIV']['Total Value']
+        )
+    }
+    account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
 
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
@@ -562,7 +647,7 @@ def _calculate_w1_owl_bonuses(account):
         account.owl['Bonuses'][bonus_name] = {
             'BaseValue': bonus_base,
             'NumUnlocked': bonus_num_unlocked,
-            'Value': (int(bonus_value) if bonus_value.is_integer() else bonus_value)
+            'Value': safer_convert(bonus_value, 0)
     }
 
 def _calculate_w2(account):
@@ -1763,6 +1848,7 @@ def _calculate_wave_3(account):
     _calculate_general_character_over_books(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
+    _calculate_master_classes_grimoire_bone_sources(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (

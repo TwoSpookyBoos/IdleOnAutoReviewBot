@@ -6,7 +6,7 @@ from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts import (
     lavaFunc, ValueToMulti, break_you_best, skillIndexList,
-    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level
+    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level, max_VialLevel
 )
 
 
@@ -60,9 +60,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
-        picture_class='snow-slurry',
+        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Image'],
         progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
-        goal=13
+        goal=max_VialLevel
     ))
     psrAdvices[accountSubgroup].append(Advice(
         label=f"Sample It bubble: "
@@ -290,7 +290,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
             bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0) + levels_above_max
 
     talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
-    orb_kills = session_data.account.dk_orb_kills
+    orb_kills = session_data.account.class_kill_talents['King of the Remembered']['Kills']
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 
@@ -384,7 +384,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     po_AdviceDict[aw_label].append(Advice(
         label=f"Companions: Biggole Mole: "
               f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
-              f"{'<br>Note: May be inaccurate. Not all data contains Companions!' if not session_data.account.companions['Biggole Mole'] else ''}",
+              f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
         picture_class='biggole-mole',
         progression=biggole_mole_days,
         goal=biggole_mole_max_days
