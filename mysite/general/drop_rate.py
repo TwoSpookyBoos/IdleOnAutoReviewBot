@@ -156,7 +156,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     has_mallay_companion = session_data.account.companions['Mallay']
     drop_rate_aw_advice[general].append(Advice(
         label=f"Companions- Mallay:"
-              f"<br>x{1.30 if has_mallay_companion else 0}/x1.3 Drop Rate MULTI"
+              f"<br>{1.3 if has_mallay_companion else 0}/1.3x Drop Rate MULTI"
               f"{missing_companion_data_txt}",
         picture_class='mallay',
         progression=int(has_mallay_companion) if not missing_companion_data else 'IDK',
@@ -238,8 +238,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     golden_sixes_max_base = lavaFunc(golden_sixes_stamp_data['funcType'], stamp_maxes['Golden Sixes Stamp'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{round(golden_sixes_stamp['Total Value'], 2):g}"
-              f"/{round((golden_sixes_max_base * 2 * 1.25 * session_data.account.exalted_stamp_multi), 2):g}% Drop Rate"
+              f"<br>+{round(golden_sixes_stamp['Total Value'], 2):g}% Drop Rate"
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
@@ -256,16 +255,16 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"Companions- Reindeer:"
                   f"<br>{2 if has_reindeer_companion else 0}/2x Arcade Bonus MULTI"
-                  f"<br>Note: increases the Arcade Bonus value below"
+                  f"<br>Note: Increases the Arcade Bonus value below"
                   f"{missing_companion_data_txt}",
             picture_class='spirit-reindeer',
             progression=int(has_reindeer_companion) if not missing_companion_data else 'IDK',
             goal=1
         ))
-    drop_rate_arcade_bonus_id = 27
-    _, drop_rate_arcade  = list(session_data.account.arcade.items())[drop_rate_arcade_bonus_id]
+
+    drop_rate_arcade = session_data.account.arcade[27]
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Arcade|#arcade }}}}- % Drop Rate:"
+        label=f"{{{{ Arcade|#arcade }}}}- Drop Rate:"
               f"<br>+{drop_rate_arcade['Value']:g}/{drop_rate_arcade['MaxValue']:g}% Drop Rate"
               f"{missing_companion_data_txt}",
         picture_class=drop_rate_arcade['Image'],
@@ -276,11 +275,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Obols - Family - Drop Rate
     obols_family_drop_rate = session_data.account.obols['BonusTotals']['Total%_DROP_CHANCE']
-    obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRatePractical']
-    obols_family_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
-    if obols_family_drop_rate >= obols_family_drop_rate_max:
-        obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
-        obols_family_note = '<br>Note: true max is rare and hyper obols, each with +1 DR upgrade'
+    obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
+    obols_family_note = '<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR upgrade'
     drop_rate_aw_advice[w2].append(Advice(
         label=f"Obols- Family Obols:"
               f"<br>+{obols_family_drop_rate}/{obols_family_drop_rate_max}% Drop Rate"
@@ -303,12 +299,13 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         (b for b in droppin_loads_value_breakpoints if b[0] > dropin_loads_bubble['Level']),
         None
     )
-    droppin_loads_breakpoint_txt = ''
-    if droppin_loads_next_breakpoint != None:
-        droppin_loads_breakpoint_txt = f"<br>Next breakpoint: {droppin_loads_next_breakpoint[2]}% value at level {droppin_loads_next_breakpoint[0]}"
+    droppin_loads_breakpoint_txt = (
+        f"<br>Next breakpoint: {droppin_loads_next_breakpoint[2]}% value at level {droppin_loads_next_breakpoint[0]}"
+        if droppin_loads_next_breakpoint is not None else ''
+    )
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Alchemy Bubbles|#bubbles }}}}s- Droppin Loads:"
-              f"<br>+{round(dropin_loads_bubble['BaseValue'], 1):g}/{droppin_loads_value_breakpoints[-1][1]}% Drop Rate"
+        label=f"{{{{ Alchemy Bubbles|#bubbles }}}}- Droppin Loads:"
+              f"<br>+{round(dropin_loads_bubble['BaseValue'], 2):g}/{droppin_loads_value_breakpoints[-1][1]}% Drop Rate"
               f"{droppin_loads_breakpoint_txt}",
         picture_class='droppin-loads',
         progression=dropin_loads_bubble['Level'],
@@ -324,8 +321,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     if chilled_yarn_artifact_level < numberOfArtifactTiers:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"{{{{ Artifacts|#artifacts }}}}- Chilled Yarn:"
-                  f"<br>x{chilled_yarn_value}/x{chilled_yarn_max} Sigil Bonuses"
-                  f"<br>Note: improves the sigil below",
+                  f"<br>{chilled_yarn_value}/{chilled_yarn_max}x Sigil Bonuses"
+                  f"<br>Note: Improves the sigil below",
             picture_class='chilled-yarn',
             progression=chilled_yarn_value,
             goal=numberOfArtifactTiers
