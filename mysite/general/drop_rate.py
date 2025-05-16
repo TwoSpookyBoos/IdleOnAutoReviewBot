@@ -612,9 +612,9 @@ def get_drop_rate_player_advice_group():
         end_note = ''
         if best_2_cards < 2:
             if best_2_cards == 0 and session_data.account.labChips['Omega Nanochip'] > 0:
-                end_note = 'Note: place in TOP LEFT card slot with Omega Nanochip Lab Chip'
+                end_note = 'Note: Place in TOP LEFT card slot with Omega Nanochip Lab Chip'
             elif best_2_cards != 0 and session_data.account.labChips['Omega Motherboard'] > 0:
-                end_note = 'Note: place in BOT RIGHT card slot with Omega Motherboard Lab Chip'
+                end_note = 'Note: Place in BOT RIGHT card slot with Omega Motherboard Lab Chip'
             best_2_cards += 1
         drop_rate_pp_advice[cards].append(card.getAdvice(optional_ending_note=end_note))
 
@@ -623,6 +623,8 @@ def get_drop_rate_player_advice_group():
     bnn_star, _ = divmod(bnn_stars_sum, len(bnn_cardset))
     bnn_star = min(bnn_star, max_card_stars)
     bnn_star_next = (bnn_star + 1) * len(bnn_cardset)
+    if bnn_stars_sum == bnn_star_next:
+        bnn_star += 1
     drop_rate_pp_advice[cards].append(Advice(
         label=f"{{{{ Card Sets|#cards }}}}- Bosses n Nightmares:"
               f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
@@ -637,6 +639,8 @@ def get_drop_rate_player_advice_group():
     events_star, _ = divmod(events_stars_sum, len(events_cardset))
     events_star = min(events_star, max_card_stars)
     events_star_next = (events_star + 1) * len(events_cardset)
+    if events_stars_sum == events_star_next:
+        events_star += 1
     drop_rate_pp_advice[cards].append(Advice(
         label=f"{{{{ Card Sets|#cards }}}}- Events:"
               f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
