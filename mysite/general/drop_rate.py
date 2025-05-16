@@ -758,35 +758,56 @@ def get_drop_rate_player_advice_group():
     ))
 
     # Post Office - Non Predatory Loot Box
-    nplb_po_box_max = 33.3
-    nplb_po_box_index = 11
-    nplb_po_box_level_max = poBoxDict[nplb_po_box_index]['Max Level']
-    nplb_po_box_level_total = 0
-    nplb_po_box_value_total = 0
-    num_chars = session_data.account.character_count
-    for toon in session_data.account.all_characters:
-        nplb_po_box_level_total += toon.po_boxes_invested['Non Predatory Loot Box']['Level']
-        nplb_po_box_value_total += toon.po_boxes_invested['Non Predatory Loot Box']['Bonus1Value']
-    nplb_po_box_level_avg = floor(nplb_po_box_level_total/num_chars)
-    nplb_po_box_value_avg = round(nplb_po_box_value_total/num_chars, 2)
-    drop_rate_pp_advice[misc].append(Advice(
-        label=f"{{{{ PO Boxs|#post-office }}}}- Non Predatory Loot Box:"
-              f"<br>+{nplb_po_box_value_avg:g}/{nplb_po_box_max}% Drop Rate (average across all characters)",
-        picture_class='non-predatory-loot-box',
-        progression=nplb_po_box_level_avg,
-        goal=nplb_po_box_level_max
-    ))
+    nplb = next(b for b in poBoxDict.values() if b['Name'] == 'Non Predatory Loot Box')
+    nplb_dr_max_value = lavaFunc(
+        funcType=nplb['1_funcType'],
+        level=nplb['Max Level'],
+        x1=nplb['1_x1'],
+        x2=nplb['1_x2']
+    )
+    nplb_all = [char.po_boxes_invested[nplb['Name']]['Level'] for char in session_data.account.all_characters]
+    nplb_unmaxed = {char.character_name:char.po_boxes_invested[nplb['Name']]['Level'] for char in session_data.account.all_characters if char.po_boxes_invested['Non Predatory Loot Box']['Level'] < nplb['Max Level']}
+    nplb_lowest = min(nplb_all, default=0)
+    if nplb_lowest < nplb['Max Level']:
+        drop_rate_pp_advice[misc].append(Advice(
+            label=(
+                f"{{{{ Post Office|#post-office }}}}- Non Predatory Loot Box:"
+                f"<br>Up to +{round(nplb_dr_max_value, 2):g}% Drop Rate at {nplb['Max Level']} boxes invested"
+                f"<br>Non-maxed boxes: {nplb_unmaxed}"
+            ),
+            picture_class=nplb['Name'],
+            progression=nplb_lowest,
+            goal=nplb['Max Level']
+        ))
+    else:
+        drop_rate_pp_advice[misc].append(Advice(
+            label=f"{{{{ Post Office|#post-office }}}}- Non Predatory Loot Box:"
+                  f"<br>+{round(nplb_dr_max_value, 2):g}% Drop Rate",
+            picture_class=nplb['Name'],
+            progression=nplb_lowest,
+            goal=nplb['Max Level']
+        ))
 
     # Prayers - Midas Minded
-    midas_minded_bonus_max = 118
-    midas_minded_curse_max = 350
     midas_minded_data = next(p for p in prayersDict.values() if p['Name'] == 'Midas Minded')
+    midas_minded_bonus_max = lavaFunc(
+        funcType=midas_minded_data['bonus_funcType'],
+        level=midas_minded_data['MaxLevel'],
+        x1=midas_minded_data['bonus_x1'],
+        x2=midas_minded_data['bonus_x2']
+    )
+    midas_minded_curse_max = lavaFunc(
+        funcType=midas_minded_data['curse_funcType'],
+        level=midas_minded_data['MaxLevel'],
+        x1=midas_minded_data['curse_x1'],
+        x2=midas_minded_data['curse_x2']
+    )
+
     midas_minded_prayer = session_data.account.prayers['Midas Minded']
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Prayers|#prayers }}}}- Midas Minded:"
-              f"<br>+{midas_minded_prayer['BonusValue']}/{midas_minded_bonus_max}% Drop Rate Bonus | "
-              f"+{midas_minded_prayer['CurseValue']:g}/{midas_minded_curse_max}% Max HP for Monsters CURSE"
-              f"<br>Note: do NOT use with Master Class modes, they only gain curse",
+              f"<br>+{round(midas_minded_prayer['BonusValue'], 2):g}/{round(midas_minded_bonus_max, 2):g}% Drop Rate Bonus | "
+              f"+{round(midas_minded_prayer['CurseValue'], 2):g}/{round(midas_minded_curse_max, 2):g}% Max HP for Monsters CURSE",
         picture_class='midas-minded',
         progression=midas_minded_prayer['Level'],
         goal=midas_minded_data['MaxLevel']
@@ -796,7 +817,7 @@ def get_drop_rate_player_advice_group():
     obols_player_drop_rate_total = 0
     for char in session_data.account.all_characters:
         obols_player_drop_rate_total += char.obols.get('Total%_DROP_CHANCE', 0)
-    obols_player_drop_rate_avg = floor(obols_player_drop_rate_total/num_chars)
+    obols_player_drop_rate_avg = floor(obols_player_drop_rate_total)
     player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRatePractical']
     player_obol_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
     if obols_player_drop_rate_avg >= player_obol_drop_rate_max:
