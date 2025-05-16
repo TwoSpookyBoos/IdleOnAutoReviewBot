@@ -736,7 +736,7 @@ def get_drop_rate_player_advice_group():
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- Pirate Booty:"
               f"<br>+{round(pirate_booty_starsign_value_nochip, 1):g}% Drop Rate {'PASSIVE' if pirate_booty_infinite_unlocked else 'if equipped'}"
-              f"{f'<br>+{round(pirate_booty_starsign_value_chip, 1):g}% Drop Rate if equiped WITH Silkrode Lab Chip' if silkroad_chip_owned and pirate_booty_infinite_unlocked else ''}",
+              f"{f'<br>+{round(pirate_booty_starsign_value_chip, 1):g}% Drop Rate if equipped WITH Silkrode Lab Chip' if silkroad_chip_owned and pirate_booty_infinite_unlocked else ''}",
         picture_class='blue-hedgehog',
         progression=int(pirate_booty_starsign_unlocked),
         goal=1
@@ -751,7 +751,7 @@ def get_drop_rate_player_advice_group():
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- Druipi Major:"
               f"<br>+{round(druipi_major_starsign_value_nochip, 1):g}% Drop Rate {'PASSIVE' if druipi_major_infinite_unlocked else 'if equipped'}"
-              f"{f'<br>+{round(druipi_major_starsign_value_chip, 1):g}% Drop Rate if equiped WITH Silkrode Lab Chip' if silkroad_chip_owned and druipi_major_infinite_unlocked else ''}",
+              f"{f'<br>+{round(druipi_major_starsign_value_chip, 1):g}% Drop Rate if equipped WITH Silkrode Lab Chip' if silkroad_chip_owned and druipi_major_infinite_unlocked else ''}",
         picture_class='og-signalais',
         progression=int(druipi_major_starsign_unlocked),
         goal=1
