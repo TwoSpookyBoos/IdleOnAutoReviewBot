@@ -687,7 +687,6 @@ def get_drop_rate_player_advice_group():
                     goal=1
                 ))
 
-
     # Lab Chips - Silkrode Nanochip
     # Modifier for Star Signs below, must be equipped so we always show 
     silkroad_chip_owned = session_data.account.labChips['Silkrode Nanochip'] > 0
@@ -695,7 +694,7 @@ def get_drop_rate_player_advice_group():
     drop_rate_pp_advice[misc].append(Advice(
         label=f"Lab Chips- Silkrode Nanochip:"
               f"<br>x2 Star Sign Bonuses while equipped"
-              f"<br>Note: improves the Star Signs below, only if Star Sign is equipped",
+              f"<br>Note: Improves the Star Signs below while they are equipped",
         picture_class='silkrode-nanochip',
         progression=int(silkroad_chip_owned),
         goal=1
@@ -707,8 +706,6 @@ def get_drop_rate_player_advice_group():
     saraph_cosmod_starsign_mod = (1.1 ** max(3, ceil((session_data.account.all_skills['Summoning'][0]+1)/20))) if saraph_cosmos_starsign_unlocked else 1.0
     drop_rate_pp_advice[misc].append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- Seraph Cosmos:"
-              f"<br>x{round(saraph_cosmod_starsign_mod, 2)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
-              f"<br>Note: improves the Star Signs below",
               f"<br>x{round(saraph_cosmod_starsign_mod, 3)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
               f"<br>Note: Always improves the Star Signs below",
         picture_class='seraph-cosmos',
@@ -730,8 +727,6 @@ def get_drop_rate_player_advice_group():
         infinite_star_sign_levels += int(starsignsDict[i]['Passive'])
         i += 1
 
-    # Star Sign - Druipi Major
-    pirate_booty_starsign = session_data.account.star_signs['Seraph Cosmos']
     # Star Sign - Pirate Booty
     pirate_booty_starsign = session_data.account.star_signs['Pirate Booty']
     pirate_booty_starsign_unlocked = pirate_booty_starsign['Unlocked']
