@@ -674,19 +674,19 @@ def get_drop_rate_player_advice_group():
         # Once the player has a piece of DR gear for a slot, it won't list _worse_ items for the same slot.
         # Each slot is already sorted best to worst so we just break out of the slot loop once we have an owned item
         # Because of the lack of availability, we'll show ALL limited items all the time. Even if something better is owned
-        bis_owned = False
+        best_value = 0
         for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
-            if not bis_owned or equipment['Limited']:
+            if equipment['Value'] >= best_value:
+                best_value = max(best_value, equipment['Value'])
                 drop_rate_pp_advice[eqp].append(Advice(
                     label=f"{equipment['Type']}- {equipment['Name']}:"
-                        f"<br>+{equipment['Value']}% Drop Rate{' (limited availability)' if equipment['Limited'] else ''}"
-                        f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
+                          f"<br>+{equipment['Value']}% Drop Rate{' (Limited availability)' if equipment['Limited'] else ''}"
+                          f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
                     picture_class=equipment['Image'],
                     progression=int(equipment['Owned']),
                     goal=1
                 ))
-            if equipment['Owned']:
-                bis_owned = True
+
 
     # Lab Chips - Silkrode Nanochip
     # Modifier for Star Signs below, must be equipped so we always show 
@@ -709,6 +709,8 @@ def get_drop_rate_player_advice_group():
         label=f"{{{{ Star Signs|#star-signs }}}}- Seraph Cosmos:"
               f"<br>x{round(saraph_cosmod_starsign_mod, 2)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
               f"<br>Note: improves the Star Signs below",
+              f"<br>x{round(saraph_cosmod_starsign_mod, 3)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
+              f"<br>Note: Always improves the Star Signs below",
         picture_class='seraph-cosmos',
         progression=int(saraph_cosmos_starsign_unlocked),
         goal=1
@@ -730,6 +732,8 @@ def get_drop_rate_player_advice_group():
 
     # Star Sign - Druipi Major
     pirate_booty_starsign = session_data.account.star_signs['Seraph Cosmos']
+    # Star Sign - Pirate Booty
+    pirate_booty_starsign = session_data.account.star_signs['Pirate Booty']
     pirate_booty_starsign_unlocked = pirate_booty_starsign['Unlocked']
     pirate_booty_infinite_unlocked = pirate_booty_starsign['Index'] <= infinite_star_sign_levels
     pirate_booty_starsign_value_nochip = 5 * saraph_cosmod_starsign_mod
