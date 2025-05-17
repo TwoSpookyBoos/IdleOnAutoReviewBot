@@ -1389,7 +1389,7 @@ atoms_progressionTiers = {
     },
     14: {
         'Atoms': {
-            'Aluminium - Stamp Supercharger': 30,
+            'Aluminium - Stamp Supercharger': 50,
             'Helium - Talent Power Stacker': 12,
         },
     },
