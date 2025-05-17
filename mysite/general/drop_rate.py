@@ -819,6 +819,7 @@ def get_drop_rate_player_advice_group():
         if best_obols[0] is None:
             best_obols[0] = char.character_name
         if char.obols.get('Total%_DROP_CHANCE', 0) > best_obols[1]:
+            best_obols[0] = char.character_name
             best_obols[1] = char.obols.get('Total%_DROP_CHANCE', 0)
     player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
     drop_rate_pp_advice[misc].append(Advice(
