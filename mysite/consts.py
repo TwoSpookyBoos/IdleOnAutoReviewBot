@@ -5908,10 +5908,10 @@ obols_dict = {
     "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_CHANCE': 15}},
 }
 obols_max_bonuses_dict = {
-    'PlayerDropRatePractical': 134,
-    'PlayerDropRateTrue': 172,
-    'FamilyDropRatePractical': 188,
-    'FamilyDropRateTrue': 228
+    'PlayerDropRatePractical': 134,  #12*4=48% circles, 6*8=48% squares,  2*11=22% hex, 1*16=16% sparkle
+    'PlayerDropRateTrue': 172,       #12*5=60% circles, 6*11=66% squares, 2*15=30% hex, 1*16=16% sparkle
+    'FamilyDropRatePractical': 188,  #12*4=48% circles, 4*8=32% squares,  4*11=44% hex, 4*16=64% sparkle
+    'FamilyDropRateTrue': 228        #12*5=60% circles, 4*11=44% squares, 4*15=60% hex, 4*16=64% sparkle
 }
 ignorable_obols_list = [
     'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',

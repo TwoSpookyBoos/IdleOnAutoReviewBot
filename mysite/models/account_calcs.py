@@ -2061,7 +2061,7 @@ def _calculate_class_unique_kill_stacks(account):
         account.class_kill_talents[talent_name]['funcType'] = all_talentsDict[talent_details['Talent Number']]['funcX']
         account.class_kill_talents[talent_name]['x1'] = all_talentsDict[talent_details['Talent Number']]['x1']
         account.class_kill_talents[talent_name]['x2'] = all_talentsDict[talent_details['Talent Number']]['x2']
-        account.class_kill_talents[talent_name]['Highest Preset Level'] = max(talent_levels)
+        account.class_kill_talents[talent_name]['Highest Preset Level'] = max(talent_levels, default=0)
         account.class_kill_talents[talent_name]['Talent Value'] = lavaFunc(
             funcType=account.class_kill_talents[talent_name]['funcType'],
             level=account.class_kill_talents[talent_name]['Highest Preset Level'],

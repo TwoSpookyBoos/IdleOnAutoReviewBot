@@ -279,7 +279,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     ))
 
     # Obols - Family - Drop Rate
-    obols_family_drop_rate = session_data.account.obols['BonusTotals']['Total%_DROP_CHANCE']
+    obols_family_drop_rate = session_data.account.obols['BonusTotals'].get('Total%_DROP_CHANCE', 0)
     obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
     obols_family_note = '<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR'
     drop_rate_aw_advice[w2].append(Advice(
@@ -446,7 +446,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{round(wisdom_monument_drop_rate['Value'], 2):g}% Drop Rate",
         picture_class='cavern-13',
         progression=wisdom_monument_drop_rate['Level'],
-        goal='∞'
+        goal=infinity_string
     ))
 
     # World 6
@@ -814,21 +814,19 @@ def get_drop_rate_player_advice_group():
     ))
 
     # Obols - Personal
-    obols_player_drop_rate_total = 0
+    best_obols = [None, 0]
     for char in session_data.account.all_characters:
-        obols_player_drop_rate_total += char.obols.get('Total%_DROP_CHANCE', 0)
-    obols_player_drop_rate_avg = floor(obols_player_drop_rate_total)
-    player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRatePractical']
-    player_obol_note = '<br>Note: practical max is farmable obols, each with +1 DR upgrade'
-    if obols_player_drop_rate_avg >= player_obol_drop_rate_max:
-        player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
-        player_obol_note = '<br>Note: true max is rare and hyper obols, each with +1 DR upgrade'
+        if best_obols[0] is None:
+            best_obols[0] = char.character_name
+        if char.obols.get('Total%_DROP_CHANCE', 0) > best_obols[1]:
+            best_obols[1] = char.obols.get('Total%_DROP_CHANCE', 0)
+    player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
     drop_rate_pp_advice[misc].append(Advice(
         label=f"Obols- Personal Obols:"
-              f"<br>+{obols_player_drop_rate_avg}/{player_obol_drop_rate_max}% Drop Rate (average across all characters)"
-              f"{player_obol_note}",
+              f"<br>+{best_obols[1]}/{player_obol_drop_rate_max}% Drop Rate on best ({best_obols[0]})"
+              f"<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR",
         picture_class='dementia-obol-of-infinisixes',
-        progression=obols_player_drop_rate_avg,
+        progression=best_obols[1],
         goal=player_obol_drop_rate_max
     ))
 
