@@ -7436,7 +7436,7 @@ caverns_conjuror_majiks = {
         {'Name': 'Resource Bursting', 'BonusPerLevel': 100, 'MaxLevel': 3, 'Scaling': 'add', 'Description': '% multi-resource max'},
         {'Name': 'Voter Integrity', 'BonusPerLevel': 6, 'MaxLevel': 5, 'Scaling': 'add', 'Description': '% larger Ballot bonus'},
         {'Name': 'Weapon Relevancy', 'BonusPerLevel': 75, 'MaxLevel': 4, 'Scaling': 'add', 'Description': '% stronger Weapon Power'},
-        {'Name': 'Equinox_Maxim', 'BonusPerLevel': 12, 'MaxLevel': 5, 'Scaling': 'value', 'Description': 'x Equinox Bar Fill Rate'},
+        {'Name': 'Equinox Maxim', 'BonusPerLevel': 12, 'MaxLevel': 5, 'Scaling': 'value', 'Description': 'x Equinox Bar Fill Rate'},
         {'Name': 'IdleOn Placeholder', 'BonusPerLevel': 1, 'MaxLevel': 2, 'Scaling': 'add', 'Description': " placeholder- Don't buy this",},
     ]
 }

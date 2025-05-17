@@ -110,7 +110,8 @@ def _calculate_caverns_majiks(account):
                         majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
                     )
             account.caverns['Majiks'][majik_data['Name']]['Description'] = (
-                f"{account.caverns['Majiks'][majik_data['Name']]['Value']}/{account.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                f"{round(account.caverns['Majiks'][majik_data['Name']]['Value'], 2):g}"
+                f"/{round(account.caverns['Majiks'][majik_data['Name']]['MaxValue'], 2):g}"
                 f"{account.caverns['Majiks'][majik_data['Name']]['Description']}"
             )
             # logger.debug(f"{majik_data['Name']} value set to {account.caverns['Majiks'][majik_data['Name']]['Value']}")
