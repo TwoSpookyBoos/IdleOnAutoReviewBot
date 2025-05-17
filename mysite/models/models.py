@@ -28,7 +28,7 @@ from consts import (
     # Caverns
 
 )
-from utils.data_formatting import safe_loads, safer_get, get_obol_totals
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -60,15 +60,27 @@ class Equipment:
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
                 groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
+            inv_order = raw_data.get(f"InventoryOrder_{toon_index}", [])
+            inv_quantity = raw_data.get(f"ItemQTY_{toon_index}", [])
+            all_inventory = {}
+            for o, q in zip(inv_order, inv_quantity):
+                if o in all_inventory:
+                    all_inventory[o] += safer_convert(q, 0.0)
+                else:
+                    all_inventory[o] = safer_convert(q, 0.0)
+                groups.append([Asset(name, count) for name, count in all_inventory.items()])
+
             # equips, tools, foods = groups
 
             self.equips = groups[0] if groups else []
             self.tools = groups[1] if groups else []
             self.foods = groups[2] if groups else []
+            self.inventory = groups[3] if groups else []
         else:
-            self.equips = {}
-            self.tools = {}
+            self.equips = []
+            self.tools = []
             self.foods = []
+            self.inventory = []
 
 def getExpectedTalents(classes_list):
     expectedTalents = []

@@ -74,16 +74,26 @@ def getSlabProgressionTierAdviceGroups():
         if itemName not in session_data.account.registered_slab:
             # If the item is an Asset, meaning in storage, character inventory, or worn by a character
             if session_data.account.stored_assets.get(itemName).amount > 0:
+                sources = ", ".join([
+                    char.character_name for char in session_data.account.all_characters
+                    if item_display_name in char.equipment.inventory
+                ])
+                sources = 'In Storage' if not sources else f"Inventory of {sources}"
                 slab_AdviceDict["Storage"].append(Advice(
-                    label=f"{item_display_name} (Storage or Inventory)",
+                    label=f"{item_display_name} ({sources})",
                     picture_class=item_picture,
                     progression=0,
                     goal=1
                 ))
                 continue
             elif session_data.account.worn_assets.get(itemName).amount > 0:
+                sources = ", ".join([
+                    char.character_name for char in session_data.account.all_characters
+                    if item_display_name in char.equipment.equips
+                    or item_display_name in char.equipment.tools
+                ])
                 slab_AdviceDict["Storage"].append(Advice(
-                    label=f"{item_display_name} (Equipped)",
+                    label=f"{item_display_name} (Equipped by {sources})",
                     picture_class=item_picture,
                     progression=0,
                     goal=1
@@ -196,28 +206,19 @@ def getSlabProgressionTierAdviceGroups():
                 ))
                 continue
 
-    # Remove any empty subgroups. Caused by creating the subgroups in order to preserve order.
-    emptyVendorSubgroups = []
-    for subgroup in slab_AdviceDict["Vendors"]:
-        if len(slab_AdviceDict["Vendors"][subgroup]) == 0:
-            emptyVendorSubgroups.append(subgroup)
-    for subgroup in vendors:
-        if vendors[subgroup] not in session_data.account.registered_slab:
-            slab_AdviceDict["Vendors"][subgroup] = [
+    # Replace any locked Vendors with unlock note
+    for vendor_name in vendors:
+        if vendors[vendor_name] not in session_data.account.registered_slab:
+            slab_AdviceDict["Vendors"][vendor_name] = [
                 Advice(
-                    label=f"{subgroup} purchases hidden until Boss Crystal registered in The Slab",
-                    picture_class=getItemDisplayName(vendors[subgroup]),
+                    label=f"{vendor_name} purchases hidden until Boss Crystal registered in The Slab",
+                    picture_class=getItemDisplayName(vendors[vendor_name]),
                     progression=0,
                     goal=1
                 )
             ]
-    for emptySubgroup in emptyVendorSubgroups:
-        slab_AdviceDict["Vendors"].pop(emptySubgroup)
 
-    emptyAnvilSubgroups = []
-    for subgroup in slab_AdviceDict["Anvil"]:
-        if len(slab_AdviceDict["Anvil"][subgroup]) == 0:
-            emptyAnvilSubgroups.append(subgroup)
+    # Replace any locked Anvil Tabs with unlock note
     for subgroup in anvilTabs:
         if anvilTabs[subgroup] not in session_data.account.registered_slab:
             slab_AdviceDict["Anvil"][subgroup] = [
@@ -228,15 +229,6 @@ def getSlabProgressionTierAdviceGroups():
                     goal=1
                 )
             ]
-    for removableSubgroup in emptyAnvilSubgroups:
-        slab_AdviceDict["Anvil"].pop(removableSubgroup)
-
-    # emptyDungeonSubgroups = []
-    # for subgroup in slab_AdviceDict["Dungeon"]:
-    #     if len(slab_AdviceDict["Dungeon"][subgroup]) == 0:
-    #         emptyDungeonSubgroups.append(subgroup)
-    # for emptySubgroup in emptyDungeonSubgroups:
-    #     slab_AdviceDict["Dungeon"].pop(emptySubgroup)
 
     # Generate Alert
     minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
@@ -251,7 +243,7 @@ def getSlabProgressionTierAdviceGroups():
     # Generate AdviceGroups
     slab_AdviceGroupDict["Storage"] = AdviceGroup(
         tier='',
-        pre_string=f"Found in storage or on a character",
+        pre_string=f"Minimal Effort- Found in storage or on a character",
         advices=slab_AdviceDict["Storage"],
         informational=True
     )
@@ -263,7 +255,7 @@ def getSlabProgressionTierAdviceGroups():
     )
     slab_AdviceGroupDict["Reclaims"] = AdviceGroup(
         tier='',
-        pre_string=f"Could be reclaimed from a completed quest (1 per cloudsave)",
+        pre_string=f"Minimal Effort- Could be reclaimed from a completed quest (1 per cloudsave)",
         advices=slab_AdviceDict["Reclaims"],
         informational=True
     )
@@ -292,6 +284,9 @@ def getSlabProgressionTierAdviceGroups():
         informational=True
     )
 
+    for ag in slab_AdviceGroupDict.values():
+        ag.remove_empty_subgroups()
+
     overall_SectionTier = min(max_tier, tier_Slab)
     return slab_AdviceGroupDict, overall_SectionTier, max_tier
 
@@ -311,9 +306,6 @@ def getSlabAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     slab_AdviceGroupDict, overall_SectionTier, max_tier = getSlabProgressionTierAdviceGroups()
     #slab_AdviceGroupDict["Hidden"] = getHiddenAdviceGroup()
-
-    for ag in slab_AdviceGroupDict.values():
-        ag.remove_empty_subgroups()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
