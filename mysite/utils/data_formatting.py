@@ -148,6 +148,7 @@ def load_toolbox_data(rawJSON):
     parsed["guildData"] = rawJSON.get("guildData", {})
     parsed["serverVars"] = rawJSON.get("serverVars", {})
     parsed["AutoLoot"] = rawJSON.get("serverVars", {}).get("AutoLoot", 0)
+    parsed['parsedData'] = rawJSON.get('parsedData', {})  #Only available on Public Toolbox profiles
     if not isinstance(parsed.get("AutoLoot"), int):
         try:
             parsed["AutoLoot"] = int(parsed["AutoLoot"])

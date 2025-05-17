@@ -1126,8 +1126,12 @@ def _calculate_caverns_measurements_multis(account):
                 'PrettyRaw': f"{sum_combat_levels:,}",
                 'Prepped': sum_combat_levels / 500  # In the source code, this is when 99 = i
             }
-        # elif entry_index == 3:  #Tome Score
-        #     pass
+        elif entry_index == 3:  #Tome Score
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': account.tome['Total Points'],
+                'PrettyRaw': f"{account.tome['Total Points']:,}",
+                'Prepped': account.tome['Total Points'] / 2500  # In the source code, this is when 99 = i
+            }
         elif entry_index == 4:  #All Skill Lv
             total_skill_levels = 0
             for skill, skill_levels in account.all_skills.items():
@@ -1580,7 +1584,7 @@ def _calculate_caverns_gambit(account):
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 def _calculate_w6(account):
-    _calculate_w6_farming(account)
+    # _calculate_w6_farming(account)  # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_summoning(account)
 
 def _calculate_w6_sneaking_gemstones(account):
@@ -1602,6 +1606,8 @@ def _calculate_w6_sneaking_gemstones(account):
                 account.sneaking['Gemstones'][gemstone_name]['BoostedValue'] = account.sneaking['Gemstones'][gemstone_name]['BaseValue']
 
 def _calculate_w6_farming(account):
+    # Runs in wave3 due to Land Rank multi from Talents
+    _calculate_w6_farming_land_ranks(account)
     _calculate_w6_farming_crop_depot(account)
     _calculate_w6_farming_markets(account)
     _calculate_w6_farming_crop_value(account)
@@ -1609,6 +1615,35 @@ def _calculate_w6_farming(account):
     _calculate_w6_farming_crop_speed(account)
     _calculate_w6_farming_bean_bonus(account)
     _calculate_w6_farming_og(account)
+
+def _calculate_w6_farming_land_ranks(account):
+    highest_dank_rank_level = 0
+    for db in account.dbs:
+        highest_dank_rank_level = max(
+            highest_dank_rank_level,
+            db.current_preset_talents.get('207', 0) + db.total_bonus_talent_levels,
+            db.secondary_preset_talents.get('207', 0) + db.total_bonus_talent_levels
+        )
+
+    dank_rank_multi = max(1, lavaFunc(
+        funcType=all_talentsDict[207]['funcX'],
+        level=highest_dank_rank_level,
+        x1=all_talentsDict[207]['x1'],
+        x2=all_talentsDict[207]['x2'],
+    ))
+
+    for upgrade_name, upgrade_details in account.farming['LandRankDatabase'].items():
+        if upgrade_details['Index'] % 5 != 4:
+            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
+                dank_rank_multi
+                * ((1.7 * upgrade_details['BaseValue'] * upgrade_details['Level']) / (upgrade_details['Level'] + 80))
+            )
+        else:
+            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
+                dank_rank_multi
+                * upgrade_details['BaseValue']
+                * upgrade_details['Level']
+            )
 
 def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
@@ -1859,6 +1894,7 @@ def _calculate_wave_3(account):
     _calculate_w6_sneaking_gemstones(account)
     _calculate_master_classes_grimoire_bone_sources(account)
     _calculate_class_unique_kill_stacks(account)
+    _calculate_w6_farming(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
@@ -2079,4 +2115,3 @@ def _calculate_class_unique_kill_stacks(account):
             account.class_kill_talents[talent_name]['Talent Value'] * account.class_kill_talents[talent_name]['Kill Stacks']
         )
         # logger.debug(f"{account.class_kill_talents[talent_name] = }")
-

@@ -1859,6 +1859,7 @@ def _parse_w4(account):
     _parse_w4_lab(account)
     _parse_w4_rift(account)
     _parse_w4_breeding(account)
+    _parse_w4_tome(account)
 
 def _parse_w4_cooking(account):
     account.cooking = {
@@ -1931,6 +1932,13 @@ def _parse_w4_cooking_ribbons(account):
             account.meals[meal_name]['RibbonTier'] = 0
             if raw_ribbons:
                 logger.exception(f"Could not retrieve Ribbon for {meal_name}")
+
+def _parse_w4_tome(account):
+    account.tome = {
+        'Data Present': 'totalTomePoints' in account.raw_data.get('parsedData', {}),
+        'Total Points': floor(account.raw_data.get('parsedData', {}).get('totalTomePoints', 0))
+    }
+
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
@@ -3415,17 +3423,15 @@ def _parse_w6_farming_land_ranks(account, rawRanks):
             account.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
                 'Level': rawRanks[2][upgradeIndex],
                 'BaseValue': upgradeValuesDict['Value'],
-                'Value': (
-                    (1.7 * upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]) / (rawRanks[2][upgradeIndex] + 80)
-                    if upgradeIndex not in [4, 9, 14, 19]
-                    else upgradeValuesDict['Value'] * rawRanks[2][upgradeIndex]
-                )
+                'Value': 0,  #Updated in account_calcs._calculate_w6_farming_land_ranks()
+                'Index': upgradeIndex
             }
         except:
             account.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
                 'Level': 0,
                 'BaseValue': upgradeValuesDict['Value'],
-                'Value': 0
+                'Value': 0,
+                'Index': upgradeIndex
             }
 
 def _parse_w6_summoning(account):
