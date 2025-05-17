@@ -9,7 +9,7 @@ from consts import (
     gfood_codes,
     card_raw_data, cardset_names, decode_enemy_name,
     gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
-    guildBonusesList, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
+    guild_bonuses_dict, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
     event_points_shop_dict,
     npc_tokens,
     companions,
@@ -27,7 +27,7 @@ from consts import (
     sigilsDict,
     arcadeBonuses, arcade_max_level,
     ballotDict,
-    obolsDict, ignorable_obols_list,
+    obols_dict, ignorable_obols_list,
     islands_dict, killroy_dict,
     # W3
     refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
@@ -56,7 +56,7 @@ from consts import (
     caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges,
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, numberToLetter
 
@@ -138,7 +138,7 @@ def _all_stored_items(account) -> Assets:
 def _all_worn_items(account) -> Assets:
     stuff_worn = defaultdict(int)
     for toon in account.safe_characters:
-        for item in [*toon.equipment.foods, *toon.equipment.equips]:
+        for item in [*toon.equipment.foods, *toon.equipment.equips, *toon.equipment.tools]:
             if item.codename == 'Blank':
                 continue
             stuff_worn[item.codename] += item.amount
@@ -233,7 +233,6 @@ def _parse_characters(account, run_type):
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
-
     account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
     account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
     account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
@@ -246,8 +245,10 @@ def _parse_character_class_lists(account):
 
     account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
     account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
+    account.sorcs = [toon for toon in account.all_characters if 'Elemental Sorcerer' in toon.all_classes]
 
     account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
+    account.sbs = [toon for toon in account.all_characters if 'Siege Breaker' in toon.all_classes]
 
 def _parse_general(account):
     # General / Multiple uses
@@ -319,7 +320,6 @@ def _parse_general_gem_shop_bundles(account):
     if unknown_bundles:
         logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
 
-
 def _parse_general_quests(account):
     account.compiled_quests = {}
     for charIndex, questsDict in enumerate(account.all_quests):
@@ -355,9 +355,17 @@ def _parse_general_npc_tokens(account):
     #     account.all_assets.get(tokenName).add(tokenCount)
 
 def _parse_class_unique_kill_stacks(account):
-    account.dk_orb_kills = safer_get(account.raw_optlacc_dict, 138, 0)
-    account.sb_plunder_kills = safer_get(account.raw_optlacc_dict, 139, 0)
-    account.es_wormhole_kills = safer_get(account.raw_optlacc_dict, 152, 0)
+    account.class_kill_talents = {
+        'Archlord of the Pirates': {
+            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
+        },
+        'King of the Remembered': {
+            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
+        },
+        'Wormhole Emperor': {
+            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
+        }
+    }
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -466,14 +474,21 @@ def _parse_general_merits(account):
                 continue  # Already defaulted to 0 in Consts
 
 def _parse_general_guild_bonuses(account):
-    account.guildBonuses = {}
+    account.guild_bonuses = {}
     raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonusIndex, bonusName in enumerate(guildBonusesList):
+    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_dict.items()):
         try:
-            account.guildBonuses[bonusName] = safer_convert(raw_guild[0][bonusIndex], 0)
+            guild_bonus_level = safer_convert(raw_guild[0][bonus_index], 0)
         except Exception as e:
             logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
-            account.guildBonuses[bonusName] = 0
+            guild_bonus_level = 0
+        account.guild_bonuses[bonus_name] = {
+            'Level': guild_bonus_level,
+            'Value': lavaFunc(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
+            'Max Level': bonus['Max Level'],
+            'Max Value': bonus['Max Value'],
+            'Image': bonus['Image']
+        }
 
 def _parse_general_printer(account):
     account.printer = {
@@ -1192,10 +1207,10 @@ def _parse_w2_cauldrons(account):
         ]
     except Exception as e:
         logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["OrangeBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["GreenBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["PurpleBoosts"]: [0, 0, 0, 0]
-        account.alchemy_cauldrons["YellowBoosts"]: [0, 0, 0, 0]
+        account.alchemy_cauldrons["OrangeBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["GreenBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["PurpleBoosts"] = [0, 0, 0, 0]
+        account.alchemy_cauldrons["YellowBoosts"] = [0, 0, 0, 0]
     try:
         account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
         account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
@@ -1409,8 +1424,8 @@ def _parse_w2_obols(account):
     }
     raw_owned_obols = []
     for jsonkey in [
-        "ObolEqO1", "ObolEqO2", "ObolEqO0_0", "ObolEqO0_1", "ObolEqO0_2", "ObolEqO0_3", "ObolEqO0_4",
-        "ObolEqO0_5", "ObolEqO0_6", "ObolEqO0_7", "ObolEqO0_8", "ObolEqO0_9"
+        'ObolEqO1', 'ObolEqO2', 'ObolEqO0_0', 'ObolEqO0_1', 'ObolEqO0_2', 'ObolEqO0_3', 'ObolEqO0_4',
+        'ObolEqO0_5', 'ObolEqO0_6', 'ObolEqO0_7', 'ObolEqO0_8', 'ObolEqO0_9'
     ]:
         raw_owned_obols += safe_loads(account.raw_data.get(jsonkey, []))
     raw_obol_inventory_list = safe_loads(account.raw_data.get("ObolInvOr"))
@@ -1418,13 +1433,17 @@ def _parse_w2_obols(account):
         raw_owned_obols += subdict.values()
     for obol in raw_owned_obols:
         if obol not in ignorable_obols_list:
-            obolBonusType = obolsDict.get(obol, {}).get('Bonus', 'Unknown')
-            obolShape = obolsDict.get(obol, {}).get('Shape', 'Unknown')
+            obolBonusType = obols_dict.get(obol, {}).get('Bonus', 'Unknown')
+            obolShape = obols_dict.get(obol, {}).get('Shape', 'Unknown')
             account.obols[obolBonusType][obolShape]['Total'] += 1
             if obol not in account.obols[obolBonusType][obolShape]:
                 account.obols[obolBonusType][obolShape][obol] = {'Count': 1}
             else:
                 account.obols[obolBonusType][obolShape][obol]['Count'] += 1
+    
+    raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
+    raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
+    account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
 
 def _parse_w2_islands(account):
     account.islands = {

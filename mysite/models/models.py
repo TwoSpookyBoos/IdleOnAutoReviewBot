@@ -10,7 +10,7 @@ from flask import g
 from config import app
 from consts import (
     # General
-    lavaFunc, ignorable_labels, cards_max_level,
+    lavaFunc, ignorable_labels, cards_max_level, obols_dict,
     greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
@@ -28,7 +28,7 @@ from consts import (
     # Caverns
 
 )
-from utils.data_formatting import safe_loads, safer_get
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -139,6 +139,8 @@ class Character:
         secondary_preset_talents: dict,
         current_preset_talent_bar: dict,
         secondary_preset_talent_bar: dict,
+        obols: list[str],
+        obol_upgrades: dict,
         po_boxes: list[int],
         equipped_lab_chips: list[str],
         inventory_bags: dict,
@@ -210,6 +212,8 @@ class Character:
         self.divinity_link: str = "Unlinked"
         self.current_polytheism_link = "Unlinked"
         self.secondary_polytheism_link = "Unlinked"
+        self.obols = get_obol_totals(obols, obol_upgrades)
+
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():
             try:
@@ -686,7 +690,7 @@ class AdviceGroup(AdviceBase):
         if 'default' in self.advices:
             if isinstance(self.advices['default'], list):
                 try:
-                    self.advices['default']: list[Advice] = sorted(
+                    self.advices['default'] = list[Advice] = sorted(
                         self.advices['default'],
                         key=lambda a: float(str(a.progression).strip('%')),
                         reverse=reverseBool
@@ -1167,9 +1171,10 @@ class Card:
         )
         return result
 
-    def getAdvice(self, optional_starting_note=''):
+    def getAdvice(self, optional_starting_note='', optional_ending_note=''):
         a = Advice(
-            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}",
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}"
+                  f"{'<br>' if optional_ending_note else ''}{optional_ending_note}",
             picture_class=self.css_class,
             progression=self.level,
             goal=self.max_level
