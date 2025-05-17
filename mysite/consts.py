@@ -9363,17 +9363,11 @@ reclaimableQuestItems = {
         "QuestName": "Hardcore Gamer Status, Here I Come!",
         "QuestNameCoded": "Scripticus2"
     },
-    "Quest1": {
-        "ItemName": "Mining Certificate",
+    "EquipmentTools1": {
+        "ItemName": "Junk Pickaxe",
         "QuestGiver": "Glumlee",
         "QuestName": "Literally Burning Your Money",
         "QuestNameCoded": "Glumlee3"
-    },
-    "Quest5": {
-        "ItemName": "Class Certificate",
-        "QuestGiver": "Promotheus",
-        "QuestName": "Three Right Answers",
-        "QuestNameCoded": "Promotheus2"
     },
     "InvBag4": {
         "ItemName": "Inventory Bag D",
@@ -9503,11 +9497,11 @@ slab_QuestRewardsAllChars = {
         "QuestName": "Mr. Worldwide",
         "QuestNameCoded": "Scripticus4"
     },
-    'EquipmentTools1': {
+    "EquipmentTools1": {
         "ItemName": "Junk Pickaxe",
-        "QuestGiver": "Scripticus",
-        "QuestName": "Certified Swinger, of Pickaxes of course!",
-        "QuestNameCoded": "Scripticus6"
+        "QuestGiver": "Glumlee",
+        "QuestName": "Literally Burning Your Money",
+        "QuestNameCoded": "Glumlee3"
     },
     'MaxCapBagM1': {
         "ItemName": "Mini Materials Pouch",
@@ -9562,12 +9556,6 @@ slab_QuestRewardsAllChars = {
         "QuestGiver": "Glumlee",
         "QuestName": "Learning to Swing",
         "QuestNameCoded": "Glumlee1"
-    },
-    'Quest1': {
-        "ItemName": "Mining Certificate",
-        "QuestGiver": "Glumlee",
-        "QuestName": "Literally Burning your Money",
-        "QuestNameCoded": "Glumlee3"
     },
     'MaxCapBagT2': {
         "ItemName": "Miniature Mining Pouch",
