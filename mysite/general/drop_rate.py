@@ -403,6 +403,30 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=1
     ))
 
+    # The Tome
+    # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
+    grey_tome_book = session_data.account.grimoire['Upgrades']['Grey Tome Book']
+    if grey_tome_book['Level'] < grey_tome_book['Max Level']:
+        upgrades_to_unlock = grey_tome_book['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
+        drop_rate_aw_advice[w4].append(Advice(
+            label=f"{{{{Grimoire|#the-grimoire}}}}: Grey Tome Book:"
+                  f"<br>{round(grey_tome_book['Total Value'], 2):g}x higher bonus from Tome Red Pages"
+                  f"{f'<br>Requires {upgrades_to_unlock} more upgrades to unlock' if upgrades_to_unlock > 0 else ''}",
+            picture_class=session_data.account.grimoire['Upgrades']['Grey Tome Book']['Image'],
+            progression=grey_tome_book['Level'],
+            goal=grey_tome_book['Max Level']
+        ))
+    drop_rate_aw_advice[w4].append(Advice(
+        label=f"""Tome- Red Pages:"""
+              f"""<br>+{round(session_data.account.tome['Bonuses']['Drop Rarity']['Total Value'], 3):g}% Drop Rate"""
+              f"""<br>{'Unknown, sorry 🙁' if not session_data.account.tome['Data Present'] else ''}"""
+              f"""{f"{session_data.account.tome['Total Points']:,}" if session_data.account.tome['Data Present'] else ''} Total Tome Points"""
+              f"""<br>Increases every 100 points over 8000""",
+        picture_class='red-tome-pages',
+        progression=session_data.account.tome['Red Pages Unlocked'],
+        goal=1
+    ))
+
     # World 5
     #########################################
 

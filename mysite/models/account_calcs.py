@@ -39,6 +39,7 @@ def calculate_account(account):
     _calculate_wave_3(account)
 
 def _calculate_wave_1(account):
+    # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w2_arcade(account)
@@ -234,6 +235,7 @@ def _calculate_w2_arcade(account):
         account.arcade[upgrade_index]['Display'] = (
             f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
         )
+
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -925,6 +927,7 @@ def _calculate_w4(account):
     _calculate_w4_jewel_multi(account)
     _calculate_w4_meal_multi(account)
     _calculate_w4_lab_bonuses(account)
+    _calculate_w4_tome_bonuses(account)
 
 def _calculate_w4_cooking_max_plate_levels(account):
     # Sailing Artifact Increases
@@ -1025,7 +1028,6 @@ def _calculate_w4_meal_multi(account):
         else:
             account.meals[meal]['Description'] = account.meals[meal]['Effect']
 
-
 def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = 3
 
@@ -1040,6 +1042,29 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] *= account.labBonuses['No Bubble Left Behind']['Enabled']
     #Now for the bullshit: Lava has a hidden cap of 10 bubbles
     account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
+
+def _calculate_w4_tome_bonuses(account):
+    # DMG
+
+    # Skill Efficiency
+
+    # Drop Rarity
+    account.tome['Bonuses']['Drop Rarity']['Value'] = (
+        account.tome['Red Pages Unlocked']  #Sets the whole value to 0 if player hasn't turned in Red Pages yet
+        * 2
+        * safer_math_pow(
+            floor(
+                max(0, account.tome['Total Points'] - 8000)
+                / 100
+            ),
+            0.7
+        )
+    )
+    account.tome['Bonuses']['Drop Rarity']['Total Value'] = (
+        account.tome['Bonuses']['Drop Rarity']['Value']
+        * ValueToMulti(account.grimoire['Upgrades']['Grey Tome Book']['Level'])
+    )
+    logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
 
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']

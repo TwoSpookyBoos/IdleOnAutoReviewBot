@@ -1936,7 +1936,14 @@ def _parse_w4_cooking_ribbons(account):
 def _parse_w4_tome(account):
     account.tome = {
         'Data Present': 'totalTomePoints' in account.raw_data.get('parsedData', {}),
-        'Total Points': floor(account.raw_data.get('parsedData', {}).get('totalTomePoints', 0))
+        'Total Points': floor(account.raw_data.get('parsedData', {}).get('totalTomePoints', 0)),
+        'Blue Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 196, False), False),
+        'Red Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 197, False), False),
+        'Bonuses': {
+            'DMG': {},
+            'Skill Efficiency': {},
+            'Drop Rarity': {},
+        }
     }
 
 
