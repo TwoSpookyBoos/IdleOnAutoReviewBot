@@ -17,7 +17,7 @@
     ["Rats Nest", 15, "Rats", 35000, "Basic W1 Enemies", "Basic W1 Enemies", "Basic W1 Enemies", "Basic W1 Enemies", "Rat"],
     ["The Roots", 30, "TD Nutto", 0, "Easy Extras", "Easy Extras", "Medium Extras", "Medium Extras", "Nutto"],
     ["The Office", 9, "Dr. Def Poops", 0, "Easy Extras", "Easy Extras", "Easy Extras", "Easy Extras", "Poop"],
-    ["Meel's Crypt", 38, "Boops", 0, "Easy Extras", "Difficult Extras", "Impossible", "Impossible", "Boop"],
+    ["Meel's Crypt", 38, "Boops", 0, "Easy Extras", "Difficult Extras", "Insane", "Impossible", "Boop"],
 
     ["Jar Bridge", 51, "Sandy Pot", 250, "Basic W2 Enemies", "Basic W2 Enemies", "Basic W2 Enemies", "Basic W2 Enemies", "Sandy-Pot"],
     ["The Mimic Hole", 52, "Mimic", 600, "Basic W2 Enemies", "Basic W2 Enemies", "Basic W2 Enemies", "Basic W2 Enemies", "Mimic"],
