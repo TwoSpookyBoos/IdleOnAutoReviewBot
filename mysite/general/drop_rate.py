@@ -677,7 +677,7 @@ def get_drop_rate_player_advice_group():
         best_value = 0
         for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
             if equipment['Value'] >= best_value:
-                best_value = max(best_value, equipment['Value'])
+                best_value = max(best_value, equipment['Value'] * equipment['Owned'])
                 drop_rate_pp_advice[eqp].append(Advice(
                     label=f"{equipment['Type']}- {equipment['Name']}:"
                           f"<br>+{equipment['Value']}% Drop Rate{' (Limited availability)' if equipment['Limited'] else ''}"
