@@ -1383,14 +1383,23 @@ atoms_progressionTiers = {
         'Atoms': {
             'Boron - Particle Upgrader': 30,
             'Hydrogen - Stamp Decreaser': 30,
-            #"Neon - Damage N' Cheapener": 30,
+            "Neon - Damage N' Cheapener": 30,
             'Fluoride - Void Plate Chef': 30,
         },
     },
     14: {
         'Atoms': {
             'Aluminium - Stamp Supercharger': 50,
-            'Helium - Talent Power Stacker': 12,
+            "Neon - Damage N' Cheapener": 50,
+            'Hydrogen - Stamp Decreaser': 45,
+            'Helium - Talent Power Stacker': 13,
+            'Lithium - Bubble Insta Expander': 50,
+            'Boron - Particle Upgrader': 50,
+            'Nitrogen - Construction Trimmer': 50,
+            'Carbon - Wizard Maximizer': 50,  #Questionable
+            'Oxygen - Library Booker': 50,  #Questionable
+            'Fluoride - Void Plate Chef': 50,  #Questionable
+            'Magnesium - Trap Compounder': 50  #Questionable
         },
     },
 }
