@@ -1064,7 +1064,7 @@ def _calculate_w4_tome_bonuses(account):
         account.tome['Bonuses']['Drop Rarity']['Value']
         * ValueToMulti(account.grimoire['Upgrades']['Grey Tome Book']['Level'])
     )
-    logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
+    # logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
 
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
