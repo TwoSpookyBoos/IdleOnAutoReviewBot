@@ -580,7 +580,13 @@ class Advice(AdviceBase):
     def __calculate_progress_box_width(self) -> str:
         percentage = next((num for num in [self.goal, self.progression] if num.endswith("%")), None)
         if not all(num.endswith("%") for num in [self.goal, self.progression]) and percentage:
-            return percentage
+            try:
+                # Extract just the number, cast to float, min with 100, reapply %
+                # This should prevent progress bars going way off to the right due to percentage being over 100%
+                percentage = f"{min(100, float(percentage.split('%')[0]))}%"
+                return percentage
+            except:
+                return percentage
 
         float_re = re.compile(r'\d+(.\d+)?')
         progression = float_re.search(self.progression)
@@ -588,7 +594,7 @@ class Advice(AdviceBase):
         try:
             percentage = round(100 * float(progression[0]) / float(goal[0]), 2)
             percentage = percentage if percentage < 100 else 100
-            return str(percentage) + '%'
+            return f"{percentage}%"
         except (ZeroDivisionError, IndexError, TypeError, ValueError):
             return "0"
 

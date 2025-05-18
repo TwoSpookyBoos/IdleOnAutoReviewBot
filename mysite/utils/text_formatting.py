@@ -15,7 +15,7 @@ numeralList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
     """Pluralize"""
-    length = _list if isinstance(_list, int) else len(_list)
+    length = _list if (isinstance(_list, int) or isinstance(_list, float)) else len(_list)
     return suffix_plural if length > 1 else suffix_singular
 
 
