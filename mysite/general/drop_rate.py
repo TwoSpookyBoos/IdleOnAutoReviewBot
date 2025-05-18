@@ -321,20 +321,20 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Artifacts- Chilled Yarn
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     chilled_yarn_artifact_level = session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']
-    chilled_yarn_value = 2 * chilled_yarn_artifact_level
-    chilled_yarn_max = 2 * numberOfArtifactTiers
+    chilled_yarn_multi = ValueToMulti(100 * session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
+    chilled_yarn_max = ValueToMulti(100 * numberOfArtifactTiers)
     if chilled_yarn_artifact_level < numberOfArtifactTiers:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"{{{{ Artifacts|#artifacts }}}}- Chilled Yarn:"
-                  f"<br>{chilled_yarn_value}/{chilled_yarn_max}x Sigil Bonuses"
+                  f"<br>{round(chilled_yarn_multi, 2):g}/{round(chilled_yarn_max, 2):g}x Sigil Bonuses"
                   f"<br>Note: Improves the sigil below",
             picture_class='chilled-yarn',
-            progression=chilled_yarn_value,
+            progression=chilled_yarn_artifact_level,
             goal=numberOfArtifactTiers
         ))
     # Alchemy - Sigils - Clover
     trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
-    trove_sigil_value = sigilsDict['Trove']['Values'][trove_sigil_level-1] * chilled_yarn_value
+    trove_sigil_value = sigilsDict['Trove']['Values'][trove_sigil_level-1] * chilled_yarn_multi
     trove_sigil_value_max = sigilsDict['Trove']['Values'][max_IndexOfSigils-1] * chilled_yarn_max
     drop_rate_aw_advice[w2].append(Advice(
         label=f"{{{{ Sigils|#sigils }}}}- Clover Sigil:"
