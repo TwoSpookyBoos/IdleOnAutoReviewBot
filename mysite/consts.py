@@ -4930,7 +4930,7 @@ equipment_by_bonus_dict = {
         'Cobalt Robe':    {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
         'Evergreen Robe': {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}, 'Image': 'evergreen-robe'},
         # Keychains
-        'Relic Chain': {'Type': 'Keychain', 'Limited': False, 'Note': 'Relic can roll up to a POSSIBLE +16% Drop Rate<br>All other key chains can roll up to +8% Drop Rate', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
+        'Relic Chain': {'Type': 'Keychain', 'Limited': False, 'Note': 'Relic can roll up to +16% total Drop Rate<br>All other Tier 2 keychains can only roll up to +8% Drop Rate', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
     }
 }
 

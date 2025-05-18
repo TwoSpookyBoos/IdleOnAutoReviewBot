@@ -628,7 +628,8 @@ def get_drop_rate_player_advice_group():
     drop_rate_pp_advice[cards].append(Advice(
         label=f"{{{{ Card Sets|#cards }}}}- Bosses n Nightmares:"
               f"<br>+{6 * bnn_star}/{6 * (1 + max_card_stars)}% Drop Rate"
-              f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}",
+              + (f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}" if bnn_stars_sum < bnn_star_next else '')
+        ,
         picture_class='bosses-n-nightmares',
         progression=bnn_star,
         goal=6
@@ -644,7 +645,7 @@ def get_drop_rate_player_advice_group():
     drop_rate_pp_advice[cards].append(Advice(
         label=f"{{{{ Card Sets|#cards }}}}- Events:"
               f"<br>+{7 * events_star}/{7 * (1 + max_card_stars)}% Drop Rate"
-              f"<br>Cards until next set level {events_stars_sum}/{events_star_next}",
+              + (f"<br>Cards until next set level {events_stars_sum}/{events_star_next}" if events_stars_sum < events_star_next else ''),
         picture_class='events',
         progression=events_star,
         goal=6
