@@ -1972,6 +1972,15 @@ def _calculate_general_character_over_books(account):
             "Progression": account.sneaking['MaxMastery'],
             "Goal": 3
         },
+        'Grimoire': {
+            'Value': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
+            'Image': account.grimoire['Upgrades']['Skull of Major Talent']['Image'],
+            'Label': f"{{{{Grimoire |  #the-grimoire}}}}: Skull of Major Talent: "
+                     f"+{account.grimoire['Upgrades']['Skull of Major Talent']['Level']}"
+                     f"/{account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']}",
+            'Progression': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
+            'Goal': account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']
+        }
     }
     account.bonus_talents_account_wide_sum = 0
     for bonusName, bonusValuesDict in account.bonus_talents.items():
