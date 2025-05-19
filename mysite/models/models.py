@@ -10,7 +10,7 @@ from flask import g
 from config import app
 from consts import (
     # General
-    lavaFunc, ignorable_labels, cards_max_level,
+    lavaFunc, ignorable_labels, cards_max_level, obols_dict,
     greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
     # W1
     # W2
@@ -28,7 +28,7 @@ from consts import (
     # Caverns
 
 )
-from utils.data_formatting import safe_loads, safer_get
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -60,15 +60,27 @@ class Equipment:
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
                 groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
 
+            inv_order = raw_data.get(f"InventoryOrder_{toon_index}", [])
+            inv_quantity = raw_data.get(f"ItemQTY_{toon_index}", [])
+            all_inventory = {}
+            for o, q in zip(inv_order, inv_quantity):
+                if o in all_inventory:
+                    all_inventory[o] += safer_convert(q, 0.0)
+                else:
+                    all_inventory[o] = safer_convert(q, 0.0)
+                groups.append([Asset(name, count) for name, count in all_inventory.items()])
+
             # equips, tools, foods = groups
 
             self.equips = groups[0] if groups else []
             self.tools = groups[1] if groups else []
             self.foods = groups[2] if groups else []
+            self.inventory = groups[3] if groups else []
         else:
-            self.equips = {}
-            self.tools = {}
+            self.equips = []
+            self.tools = []
             self.foods = []
+            self.inventory = []
 
 def getExpectedTalents(classes_list):
     expectedTalents = []
@@ -139,6 +151,8 @@ class Character:
         secondary_preset_talents: dict,
         current_preset_talent_bar: dict,
         secondary_preset_talent_bar: dict,
+        obols: list[str],
+        obol_upgrades: dict,
         po_boxes: list[int],
         equipped_lab_chips: list[str],
         inventory_bags: dict,
@@ -210,6 +224,8 @@ class Character:
         self.divinity_link: str = "Unlinked"
         self.current_polytheism_link = "Unlinked"
         self.secondary_polytheism_link = "Unlinked"
+        self.obols = get_obol_totals(obols, obol_upgrades)
+
         self.po_boxes_invested = {}
         for poBoxIndex, poBoxValues in poBoxDict.items():
             try:
@@ -564,7 +580,13 @@ class Advice(AdviceBase):
     def __calculate_progress_box_width(self) -> str:
         percentage = next((num for num in [self.goal, self.progression] if num.endswith("%")), None)
         if not all(num.endswith("%") for num in [self.goal, self.progression]) and percentage:
-            return percentage
+            try:
+                # Extract just the number, cast to float, min with 100, reapply %
+                # This should prevent progress bars going way off to the right due to percentage being over 100%
+                percentage = f"{min(100, float(percentage.split('%')[0]))}%"
+                return percentage
+            except:
+                return percentage
 
         float_re = re.compile(r'\d+(.\d+)?')
         progression = float_re.search(self.progression)
@@ -572,7 +594,7 @@ class Advice(AdviceBase):
         try:
             percentage = round(100 * float(progression[0]) / float(goal[0]), 2)
             percentage = percentage if percentage < 100 else 100
-            return str(percentage) + '%'
+            return f"{percentage}%"
         except (ZeroDivisionError, IndexError, TypeError, ValueError):
             return "0"
 
@@ -686,7 +708,7 @@ class AdviceGroup(AdviceBase):
         if 'default' in self.advices:
             if isinstance(self.advices['default'], list):
                 try:
-                    self.advices['default']: list[Advice] = sorted(
+                    self.advices['default'] = list[Advice] = sorted(
                         self.advices['default'],
                         key=lambda a: float(str(a.progression).strip('%')),
                         reverse=reverseBool
@@ -1167,9 +1189,10 @@ class Card:
         )
         return result
 
-    def getAdvice(self, optional_starting_note=''):
+    def getAdvice(self, optional_starting_note='', optional_ending_note=''):
         a = Advice(
-            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}",
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}"
+                  f"{'<br>' if optional_ending_note else ''}{optional_ending_note}",
             picture_class=self.css_class,
             progression=self.level,
             goal=self.max_level

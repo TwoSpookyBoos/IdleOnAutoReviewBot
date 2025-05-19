@@ -97,6 +97,81 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     overall_SectionTier = min(max_tier + infoTiers, tier_Islands)
     return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
 
+def getRandomEventItemsAdviceGroup() -> AdviceGroup:
+    items_advice = []
+
+    random_event_items = {
+        'Grumbie the Hatchet Hammer (Mega Grumblo)': {
+            'Code Name': 'EquipmentToolsHatchet11',
+            'Resource': 'mega-grumblo',
+            'Goal': 1,
+            'Image': 'grumbie-the-hatchet-hammer'
+        },
+        'Skewered Snek (Snake Swarm)': {
+            'Code Name': 'EquipmentTools13',
+            'Resource': 'snake-swarm',
+            'Goal': 1,
+            'Image': 'skewered-snek'
+        },
+        'Ice Guard Helmet (Glacial Guild)': {
+            'Code Name': 'EquipmentHats79',
+            'Resource': 'ice-guard',
+            'Goal': 1,
+            'Image': 'ice-guard-helmet'
+        },
+        'Vigilant Obol of Ice Guard (Glacial Guild)': {
+            'Code Name': 'ObolKnight',
+            'Resource': 'ice-guard',
+            'Goal': 1,
+            'Image': 'vigilant-obol-of-ice-guard'
+        },
+        'Meteorhead (Fallen Meteorite)': {
+            'Code Name': 'EquipmentHats78',
+            'Resource': 'fallen-meteor',
+            'Goal': 1,
+            'Image': 'meteorhead'
+        },
+        'Meteorite Ring (Fallen Meteorite)': {
+            'Code Name': 'EquipmentRingsChat10',
+            'Resource': 'fallen-meteor',
+            'Goal': 1,
+            'Image': 'meteorite-ring'
+        },
+        'Grumpy Obol of the Grandfrogger (Angry Frogs)': {
+            'Code Name': 'ObolFrog',
+            'Resource': 'angry-frogs',
+            'Goal': 1,
+            'Image': 'grumpy-obol-of-the-grandfrogger'
+        }
+    }
+
+    total_found = 0
+    total_possible = len(random_event_items)
+
+    for display, details in random_event_items.items():
+        if details['Code Name'] in session_data.account.registered_slab:
+            total_found += 1
+        items_advice.append(Advice(
+            label=display,
+            picture_class=details['Image'],
+            progression=int(details['Code Name'] in session_data.account.registered_slab),
+            goal=1,
+            resource=details['Resource'],
+            informational=True
+        ))
+
+    for advice in items_advice:
+        mark_advice_completed(advice)
+
+    items_ag = AdviceGroup(
+        tier='',
+        pre_string=f"Info- {total_found}/{total_possible} Unique Random Event drops found",
+        advices=items_advice
+    )
+    items_ag.remove_empty_subgroups()
+    return items_ag
+
+
 def getIslandsAdviceSection() -> AdviceSection:
     highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
     if highestFishingSkillLevel < 30:
@@ -114,6 +189,7 @@ def getIslandsAdviceSection() -> AdviceSection:
     islands_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     islands_AdviceGroupDict['Trash'] = getTrashIslandAdviceGroup()
     islands_AdviceGroupDict['Fractal'] = getFractalAdviceGroup()
+    islands_AdviceGroupDict['Random Event Items'] = getRandomEventItemsAdviceGroup()
 
     #Advice Section
 

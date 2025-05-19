@@ -90,12 +90,11 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     ))
     for capStamp in ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]:
         capacity_Advices["Stamps"].append(Advice(
-            label=f"{capStamp}: "
-                  f"{session_data.account.stamps.get(capStamp, {}).get('Level', 0)}/{stamp_maxes.get(capStamp, 999)}%",
+            label=f"{capStamp}: {round(session_data.account.stamps[capStamp]['Total Value'], 2):g}%",
             picture_class=capStamp,
-            progression=session_data.account.stamps.get(capStamp, {}).get('Level', 0),
-            goal=stamp_maxes.get(capStamp, 999),
-            resource=session_data.account.stamps.get(capStamp, {}).get('Material', 0),
+            progression=session_data.account.stamps[capStamp]['Level'],
+            goal=stamp_maxes[capStamp],
+            resource=session_data.account.stamps[capStamp]['Material'],
         ))
 
     # Account-Wide
@@ -109,7 +108,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices["Account Wide"].append(Advice(
         label="Guild Bonus: Rucksack",
         picture_class="rucksack",
-        progression=f"{session_data.account.guildBonuses.get('Rucksack', 0) if session_data.account.guildBonuses.get('Rucksack', 0) > 0 else 'IDK'}",
+        progression=f"{session_data.account.guild_bonuses['Rucksack']['Level'] if session_data.account.guild_bonuses['Rucksack']['Level'] > 0 else 'IDK'}",
         goal=50
     ))
     capacity_Advices["Account Wide"].append(session_data.account.shrine_advices['Pantheon Shrine'])

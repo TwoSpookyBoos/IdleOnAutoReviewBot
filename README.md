@@ -64,7 +64,19 @@ $env:FLASK_ENV = "development"
 $env:FLASK_RUN_PORT = 5000
 python -m flask run 
 ```
-or, if you're using PyCharm, run one of the two saved run configurations.
+#### Docker
+Build and run the container, which mounts the local code.
+Flask will auto-update files that are changed, so you shouldn't need to rebuild unless requirements change.
+``` bash
+docker build . -t idleon-auto-review-bot:latest
+docker run --rm -d --name iarb -p 5000:5000 -v mysite:/usr/src/app idleon-auto-review-bot:1.0.3
+```
+To tail the webserver logs use
+``` bash
+docker logs -f iarb
+```
+#### PyCharm
+Run one of the two saved run configurations.
 <hr/>
 
 ## Test

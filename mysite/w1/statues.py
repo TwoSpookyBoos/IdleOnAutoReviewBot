@@ -32,8 +32,8 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         crystal_AdviceList.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice('Minimum 3 star'))
 
     crystal_AdviceList.append(Advice(
-        label=f"Minimum 100 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Value']:.3f}%)",
-        picture_class="crystallin",
+        label=f"Minimum 100 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Total Value']:.3f}%)",
+        picture_class='crystallin',
         progression=session_data.account.stamps['Crystallin']['Level'],
         goal=100  #stamp_maxes['Crystallin']
     ))

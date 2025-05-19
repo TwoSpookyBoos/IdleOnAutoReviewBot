@@ -1,7 +1,7 @@
 from math import ceil
 
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
@@ -35,17 +35,22 @@ def getOfferingsAdviceGroup():
     except:
         pass
 
+    low_purchases = safer_convert(divinityPoints//lowOfferingGoal, 0)
     offerings_AdviceDict["Available Offerings"].append(Advice(
-        label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(lowOffering)}",
+        label=f"{divinity_offeringsDict.get(lowOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(lowOffering)}"
+              f"{f'<br>Could be bought {low_purchases} time{pl(low_purchases)}' if divinityPoints >= lowOfferingGoal else ''}",
         picture_class=divinity_offeringsDict.get(lowOffering, {}).get('Image', ''),
-        progression=f"{max(0, min(10000, divinityPoints / max(1, lowOfferingGoal))):.2%}",
-        #goal=lowOfferingGoal
+        progression=f"{max(0, min(1, divinityPoints / max(1, lowOfferingGoal))):.2%}",
+        goal='100%'
     ))
+
+    high_purchases = safer_convert(divinityPoints//highOfferingGoal, 0)
     offerings_AdviceDict["Available Offerings"].append(Advice(
-        label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(highOffering)}",
+        label=f"{divinity_offeringsDict.get(highOffering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(highOffering)}"
+              f"{f'<br>Could be bought {high_purchases} time{pl(high_purchases)}' if divinityPoints >= highOfferingGoal else ''}",
         picture_class=divinity_offeringsDict.get(highOffering, {}).get('Image', ''),
-        progression=f"{max(0, min(10000, divinityPoints / max(1, highOfferingGoal))):.2%}",
-        #goal=highOfferingGoal
+        progression=f"{max(0, min(1, divinityPoints / max(1, highOfferingGoal))):.2%}",
+        goal='100%'
     ))
     offerings_AdviceDict["Strategy"].append(Advice(
         label=f"Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.",
@@ -55,6 +60,11 @@ def getOfferingsAdviceGroup():
         label=f"Option 2: Always choose low offering and pray 🙏",
         picture_class=divinity_offeringsDict.get(0, {}).get('Image', ''),
     ))
+
+    for subgroup in offerings_AdviceDict:
+        for advice in offerings_AdviceDict[subgroup]:
+            mark_advice_completed(advice)
+
     offerings_AdviceGroup = AdviceGroup(
         tier="",
         pre_string="Offerings Information",
