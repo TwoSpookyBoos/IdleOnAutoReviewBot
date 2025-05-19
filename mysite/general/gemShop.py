@@ -1,9 +1,9 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import safe_loads, safer_get
+from utils.data_formatting import safe_loads, safer_get, safer_convert, mark_advice_completed
 from utils.logging import get_logger
 from consts import (
     gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks,
-    caverns_max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string
+    caverns_max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string, maxCharacters
 )
 from flask import g as session_data
 
@@ -274,26 +274,72 @@ def getGemShopAdviceSection() -> AdviceSection:
             informational=True
         ))
 
+    # FOMO tracked through OptionsListAccount entries
     fomo_advice = []
     for purchase_name, purchase_details in gem_shop_optlacc_dict.items():
-        if purchase_details[1] != infinity_string:
-            if boughtItems[purchase_name] < purchase_details[1]:
-                fomo_advice.append(Advice(
-                    label=purchase_name,
-                    picture_class=purchase_name,
-                    progression=boughtItems[purchase_name],
-                    goal=purchase_details[1],
-                    informational=True
-                ))
-        else:
-            fomo_advice.append(Advice(
-                label=purchase_name,
-                picture_class=purchase_name,
-                progression=boughtItems[purchase_name],
-                goal=purchase_details[1],
-                informational=True,
-                completed=True
-            ))
+        fomo_advice.append(Advice(
+            label=purchase_name,
+            picture_class=purchase_name,
+            progression=boughtItems[purchase_name],
+            goal=purchase_details[1],
+            informational=True,
+            completed=(
+                boughtItems[purchase_name] >= purchase_details[1]
+                if purchase_details[1] != infinity_string
+                else True
+            )
+        ))
+
+    # FOMO Equipment
+    fomo_equipment = {
+        'Dune Killer Ring (W2)': {
+            'Code Name': 'EquipmentRings33',
+            'Goal': 2 * maxCharacters,
+            'Image': 'dune-killer-ring'
+        },
+        'Tundra Killer Ring (W3)': {
+            'Code Name': 'EquipmentRings31',
+            'Goal': 2 * maxCharacters,
+            'Image': 'tundra-killer-ring'
+        },
+        'Nebula Killer Ring (W4)': {
+            'Code Name': 'EquipmentRings32',
+            'Goal': 2 * maxCharacters,
+            'Image': 'nebula-killer-ring'
+        },
+        'Magma Killer Ring (W5)': {
+            'Code Name': 'EquipmentRings34',
+            'Goal': 2 * maxCharacters,
+            'Image': 'magma-killer-ring'
+        },
+        'Deathbringer Hood of Death': {
+            'Code Name': 'EquipmentHats112',
+            'Goal': 1,
+            'Image': 'deathbringer-hood-of-death'
+        },
+        'Windwalker Hood': {
+            'Code Name': 'EquipmentHats118',
+            'Goal': 1,
+            'Image': 'windwalker-hood'
+        },
+
+    }
+    for display, details in fomo_equipment.items():
+        fomo_advice.append(Advice(
+            label=display,
+            picture_class=details['Image'],
+            progression=safer_convert(session_data.account.all_assets.get(details['Code Name']).amount, 0),
+            goal=details['Goal'],
+            informational=True,
+            completed=(
+                session_data.account.all_assets.get(details['Code Name']).amount >= details['Goal']
+                if details['Goal'] != infinity_string
+                else True
+            )
+        ))
+
+    for advice in fomo_advice:
+        mark_advice_completed(advice)
 
     groups.append(AdviceGroup(
         tier='',

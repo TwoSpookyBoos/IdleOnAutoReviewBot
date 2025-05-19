@@ -69,7 +69,8 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices["Scaling Sources"].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
 
     cap_Advices["Scaling Sources"].append(Advice(
-        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Value']:.2f}/57.50%",
+        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Total Value']:.2f}/57.50%"
+              f"Note: Exalting the stamp will take it over the goal listed above",
         picture_class="forge-stamp",
         progression=session_data.account.stamps['Forge Stamp']['Level'],
         goal=230  #Forge Stamp currently has a max of 230, unless it gets increased by the Sacred Methods bundle.

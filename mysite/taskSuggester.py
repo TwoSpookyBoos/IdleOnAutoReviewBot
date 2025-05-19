@@ -12,7 +12,7 @@ from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData, safer_convert
 from utils.logging import get_logger
 from utils.text_formatting import is_username
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop
+from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop, drop_rate
 from master_classes import grimoire, compass
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy, post_office, killroy, islands, arcade, bonus_ballot
@@ -75,6 +75,7 @@ def main(inputData, source_string, runType="web"):
             combatLevels.getCombatLevelsAdviceSection(),
             secretPath.getSecretClassAdviceSection(),
             active.getActiveAdviceSection(),
+            drop_rate.get_drop_rate_advice_section(),
             achievements.getAchievementsAdviceSection(),
             *(consumables.getConsumablesAdviceSections()),
             gemShop.getGemShopAdviceSection(),

@@ -1,13 +1,14 @@
+import copy
 from math import ceil, floor, log2, prod
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
-    base_crystal_chance,
+    base_crystal_chance, class_kill_talents_dict,
     filter_recipes, filter_never,
     # Master Classes
     grimoire_stack_types,
     # W1
-    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name,
+    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name, owl_bonuses_of_orion,
     # W2
     fishingToolkitDict,
     islands_trash_shop_costs,
@@ -38,6 +39,7 @@ def calculate_account(account):
     _calculate_wave_3(account)
 
 def _calculate_wave_1(account):
+    # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w2_arcade(account)
@@ -109,7 +111,8 @@ def _calculate_caverns_majiks(account):
                         majik_data['BonusPerLevel'] ** majik_data['MaxLevel']
                     )
             account.caverns['Majiks'][majik_data['Name']]['Description'] = (
-                f"{account.caverns['Majiks'][majik_data['Name']]['Value']}/{account.caverns['Majiks'][majik_data['Name']]['MaxValue']}"
+                f"{round(account.caverns['Majiks'][majik_data['Name']]['Value'], 2):g}"
+                f"/{round(account.caverns['Majiks'][majik_data['Name']]['MaxValue'], 2):g}"
                 f"{account.caverns['Majiks'][majik_data['Name']]['Description']}"
             )
             # logger.debug(f"{majik_data['Name']} value set to {account.caverns['Majiks'][majik_data['Name']]['Value']}")
@@ -232,6 +235,7 @@ def _calculate_w2_arcade(account):
         account.arcade[upgrade_index]['Display'] = (
             f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
         )
+
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -489,6 +493,7 @@ def _calculate_w1(account):
     _calculate_w1_starsigns(account)
     _calculate_w1_statues(account)
     _calculate_w1_stamps(account)
+    _calculate_w1_owl_bonuses(account)
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -611,13 +616,50 @@ def _calculate_w1_stamps(account):
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
     )
 
-    for stamp_name in account.stamps:
-        if account.stamps[stamp_name]['Exalted']:
-            try:
-                account.stamps[stamp_name]['Value'] *= account.exalted_stamp_multi
-            except:
-                logger.exception(f"Failed to upgrade the Value of {stamp_name}")
-                continue
+    for stamp_name, stamp_values in account.stamps.items():
+        try:
+            account.stamps[stamp_name]['Total Value'] = (
+                stamp_values['Value']
+                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp_values['StampType'] != 'Misc' else 1)
+                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp_values['StampType'] != 'Misc' else 1)
+                * (account.exalted_stamp_multi if stamp_values['Exalted'] else 1)
+            )
+        except:
+            account.stamps[stamp_name]['Total Value'] = stamp_values['Value']
+            logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
+            continue
+
+
+
+def _calculate_w1_owl_bonuses(account):
+    bonuses_of_orion_num = len(owl_bonuses_of_orion)
+    bonuses_of_orion_owned = account.owl['BonusesOfOrion']
+    megafeathers_owned = account.owl['MegaFeathersOwned']
+    megafeather_mod = 0
+    if megafeathers_owned >= 10:
+        megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
+    elif megafeathers_owned > 7:
+        megafeather_mod = 5
+    elif megafeathers_owned > 5:
+        megafeather_mod = 4
+    elif megafeathers_owned > 3:
+        megafeather_mod = 3
+    elif megafeathers_owned > 1:
+        megafeather_mod = 2
+
+    account.owl['Bonuses'] = {}
+    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonuses_of_orion.items()):
+        bonus_base = bonus['BaseValue']
+        if account.owl['Discovered']:
+            bonus_num_unlocked = (floor(bonuses_of_orion_owned/bonuses_of_orion_num) + (1 if (bonuses_of_orion_owned % bonuses_of_orion_num) > bonus_index else 0))
+        else:
+            bonus_num_unlocked = 0
+        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod
+        account.owl['Bonuses'][bonus_name] = {
+            'BaseValue': bonus_base,
+            'NumUnlocked': bonus_num_unlocked,
+            'Value': safer_convert(bonus_value, 0)
+    }
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
@@ -885,6 +927,7 @@ def _calculate_w4(account):
     _calculate_w4_jewel_multi(account)
     _calculate_w4_meal_multi(account)
     _calculate_w4_lab_bonuses(account)
+    _calculate_w4_tome_bonuses(account)
 
 def _calculate_w4_cooking_max_plate_levels(account):
     # Sailing Artifact Increases
@@ -985,7 +1028,6 @@ def _calculate_w4_meal_multi(account):
         else:
             account.meals[meal]['Description'] = account.meals[meal]['Effect']
 
-
 def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = 3
 
@@ -1000,6 +1042,29 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] *= account.labBonuses['No Bubble Left Behind']['Enabled']
     #Now for the bullshit: Lava has a hidden cap of 10 bubbles
     account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
+
+def _calculate_w4_tome_bonuses(account):
+    # DMG
+
+    # Skill Efficiency
+
+    # Drop Rarity
+    account.tome['Bonuses']['Drop Rarity']['Value'] = (
+        account.tome['Red Pages Unlocked']  #Sets the whole value to 0 if player hasn't turned in Red Pages yet
+        * 2
+        * safer_math_pow(
+            floor(
+                max(0, account.tome['Total Points'] - 8000)
+                / 100
+            ),
+            0.7
+        )
+    )
+    account.tome['Bonuses']['Drop Rarity']['Total Value'] = (
+        account.tome['Bonuses']['Drop Rarity']['Value']
+        * ValueToMulti(account.grimoire['Upgrades']['Grey Tome Book']['Level'])
+    )
+    # logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
 
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
@@ -1086,8 +1151,12 @@ def _calculate_caverns_measurements_multis(account):
                 'PrettyRaw': f"{sum_combat_levels:,}",
                 'Prepped': sum_combat_levels / 500  # In the source code, this is when 99 = i
             }
-        # elif entry_index == 3:  #Tome Score
-        #     pass
+        elif entry_index == 3:  #Tome Score
+            account.caverns['MeasurementMultis'][clean_entry_name] = {
+                'Raw': account.tome['Total Points'],
+                'PrettyRaw': f"{account.tome['Total Points']:,}",
+                'Prepped': account.tome['Total Points'] / 2500  # In the source code, this is when 99 = i
+            }
         elif entry_index == 4:  #All Skill Lv
             total_skill_levels = 0
             for skill, skill_levels in account.all_skills.items():
@@ -1540,7 +1609,7 @@ def _calculate_caverns_gambit(account):
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 def _calculate_w6(account):
-    _calculate_w6_farming(account)
+    # _calculate_w6_farming(account)  # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_summoning(account)
 
 def _calculate_w6_sneaking_gemstones(account):
@@ -1562,6 +1631,8 @@ def _calculate_w6_sneaking_gemstones(account):
                 account.sneaking['Gemstones'][gemstone_name]['BoostedValue'] = account.sneaking['Gemstones'][gemstone_name]['BaseValue']
 
 def _calculate_w6_farming(account):
+    # Runs in wave3 due to Land Rank multi from Talents
+    _calculate_w6_farming_land_ranks(account)
     _calculate_w6_farming_crop_depot(account)
     _calculate_w6_farming_markets(account)
     _calculate_w6_farming_crop_value(account)
@@ -1569,6 +1640,35 @@ def _calculate_w6_farming(account):
     _calculate_w6_farming_crop_speed(account)
     _calculate_w6_farming_bean_bonus(account)
     _calculate_w6_farming_og(account)
+
+def _calculate_w6_farming_land_ranks(account):
+    highest_dank_rank_level = 0
+    for db in account.dbs:
+        highest_dank_rank_level = max(
+            highest_dank_rank_level,
+            db.current_preset_talents.get('207', 0) + db.total_bonus_talent_levels,
+            db.secondary_preset_talents.get('207', 0) + db.total_bonus_talent_levels
+        )
+
+    dank_rank_multi = max(1, lavaFunc(
+        funcType=all_talentsDict[207]['funcX'],
+        level=highest_dank_rank_level,
+        x1=all_talentsDict[207]['x1'],
+        x2=all_talentsDict[207]['x2'],
+    ))
+
+    for upgrade_name, upgrade_details in account.farming['LandRankDatabase'].items():
+        if upgrade_details['Index'] % 5 != 4:
+            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
+                dank_rank_multi
+                * ((1.7 * upgrade_details['BaseValue'] * upgrade_details['Level']) / (upgrade_details['Level'] + 80))
+            )
+        else:
+            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
+                dank_rank_multi
+                * upgrade_details['BaseValue']
+                * upgrade_details['Level']
+            )
 
 def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
@@ -1673,12 +1773,7 @@ def _calculate_w6_farming_crop_evo(account):
         * ValueToMulti(account.farming['Evo']['Vial Value'])
     )
     # Stamp
-    account.farming['Evo']['Stamp Value'] = (
-            max(1, 2 * account.labBonuses['Certified Stamp Book']['Enabled'])
-            * max(1, 1.25 * account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])
-            * account.stamps['Crop Evo Stamp']['Value']
-    )
-    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.farming['Evo']['Stamp Value'])
+    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp']['Total Value'])
     # Meals
     account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
     account.farming['Evo']['Meals Multi'] = (
@@ -1823,6 +1918,8 @@ def _calculate_wave_3(account):
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
     _calculate_master_classes_grimoire_bone_sources(account)
+    _calculate_class_unique_kill_stacks(account)
+    _calculate_w6_farming(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
@@ -1900,6 +1997,15 @@ def _calculate_general_character_over_books(account):
             "Progression": account.sneaking['MaxMastery'],
             "Goal": 3
         },
+        'Grimoire': {
+            'Value': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
+            'Image': account.grimoire['Upgrades']['Skull of Major Talent']['Image'],
+            'Label': f"{{{{Grimoire |  #the-grimoire}}}}: Skull of Major Talent: "
+                     f"+{account.grimoire['Upgrades']['Skull of Major Talent']['Level']}"
+                     f"/{account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']}",
+            'Progression': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
+            'Goal': account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']
+        }
     }
     account.bonus_talents_account_wide_sum = 0
     for bonusName, bonusValuesDict in account.bonus_talents.items():
@@ -2002,3 +2108,44 @@ def _calculate_general_crystal_spawn_chance(account):
     account.highest_jman_crystal_spawn_chance = max(
         [char.crystal_spawn_chance for char in account.all_characters if "Journeyman" in char.all_classes], default=base_crystal_chance
     )
+
+def _calculate_class_unique_kill_stacks(account):
+    abc = {
+        'King of the Remembered': {
+            'Talent Number': 178,
+            'Class List': account.dks,
+            'Bonus': 'Printer Output',
+        },
+        'Archlord of the Pirates': {
+            'Talent Number': 328,
+            'Class List': account.sbs,
+            'Bonus': 'Drop Rate and Class EXP',
+        },
+        'Wormhole Emperor': {
+            'Talent Number': 508,
+            'Class List': account.sorcs,
+            'Bonus': 'Damage',
+        }
+    }
+    for talent_name, talent_details in abc.items():
+        talent_levels = []
+        for char in talent_details['Class List']:
+            talent_levels.append(char.current_preset_talents.get(f"{talent_details['Talent Number']}", 0) + char.total_bonus_talent_levels)
+            talent_levels.append(char.secondary_preset_talents.get(f"{talent_details['Talent Number']}", 0) + char.total_bonus_talent_levels)
+
+        account.class_kill_talents[talent_name]['Bonus Type'] = abc[talent_name]['Bonus']
+        account.class_kill_talents[talent_name]['funcType'] = all_talentsDict[talent_details['Talent Number']]['funcX']
+        account.class_kill_talents[talent_name]['x1'] = all_talentsDict[talent_details['Talent Number']]['x1']
+        account.class_kill_talents[talent_name]['x2'] = all_talentsDict[talent_details['Talent Number']]['x2']
+        account.class_kill_talents[talent_name]['Highest Preset Level'] = max(talent_levels, default=0)
+        account.class_kill_talents[talent_name]['Talent Value'] = lavaFunc(
+            funcType=account.class_kill_talents[talent_name]['funcType'],
+            level=account.class_kill_talents[talent_name]['Highest Preset Level'],
+            x1=account.class_kill_talents[talent_name]['x1'],
+            x2=account.class_kill_talents[talent_name]['x2']
+        )
+        account.class_kill_talents[talent_name]['Kill Stacks'] = safer_math_log(account.class_kill_talents[talent_name]['Kills'], 'Lava')
+        account.class_kill_talents[talent_name]['Total Value'] = (
+            account.class_kill_talents[talent_name]['Talent Value'] * account.class_kill_talents[talent_name]['Kill Stacks']
+        )
+        # logger.debug(f"{account.class_kill_talents[talent_name] = }")

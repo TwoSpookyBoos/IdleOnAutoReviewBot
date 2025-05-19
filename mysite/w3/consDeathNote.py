@@ -59,7 +59,8 @@ def getDeathNoteProgressionTiersAdviceGroup():
         "WOW": {}
     }
     infoTiers = 2
-    max_tier = deathNote_progressionTiers[-1][0] - infoTiers
+    true_max = deathNote_progressionTiers[-1][0]
+    max_tier = true_max - infoTiers
     worldIndexes = []
     tier_combo = {}
     for number in range(1, currentWorld + 1):
@@ -259,17 +260,6 @@ def getDeathNoteProgressionTiersAdviceGroup():
                             goal=1)
                     ]
 
-    # If the player is basically finished with cooking, bypass the requirement while still showing the progress
-    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
-        if tier_combo['ZOW'] < max_tier + infoTiers:
-            tier_combo['ZOW'] = max_tier + infoTiers
-        if tier_combo['CHOW'] < max_tier + infoTiers:
-            tier_combo['CHOW'] = max_tier + infoTiers
-        if tier_combo['MEOW'] < max_tier + infoTiers:
-            tier_combo['MEOW'] = max_tier + infoTiers
-        if tier_combo['WOW'] < max_tier + infoTiers:
-            tier_combo['WOW'] = max_tier + infoTiers
-
     # Generate Advice Groups
     deathnote_AdviceGroupDict = {}
     # Basic Worlds
@@ -339,6 +329,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
             pre_string=f"{'Informational- You could complete' if tier_combo['WOW'] >= max_tier else 'Complete'} {apocToNextTier['WOW']} more"
                        f" WOW{pl(apocToNextTier['WOW'])} with {session_data.account.all_characters[apocalypse_character_Index].character_name} {wowsForNextTier}",
             advices=deathnote_AdviceDict['WOW'],
+            post_string='Aim for 10m+ KPH per enemy',
             informational=True if tier_combo['WOW'] >= max_tier else False
         )
     else:
@@ -354,12 +345,12 @@ def getDeathNoteProgressionTiersAdviceGroup():
             deathnote_AdviceGroupDict[ag.pre_string] = ag
 
     overall_SectionTier = min(
-        max_tier + infoTiers, min(tier_combo.values())
+        true_max, min(tier_combo.values())
         # tier_combo[1], tier_combo[2], tier_combo[3],
         # tier_combo[4], tier_combo[5], tier_combo[6],
         # tier_combo['ZOW'], tier_combo['CHOW'], tier_combo['MEOW'], tier_combo['WOW']
     )
-    return deathnote_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
+    return deathnote_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 
 def getDeathNoteAdviceSection() -> AdviceSection:
