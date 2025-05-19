@@ -6354,8 +6354,8 @@ dnNextSkullNameDict = {
     20: "Finished!"
 }
 apocableMapIndexDict = {
-    0: [30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
-    1: [1, 2, 14, 17, 16, 13, 18, 31, 19, 24, 26, 27, 28, 8, 15],
+    0: [31, 30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  #MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
     2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
     3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
