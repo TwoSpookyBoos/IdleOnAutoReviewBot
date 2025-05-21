@@ -79,7 +79,7 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
             goal=f"{lab_max:.2f}"
         ),
         Advice(
-            label=f"{{{{ Grimoire|#the-grimoire}}}}: Superior Crop Research: {session_data.account.grimoire['Upgrades']['Superior Crop Research']['Total Value']}/3x",
+            label=f"{{{{ Grimoire|#the-grimoire}}}}: Superior Crop Research: {round(session_data.account.grimoire['Upgrades']['Superior Crop Research']['Total Value'], 2):g}/3x",
             picture_class=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Image'],
             progression=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Level'],
             goal=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Max Level'],
