@@ -389,15 +389,21 @@ def get_obol_totals(obol_list, obol_upgrade_dict):
         # Adds any upgrade value for each equipped obol
         if obol_index in obol_upgrade_dict.keys():
             if 'UQ1txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ1txt'] != 0:
-                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = (
-                    obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0)
-                    + obol_upgrade_dict[obol_index]['UQ1val']
-                )
+                try:
+                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = (
+                        obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0)
+                        + safer_convert(obol_upgrade_dict[obol_index]['UQ1val'], 0)
+                    )
+                except:
+                    logger.exception(f"Could not parse Obol UQ1txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
             if 'UQ2txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ2txt'] != 0:
-                obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = (
-                    obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}", 0)
-                    + obol_upgrade_dict[obol_index]['UQ2val']
-                )
+                try:
+                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = (
+                        obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}", 0)
+                        + safer_convert(obol_upgrade_dict[obol_index]['UQ2val'], 0)
+                    )
+                except:
+                    logger.exception(f"Could not parse Obol UQ2txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
             for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK', 'Defence', 'Weapon_Power', 'Reach', 'Speed']:
                 obols_totals[f"Total{upgrade_val}"] = obols_totals.get(f"Total{upgrade_val}", 0) + obol_upgrade_dict.get(upgrade_val, 0)
     return obols_totals
