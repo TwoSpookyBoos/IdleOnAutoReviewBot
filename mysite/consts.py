@@ -830,7 +830,7 @@ vault_progressionTiers = {
         ]  #This list generated from Acecow's alt account when they first entered World 6
     },
     3: {
-        'Ignore': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge']
+        'Exclude': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge']
     }
 }
 
