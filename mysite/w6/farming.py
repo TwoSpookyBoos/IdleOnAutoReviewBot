@@ -4,8 +4,11 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts import (farming_progressionTiers, break_you_best, maxFarmingCrops, maxCharacters, max_VialLevel, maxMealLevel, stamp_maxes,
-                    ValueToMulti, tomepct, getCropEvoChance, cropDict, landrankDict, maxFarmingValue, infinity_string, getRequiredCropNumber)
+from consts import (
+    farming_progressionTiers, break_you_best, ValueToMulti, maxCharacters, infinity_string,
+    stamp_maxes, max_VialLevel, maxMealLevel,
+    maxFarmingCrops, maxFarmingValue, cropDict, landrankDict, getCropEvoChance, getRequiredCropNumber
+)
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -329,7 +332,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
 
 def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     #Create subgroup labels
-    alch = f"Alchemy without Crop Chapter: {farming['Evo']['Alch Multi']:.3f}x"
+    alch = f"Alchemy: {farming['Evo']['Alch Multi']:.3f}x"
     stamp = f"Stamps: {farming['Evo']['Stamp Multi']:.3f}x"
     meals = f"Meals: {farming['Evo']['Meals Multi']:.3f}x"
     farm = f"Markets: {farming['Evo']['Farm Multi']:.3g}x"
@@ -338,7 +341,7 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
     ss = f"Star Sign: {farming['Evo']['SS Multi']:.3f}x"
     lamp = f"Lamp Wish: {farming['Evo']['Wish Multi']:.3f}x"
     misc = f"Misc: {farming['Evo']['Misc Multi']:.3f}x"
-    total = f"Subtotal before Crop Chapter Bubble: {farming['Evo']['Subtotal Multi']:.3g}x"
+    total = f"Total Evo Chance: {farming['Evo']['Subtotal Multi']:.3g}x"
     evo_advices = {
         total: [],
         alch: [],
@@ -362,8 +365,11 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         goal=infinity_string,
         resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
     ))
+    crop_chapter_stacks = max(0, (session_data.account.tome['Total Points'] - 5000) // 2000)
     evo_advices[alch].append(Advice(
-        label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k",
+        label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k"
+              f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
+              f"<br>Total: +{round(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks, 3):g}%",
         picture_class='crop-chapter',
         progression=session_data.account.alchemy_bubbles['Crop Chapter']['Level'],
         goal=infinity_string,
@@ -589,17 +595,15 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
         final_crops[k] = [cropDict[v]['SeedName'],  ceil(1 / getCropEvoChance(v)),  cropDict[v]['Image']]
     subtotal_final_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]
     final_glassy_completed = subtotal_final_glassy_percent >= 1
-    first_failed_goal = 0
-    first_failed_key = 0
     if final_glassy_completed:
         first_failed_goal = final_crops[max(final_crops.keys())][1]
         first_failed_key = max(final_crops.keys())
-        prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
+        prog_percent = min(1, farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]) * 100
         evo_advices[total].append(Advice(
             label=f"Final {final_crops[first_failed_key][0]} chance"
                   f"<br>{first_failed_goal:.3g} for 100% chance",
             picture_class=final_crops[first_failed_key][2],
-            progression=f"{min(1, prog_percent):.2%}",
+            progression=f"{round(prog_percent, 2):g}",
             #goal=f"{first_failed_goal:.3g}"
         ))
     else:
@@ -610,34 +614,13 @@ def getEvoChanceAdviceGroup(farming) -> AdviceGroup:
                 first_failed_goal = v[1]
                 prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
                 evo_advices[total].append(Advice(
-                    label=f"Final {v[0]} chance with 0 stacks of Crop Chapter"
+                    label=f"Final {v[0]} chance"
                           f"<br>{first_failed_goal:.3g} for 100% chance",
                     picture_class=v[2],
-                    progression=f"{min(1, prog_percent):.3%}",
-                    #goal=f"{v[1]:.3g}"
+                    progression=f"{min(1, prog_percent):.2%}",
+                    goal="100%"
                 ))
                 break
-        #Show chance including Crop Chapter for 50%, 25%, and 10% tome
-        tome_added = 0
-        for threshold, points in tomepct.items():
-            crop_chapter_stacks = max(1, (points - 5000)//2000)
-            crop_chapter_multi = ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks)
-            total_multi = farming['Evo']['Subtotal Multi'] * crop_chapter_multi
-            prog_percent = min(1, total_multi / first_failed_goal)
-            completed = prog_percent >= 1 or final_glassy_completed
-            if not completed and (
-                (tome_added < 3 and first_failed_key <= 6)
-                or (tome_added < 5 and first_failed_key >= 7)
-            ) and crop_chapter_multi > 1:
-                evo_advices[total].append(Advice(
-                    label=f"{threshold}% tome = {crop_chapter_stacks} stacks"
-                          f"<br>Bubble Multi: {crop_chapter_multi:.3f}x"
-                          f"<br>Grand Total: {total_multi:.3g}",
-                    picture_class='blue-tome-pages',
-                    progression=f"{prog_percent:.2%}",
-                    #goal=f"{first_failed_goal:.3g}"
-                ))
-                tome_added += 1
 
     for category in evo_advices.values():
         for advice in category:

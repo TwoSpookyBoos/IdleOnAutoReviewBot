@@ -3,7 +3,7 @@ from math import ceil, floor, log2, prod
 from consts import (
     # General
     lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
-    base_crystal_chance, class_kill_talents_dict,
+    base_crystal_chance,
     filter_recipes, filter_never,
     # Master Classes
     grimoire_stack_types,
@@ -16,7 +16,7 @@ from consts import (
     # W3
     arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines,
     # W4
-    nblbMaxBubbleCount, maxMealCount, maxMealLevel,
+    tomepct, nblbMaxBubbleCount, maxMealCount, maxMealLevel,
     # W5
     numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
     # W6
@@ -38,11 +38,13 @@ def calculate_account(account):
     _calculate_wave_2(account)
     _calculate_wave_3(account)
 
+
 def _calculate_wave_1(account):
     # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
     _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w2_arcade(account)
+    _calculate_w4_tome(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -236,6 +238,24 @@ def _calculate_w2_arcade(account):
             f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
         )
 
+def _calculate_w4_tome(account):
+    raw_tome_pcts = account.raw_data.get('serverVars', {}).get('TomePct')
+    if raw_tome_pcts is not None:
+        raw_tome_pcts = sorted(raw_tome_pcts)
+        parsed_tome_pcts = {}
+        for percent_index, percent in enumerate(tomepct.keys()):
+            try:
+                parsed_tome_pcts[percent] = raw_tome_pcts[percent_index]
+            except:
+                parsed_tome_pcts[percent] = 99999
+        for percent, score in parsed_tome_pcts.items():
+            if account.tome['Total Points'] > score:
+                account.tome['Tome Percent'] = min(account.tome['Tome Percent'], percent)
+    else:
+        for percent, score in tomepct.items():
+            if account.tome['Total Points'] > score:
+                account.tome['Tome Percent'] = min(account.tome['Tome Percent'], percent)
+    # logger.debug(f"{account.tome['Total Points']} tome points = Top {account.tome['Tome Percent']}%")
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -335,6 +355,7 @@ def _calculate_general_highest_world_reached(account):
         return 2
     else:
         return 1
+
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire(account)
@@ -488,6 +509,7 @@ def _calculate_master_classes_compass_dust_sources(account):
     }
     account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
 
+
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
     _calculate_w1_starsigns(account)
@@ -629,8 +651,6 @@ def _calculate_w1_stamps(account):
             logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
             continue
 
-
-
 def _calculate_w1_owl_bonuses(account):
     bonuses_of_orion_num = len(owl_bonuses_of_orion)
     bonuses_of_orion_owned = account.owl['BonusesOfOrion']
@@ -660,6 +680,7 @@ def _calculate_w1_owl_bonuses(account):
             'NumUnlocked': bonus_num_unlocked,
             'Value': safer_convert(bonus_value, 0)
     }
+
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
@@ -778,6 +799,7 @@ def _calculate_w2_killroy(account):
                 safer_get(account.raw_optlacc_dict, 112, 0) >= upgradeDict['Required Fights']
                 or account.killroy[upgradeName]['Upgrades'] > 0
             ) and account.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
+
 
 def _calculate_w3(account):
     _calculate_w3_building_max_levels(account)
@@ -921,6 +943,7 @@ def _calculate_w3_shrine_advices(account):
         progression=1 + next(c.getStars() for c in account.cards if c.name == "Chaotic Chizoar"),
         goal=6
     )
+
 
 def _calculate_w4(account):
     _calculate_w4_cooking_max_plate_levels(account)
@@ -1066,6 +1089,7 @@ def _calculate_w4_tome_bonuses(account):
     )
     # logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
 
+
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
     _calculate_w5_divinity_offering_costs(account)
@@ -1084,6 +1108,7 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
     except OverflowError:
         logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}")
         return 1e100
+
 
 def _calculate_caverns(account):
     #_calculate_caverns_majiks(account)
@@ -1608,6 +1633,7 @@ def _calculate_caverns_gambit(account):
     if account.caverns['Caverns']['Gambit']['Bonuses'][9]['Unlocked']:
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
+
 def _calculate_w6(account):
     # _calculate_w6_farming(account)  # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_summoning(account)
@@ -1769,7 +1795,10 @@ def _calculate_w6_farming_crop_evo(account):
     account.farming['Evo']['Vial Value'] = account.alchemy_vials['Flavorgil (Caulifish)']['Value']
     account.farming['Evo']['Alch Multi'] = (
         ValueToMulti(account.farming['Evo']['Cropius Final Value'])
-        # * ValueToMulti(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'])
+        * ValueToMulti(
+            account.alchemy_bubbles['Crop Chapter']['BaseValue']
+            * max(0, floor((account.tome['Total Points'] - 5000) / 2000))
+        )
         * ValueToMulti(account.farming['Evo']['Vial Value'])
     )
     # Stamp
@@ -1910,6 +1939,7 @@ def _calculate_w6_summoning_doublers(account):
         account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']
         + (10 * account.event_points_shop['Bonuses']['Summoning Star']['Owned'])
     )
+
 
 def _calculate_wave_3(account):
     _calculate_w3_library_max_book_levels(account)
