@@ -38,6 +38,8 @@ const defaults = {
 
 const spinner = new Spin.Spinner(opts)
 
+const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
 function toggleSidebar() {
     document.querySelectorAll('#drawer, #drawer-handle, #veil')
         .forEach(e => e.classList.toggle('sidebar-open'))
@@ -528,6 +530,7 @@ const hiddenElements = {
     "hidden-completed": new Set(),
     "hidden-informational": new Set(),
     "hidden-unrated": new Set(),
+    "hidden-overwhelming": new Set(),
     [kidsHiddenClass]: new Set()
 }
 
@@ -716,6 +719,7 @@ function initResultsUI() {
     setupDataClock()
     hideElements()
     handleParallax()
+    animateStaleData()
 }
 
 function handleParallax() {
@@ -768,6 +772,19 @@ function handleParallax() {
     document.querySelector('.container-fluid').onscroll = updateParallax;
     window.addEventListener('resize', updateParallax);
     updateParallax();
+}
+
+/* The animation for the old data needs to be triggered once the browser finishes with the
+ * UI rendering/repainting, otherwise it can get executed inconsistently (start too early)
+ */
+function animateStaleData() {
+    // I don't feel like making some contrived workarounds to make it look good on mobile
+    if (!isDesktop) return;
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            document.querySelector('.stale').style.animation ='shake 1s linear'
+        }, 0);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

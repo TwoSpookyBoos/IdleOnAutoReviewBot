@@ -23,6 +23,7 @@ logger = get_logger(__name__)
 class HeaderData:
     JSON = "JSON"
     PUBLIC = "Public Profile"
+    is_stale: bool = False
 
     def __init__(self, input_data, source_string):
         self.ie_link = ""
@@ -60,6 +61,7 @@ class HeaderData:
             locale = request.accept_languages.best.replace("-", "_")
             self.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
             self.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+            self.is_stale = deltaTime.total_seconds() >= 24 * 60 * 60
 
         except Exception as e:
             logger.warning("Unable to parse last updated time.")
