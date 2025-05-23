@@ -51,8 +51,8 @@ class HeaderData:
         try:
             timeAwayDict = safe_loads(session_data.account.raw_data["TimeAway"])
             lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
-            lastUpdatedTimeUTC = datetime.datetime.fromtimestamp(lastUpdatedTimeEpoch, datetime.UTC)
-            currentTimeUTC = datetime.datetime.now(datetime.UTC)
+            lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
+            currentTimeUTC = datetime.datetime.utcnow()
             deltaTime = currentTimeUTC - lastUpdatedTimeUTC
             days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
             hours, rest = divmod(rest, 60 * 60)
