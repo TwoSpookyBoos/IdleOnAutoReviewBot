@@ -23,6 +23,7 @@ logger = get_logger(__name__)
 class HeaderData:
     JSON = "JSON"
     PUBLIC = "Public Profile"
+    is_stale: bool = False
 
     def __init__(self, input_data, source_string):
         self.ie_link = ""
@@ -50,8 +51,8 @@ class HeaderData:
         try:
             timeAwayDict = safe_loads(session_data.account.raw_data["TimeAway"])
             lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
-            lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
-            currentTimeUTC = datetime.datetime.utcnow()
+            lastUpdatedTimeUTC = datetime.datetime.fromtimestamp(lastUpdatedTimeEpoch, datetime.UTC)
+            currentTimeUTC = datetime.datetime.now(datetime.UTC)
             deltaTime = currentTimeUTC - lastUpdatedTimeUTC
             days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
             hours, rest = divmod(rest, 60 * 60)
@@ -60,6 +61,7 @@ class HeaderData:
             locale = request.accept_languages.best.replace("-", "_")
             self.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
             self.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+            self.is_stale = deltaTime.total_seconds() >= 24 * 60 * 60
 
         except Exception as e:
             logger.warning("Unable to parse last updated time.")
