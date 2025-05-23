@@ -1,0 +1,15 @@
+[project]
+name = "idleonautoreviewbot"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = "3.10"
+dependencies = [
+    "babel==2.17.0",
+    "coloredlogs==15.0.1",
+    "flask==3.1.1",
+    "libsass==0.23.0",
+    "pytest==8.3.5",
+    "pyyaml==6.0.2",
+    "requests==2.32.3",
+    "ua-parser==1.0.1",
+]
