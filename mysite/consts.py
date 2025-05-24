@@ -1416,146 +1416,167 @@ sampling_progressionTiers = {
 
 ###WORLD 4 PROGRESSION TIERS###
 breeding_progressionTiers = {
-        0: {
-            "Tier": 0,
-            "TerritoriesUnlocked": 0,
-            "PetSlots": 2,
-            "TerritoryNotes": "",
-            "ArenaWaves": 0,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        1: {
-            "Tier": 1,
-            "TerritoriesUnlocked": 3,
-            "PetSlots": 3,
-            "TerritoryNotes": "",
-            "ArenaWaves": 3,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        2: {
-            "Tier": 2,
-            "TerritoriesUnlocked": 7,
-            "PetSlots": 4,
-            "TerritoryNotes": "",
-            "ArenaWaves": 15,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        3: {
-            "Tier": 3,
-            "TerritoriesUnlocked": 10,
-            "PetSlots": 4,
-            "TerritoryNotes": "",
-            "ArenaWaves": 50,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        4: {
-            "Tier": 4,
-            "TerritoriesUnlocked": 14,
-            "PetSlots": 5,
-            "TerritoryNotes": "",
-            "ArenaWaves": 125,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        5: {
-            "Tier": 5,
-            "TerritoriesUnlocked": 20,
-            "PetSlots": 6,
-            "TerritoryNotes": "",
-            "ArenaWaves": 200,
-            "ArenaNotes": "",
-            "Shinies": {},
-            "ShinyNotes": ""
-            },
-        #0-5 are Territory/Arena focused.
-        #6 is blended
-        #7+ are Shiny focused
-        6: {
-            "Tier": 6,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Faster Shiny Pet Lv Up Rate": [24, 6],
-                "Bonuses from All Meals": [10, 5],
-                "Infinite Star Signs": [25, 5],
-                "Base Efficiency for All Skills": [20, 5],
-            },
-            "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
-            },
-        7: {
-            "Tier": 7,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Base Critter Per Trap": [10, 5],
-                "Drop Rate": [15, 5],
-                "Faster Refinery Speed": [15, 5],
-                "Lower Minimum Travel Time for Sailing": [5, 5],
-                },
-            "ShinyNotes": ""
-            },
-        8: {
-            "Tier": 8,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Multikill Per Tier": [20, 5],
-                "Higher Artifact Find Chance": [15, 5],
-                "Faster Shiny Pet Lv Up Rate": [28, 7],
-                "Infinite Star Signs": [37, 7],
-                "Summoning EXP": [10, 5]
-                },
-            "ShinyNotes": ""
-            },
-        9: {
-            "Tier": 9,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Bonuses from All Meals": [26, 13],
-                "Base Efficiency for All Skills": [48, 12],
-                },
-            "ShinyNotes": ""
+    0: {
+        "Tier": 0,
+        "TerritoriesUnlocked": 0,
+        "PetSlots": 2,
+        "TerritoryNotes": "",
+        "ArenaWaves": 0,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
         },
-        10: {
-            "Tier": 10,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Drop Rate": [36, 12],
-                "Base Critter Per Trap": [22, 11],
-                },
-            "ShinyNotes": ""
+    1: {
+        "Tier": 1,
+        "TerritoriesUnlocked": 3,
+        "PetSlots": 3,
+        "TerritoryNotes": "",
+        "ArenaWaves": 3,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
         },
-        11: {
-            "Tier": 11,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Summoning EXP": [22, 11],
-                "Faster Refinery Speed": [33, 11],
-                "Multikill Per Tier": [44, 11],
-            },
-            "ShinyNotes": ""
+    2: {
+        "Tier": 2,
+        "TerritoriesUnlocked": 7,
+        "PetSlots": 4,
+        "TerritoryNotes": "",
+        "ArenaWaves": 15,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
         },
-        12: {
-            "Tier": 12,
-            "TerritoriesUnlocked": 24,
-            "ArenaWaves": 200,
-            "Shinies": {
-                "Infinite Star Signs": [45, 8],
+    3: {
+        "Tier": 3,
+        "TerritoriesUnlocked": 10,
+        "PetSlots": 4,
+        "TerritoryNotes": "",
+        "ArenaWaves": 50,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
+        },
+    4: {
+        "Tier": 4,
+        "TerritoriesUnlocked": 14,
+        "PetSlots": 5,
+        "TerritoryNotes": "",
+        "ArenaWaves": 125,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
+        },
+    5: {
+        "Tier": 5,
+        "TerritoriesUnlocked": 20,
+        "PetSlots": 6,
+        "TerritoryNotes": "",
+        "ArenaWaves": 200,
+        "ArenaNotes": "",
+        "Shinies": {},
+        "ShinyNotes": ""
+        },
+    #0-5 are Territory/Arena focused.
+    #6 is blended
+    #7+ are Shiny focused
+    6: {
+        "Tier": 6,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Faster Shiny Pet Lv Up Rate": [24, 6],
+            "Bonuses from All Meals": [10, 5],
+            "Infinite Star Signs": [25, 5],
+            "Base Efficiency for All Skills": [20, 5],
+        },
+        "ShinyNotes": "Start by focusing on pets that increase Shiny Speed rate. This will decrease the amount of time needed to level up pets in the future."
+        },
+    7: {
+        "Tier": 7,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Base Critter Per Trap": [10, 5],
+            "Drop Rate": [15, 5],
+            "Faster Refinery Speed": [15, 5],
+            "Lower Minimum Travel Time for Sailing": [5, 5],
             },
-            "ShinyNotes": ""
-        }
+        "ShinyNotes": ""
+        },
+    8: {
+        "Tier": 8,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Multikill Per Tier": [20, 5],
+            "Higher Artifact Find Chance": [15, 5],
+            "Faster Shiny Pet Lv Up Rate": [28, 7],
+            "Infinite Star Signs": [37, 7],
+            "Summoning EXP": [10, 5]
+            },
+        "ShinyNotes": ""
+        },
+    9: {
+        "Tier": 9,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Bonuses from All Meals": [26, 13],
+            "Base Efficiency for All Skills": [48, 12],
+            },
+        "ShinyNotes": ""
+    },
+    10: {
+        "Tier": 10,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Drop Rate": [36, 12],
+            "Base Critter Per Trap": [22, 11],
+            },
+        "ShinyNotes": ""
+    },
+    11: {
+        "Tier": 11,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Summoning EXP": [22, 11],
+            "Faster Refinery Speed": [33, 11],
+            "Multikill Per Tier": [44, 11],
+        },
+        "ShinyNotes": ""
+    },
+    12: {
+        "Tier": 12,
+        "TerritoriesUnlocked": 24,
+        "ArenaWaves": 200,
+        "Shinies": {
+            "Infinite Star Signs": [45, 8],
+        },
+        "ShinyNotes": ""
+    },
+    13: {
+        'Max Shinies': [
+            'Bonuses from All Meals', 'Drop Rate', 'Summoning EXP',
+            'Base Efficiency for All Skills', 'Multikill Per Tier', 'Faster Refinery Speed'
+        ]
+    },
+    14: {
+        'Max Shinies': [
+            'Farming EXP', 'Lower Minimum Travel Time for Sailing', 'Sail Captain EXP Gain',
+            'Higher Artifact Find Chance', 'Skill EXP', 'Base Critter Per Trap'
+        ]
+    },
+    15: {
+        'Max Shinies': [
+            'Faster Shiny Pet Lv Up Rate', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK',
+            'Infinite Star Signs', 'Total Damage',
+            'Tab 4 Talent Pts', 'Tab 3 Talent Pts', 'Tab 2 Talent Pts', 'Tab 1 Talent Pts',
+            'Class EXP', 'Line Width in Lab'
+        ]
+    },
+
     }
 rift_progressionTiers = {
     0: [0,  "",             0],
