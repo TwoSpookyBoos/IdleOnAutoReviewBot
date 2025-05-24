@@ -405,10 +405,6 @@ achievements_progressionTiers = {
             'Skill Master': {'World': 2, 'Reward': 'W2 Key', 'Rating': ''},
             'Cool Score!': {'World': 3, 'Reward': 'W3 Colo and Shop', 'Rating': ''},
         },
-        # 'Free Teleports': {
-        #     'Nice Fur Suit': {'World': 1, 'Reward': 'Free Teleport to Encroaching Forest Villas / Wode Boards / Amarok', 'Rating': ''},
-        #     "Million Null 'n Void": {'World': 1, 'Reward': 'Free Teleport to Echoing Egress / Void Ore', 'Rating': ''},
-        # },
         'Monster Respawn': {},
         'Recipes': {
             'Based Roots': {'World': 1, 'Reward': 'Acorn Hat', 'Rating': ''},
@@ -2284,7 +2280,7 @@ expectedStackables = {
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
         "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
-        "StoneT2", "StoneZ2",  "StoneW2", "StoneA2", # W2 upgrade stones and Mystery2
+        "StoneT2", "StoneZ2",  "StoneW2", "StoneA2",  # W2 upgrade stones and Mystery2
         "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
         "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9",  #W5 Slow drops = Golden W5 Sammy + Statues
@@ -3440,7 +3436,7 @@ guild_bonuses_dict = {
     'Multi Tool': {'Image': 'multi-tool', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
     'Skilley Skiller': {'Image': 'skilley-skiller', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
     'Coin Supercharger': {'Image': 'coin-supercharger', 'Max Level': 100, 'Max Value': 16.667, 'funcType': 'decay', 'x1': 20, 'x2': 20},
-    'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'Max Level': 50, 'Max Value': 0, 'funcType': 'special1', 'x1': 200, 'x2': 50}, # This value decreases to a min value of 0
+    'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'Max Level': 50, 'Max Value': 0, 'funcType': 'special1', 'x1': 200, 'x2': 50},  # This value decreases to a min value of 0
     'Gold Charm': {'Image': 'gold-charm', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
     'Star Dazzle': {'Image': 'star-dazzle', 'Max Level': 50, 'Max Value': 60, 'funcType': 'decay', 'x1': 120, 'x2': 50},
     'C2 Card Spotter': {'Image': 'c2-card-spotter', 'Max Level': 50, 'Max Value': 30, 'funcType': 'decay', 'x1': 60, 'x2': 50},
@@ -4840,7 +4836,7 @@ filter_recipes = {
     "Beginner Recipe": [
         "Copper Band", "Iron Boots", "Steel Band", "Goo Galoshes", "Fur Shirt", "Dooble Goopi", "Bleached Designer Wode Patch Pants",
         "Serrated Rex Ring", "Fishing Overalls", "Bandito Pantaloon",
-        "Blue Tee", "Peanut", "Golden Peanut",  #IDK about including these. They're technically from quests but maybe they count too? :shrug:
+        "Blue Tee", "Peanut", "Golden Peanut",  #IDK about including these. They're technically from quests, but maybe they count too? :shrug:
     ],
     "Novice Recipe": [
         "Defenders Dignity", "Strung Bludgeon", "Polished Bludgeon", "Googley Eyes", "Dootjat Eye", "Protectors Pride", "Skullfish Pendant",
@@ -8484,7 +8480,7 @@ cropDepotDict = {
 
 }
 cropDict = {
-#Basic
+    #Basic
     #0: {'Name': '', 'Image': '', 'SeedName': 'Earthy', 'SeedCropIndex': None},
     1: {'Name': 'Apple', 'Image': 'apple-crop', 'SeedName': 'Basic', 'SeedCropIndex': 1},
     2: {'Name': 'Orange', 'Image': 'orange', 'SeedName': 'Basic', 'SeedCropIndex': 2},
@@ -8507,7 +8503,8 @@ cropDict = {
     19: {'Name': 'Dragon Fruit', 'Image': 'dragon-fruit', 'SeedName': 'Basic', 'SeedCropIndex': 19},
     20: {'Name': 'Mango', 'Image': 'mango', 'SeedName': 'Basic', 'SeedCropIndex': 20},
     21: {'Name': 'Gold Blueberry', 'Image': 'gold-blueberry', 'SeedName': 'Basic', 'SeedCropIndex': 21},
-#Earthy
+
+    #Earthy
     22: {'Name': 'Carrot', 'Image': 'carrot', 'SeedName': 'Earthy', 'SeedCropIndex': 1},
     23: {'Name': 'Potato', 'Image': 'potato', 'SeedName': 'Earthy', 'SeedCropIndex': 2},
     24: {'Name': 'Beat', 'Image': 'beat', 'SeedName': 'Earthy', 'SeedCropIndex': 3},
@@ -8533,7 +8530,8 @@ cropDict = {
     44: {'Name': 'Bell Pepper', 'Image': 'bell-pepper', 'SeedName': 'Earthy', 'SeedCropIndex': 23},
     45: {'Name': 'Corn', 'Image': 'corn-crop', 'SeedName': 'Earthy', 'SeedCropIndex': 24},
     46: {'Name': 'Gold Sliced Tomato', 'Image': 'gold-sliced-tomato', 'SeedName': 'Earthy', 'SeedCropIndex': 25},
-#Bulbo
+
+    #Bulbo
     47: {'Name': 'Daisy', 'Image': 'daisy', 'SeedName': 'Bulbo', 'SeedCropIndex': 1},
     48: {'Name': 'Flour', 'Image': 'flour', 'SeedName': 'Bulbo', 'SeedCropIndex': 2},
     49: {'Name': 'Stargazer Lily', 'Image': 'stargazer-lily', 'SeedName': 'Bulbo', 'SeedCropIndex': 3},
@@ -8549,7 +8547,8 @@ cropDict = {
     59: {'Name': 'Muffin', 'Image': 'muffin', 'SeedName': 'Bulbo', 'SeedCropIndex': 13},
     60: {'Name': 'Black Rose', 'Image': 'black-rose', 'SeedName': 'Bulbo', 'SeedCropIndex': 14},
     61: {'Name': 'Golden Tulip', 'Image': 'golden-tulip', 'SeedName': 'Bulbo', 'SeedCropIndex': 15},
-#Sushi
+
+    #Sushi
     62: {'Name': 'Sushi Crop 1', 'Image': 'sushi-crop-1', 'SeedName': 'Sushi', 'SeedCropIndex': 1},
     63: {'Name': 'Sushi Crop 2', 'Image': 'sushi-crop-2', 'SeedName': 'Sushi', 'SeedCropIndex': 2},
     64: {'Name': 'Sushi Crop 3', 'Image': 'sushi-crop-3', 'SeedName': 'Sushi', 'SeedCropIndex': 3},
@@ -8573,7 +8572,8 @@ cropDict = {
     82: {'Name': 'Sushi Crop 21', 'Image': 'sushi-crop-21', 'SeedName': 'Sushi', 'SeedCropIndex': 21},
     83: {'Name': 'Sushi Crop 22', 'Image': 'sushi-crop-22', 'SeedName': 'Sushi', 'SeedCropIndex': 22},
     84: {'Name': 'Sushi Crop 23', 'Image': 'sushi-crop-23', 'SeedName': 'Sushi', 'SeedCropIndex': 23},
-#Mushie
+
+    #Mushie
     85:  {'Name': 'Mushroom 1', 'Image': 'mushroom-1', 'SeedName': 'Mushie', 'SeedCropIndex': 1},
     86:  {'Name': 'Mushroom 2', 'Image': 'mushroom-2', 'SeedName': 'Mushie', 'SeedCropIndex': 2},
     87:  {'Name': 'Mushroom 3', 'Image': 'mushroom-3', 'SeedName': 'Mushie', 'SeedCropIndex': 3},
@@ -8597,7 +8597,8 @@ cropDict = {
     105: {'Name': 'Mushroom 21', 'Image': 'mushroom-21', 'SeedName': 'Mushie', 'SeedCropIndex': 21},
     106: {'Name': 'Mushroom 22', 'Image': 'mushroom-22', 'SeedName': 'Mushie', 'SeedCropIndex': 22},
     107: {'Name': 'Mushroom 23', 'Image': 'mushroom-23', 'SeedName': 'Mushie', 'SeedCropIndex': 23},
-#Normal Glassy
+
+    #Normal Glassy
     108: {'Name': 'Glassy Bananas', 'Image': 'glassy-bananas', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 1},
     109: {'Name': 'Glassy Mango', 'Image': 'glassy-mango', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 2},
     110: {'Name': 'Glassy Mushroom', 'Image': 'glassy-mushroom', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 3},
@@ -8611,7 +8612,8 @@ cropDict = {
     118: {'Name': 'Glassy Lettuce', 'Image': 'glassy-lettuce', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 11},
     119: {'Name': 'Glassy Onigiri', 'Image': 'glassy-onigiri', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 12},
     120: {'Name': 'Glassy Corn', 'Image': 'glassy-corn', 'SeedName': 'Normal Glassy', 'SeedCropIndex': 13},
-#Red Glassy
+
+    #Red Glassy
     121: {'Name': 'Red Glassy Bananas',     'Image': 'red-glassy-bananas', 'SeedName': 'Red Glassy',    'SeedCropIndex': 14},
     122: {'Name': 'Red Glassy Mango',       'Image': 'red-glassy-mango', 'SeedName': 'Red Glassy',      'SeedCropIndex': 15},
     123: {'Name': 'Red Glassy Broccoli',    'Image': 'red-glassy-broccoli', 'SeedName': 'Red Glassy',   'SeedCropIndex': 16},
@@ -8622,7 +8624,8 @@ cropDict = {
     128: {'Name': 'Red Glassy Rose',        'Image': 'red-glassy-rose', 'SeedName': 'Red Glassy',       'SeedCropIndex': 21},
     129: {'Name': 'Red Glassy Onigiri',     'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 22},
     130: {'Name': 'Red Glassy Corn',        'Image': 'red-glassy-corn', 'SeedName': 'Red Glassy',       'SeedCropIndex': 23},
-#Green Glassy
+
+    #Green Glassy
     131: {'Name': 'Green Glassy Bananas',     'Image': 'green-glassy-bananas', 'SeedName': 'Green Glassy',    'SeedCropIndex': 24},
     132: {'Name': 'Green Glassy Mango',       'Image': 'green-glassy-mango', 'SeedName': 'Green Glassy',      'SeedCropIndex': 25},
     133: {'Name': 'Green Glassy Broccoli',    'Image': 'green-glassy-broccoli', 'SeedName': 'Green Glassy',   'SeedCropIndex': 26},
@@ -8633,7 +8636,8 @@ cropDict = {
     138: {'Name': 'Green Glassy Rose',        'Image': 'green-glassy-rose', 'SeedName': 'Green Glassy',       'SeedCropIndex': 31},
     139: {'Name': 'Green Glassy Onigiri',     'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 32},
     140: {'Name': 'Green Glassy Corn',        'Image': 'green-glassy-corn', 'SeedName': 'Green Glassy',       'SeedCropIndex': 33},
-#White Glassy
+
+    #White Glassy
     141: {'Name': 'White Glassy Bananas',     'Image': 'white-glassy-bananas', 'SeedName': 'White Glassy',    'SeedCropIndex': 34},
     142: {'Name': 'White Glassy Mango',       'Image': 'white-glassy-mango', 'SeedName': 'White Glassy',      'SeedCropIndex': 35},
     143: {'Name': 'White Glassy Broccoli',    'Image': 'white-glassy-broccoli', 'SeedName': 'White Glassy',   'SeedCropIndex': 36},
@@ -8644,7 +8648,8 @@ cropDict = {
     148: {'Name': 'White Glassy Rose',        'Image': 'white-glassy-rose', 'SeedName': 'White Glassy',       'SeedCropIndex': 41},
     149: {'Name': 'White Glassy Onigiri',     'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 42},
     150: {'Name': 'White Glassy Corn',        'Image': 'white-glassy-corn', 'SeedName': 'White Glassy',       'SeedCropIndex': 43},
-#Purple Glassy
+
+    #Purple Glassy
     151: {'Name': 'Purple Glassy Bananas',     'Image': 'purple-glassy-bananas', 'SeedName': 'Purple Glassy',    'SeedCropIndex': 44},
     152: {'Name': 'Purple Glassy Mango',       'Image': 'purple-glassy-mango', 'SeedName': 'Purple Glassy',      'SeedCropIndex': 45},
     153: {'Name': 'Purple Glassy Broccoli',    'Image': 'purple-glassy-broccoli', 'SeedName': 'Purple Glassy',   'SeedCropIndex': 46},
@@ -8655,7 +8660,8 @@ cropDict = {
     158: {'Name': 'Purple Glassy Rose',        'Image': 'purple-glassy-rose', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 51},
     159: {'Name': 'Purple Glassy Onigiri',     'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 52},
     160: {'Name': 'Purple Glassy Corn',        'Image': 'purple-glassy-corn', 'SeedName': 'Purple Glassy',       'SeedCropIndex': 53},
-#Yellow Glassy
+
+    #Yellow Glassy
     161: {'Name': 'Yellow Glassy Bananas',     'Image': 'yellow-glassy-bananas', 'SeedName': 'Yellow Glassy',    'SeedCropIndex': 54},
     162: {'Name': 'Yellow Glassy Mango',       'Image': 'yellow-glassy-mango', 'SeedName': 'Yellow Glassy',      'SeedCropIndex': 55},
     163: {'Name': 'Yellow Glassy Broccoli',    'Image': 'yellow-glassy-broccoli', 'SeedName': 'Yellow Glassy',   'SeedCropIndex': 56},
@@ -8666,7 +8672,8 @@ cropDict = {
     168: {'Name': 'Yellow Glassy Rose',        'Image': 'yellow-glassy-rose', 'SeedName': 'Yellow Glassy',       'SeedCropIndex': 61},
     169: {'Name': 'Yellow Glassy Onigiri',     'Image': 'yellow-glassy-corn', 'SeedName': 'Yellow Glassy',       'SeedCropIndex': 62},
     170: {'Name': 'Yellow Glassy Corn',        'Image': 'yellow-glassy-corn', 'SeedName': 'Yellow Glassy',       'SeedCropIndex': 63},
-#Blue Glassy
+
+    #Blue Glassy
     171: {'Name': 'Blue Glassy Bananas',     'Image': 'blue-glassy-bananas', 'SeedName': 'Blue Glassy',    'SeedCropIndex': 64},
     172: {'Name': 'Blue Glassy Mango',       'Image': 'blue-glassy-mango', 'SeedName': 'Blue Glassy',      'SeedCropIndex': 65},
     173: {'Name': 'Blue Glassy Broccoli',    'Image': 'blue-glassy-broccoli', 'SeedName': 'Blue Glassy',   'SeedCropIndex': 66},
@@ -8677,7 +8684,8 @@ cropDict = {
     178: {'Name': 'Blue Glassy Rose',        'Image': 'blue-glassy-rose', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 71},
     179: {'Name': 'Blue Glassy Onigiri',     'Image': 'blue-glassy-corn', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 72},
     180: {'Name': 'Blue Glassy Corn',        'Image': 'blue-glassy-corn', 'SeedName': 'Blue Glassy',       'SeedCropIndex': 73},
-#T08 Glassy
+
+    #T08 Glassy
     181: {'Name': 'T08 Glassy Bananas',     'Image': 't08-glassy-bananas',      'SeedName': 'T08 Glassy', 'SeedCropIndex': 74},
     182: {'Name': 'T08 Glassy Mango',       'Image': 't08-glassy-mango',        'SeedName': 'T08 Glassy', 'SeedCropIndex': 75},
     183: {'Name': 'T08 Glassy Broccoli',    'Image': 't08-glassy-broccoli',     'SeedName': 'T08 Glassy', 'SeedCropIndex': 76},
@@ -8688,7 +8696,8 @@ cropDict = {
     188: {'Name': 'T08 Glassy Rose',        'Image': 't08-glassy-rose',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 81},
     189: {'Name': 'T08 Glassy Onigiri',     'Image': 't08-glassy-corn',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 82},
     190: {'Name': 'T08 Glassy Corn',        'Image': 't08-glassy-corn',         'SeedName': 'T08 Glassy', 'SeedCropIndex': 83},
-#T09 Glassy
+
+    #T09 Glassy
     191: {'Name': 'T09 Glassy Bananas',     'Image': 't09-glassy-bananas',      'SeedName': 'T09 Glassy', 'SeedCropIndex': 84},
     192: {'Name': 'T09 Glassy Mango',       'Image': 't09-glassy-mango',        'SeedName': 'T09 Glassy', 'SeedCropIndex': 85},
     193: {'Name': 'T09 Glassy Broccoli',    'Image': 't09-glassy-broccoli',     'SeedName': 'T09 Glassy', 'SeedCropIndex': 86},
@@ -8699,7 +8708,8 @@ cropDict = {
     198: {'Name': 'T09 Glassy Rose',        'Image': 't09-glassy-rose',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 91},
     199: {'Name': 'T09 Glassy Onigiri',     'Image': 't09-glassy-corn',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 92},
     200: {'Name': 'T09 Glassy Corn',        'Image': 't09-glassy-corn',         'SeedName': 'T09 Glassy', 'SeedCropIndex': 93},
-#T10 Glassy
+
+    #T10 Glassy
     201: {'Name': 'T10 Glassy Bananas',     'Image': 't10-glassy-bananas',      'SeedName': 'T10 Glassy', 'SeedCropIndex': 94},
     202: {'Name': 'T10 Glassy Mango',       'Image': 't10-glassy-mango',        'SeedName': 'T10 Glassy', 'SeedCropIndex': 95},
     203: {'Name': 'T10 Glassy Broccoli',    'Image': 't10-glassy-broccoli',     'SeedName': 'T10 Glassy', 'SeedCropIndex': 96},
@@ -8710,7 +8720,8 @@ cropDict = {
     208: {'Name': 'T10 Glassy Rose',        'Image': 't10-glassy-rose',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 101},
     209: {'Name': 'T10 Glassy Onigiri',     'Image': 't10-glassy-corn',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 102},
     210: {'Name': 'T10 Glassy Corn',        'Image': 't10-glassy-corn',         'SeedName': 'T10 Glassy', 'SeedCropIndex': 103},
-#T11 Glassy
+
+    #T11 Glassy
     211: {'Name': 'T11 Glassy Bananas',     'Image': 't11-glassy-bananas',      'SeedName': 'T11 Glassy', 'SeedCropIndex': 104},
     212: {'Name': 'T11 Glassy Mango',       'Image': 't11-glassy-mango',        'SeedName': 'T11 Glassy', 'SeedCropIndex': 105},
     213: {'Name': 'T11 Glassy Broccoli',    'Image': 't11-glassy-broccoli',     'SeedName': 'T11 Glassy', 'SeedCropIndex': 106},
@@ -8721,7 +8732,8 @@ cropDict = {
     218: {'Name': 'T11 Glassy Rose',        'Image': 't11-glassy-rose',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 111},
     219: {'Name': 'T11 Glassy Onigiri',     'Image': 't11-glassy-corn',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 112},
     220: {'Name': 'T11 Glassy Corn',        'Image': 't11-glassy-corn',         'SeedName': 'T11 Glassy', 'SeedCropIndex': 113},
-#T12 Glassy
+
+    #T12 Glassy
     221: {'Name': 'T12 Glassy Bananas',     'Image': 't12-glassy-bananas',      'SeedName': 'T12 Glassy', 'SeedCropIndex': 114},
     222: {'Name': 'T12 Glassy Mango',       'Image': 't12-glassy-mango',        'SeedName': 'T12 Glassy', 'SeedCropIndex': 115},
     223: {'Name': 'T12 Glassy Broccoli',    'Image': 't12-glassy-broccoli',     'SeedName': 'T12 Glassy', 'SeedCropIndex': 116},
@@ -8757,7 +8769,6 @@ def getCropEvoChance(overallSeedNumber: int) -> float:
 
 def getRequiredCropNumber(upgrade, target_level):
     target_index = target_level - 1  #Formula uses the number of already purchased levels: x - 1
-    result_number = 0
     match upgrade:
         case 'Land Plots':
             starting_value = 0
@@ -9339,6 +9350,7 @@ def decode_enemy_name(coded_name: str) -> str:
     if decoded_name.startswith('Unknown'):
         logger.warning(f"Unknown enemy code name: {coded_name}")
     return decoded_name
+
 
 ###SLAB CONSTS###
 #SlabItemSort last pulled from code in v2.35 Wind Walker class
@@ -10474,6 +10486,7 @@ def find_vendor_name(item_codename):
     for vendor_name, sold_items in vendorItems.items():
         if item_codename in sold_items:
             return vendor_name
+
 
 #anvilItems last pulled from code in 2.12. Search for: ItemToCraftNAME = function ()
 anvilItems = {
