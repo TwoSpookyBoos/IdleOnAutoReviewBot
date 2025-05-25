@@ -826,7 +826,7 @@ vault_progressionTiers = {
         ]  #This list generated from Acecow's alt account when they first entered World 6
     },
     3: {
-        'Exclude': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge']
+        'Exclude': ['Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge', 'Card Retirement']
     }
 }
 
@@ -881,21 +881,20 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 234, 'Warriors Rule': 117, 'Hearty Diggy': 234, 'Wyoming Blood': 70, 'Sploosh Sploosh': 70, 'Stronk Tools': 164, 'Multorange': 70,
       'Dream Of Ironfish': 70},
      {'Swift Steppin': 234, 'Archer Or Bust': 117, 'Bug^2': 70, 'Premigreen': 70, 'Fly In Mind': 94},
-     {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70, 'Tree Sleeper': 94},
+     {'Stable Jenius': 234, 'Mage Is Best': 117, 'Molto Loggo': 70, 'Le Brain Tools': 164, 'Severapurple': 70},
      {'All For Kill': 150, "Name I Guess": 100},
      "70% max value",
      ""],
     [7, 120,
-     {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120,
-      'Dream Of Ironfish': 120},
-     {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120, 'Premigreen': 120},
+     {'Roid Ragin': 400, 'Warriors Rule': 200, 'Hearty Diggy': 400, 'Wyoming Blood': 120, 'Sploosh Sploosh': 120, 'Stronk Tools': 280, 'Multorange': 120},
+     {'Swift Steppin': 400, 'Archer Or Bust': 200, 'Bug^2': 120},
      {'Stable Jenius': 400, 'Mage Is Best': 200, 'Hocus Choppus': 400, 'Molto Loggo': 120, 'Le Brain Tools': 280, 'Severapurple': 120, 'Tree Sleeper': 160},
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, 'Cookin Roadkill': 105, 'All For Kill': 167},
      "80% max value",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
     [8, 120,
      {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170},
-     {'Swift Steppin': 567, 'Premigreen': 170},
+     {'Swift Steppin': 567},
      {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180},
      "85% max value",
@@ -905,7 +904,7 @@ bubbles_progressionTiers = [
      {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
      {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
      {'Laaarrrryyyy': 501, 'Cookin Roadkill': 630, 'Startue Exp': 240, 'Hammer Hammer': 300,
-      'Droppin Loads': 280, 'Shimmeron': 360, 'Buff Boi Talent': 100, 'Fast Boi Talent': 100, 'Smart Boi Talent': 100,},
+      'Droppin Loads': 280, 'Buff Boi Talent': 100, 'Fast Boi Talent': 100, 'Smart Boi Talent': 100},
      "90% max value",
      ""],
     [10, 120,
@@ -973,7 +972,7 @@ bubbles_progressionTiers = [
      {'Stable Jenius': 10000, 'Mage Is Best': 4950, 'Hocus Choppus': 9900, 'Le Brain Tools': 6930, 'Severapurple': 2970, 'Tree Sleeper': 3960,
       'Slabe Logsoul': 5940, 'Slabe Wisdom': 5940, 'Endgame Eff III': 5940, 'Tome Wisdom': 5940},
      {'Cookin Roadkill': 6930, 'Call Me Bob': 10000, 'Carpenter': 4950, 'Nickel Of Wisdom': 2970, "Penny Of Strength": 2970, "Dollar Of Agility": 2970,
-      'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Big P': 5940, 'Shimmeron': 3960,
+      'Droppin Loads': 6930, 'Startue Exp': 5940, 'Laaarrrryyyy': 9900, 'Big Game Hunter': 2970, 'Mr Massacre': 4950, 'Big P': 5940,
       'Hammer Hammer': 10000, "Grind Time": 10000, 'Buff Boi Talent': 800, 'Fast Boi Talent': 800, 'Smart Boi Talent': 800,
       'Card Champ': 3960,
       'Essence Chapter': 4950, 'Quickdraw Quiver': 5940, 'Smarter Spells': 5940, 'Ninja Looter': 5940, 'Crop Chapter': 4950
