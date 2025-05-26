@@ -275,8 +275,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     if highestZOWCountIndex is not None:
         deathnote_AdviceGroupDict['ZOW'] = AdviceGroup(
             tier=str(tier_combo['ZOW'] if tier_combo['ZOW'] < max_tier else ""),
-            pre_string=f"{'Informational- You could complete' if tier_combo['ZOW'] >= max_tier else 'Complete'} {apocToNextTier['ZOW']} more"
-                       f" ZOW{pl(apocToNextTier['ZOW'])} with {session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}",
+            pre_string=f"""{f"Informational Tier {tier_combo['ZOW']}- You could complete" if tier_combo['ZOW'] >= max_tier else 'Complete'} """
+                       f"""{apocToNextTier['ZOW']} more ZOW{pl(apocToNextTier['ZOW'])} with """
+                       f"""{session_data.account.all_characters[highestZOWCountIndex].character_name} {zowsForNextTier}""",
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy",
             informational=True if tier_combo['ZOW'] >= max_tier else False
@@ -292,8 +293,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     if highestCHOWCountIndex is not None:
         deathnote_AdviceGroupDict['CHOW'] = AdviceGroup(
             tier=str(tier_combo['CHOW'] if tier_combo['CHOW'] < max_tier else ""),
-            pre_string=f"{'Informational- You could complete' if tier_combo['CHOW'] >= max_tier else 'Complete'} {apocToNextTier['CHOW']} more"
-                       f" CHOW{pl(apocToNextTier['CHOW'])} with {session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}",
+            pre_string=f"""{f"Informational Tier {tier_combo['CHOW']}- You could complete" if tier_combo['CHOW'] >= max_tier else 'Complete'} """
+                       f"""{apocToNextTier['CHOW']} more CHOW{pl(apocToNextTier['CHOW'])} with """
+                       f"""{session_data.account.all_characters[highestCHOWCountIndex].character_name} {chowsForNextTier}""",
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy",
             informational=True if tier_combo['CHOW'] >= max_tier else False
@@ -309,8 +311,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     if apocalypse_character_Index is not None:
         deathnote_AdviceGroupDict['MEOW'] = AdviceGroup(
             tier=str(tier_combo['MEOW'] if tier_combo['MEOW'] < max_tier else ""),
-            pre_string=f"{'Informational- You could complete' if tier_combo['MEOW'] >= max_tier else 'Complete'} {apocToNextTier['MEOW']} more"
-                       f" Super CHOW{pl(apocToNextTier['MEOW'])} with {session_data.account.all_characters[apocalypse_character_Index].character_name} {meowsForNextTier}",
+            pre_string=f"""{f"Informational Tier {tier_combo['MEOW']}- You could complete" if tier_combo['MEOW'] >= max_tier else 'Complete'} """
+                       f"""{apocToNextTier['MEOW']} more Super CHOW{pl(apocToNextTier['MEOW'])} with """
+                       f"""{session_data.account.all_characters[apocalypse_character_Index].character_name} {meowsForNextTier}""",
             advices=deathnote_AdviceDict['MEOW'],
             post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy",
             informational=True if tier_combo['MEOW'] >= max_tier else False
@@ -326,8 +329,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     if apocalypse_character_Index is not None:
         deathnote_AdviceGroupDict['WOW'] = AdviceGroup(
             tier=str(tier_combo['WOW'] if tier_combo['WOW'] < max_tier else ""),
-            pre_string=f"{'Informational- You could complete' if tier_combo['WOW'] >= max_tier else 'Complete'} {apocToNextTier['WOW']} more"
-                       f" WOW{pl(apocToNextTier['WOW'])} with {session_data.account.all_characters[apocalypse_character_Index].character_name} {wowsForNextTier}",
+            pre_string=f"""{f"Informational Tier {tier_combo['WOW']}- You could complete" if tier_combo['WOW'] >= max_tier else 'Complete'} """
+                       f"""{apocToNextTier['WOW']} more WOW{pl(apocToNextTier['WOW'])} with """
+                       f"""{session_data.account.all_characters[apocalypse_character_Index].character_name} {wowsForNextTier}""",
             advices=deathnote_AdviceDict['WOW'],
             post_string='Aim for 10m+ KPH per enemy',
             informational=True if tier_combo['WOW'] >= max_tier else False

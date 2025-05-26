@@ -1,4 +1,3 @@
-import copy
 from math import ceil, floor, log2, prod
 from consts import (
     # General
@@ -679,7 +678,7 @@ def _calculate_w1_owl_bonuses(account):
             'BaseValue': bonus_base,
             'NumUnlocked': bonus_num_unlocked,
             'Value': safer_convert(bonus_value, 0)
-    }
+        }
 
 
 def _calculate_w2(account):
@@ -1419,7 +1418,8 @@ def _calculate_caverns_motherlode_layers(account):
 def _calculate_caverns_monuments_bravery(account):
     monument_name = 'Bravery Monument'
     account.caverns['Caverns'][monument_name]['Sword Count'] = (
-        min(9,
+        min(
+            9,
             3  # Starting amount
             + (2 * (account.caverns['Caverns'][monument_name]['Hours'] >= 80))
             + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 750))

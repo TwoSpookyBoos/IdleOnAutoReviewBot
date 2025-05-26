@@ -15,7 +15,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     vault_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 1
+    info_tiers = 0
     true_max = max(vault_progressionTiers.keys(), default=0)
     max_tier = true_max - info_tiers
     tier_Vault = 0

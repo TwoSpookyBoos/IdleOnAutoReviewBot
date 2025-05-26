@@ -187,7 +187,7 @@ class Placements(dict):
         ACHIEVEMENTS:  [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,     true_max_tiers[ACHIEVEMENTS], 99],
         GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
         Q_GSTACKS:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,     true_max_tiers[Q_GSTACKS], 99],
-        VAULT:         [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      3,  3,  3,      3,     true_max_tiers[VAULT], 99],
+        VAULT:         [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      2,  3,  3,      3,     true_max_tiers[VAULT], 99],
         STAMPS:        [0,   1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,     12, 13, 14,     15, 16, 17,     20,    true_max_tiers[STAMPS], 99],
         BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
         SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,     true_max_tiers[SMITHING], 99],
