@@ -220,7 +220,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
 def _calculate_w2_arcade(account):
     for upgrade_index, upgrade_details in account.arcade.items():
         account.arcade[upgrade_index]['Value'] *= (
-            max(1, 2 * account.arcade[upgrade_index]['Royale'])
+            max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
             * max(1, 2 * account.companions['Reindeer'])
         )
         account.arcade[upgrade_index]['Display'] = (

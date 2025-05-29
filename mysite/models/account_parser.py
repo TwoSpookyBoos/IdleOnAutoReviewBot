@@ -1312,7 +1312,7 @@ def _parse_w2_arcade(account):
     account.arcade_currency = {
         'Balls': safer_get(account.raw_optlacc_dict, 74, 0),
         'Gold Balls': safer_get(account.raw_optlacc_dict, 75, 0),
-        'Royale Balls': safer_get(account.raw_optlacc_dict, 324, 0),
+        'Cosmic Balls': safer_get(account.raw_optlacc_dict, 324, 0),
     }
 
     account.arcade = {}
@@ -1328,7 +1328,7 @@ def _parse_w2_arcade(account):
                     upgrade_details['x2']
                 ),
                 'MaxValue':(
-                    2  #Royale
+                    2  #Cosmic
                     * 2  #Reindeer Companion
                     * lavaFunc(
                         upgrade_details['funcType'],
@@ -1337,10 +1337,10 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Royale': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
+                'Cosmic': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
                 'Material': (
                     '' if raw_arcade_upgrades[upgrade_index] == 101
-                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgrade_index] == 100
+                    else 'arcade-cosmic-ball' if raw_arcade_upgrades[upgrade_index] == 100
                     else 'arcade-gold-ball'
                 ),
                 'Image': f'arcade-bonus-{upgrade_index}',
@@ -1358,7 +1358,7 @@ def _parse_w2_arcade(account):
                     upgrade_details['x2']
                 ),
                 'MaxValue':(
-                    2  #Royale
+                    2  #Cosmic
                     * 2  #Reindeer Companion
                     * lavaFunc(
                         upgrade_details['funcType'],
@@ -1367,7 +1367,7 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Royale': False,
+                'Cosmic': False,
                 'Material': 'arcade-gold-ball',
                 'Image': f'arcade-bonus-{upgrade_index}',
                 'Display Type': upgrade_details['displayType'],

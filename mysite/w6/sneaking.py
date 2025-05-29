@@ -30,22 +30,19 @@ def getSneakingProgressionTiersAdviceGroups():
     ))
 
     for gemstoneName, gemstoneData in session_data.account.sneaking['Gemstones'].items():
-        if gemstoneName == 'Emerald':
-            emerald_note = f" = {1 - (1/(max(1, session_data.account.sneaking['Gemstones']['Emerald']['BoostedValue'])/100)):.4%} cost reduction"
+        emerald_note = (
+            f" = {1 - (1/(max(1, session_data.account.sneaking['Gemstones']['Emerald']['BoostedValue'])/100)):.4%} cost reduction"
+            if gemstoneName == 'Emerald' else ''
+        )
         if session_data.account.sneaking['Gemstones']['Moissanite']['BaseValue'] > 0 and gemstoneName != 'Moissanite':
             boosted_value = (
-                f""" (+{gemstoneData['BoostedValue']:,.2f}"""
-                f"""{'%' if gemstoneName != 'Firefrost' else ''} total"""
-                f"""{emerald_note if gemstoneName == 'Emerald' else ''})"""
+                f" (+{gemstoneData['BoostedValue']:,.2f}"
+                f"{'%' if gemstoneName != 'Firefrost' else ''} total"
+                f"{emerald_note})"
             )
         else:
             boosted_value = ''
         sneaking_AdviceDict["Gemstones"].append(Advice(
-            # label="{} (Level {}: +{:.2f}% {})".format(
-            #     gemstoneName,
-            #     gemstoneData.get('Level', 0),
-            #     gemstoneData.get('Value', 0),
-            #     gemstoneData.get('Stat', '')),
             label=f"Level {gemstoneData['Level']:,} {gemstoneName}:"
                   f" +{gemstoneData['BaseValue']:,.2f}/{gemstoneData['MaxValue']:,}"
                   f"{'%' if gemstoneName != 'Firefrost' else ''} {gemstoneData['Stat']}"
