@@ -1,11 +1,10 @@
 from consts.progression_tiers_updater import true_max_tiers
-from models.advice_type import AdviceType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import ValueToMulti, break_you_best, build_subgroup_label
+from consts.consts import ValueToMulti, break_you_best, build_subgroup_label, AdviceType
 from consts.consts_w2 import max_index_of_vials, max_vial_level, max_maxable_vials, vial_costs
 from consts.progression_tiers import vials_progressionTiers
 

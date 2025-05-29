@@ -2,7 +2,6 @@ from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
 from consts.consts import break_you_best, build_subgroup_label
-from consts.consts_w1 import bribes_dict, unpurchasable_bribes
 from consts.progression_tiers import bribes_progressionTiers
 from flask import g as session_data
 

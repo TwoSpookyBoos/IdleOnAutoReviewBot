@@ -1,8 +1,7 @@
-from models.emoji_type import EmojiType
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get, safer_convert, mark_advice_completed
 from utils.logging import get_logger
-from consts.consts import break_you_best
+from consts.consts import break_you_best, EmojiType
 from consts.consts_general import current_world, max_characters, gem_shop_optlacc_dict
 from consts.consts_w6 import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel

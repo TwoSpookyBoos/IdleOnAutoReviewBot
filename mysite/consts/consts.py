@@ -1,8 +1,6 @@
 import yaml
+from enum import Enum
 from pathlib import Path
-
-from models.advice_type import AdviceType
-from models.emoji_type import EmojiType
 from utils.logging import get_logger
 from config import app
 
@@ -109,6 +107,23 @@ switches = [
 ]
 
 ###AutoReview consts###
+class EmojiType(Enum):
+    NO = '❌'
+    STOP = '🛑'
+    WARNING = '⚠️'
+    CHECK = '✔️'
+    TADA = '🎉'
+    HEART = '❤️'
+    HEARTBROKEN = '💔'
+    HAPPY = '😄'
+    FROWN = '🙁'
+    WIDE_SHRUG = "¯\\_(ツ)_/¯"
+    PRAY = '🙏'
+    THUMBSUP = '👍'
+    EYEROLL = '🙄'
+    INFINITY = '∞'
+
+
 break_you_best = f'<br>You best {EmojiType.HEART.value}'
 break_you_bestest = f'<br>You bestest {EmojiType.HEART.value}'
 break_keep_it_up = f"<br>Keep it up! You're on the right track! {EmojiType.HEART.value}"
@@ -163,3 +178,10 @@ def build_subgroup_label(tier_number, max_tier, pre='', post=''):
     post_note = f' ({post})' if post else ''
     final = f"{pre_note} reach {optional_note}Tier {tier_number}{post_note}"
     return final
+
+
+class AdviceType(Enum):
+    INFO = 'Info'
+    OPT = 'Optional'
+    COMP = 'Completed'
+    OVR = 'Overwhelming'

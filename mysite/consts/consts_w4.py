@@ -1,6 +1,7 @@
 import math
+from utils.logging import get_logger
 
-from consts.consts import logger
+logger = get_logger(__name__)
 
 tomepct = {
     95: 765,

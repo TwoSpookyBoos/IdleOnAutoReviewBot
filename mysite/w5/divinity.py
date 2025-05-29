@@ -1,14 +1,13 @@
 from math import ceil
 
 from consts.progression_tiers_updater import true_max_tiers
-from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts import (
-    break_you_best
+    break_you_best, EmojiType
 )
 from consts.consts_w5 import divinity_offeringsDict, divinity_stylesDict, divLevelReasonsDict, divinity_arctisBreakpoints, getDivinityNameFromIndex, \
     getOfferingNameFromIndex, getStyleNameFromIndex

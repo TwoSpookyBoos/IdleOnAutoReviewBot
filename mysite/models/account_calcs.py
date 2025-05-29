@@ -1,6 +1,6 @@
 from math import ceil, floor, log2, prod
 
-from consts.consts import ceilUpToBase, ValueToMulti
+from consts.consts import ceilUpToBase, ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
@@ -14,7 +14,6 @@ from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_b
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.progression_tiers import owl_bonuses_of_orion
-from models.emoji_type import EmojiType
 from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger

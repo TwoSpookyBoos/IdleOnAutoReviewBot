@@ -1,5 +1,9 @@
 import math
-from consts.consts import logger, ValueToMulti
+from consts.consts import ValueToMulti
+from utils.logging import get_logger
+
+logger = get_logger(__name__)
+
 
 def getCavernResourceImage(resource_number: int):
     try:

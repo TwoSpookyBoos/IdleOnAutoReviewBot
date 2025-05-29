@@ -1,7 +1,6 @@
 from consts.progression_tiers_updater import true_max_tiers
-from models.emoji_type import EmojiType
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts.consts import ValueToMulti
+from consts.consts import ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
 from consts.consts_w6 import max_farming_crops, max_land_rank_level

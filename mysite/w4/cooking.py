@@ -1,10 +1,9 @@
 from consts.progression_tiers_updater import true_max_tiers
-from models.advice_type import AdviceType
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best
+from consts.consts import break_you_best, AdviceType
 from consts.consts_w4 import max_meal_count, max_meal_level, cooking_close_enough
 from utils.text_formatting import pl
 

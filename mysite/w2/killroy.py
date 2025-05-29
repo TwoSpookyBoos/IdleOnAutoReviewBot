@@ -1,7 +1,7 @@
 import math
 
 from consts.progression_tiers_updater import true_max_tiers
-from models.emoji_type import EmojiType
+from consts.consts import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data

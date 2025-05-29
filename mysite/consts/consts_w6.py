@@ -1,7 +1,10 @@
 import math
 
-from consts.consts import logger, ValueToMulti
+from consts.consts import ValueToMulti
 from consts.consts_idleon import lavaFunc
+from utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 jade_emporium = [
     {

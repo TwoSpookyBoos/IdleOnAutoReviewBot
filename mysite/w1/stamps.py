@@ -1,10 +1,9 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers_updater import true_max_tiers
-from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_general import current_max_usable_inventory_slots
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w3 import max_overall_book_levels

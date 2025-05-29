@@ -2,13 +2,11 @@ import math
 from flask import g as session_data
 
 from consts.progression_tiers_updater import true_max_tiers
-from models.advice_type import AdviceType
-from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
-from consts.consts import ValueToMulti, break_you_best, build_subgroup_label
+from consts.consts import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
 from consts.consts_idleon import skill_index_list, lavaFunc
 from consts.consts_w5 import goldrelic_multisDict
 from consts.consts_w3 import max_printer_sample_rate

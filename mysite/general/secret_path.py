@@ -1,10 +1,9 @@
 from consts.progression_tiers_updater import true_max_tiers
-from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best
+from consts.consts import break_you_best, EmojiType
 from consts.progression_tiers import secret_class_progressionTiers
 from utils.text_formatting import pl
 
