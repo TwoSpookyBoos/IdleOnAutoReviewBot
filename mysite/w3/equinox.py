@@ -1,6 +1,6 @@
 from flask import g as session_data
 from consts.consts import break_you_best
-from consts.consts_w3 import max_possible_dreams, dreams_that_unlock_new_bonuses
+from consts.consts_w3 import max_possible_dreams
 from consts.progression_tiers import equinox_progressionTiers
 from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice

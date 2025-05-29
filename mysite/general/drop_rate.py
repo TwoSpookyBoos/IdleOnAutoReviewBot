@@ -8,7 +8,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import buildings_dict, prayers_dict, approx_max_talent_level_non_es
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
-from consts.consts_w1 import stamp_maxes, stamps_dict, starsigns_dict
+from consts.consts_w1 import stamp_maxes, starsigns_dict
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger

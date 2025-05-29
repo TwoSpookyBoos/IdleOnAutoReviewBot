@@ -1,5 +1,5 @@
 from consts.consts import break_keep_it_up
-from consts.consts_w2 import max_vial_level, getReadableVialNames, critter_vials_list
+from consts.consts_w2 import max_vial_level, critter_vials_list
 from consts.consts_w3 import max_trapping_critter_types, trapping_quests_requirement_list, trapset_images
 from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice

@@ -1,6 +1,5 @@
 from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 from flask import g as session_data
