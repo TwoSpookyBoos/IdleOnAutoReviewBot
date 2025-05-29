@@ -119,6 +119,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         #     )
         # endangered_AdviceSection.completed = True if not endangered_AdviceSection.groups else False
         # sections.append(endangered_AdviceSection)
+    else:
+        tier_EndangeredGreenstacks = 1
 
     if len(advice_MissedQuestGStacks) > 0:
         tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missable_gstacks_dict)}"
