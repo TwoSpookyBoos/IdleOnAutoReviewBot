@@ -91,6 +91,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
                          f"{'<br> Be sure NOT to turn in their quests until GStacking them' if still_obtainable > 0 else ''}")
 
     if len(advice_EndangeredQuestGStacks) > 0:
+        tier_EndangeredGreenstacks = 0
         questGStacks_AdviceDict['Endangered'] = [
             Advice(
                 label=f"{item.name}- {item.quest}",
@@ -103,10 +104,9 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
             for item in advice_EndangeredQuestGStacks
         ]
         questGStacks_AdviceGroupDict['Endangered'] = AdviceGroup(
-            tier='',
+            tier=tier_EndangeredGreenstacks,
             pre_string='Still obtainable',
             advices=questGStacks_AdviceDict['Endangered'],
-            informational=True
         )
         # endangered_AdviceSection = AdviceSection(
         #         name="Endangered Greenstacks",
@@ -141,7 +141,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
             informational=True
         )
 
-    overall_SectionTier = int(still_obtainable == 0)
+    overall_SectionTier = min(true_max, tier_EndangeredGreenstacks)
 
     tier_section = f"{overall_SectionTier}/{max_tier}"
     questGStacks_AdviceSection = AdviceSection(

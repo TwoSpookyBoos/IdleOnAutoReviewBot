@@ -4,8 +4,8 @@ from consts.consts import break_you_best
 from consts.consts_idleon import expected_talents_dict
 from consts.consts_general import current_world, arbitrary_es_family_goal
 from consts.consts_w4 import max_meal_level, cooking_close_enough
-from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, max_summoning_book_levels, max_overall_book_levels, library_subgroup_tiers, skill_talentsDict, \
-    combat_talentsDict, unbookable_talents_list
+from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, max_summoning_book_levels, max_overall_book_levels,\
+    library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import stamp_maxes
 from consts.progression_tiers_updater import true_max_tiers
@@ -550,7 +550,7 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
     overall_SectionTier = min(max_tier + optional_tiers, category_tier)
     return category_advice_groups, overall_SectionTier, max_tier, anyBookAdvice
 
-def getLibraryProgressionTiersAdviceGroups_characters(true_max_tiers=None):
+def getLibraryProgressionTiersAdviceGroups_characters():
     # This was a very lazy fix to get back to the previous state
     old_librarySubgroupTiers = [
         '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
