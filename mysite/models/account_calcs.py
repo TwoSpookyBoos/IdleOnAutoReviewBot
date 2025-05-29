@@ -1,29 +1,20 @@
 from math import ceil, floor, log2, prod
-from consts import (
-    # General
-    lavaFunc, ceilUpToBase, ValueToMulti, getNextESFamilyBreakpoint,
-    base_crystal_chance,
-    filter_recipes, filter_never,
-    # Master Classes
-    grimoire_stack_types,
-    # W1
-    vault_stack_types, grimoire_coded_stack_monster_order, decode_enemy_name, owl_bonuses_of_orion,
-    # W2
-    fishingToolkitDict,
-    islands_trash_shop_costs,
-    killroy_dict,
-    # W3
-    arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines,
-    # W4
-    tomepct, nblbMaxBubbleCount, maxMealCount, maxMealLevel,
-    # W5
-    numberOfArtifactTiers, divinity_offeringsDict, divinity_DivCostAfter3,
-    # W6
-    maxFarmingValue, summoning_rewards_that_dont_multiply_base_value, getGemstoneBoostedValue,
-    # Caverns
-    caverns_conjuror_majiks, schematics_unlocking_buckets, monument_bonuses, getBellImprovementBonus, monument_names, released_monuments,
-    infinity_string, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords, caverns_cavern_names, caverns_measurer_scalars
+
+from consts.consts import ceilUpToBase, ValueToMulti
+from consts.consts_idleon import lavaFunc, base_crystal_chance
+from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
+from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
+from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value
+from consts.consts_w5 import max_sailing_artifact_level, divinity_offeringsDict, divinity_DivCostAfter3, filter_recipes, filter_never
+from consts.consts_caverns import (
+    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
+    caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses, getBellImprovementBonus
 )
+from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles
+from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
+from consts.progression_tiers import owl_bonuses_of_orion
+from models.emoji_type import EmojiType
 from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
@@ -135,13 +126,13 @@ def _calculate_w6_summoning_winner_bonuses(account):
         winzLanternPostString = ""
 
     mgb_partial = ValueToMulti(
-        (25 * numberOfArtifactTiers)
+        (25 * max_sailing_artifact_level)
         + account.merits[5][4]['MaxLevel']
         + 1  #int(account.achievements['Spectre Stars'])
         + 1  #int(account.achievements['Regalis My Beloved'])
     )
     mgb_full = ValueToMulti(
-        (25 * numberOfArtifactTiers)
+        (25 * max_sailing_artifact_level)
         + account.merits[5][4]['MaxLevel']
         + 1  #int(account.achievements['Spectre Stars'])
         + 1  #int(account.achievements['Regalis My Beloved'])
@@ -202,10 +193,10 @@ def _calculate_w6_summoning_winner_bonuses(account):
     account.summoning['WinnerBonusesMultiMaxFull'] = max(1, mga * mgb_full)
     account.summoning['WinnerBonusesSummaryFull'] = [
         Advice(
-            label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{infinity_string}",
+            label=f"Winner Bonuses multi from Endless Summoning: {account.summoning['Endless Bonuses']['x Winner Bonuses']}/{EmojiType.INFINITY.value}",
             picture_class='endless-summoning',
             progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
-            goal=infinity_string,
+            goal=EmojiType.INFINITY.value,
             completed=True
         ),
         Advice(
@@ -270,7 +261,7 @@ def _calculate_wave_2(account):
 def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
-    account.highestWorldReached = _calculate_general_highest_world_reached(account)
+    account.highest_world_reached = _calculate_general_highest_world_reached(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -312,14 +303,14 @@ def _calculate_general_item_filter(account):
                 label=f"{filtered_displayName} filtered, not in Slab",
                 picture_class=filtered_displayName,
             ))
-        elif filtered_displayName in fishingToolkitDict['Lures']:
-            if fishingToolkitDict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
+        elif filtered_displayName in fishing_toolkit_dict['Lures']:
+            if fishing_toolkit_dict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
                 account.alerts_AdviceDict['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                     picture_class=filtered_displayName,
                 ))
-        elif filtered_displayName in fishingToolkitDict['Lines']:
-            if fishingToolkitDict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
+        elif filtered_displayName in fishing_toolkit_dict['Lines']:
+            if fishing_toolkit_dict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
                 account.alerts_AdviceDict['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                     picture_class=filtered_displayName,
@@ -1013,9 +1004,9 @@ def _calculate_w4_cooking_max_plate_levels(account):
         ))
 
     account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
-    account.cooking['MaxRemainingMeals'] = (maxMealCount * maxMealLevel) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['MaxRemainingMeals'] = (max_meal_count * max_meal_level) - account.cooking['PlayerTotalMealLevels']
     account.cooking['NMLBDays'] = sum([
-        ceil((maxMealLevel - meal_details['Level']) / 3) for meal_details in account.meals.values()
+        ceil((max_meal_level - meal_details['Level']) / 3) for meal_details in account.meals.values()
     ])
 
 def _calculate_w4_jewel_multi(account):
@@ -1063,7 +1054,7 @@ def _calculate_w4_lab_bonuses(account):
     #Reduce this down to 0 if the lab bonus isn't enabled
     account.labBonuses['No Bubble Left Behind']['Value'] *= account.labBonuses['No Bubble Left Behind']['Enabled']
     #Now for the bullshit: Lava has a hidden cap of 10 bubbles
-    account.labBonuses['No Bubble Left Behind']['Value'] = min(nblbMaxBubbleCount, account.labBonuses['No Bubble Left Behind']['Value'])
+    account.labBonuses['No Bubble Left Behind']['Value'] = min(max_nblb_bubbles, account.labBonuses['No Bubble Left Behind']['Value'])
 
 def _calculate_w4_tome_bonuses(account):
     # DMG
@@ -1188,7 +1179,7 @@ def _calculate_caverns_measurements_multis(account):
             account.caverns['MeasurementMultis'][clean_entry_name] = {
                 'Raw': total_skill_levels,
                 'PrettyRaw': f"{total_skill_levels:,}",
-                'Prepped': total_skill_levels / 5000 + max(0, (total_skill_levels - 18000) / 1500),  # In the source code, this is when 99 = i
+                'Prepped': total_skill_levels / 5000 + max(0.0, (total_skill_levels - 18000) / 1500),  # In the source code, this is when 99 = i
             }
         # elif entry_index == 5:  #Unimplemented as of 2.32 Gambit, just returns 0. Default case can handle it.
         #     pass
@@ -1277,11 +1268,11 @@ def _calculate_caverns_studies(account):
             case 9:
                 base_value = 50
                 total_value = base_value + (study_details['Level'] * study_details['ScalingValue'])
-                max_level = infinity_string
+                max_level = EmojiType.INFINITY.value
                 base_note = f"<br>{base_value} base +{study_details['ScalingValue']} per level"
             case _:
                 total_value = study_details['Level'] * study_details['ScalingValue']
-                max_level = infinity_string
+                max_level = EmojiType.INFINITY.value
                 if '}' in study_details['Description']:
                     base_note = f"<br>No base, +{ValueToMulti(study_details['ScalingValue']) - 1:.2f} per level"
                 else:
@@ -1481,7 +1472,7 @@ def _calculate_caverns_monuments_justice(account):
             + (1.5 * (account.caverns['Caverns'][monument_name]['Hours'] >= 10000))
         )
     )
-    account.caverns['Caverns'][monument_name]['Max Coins'] = infinity_string
+    account.caverns['Caverns'][monument_name]['Max Coins'] = EmojiType.INFINITY.value
     account.caverns['Caverns'][monument_name]['Popularity'] = (
         3  #Starting amount
         + (7 * (account.caverns['Caverns'][monument_name]['Hours'] >= 5000))
@@ -1707,7 +1698,7 @@ def _calculate_w6_farming_crop_depot(account):
 
 def _calculate_w6_farming_markets(account):
     super_multi_current_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * account.farming['CropStacks']['Super Gmo'])
-    #super_multi_max_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * maxFarmingCrops)
+    #super_multi_max_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * max_farming_crops)
     #logger.debug(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
     for name, details in account.farming['MarketUpgrades'].items():
         try:
@@ -1772,8 +1763,8 @@ def _calculate_w6_farming_crop_value(account):
         * account.farming['Value']['Pboost Ballot Multi Max']
         * account.farming['Value']['Value GMO Current']
     )  # end of round
-    account.farming['Value']['FinalMin'] = min(maxFarmingValue, account.farming['Value']['BeforeCapMin'])
-    account.farming['Value']['FinalMax'] = min(maxFarmingValue, account.farming['Value']['BeforeCapMax'])
+    account.farming['Value']['FinalMin'] = min(max_farming_value, account.farming['Value']['BeforeCapMin'])
+    account.farming['Value']['FinalMax'] = min(max_farming_value, account.farming['Value']['BeforeCapMax'])
     #logger.debug(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {account.farming['Value']['BeforeCap']}")
     #logger.debug(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {account.farming['Value']['Final']}")
 
@@ -1806,8 +1797,8 @@ def _calculate_w6_farming_crop_evo(account):
     # Meals
     account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
     account.farming['Evo']['Meals Multi'] = (
-            ValueToMulti(account.meals['Bill Jack Pepper']['Value'])
-            * ValueToMulti(account.meals['Nyanborgir']['Value'] * account.farming['Evo']['Nyan Stacks'])
+        ValueToMulti(account.meals['Bill Jack Pepper']['Value'])
+        * ValueToMulti(account.meals['Nyanborgir']['Value'] * account.farming['Evo']['Nyan Stacks'])
     )
     # Markets
     account.farming['Evo']['Farm Multi'] = ValueToMulti(account.farming['MarketUpgrades']['Biology Boost']['Value']) * account.farming['MarketUpgrades']['Evolution Gmo']['StackedValue']

@@ -1,16 +1,15 @@
 from math import ceil
+
+from consts.progression_tiers_updater import true_max_tiers
+from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best,
-    schematics_unlocking_buckets, sediment_names, max_sediments, getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired,
-    getDenOpalRequirement, schematics_unlocking_amplifiers, getMonumentOpalChance, monument_layer_rewards,
-    infinity_string, ValueToMulti
-    # shallow_caverns_progressionTiers
-)
-from utils.text_formatting import pl, notateNumber
+# from consts.consts import shallow_caverns_progressionTiers, break_you_best, ValueToMulti
+from consts.consts_caverns import schematics_unlocking_buckets, schematics_unlocking_amplifiers, sediment_names, max_sediments, monument_layer_rewards, \
+    getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired, getDenOpalRequirement, getMonumentOpalChance
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -130,13 +129,11 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
                 unit='%'
             ))
 
-
     cavern_ag = AdviceGroup(
         tier='',
         pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
-        informational=True,
-        picture_class='cavern-1'
+        informational=True
     )
     return cavern_ag
 
@@ -183,8 +180,7 @@ def getMotherlodeAdviceGroup(schematics):
         tier='',
         pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
-        informational=True,
-        picture_class='cavern-2'
+        informational=True
     )
     return cavern_ag
 
@@ -335,7 +331,7 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
             ),
             picture_class=bonus['Image'],
             progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
-            goal=100 if bonus['ScalingValue'] > 30 else infinity_string,
+            goal=100 if bonus['ScalingValue'] > 30 else EmojiType.INFINITY.value,
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
@@ -403,7 +399,7 @@ def getBellAdviceGroup(schematics):
             label=f"{rb_details['Description']}",
             picture_class=rb_details['Image'],
             progression=rb_details['Level'],
-            goal=infinity_string
+            goal=EmojiType.INFINITY.value
         ) for rb_index, rb_details in cavern['Ring Bonuses'].items()
     ]
     total_rings = cavern['Charges']['Ring'][1]
@@ -413,19 +409,10 @@ def getBellAdviceGroup(schematics):
     ))
     total_bonus_levels = sum([rb_details['Level'] for rb_details in cavern['Ring Bonuses'].values()])
     average_level = total_bonus_levels/max(1,total_rings)
-    bell_average = 1.88  #Per Corndag
-    average_level_too_low = average_level < bell_average
+
     cavern_advice[r_stats].insert(1, Advice(
-        label=f"""Total Bonus levels: {total_bonus_levels}"""
-              f"""<br>Avg per ring: {average_level:.4f}"""
-              # f"""{f'<br>Under {bell_average}: Consider Renewing' if (
-              #     schematics['Double Dinger Ringer']['Purchased']
-              #     and schematics['Triple Tap Tinkle']['Purchased']
-              #     and average_level_too_low
-              #     and total_rings >= 100
-              # ) else f'<br>Above {bell_average}: nice RNG 🙂' if not average_level_too_low else ''
-              # }"""
-        ,
+        label=f"Total Bonus levels: {total_bonus_levels}"
+              f"<br>Avg per ring: {average_level:.4f}",
         picture_class='bell-ring',
         completed=False,
         informational=True
@@ -440,7 +427,7 @@ def getBellAdviceGroup(schematics):
             label=ci_details['Description'],
             picture_class=ci_details['Image'],
             progression=ci_details['Level'],
-            goal=infinity_string,
+            goal=EmojiType.INFINITY.value,
             resource=ci_details['Resource'],
         ) for ci_index, ci_details in cavern['Improvements'].items()
     ]
@@ -465,8 +452,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(shallow_caverns_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Shallow Caverns']
+    max_tier = true_max - optional_tiers
     tier_Shallow_Caverns = 0
 
     #Assess Tiers
@@ -476,8 +464,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         pre_string="Progression Tiers",
         advices=shallow_caverns_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Shallow_Caverns)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 
 def getShallowCavernsAdviceSection() -> AdviceSection:

@@ -1,4 +1,5 @@
-from consts import break_you_bestest, true_max_tiers
+from consts.consts import break_you_bestest
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -16,6 +17,7 @@ class Tier:
         section_informational: bool = False,
         section_unrated: bool = False,
         section_overwhelming: bool = False,
+        section_optional: bool = False,
         current: 'Threshold' = None,
         previous: 'Threshold' = None,
         next: 'Threshold' = None
@@ -26,6 +28,7 @@ class Tier:
         self.section_informational = section_informational
         self.section_unrated = section_unrated
         self.section_overwhelming = section_overwhelming
+        self.section_optional = section_optional
         self.current = current
         self.previous = previous
         self.next = next
@@ -125,7 +128,6 @@ class Threshold:
     def placeholder(cls):
         return cls(99, -1)
 
-
     @classmethod
     def none(cls):
         return cls(0, 0)
@@ -175,7 +177,7 @@ class Placements(dict):
         BUBBLES, VIALS, P2W, SIGILS, POST_OFFICE, ISLANDS,
         REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
-        DIVINITY, SAILING, #GAMING,
+        DIVINITY, SAILING,  #GAMING,
         FARMING
     ]
 
@@ -299,8 +301,8 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming)
+    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier, section_optional) in dictOfPRs.items():
+        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming, section_optional)
         placements.place(tier)
 
     placements.finalise()
@@ -380,7 +382,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             completed=section.section_complete,
             informational=section.section_informational,
             unrated=section.section_unrated,
-            overwhelming=section.section_overwhelming
+            overwhelming=section.section_overwhelming,
+            optional=section.section_optional
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.TRUE_MAX):
@@ -403,7 +406,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
+        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.max_subgroups + 1):
             advice_groups.append(advice_group)
 
     return advice_groups
@@ -455,7 +458,8 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
             section.unrated,
             section.overwhelming,
             section.max_tier,
-            section.true_max_tier
+            section.true_max_tier,
+            section.optional
         ] for section in pinchable_sections if not section.unreached
     }
 

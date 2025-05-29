@@ -1,21 +1,18 @@
+from consts.progression_tiers_updater import true_max_tiers
+from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    max_cavern,
-    caverns_villagers, getMaxEngineerLevel, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order,
-    max_schematics,
-    max_majiks,
-    caverns_max_measurements,
-    break_you_best, infinity_string, released_schematics, total_placeholder_majiks, stamp_maxes, caverns_measurement_percent_goals
-)
+from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, max_schematics, \
+    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, caverns_measurement_percent_goals, getMaxEngineerLevel
+from consts.consts_w1 import stamp_maxes
 
 #villagers_progressionTiers,
 
 logger = get_logger(__name__)
 
-def getVillagersAdviceGroups():
+def getVillagersAdviceGroups() -> dict[str | AdviceGroup]:
     villager_ags = {
         'Explorer': getExplorerAdviceGroup(),
         'Engineer': getEngineerAdviceGroup(),
@@ -92,8 +89,8 @@ def getExplorerAdviceGroup() -> AdviceGroup:
             mark_advice_completed(advice)
 
     villager_ag = AdviceGroup(
-        tier="",
-        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        tier='',
+        pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
         completed=villager['Level'] >= max_cavern
@@ -185,7 +182,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
         completed=session_data.account.caverns['TotalSchematics'] >= released_schematics
@@ -271,8 +268,8 @@ def getConjurorAdviceGroup() -> AdviceGroup:
             mark_advice_completed(advice)
 
     villager_ag = AdviceGroup(
-        tier="",
-        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        tier='',
+        pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
         completed=villager['Level'] >= max_majiks - total_placeholder_majiks - session_data.account.gemshop['Conjuror Pts']
@@ -365,7 +362,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
                     ),
                     picture_class=measurement_details['Image'],
                     progression='Linear',
-                    goal=infinity_string,
+                    goal=EmojiType.INFINITY.value,
                     resource=measurement_details['Resource']
                 ))
 
@@ -374,8 +371,8 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
             mark_advice_completed(advice)
 
     villager_ag = AdviceGroup(
-        tier="",
-        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        tier='',
+        pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
         completed=villager['Level'] >= caverns_max_measurements
@@ -462,7 +459,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
         label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}%",
         picture_class=rosemerald['Image'],
         progression=rosemerald['Level'],
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
     villager_advice[speed_stats].append(Advice(
         label=f"Group B: Study All Nighter Majik: {majiks['Study All Nighter']['Description']}",
@@ -496,8 +493,8 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
             mark_advice_completed(advice)
 
     villager_ag = AdviceGroup(
-        tier="",
-        pre_string=f"Informational- Level {villager['Level']} {villager['Title']}",
+        tier='',
+        pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
         completed=villager['Level'] >= caverns_max_measurements
@@ -508,8 +505,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     villagers_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(villagers_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Villagers']
+    max_tier = true_max - optional_tiers
     tier_Villagers = 0
 
     #Assess Tiers
@@ -519,8 +517,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         pre_string="Progression Tiers",
         advices=villagers_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Villagers)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Villagers)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getVillagersAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -549,12 +547,12 @@ def getVillagersAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     villagers_AdviceSection = AdviceSection(
-        name="Villagers",
+        name='Villagers',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header="Villager Information",  #f"Best Villagers tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        header='Villager Information',  #f"Best Villagers tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='wiki/Hole_Campfire.gif',
         groups=villagers_AdviceGroupDict.values(),
         completed=None,

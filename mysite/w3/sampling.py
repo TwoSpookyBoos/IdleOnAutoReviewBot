@@ -1,33 +1,38 @@
 import math
 from flask import g as session_data
+
+from consts.progression_tiers_updater import true_max_tiers
+from models.advice_type import AdviceType
+from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
-from consts import (
-    lavaFunc, ValueToMulti, break_you_best, skillIndexList,
-    sampling_progressionTiers, goldrelic_multisDict, max_printer_sample_rate, arcade_max_level, max_VialLevel
-)
-
+from consts.consts import ValueToMulti, break_you_best, build_subgroup_label
+from consts.consts_idleon import skill_index_list, lavaFunc
+from consts.consts_w5 import goldrelic_multisDict
+from consts.consts_w3 import max_printer_sample_rate
+from consts.consts_w2 import max_vial_level, arcade_max_level
+from consts.progression_tiers import sampling_progressionTiers
 
 logger = get_logger(__name__)
 
 def getSampleClass(materialName: str) -> str:
-    if materialName == "Oak Logs":
-        return "mage-icon"
-    elif materialName == "Copper Ore":
-        return "warrior-icon"
-    elif materialName == "Goldfish":
-        return "barbarian-icon"
-    elif materialName == "Fly":
-        return "bowman-icon"
-    elif materialName == "Spore Cap":
-        return "voidwalker-icon"
+    if materialName == 'Oak Logs':
+        return 'mage-icon'
+    elif materialName == 'Copper Ore':
+        return 'warrior-icon'
+    elif materialName == 'Goldfish':
+        return 'barbarian-icon'
+    elif materialName == 'Fly':
+        return 'bowman-icon'
+    elif materialName == 'Spore Cap':
+        return 'voidwalker-icon'
     else:
-        return ""
+        return ''
 
 def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
-    psrAdvices = {}
+    psr_Advices = {}
 
     #Account-Wide
     account_sum = 0.0
@@ -37,87 +42,88 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
-    stample_baseValue = session_data.account.stamps['Stample Stamp']['Value']
-    stampleValue = session_data.account.stamps['Stample Stamp']['Total Value']
-    amplestample_baseValue = session_data.account.stamps['Amplestample Stamp']['Value']
-    amplestampleValue = session_data.account.stamps['Amplestample Stamp']['Total Value']
-    account_sum += stampleValue
-    account_sum += amplestampleValue
+    stample_base_value = session_data.account.stamps['Stample Stamp']['Value']
+    stample_value = session_data.account.stamps['Stample Stamp']['Total Value']
+    amplestample_base_value = session_data.account.stamps['Amplestample Stamp']['Value']
+    amplestample_value = session_data.account.stamps['Amplestample Stamp']['Total Value']
+    account_sum += stample_value
+    account_sum += amplestample_value
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
     account_sum += session_data.account.achievements['Saharan Skull']['Complete']
     #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
-    starTalentOnePoint = lavaFunc('bigBase', 1, 10, 0.075)
-    account_sum += starTalentOnePoint
+    star_talent_one_point = lavaFunc('bigBase', 1, 10, 0.075)
+    account_sum += star_talent_one_point
 
-    accountSubgroup = f"Account-Wide: +{account_sum:.2f}%"
-    psrAdvices[accountSubgroup] = []
+    account_subgroup = f'Account-Wide: +{account_sum:.2f}%'
+    psr_Advices[account_subgroup] = []
     
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
         picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Image'],
         progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
-        goal=max_VialLevel
+        goal=max_vial_level
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"Sample It bubble: "
               f"+{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}/10%",
-        picture_class="sample-it",
+        picture_class='sample-it',
         progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
         goal=200,
         resource=session_data.account.alchemy_bubbles['Sample It']['Material']
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"{{{{ Salt Lick|#salt-lick }}}} bonus: "
-              f"+{0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)}/10%",
-        picture_class="salt-lick",
-        progression=session_data.account.saltlick.get('Printer Sample Size', 0),
+              f"+{round(0.5 * session_data.account.saltlick['Printer Sample Size'], 2):g}/10%",
+        picture_class='salt-lick',
+        progression=session_data.account.saltlick['Printer Sample Size'],
         goal=20
     ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"W3 Printer Sample Rate merit: "
-              f"+{0.5 * session_data.account.merits[2][4]['Level']}/{0.5 * session_data.account.merits[2][4]['MaxLevel']:.0f}%",
-        picture_class="merit-2-4",
-        progression=session_data.account.merits[2][4]["Level"],
-        goal=session_data.account.merits[2][4]["MaxLevel"]
+    psr_Advices[account_subgroup].append(Advice(
+        label=f"W3 merit: "
+              f"+{round(0.5 * session_data.account.merits[2][4]['Level'], 1):g}/{0.5 * session_data.account.merits[2][4]['MaxLevel']:.0f}%",
+        picture_class='merit-2-4',
+        progression=session_data.account.merits[2][4]['Level'],
+        goal=session_data.account.merits[2][4]['MaxLevel']
     ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"Maestro Family Bonus: "
-              f"{session_data.account.family_bonuses['Maestro']['Value']:.2f}/4.5% at Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
-        picture_class="maestro-icon",
+    psr_Advices[account_subgroup].append(Advice(
+        label=f"Maestro Family Bonus:"
+              f" {session_data.account.family_bonuses['Maestro']['Value']:.2f}/4.5% at"
+              f" Class Level {session_data.account.family_bonuses['Maestro']['Level']}",
+        picture_class='maestro-icon',
         progression=session_data.account.family_bonuses['Maestro']['Level'],
         goal=328
     ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"Amplestample Stamp base value: +{amplestample_baseValue:.3f}/2.581%"
-              f"<br>After multipliers: {amplestampleValue:.3f}%",
-        picture_class="amplestample-stamp",
+    psr_Advices[account_subgroup].append(Advice(
+        label=f"Amplestample Stamp base value: +{amplestample_base_value:.3f}/2.581%"
+              f"<br>After multipliers: {amplestample_value:.3f}%",
+        picture_class='amplestample-stamp',
         progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
         resource=session_data.account.stamps['Amplestample Stamp']['Material'],
     ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"Stample Stamp base value: +{stample_baseValue:.3f}/2.667%"
-              f"<br>After multipliers: {stampleValue:.3f}%",
-        picture_class="stample-stamp",
+    psr_Advices[account_subgroup].append(Advice(
+        label=f"Stample Stamp base value: +{stample_base_value:.3f}/2.667%"
+              f"<br>After multipliers: {stample_value:.3f}%",
+        picture_class='stample-stamp',
         progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
         resource=session_data.account.stamps['Stample Stamp']['Material'],
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "
               f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",
-        picture_class="certified-stamp-book",
+        picture_class='certified-stamp-book',
         progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
               f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] else '1/1.25x'}",
         picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"{{{{Arcade|#arcade}}}} Bonus: "
               f"{session_data.account.arcade[5]['Value']:.2f}/"
               f"{session_data.account.arcade[5]['MaxValue']:.0f}%",
@@ -126,14 +132,14 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         goal=arcade_max_level + 1,
         resource=session_data.account.arcade[5]['Material']
     ))
-    psrAdvices[accountSubgroup].append(Advice(
+    psr_Advices[account_subgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
-        picture_class="saharan-skull",
+        picture_class='saharan-skull',
         progression=int(session_data.account.achievements['Saharan Skull']['Complete']),
         goal=1
     ))
-    psrAdvices[accountSubgroup].append(Advice(
-        label=f"Star Talent: Printer Sampling: {starTalentOnePoint:.3f}% at minimum level 1",
+    psr_Advices[account_subgroup].append(Advice(
+        label=f"Star Talent: Printer Sampling: {star_talent_one_point:.3f}% at minimum level 1",
         picture_class='printer-sampling',
         progression=1,
         goal=1
@@ -141,81 +147,84 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Character-Specific
     character_sum = 0.0
-    starTalentDiffToMax = lavaFunc('bigBase', 100, 10, 0.075) - starTalentOnePoint
-    character_sum += starTalentDiffToMax
-    poBoxMax = lavaFunc('decay', 400, 5, 200)
-    character_sum += poBoxMax
-    squireSuperSamplesMaxBook = lavaFunc('decay', session_data.account.library['MaxBookLevel'], 9, 75)
-    characterSubgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squireSuperSamplesMaxBook:.2f}% for Squires"
-    psrAdvices[characterSubgroup] = []
-    psrAdvices[characterSubgroup].append(Advice(
-        label=f"Star Talent: Printer Sampling: Additional {starTalentDiffToMax:.2f}% at max level 100",
+    star_talent_diff_to_max = lavaFunc('bigBase', 100, 10, 0.075) - star_talent_one_point
+    character_sum += star_talent_diff_to_max
+    po_box_max = lavaFunc('decay', 400, 5, 200)
+    character_sum += po_box_max
+    squire_super_samples_max_book = lavaFunc('decay', session_data.account.library['MaxBookLevel'], 9, 75)
+    character_subgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squire_super_samples_max_book:.2f}% for Squires"
+    psr_Advices[character_subgroup] = []
+    psr_Advices[character_subgroup].append(Advice(
+        label=f"Star Talent: Printer Sampling: Additional {star_talent_diff_to_max:.2f}% at max level 100",
         picture_class='printer-sampling',
         progression=1,
         goal=1
     ))
-    psrAdvices[characterSubgroup].append(Advice(
+    psr_Advices[character_subgroup].append(Advice(
         label=f"Post Office: Utilitarian Capsule: +3.33% at max 400 crates",
         picture_class='utilitarian-capsule'
     ))
-    psrAdvices[characterSubgroup].append(Advice(
-        label=f"Squire only: Super Samples: +{squireSuperSamplesMaxBook:.2f}% at max book level {session_data.account.library['MaxBookLevel']}",
+    psr_Advices[character_subgroup].append(Advice(
+        label=f"Squire only: Super Samples: +{squire_super_samples_max_book:.2f}% at max book level {session_data.account.library['MaxBookLevel']}",
         picture_class='super-samples'
     ))
 
-    prayerSubgroup = f"Which Characters need Royal Sampler?"
-    psrAdvices[prayerSubgroup] = []
-    psrAdvices[prayerSubgroup].append(Advice(
+    prayerSubgroup = 'Which Characters need Royal Sampler?'
+    psr_Advices[prayerSubgroup] = []
+    psr_Advices[prayerSubgroup].append(Advice(
         label=f"{{{{ Prayer|#prayers }}}}: Royal Sampler: {session_data.account.prayers['The Royal Sampler']['BonusString']}",
         picture_class='the-royal-sampler',
         progression=session_data.account.prayers['The Royal Sampler']['Level'],
         goal=20
     ))
-    psrAdvices[prayerSubgroup].append(Advice(
+    psr_Advices[prayerSubgroup].append(Advice(
         label=f"Character's Printer Sample Rate below is calculated WITHOUT the prayer's bonus.",
         picture_class='',
     ))
     complete_toons = 0  #Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
-    for toon in session_data.account.safe_characters:
-        characterTotalPSR = account_sum + starTalentDiffToMax + toon.po_boxes_invested['Utilitarian Capsule']['Bonus1Value']
-        if toon.sub_class == 'Squire':
-            characterTotalPSR += squireSuperSamplesMaxBook
-        if max_printer_sample_rate > characterTotalPSR:
-            shortBy = max_printer_sample_rate - characterTotalPSR
-            prayerGain = min(shortBy, session_data.account.prayers['The Royal Sampler']['BonusValue'])
-            characterEval = (
-                f"Keep prayer equipped for +{prayerGain:.3f}% 👍"
-                if 'The Royal Sampler' in toon.equipped_prayers
-                else f"⚠️Equip the Prayer for +{prayerGain:.3f}%"
-
-            ) + f"<br>{toon.po_boxes_invested['Utilitarian Capsule']['Level']}/400 PO Boxes invested"
-            complete_toons += 1 if 'The Royal Sampler' in toon.equipped_prayers else 0
+    for char in session_data.account.all_characters:
+        character_total_psr = account_sum + star_talent_diff_to_max + char.po_boxes_invested['Utilitarian Capsule']['Bonus1Value']
+        if char.sub_class == 'Squire':
+            character_total_psr += squire_super_samples_max_book
+        if max_printer_sample_rate > character_total_psr:
+            short_by = max_printer_sample_rate - character_total_psr
+            prayer_gain = min(short_by, session_data.account.prayers['The Royal Sampler']['BonusValue'])
+            character_eval = (
+                f"Keep prayer equipped for +{prayer_gain:.2f}% {EmojiType.THUMBSUP.value}"
+                if 'The Royal Sampler' in char.equipped_prayers
+                else f"{EmojiType.WARNING.value}Equip the Prayer for +{prayer_gain:.2f}%"
+            ) + (f"<br>{char.po_boxes_invested['Utilitarian Capsule']['Level']}/"
+                 f"{char.po_boxes_invested['Utilitarian Capsule']['Max Level']} PO Boxes invested")
+            complete_toons += 1 if 'The Royal Sampler' in char.equipped_prayers else 0
         else:
-            characterEval = f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in toon.equipped_prayers else ', not worn.'} 👍"
+            character_eval = (
+                f"Prayer not needed{'. You may remove if desired.' if 'The Royal Sampler' in char.equipped_prayers else ', not worn.'}"
+                f" {EmojiType.THUMBSUP.value}"
+            )
             complete_toons += 1
 
-        psrAdvices[prayerSubgroup].append(Advice(
-            label=f"{toon.character_name}: {characterEval}",
-            picture_class=f"{toon.class_name_icon}",
-            progression=f"{characterTotalPSR:.2f}",
+        psr_Advices[prayerSubgroup].append(Advice(
+            label=f"{char.character_name}: {character_eval}",
+            picture_class=f"{char.class_name_icon}",
+            progression=f"{character_total_psr:.1f}",
             goal=max_printer_sample_rate,
             unit="%"
         ))
 
-    for group_name in psrAdvices:
+    for group_name in psr_Advices:
         if group_name != prayerSubgroup:
-            for advice in psrAdvices[group_name]:
+            for advice in psr_Advices[group_name]:
                 mark_advice_completed(advice)
 
     psrAdviceGroup = AdviceGroup(
-        tier="",
-        pre_string=f"Info- Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
+        tier='',
+        pre_string=f"Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
         post_string=(
-            f"All possible values would total well over the 90% hardcap. Targets on infinite sources are provided where I'd recommend stopping."
+            f"All possible values would total well over the 90% hardcap. Targets on infinite sources are where I'd recommend stopping."
             if complete_toons < session_data.account.character_count
             else ''
         ),
-        advices=psrAdvices,
+        advices=psr_Advices,
         informational=True,
         completed=complete_toons >= session_data.account.character_count
     )
@@ -225,7 +234,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Calculate Multis for Labels
     # Skill Mastery
     sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
-    sm_eligible_skills = len(skillIndexList) - 1  #-1 to exclude Combat
+    sm_eligible_skills = len(skill_index_list) - 1  #-1 to exclude Combat
     sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = ValueToMulti(sm_sum)
@@ -260,30 +269,30 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     )
     compass_moon_of_print_multi = ValueToMulti(compass_moon_of_print_value)
 
-    anyDKMaxBooked = False
-    bestKotRBook = 0
-    anyDKMaxLeveled = False
-    bestKotRPresetLevel = 0
+    any_dk_max_booked = False
+    best_kotr_book = 0
+    any_dk_max_leveled = False
+    best_kotr_preset_level = 0
     for dk in session_data.account.dks:
         levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']
         # Book level
         if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
-            anyDKMaxBooked = True
-        if dk.max_talents.get("178", 0) > bestKotRBook:
-            bestKotRBook = dk.max_talents.get("178", 0)
+            any_dk_max_booked = True
+        if dk.max_talents.get("178", 0) > best_kotr_book:
+            best_kotr_book = dk.max_talents.get("178", 0)
 
         # Preset level
         if (
             dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
             or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
         ):
-            anyDKMaxLeveled = True
-        if dk.current_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.current_preset_talents.get("178", 0) + levels_above_max
-        if dk.secondary_preset_talents.get("178", 0) >= bestKotRPresetLevel:
-            bestKotRPresetLevel = dk.secondary_preset_talents.get("178", 0) + levels_above_max
+            any_dk_max_leveled = True
+        if dk.current_preset_talents.get("178", 0) >= best_kotr_preset_level:
+            best_kotr_preset_level = dk.current_preset_talents.get("178", 0) + levels_above_max
+        if dk.secondary_preset_talents.get("178", 0) >= best_kotr_preset_level:
+            best_kotr_preset_level = dk.secondary_preset_talents.get("178", 0) + levels_above_max
 
-    talent_value = lavaFunc('decay', bestKotRPresetLevel, 5, 150)
+    talent_value = lavaFunc('decay', best_kotr_preset_level, 5, 150)
     orb_kills = session_data.account.class_kill_talents['King of the Remembered']['Kills']
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
@@ -315,59 +324,62 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     cs_multi = lab_multi_cs * harriep_multi_cs
     cs_label = f"Character Specific: Up to {cs_multi}x"
 
-    po_AdviceDict = {
+    po_Advices = {
         cs_label: [],
         aw_label: [],
     }
 
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
-    po_AdviceDict[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
+    po_Advices[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
         label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '2x if connected to Lab/Arctis'}",
         picture_class='wired-in',
         progression=lab_multi_aw if session_data.account.companions['King Doot'] else '',
         goal=2,
-        unit="x",
+        unit='x',
         completed=session_data.account.companions['King Doot']
     ))
-    po_AdviceDict[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
+    po_Advices[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
         label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '3x if linked'}",
         picture_class='harriep',
         progression=harriep_multi_aw if session_data.account.companions['King Doot'] else '',
         goal=3,
-        unit="x",
+        unit='x',
         completed=session_data.account.companions['King Doot']
     ))
 
     # Account Wide
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
               f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
         picture_class='skill-mastery',
         progression=f"{sm_multi:.2f}",
-        goal=ValueToMulti(4 + sm_eligible_skills),
-        unit="x"
+        goal=f"{ValueToMulti(4 + sm_eligible_skills)}:.2f",
+        unit='x'
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
-        label=f"""DK's King of the Remembered: {kotr_multi:.3f}x"""
-              f"""{'<br>Not max booked!' if not anyDKMaxBooked else ''}"""
-              f"""{'<br>Not max leveled in any preset!' if not anyDKMaxLeveled else ''}"""
-              f"""{f"<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)" if anyDKMaxBooked and anyDKMaxLeveled else ''}""",
-        picture_class="king-of-the-remembered",
-        resource="orb-of-remembrance",
+    max_booked_note = '<br>Not max booked!' if not any_dk_max_booked else ''
+    max_preset_note = '<br>Not max leveled in any preset!' if not any_dk_max_leveled else ''
+    breakdown = f'<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)' if any_dk_max_booked and any_dk_max_leveled else ''
+    po_Advices[aw_label].append(Advice(
+        label=f"DK's King of the Remembered: {kotr_multi:.3f}x"
+              f"{max_booked_note}"
+              f"{max_preset_note}"
+              f"{breakdown}",
+        picture_class='king-of-the-remembered',
+        resource='orb-of-remembrance',
         progression=f"{kotr_multi:.3f}",
-        unit="x"
+        unit='x'
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic:"
               f"<br>{gr_multi:.2f}x ({gr_days}/{gr_max_days} days)",
-        picture_class="gold-relic",
+        picture_class='gold-relic',
         progression=gr_days,
         goal=gr_max_days
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"{{{{ Event Shop|#event-shop}}}}: Supreme Wiring:"
               f"<br>{supreme_wiring_multi:.2f}x ({supreme_wiring_days}/{supreme_wiring_max_days} days)",
         picture_class='event-shop-4',
@@ -375,7 +387,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=supreme_wiring_max_days
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"Companions: Biggole Mole: "
               f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
               f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
@@ -384,7 +396,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=biggole_mole_max_days
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"{{{{Compass|#the-compass}}}}: {mop['Path Name']}-{mop['Path Ordering']}: Moon of Print: "
               f"<br>{compass_moon_of_print_multi:.2f}x ({compass_moon_of_print_days}/{compass_moon_of_print_max_days} days)",
         picture_class=mop['Image'],
@@ -392,114 +404,114 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=compass_moon_of_print_max_days
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi_active}/{charm_multi}x",
         picture_class=session_data.account.sneaking['PristineCharms']['Lolly Flower']['Image'],
         progression=int(session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained']),
         goal=1
     ))
 
-    po_AdviceDict[aw_label].append(Advice(
+    po_Advices[aw_label].append(Advice(
         label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",
-        picture_class="ballot-11",
+        picture_class='ballot-11',
         progression=int(ballot_active),
         goal=1,
         completed=True
     ))
 
-    po_AdviceDict[cs_label].append(Advice(
+    po_Advices[cs_label].append(Advice(
         label="Blue Dot before your sample = Only 2x from Lab is active",
-        picture_class="printer-blue"
+        picture_class='printer-blue'
     ))
-    po_AdviceDict[cs_label].append(Advice(
+    po_Advices[cs_label].append(Advice(
         label="Yellow Star = Only 3x from Harriep is active",
-        picture_class="printer-yellow"
+        picture_class='printer-yellow'
     ))
-    po_AdviceDict[cs_label].append(Advice(
+    po_Advices[cs_label].append(Advice(
         label="Purple Swirl = 6x total from Lab and Harriep",
-        picture_class="printer-purple"
+        picture_class='printer-purple'
     ))
 
-    for subgroup in po_AdviceDict:
-        for advice in po_AdviceDict[subgroup]:
+    for subgroup in po_Advices:
+        for advice in po_Advices[subgroup]:
             mark_advice_completed(advice)
 
     po_AdviceGroup = AdviceGroup(
-        tier="",
-        pre_string=f"""Info- Sources of Printer Output. """
-                   f"""Grand Total: {aw_multi:.3f}{f" - {aw_multi * cs_multi:.3f}" if len(po_AdviceDict[cs_label]) > 0 else ''}x""",
-        advices=po_AdviceDict,
-        post_string="Please note: Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample.",
+        tier='',
+        pre_string=f"Sources of Printer Output. "
+                   f"Grand Total: {aw_multi:.3f}{f' - {aw_multi * cs_multi:.3f}' if len(po_Advices[cs_label]) > 0 else ''}x",
+        advices=po_Advices,
+        post_string="Printer Output multiplies resources printed each hour. It does NOT increase the size of taking a new sample.",
         informational=True
     )
     return po_AdviceGroup
 
 def getProgressionTiersAdviceGroup():
-    catchup = "Info- Catchup other samples to current tier"
-    sampling_AdviceDict = {
-        "MaterialSamples": {
+    catchup = f"{AdviceType.OPT.value} - Catchup other samples to current tier"
+    sampling_Advices = {
+        'MaterialSamples': {
             catchup: [],
         },
     }
     sampling_AdviceGroupDict = {}
-    infoTiers = 0
-    max_tier = max(sampling_progressionTiers.keys()) - infoTiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Sampling']
+    max_tier = true_max - optional_tiers
     tier_MaterialSamples = 0
-    # highestSample = session_data.account.printer['HighestValue']
-    allSamples = session_data.account.printer['AllSamplesSorted']
+    all_samples = session_data.account.printer['AllSamplesSorted']
 
     # Assess tiers
-    failedMaterialsDict = {}
-    for tierNumber, tierRequirements in sampling_progressionTiers.items():
-        subgroupName = f"Meet at least 1 sample size to reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
-        failedMaterialsDict[tierNumber] = {}
+    failed_materials_dict = {}
+    for tier_number, tierRequirements in sampling_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, true_max, pre='Complete at least 1 goal')
+        failed_materials_dict[tier_number] = {}
         # For each material in progressionTiers,
         #    Check if player's best sample of each material is less than tierRequirement
-        #        Add failed requirements to failedMaterialsDict
+        #        Add failed requirements to failed_materials_dict
         for materialName, materialNumber in tierRequirements['Materials'].items():
-            finalMaterialNumber = materialNumber if session_data.account.companions['King Doot'] and tierNumber >= 3 else materialNumber * tierRequirements[
+            finalMaterialNumber = materialNumber if session_data.account.companions['King Doot'] and tier_number >= 3 else materialNumber * tierRequirements[
                 'NonDootDiscount']
-            # logger.debug(f"Comparing {float(max(allSamples.get(materialName, [0])))} to {finalMaterialNumber}")
+            # logger.debug(f"Comparing {float(max(all_samples.get(materialName, [0])))} to {finalMaterialNumber}")
             try:
-                if max(allSamples.get(materialName, [0])) < finalMaterialNumber:
-                    failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
-                    # logger.info(f"Tier{tierNumber} failed on {materialName}: {max(allSamples.get(materialName, [0]))} < {finalMaterialNumber}")
+                if max(all_samples.get(materialName, [0])) < finalMaterialNumber:
+                    failed_materials_dict[tier_number][materialName] = finalMaterialNumber
+                    # logger.info(f"Tier{tier_number} failed on {materialName}: {max(all_samples.get(materialName, [0]))} < {finalMaterialNumber}")
             except Exception as reason:
                 logger.exception(
-                    f"Couldn't compare {type(max(allSamples.get(materialName, [0])))} {max(allSamples.get(materialName, [0]))} to T{tierNumber} {materialName} {finalMaterialNumber}: {reason}")
-                failedMaterialsDict[tierNumber][materialName] = finalMaterialNumber
+                    f"Couldn't compare {type(max(all_samples.get(materialName, [0])))} {max(all_samples.get(materialName, [0]))} to T{tier_number} {materialName} {finalMaterialNumber}: {reason}")
+                failed_materials_dict[tier_number][materialName] = finalMaterialNumber
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
-        if len(failedMaterialsDict[tierNumber].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tierNumber - 1:
-            tier_MaterialSamples = tierNumber
+        if len(failed_materials_dict[tier_number].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tier_number - 1:
+            tier_MaterialSamples = tier_number
         if (
-            0 < len(failedMaterialsDict[tierNumber].keys())  # At least 1 requirement was failed
-            and subgroupName not in sampling_AdviceDict['MaterialSamples']  # The subgroupName name doesn't already exist
-            and len(sampling_AdviceDict['MaterialSamples']) < session_data.account.maxSubgroupsPerGroup + 1  # +1 to account for the catchup
-            and tier_MaterialSamples < tierNumber
+            0 < len(failed_materials_dict[tier_number].keys())  # At least 1 requirement was failed
+            and subgroup_label not in sampling_Advices['MaterialSamples']  # The subgroup_label name doesn't already exist
+            and len(sampling_Advices['MaterialSamples']) < session_data.account.max_subgroups + 1  # +1 to account for the catchup
+            and tier_MaterialSamples < tier_number
         ):
-            # Setup empty subgroup with subgroupName as empty list to be added to
-            sampling_AdviceDict['MaterialSamples'][subgroupName] = []
+            # Setup empty subgroup with subgroup_label as empty list to be added to
+            sampling_Advices['MaterialSamples'][subgroup_label] = []
 
-        # Finally, if that subgroupName exists, populate with Advice
-        if subgroupName in sampling_AdviceDict['MaterialSamples']:
-            for materialName, materialNumber in failedMaterialsDict[tierNumber].items():
+        # Finally, if that subgroup_label exists, populate with Advice
+        if subgroup_label in sampling_Advices['MaterialSamples']:
+            for materialName, materialNumber in failed_materials_dict[tier_number].items():
                 goalString = notateNumber("Basic", materialNumber, 1)
-                sampling_AdviceDict['MaterialSamples'][subgroupName].append(Advice(
+                sampling_Advices['MaterialSamples'][subgroup_label].append(Advice(
                     label=f"{materialName}",
                     picture_class=materialName,
-                    progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, '', goalString),
+                    progression=notateNumber("Match", max(all_samples.get(materialName, [0])), 2, '', goalString),
                     goal=goalString,
                     resource=getSampleClass(materialName)
                 ))
 
     # After evaluating all tiers, populate the catchup group
-    for materialName, materialNumber in failedMaterialsDict.get(tier_MaterialSamples, {}).items():
+    for materialName, materialNumber in failed_materials_dict.get(tier_MaterialSamples, {}).items():
         goalString = notateNumber("Basic", materialNumber, 1)
-        sampling_AdviceDict['MaterialSamples'][catchup].append(Advice(
+        sampling_Advices['MaterialSamples'][catchup].append(Advice(
             label=f"{materialName}",
             picture_class=materialName,
-            progression=notateNumber("Match", max(allSamples.get(materialName, [0])), 2, '', goalString),
+            progression=notateNumber("Match", max(all_samples.get(materialName, [0])), 2, '', goalString),
             goal=goalString,
             resource=getSampleClass(materialName)
         ))
@@ -507,23 +519,22 @@ def getProgressionTiersAdviceGroup():
     # Generate AdviceGroups
     sampling_AdviceGroupDict["MaterialSamples"] = AdviceGroup(
         tier=tier_MaterialSamples,
-        pre_string="Improve material samples",
-        advices=sampling_AdviceDict['MaterialSamples'],
-        informational=all(['Info' in subgroupName for subgroupName in sampling_AdviceDict['MaterialSamples']]),
-        completed=all(['Info' in subgroupName for subgroupName in sampling_AdviceDict['MaterialSamples']])
+        pre_string='Improve material samples',
+        advices=sampling_Advices['MaterialSamples'],
+        completed=all(['Optional' in subgroup_label for subgroup_label in sampling_Advices['MaterialSamples']])
     )
-    sampling_AdviceGroupDict["MaterialSamples"].remove_empty_subgroups()
+    sampling_AdviceGroupDict['MaterialSamples'].remove_empty_subgroups()
 
-    overall_SectionTier = min(max_tier + infoTiers, tier_MaterialSamples)  # Looks silly, but may get more evaluations in the future
-    return sampling_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
+    overall_SectionTier = min(true_max, tier_MaterialSamples)
+    return sampling_AdviceGroupDict, overall_SectionTier, max_tier,true_max
 
 def getSamplingAdviceSection() -> AdviceSection:
     if session_data.account.construction_buildings['3D Printer']['Level'] < 1:
         sampling_AdviceSection = AdviceSection(
-            name="Sampling",
-            tier="Not Yet Evaluated",
-            header="Come back after unlocking the 3D Printer within the Construction skill in World 3!",
-            picture="3D_Printer.gif",
+            name='Sampling',
+            tier='Not Yet Evaluated',
+            header='Come back after unlocking the 3D Printer within the Construction skill in World 3!',
+            picture='3D_Printer.gif',
             unreached=True
         )
         return sampling_AdviceSection
@@ -536,13 +547,13 @@ def getSamplingAdviceSection() -> AdviceSection:
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     sampling_AdviceSection = AdviceSection(
-        name="Sampling",
+        name='Sampling',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Sampling tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="3D_Printer.gif",
+        picture='3D_Printer.gif',
         groups=sampling_AdviceGroupDict.values(),
     )
     return sampling_AdviceSection

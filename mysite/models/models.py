@@ -8,26 +8,17 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from config import app
-from consts import (
-    # General
-    lavaFunc, ignorable_labels, cards_max_level, obols_dict,
-    greenstack_item_difficulty_groups, greenStackAmount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames,
-    # W1
-    # W2
-    poBoxDict, alchemy_jobs_list,
-    # W3
-    prayersDict,
-    expected_talentsDict,
-    dnSkullValueList, reversed_dnSkullValueList, dnSkullRequirementList, reversed_dnSkullRequirementList,
-    getSkullNames, getNextSkullNames, apocableMapIndexDict, apocNamesList,
-    # W4
-    labChipsDict,
-    # W5
-    divinity_divinitiesDict,
-    # W6
-    # Caverns
-
+from consts.consts import ignorable_labels
+from consts.consts_idleon import lavaFunc, expected_talents_dict
+from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
+    greenstack_item_difficulty_groups
+from consts.consts_w5 import divinity_divinitiesDict
+from consts.consts_w4 import lab_chips_dict
+from consts.consts_w3 import (
+    prayers_dict, dn_skull_requirement_list, dn_skull_value_list, reversed_dn_skull_requirement_list, reversed_dn_skull_value_list,
+    apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
+from consts.consts_w2 import alchemy_jobs_list, po_box_dict
 from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -86,7 +77,7 @@ def getExpectedTalents(classes_list):
     expectedTalents = []
     for className in classes_list:
         try:
-            expectedTalents.extend(expected_talentsDict[className])
+            expectedTalents.extend(expected_talents_dict[className])
         except:
             continue
     return expectedTalents
@@ -216,7 +207,7 @@ class Character:
         for prayerIndex in equipped_prayers:
             if prayerIndex != -1:  #-1 is the placeholder value for an empty prayer slot
                 try:
-                    self.equipped_prayers.append(prayersDict[prayerIndex]['Name'])
+                    self.equipped_prayers.append(prayers_dict[prayerIndex]['Name'])
                 except:
                     continue
         self.skills = all_skill_levels
@@ -227,7 +218,7 @@ class Character:
         self.obols = get_obol_totals(obols, obol_upgrades)
 
         self.po_boxes_invested = {}
-        for poBoxIndex, poBoxValues in poBoxDict.items():
+        for poBoxIndex, poBoxValues in po_box_dict.items():
             try:
                 self.po_boxes_invested[poBoxValues['Name']] = {
                     'Level': po_boxes[poBoxIndex],
@@ -278,7 +269,7 @@ class Character:
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
                 try:
-                    self.equipped_lab_chips.append(labChipsDict[chipIndex]['Name'])
+                    self.equipped_lab_chips.append(lab_chips_dict[chipIndex]['Name'])
                 except:
                     continue
 
@@ -292,7 +283,7 @@ class Character:
                 "Impossible": [],
                 "Total": 0,
             }
-            for name in apocNamesList
+            for name in apoc_names_list
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
         self.printed_materials = {}
@@ -457,7 +448,6 @@ class WorldName(Enum):
     SPIRITED_VALLEY = "Spirited Valley"
     THE_CAVERNS_BELOW = "The Caverns Below"
 
-
 class AdviceBase:
     """
     Args:
@@ -523,7 +513,7 @@ class Advice(AdviceBase):
         picture_class (str): CSS class to link the image icon to the advice, e.g. 'bean-slices'
         progression: numeric (usually), how far towards the goal did the item progress?
         goal: the target level or amount of the advice
-        unit (str): if there is one, usually "%"
+        unit (str): if there is one, usually "%" or x
     """
 
     def __init__(
@@ -534,9 +524,10 @@ class Advice(AdviceBase):
             unit: str = "",
             value_format: str = "{value}{unit}",
             resource: str = "",
-            completed: bool = None,
+            completed: bool | None = None,
             unrated: bool = False,
-            overwhelming: bool | None = False,
+            overwhelming: bool = False,
+            optional: bool = False,
             **extra
     ):
         super().__init__(**extra)
@@ -568,6 +559,7 @@ class Advice(AdviceBase):
 
         self.percent = self.__calculate_progress_box_width()
         self.overwhelming = overwhelming
+        self.optional = optional
 
     @property
     def css_class(self) -> str:
@@ -598,6 +590,9 @@ class Advice(AdviceBase):
         except (ZeroDivisionError, IndexError, TypeError, ValueError):
             return "0"
 
+    def update_optional(self, parent_value: bool):
+        self.optional = parent_value
+
 @functools.total_ordering
 class AdviceGroup(AdviceBase):
     """
@@ -626,6 +621,8 @@ class AdviceGroup(AdviceBase):
         advices: list[Advice] | dict[str, list[Advice]] = [],
         completed: bool = None,
         informational: bool = False,
+        overwhelming: bool | None = False,
+        optional: bool = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -638,7 +635,8 @@ class AdviceGroup(AdviceBase):
         self.advices = advices
         self.completed = completed
         self.informational = informational
-        self.overwhelming = None
+        self.overwhelming = overwhelming
+        self.optional = False
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
@@ -662,10 +660,11 @@ class AdviceGroup(AdviceBase):
     def heading(self) -> str:
         text = ""
         if self.tier:
-            text += f"Tier {self.tier}"
-            if self.pre_string:
-                text += " - "
-        text += self.pre_string
+            text += f"{'Optional ' if self.optional else ''}Tier {self.tier}"
+        if self.informational:
+            text += "Info"
+        if self.pre_string:
+            text += f"{' - ' if text else ''}{self.pre_string}"
         if text:
             text += ":"
 
@@ -747,6 +746,19 @@ class AdviceGroup(AdviceBase):
                 for advice in value:
                     advice.overwhelming = overwhelming
 
+    def check_for_optional(self, max_tier: int):
+        if self.optional is not True:
+            if self.tier.isdigit():
+                self.optional = int(self.tier) > max_tier
+        if self.optional:
+            # If Optional, all Children will be Optional too
+            if isinstance(self.advices, list):
+                for advice in self.advices:
+                    advice.update_optional(self.optional)
+            if isinstance(self.advices, dict):
+                for value in self.advices.values():
+                    for advice in value:
+                        advice.update_optional(self.optional)
 
 class AdviceSection(AdviceBase):
     """
@@ -772,7 +784,7 @@ class AdviceSection(AdviceBase):
         header: str,
         picture: str | None = None,
         collapse: bool | None = None,
-        groups: list[AdviceGroup] = [],
+        groups=[],
         pinchy_rating: int = 0,
         max_tier: int = 0,
         true_max_tier: int = 0,
@@ -780,7 +792,7 @@ class AdviceSection(AdviceBase):
         unreached: bool = False,
         unrated: bool = False,
         informational: bool | None = None,
-        overwhelming: bool | None = None,
+        overwhelming: bool | None = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -798,6 +810,8 @@ class AdviceSection(AdviceBase):
         self.unrated = unrated
         self.informational = informational
         self.overwhelming = overwhelming
+        self.optional = False
+        self.check_for_optional()
 
     @property
     def header(self) -> str:
@@ -862,12 +876,17 @@ class AdviceSection(AdviceBase):
             return
         else:
             #print(f"{self.name}: {len([group for group in self.groups if group and group.informational])} Info groups / {len([group for group in self.groups if group])} total Truthy groups")
-            self.informational = len([group for group in self.groups if group and not group.informational]) == 0 and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
+            self.informational = all([group.informational for group in self.groups]) and len([group for group in self.groups if group]) > 0  #True if 0 length, False otherwise
 
     def set_overwhelming(self, overwhelming):
         self.overwhelming = overwhelming
         for group in self.groups:
             group.set_overwhelming(overwhelming)
+
+    def check_for_optional(self):
+        for group in self.groups:
+            group.check_for_optional(self.max_tier)
+        self.optional = all([group.optional for group in self.groups])  # True if ALL groups are Optional
 
 
 class AdviceWorld(AdviceBase):
@@ -893,7 +912,7 @@ class AdviceWorld(AdviceBase):
         completed: bool | None = None,
         informational: bool | None = None,
         unrated: bool | None = None,
-        overwhelming: bool | None = None,
+        overwhelming: bool | None = False,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -918,6 +937,8 @@ class AdviceWorld(AdviceBase):
             self.overwhelming = overwhelming
         else:
             self.check_for_overwhelming()
+        self.optional = False
+        self.check_for_optional()
 
     @property
     def id(self):
@@ -933,15 +954,17 @@ class AdviceWorld(AdviceBase):
         self.completed = len([section for section in self.sections if not section.completed]) == 0  #True if 0 length, False otherwise
 
     def check_for_informationalness(self):
-        self.informational = len([section for section in self.sections if not section.informational]) == 0 and len(
-            [section for section in self.sections if section]) > 0
+        self.informational = all([section.informational for section in self.sections if section])
 
     def check_for_unratedness(self):
-        self.unrated = len([section for section in self.sections if not section.unrated]) == 0 and len(
-            [section for section in self.sections if section]) > 0
+        self.unrated = all([section.unrated for section in self.sections if section])
 
     def check_for_overwhelming(self):
-        self.overwhelming = len([section for section in self.sections if not section.overwhelming]) == 0  #True if ALL sections are Overwhelming
+        self.overwhelming = all([section.overwhelming for section in self.sections if section])  #True if ALL sections are Overwhelming
+
+    def check_for_optional(self):
+        self.optional = all([section.optional for section in self.sections if section])  #True if ALL sections are Optional
+
 
 class Asset:
     def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):
@@ -993,12 +1016,11 @@ class Asset:
 
     @property
     def greenstacked(self) -> bool:
-        return self.amount >= greenStackAmount
+        return self.amount >= greenstack_amount
 
     @property
     def progression(self) -> int:
-        return self.amount * 100 // greenStackAmount
-
+        return self.amount * 100 // greenstack_amount
 
 class Assets(dict):
     def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
@@ -1212,7 +1234,7 @@ class EnemyWorld:
         self.total_mk = sum(enemy_map.skull_mk_value for enemy_map in mapsdict.values())
         self.current_lowest_skull_name: str = "None"
         self.next_lowest_skull_name: str = "Normal Skull"
-        for skullValue in dnSkullValueList:
+        for skullValue in dn_skull_value_list:
             self.lowest_skulls_dict[skullValue] = []
         if len(mapsdict) > 0:
             for enemy_map_index in self.maps_dict:
@@ -1297,19 +1319,19 @@ class EnemyMap:
 
     def generateDNSkull(self):
         self.kill_count = int(self.kill_count)
-        for counter in range(0, len(dnSkullRequirementList)):
-            if self.kill_count >= dnSkullRequirementList[counter]:
-                self.skull_mk_value = dnSkullValueList[counter]
+        for counter in range(0, len(dn_skull_requirement_list)):
+            if self.kill_count >= dn_skull_requirement_list[counter]:
+                self.skull_mk_value = dn_skull_value_list[counter]
         self.skull_name = getSkullNames(self.skull_mk_value)
-        if self.skull_mk_value == reversed_dnSkullValueList[0]:
+        if self.skull_mk_value == reversed_dn_skull_value_list[0]:
             #If map's skull is highest, currently Eclipse Skull, set in defaults
             self.kills_to_next_skull = 0
             self.percent_toward_next_skull = 100
         else:
-            for skullValueIndex in range(1, len(reversed_dnSkullValueList)):
-                if self.skull_mk_value == reversed_dnSkullValueList[skullValueIndex]:
-                    self.kills_to_next_skull = ceil(reversed_dnSkullRequirementList[skullValueIndex-1] - self.kill_count)
-                    self.percent_toward_next_skull = floor((self.kill_count / reversed_dnSkullRequirementList[skullValueIndex-1]) * 100)
+            for skullValueIndex in range(1, len(reversed_dn_skull_value_list)):
+                if self.skull_mk_value == reversed_dn_skull_value_list[skullValueIndex]:
+                    self.kills_to_next_skull = ceil(reversed_dn_skull_requirement_list[skullValueIndex - 1] - self.kill_count)
+                    self.percent_toward_next_skull = floor((self.kill_count / reversed_dn_skull_requirement_list[skullValueIndex - 1]) * 100)
 
 def buildMaps() -> dict[int, dict]:
     mapDict = {
@@ -1335,7 +1357,7 @@ def buildMaps() -> dict[int, dict]:
         #mapData[6]: str = meow rating
         #mapData[7]: str = wow rating
         #mapData[8]: str = image
-        if mapData[1] in apocableMapIndexDict[0]:
+        if mapData[1] in apocable_map_index_dict[0]:
             world = 0
         else:
             world = floor(mapData[1] / 50) + 1

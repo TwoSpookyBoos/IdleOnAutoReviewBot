@@ -1,7 +1,8 @@
 import math
 import time
 
-from consts import ValueToMulti, infinity_string
+from consts.progression_tiers_updater import true_max_tiers
+from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -35,8 +36,9 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 
     bb_ag = AdviceGroup(
         tier='',
-        pre_string="Info- All Ballot bonuses",
-        advices=bb_advice
+        pre_string='All Ballot bonuses',
+        advices=bb_advice,
+        informational=True
     )
     bb_ag.remove_empty_subgroups()
 
@@ -78,7 +80,7 @@ def getBallotMultiAdviceGroup():
                 label=f"Endless {{{{ Summoning|#summoning}}}}: +{endless}%",
                 picture_class='endless-summoning',
                 progression=session_data.account.summoning['Battles']['Endless'],
-                goal=infinity_string
+                goal=EmojiType.INFINITY.value
             ),
             Advice(
                 label=f"Companions: Mashed Potato: +{5 * session_data.account.companions['Mashed Potato']}/5%"
@@ -96,20 +98,20 @@ def getBallotMultiAdviceGroup():
 
     multis_ag = AdviceGroup(
         tier='',
-        pre_string="Info- Sources of Bonus Ballot Multi",
+        pre_string='Sources of Bonus Ballot Multi',
         advices=multis_advice,
         informational=True
     )
     return multis_ag
 
 def getBonus_BallotAdviceSection() -> AdviceSection:
-    if session_data.account.highestWorldReached < 2:
+    if session_data.account.highest_world_reached < 2:
         bonus_ballot_AdviceSection = AdviceSection(
             name="Bonus Ballot",
             tier='0/0',
             pinchy_rating=0,
-            header="Come back after unlocking Bonus Ballot in W2 town!",
-            picture="Bonus_Ballot.png",
+            header='Come back after unlocking Bonus Ballot in W2 town!',
+            picture='Bonus_Ballot.png',
             completed=False,
             unrated=True,
             unreached=True
@@ -122,12 +124,19 @@ def getBonus_BallotAdviceSection() -> AdviceSection:
         'Multi': getBallotMultiAdviceGroup()
     }
 
+    overall_SectionTier = 0
+    optional_tiers = 0
+    true_max = true_max_tiers['Bonus Ballot']
+    max_tier = true_max - optional_tiers
+
     #Generate AdviceSection
-    #tier_section = f"{overall_SectionTier}/{max_tier}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
     bonus_ballot_AdviceSection = AdviceSection(
-        name="Bonus Ballot",
-        tier='0/0',
-        pinchy_rating=0,
+        name='Bonus Ballot',
+        tier=tier_section,
+        pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header="Bonus Ballot information",
         picture="wiki/Voter_Slime.gif",
         groups=bonus_ballot_AdviceGroupDict.values(),

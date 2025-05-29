@@ -1,11 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
+from consts.progression_tiers_updater import true_max_tiers
+from models.models import AdviceSection, AdviceGroup
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string,
-    #template_progressionTiers
-)
+from consts.consts import break_you_best
 
 logger = get_logger(__name__)
 
@@ -13,29 +10,30 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     template_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(template_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Template']
+    max_tier = true_max - optional_tiers
     tier_Template = 0
 
     #Assess Tiers
 
     tiers_ag = AdviceGroup(
         tier=tier_Template,
-        pre_string="Progression Tiers",
+        pre_string='Progression Tiers',
         advices=template_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Template)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Template)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getTemplateAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    highestTemplateSkillLevel = max(session_data.account.all_skills["TemplateSkill"])
+    highestTemplateSkillLevel = max(session_data.account.all_skills['TemplateSkill'])
     if highestTemplateSkillLevel < 1:
         template_AdviceSection = AdviceSection(
-            name="Template",
-            tier="Not Yet Evaluated",
-            header="Come back after unlocking Template!",
-            picture="",
+            name='Template',
+            tier='Not Yet Evaluated',
+            header='Come back after unlocking Template!',
+            picture='',
             unrated=None,
             unreached=True,
             completed=False

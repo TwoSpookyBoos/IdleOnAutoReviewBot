@@ -29,8 +29,9 @@ def getEventShopAdviceGroup() -> AdviceGroup:
 
     es_ag = AdviceGroup(
         tier='',
-        pre_string="Seasonal Event Shop bonuses",
-        advices=es_advice
+        pre_string='Seasonal Event Shop bonuses',
+        advices=es_advice,
+        informational=True
     )
     return es_ag
 
@@ -39,14 +40,21 @@ def getEvent_ShopAdviceSection() -> AdviceSection:
     event_shop_AdviceGroupDict = {}
     event_shop_AdviceGroupDict['Shop'] = getEventShopAdviceGroup()
 
+    overall_SectionTier = 0
+    optional_tiers = 0
+    true_max = 0  #true_max_tiers['Event Shop']
+    max_tier = true_max - optional_tiers
+
     #Generate AdviceSection
-    #tier_section = f"{overall_SectionTier}/{max_tier}"
+    tier_section = f"{overall_SectionTier}/{max_tier}"
     event_shop_AdviceSection = AdviceSection(
         name="Event Shop",
-        tier='0/0',
+        tier=tier_section,
         pinchy_rating=0,
-        header="Seasonal Event Points Shop",
-        picture="Event_Shop.png",
+        max_tier=max_tier,
+        true_max_tier=true_max,
+        header='Seasonal Event Points Shop',
+        picture='Event_Shop.png',
         groups=event_shop_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

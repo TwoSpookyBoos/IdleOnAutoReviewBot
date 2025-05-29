@@ -7,7 +7,8 @@ from pathlib import Path
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
-import consts
+import consts.consts
+import tests.test_consts_tiers
 import taskSuggester
 from models import custom_exceptions
 from utils.data_formatting import HeaderData
@@ -33,7 +34,7 @@ from utils.logging import (
     get_logger,
     name_for_logging,
     key_for_logging_cache,
-    log_browser_data
+    # log_browser_data
 )
 from utils.template_filters import *
 
@@ -62,7 +63,7 @@ def parse_user_input():
         try:
             parsed = json.loads(data)
             source_string = InputType.JSON
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError:
             raise custom_exceptions.JSONDecodeError(data)
 
     else:
@@ -80,18 +81,18 @@ def store_user_preferences():
     else:
         raise ValueError(f"Unknown request method: {request.method}")
 
-    for switch in consts.switches:
+    for switch in consts.consts.switches:
         setattr(g, switch["name"], args.get(switch["name"], False) in ["on", "True", "true", True])
 
 
 def get_user_preferences():
-    return {switch["name"]: getattr(g, switch["name"]) for switch in consts.switches}
+    return {switch["name"]: getattr(g, switch["name"]) for switch in consts.consts.switches}
 
 
 def switches():
     return [
         (*switch.values(), ("on" if get_user_preferences()[switch["name"]] else "off"))
-        for switch in consts.switches
+        for switch in consts.consts.switches
     ]
 
 

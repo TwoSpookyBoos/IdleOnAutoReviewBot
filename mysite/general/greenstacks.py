@@ -1,5 +1,9 @@
-from consts import missableGStacksDict, break_you_best, greenstack_progressionTiers, find_vendor_name, gstack_unique_expected
-from models.models import AdviceSection, AdviceGroup, Advice, gstackable_codenames_expected, Assets
+from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
+from consts.consts_w5 import find_vendor_name
+from consts.progression_tiers import greenstack_progressionTiers
+from consts.progression_tiers_updater import true_max_tiers
+from models.models import AdviceSection, AdviceGroup, Advice, Assets
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -20,9 +24,9 @@ def getEquinoxDreams() -> dict:
 
 
 def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
-    info_tiers = 0
-    true_max = 1
-    max_tier = true_max - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Greenstacks']
+    max_tier = true_max - optional_tiers
 
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
     advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
@@ -40,7 +44,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     ]
 
     for quest_item in list(advice_EndangeredQuestGStacks):
-        item_data = missableGStacksDict[quest_item.name]
+        item_data = missable_gstacks_dict[quest_item.name]
         quest_codename = item_data[1]
         quest_item.quest = item_data[2]
         quest_item.quest_giver = item_data[5]
@@ -57,10 +61,10 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         "to clean up later!"
     )
 
-    already_missed = len(missableGStacksDict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)
+    already_missed = len(missable_gstacks_dict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)
     already_obtained = len(advice_ObtainedQuestGStacks)
     still_obtainable = len(advice_EndangeredQuestGStacks)
-    possible = len(missableGStacksDict)
+    possible = len(missable_gstacks_dict)
 
     tier_obtainable = f"{still_obtainable}/{possible - still_obtainable}"
 
@@ -99,9 +103,10 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
             for item in advice_EndangeredQuestGStacks
         ]
         questGStacks_AdviceGroupDict['Endangered'] = AdviceGroup(
-            tier="",
-            pre_string="Still obtainable",
+            tier='',
+            pre_string='Still obtainable',
             advices=questGStacks_AdviceDict['Endangered'],
+            informational=True
         )
         # endangered_AdviceSection = AdviceSection(
         #         name="Endangered Greenstacks",
@@ -116,7 +121,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         # sections.append(endangered_AdviceSection)
 
     if len(advice_MissedQuestGStacks) > 0:
-        tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missableGStacksDict)}"
+        tier_missed = f"{len(advice_MissedQuestGStacks)}/{len(missable_gstacks_dict)}"
         header_missed = (f"You have already missed {tier_missed} missable quest item Greenstacks."
                          f"<br>You're locked out of these until you get more character slots :(")
         questGStacks_AdviceDict['Missed'] = [
@@ -130,8 +135,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
             for item in advice_MissedQuestGStacks
         ]
         questGStacks_AdviceGroupDict['Missed'] = AdviceGroup(
-            tier="",
-            pre_string="Already missed",
+            tier='',
+            pre_string='Already missed',
             advices=questGStacks_AdviceDict['Missed'],
             informational=True
         )
@@ -142,11 +147,11 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     questGStacks_AdviceSection = AdviceSection(
         name="Endangered Greenstacks",
         tier=tier_section,
-        pinchy_rating=int(still_obtainable == 0),
-        max_tier=1,
-        true_max_tier=1,
+        pinchy_rating=overall_SectionTier,
+        max_tier=max_tier,
+        true_max_tier=true_max,
         header=header_obtainable,
-        picture="wiki/Greenstack.png",
+        picture='wiki/Greenstack.png',
         note=note,
         groups=questGStacks_AdviceGroupDict.values(),
         completed=still_obtainable == 0
@@ -175,9 +180,7 @@ def getGStackAdviceSections():
             category: [
                 Advice(
                     label=f"{item.name}"
-                          f"{' (' if category == 'Vendor Shops' else ''}"
-                          f"{find_vendor_name(item.codename) if category == 'Vendor Shops' else ''}"
-                          f"{')' if category == 'Vendor Shops' else ''}",
+                          f"{f' ({find_vendor_name(item.codename)})' if category == 'Vendor Shops' else ''}",
                     picture_class=item.name,
                     progression=item.progression,
                     goal=100,
@@ -189,15 +192,14 @@ def getGStackAdviceSections():
         }
         groups.append(
             AdviceGroup(
-                tier=f"",
+                tier='',
                 pre_string=f"{'Difficulty Group ' if tier!= 'Timegated' else ''}{tier} Item recommendations",
-                advices=tier_subsection,
-                informational=True
+                advices=tier_subsection
             )
         )
 
     cheat_group = AdviceGroup(
-        tier="",
+        tier='',
         pre_string="Curious... you also managed to greenstack these unprecedented items",
         post_string="Share your unyielding persistence with us, please!",
         advices=[
@@ -249,12 +251,12 @@ def getGStackAdviceSections():
 
     #Equinox Dream Review
     overall_SectionTier = 0
-    info_tiers = 2
-    max_tier = max(greenstack_progressionTiers.keys(), default=0) - info_tiers
-    true_max = max_tier + info_tiers
+    optional_tiers = 2
+    true_max = max(greenstack_progressionTiers.keys(), default=0)
+    max_tier = true_max - optional_tiers
     dream_advice = {}
     for tier_number, requirements in greenstack_progressionTiers.items():
-        subgroup_name = f"To reach {'Informational ' if tier_number > max_tier else ''}Tier {tier_number}"
+        subgroup_name = build_subgroup_label(tier_number, max_tier)
         if not equinoxDreamsStatus.get(f"Dream{requirements.get('Dream Number', 29)}", False) or (
                 tier_number > max_tier and requirements['Required Stacks'] > expectedGStacksCount
         ):
@@ -271,7 +273,7 @@ def getGStackAdviceSections():
                     label=f"Turn in {{{{ Equinox|#equinox }}}} Dream {requirements['Dream Number']}",
                     picture_class='equinox-dreams',
                     progression=int(equinoxDreamsStatus[f"Dream{requirements['Dream Number']}"]),
-                    goal=int(1)
+                    goal=1
                 ))
         else:
             overall_SectionTier += 1

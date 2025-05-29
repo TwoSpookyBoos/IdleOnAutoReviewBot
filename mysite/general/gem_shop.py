@@ -1,10 +1,13 @@
+from models.emoji_type import EmojiType
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get, safer_convert, mark_advice_completed
 from utils.logging import get_logger
-from consts import (
-    gemShop_progressionTiers, maxFarmingCrops, currentWorld, breedingTotalPets, cookingCloseEnough, break_you_best, max_cavern, max_majiks,
-    caverns_max_measurements, getMaxEngineerLevel, gem_shop_optlacc_dict, infinity_string, maxCharacters
-)
+from consts.consts import break_you_best
+from consts.consts_general import current_world, max_characters, gem_shop_optlacc_dict
+from consts.consts_w6 import max_farming_crops
+from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
+from consts.consts_w4 import cooking_close_enough, breeding_total_pets
+from consts.progression_tiers import gemShop_progressionTiers
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -60,12 +63,12 @@ def try_exclude_BurningBadBooks(exclusionLists):
             sublist.append("Burning Bad Books")
 
 def try_exclude_EggCapacity(exclusionLists):
-    if session_data.account.breeding['Total Unlocked Count'] >= breedingTotalPets - 5:
+    if session_data.account.breeding['Total Unlocked Count'] >= breeding_total_pets - 5:
         for sublist in exclusionLists:
             sublist.append('Royal Egg Cap')
 
 def try_exclude_Kitchens(exclusionLists):
-    if session_data.account.cooking['MaxRemainingMeals'] < cookingCloseEnough:
+    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
         for sublist in exclusionLists:
             sublist.append('Richelin Kitchen')
 
@@ -73,7 +76,7 @@ def try_exclude_ChestSluggo(exclusionLists):
     # 33 artifacts times 4 tiers each = 132 for v2.26
     # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
     # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
-    if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * numberOfArtifactTiers) * 0.43:
+    if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * max_sailing_artifact_level) * 0.43:
         for sublist in exclusionLists:
             sublist.append("Chest Sluggo")
 
@@ -82,7 +85,7 @@ def try_exclude_Gaming(exclusionLists):
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
-        or session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops * 0.75
+        or session_data.account.farming['CropsUnlocked'] >= max_farming_crops * 0.75
     ):
         for sublist in exclusionLists:
             sublist.append('Golden Sprinkler')
@@ -125,12 +128,12 @@ def try_exclude_ShroomFamiliar(exclusionLists):
             sublist.append('Shroom Familiar')
 
 def try_exclude_IvoryBubbleCauldrons(exclusionLists):
-    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > currentWorld:
+    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > current_world:
         for sublist in exclusionLists:
             sublist.append('Ivory Bubble Cauldrons')
 
 def try_exclude_Farming(exclusionLists):
-    if session_data.account.farming["CropsUnlocked"] >= maxFarmingCrops:
+    if session_data.account.farming["CropsUnlocked"] >= max_farming_crops:
         for sublist in exclusionLists:
             sublist.append('Instagrow Generator')
             sublist.append('Plot of Land')
@@ -201,7 +204,7 @@ def getBonusSectionName(bonusName):
 
         case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
             return "Limited Shop"
-        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' |'Resource Boost' | 'Conjuror Pts' | 'Opal':
+        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
             return "Oddities"
         case _:
             return "UnknownShop"
@@ -285,7 +288,7 @@ def getGemShopAdviceSection() -> AdviceSection:
             informational=True,
             completed=(
                 boughtItems[purchase_name] >= purchase_details[1]
-                if purchase_details[1] != infinity_string
+                if purchase_details[1] != EmojiType.INFINITY.value
                 else True
             )
         ))
@@ -294,22 +297,22 @@ def getGemShopAdviceSection() -> AdviceSection:
     fomo_equipment = {
         'Dune Killer Ring (W2)': {
             'Code Name': 'EquipmentRings33',
-            'Goal': 2 * maxCharacters,
+            'Goal': 2 * max_characters,
             'Image': 'dune-killer-ring'
         },
         'Tundra Killer Ring (W3)': {
             'Code Name': 'EquipmentRings31',
-            'Goal': 2 * maxCharacters,
+            'Goal': 2 * max_characters,
             'Image': 'tundra-killer-ring'
         },
         'Nebula Killer Ring (W4)': {
             'Code Name': 'EquipmentRings32',
-            'Goal': 2 * maxCharacters,
+            'Goal': 2 * max_characters,
             'Image': 'nebula-killer-ring'
         },
         'Magma Killer Ring (W5)': {
             'Code Name': 'EquipmentRings34',
-            'Goal': 2 * maxCharacters,
+            'Goal': 2 * max_characters,
             'Image': 'magma-killer-ring'
         },
         'Deathbringer Hood of Death': {
@@ -333,7 +336,7 @@ def getGemShopAdviceSection() -> AdviceSection:
             informational=True,
             completed=(
                 session_data.account.all_assets.get(details['Code Name']).amount >= details['Goal']
-                if details['Goal'] != infinity_string
+                if details['Goal'] != EmojiType.INFINITY.value
                 else True
             )
         ))
@@ -343,8 +346,9 @@ def getGemShopAdviceSection() -> AdviceSection:
 
     groups.append(AdviceGroup(
         tier='',
-        pre_string=f"Info- Tracked Limited Shop purchases",
-        advices=fomo_advice
+        pre_string='Limited Shop purchases',
+        advices=fomo_advice,
+        informational=True
     ))
 
     groups = [g for g in groups if g]

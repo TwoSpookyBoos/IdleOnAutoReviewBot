@@ -1,4 +1,6 @@
-from consts import combatLevels_progressionTiers, break_you_best
+from consts.consts import break_you_best
+from consts.progression_tiers import combatLevels_progressionTiers
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data
@@ -99,15 +101,15 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
     ]
 
     lvlup_group = AdviceGroup(
-        tier="",
+        tier='',
         pre_string=advice_PersonalLevels,
         advices=lvlup_advices,
         informational=True
     )
 
-    info_tiers = 0
-    max_tier = combatLevels_progressionTiers[-1][0] - info_tiers
-    true_max = max_tier + info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Combat Levels']
+    max_tier = true_max - optional_tiers
     tier = f"{overall_CombatLevelTier}/{max_tier}"
     header = f"Best Family class level tier met: {tier}. "
 

@@ -1,13 +1,16 @@
+from consts.progression_tiers_updater import true_max_tiers
+from models.emoji_type import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import break_you_best, secret_class_progressionTiers
+from consts.consts import break_you_best
+from consts.progression_tiers import secret_class_progressionTiers
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-skillsToReview_RightHand = ["Mining", "Choppin", "Fishing", "Catching", "Trapping", "Worship"]
+right_hand_skills = ['Mining', 'Choppin', 'Fishing', 'Catching', 'Trapping', 'Worship']
 
 def getRightHandsAdviceGroups(true_max):
     catchup_advices = []
@@ -16,7 +19,7 @@ def getRightHandsAdviceGroups(true_max):
     sorted_skills = {}
     perfect = True
 
-    for skill in skillsToReview_RightHand:
+    for skill in right_hand_skills:
         sorted_skills[skill] = []
         stayahead_advices[skill] = []
         for char in session_data.account.all_characters:
@@ -65,7 +68,7 @@ def getRightHandsAdviceGroups(true_max):
         #Display the leader
         if characters_at_highest == 1:
             stayahead_advices[skill].append(Advice(
-                label=f"{'🛑' if not mman_uniquely_first else ''}"
+                label=f"{EmojiType.STOP.value if not mman_uniquely_first else ''}"
                       f" {sorted_skills[skill][0].character_name} is currently best at {skill}",
                       #f"{f'with {sorted_skills[skill][0].skills[skill]}' if not mman_uniquely_first else ''}",
                 picture_class=sorted_skills[skill][0].class_name_icon,
@@ -85,15 +88,15 @@ def getRightHandsAdviceGroups(true_max):
                     if mman_uniquely_first:
                         label_symbol = ''
                     else:
-                        label_symbol = '🛑'
+                        label_symbol = EmojiType.STOP.value
                 else:
                     # If this character is a maestro and the 1st place character is also a Maestro, warning. Up to Player to decide
                     if 'Maestro' in sorted_skills[skill][0].all_classes:
-                        label_symbol = '⚠️'
+                        label_symbol = EmojiType.WARNING.value
                     # Else if this character is a Maestro and the 1st place character ISN'T a Maestro, checkmark
                     else:
-                        label_symbol = '✔️'
-                if label_symbol == '✔️':
+                        label_symbol = EmojiType.CHECK.value
+                if label_symbol == EmojiType.CHECK.value:
                     fancy_label = f"{label_symbol}{char.character_name} should level {skill}"
                 elif char.skills[skill] < highest_mman_level-1:
                     fancy_label = f"{char.character_name} can level {skill}"
@@ -131,7 +134,7 @@ def getRightHandsAdviceGroups(true_max):
 
     #Catch Up
     catchup_ag = AdviceGroup(
-        tier=f"{true_max if len(catchup_advices) == 0 else true_max-1}",
+        tier=true_max if len(catchup_advices) == 0 else true_max-1,
         pre_string=(
             f"{pl(session_data.account.maestros, f'{session_data.account.maestros[0]} is not', 'Your Maestros are not')}"
             f" best in {len(skills_needing_catchup)} Right Hand Skill{pl(skills_needing_catchup)}"
@@ -159,7 +162,7 @@ def getRightHandsAdviceGroups(true_max):
         tier='',
         pre_string=(
             f"Your Maestro{pl(len(session_data.account.maestros), ' is', 's are')}"
-            f" the highest level in {len(skillsToReview_RightHand)-len(skills_needing_catchup)}/{len(skillsToReview_RightHand)}"
+            f" the highest level in {len(right_hand_skills) - len(skills_needing_catchup)}/{len(right_hand_skills)}"
             f" Right Hand skills. Be careful not to let others overtake"
         ),
         advices=stayahead_advices,
@@ -176,92 +179,92 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
 
     # No Journeyman
     if tier_SecretClass == 0:
-        bush1complete = False
-        bush2complete = False
-        bush3complete = False
-        rock1complete = False
-        rock2complete = False
+        bush1_complete = False
+        bush2_complete = False
+        bush3_complete = False
+        rock1_complete = False
+        rock2_complete = False
         for characterIndex in range(0, len(session_data.account.all_quests)):
-            if session_data.account.all_quests[characterIndex].get("Bushlyte1", 0) == 1:
-                bush1complete = True
-            if session_data.account.all_quests[characterIndex].get("Bushlyte2", 0) == 1:
-                bush2complete = True
-            if session_data.account.all_quests[characterIndex].get("Bushlyte3", 0) == 1:
-                bush3complete = True
-            if session_data.account.all_quests[characterIndex].get("Rocklyte1", 0) == 1:
-                rock1complete = True
-            if session_data.account.all_quests[characterIndex].get("Rocklyte2", 0) == 1:
-                rock2complete = True
-        totalQuestPeanuts = 1651 - (51 * bush1complete) - (200 * bush2complete) - (400 * bush3complete) - (500 * rock1complete) - (500 * rock2complete)
-        goldenPeanutsOwned = session_data.account.all_assets.get("PeanutG").amount
-        peanutsOwned = session_data.account.all_assets.get("Peanut").amount
-        if goldenPeanutsOwned < 6:
-            peanutsRemaining = totalQuestPeanuts - peanutsOwned - (goldenPeanutsOwned * 100)
+            if session_data.account.all_quests[characterIndex].get('Bushlyte1', 0) == 1:
+                bush1_complete = True
+            if session_data.account.all_quests[characterIndex].get('Bushlyte2', 0) == 1:
+                bush2_complete = True
+            if session_data.account.all_quests[characterIndex].get('Bushlyte3', 0) == 1:
+                bush3_complete = True
+            if session_data.account.all_quests[characterIndex].get('Rocklyte1', 0) == 1:
+                rock1_complete = True
+            if session_data.account.all_quests[characterIndex].get('Rocklyte2', 0) == 1:
+                rock2_complete = True
+        total_quest_peanuts = 1651 - (51 * bush1_complete) - (200 * bush2_complete) - (400 * bush3_complete) - (500 * rock1_complete) - (500 * rock2_complete)
+        golden_peanuts_owned = session_data.account.all_assets.get('PeanutG').amount
+        peanuts_owned = session_data.account.all_assets.get('Peanut').amount
+        if golden_peanuts_owned < 6:
+            peanuts_remaining = total_quest_peanuts - peanuts_owned - (golden_peanuts_owned * 100)
         else:
-            peanutsRemaining = totalQuestPeanuts - peanutsOwned - 500
+            peanuts_remaining = total_quest_peanuts - peanuts_owned - 500
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
             label="On your 7th or later character, create a Journeyman. Only make 1 Secret Class character!",
-            picture_class="journeyman-icon"
+            picture_class='journeyman-icon'
         ))
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
             label="Skip this fool's quest. You need to stay a Beginner to become a Journeyman!",
-            picture_class="promotheus"
+            picture_class='promotheus'
         ))
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
             label="Start the Journeyman quest chain by finding this NPC in World 1! You'll need 1651 Peanuts in total.",
-            picture_class="bushlyte"
+            picture_class='bushlyte'
         ))
         secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-            label="Peanuts are crafted at the anvil",
-            picture_class="peanut",
-            progression=peanutsOwned,
-            goal=totalQuestPeanuts
+            label='Peanuts are crafted at the anvil',
+            picture_class='peanut',
+            progression=peanuts_owned,
+            goal=total_quest_peanuts
         ))
-        if peanutsRemaining > 0:
-            peanuts_subgroup = f"Ingredients for the remaining {peanutsRemaining} Peanuts:"
+        if peanuts_remaining > 0:
+            peanuts_subgroup = f'Ingredients for the remaining {peanuts_remaining} Peanuts:'
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
                 label=peanuts_subgroup,
-                picture_class="",
+                picture_class='',
             ))
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                label="Hot Dogs can be purchased from both W1 Vendors daily",
-                picture_class="hot-dog",
-                progression=session_data.account.all_assets.get("FoodHealth3").amount,
-                goal=2 * peanutsRemaining
+                label='Hot Dogs can be purchased from both W1 Vendors daily',
+                picture_class='hot-dog',
+                progression=session_data.account.all_assets.get('FoodHealth3').amount,
+                goal=2 * peanuts_remaining
             ))
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                label="Bleach Logs",
-                picture_class="bleach-logs",
-                progression=session_data.account.all_assets.get("BirchTree").amount,
-                goal=peanutsRemaining
+                label='Bleach Logs',
+                picture_class='bleach-logs',
+                progression=session_data.account.all_assets.get('BirchTree').amount,
+                goal=peanuts_remaining
             ))
             secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                label="Copper Ore",
-                picture_class="copper-ore",
-                progression=session_data.account.all_assets.get("Copper").amount,
-                goal=peanutsRemaining
+                label='Copper Ore',
+                picture_class='copper-ore',
+                progression=session_data.account.all_assets.get('Copper').amount,
+                goal=peanuts_remaining
             ))
 
-            if goldenPeanutsOwned < 5:
+            if golden_peanuts_owned < 5:
                 # Add advice for gold bars
                 secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                    label="Gold Bars",
-                    picture_class="gold-bar",
-                    progression=session_data.account.stored_assets.get("GoldBar").amount,
-                    goal=250 - (50 * goldenPeanutsOwned)
+                    label='Gold Bars',
+                    picture_class='gold-bar',
+                    progression=session_data.account.stored_assets.get('GoldBar').amount,
+                    goal=250 - (50 * golden_peanuts_owned)
                 ))
             else:
                 # Add advice for golden peanuts
-                secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                    label="Gold Peanuts",
-                    picture_class="golden-peanut",
-                    progression=goldenPeanutsOwned,
+                secretClass_AdviceDict['UnlockNextClass'].append(Advice(
+                    label='Gold Peanuts',
+                    picture_class='golden-peanut',
+                    progression=golden_peanuts_owned,
                     goal=5
                 ))
-            for advice in secretClass_AdviceDict["UnlockNextClass"]:
+            for advice in secretClass_AdviceDict['UnlockNextClass']:
                 try:
                     if int(advice.progression) >= int(advice.goal):
-                        advice.label += " (Ready!)"
+                        advice.label += ' (Ready!)'
                 except:
                     pass
 
@@ -495,9 +498,9 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
     return secretClass_AdviceDict
 
 def getProgressionTiersAdviceGroup(jmans, maestros):
-    info_tiers = 1
-    max_tier = max(secret_class_progressionTiers.keys()) - info_tiers
-    true_max = max_tier + info_tiers
+    optional_tiers = 1
+    true_max = true_max_tiers['Secret Class Path']
+    max_tier = true_max - optional_tiers
     tier_SecretClass = 0
 
     #Required Tiers
@@ -525,7 +528,7 @@ def getProgressionTiersAdviceGroup(jmans, maestros):
     if len(maestros) > 0:
         secret_class_advice_groups['RightHandsCatchup'], no_catchup_needed, secret_class_advice_groups['RightHandsStayAhead'] = getRightHandsAdviceGroups(true_max)
 
-    #Info Tier
+    #Optional Tier
     for tier, requirements in secret_class_progressionTiers.items():
         if 'No Catchup Needed' in requirements:
             if no_catchup_needed and tier_SecretClass == max_tier:
@@ -542,18 +545,18 @@ def getSecretClassAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     secretClass_AdviceSection = AdviceSection(
-        name="Secret Class Path",
+        name='Secret Class Path',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Secret Class tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Stone_Peanut.png",
+        picture='Stone_Peanut.png',
         groups=secret_class_advice_groups.values(),
         note=(
             f"Important! Only one Maestro's Right and Left Hands buffs work."
             f"<br>On Steam, this is the last created Maestro."
-            f"<br>I'm not totally sure about other platforms, sorry 🙁"
+            f"<br>I'm not totally sure about other platforms, sorry {EmojiType.FROWN.value}"
         ) if len(maestros) > 1 else ''
     )
 

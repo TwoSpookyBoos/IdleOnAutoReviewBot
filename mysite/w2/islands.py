@@ -1,8 +1,11 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts import islands_progressionTiers, break_you_best, islands_fractal_rewards_dict
+from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_w2 import islands_fractal_rewards_dict
+from consts.progression_tiers import islands_progressionTiers
 
 logger = get_logger(__name__)
 
@@ -10,21 +13,21 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
     trash_advices = []
     if session_data.account.islands['Trash Island']['Garbage Purchases'] < 6:
         trash_advices.append(Advice(
-            label=f"Purchase 5 total levels into Garbage Generation",
+            label='Step 1: Purchase 6 total levels into Garbage Generation',
             picture_class='garbage',
             progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
             goal=6
         ))
     if not session_data.account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked']:
         trash_advices.append(Advice(
-            label=f"Unlock and Purchase the new {{{{ Bribes|#bribes}}}}",
+            label=f"Step 2: Unlock and Purchase the new {{{{ Bribes|#bribes}}}}",
             picture_class='bribes',
             progression=session_data.account.islands['Trash'],
             goal=session_data.account.islands['Trash Island']['Unlock New Bribe Set']['Cost']
         ))
     if session_data.account.islands['Trash Island']['Garbage Purchases'] < 9:
         trash_advices.append(Advice(
-            label=f"Purchase 9 total levels into Garbage Generation",
+            label='Step 3: Purchase 9 total levels into Garbage Generation',
             picture_class='garbage',
             progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
             goal=9
@@ -33,7 +36,7 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
     for stamp_name in ['Golden Sixes Stamp', 'Stat Wallstreet Stamp', 'Skelefish Stamp', 'Amplestample Stamp']:
         if not session_data.account.islands['Trash Island'][stamp_name]['Unlocked']:
             trash_advices.append(Advice(
-                label=f"Purchase the {stamp_name[:-6]} {{{{ Stamp|#stamps }}}}",
+                label=f"Step 4: Purchase the {stamp_name[:-6]} {{{{ Stamp|#stamps }}}}",
                 picture_class=stamp_name,
                 progression=session_data.account.islands['Trash'],
                 goal=session_data.account.islands['Trash Island'][stamp_name]['Cost']
@@ -41,7 +44,7 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
 
     trash_advicegroup = AdviceGroup(
         tier='',
-        pre_string='Informational- Trash Island shop priorities',
+        pre_string='Trash Island shop priorities',
         advices=trash_advices,
         informational=True
     )
@@ -49,10 +52,10 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
 
 def getFractalAdviceGroup() -> AdviceGroup:
     fractal_advices = []
-    for hours, rewardDict in islands_fractal_rewards_dict.items():
+    for hours, details in islands_fractal_rewards_dict.items():
         fractal_advices.append(Advice(
-            label=rewardDict['Reward'],
-            picture_class=rewardDict['Image'],
+            label=details['Reward'],
+            picture_class=details['Image'],
             progression=session_data.account.nothing_hours,
             goal=int(hours)
         ))
@@ -62,7 +65,7 @@ def getFractalAdviceGroup() -> AdviceGroup:
 
     fractal_advicegroup = AdviceGroup(
         tier='',
-        pre_string='Informational- Fractal Nothing hour rewards',
+        pre_string='Fractal Nothing hour rewards',
         advices=fractal_advices,
         informational=True
     )
@@ -70,32 +73,39 @@ def getFractalAdviceGroup() -> AdviceGroup:
     return fractal_advicegroup
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
-    islands_AdviceDict = {}
-    infoTiers = 0
-    max_tier = max(islands_progressionTiers.keys()) - infoTiers
+    island_Advices = {}
+    optional_tiers = 0
+    true_max = true_max_tiers['Islands']
+    max_tier = true_max - optional_tiers
     tier_Islands = 0
 
     # Assess Tiers
-    for tierNumber, tierRequirements in islands_progressionTiers.items():
-        subgroupName = f"To reach Tier {tierNumber}"
-        for islandName in tierRequirements.get('Islands', []):
-            if not session_data.account.islands[islandName]['Unlocked']:
-                if subgroupName not in islands_AdviceDict and len(islands_AdviceDict) < session_data.account.maxSubgroupsPerGroup:
-                    islands_AdviceDict[subgroupName] = []
-                if subgroupName in islands_AdviceDict:
-                    islands_AdviceDict[subgroupName].append(Advice(
-                        label=f"Unlock {islandName}",
-                        picture_class=islandName
+    for tier_number, requirements in islands_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+        for island_name in requirements.get('Islands', []):
+            if not session_data.account.islands[island_name]['Unlocked']:
+                if (
+                    subgroup_label not in island_Advices
+                    and len(island_Advices) < session_data.account.max_subgroups
+                ):
+                    island_Advices[subgroup_label] = []
+                if subgroup_label in island_Advices:
+                    island_Advices[subgroup_label].append(Advice(
+                        label=f'Unlock {island_name}',
+                        picture_class=island_name,
+                        progression=0,
+                        goal=1
                     ))
-        if subgroupName not in islands_AdviceDict and tier_Islands == tierNumber - 1:
-            tier_Islands = tierNumber
+        if subgroup_label not in island_Advices and tier_Islands == tier_number - 1:
+            tier_Islands = tier_number
+
     tiers_ag = AdviceGroup(
         tier=tier_Islands,
-        pre_string="Unlock all Islands",
-        advices=islands_AdviceDict
+        pre_string='Unlock all Islands',
+        advices=island_Advices
     )
-    overall_SectionTier = min(max_tier + infoTiers, tier_Islands)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
+    overall_SectionTier = min(true_max, tier_Islands)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getRandomEventItemsAdviceGroup() -> AdviceGroup:
     items_advice = []
@@ -165,21 +175,21 @@ def getRandomEventItemsAdviceGroup() -> AdviceGroup:
 
     items_ag = AdviceGroup(
         tier='',
-        pre_string=f"Info- {total_found}/{total_possible} Unique Random Event drops found",
-        advices=items_advice
+        pre_string=f'{total_found}/{total_possible} Unique Random Event drops found',
+        advices=items_advice,
+        informational=True
     )
     items_ag.remove_empty_subgroups()
     return items_ag
 
-
 def getIslandsAdviceSection() -> AdviceSection:
-    highestFishingSkillLevel = max(session_data.account.all_skills["Fishing"])
-    if highestFishingSkillLevel < 30:
+    highest_fishing_level = max(session_data.account.all_skills['Fishing'])
+    if highest_fishing_level < 30:
         islands_AdviceSection = AdviceSection(
-            name="Islands",
-            tier="Not Yet Evaluated",
-            header="Come back after reaching level 30 Fishing!",
-            picture="wiki/Island_Expeditions_Boat.gif",
+            name='Islands',
+            tier='Not Yet Evaluated',
+            header='Come back after reaching level 30 Fishing!',
+            picture='wiki/Island_Expeditions_Boat.gif',
             unreached=True
         )
         return islands_AdviceSection
@@ -192,16 +202,15 @@ def getIslandsAdviceSection() -> AdviceSection:
     islands_AdviceGroupDict['Random Event Items'] = getRandomEventItemsAdviceGroup()
 
     #Advice Section
-
-    tier_section = f"{overall_SectionTier}/{max_tier}"
+    tier_section = f'{overall_SectionTier}/{max_tier}'
     islands_AdviceSection = AdviceSection(
-        name="Islands",
+        name='Islands',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Islands tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="wiki/Island_Expeditions_Boat.gif",
+        picture='wiki/Island_Expeditions_Boat.gif',
         groups=islands_AdviceGroupDict.values()
     )
     return islands_AdviceSection

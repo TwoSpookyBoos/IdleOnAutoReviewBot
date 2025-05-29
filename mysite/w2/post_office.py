@@ -1,25 +1,28 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import post_office_tabs, post_office_progression_tiers, break_you_best, infinity_string
+from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_w2 import post_office_tabs
+from consts.progression_tiers import post_office_progression_tiers
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
-    postOffice_AdviceDict = {
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
+    po_Advices = {
         'Tiers': {},
     }
-    info_tiers = 1
-    true_max = max(post_office_progression_tiers.keys())
-    max_tier = true_max - info_tiers
+    optional_tiers = 1
+    true_max = true_max_tiers['Post Office']
+    max_tier = true_max - optional_tiers
     tier_PostOffice = 0
 
     #Assess Tiers
     boxes_advised = {char.character_name:[] for char in session_data.account.all_characters}
-    for tier, requirements in post_office_progression_tiers.items():
-        subgroup_label = f"To reach {'Informational ' if tier > max_tier else ''}Tier {tier}"
-        postOffice_AdviceDict['Tiers'][subgroup_label] = []
+    for tier_number, requirements in post_office_progression_tiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+
         if 'Class Specific' in requirements:
             for char in session_data.account.all_characters:
                 for class_name in requirements['Class Specific']:
@@ -29,14 +32,20 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
                                 char.po_boxes_invested[box_name]['Level'] < box_level
                                 and box_name not in boxes_advised[char.character_name]
                             ):
-                                postOffice_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                                    label=f"{char.character_name}: {box_name}",
-                                    picture_class=char.class_name_icon,
-                                    progression=char.po_boxes_invested[box_name]['Level'],
-                                    goal=box_level,
-                                    resource=box_name
-                                ))
-                                boxes_advised[char.character_name].append(box_name)
+                                if (
+                                    subgroup_label not in po_Advices['Tiers']
+                                    and len(po_Advices['Tiers']) < session_data.account.max_subgroups
+                                ):
+                                    po_Advices['Tiers'][subgroup_label] = []
+                                if subgroup_label in po_Advices['Tiers']:
+                                    po_Advices['Tiers'][subgroup_label].append(Advice(
+                                        label=f"{char.character_name}: {box_name}",
+                                        picture_class=char.class_name_icon,
+                                        progression=char.po_boxes_invested[box_name]['Level'],
+                                        goal=box_level,
+                                        resource=box_name
+                                    ))
+                                    boxes_advised[char.character_name].append(box_name)
         if 'Myriad' in requirements:
             for char in session_data.account.all_characters:
                 for box_name, box_details in char.po_boxes_invested.items():
@@ -48,22 +57,28 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
                             box_details['Level'] < box_details['Max Level']
                             and box_name not in boxes_advised[char.character_name]
                         ):
-                            postOffice_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                                label=f"{char.character_name}: {box_name}",
-                                picture_class=char.class_name_icon,
-                                progression=char.po_boxes_invested[box_name]['Level'],
-                                goal=box_details['Max Level'],
-                                resource=box_name
-                            ))
-                            boxes_advised[char.character_name].append(box_name)
+                            if (
+                                    subgroup_label not in po_Advices['Tiers']
+                                    and len(po_Advices['Tiers']) < session_data.account.max_subgroups
+                            ):
+                                po_Advices['Tiers'][subgroup_label] = []
+                            if subgroup_label in po_Advices['Tiers']:
+                                po_Advices['Tiers'][subgroup_label].append(Advice(
+                                    label=f"{char.character_name}: {box_name}",
+                                    picture_class=char.class_name_icon,
+                                    progression=char.po_boxes_invested[box_name]['Level'],
+                                    goal=box_details['Max Level'],
+                                    resource=box_name
+                                ))
+                                boxes_advised[char.character_name].append(box_name)
 
-        if len(postOffice_AdviceDict['Tiers'][subgroup_label]) == 0 and tier_PostOffice == tier-1:
-            tier_PostOffice = tier
+        if subgroup_label not in po_Advices['Tiers'] and tier_PostOffice == tier_number - 1:
+            tier_PostOffice = tier_number
 
     tiers_ag = AdviceGroup(
         tier=tier_PostOffice,
-        pre_string="Progression Tiers",
-        advices=postOffice_AdviceDict['Tiers']
+        pre_string='Progression Tiers',
+        advices=po_Advices['Tiers']
     )
     tiers_ag.remove_empty_subgroups()
 
@@ -71,9 +86,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getBoxesAdviceGroup(character):
-    totalPointInvested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
+    total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
 
-    postOffice_advices = {
+    po_Advices = {
         tab_name: [
             Advice(
                 label=boxName,
@@ -85,27 +100,27 @@ def getBoxesAdviceGroup(character):
         ] for tab_name in post_office_tabs
     }
 
-    for subgroup in postOffice_advices:
-        for advice in postOffice_advices[subgroup]:
+    for subgroup in po_Advices:
+        for advice in po_Advices[subgroup]:
             mark_advice_completed(advice)
 
     char_ag = AdviceGroup(
-        tier="",
-        pre_string=f"Info- Boxes for {character.character_name} the {character.class_name}",
-        advices=postOffice_advices,
-        post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - totalPointInvested):,.0f}",
+        tier='',
+        pre_string=f"Boxes for {character.character_name} the {character.class_name}",
+        advices=po_Advices,
+        post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested):,.0f}",
         informational=True,
     )
     return char_ag
 
 def getPostOfficeAdviceSection() -> AdviceSection:
-    if session_data.account.highestWorldReached < 2:
+    if session_data.account.highest_world_reached < 2:
         postOffice_AdviceSection = AdviceSection(
-            name="Post Office",
-            tier="0",
+            name='Post Office',
+            tier='0/0',
             pinchy_rating=0,
-            header="Come back after unlocking the Post Office in W2 town!",
-            picture="wiki/Postboy_Pablob.gif",
+            header='Come back after unlocking the Post Office in W2 town!',
+            picture='wiki/Postboy_Pablob.gif',
             unrated=True,
             unreached=True
         )
@@ -120,13 +135,13 @@ def getPostOfficeAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     postOffice_AdviceSection = AdviceSection(
-        name="Post Office",
+        name='Post Office',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Post Office tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="wiki/Postboy_Pablob.gif",
+        picture='wiki/Postboy_Pablob.gif',
         groups=postOffice_AdviceGroupDict.values(),
     )
     return postOffice_AdviceSection
