@@ -155,6 +155,7 @@ def main(inputData, source_string, runType="web"):
                 group.check_for_completeness()
             section.check_for_completeness()
             section.check_for_informationalness()
+            section.check_for_optional()
             # logger.debug(
             #     (f"{section} {section.tier}: "
             #      f"Unreached={section.unreached}, "
@@ -175,6 +176,7 @@ def main(inputData, source_string, runType="web"):
             group.check_for_completeness()
         section.check_for_completeness()
         section.check_for_informationalness()
+        section.check_for_optional()
         #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Remove the later-rated sections if Overwhelmed mode is on
@@ -217,7 +219,8 @@ def main(inputData, source_string, runType="web"):
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,
+                    complete=False, optional=False, informational=False, unrated=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner=["generalbanner.jpg", "generalbannertext.png"]),
         AdviceWorld(name=WorldName.MASTER_CLASSES, sections=sections_master_classes, banner=["master_classes_banner.png", "master_classes_banner_text.png"]),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
@@ -232,6 +235,8 @@ def main(inputData, source_string, runType="web"):
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
         world.check_for_overwhelming()
+        world.check_for_informationalness()
+        world.check_for_optional()
         #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}, Overwhelming={world.overwhelming}")
         continue
 
@@ -240,7 +245,7 @@ def main(inputData, source_string, runType="web"):
     headerData = HeaderData(inputData, verified_source_string)
     logger.info(f"{headerData.last_update = }")
 
-    if runType == "consoleTest":
-        return "Pass"
+    if runType == 'consoleTest':
+        return 'Pass'
     else:
         return reviews, headerData

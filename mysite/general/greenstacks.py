@@ -25,7 +25,7 @@ def getEquinoxDreams() -> dict:
 
 def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     optional_tiers = 0
-    true_max = true_max_tiers['Greenstacks']
+    true_max = true_max_tiers['Endangered Greenstacks']
     max_tier = true_max - optional_tiers
 
     advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
@@ -196,7 +196,8 @@ def getGStackAdviceSections():
             AdviceGroup(
                 tier='',
                 pre_string=f"{'Difficulty Group ' if tier!= 'Timegated' else ''}{tier} Item recommendations",
-                advices=tier_subsection
+                advices=tier_subsection,
+                informational=True
             )
         )
 

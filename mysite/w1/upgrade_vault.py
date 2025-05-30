@@ -106,7 +106,8 @@ def getVaultUpgradesAdviceGroup():
     upgrades_ag = AdviceGroup(
         tier='',
         pre_string='Vault Upgrades',
-        advices=upgrades_AdviceDict
+        advices=upgrades_AdviceDict,
+        informational=True
     )
     upgrades_ag.remove_empty_subgroups()
     return upgrades_ag

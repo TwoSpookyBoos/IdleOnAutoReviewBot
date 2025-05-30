@@ -13,22 +13,22 @@ class Tier:
         self,
         tier: int,
         section: str = None,
+        section_optional: bool = False,
         section_complete: bool = False,
         section_informational: bool = False,
         section_unrated: bool = False,
         section_overwhelming: bool = False,
-        section_optional: bool = False,
         current: 'Threshold' = None,
         previous: 'Threshold' = None,
         next: 'Threshold' = None
     ):
         self.tier = tier
         self.section = section
+        self.section_optional = section_optional
         self.section_complete = section_complete
         self.section_informational = section_informational
         self.section_unrated = section_unrated
         self.section_overwhelming = section_overwhelming
-        self.section_optional = section_optional
         self.current = current
         self.previous = previous
         self.next = next
@@ -301,8 +301,18 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier, section_optional) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming, section_optional)
+    for section, (pinchy_tier, section_optional, section_complete,
+                  section_informational, section_unrated, section_overwhelming,
+                  section_max_tier, section_true_max_tier) in dictOfPRs.items():
+        tier = Tier(
+            tier=pinchy_tier,
+            section=section,
+            section_optional=section_optional,
+            section_complete=section_complete,
+            section_informational=section_informational,
+            section_unrated=section_unrated,
+            section_overwhelming=section_overwhelming,
+        )
         placements.place(tier)
 
     placements.finalise()
@@ -453,13 +463,13 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     dictOfPRs = {
         section.name: [
             section.pinchy_rating,
+            section.optional,
             section.completed,
             section.informational,
             section.unrated,
             section.overwhelming,
             section.max_tier,
             section.true_max_tier,
-            section.optional
         ] for section in pinchable_sections if not section.unreached
     }
 
@@ -499,30 +509,33 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     sections_maxed = f"{sections_maxed_count}/{sections_total}"
 
     pinchy_high = AdviceSection(
-        name="Pinchy high",
+        name='Pinchy high',
         tier=expectedThreshold.name,
         header=pinchyExpected,
         collapse=True,
-        completed=False
+        completed=False,
+        optional=False
     )
 
     pinchy_low = AdviceSection(
-        name="Pinchy low",
+        name='Pinchy low',
         tier=lowestThresholdReached.name,
         header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
         collapse=True,
-        completed=False
+        completed=False,
+        optional=False
     )
 
     pinchy_all = AdviceSection(
-        name="Pinchy all",
+        name='Pinchy all',
         tier=sections_maxed,
         pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
                f"{break_you_bestest if sections_maxed_count >= sections_total else ''}",
         picture='customized/grumblo_explode.png' if sections_maxed_count >= sections_total else "Pinchy.gif",
         groups=advice_groups,
-        complete=False
+        complete=False,
+        optional=False
     )
 
     return pinchy_high, pinchy_low, pinchy_all

@@ -239,7 +239,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     cooking_AdviceGroupDict['NextTier'] = AdviceGroup(
         tier=tier_Cooking,
         pre_string='To unlock the next set of Meal Priorities' if tier_Cooking < max_tier else 'Max all Meals',
-        advices=cooking_Advices['NextTier'],
+        advices=cooking_Advices['NextTier']
     )
 
     cooking_AdviceGroupDict['CurrentTier'] = AdviceGroup(

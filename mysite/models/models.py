@@ -484,7 +484,7 @@ class AdviceBase:
 
     @property
     def dataset(self) -> list:
-        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "unrated", "unreached", "overwhelming"]]
+        return [[attr, getattr(self, attr, False)] for attr in ["optional", "completed", "informational", "unrated", "unreached", "overwhelming"]]
 
 
 class LabelBuilder:
@@ -746,7 +746,9 @@ class AdviceGroup(AdviceBase):
                 for advice in value:
                     advice.overwhelming = overwhelming
 
-    def check_for_optional(self, max_tier: int):
+    def check_for_optional(self, max_tier: int, override=None):
+        if override is not None:
+            self.optional = override
         if self.optional is not True:
             if self.tier.isdigit():
                 self.optional = int(self.tier) > max_tier
@@ -793,6 +795,7 @@ class AdviceSection(AdviceBase):
         unrated: bool = False,
         informational: bool | None = None,
         overwhelming: bool | None = False,
+        optional: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -810,7 +813,7 @@ class AdviceSection(AdviceBase):
         self.unrated = unrated
         self.informational = informational
         self.overwhelming = overwhelming
-        self.optional = False
+        self.optional = optional
         self.check_for_optional()
 
     @property
@@ -884,9 +887,16 @@ class AdviceSection(AdviceBase):
             group.set_overwhelming(overwhelming)
 
     def check_for_optional(self):
-        for group in self.groups:
-            group.check_for_optional(self.max_tier)
-        self.optional = all([group.optional for group in self.groups])  # True if ALL groups are Optional
+        if self.optional is None:
+            self.optional = self.pinchy_rating >= self.max_tier
+
+        if self.optional is not True:
+            if self.name.startswith('Pinchy'):
+                self.optional = False
+            else:
+                for group in self.groups:
+                    group.check_for_optional(self.max_tier)
+                self.optional = all([group.optional for group in self.groups])  # True if ALL groups are Optional
 
 
 class AdviceWorld(AdviceBase):
@@ -913,6 +923,7 @@ class AdviceWorld(AdviceBase):
         informational: bool | None = None,
         unrated: bool | None = None,
         overwhelming: bool | None = False,
+        optional: bool | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -921,24 +932,21 @@ class AdviceWorld(AdviceBase):
         self.sections: list[AdviceSection] = sections
         self.banner: list[str] | None = banner
         self.title: str = title
-        if completed is not None:
-            self.completed = completed
-        else:
+        self.completed = completed
+        if self.completed is None:
             self.check_for_completeness()
-        if informational is not None:
-            self.informational = informational
-        else:
+        self.informational = informational
+        if self.informational is None:
             self.check_for_informationalness()
-        if unrated is not None:
-            self.unrated = unrated
-        else:
+        self.unrated = unrated
+        if self.unrated is None:
             self.check_for_unratedness()
-        if overwhelming is not None:
-            self.overwhelming = overwhelming
-        else:
+        self.overwhelming = overwhelming
+        if self.overwhelming is None:
             self.check_for_overwhelming()
-        self.optional = False
-        self.check_for_optional()
+        self.optional = optional
+        if self.optional is None:
+            self.check_for_optional()
 
     @property
     def id(self):
@@ -951,19 +959,27 @@ class AdviceWorld(AdviceBase):
         """
         Used when a bool for complete was not passed in during initialization of the AdviceWorld
         """
-        self.completed = len([section for section in self.sections if not section.completed]) == 0  #True if 0 length, False otherwise
+        if self.completed is None:
+            self.completed = len([section for section in self.sections if not section.completed]) == 0  #True if 0 length, False otherwise
 
     def check_for_informationalness(self):
-        self.informational = all([section.informational for section in self.sections if section])
+        if self.informational is None:
+            self.informational = all([section.informational for section in self.sections if section])
 
     def check_for_unratedness(self):
-        self.unrated = all([section.unrated for section in self.sections if section])
+        if self.unrated is None:
+            self.unrated = all([section.unrated for section in self.sections if section])
 
     def check_for_overwhelming(self):
-        self.overwhelming = all([section.overwhelming for section in self.sections if section])  #True if ALL sections are Overwhelming
+        if self.overwhelming is None:
+            self.overwhelming = all([section.overwhelming for section in self.sections if section])  #True if ALL sections are Overwhelming
 
     def check_for_optional(self):
-        self.optional = all([section.optional for section in self.sections if section])  #True if ALL sections are Optional
+        if self.optional is None:
+            if self.name.startswith('Pinchy'):
+                self.optional = False
+            else:
+                self.optional = all([section.optional for section in self.sections if section])  #True if ALL sections are Optional
 
 
 class Asset:

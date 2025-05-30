@@ -69,6 +69,12 @@ switches = [
         "static": "false",
     },
     {
+        "label": "Hide Optional Tiered Sections",
+        "name": "hide_optional",
+        "true": "",
+        "false": "",
+        "static": "false",
+    },{
         "label": "Hide Completed",
         "name": "hide_completed",
         "true": "",
@@ -76,7 +82,7 @@ switches = [
         "static": "false",
     },
     {
-        "label": "Hide Informational Groups",
+        "label": "Hide Pure-Info",
         "name": "hide_informational",
         "true": "",
         "false": "",
