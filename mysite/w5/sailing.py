@@ -4,7 +4,7 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts import break_you_best, build_subgroup_label
-from consts.consts_w5 import max_sailing_artifact_level, numberOfArtifacts
+from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles
 from consts.progression_tiers import sailing_progressionTiers
 
@@ -38,7 +38,7 @@ def getSailingProgressionTierAdviceGroups():
     tier_Islands = 0
     tier_CaptainsAndBoats = 0
     tier_Artifacts = 0
-    total_artifacts = max_sailing_artifact_level * numberOfArtifacts
+    total_artifacts = max_sailing_artifact_level * sailing_artifacts_count
     delays_dict = getSailingDelays()
     golden_hampter_note = ''
 

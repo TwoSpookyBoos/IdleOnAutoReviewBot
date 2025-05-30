@@ -156,6 +156,7 @@ class Placements(dict):
     SIGILS = "Sigils"
     POST_OFFICE = "Post Office"
     ISLANDS = "Islands"
+    ARMOR_SETS = 'Armor Sets'
     REFINERY = "Refinery"
     SAMPLING = "Sampling"
     SALT_LICK = "Salt Lick"
@@ -175,7 +176,7 @@ class Placements(dict):
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
         VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, POST_OFFICE, ISLANDS,
-        REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
+        ARMOR_SETS, REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING,  #GAMING,
         FARMING
@@ -202,6 +203,7 @@ class Placements(dict):
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,     true_max_tiers[SIGILS], 99],
         POST_OFFICE:   [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,     true_max_tiers[POST_OFFICE], 99],
         ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,     true_max_tiers[ISLANDS], 99],
+        ARMOR_SETS:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,     true_max_tiers[ARMOR_SETS], 99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,     true_max_tiers[SALT_LICK], 99],

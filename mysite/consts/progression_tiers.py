@@ -33,7 +33,6 @@ combatLevels_progressionTiers = [
     [30, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
     [31, 4800, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
     [32, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
-
 ]
 secret_class_progressionTiers = {
     0: {},
@@ -1401,6 +1400,29 @@ sampling_progressionTiers = {
     8: {"Materials": {"Oak Logs": 10e9,  "Copper Ore": 8e9,   "Goldfish": 1e9,   "Fly": 454e6, "Spore Cap": 20e6}, "NonDootDiscount": .85},
     9: {"Materials": {"Oak Logs": 22e9,  "Copper Ore": 15e9,  "Goldfish": 2e9,   "Fly": 1e9,   "Spore Cap": 30e6}, "NonDootDiscount": .90},
     10:{"Materials": {"Oak Logs": 100e9, "Copper Ore": 250e9, "Goldfish": 10e9,  "Fly": 8e9,   "Spore Cap": 40e6}, "NonDootDiscount": .90},
+}
+armor_sets_progressionTiers = {
+    1: {
+        'Unlocked': True
+    },
+    2: {
+        'Sets': ['COPPER SET', 'IRON SET', 'GOLD SET', 'PLATINUM SET', 'DEMENTIA SET', 'AMAROK SET']
+    },
+    3: {
+        'Sets': ['VOID SET', 'EFAUNT SET', 'CHIZOAR SET']
+    },
+    4: {
+        'Sets': ['LUSTRE SET', 'DIABOLICAL SET', 'TROLL SET', 'MAGMA SET']
+    },
+    5: {
+        'Sets': ['KATTLEKRUK SET', 'MARBIGLASS SET', 'GODSHARD SET']
+    },
+    6: {
+        'Sets': ['EMPEROR SET']
+    },
+    7: {
+        'Sets': ['SECRET SET']
+    }
 }
 
 ###WORLD 4 PROGRESSION TIERS###

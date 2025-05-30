@@ -22,8 +22,9 @@ from consts.consts_w2 import (
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
-    collider_storage_limit_list, prayers_dict, salt_lick_list, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list, apocable_map_index_dict,
-    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed
+    collider_storage_limit_list, prayers_dict, salt_lick_list, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
+    apocable_map_index_dict,
+    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -31,7 +32,7 @@ from consts.consts_w4 import (
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailingDict, captainBuffs, divinity_divinitiesDict, gamingSuperbitsDict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens
+    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens
 )
 from consts.consts_caverns import (
     getCavernResourceImage, caverns_cavern_names, caverns_villagers, caverns_engineer_schematics,
@@ -273,6 +274,7 @@ def _parse_general(account):
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
     _parse_general_upgrade_vault(account)
+    _parse_general_armor_sets(account)
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
@@ -646,6 +648,31 @@ def _parse_general_upgrade_vault(account):
     account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
     for upgrade_name in account.vault['Upgrades']:
         account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
+
+def _parse_general_armor_sets(account):
+    account.armor_sets = {
+        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
+        'Days to Unlock': max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Sets': {}
+    }
+    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
+    try:
+        raw_armor_sets_list = raw_armor_sets.split(',')
+    except:
+        raw_armor_sets_list = []
+    for set_name, requirements in equipment_sets_dict.items():
+        clean_name = set_name.replace('_', ' ')
+        account.armor_sets['Sets'][clean_name] = {
+            'Owned': set_name in raw_armor_sets_list,
+            'Image': getItemDisplayName(requirements[0][0]),
+            'Armor': requirements[0],
+            'Tools': requirements[1],
+            'Required Tools': safer_convert(requirements[3][0], 0),
+            'Weapons': requirements[2],
+            'Required Weapons': safer_convert(requirements[3][1], 0),
+            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
+            'Base Value': safer_convert(requirements[3][2], 0)
+        }
 
 
 def _parse_master_classes(account):
@@ -2242,7 +2269,7 @@ def _parse_w5_gaming(account):
             account.gaming['SuperBitsString'] = ''
             account.gaming['Envelopes'] = 0
 
-    for index, valuesDict in gamingSuperbitsDict.items():
+    for index, valuesDict in gaming_superbits_dict.items():
         try:
             account.gaming['SuperBits'][valuesDict['Name']] = {
                 'Unlocked': valuesDict['CodeString'] in account.gaming['SuperBitsString'],
@@ -2298,7 +2325,7 @@ def _parse_w5_sailing(account):
         account.sum_artifact_tiers = sum(raw_sailing_list[3])
     except:
         account.sum_artifact_tiers = 0
-    for islandIndex, islandValuesDict in sailingDict.items():
+    for islandIndex, islandValuesDict in sailing_dict.items():
         try:
             account.sailing['Islands'][islandValuesDict['Name']] = {
                 'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
@@ -2352,8 +2379,8 @@ def _parse_w5_sailing_captains(account):
         try:
             account.sailing['Captains'][captainIndex] = {
                 'Tier': captainDetails[0],
-                'TopBuff': captainBuffs[captainDetails[1]],
-                'BottomBuff': captainBuffs[captainDetails[2]],
+                'TopBuff': captain_buffs[captainDetails[1]],
+                'BottomBuff': captain_buffs[captainDetails[2]],
                 'Level': captainDetails[3],
                 # 'EXP': captainDetails[4],
                 'TopBuffBaseValue': captainDetails[5],
@@ -2372,7 +2399,7 @@ def _parse_w5_sailing_captains(account):
 
 def _parse_w5_divinity(account):
     account.divinity = {
-        'Divinities': copy.deepcopy(divinity_divinitiesDict),
+        'Divinities': copy.deepcopy(divinity_divinities_dict),
         'DivinityLinks': {}
     }
     raw_divinity_list = safe_loads(account.raw_data.get("Divinity", []))
@@ -2518,8 +2545,8 @@ def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, e
         raw_pocket_div_links = [-1, -1]
     for entry_index, entry_value in enumerate(raw_pocket_div_links):
         if int(entry_value) != -1 and entry_index < account.caverns['Majiks']['Pocket Divinity']['Level']:
-            if int(entry_value)+1 in divinity_divinitiesDict:
-                account.caverns['PocketDivinityLinks'].append(divinity_divinitiesDict[int(entry_value)+1]['Name'])
+            if int(entry_value)+1 in divinity_divinities_dict:
+                account.caverns['PocketDivinityLinks'].append(divinity_divinities_dict[int(entry_value) + 1]['Name'])
             else:
                 logger.exception(f"Pocket Divinity link value of {entry_value}+1 not found in consts.divinity_divinitiesDict")
                 account.caverns['PocketDivinityLinks'].append('')

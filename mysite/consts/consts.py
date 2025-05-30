@@ -158,8 +158,9 @@ versions_patches = {
     251: "v2.32 Gambit",
     255: "v2.34 Wisdom Monument",
     262: "v2.35 4th Anniversary Event",
-    264: "v2.35 Windwalker Class",
+    264: "v2.35 Wind Walker Class",
     265: "v2.36 Charred Bones",
+    267: "v2.37 Emperor Boss",
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 

@@ -72,6 +72,7 @@ true_max_tiers = {
     'Post Office': max(post_office_progression_tiers.keys()),
 
     # World 3
+    'Armor Sets': 7,
     'Atom Collider': max(atoms_progressionTiers.keys()),
     'Buildings': 0,
     'Death Note': deathNote_progressionTiers[-1][0],

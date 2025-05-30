@@ -8,8 +8,10 @@ equinox_bonuses_dict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False},
     3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended', 'SummoningExpands': False},
     4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional', 'SummoningExpands': False},
-    5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': False},
-    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended', 'SummoningExpands': True},
+    5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended',
+        'SummoningExpands': False},
+    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended',
+        'SummoningExpands': True},
     7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': True},
     8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional', 'SummoningExpands': False},
     9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended', 'SummoningExpands': True},
@@ -28,17 +30,17 @@ refinery_dict = {
     "Nullo": [8, "nullo-salt", 1, 2, 0, 0]
 }
 buildings_dict = {
-    #Buildings
+    # Buildings
     0: {'Name': '3D Printer', 'Image': 'three-d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
     1: {'Name': 'Talent Book Library', 'Image': 'talent-book-library', 'BaseMaxLevel': 101, 'Type': 'Utility'},
     2: {'Name': 'Death Note', 'Image': 'death-note', 'BaseMaxLevel': 51, 'Type': 'Utility'},
     3: {'Name': 'Salt Lick', 'Image': 'salt-lick', 'BaseMaxLevel': 10, 'Type': 'Utility'},
     4: {'Name': 'Chest Space', 'Image': 'chest-space', 'BaseMaxLevel': 25, 'Type': 'Utility'},
-    5: {'Name': 'Cost Cruncher', 'Image': 'cost-cruncher','BaseMaxLevel': 60, 'Type': 'Utility'},
+    5: {'Name': 'Cost Cruncher', 'Image': 'cost-cruncher', 'BaseMaxLevel': 60, 'Type': 'Utility'},
     6: {'Name': 'Trapper Drone', 'Image': 'critter-drone', 'BaseMaxLevel': 15, 'Type': 'Utility'},
     7: {'Name': 'Automation Arm', 'Image': 'automation-arm', 'BaseMaxLevel': 5, 'Type': 'Utility'},
     8: {'Name': 'Atom Collider', 'Image': 'atom-collider', 'BaseMaxLevel': 200, 'Type': 'Utility'},
-    #TD Towers
+    # TD Towers
     9: {'Name': 'Pulse Mage', 'Image': 'pulse-mage', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     10: {'Name': 'Fireball Lobber', 'Image': 'fireball-lobber', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     11: {'Name': 'Boulder Roller', 'Image': 'boulder-roller', 'BaseMaxLevel': 50, 'Type': 'Tower'},
@@ -48,7 +50,7 @@ buildings_dict = {
     15: {'Name': 'Kraken Cosplayer', 'Image': 'kraken-cosplayer', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     16: {'Name': 'Poisonic Elder', 'Image': 'poisonic-elder', 'BaseMaxLevel': 50, 'Type': 'Tower'},
     17: {'Name': 'Voidinator', 'Image': 'voidinator', 'BaseMaxLevel': 50, 'Type': 'Tower'},
-    #Shrines
+    # Shrines
     # ShrineInfo = function ()
     18: {'Name': 'Woodular Shrine', 'Image': 'woodular-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 12, 'ValueIncrement': 3},
     19: {'Name': 'Isaccian Shrine', 'Image': 'isaccian-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 12, 'ValueIncrement': 3},
@@ -56,7 +58,8 @@ buildings_dict = {
     21: {'Name': 'Pantheon Shrine', 'Image': 'pantheon-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 10, 'ValueIncrement': 2},
     22: {'Name': 'Clover Shrine', 'Image': 'clover-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 15, 'ValueIncrement': 3},
     23: {'Name': 'Summereading Shrine', 'Image': 'summereading-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 6, 'ValueIncrement': 1},
-    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 50, 'ValueIncrement': 7.5},  #Nerfed in v2.35 WW from 10 to 7.5
+    24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 50, 'ValueIncrement': 7.5},
+    # Nerfed in v2.35 WW from 10 to 7.5
     25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 5, 'ValueIncrement': 1},
     26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 1, 'ValueIncrement': 0.1},
 }
@@ -64,27 +67,39 @@ buildings_dict = {
 
 buildings_towers = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Tower']
 buildings_tower_max_level = (
-    50  #Base
-    + 30  #2.5 Cons Mastery
-    + 60  #2 per level times 30 max levels of Atom Collider - Carbon
-    + 100  #Cavern 14 - Gambit - Bonus Index 9
-)  #As of v2.35
-buildings_shrines: list[str] = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Shrine']
+        50  # Base
+        + 30  # 2.5 Cons Mastery
+        + 60  # 2 per level times 30 max levels of Atom Collider - Carbon
+        + 100  # Cavern 14 - Gambit - Bonus Index 9
+)  # As of v2.35
+buildings_shrines: list[str] = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if
+                                buildingValuesDict['Type'] == 'Shrine']
 
-#AtomInfo in code. Last pulled 2.36 WW
+# AtomInfo in code. Last pulled 2.36 WW
 atoms_list: list[list] = [
-    ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1, "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
-    ["Helium - Talent Power Stacker", 0, 10, 10, 1, "All talents that give more bonus per 'Power of 10 resources you own' will count +{ more powers of 10 than you actually own when giving the bonus."],
-    ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1, "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
-    ["Beryllium - Post Office Penner", 20, 1.26, 75, 7, "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
-    ["Boron - Particle Upgrader", 70, 1.37, 175, 2, "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
-    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2, "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction."],
-    ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15, "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
-    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2, "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Maximum Talent LV is increased by +10."],
-    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1, "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every meal with a studded black void plate."],
+    ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1,
+     "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
+    ["Helium - Talent Power Stacker", 0, 10, 10, 1,
+     "All talents that give more bonus per 'Power of 10 resources you own' will count +{ more powers of 10 than you actually own when giving the bonus."],
+    ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1,
+     "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
+    ["Beryllium - Post Office Penner", 20, 1.26, 75, 7,
+     "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
+    ["Boron - Particle Upgrader", 70, 1.37, 175, 2,
+     "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
+    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2,
+     "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction."],
+    ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15,
+     "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
+    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2,
+     "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Maximum Talent LV is increased by +10."],
+    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1,
+     "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every meal with a studded black void plate."],
     ["Neon - Damage N' Cheapener", 40000, 1.22, 40000, 1, "Increases your total damage by +{%. Also, reduces the cost of all atom upgrades by {% too."],
-    ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5, "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
-    ['Magnesium - Trap Compounder', 30000, 1.6, 30000, 1, 'Every day, critters gained from traps increases by +{%. This bonus is capped at 60 days, and resets back to +0% when a new trap is placed.'],
+    ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5,
+     "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
+    ['Magnesium - Trap Compounder', 30000, 1.6, 30000, 1,
+     'Every day, critters gained from traps increases by +{%. This bonus is capped at 60 days, and resets back to +0% when a new trap is placed.'],
     ['Aluminium - Stamp Supercharger', 200000, 1.3, 200000, 2, 'Stamp Doublers give an extra +{% MORE bonus than the normal +100% they give!']
 ]
 collider_storage_limit_list = [15, 25, 100, 250, 1050]
@@ -94,7 +109,7 @@ prayers_list: list[str] = [
     "Tachion of the Titans (Dune Soul)", "Balance of Precision (Dune Soul)", "Midas Minded (Dune Soul)", "Jawbreaker (Dune Soul)",
     "The Royal Sampler (Rooted Soul)", "Antifun Spirit (Rooted Soul)", "Circular Criticals (Rooted Soul)", "Ruck Sack (Rooted Soul)",
     "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
-    "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)","Glitterbug (Squishy Soul)",
+    "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)", "Glitterbug (Squishy Soul)",
 ]
 prayers_dict = {
     0: {"Name": "Big Brain Time", "Material": "Forest Soul", "Display": "Big Brain Time (Forest Soul)", "MaxLevel": 50,
@@ -105,7 +120,8 @@ prayers_dict = {
         "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill EXP Gain', 'curse_pre': '-', 'curse_post': '%'},
     2: {"Name": "Unending Energy", "Material": "Forest Soul", "Display": "Unending Energy (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 22.5, 'bonus_x2': 2.5, 'bonus_stat': 'Class and Skill EXP', 'bonus_pre': '+', 'bonus_post': '%',
-        "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Max AFK time is now 10 hours. Use with caution', 'curse_pre': '', 'curse_post': ''},
+        "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Max AFK time is now 10 hours. Use with caution', 'curse_pre': '',
+        'curse_post': ''},
     3: {"Name": "Shiny Snitch", "Material": "Forest Soul", "Display": "Shiny Snitch (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Shiny Critters per trap', 'bonus_pre': '+', 'bonus_post': '',
         "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'lower', 'curse_pre': 'Your Shiny chance is now ', 'curse_post': 'x'},
@@ -113,7 +129,8 @@ prayers_dict = {
         "bonus_funcType": 'bigBase', 'bonus_x1': 4.5, 'bonus_x2': 0.5, 'bonus_stat': 'All AFK Gain Rate', 'bonus_pre': '+', 'bonus_post': '%',
         "curse_funcType": 'bigBase', 'curse_x1': 10.8, 'curse_x2': 1.2, 'curse_stat': 'Carry Capacity', 'curse_pre': '-', 'curse_post': '%'},
     5: {"Name": "Tachion of the Titans", "Material": "Dune Soul", "Display": "Tachion of the Titans (Dune Soul)", "MaxLevel": 2,
-        "bonus_funcType": 'bigBase', 'bonus_x1': 1, 'bonus_x2': 0, 'bonus_stat': 'Giant Monsters can now spawn on Monster Kill', 'bonus_pre': '', 'bonus_post': '',
+        "bonus_funcType": 'bigBase', 'bonus_x1': 1, 'bonus_x2': 0, 'bonus_stat': 'Giant Monsters can now spawn on Monster Kill', 'bonus_pre': '',
+        'bonus_post': '',
         "curse_funcType": 'bigBase', 'curse_x1': 1, 'curse_x2': 0, 'curse_stat': 'Giant Monsters can now spawn...', 'curse_pre': '', 'curse_post': ''},
     6: {"Name": "Balance of Precision", "Material": "Dune Soul", "Display": "Balance of Precision (Dune Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Total Accuracy', 'bonus_pre': '+', 'bonus_post': '%',
@@ -126,7 +143,8 @@ prayers_dict = {
         "curse_funcType": 'bigBase', 'curse_x1': 180, 'curse_x2': 20, 'curse_stat': 'Max HP for all monsters', 'curse_pre': '+', 'curse_post': '%'},
     9: {"Name": "The Royal Sampler", "Material": "Rooted Soul", "Display": "The Royal Sampler (Rooted Soul)", "MaxLevel": 20,
         "bonus_funcType": 'bigBase', 'bonus_x1': 13.5, 'bonus_x2': 1.5, 'bonus_stat': 'Printer Sample Rate', 'bonus_pre': '+', 'bonus_post': '%',
-        "curse_funcType": 'bigBase', 'curse_x1': 27, 'curse_x2': 3, 'curse_stat': 'All EXP gain. Remove all samples on this character to Unequip.', 'curse_pre': '-', 'curse_post': '%'},
+        "curse_funcType": 'bigBase', 'curse_x1': 27, 'curse_x2': 3, 'curse_stat': 'All EXP gain. Remove all samples on this character to Unequip.',
+        'curse_pre': '-', 'curse_post': '%'},
     10: {"Name": "Antifun Spirit", "Material": "Rooted Soul", "Display": "Antifun Spirit (Rooted Soul)", "MaxLevel": 10,
          "bonus_funcType": 'bigBase', 'bonus_x1': 630, 'bonus_x2': 70, 'bonus_stat': 'Minigame Reward Multi', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 8.1, 'curse_x2': 0.9, 'curse_stat': 'plays per attempt', 'curse_pre': 'Minigames cost ', 'curse_post': ''},
@@ -137,10 +155,12 @@ prayers_dict = {
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Carry Capacity', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'All AFK Gain Rate', 'curse_pre': '-', 'curse_post': '%'},
     13: {"Name": "Fibers of Absence", "Material": "Frigid Soul", "Display": "Fibers of Absence (Frigid Soul)", "MaxLevel": 50,
-         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Kills for Deathnote and opening portals', 'bonus_pre': '+', 'bonus_post': '%',
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Kills for Deathnote and opening portals', 'bonus_pre': '+',
+         'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 13.5, 'curse_x2': 1.5, 'curse_stat': 'Total Damage', 'curse_pre': '-', 'curse_post': '%'},
     14: {"Name": "Vacuous Tissue", "Material": "Frigid Soul", "Display": "Vacuous Tissue (Frigid Soul)", "MaxLevel": 1,
-         "bonus_funcType": 'bigBase', 'bonus_x1': 100, 'bonus_x2': 0, 'bonus_stat': 'Dungeon Credits and Flurbos from Boosted Runs', 'bonus_pre': '+', 'bonus_post': '%',
+         "bonus_funcType": 'bigBase', 'bonus_x1': 100, 'bonus_x2': 0, 'bonus_stat': 'Dungeon Credits and Flurbos from Boosted Runs', 'bonus_pre': '+',
+         'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 2, 'curse_x2': 0, 'curse_stat': 'Dungeon Passes per run', 'curse_pre': 'Use ', 'curse_post': 'x'},
     15: {"Name": "Beefy For Real", "Material": "Frigid Soul", "Display": "Beefy For Real (Frigid Soul)", "MaxLevel": 40,
          "bonus_funcType": 'bigBase', 'bonus_x1': 18, 'bonus_x2': 2, 'bonus_stat': 'Total Damage', 'bonus_pre': '+', 'bonus_post': '%',
@@ -152,7 +172,8 @@ prayers_dict = {
          "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Skill EXP Gain', 'bonus_pre': '+', 'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'Skill Efficiency', 'curse_pre': '-', 'curse_post': '%'},
     18: {"Name": "Glitterbug", "Material": "Squishy Soul", "Display": "Glitterbug (Squishy Soul)", "MaxLevel": 30,
-         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'chance for Giant Mobs to summon 2 Crystal Mobs', 'bonus_pre': '+', 'bonus_post': '%',
+         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'chance for Giant Mobs to summon 2 Crystal Mobs', 'bonus_pre': '+',
+         'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'less likely to spawn', 'curse_pre': 'Giant Mobs are ', 'curse_post': '%'},
 }
 conditional_prayers = {'Unending Energy': 50, 'Big Brain Time': 50, 'Antifun Spirit': 10, 'Fibers of Absence': 50, 'Beefy For Real': 40, 'Glitterbug': 25}
@@ -166,17 +187,17 @@ max_scaling_book_levels = 30
 max_summoning_book_levels = 29
 max_overall_book_levels = 100 + max_static_book_levels + max_scaling_book_levels + max_summoning_book_levels
 approx_max_talent_level_non_es = (
-    max_overall_book_levels
-    + 30  #Grimoire
-    + 25  #Equinox
-    + 20  #Arctis
-    + 15  #Symbols of Beyond
-    + 14  #ES Family Bonus (Note: Not Family Guy!)
-    + 25  #Companion: Rift Slug
-    + 5  #Sneak Mastery III
-    + 1   #Maroon Warship achievement
+        max_overall_book_levels
+        + 30  # Grimoire
+        + 25  # Equinox
+        + 20  # Arctis
+        + 15  # Symbols of Beyond
+        + 14  # ES Family Bonus (Note: Not Family Guy!)
+        + 25  # Companion: Rift Slug
+        + 5  # Sneak Mastery III
+        + 1  # Maroon Warship achievement
 )
-approx_max_talent_level_es = approx_max_talent_level_non_es + 4  #Family Guy
+approx_max_talent_level_es = approx_max_talent_level_non_es + 4  # Family Guy
 dn_skull_requirement_list = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
 dn_skull_value_list = [0, 1, 2, 3, 4, 5, 7, 10, 20]
@@ -209,8 +230,8 @@ dn_next_skull_name_dict = {
     20: "Finished!"
 }
 apocable_map_index_dict = {
-    0: [31, 30, 9, 38, 69, 120, 166],  #Barbarian only, not in regular DeathNote
-    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  #MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
+    0: [31, 30, 9, 38, 69, 120, 166],  # Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  # MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
     2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
     3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
@@ -227,15 +248,15 @@ apoc_difficulty_name_list = [
 ]
 max_trapping_critter_types = 12
 trapping_quests_requirement_list = [
-    {"QuestName": "Frogecoin to the MOON!",         'RequiredItems': {"Critter1": 100,   "Critter1A": 1}},
-    {"QuestName": "Yet another Cartoon Reference",  'RequiredItems': {"Critter2": 250,   "Critter2A": 1}},
-    {"QuestName": "Small Stingers, Big Owie",       'RequiredItems': {"Critter3": 500,   "Critter3A": 2}},
-    {"QuestName": "The Mouse n the Molerat",        'RequiredItems': {"Critter4": 1000,  "Critter4A": 2}},
-    {"QuestName": "Happy Tree Friend",              'RequiredItems': {"Critter5": 1500,  "Critter5A": 3}},
-    {"QuestName": "Noot Noot!",                     'RequiredItems': {"Critter6": 2500,  "Critter6A": 4}},
-    {"QuestName": "Bunny you Should Say That!",     'RequiredItems': {"Critter7": 4000,  "Critter7A": 6}},
-    {"QuestName": "Rollin' Thunder",                'RequiredItems': {"Critter8": 8000,  "Critter8A": 10}},
-    {"QuestName": "Glitter Critter",                'RequiredItems': {"Critter8A": 30,   "Critter6A": 60,    "Critter3A": 200}}
+    {"QuestName": "Frogecoin to the MOON!", 'RequiredItems': {"Critter1": 100, "Critter1A": 1}},
+    {"QuestName": "Yet another Cartoon Reference", 'RequiredItems': {"Critter2": 250, "Critter2A": 1}},
+    {"QuestName": "Small Stingers, Big Owie", 'RequiredItems': {"Critter3": 500, "Critter3A": 2}},
+    {"QuestName": "The Mouse n the Molerat", 'RequiredItems': {"Critter4": 1000, "Critter4A": 2}},
+    {"QuestName": "Happy Tree Friend", 'RequiredItems': {"Critter5": 1500, "Critter5A": 3}},
+    {"QuestName": "Noot Noot!", 'RequiredItems': {"Critter6": 2500, "Critter6A": 4}},
+    {"QuestName": "Bunny you Should Say That!", 'RequiredItems': {"Critter7": 4000, "Critter7A": 6}},
+    {"QuestName": "Rollin' Thunder", 'RequiredItems': {"Critter8": 8000, "Critter8A": 10}},
+    {"QuestName": "Glitter Critter", 'RequiredItems': {"Critter8A": 30, "Critter6A": 60, "Critter3A": 200}}
 ]
 trapset_images = {
     0: 'cardboard-traps',
@@ -371,16 +392,16 @@ def getEnemyNameFromMap(inputMap: str) -> str:
         return f"Unexpected Input received: {reason}"
 
 
-hardcap_symbols = 280  #Last verified as of v2.23
-hardcap_enhancement_eclipse = 250  #Lava might add more in the future, but there are no bonuses above 250 in v2.10
+hardcap_symbols = 280  # Last verified as of v2.23
+hardcap_enhancement_eclipse = 250  # Lava might add more in the future, but there are no bonuses above 250 in v2.10
 library_subgroup_tiers = [
     'Account Wide Priorities', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents', 'VIP'
-]  #Used in the Group by Priority function
+]  # Used in the Group by Priority function
 old_library_subgroup_tiers = [
-        '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
-        'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
-    ]  #Used in the Group by Character function
+    '', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
+    'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents'
+]  # Used in the Group by Character function
 skill_talentsDict = {
     # Optimal is an optional list for calculating library.getJeapordyGoal
     # [0] = the starting level
@@ -389,7 +410,7 @@ skill_talentsDict = {
     # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
 
-    #Wisdom Skills
+    # Wisdom Skills
     "Choppin": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Tab 2"},
@@ -455,7 +476,7 @@ skill_talentsDict = {
             506: {"Name": "Shared Beliefs", "Tab": "Tab 4"},  # Account-wide EXP bumped to Medium because Divinity extra important
         },
     },
-    #Strength Skills
+    # Strength Skills
     'Farming': {
         'High': {
             207: {'Name': 'Dank Ranks', 'Tab': 'Tab 5'}
@@ -558,7 +579,7 @@ skill_talentsDict = {
             176: {"Name": "One Thousand Hours Played", "Tab": "Tab 4"},  # Account-wide EXP bumped to Low
         },
     },
-    #Agility Skills
+    # Agility Skills
     "Smithing": {
         "High": {},
         "Medium": {},
@@ -643,7 +664,7 @@ skill_talentsDict = {
             430: {'Name': 'Price Recession', 'Tab': 'Tab 5'},
         },
         'Medium': {
-            431: {'Name': 'Sneaky Skilling', 'Tab': 'Tab 5'},  #Account-wide EXP bumped to Medium
+            431: {'Name': 'Sneaky Skilling', 'Tab': 'Tab 5'},  # Account-wide EXP bumped to Medium
         }
     },
     # Utility is talents that apply to multiple skills at a bottom-of-the-group priority (Mostly Jman stuff + Drop Rate)
@@ -740,7 +761,7 @@ combat_talentsDict = {
         "High": {
             168: {"Name": "Orb of Remembrance", "Tab": "Tab 4"},
             120: {"Name": "Shockwave Slash", "Tab": "Tab 3", "Optimal": [0, 30, True]},
-            165: {"Name": "Knightly Disciple", "Tab": "Tab 4"},  #Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
+            165: {"Name": "Knightly Disciple", "Tab": "Tab 4"},  # Inconsistent levels for extra attacks per Stark. Idk, just max book it and deal with it
             169: {"Name": "Imbued Shockwaves", "Tab": "Tab 4"},
             121: {"Name": "Daggerang", "Tab": "Tab 3", "Optimal": [0, 30, True]},
             166: {"Name": "Mega Mongorang", "Tab": "Tab 4"},
@@ -762,7 +783,7 @@ combat_talentsDict = {
     "Squire": {
         "High": {
             120: {"Name": "Shockwave Slash", "Tab": "Tab 3", "Optimal": [0, 30, True]},
-            121: {"Name": "Daggerang", "Tab": "Tab 3", "Optimal": [0, 30, True]},},
+            121: {"Name": "Daggerang", "Tab": "Tab 3", "Optimal": [0, 30, True]}, },
         "Medium": {
             129: {"Name": "Blocky Bottles", "Tab": "Tab 3"},
             125: {"Name": "Precision Power", "Tab": "Tab 3"},
@@ -920,7 +941,7 @@ combat_talentsDict = {
             426: {'Name': 'Elemental Mayhem', 'Tab': 'Tab 5'},
             362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3",},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
             361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
         },
@@ -948,7 +969,7 @@ combat_talentsDict = {
         "High": {
             362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3",},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
             363: {"Name": "Nacho Party", "Tab": "Tab 4", 'Optimal': [0, 13, True]},
             361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
@@ -970,7 +991,7 @@ combat_talentsDict = {
     "Hunter": {
         "High": {
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3",},
+            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
         },
         "Medium": {
@@ -1034,24 +1055,136 @@ combat_talentsDict = {
     },
 }
 unbookable_talents_list = [
-    10, 11, 12,  #Tab 1 STR, AGI, WIS
-    75, 79,      #Beginner tab1 Happy Dude and Sleepin' on the Job
-    23,          #Journeyman Lucky Horseshoe
-    86, 87,      #Warrior tab1 Meat Shank and Critikill
-    266, 267,    #Archer tab1 Featherweight and I See You
-    446, 447,    #Mage tab1 Overclocked Energy and Farsight
+    10, 11, 12,  # Tab 1 STR, AGI, WIS
+    75, 79,  # Beginner tab1 Happy Dude and Sleepin' on the Job
+    23,  # Journeyman Lucky Horseshoe
+    86, 87,  # Warrior tab1 Meat Shank and Critikill
+    266, 267,  # Archer tab1 Featherweight and I See You
+    446, 447,  # Mage tab1 Overclocked Energy and Farsight
 ]
 printer_indexes_being_printed_by_character_index = [
-    [5, 6],  #Character Index 0
+    [5, 6],  # Character Index 0
     [12, 13],
     [19, 20],
     [26, 27],
     [33, 34],
-    [40, 41],  #Character Index 5
+    [40, 41],  # Character Index 5
     [47, 48],
     [54, 55],
     [61, 62],
-    [68, 69],  #Character Index 9
+    [68, 69],  # Character Index 9
 ]
-#This flattens the above list of lists. Nested list comprehension sucks to read
+# This flattens the above list of lists. Nested list comprehension sucks to read
 printer_all_indexes_being_printed = [index for character_index in printer_indexes_being_printed_by_character_index for index in character_index]
+
+equipment_sets_dict = {
+    'COPPER_SET': [
+        ["EquipmentHats17", "EquipmentShirts11", "EquipmentPants2"],
+        "EquipmentTools2 EquipmentToolsHatchet3 FishingRod2 CatchingNet2 TrapBoxSet2 WorshipSkull2".split(" "),
+        ["none"],
+        ["1", "0", "60", "+{%_Mining_and|Chopping_Efficiency", "+{%_Mining_and_Chopping|Efficiency"]
+    ],
+    'IRON_SET': [
+        ["EquipmentHats18", "EquipmentShirts12", "EquipmentPants3"],
+        ["EquipmentTools3", "EquipmentToolsHatchet1", "FishingRod3", "CatchingNet3", "WorshipSkull2"],
+        ["none"],
+        ["1", "0", "25", "+{%_Class_EXP_Gain", "+{%_Class_EXP_Gain"]
+    ],
+    'AMAROK_SET': [
+        ["EquipmentHats22", "EquipmentShirts18", "EquipmentPants17", "EquipmentShoes20"],
+        ["none"],
+        ["none"],
+        ["0", "0", "40", "+{%_Accuracy_and|Defence", "+{%_Accuracy_and_Defence"]
+    ],
+    'GOLD_SET': [
+        ["EquipmentHats28", "EquipmentShirts13", "EquipmentPants4", "EquipmentShoes3"],
+        ["EquipmentTools5", "EquipmentToolsHatchet2", "FishingRod4", "CatchingNet4", "WorshipSkull2"],
+        ["EquipmentPunching3", "TestObj3", "EquipmentBows5", "EquipmentWands5"],
+        ["1", "1", "50", "}x_Coins_Dropped|by_Monsters", "}x_Coins_Dropped_by_Monsters"]
+    ],
+    'PLATINUM_SET': [
+        ["EquipmentHats19", "EquipmentShirts14", "EquipmentPants5", "EquipmentShoes4"],
+        "EquipmentTools6 EquipmentToolsHatchet4 FishingRod5 CatchingNet5 TrapBoxSet3 WorshipSkull3".split(" "),
+        ["EquipmentSword1", "EquipmentBows6", "EquipmentWands6"],
+        ["1", "1", "60", "+{%_Fishing_and|Catching_Efficiency", "+{%_Fishing_and_Catching|Efficiency"]
+    ],
+    'EFAUNT_SET': [
+        ["EquipmentHats52", "EquipmentShirts26", "EquipmentPants20", "EquipmentShoes21"],
+        ["none"],
+        ["none"],
+        ["0", "0", "25", "+{%_Drop_Rate", "+{%_Drop_Rate"]
+    ],
+    'DEMENTIA_SET': [
+        ["EquipmentHats53", "EquipmentShirts15", "EquipmentPants6", "EquipmentShoes5"],
+        "EquipmentTools7 EquipmentToolsHatchet5 FishingRod6 CatchingNet6 TrapBoxSet4 WorshipSkull4".split(" "),
+        ["EquipmentPunching4", "EquipmentSword2", "EquipmentBows7", "EquipmentWands3"],
+        ["2", "1", "50", "+{%_Critters_and|Souls_gained", "+{%_Critters_and_Souls_gained"]
+    ],
+    'VOID_SET': [
+        ["EquipmentHats54", "EquipmentShirts27", "EquipmentPants21", "EquipmentShoes22"],
+        "EquipmentTools11 EquipmentToolsHatchet7 FishingRod7 CatchingNet7 TrapBoxSet5 WorshipSkull5".split(" "),
+        ["EquipmentPunching5", "EquipmentSword3", "EquipmentBows8", "EquipmentWands7"],
+        ["2", "1", "10", "+{%_AFK_Gains", "+{%_AFK_Gains"]
+    ],
+    'CHIZOAR_SET': [
+        ["EquipmentHats68", "EquipmentShirts6", "EquipmentPants9", "EquipmentShoes23"],
+        ["none"],
+        ["none"],
+        ["0", "0", "40", "+{%_All_Skill_EXP|Gain", "+{%_All_Skill_EXP_Gain"]
+    ],
+    'LUSTRE_SET': [
+        ["EquipmentHats70", "EquipmentShirts32", "EquipmentPants24", "EquipmentShoes24"],
+        "EquipmentTools8 EquipmentToolsHatchet6 FishingRod8 CatchingNet8 TrapBoxSet6 WorshipSkull6".split(" "),
+        ["EquipmentPunching6", "EquipmentSword4", "EquipmentBows9", "EquipmentWands8"],
+        ["2", "1", "75", "+{%_Total_Damage", "+{%_Total_Damage"]
+    ],
+    'DIABOLICAL_SET': [
+        ["EquipmentHats71", "EquipmentShirts33", "EquipmentPants25", "EquipmentShoes25"],
+        "EquipmentTools12 EquipmentToolsHatchet8 FishingRod9 CatchingNet9 TrapBoxSet7 WorshipSkull7".split(" "),
+        ["EquipmentPunching7", "EquipmentSword5", "EquipmentBows10", "EquipmentWands9"],
+        ["2", "1", "20", "+{%_Faster_Monster|Respawning", "+{%_Faster_Monster_Respawning"]
+    ],
+    'TROLL_SET': [
+        ["EquipmentHats74", "EquipmentShirts34", "EquipmentPants8", "EquipmentShoes34"],
+        ["none"],
+        ["none"],
+        ["0", "0", "25", "}x_Higher_Bonuses|from_Tome", "}x_Higher_Bonuses_from_Tome"]
+    ],
+    'MAGMA_SET': [
+        ["EquipmentHats77", "EquipmentShirts35", "EquipmentPants26", "EquipmentShoes35"],
+        "EquipmentTools9 EquipmentToolsHatchet9 FishingRod10 CatchingNet10 TrapBoxSet8 WorshipSkull9".split(" "),
+        ["EquipmentPunching8", "EquipmentSword6", "EquipmentBows11", "EquipmentWands10"],
+        ["3", "1", "100", "+{%_Lab_and|Divinity_EXP_Gain", "+{%_Lab_and_Divinity_EXP_Gain"]
+    ],
+    'KATTLEKRUK_SET': [
+        ["EquipmentHats83", "EquipmentShirts36", "EquipmentPants27", "EquipmentShoes36", "EquipmentCape13"],
+        ["none"],
+        ["EquipmentPunching9", "EquipmentSword7", "EquipmentBows12", "EquipmentWands11"],
+        ["0", "1", "5", "+{_LV_for_all_Talents", "+{_LV_for_all_Talents"]
+    ],
+    'MARBIGLASS_SET': [
+        ["EquipmentHats105", "EquipmentShirts37", "EquipmentPants29", "EquipmentShoes37"],
+        "EquipmentTools14 EquipmentToolsHatchet12 FishingRod11 CatchingNet11 TrapBoxSet9 WorshipSkull10".split(" "),
+        ["EquipmentPunching10", "EquipmentSword8", "EquipmentBows13", "EquipmentWands12"],
+        ["4", "1", "10", "+{%_All_Stat", "+{%_All_Stat"]
+    ],
+    'GODSHARD_SET': [
+        ["EquipmentHats106", "EquipmentShirts38", "EquipmentPants30", "EquipmentShoes38"],
+        "EquipmentTools15 EquipmentToolsHatchet10 FishingRod12 CatchingNet12 TrapBoxSet10 WorshipSkull11".split(" "),
+        ["EquipmentPunching11", "EquipmentSword9", "EquipmentBows14", "EquipmentWands13"],
+        ["6", "1", "15", "}x_Higher_Winners|Bonuses_from_Summoning", "}x_Higher_Winners_Bonuses_from|Summoning"]
+    ],
+    'EMPEROR_SET': [
+        "EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40 EquipmentRings36 EquipmentCape17".split(" "),
+        ["none"],
+        ["none"],
+        ["0", "0", "20", "Ribbons_and_Exalted|Stamps_give_}x_more_multi", "Ribbons_and_Exalted_Stamps|give_}x_more_multi"]
+    ],
+    'SECRET_SET': [
+        ["EquipmentHats61", "EquipmentPunching11", "EquipmentShirts31", "Trophy3", "EquipmentNametag4"],
+        ["none"],
+        ["none"],
+        ["0", "0", "25", "}x_Gold_Food|effect", "}x_Gold_Food_effect"]
+    ],
+
+}

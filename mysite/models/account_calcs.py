@@ -5,7 +5,7 @@ from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value
-from consts.consts_w5 import max_sailing_artifact_level, divinity_offeringsDict, divinity_DivCostAfter3, filter_recipes, filter_never
+from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
     caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
     caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses, getBellImprovementBonus
@@ -34,6 +34,7 @@ def _calculate_wave_1(account):
     _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w2_arcade(account)
     _calculate_w4_tome(account)
+    _calculate_w3_armor_sets(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -245,6 +246,27 @@ def _calculate_w4_tome(account):
             if account.tome['Total Points'] > score:
                 account.tome['Tome Percent'] = min(account.tome['Tome Percent'], percent)
     # logger.debug(f"{account.tome['Total Points']} tome points = Top {account.tome['Tome Percent']}%")
+
+def _calculate_w3_armor_sets(account):
+    armor_set_multi = ValueToMulti(0)
+    for set_name, set_details in account.armor_sets['Sets'].items():
+        # Calculate the Total Value and Generate Description
+        if '{' in account.armor_sets['Sets'][set_name]['Bonus Type']:
+            account.armor_sets['Sets'][set_name]['Total Value'] = (
+                account.armor_sets['Sets'][set_name]['Base Value']
+                * armor_set_multi
+            )
+            account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
+                '{', f"{account.armor_sets['Sets'][set_name]['Total Value']}"
+            )
+        if '}' in account.armor_sets['Sets'][set_name]['Bonus Type']:
+            account.armor_sets['Sets'][set_name]['Total Value'] = ValueToMulti(
+                account.armor_sets['Sets'][set_name]['Base Value']
+                * armor_set_multi
+            )
+            account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
+                '}', f"{account.armor_sets['Sets'][set_name]['Total Value']:.2f}"
+            )
 
 def _calculate_wave_2(account):
     _calculate_general(account)
@@ -1090,7 +1112,7 @@ def _calculate_w5_divinity_offering_costs(account):
 
 def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
     try:
-        cost = (20 * safer_math_pow(unlockedDivinity + 1.3, 2.3) * safer_math_pow(2.2, unlockedDivinity) + 60) * divinity_offeringsDict.get(offeringIndex, {}).get("Chance", 1) / 100
+        cost = (20 * safer_math_pow(unlockedDivinity + 1.3, 2.3) * safer_math_pow(2.2, unlockedDivinity) + 60) * divinity_offerings_dict.get(offeringIndex, {}).get("Chance", 1) / 100
         if unlockedDivinity >= 3:
             cost = cost * safer_math_pow(min(1.8, max(1, 1 + DivCostAfter3 / 100)), unlockedDivinity - 2)
         return ceil(cost)

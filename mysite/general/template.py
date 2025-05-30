@@ -2,12 +2,12 @@ from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best
+from consts.consts import break_you_best, build_subgroup_label
 
 logger = get_logger(__name__)
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
-    template_AdviceDict = {
+    template_Advices = {
         'Tiers': {},
     }
     optional_tiers = 0
@@ -16,11 +16,16 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     tier_Template = 0
 
     #Assess Tiers
+    for tier_number, requirements in template_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+
+        if subgroup_label not in template_Advices['Tiers'] and tier_Template == tier_number - 1:
+            tier_ArmorSets = tier_number
 
     tiers_ag = AdviceGroup(
         tier=tier_Template,
         pre_string='Progression Tiers',
-        advices=template_AdviceDict['Tiers']
+        advices=template_Advices['Tiers']
     )
     overall_SectionTier = min(true_max, tier_Template)
     return tiers_ag, overall_SectionTier, max_tier, true_max

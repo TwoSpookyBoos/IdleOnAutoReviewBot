@@ -1105,7 +1105,8 @@ gem_shop_optlacc_dict = {
     'Dragonic Liquid Cauldron': [123, 4],
     'Equinox Pingy': [320, EmojiType.INFINITY.value],
     'Rupie Slug': [355, EmojiType.INFINITY.value],
-    'Exalted Stamps': [366, EmojiType.INFINITY.value]
+    'Exalted Stamps': [366, EmojiType.INFINITY.value],
+    'Lifetime Tickets': [382, EmojiType.INFINITY.value]
 }
 gem_shop_bundles_dict = {
     'bun_a': 'Lava Supporter Pack',

@@ -8,7 +8,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w6 import max_farming_crops
-from consts.consts_w5 import max_sailing_artifact_level, numberOfArtifacts
+from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories
 from consts.consts_w2 import critter_vials_list, max_vial_level
 from consts.progression_tiers import breeding_progressionTiers
@@ -34,7 +34,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Infinite Star Signs'] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
-    if session_data.account.sum_artifact_tiers >= (numberOfArtifacts * max_sailing_artifact_level):
+    if session_data.account.sum_artifact_tiers >= (sailing_artifacts_count * max_sailing_artifact_level):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 

@@ -75,7 +75,7 @@ def try_exclude_ChestSluggo(exclusionLists):
     # 33 artifacts times 4 tiers each = 132 for v2.26
     # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
     # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
-    if session_data.account.sum_artifact_tiers >= 58:  #(numberOfArtifacts * max_sailing_artifact_level) * 0.43:
+    if session_data.account.sum_artifact_tiers >= 58:  #(sailing_artifacts_count * max_sailing_artifact_level) * 0.43:
         for sublist in exclusionLists:
             sublist.append("Chest Sluggo")
 
@@ -314,6 +314,12 @@ def getGemShopAdviceSection() -> AdviceSection:
             'Goal': 2 * max_characters,
             'Image': 'magma-killer-ring'
         },
+        'Spirit Killer Ring (W6)': {
+            'Code Name': 'EquipmentRings37',
+            'Goal': 2 * max_characters,
+            'Image': 'spirit-killer-ring'
+        },
+
         'Deathbringer Hood of Death': {
             'Code Name': 'EquipmentHats112',
             'Goal': 1,

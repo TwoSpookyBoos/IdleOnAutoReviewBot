@@ -8,7 +8,7 @@ from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts.consts import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
 from consts.consts_idleon import skill_index_list, lavaFunc
-from consts.consts_w5 import goldrelic_multisDict
+from consts.consts_w5 import goldrelic_multis_dict
 from consts.consts_w3 import max_printer_sample_rate
 from consts.consts_w2 import max_vial_level, arcade_max_level
 from consts.progression_tiers import sampling_progressionTiers
@@ -245,7 +245,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         else 60 if gr_level == 2
         else 40
     )
-    gr_multi = ValueToMulti(gr_days * goldrelic_multisDict.get(gr_level, 0))
+    gr_multi = ValueToMulti(gr_days * goldrelic_multis_dict.get(gr_level, 0))
 
     supreme_wiring_max_days = 50
     supreme_wiring_days = min(supreme_wiring_max_days, safer_get(session_data.account.raw_optlacc_dict, 323, 0))

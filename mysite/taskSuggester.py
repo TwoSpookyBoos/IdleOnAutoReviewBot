@@ -17,7 +17,7 @@ from general import combat_levels, greenstacks, pinchy, cards, secret_path, cons
 from master_classes import grimoire, compass
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
 from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
-from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider
+from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
@@ -110,6 +110,7 @@ def main(inputData, source_string, runType="web"):
             bonus_ballot.getBonus_BallotAdviceSection()
         ],
         sections_3 := [
+            armor_sets.getArmorSetsAdviceSection(),
             refinery.getConsRefineryAdviceSection(),
             buildings.getConsBuildingsAdviceSection(),
             sampling.getSamplingAdviceSection(),

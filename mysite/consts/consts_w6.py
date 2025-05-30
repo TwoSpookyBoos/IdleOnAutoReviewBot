@@ -202,6 +202,11 @@ jade_emporium = [
         "Bonus": "Adds a new bonus type to your crop scientist! Specifically '+1% Drop Rate' per Crop after 100! So having 105 crops would only give +5%",
         "CodeString": "L"
     },
+    {
+        "Name": "Emperor Season Pass",
+        "Bonus": "There is now a 50% chance to get +2 visits to the Emperor every day, and your maximum visits goes up from 6 to 11",
+        "CodeString": "M"
+    },
 
 ]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]

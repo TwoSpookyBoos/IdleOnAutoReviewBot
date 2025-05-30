@@ -9,7 +9,7 @@ from flask import g as session_data
 from consts.consts import (
     break_you_best, EmojiType
 )
-from consts.consts_w5 import divinity_offeringsDict, divinity_stylesDict, divLevelReasonsDict, divinity_arctisBreakpoints, getDivinityNameFromIndex, \
+from consts.consts_w5 import divinity_offerings_dict, divinity_styles_dict, div_level_reasons_dict, divinity_arctis_breakpoints, getDivinityNameFromIndex, \
     getOfferingNameFromIndex, getStyleNameFromIndex
 from consts.progression_tiers import divinity_progressionTiers
 
@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 
 
 def getDivLevelReason(inputLevel: int) -> str:
-    return divLevelReasonsDict.get(inputLevel, "")
+    return div_level_reasons_dict.get(inputLevel, "")
 
 def getOfferingsAdviceGroup():
     offerings_Advices = {
@@ -40,28 +40,28 @@ def getOfferingsAdviceGroup():
 
     low_purchases = safer_convert(divinity_points//low_offering_goal, 0)
     offerings_Advices["Available Offerings"].append(Advice(
-        label=f"{divinity_offeringsDict.get(low_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(low_offering)}"
+        label=f"{divinity_offerings_dict.get(low_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(low_offering)}"
               f"{f'<br>Could be bought {low_purchases} time{pl(low_purchases)}' if divinity_points >= low_offering_goal else ''}",
-        picture_class=divinity_offeringsDict.get(low_offering, {}).get('Image', ''),
+        picture_class=divinity_offerings_dict.get(low_offering, {}).get('Image', ''),
         progression=f"{max(0, min(1, divinity_points / max(1, low_offering_goal))):.2%}",
         goal='100%'
     ))
 
     high_purchases = safer_convert(divinity_points//high_offering_goal, 0)
     offerings_Advices["Available Offerings"].append(Advice(
-        label=f"{divinity_offeringsDict.get(high_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(high_offering)}"
+        label=f"{divinity_offerings_dict.get(high_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(high_offering)}"
               f"{f'<br>Could be bought {high_purchases} time{pl(high_purchases)}' if divinity_points >= high_offering_goal else ''}",
-        picture_class=divinity_offeringsDict.get(high_offering, {}).get('Image', ''),
+        picture_class=divinity_offerings_dict.get(high_offering, {}).get('Image', ''),
         progression=f"{max(0, min(1, divinity_points / max(1, high_offering_goal))):.2%}",
         goal='100%'
     ))
     offerings_Advices['Strategy'].append(Advice(
         label='Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.',
-        picture_class=divinity_offeringsDict.get(5, {}).get('Image', ''),
+        picture_class=divinity_offerings_dict.get(5, {}).get('Image', ''),
     ))
     offerings_Advices["Strategy"].append(Advice(
         label=f'Option 2: Always choose low offering and pray {EmojiType.PRAY.value}',
-        picture_class=divinity_offeringsDict.get(0, {}).get('Image', ''),
+        picture_class=divinity_offerings_dict.get(0, {}).get('Image', ''),
     ))
 
     for subgroup in offerings_Advices:
@@ -106,18 +106,18 @@ def getStylesInfoAdviceGroup(highest_divinity_level: int) -> AdviceGroup:
     }
     # Points Styles Info
     for style in [7, 6, 2, 4, 1, 0]:
-        if highest_divinity_level >= divinity_stylesDict[style].get('UnlockLevel', 0):
+        if highest_divinity_level >= divinity_styles_dict[style].get('UnlockLevel', 0):
             styles_AdviceDict['Highest Points per hour'].append(Advice(
-                label=f"{divinity_stylesDict[style].get('Points', 0)}/hr: {getStyleNameFromIndex(style)}",
+                label=f"{divinity_styles_dict[style].get('Points', 0)}/hr: {getStyleNameFromIndex(style)}",
                 picture_class=getStyleNameFromIndex(style),
                 completed=True
             ))
 
     # EXP Styles Info
     for style in [7, 6, 4, 5, 1, 3, 2, 0]:
-        if highest_divinity_level >= divinity_stylesDict[style].get('UnlockLevel', 0):
+        if highest_divinity_level >= divinity_styles_dict[style].get('UnlockLevel', 0):
             styles_AdviceDict['Highest EXP per hour'].append(Advice(
-                label=f"{divinity_stylesDict[style].get('Exp', 0)}/hr: {getStyleNameFromIndex(style)} {divinity_stylesDict[style].get('Notes', '')}",
+                label=f"{divinity_styles_dict[style].get('Exp', 0)}/hr: {getStyleNameFromIndex(style)} {divinity_styles_dict[style].get('Notes', '')}",
                 picture_class=getStyleNameFromIndex(style),
                 completed=True
             ))
@@ -239,7 +239,7 @@ def getArctisAdviceGroup(lowest_divinity_level: int, highest_divinity_level: int
         completed=True
     ))
 
-    for arctis_breakpoint, requirementsDict in divinity_arctisBreakpoints.items():
+    for arctis_breakpoint, requirementsDict in divinity_arctis_breakpoints.items():
         any_completed_big_p_goal = False
         for div_level, big_p_level in requirementsDict.items():
             if arctis_breakpoint > current_lowest_arctis_value:  #At least 1 above their minimum
@@ -252,7 +252,7 @@ def getArctisAdviceGroup(lowest_divinity_level: int, highest_divinity_level: int
                         f"Arctis +{arctis_breakpoint}" not in arctis_Advices
                         and (
                             arctis_breakpoint <= current_highest_arctis_value + 1
-                            or arctis_breakpoint == min(divinity_arctisBreakpoints.keys())
+                            or arctis_breakpoint == min(divinity_arctis_breakpoints.keys())
                         )
                     ):  #No more than 1 above their max, unless they're still under the lowest breakpoint I entered
                         arctis_Advices[f"Arctis +{arctis_breakpoint}"] = []

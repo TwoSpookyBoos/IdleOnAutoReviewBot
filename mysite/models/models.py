@@ -12,7 +12,7 @@ from consts.consts import ignorable_labels
 from consts.consts_idleon import lavaFunc, expected_talents_dict
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
-from consts.consts_w5 import divinity_divinitiesDict
+from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
     prayers_dict, dn_skull_requirement_list, dn_skull_value_list, reversed_dn_skull_requirement_list, reversed_dn_skull_value_list,
@@ -356,13 +356,13 @@ class Character:
             try:
                 current_preset_level = self.current_preset_talents.get("505", 0)
                 if current_preset_level > 0:
-                    self.current_polytheism_link = divinity_divinitiesDict[(current_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+                    self.current_polytheism_link = divinity_divinities_dict[(current_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
             except:
                 pass
             try:
                 secondary_preset_level = self.secondary_preset_talents.get("505", 0)
                 if secondary_preset_level > 0:
-                    self.secondary_polytheism_link = divinity_divinitiesDict[(secondary_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+                    self.secondary_polytheism_link = divinity_divinities_dict[(secondary_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
             except:
                 pass
 
