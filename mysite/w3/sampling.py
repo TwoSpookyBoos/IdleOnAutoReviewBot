@@ -351,7 +351,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
               f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
         picture_class='skill-mastery',
         progression=f"{sm_multi:.2f}",
-        goal=f"{ValueToMulti(4 + sm_eligible_skills)}:.2f",
+        goal=f"{ValueToMulti(4 + sm_eligible_skills):.2f}",
         unit='x'
     ))
 
