@@ -13,7 +13,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
     armor_sets_Advices = {
         'Tiers': {},
     }
-    optional_tiers = 0
+    optional_tiers = 1
     true_max = true_max_tiers['Armor Sets']
     max_tier = true_max - optional_tiers
     tier_ArmorSets = 0
