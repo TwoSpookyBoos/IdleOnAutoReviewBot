@@ -412,7 +412,7 @@ arcade_bonuses = {
     46: {'Stat': 'Total Damage', 'x1': 2, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
     47: {'Stat': 'Wind Walker Dust', 'x1': 1, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
     48: {'Stat': 'Medallion Chance', 'x1': 0.5, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    49: {'Stat': 'Breedability Rate', 'x1': 100, 'x2': 100, 'funcType': 'add', 'displayType': '%'}
+    49: {'Stat': 'Breedability Rate', 'x1': 100, 'x2': 100, 'funcType': 'decay', 'displayType': '%'}
 }
 arcade_max_level = 100
 post_office_tabs = ["Bob's Boxes", "Charlie's Crates"]
