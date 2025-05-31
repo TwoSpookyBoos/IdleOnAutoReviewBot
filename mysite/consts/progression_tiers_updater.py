@@ -106,5 +106,6 @@ true_max_tiers = {
     'Beanstalk': len(gfood_codes) * 2,
     'Farming': max(farming_progressionTiers.keys()),
     'Sneaking': 0,
-    'Summoning': 0
+    'Summoning': 0,
+    'Emperor': 0
 }

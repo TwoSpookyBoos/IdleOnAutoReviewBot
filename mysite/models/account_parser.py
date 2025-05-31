@@ -45,12 +45,12 @@ from consts.consts_caverns import (
 from consts.consts_w6 import (
     jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
-    summoningDict, summoning_endlessEnemies, summoning_endlessDict, summoningBattleCountsDict
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images
 )
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
+from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Advice
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals, safer_math_pow
 from utils.logging import get_logger
-from utils.text_formatting import getItemDisplayName, numberToLetter
+from utils.text_formatting import getItemDisplayName, numberToLetter, notateNumber
 
 logger = get_logger(__name__)
 
@@ -652,7 +652,7 @@ def _parse_general_upgrade_vault(account):
 def _parse_general_armor_sets(account):
     account.armor_sets = {
         'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days to Unlock': max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
         'Sets': {}
     }
     raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
@@ -3206,6 +3206,7 @@ def _parse_w6(account):
     _parse_w6_sneaking(account)
     _parse_w6_farming(account)
     _parse_w6_summoning(account)
+    _parse_w6_emperor(account)
 
 def _parse_w6_sneaking(account):
     account.sneaking = {
@@ -3526,7 +3527,7 @@ def _parse_w6_summoning(account):
     # raw_summoning_list[1] = List of codified names of enemies from battles won
     account.summoning["Battles"] = {}
     account.summoning["BattleDetails"] = {}
-    for color in summoningDict:
+    for color in summoning_dict:
         account.summoning["BattleDetails"][color] = {}
     _parse_w6_summoning_battles(account, raw_summoning_list[1])
 
@@ -3549,12 +3550,12 @@ def _parse_w6_summoning_battles(account, rawBattles):
     regular_battles = [battle for battle in safe_battles if not battle.startswith('rift')]
     account.summoning['Battles']['NormalTotal'] = len(regular_battles)
 
-    if account.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
-        account.summoning["Battles"] = summoningBattleCountsDict
+    if account.summoning['Battles']['NormalTotal'] >= summoning_battle_counts_dict["Normal"]:
+        account.summoning["Battles"] = summoning_battle_counts_dict
         account.summoning['AllBattlesWon'] = True
     else:
         account.summoning['AllBattlesWon'] = False
-        for colorName, colorDict in summoningDict.items():
+        for colorName, colorDict in summoning_dict.items():
             account.summoning["Battles"][colorName] = 0
             for battleIndex, battleValuesDict in colorDict.items():
                 if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
@@ -3563,7 +3564,7 @@ def _parse_w6_summoning_battles(account, rawBattles):
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
 
-    for colorName, colorDict in summoningDict.items():
+    for colorName, colorDict in summoning_dict.items():
         for battleIndex, battleValuesDict in colorDict.items():
             account.summoning["BattleDetails"][colorName][battleIndex + 1] = {
                 'Defeated': battleValuesDict['EnemyID'] in rawBattles,
@@ -3627,3 +3628,32 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
         except Exception as e:
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
+
+
+def _parse_w6_emperor(account):
+    bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
+    bonus_values = [int(value) for value in EmperorBon[1]]
+    fight_map = [int(value) for value in EmperorBon[2]]
+
+    account.emperor = {
+        'Last Showdown': safer_convert(safer_get(account.raw_optlacc_dict, 369, 0), 0),
+        'Daily Attempts': 1 + safer_convert(safer_get(account.raw_optlacc_dict, 382, 0), 0),
+        'Remaining Attempts': safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
+        'Bonuses': {
+            bonus_index: {  #Normally I'd put bonus_type here, but Lava's list contains duplicate placeholder names
+                'Bonus Type': bonus_type,
+                'Wins': 0,
+                'Value Per Win': bonus_values[bonus_index],
+                'Total Value': 0,
+                'Image': emperor_bonus_images[bonus_index],
+            } for bonus_index, bonus_type in enumerate(bonus_types)
+        },
+        'Upcoming': {}
+    }
+
+    for running_total in range(0, account.emperor['Last Showdown']):
+        fight_map_index = running_total % 48
+        bonus_type = bonus_types[fight_map[fight_map_index]]
+        bonus_index = bonus_types.index(bonus_type)
+        account.emperor['Bonuses'][bonus_index]['Wins'] += 1
+        # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_type]['Value Per Win'])} {bonus_type}")

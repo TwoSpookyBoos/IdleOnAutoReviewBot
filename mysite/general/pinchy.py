@@ -207,7 +207,7 @@ class Placements(dict):
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,     true_max_tiers[SALT_LICK], 99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 22,     23,    true_max_tiers[DEATH_NOTE], 99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 21,     22,    true_max_tiers[DEATH_NOTE], 99],
         COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,    true_max_tiers[COLLIDER], 99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,     true_max_tiers[PRAYERS], 99],
         TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,    true_max_tiers[TRAPPING], 99],
@@ -365,7 +365,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     try:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 22:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 21:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
             expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)

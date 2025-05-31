@@ -4,7 +4,7 @@ from consts.consts import ceilUpToBase, ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
-from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value
+from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
     caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
@@ -35,6 +35,7 @@ def _calculate_wave_1(account):
     _calculate_w2_arcade(account)
     _calculate_w4_tome(account)
     _calculate_w3_armor_sets(account)
+    _calculate_w6_emperor_bonuses(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -267,6 +268,80 @@ def _calculate_w3_armor_sets(account):
             account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
                 '}', f"{account.armor_sets['Sets'][set_name]['Total Value']:.2f}"
             )
+
+def getEmperorHealth(showdowns_completed: int) -> str:
+    hp = 135e13 * safer_math_pow(1.7, showdowns_completed)
+    hp_string = notateNumber('Basic', hp, 2)
+    return hp_string
+
+def _calculate_w6_emperor_bonuses(account):
+    account.emperor['Max Attempts'] = (
+        5  #base
+        + (5 * account.sneaking['JadeEmporium']['Emperor Season Pass']['Obtained'])
+        + (6 * account.gemshop['Lifetime Tickets'])
+    )
+    emperor_bonus_multi = ValueToMulti(0)
+
+    for bonus_index, bonus_values in account.emperor['Bonuses'].items():
+        if '{' in bonus_values['Bonus Type']:
+            account.emperor['Bonuses'][bonus_index]['Scaling'] = (
+                f"+{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}"
+                f"{'%' if bonus_index != 3 else ''} per level")
+            account.emperor['Bonuses'][bonus_index]['Total Value'] = (
+                account.emperor['Bonuses'][bonus_index]['Wins']
+                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
+                * emperor_bonus_multi
+            )
+            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
+                '{', f"{account.emperor['Bonuses'][bonus_index]['Total Value']:.0f}"
+            )
+        if '}' in bonus_values['Bonus Type']:
+            account.emperor['Bonuses'][bonus_index]['Scaling'] = (
+                f"+{ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win']) - 1:.2f}x per level"
+            )
+            account.emperor['Bonuses'][bonus_index]['Total Value'] = ValueToMulti(
+                account.emperor['Bonuses'][bonus_index]['Wins']
+                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
+                * emperor_bonus_multi
+            )
+            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
+                '}', f"{account.emperor['Bonuses'][bonus_index]['Total Value']:.2f}"
+            )
+        if '$' in bonus_values['Bonus Type']:
+            account.emperor['Bonuses'][bonus_index]['Scaling'] = ''
+            value = (
+                account.emperor['Bonuses'][bonus_index]['Wins']
+                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
+                * emperor_bonus_multi
+            )
+            account.emperor['Bonuses'][bonus_index]['Total Value'] = 1 - (value / (value + 100))
+            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
+                '$', f"{(1 - account.emperor['Bonuses'][bonus_index]['Total Value'])*100:.2f}"
+            )
+
+    bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
+    fight_map = [int(value) for value in EmperorBon[2]]
+
+    for i in range(1, 21):
+        next_showdown = account.emperor['Last Showdown'] + i
+        fight_map_index = next_showdown % 48
+        bonus_type = bonus_types[fight_map[fight_map_index]]
+        bonus_index = bonus_types.index(bonus_type)
+
+        if '}' in bonus_type:
+            scaling = bonus_type.replace('}', f"+{ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win']) - 1:.2f}")
+        elif '$' in bonus_type:
+            scaling = bonus_type.replace('$', f"{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}")
+        elif '{' in bonus_type:
+            scaling = bonus_type.replace('{', f"{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}")
+        else:
+            scaling = ''
+
+        account.emperor['Upcoming'][next_showdown] = [
+            getEmperorHealth(next_showdown),
+            scaling,
+            emperor_bonus_images[bonus_types.index(bonus_type)]
+        ]
 
 def _calculate_wave_2(account):
     _calculate_general(account)

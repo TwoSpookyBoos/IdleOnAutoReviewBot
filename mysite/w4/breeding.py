@@ -38,7 +38,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 
-    if all([session_data.account.alchemy_vials[vial_name]['Level'] < max_vial_level for vial_name in critter_vials_list]):
+    if all([session_data.account.alchemy_vials[vial_name]['Level'] >= max_vial_level for vial_name in critter_vials_list]):
         shinyExclusionsDict['Base Critter Per Trap'] = True
 
     shinyExclusionsDict['Faster Shiny Pet Lv Up Rate'] = session_data.account.sneaking['JadeEmporium']["Science Crayon"]['Obtained']

@@ -19,7 +19,16 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
     tier_ArmorSets = 0
 
     smithy_unlocked = session_data.account.armor_sets['Unlocked']
-    remaining_days = session_data.account.armor_sets['Days to Unlock']
+    days_toward_unlock = session_data.account.armor_sets['Days toward Unlock']
+
+    if (
+        not smithy_unlocked
+        and days_toward_unlock >= 30
+    ):
+        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            label=f"{{{{Smithy|#armor-sets}}}} ready to accept Armor Sets",
+            picture_class='smithy'
+        ))
 
     #Assess Tiers
     for tier_number, requirements in armor_sets_progressionTiers.items():
@@ -39,7 +48,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
                 armor_sets_Advices['Tiers'][subgroup_label].append(Advice(
                     label=f"Unlock the Smithy by having purchased 2000 gems or waiting 30 days",
                     picture_class='smithy',
-                    progression=30-remaining_days,
+                    progression=min(30, days_toward_unlock),
                     goal=30
                 ))
 
@@ -120,6 +129,18 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                 f"Required Weapons: {obtained_weapons}/{details['Required Weapons']}": all_weapons
             }
 
+            # Generate alert if set ready
+            if (
+                obtained_armors >= len(details['Armor'])
+                and obtained_tools >= details['Required Tools']
+                and obtained_weapons >= details['Required Weapons']
+                and session_data.account.armor_sets['Unlocked']
+            ):
+                session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                    label=f"{name.title()} can be {{{{completed|#armor-sets}}}}",
+                    picture_class=details['Image']
+                ))
+
     for set_name in sets_Advices:
         for advice_type in sets_Advices[set_name]:
             for advice in sets_Advices[set_name][advice_type]:
@@ -136,13 +157,14 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     }
 
     set_bonuses_Advice = [
-            Advice(
-                label=f"{set_name.title()}: {player_sets[set_name]['Description']}",
-                picture_class=player_sets[set_name]['Image'],
-                progression=int(details['Owned']),
-                goal=1
-            ) for set_name, details in player_sets.items()
-        ]
+        Advice(
+            label=f"{set_name.title()}: {player_sets[set_name]['Description']}",
+            picture_class=player_sets[set_name]['Image'],
+            progression=int(details['Owned']),
+            goal=1
+        ) for set_name, details in player_sets.items()
+    ]
+
     for advice in set_bonuses_Advice:
         mark_advice_completed(advice)
 

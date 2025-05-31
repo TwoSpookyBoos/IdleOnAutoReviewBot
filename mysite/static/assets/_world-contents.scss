@@ -331,6 +331,7 @@ $world-monsters: (
     minichief-spirit: img('wiki/Minichief_Spirit_Idle.gif'),
     samurai-guardian: img('wiki/Samurai_Guardian_Idle.gif'),
     crystal-candalight: img('wiki/Crystal_Candalight_Idle.gif'),
+    the-emperor: img('data/Boss6.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);

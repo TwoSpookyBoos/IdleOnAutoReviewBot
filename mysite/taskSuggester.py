@@ -21,7 +21,7 @@ from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, eq
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
-from w6 import beanstalk, sneaking, farming, summoning
+from w6 import beanstalk, sneaking, farming, summoning, emperor
 
 logger = get_logger(__name__)
 
@@ -144,6 +144,7 @@ def main(inputData, source_string, runType="web"):
             summoning.getSummoningAdviceSection(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),
+            emperor.getEmperorAdviceSection()
         ],
     ]
 

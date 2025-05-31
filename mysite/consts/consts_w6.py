@@ -842,7 +842,7 @@ summoning_rewards_that_dont_multiply_base_value = [
     summoningRewards[32],  #Winner Bonuses
 ]
 summoning_match_colors = ['White', 'Green', 'Yellow', 'Blue', 'Purple', 'Red', 'Cyan']
-summoningDict = {
+summoning_dict = {
     summoning_match_colors[0]: {
         0: {
             "EnemyID": "Pet1", "Value2": 29, "Value3": 24, "Value4": 12, "OpponentName": "Pablo and his Plump Piggies",
@@ -1264,5 +1264,13 @@ summoning_endlessDict = {
     38: {'RewardID': summoningRewards[24], 'RewardQTY': 30, 'Challenge': summoning_endless_challenge_types[10]},
     39: {'RewardID': summoningRewards[32], 'RewardQTY': 3, 'Challenge': summoning_endless_challenge_types[8]},
 }
-summoningBattleCountsDict = {k: len(v) for k, v in summoningDict.items()}
-summoningBattleCountsDict['Normal'] = sum(summoningBattleCountsDict.values())
+summoning_battle_counts_dict = {k: len(v) for k, v in summoning_dict.items()}
+summoning_battle_counts_dict['Normal'] = sum(summoning_battle_counts_dict.values())
+
+# Last pulled from code in v2.37
+EmperorBon = [
+    "}x_Ninja_Stealth }x_Deathbringer_Extra_Bones $%_cheaper_Farming_Upgrades +{_Opals }x_Windwalker_Extra_Dust +{%_Equinox_Bar_Fill_Rate }x_Arcane_Cultist_Extra_Tachyons }x_Gaming_Bit_gain }x_Summoning_Winner_Bonuses +{%_something_World_7ish +{%_something_World_7ish +{%_Drop_Rate".split(" "),
+    "30 5 20 1 5 15 5 50 1 5 5 10".split(" "),
+    "0 1 0 2 1 4 0 2 4 3 1 0 2 4 5 0 1 2 4 0 6 5 4 2 7 0 1 3 5 4 11 8 0 7 6 9 2 1 7 10 4 5 7 6 0 2 11 1".split(" ")
+]
+emperor_bonus_images = ['sneaking', 'grimoire-bone-0', 'farming', 'opal', 'compass-dust-0', 'equinox-mirror', 'placeholder', 'gaming', 'summoning', 'placeholder', 'placeholder', 'drop-rate']

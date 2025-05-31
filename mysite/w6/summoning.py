@@ -3,7 +3,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_w6 import summoning_doubler_recommendations, summoningDict
+from consts.consts_w6 import summoning_doubler_recommendations, summoning_dict
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
 
@@ -59,7 +59,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
         sources: [],
         doublers: []
     }
-    upgrades_advice.update({f"{k} Upgrades":[] for k in summoningDict.keys()})
+    upgrades_advice.update({f"{k} Upgrades":[] for k in summoning_dict.keys()})
 
     summoning = session_data.account.summoning
     doublers_spent = summoning['Doubled Upgrades']

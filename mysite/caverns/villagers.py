@@ -246,7 +246,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         progression=session_data.account.gemshop['Conjuror Pts'],
         goal=max_conjuror_pts
     ))
-    if earned_conjuror_points > spent_conjuror_points < max_majiks:
+    if earned_conjuror_points > spent_conjuror_points < max_majiks - total_placeholder_majiks:
         unspent_pts_advice = Advice(
             label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
             picture_class='cosmos',
