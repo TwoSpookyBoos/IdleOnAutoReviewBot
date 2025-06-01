@@ -178,14 +178,17 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
     )
     return nm_ag
 
-def getNMCost(name, first_level, last_level=0):
+def getNightMarketCost(name, first_level, last_level=0):
+    cost_multi = (
+        max(.001, session_data.account.emperor['Bonuses'][2]['Total Value'])
+    )
     total_cost = 0
     upgrade = session_data.account.farming['MarketUpgrades'][name]
     if first_level > last_level:
         last_level = first_level-1
     for level in range(first_level, last_level):
-        total_cost += floor(upgrade['BaseCost'] * pow(upgrade['CostIncrement'], level))
-    return total_cost
+        total_cost += floor(upgrade['BaseCost'] * pow(upgrade['CostIncrement'], level)) * cost_multi
+    return floor(total_cost) if 1e8 > total_cost else total_cost
 
 def val_m_s_boost(megaboost, superboost):
     return ValueToMulti(
@@ -514,7 +517,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
     #Winner Bonus Increases
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         evo_advices[summon].append(advice)
-    evo_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
+    evo_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
 #Star Sign
     evo_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
@@ -678,7 +681,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     # Winner Bonus Increases
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         speed_advices[summon].append(advice)
-    speed_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
+    speed_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
 #Vial and Market
     # Vial
@@ -1126,7 +1129,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
                     else:
                         current = farming['MarketUpgrades'][r_name]['Value']
                         target = farming['MarketUpgrades'][r_name]['BonusPerLevel'] * r_level
-                    upgrade_cost = getNMCost(r_name, farming['MarketUpgrades'][r_name]['Level'], r_level)
+                    upgrade_cost = getNightMarketCost(r_name, farming['MarketUpgrades'][r_name]['Level'], r_level)
                     farming_Advices['Tiers'][subgroup_label].append(Advice(
                         label=f"{r_name}: "
                               f"{current:.4g}/{target:.4g}"
@@ -1182,7 +1185,34 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
     overall_SectionTier = min(true_max, tier_All)
     return farming_AdviceGroups, overall_SectionTier, max_tier, true_max
 
-def setFarmingProgressionTier():
+
+def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
+    cost_Advices = []
+
+    cost_Advices.append(
+        Advice(
+            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][2]['Description']}"
+                  f"<br>{session_data.account.emperor['Bonuses'][2]['Scaling']}",
+            picture_class='the-emperor',
+            progression=session_data.account.emperor['Bonuses'][2]['Wins'],
+            goal=EmojiType.INFINITY.value
+        )
+    )
+
+    for advice in cost_Advices:
+        mark_advice_completed(advice)
+
+    cost_ag = AdviceGroup(
+        tier='',
+        pre_string='Sources of Cost Discount for Day and Night Market',
+        advices=cost_Advices,
+        informational=True
+    )
+    cost_ag.remove_empty_subgroups()
+    return cost_ag
+
+
+def getFarmingAdviceSection():
     highest_farming_level = max(session_data.account.all_skills['Farming'])
     if highest_farming_level < 1:
         farming_AdviceSection = AdviceSection(
@@ -1211,6 +1241,7 @@ def setFarmingProgressionTier():
         farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
     farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
     farming_AdviceGroupDict['Night'] = getNightMarketAdviceGroup(farming)
+    farming_AdviceGroupDict['Cost'] = getCostDiscountAdviceGroup(farming)
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

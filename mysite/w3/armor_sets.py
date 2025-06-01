@@ -79,6 +79,14 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
     overall_SectionTier = min(true_max, tier_ArmorSets)
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
+def getSetAlertExclusions():
+    exclusions = set()
+
+    exclusions.add('GODSHARD SET')
+    # Several people are getting this alert but not being able to complete it due to the requirements to wear the actual items,
+    # such as having all Godshard Tools on their Vman but not the Vman Weapon
+    return exclusions
+
 def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     sets_Advices = {}
 
@@ -135,9 +143,10 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                 and obtained_tools >= details['Required Tools']
                 and obtained_weapons >= details['Required Weapons']
                 and session_data.account.armor_sets['Unlocked']
+                and name not in getSetAlertExclusions()
             ):
                 session_data.account.alerts_AdviceDict['World 3'].append(Advice(
-                    label=f"{name.title()} can be {{{{completed|#armor-sets}}}}",
+                    label=f"All required items owned to {{{{Complete|#armor-sets}}}} the {name.title()}",
                     picture_class=details['Image']
                 ))
 

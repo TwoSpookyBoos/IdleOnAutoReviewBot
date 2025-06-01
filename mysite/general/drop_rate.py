@@ -381,6 +381,14 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=EmojiType.INFINITY.value
     ))
 
+    efaunt_set = session_data.account.armor_sets['Sets']['EFAUNT SET']
+    drop_rate_aw_advice[w3].append(Advice(
+        label=f"{{{{Set bonus|#armor-sets}}}}: Efaunt Set: {efaunt_set['Description']}",
+        picture_class=efaunt_set['Image'],
+        progression=int(efaunt_set['Owned']),
+        goal=1
+    ))
+
     # World 4
     #########################################
 
@@ -418,10 +426,18 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
             progression=grey_tome_book['Level'],
             goal=grey_tome_book['Max Level']
         ))
+    troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
+    if not troll_set['Owned']:
+        drop_rate_aw_advice[w4].append(Advice(
+            label=f"{{{{Set bonus|#armor-sets}}}}: Troll Set: {troll_set['Description']}",
+            picture_class=troll_set['Image'],
+            progression=int(troll_set['Owned']),
+            goal=1
+        ))
     drop_rate_aw_advice[w4].append(Advice(
         label=f"""Tome- Red Pages:"""
-              f"""<br>+{round(session_data.account.tome['Bonuses']['Drop Rarity']['Total Value'], 3):g}% Drop Rate"""
-              f"""<br>{'Unknown, sorry 🙁' if not session_data.account.tome['Data Present'] else ''}"""
+              f"""<br>+{round(session_data.account.tome['Bonuses']['Drop Rarity']['Total Value'], 2):g}% Drop Rate"""
+              f"""<br>{f'Unknown, sorry {EmojiType.FROWN.value}' if not session_data.account.tome['Data Present'] else ''}"""
               f"""{f"{session_data.account.tome['Total Points']:,}" if session_data.account.tome['Data Present'] else ''} Total Tome Points"""
               f"""<br>Increases every 100 points over 8000""",
         picture_class='red-tome-pages',
@@ -534,6 +550,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         goal=1
     ))
 
+    secret_set = session_data.account.armor_sets['Sets']['SECRET SET']
+    if not secret_set['Owned']:
+        drop_rate_aw_advice[w6].append(Advice(
+            label=f"{{{{Set bonus|#armor-sets}}}}: Secret Set: {secret_set['Description']}",
+            picture_class=secret_set['Image'],
+            progression=int(secret_set['Owned']),
+            goal=1
+        ))
+
     # Sneaking - Beanstalk - Golden Cake
     beanstack_requirements = [0, '10K', '100K']
     cake_beanstalk = session_data.account.sneaking['Beanstalk']['FoodG13']
@@ -579,6 +604,14 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"{f'<br>Note: Max value can be further increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
         picture_class='summoning',
         progression=summoning_battles['Endless'],
+        goal=EmojiType.INFINITY.value
+    ))
+
+    drop_rate_aw_advice[w6].append(Advice(
+        label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][11]['Description']}"
+              f"<br>{session_data.account.emperor['Bonuses'][11]['Scaling']}",
+        picture_class='the-emperor',
+        progression=session_data.account.emperor['Bonuses'][11]['Wins'],
         goal=EmojiType.INFINITY.value
     ))
 

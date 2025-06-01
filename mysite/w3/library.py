@@ -111,7 +111,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
-    bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryPartial'])
+    bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryLibrary'])
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:
@@ -129,7 +129,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     bonusLevelAdvices = {}
 
     #Account Wide
-    account_subgroupName = f"Account Wide: +{session_data.account.bonus_talents_account_wide_sum}"
+    account_subgroupName = f"Account Wide: +{session_data.account.sum_account_wide_bonus_talents}"
     bonusLevelAdvices[account_subgroupName] = []
     for bonusName, bonusValuesDict in session_data.account.bonus_talents.items():
         force_complete = None
@@ -149,7 +149,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
         arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
 
-        char_bonus_levels = char.max_talents_over_books - session_data.account.bonus_talents_account_wide_sum - session_data.account.library['MaxBookLevel']
+        char_bonus_levels = char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library['MaxBookLevel']
         subgroupName = f"{char.character_name} the {char.class_name}: +{char_bonus_levels}"
         bonusLevelAdvices[subgroupName] = []
 
@@ -184,7 +184,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         #Character Specific 4 - Final total
         character_final = (
             session_data.account.library['MaxBookLevel']
-            + session_data.account.bonus_talents_account_wide_sum
+            + session_data.account.sum_account_wide_bonus_talents
             + char_bonus_levels
         )
         bonusLevelAdvices[subgroupName].append(Advice(

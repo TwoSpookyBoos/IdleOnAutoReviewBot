@@ -175,6 +175,9 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
 def ValueToMulti(value: float, min_value=1.0):
     return max(min_value, 1 + (value / 100))
 
+def MultiToValue(multi: float, min_value=0.0):
+    return max(min_value, (multi - 1) * 100)
+
 def build_subgroup_label(tier_number, max_tier, pre='', post=''):
     try:
         optional_note = f"{AdviceType.OPT.value} " if tier_number > max_tier else ''

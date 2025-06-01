@@ -182,217 +182,12 @@ salt_lick_list: list[str] = [
     'Printer Sample Size', 'Obol Storage', 'Refinery Speed', 'EXP', 'Max Book',
     'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
 ]
+
 max_static_book_levels = 140
 max_scaling_book_levels = 30
-max_summoning_book_levels = 29
+max_summoning_book_levels = 31
 max_overall_book_levels = 100 + max_static_book_levels + max_scaling_book_levels + max_summoning_book_levels
-approx_max_talent_level_non_es = (
-        max_overall_book_levels
-        + 30  # Grimoire
-        + 25  # Equinox
-        + 20  # Arctis
-        + 15  # Symbols of Beyond
-        + 14  # ES Family Bonus (Note: Not Family Guy!)
-        + 25  # Companion: Rift Slug
-        + 5  # Sneak Mastery III
-        + 1  # Maroon Warship achievement
-)
-approx_max_talent_level_es = approx_max_talent_level_non_es + 4  # Family Guy
-dn_skull_requirement_list = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
-dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
-dn_skull_value_list = [0, 1, 2, 3, 4, 5, 7, 10, 20]
-dn_miniboss_names = [
-    'Glunko The Massive', 'Dr Defecaus', 'Baba Yaga', 'Biggie Hours', 'King Doot',
-    'Dilapidated Slush', 'Mutated Mush', 'Domeo Magmus', 'Demented Spiritlord'
-]
-reversed_dn_skull_requirement_list = dn_skull_requirement_list[::-1]
-reversed_dn_skull_value_list = dn_skull_value_list[::-1]
-dn_skull_value_to_name_dict = {
-    0: "None",
-    1: "Normal Skull",
-    2: "Copper Skull",
-    3: "Iron Skull",
-    4: "Gold Skull",
-    5: "Platinum Skull",
-    7: "Dementia Skull",
-    10: "Lava Skull",
-    20: "Eclipse Skull"
-}
-dn_next_skull_name_dict = {
-    0: "Normal Skull",
-    1: "Copper Skull",
-    2: "Iron Skull",
-    3: "Gold Skull",
-    4: "Platinum Skull",
-    5: "Dementia Skull",
-    7: "Lava Skull",
-    10: "Eclipse Skull",
-    20: "Finished!"
-}
-apocable_map_index_dict = {
-    0: [31, 30, 9, 38, 69, 120, 166],  # Barbarian only, not in regular DeathNote
-    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  # MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
-    2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
-    3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
-    4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
-    5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
-    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
-}
-dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
-dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])
-apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
-apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
-apoc_difficulty_name_list = [
-    'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
-    'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
-]
-max_trapping_critter_types = 12
-trapping_quests_requirement_list = [
-    {"QuestName": "Frogecoin to the MOON!", 'RequiredItems': {"Critter1": 100, "Critter1A": 1}},
-    {"QuestName": "Yet another Cartoon Reference", 'RequiredItems': {"Critter2": 250, "Critter2A": 1}},
-    {"QuestName": "Small Stingers, Big Owie", 'RequiredItems': {"Critter3": 500, "Critter3A": 2}},
-    {"QuestName": "The Mouse n the Molerat", 'RequiredItems': {"Critter4": 1000, "Critter4A": 2}},
-    {"QuestName": "Happy Tree Friend", 'RequiredItems': {"Critter5": 1500, "Critter5A": 3}},
-    {"QuestName": "Noot Noot!", 'RequiredItems': {"Critter6": 2500, "Critter6A": 4}},
-    {"QuestName": "Bunny you Should Say That!", 'RequiredItems': {"Critter7": 4000, "Critter7A": 6}},
-    {"QuestName": "Rollin' Thunder", 'RequiredItems': {"Critter8": 8000, "Critter8A": 10}},
-    {"QuestName": "Glitter Critter", 'RequiredItems': {"Critter8A": 30, "Critter6A": 60, "Critter3A": 200}}
-]
-trapset_images = {
-    0: 'cardboard-traps',
-    1: 'silkskin-traps',
-    2: 'wooden-traps',
-    3: 'natural-traps',
-    4: 'steel-traps',
-    5: 'meaty-traps',
-    6: 'royal-traps',
-    7: 'egalitarian-traps',
-    8: 'forbidden-traps',
-    9: 'containment-of-the-zrgyios'
-}
-
-
-def getSkullNames(mkValue: int) -> str:
-    try:
-        return dn_skull_value_to_name_dict.get(mkValue, f"UnknownSkull{mkValue}")
-    except Exception as reason:
-        return f"Unexpected Input '{mkValue}' received: {reason}"
-
-
-def getNextSkullNames(mkValue: int) -> str:
-    try:
-        return dn_next_skull_name_dict.get(mkValue, f"UnknownSkull{mkValue}")
-    except Exception as reason:
-        return f"Unexpected Input received: {reason}"
-
-
-def getEnemyNameFromMap(inputMap: str) -> str:
-    mapNametoEnemyNameDict = {
-        # W1 Maps
-        "Spore Meadows": "Green Mushroom",
-        "Froggy Fields": "Frog",
-        "Valley of the Beans": "Bored Bean",
-        "Birch Enclave": "Red Mushroom",
-        "Jungle Perimeter": "Slime",
-        "The Base of the Bark": "Stick",
-        "Hollowed Trunk": "Nutto",
-        "Where the Branches End": "Wood Mushroom",
-        "Winding Willows": "Baby Boa",
-        "Vegetable Patch": "Carrotman",
-        "Forest Outskirts": "Glublin",
-        "Encroaching Forest Villa": "Wode Board",
-        "Tucked Away": "Gigafrog",
-        "Poopy Sewers": "Poop",
-        "Rats Nest": "Rat",
-        "The Roots": "Special - Single Nutto at WorshipTD map",
-        "The Office": "Special - Poops surrounding Dr.Def",
-        "Meel's Crypt": "Special- Boop",
-
-        # W2 Maps
-        "Jar Bridge": "Sandy Pot",
-        "The Mimic Hole": "Mimic",
-        "Dessert Dunes": "Crabcake",
-        "The Grandioso Canyon": "Mafioso",
-        "Shifty Sandbox": "Sand Castle",
-        "Pincer Plateau": "Pincermin",
-        "Slamabam Straightaway": "Mashed Potato",
-        "The Ring": "Tyson",
-        "Up Up Down Down": "Moonmoon",
-        "Sands of Time": "Sand Giant",
-        "Djonnuttown": "Snelbie",
-        "Mummy Memorial": "Special- Invisible Green Mushroom inside King Doot's map",
-
-        # W3 Maps
-        "Steep Sheep Ledge": "Sheepie",
-        "Snowfield Outskirts": "Frost Flake",
-        "The Stache Split": "Sir Stache",
-        "Refrigeration Station": "Bloque",
-        "Mamooooth Mountain": "Mamooth",
-        "Rollin' Tundra": "Snowmen",
-        "Signature Slopes": "Penguin",
-        "Thermonuclear Climb": "Thermister",
-        "Waterlogged Entrance": "Quenchie",
-        "Cryo Catacombs": "Cryosnake",
-        "Overpass of Sound": "Bop Box",
-        "Crystal Basecamp": "Neyeptune",
-        "Wam Wonderland": "Dedotated Ram",
-        "Hell Hath Frozen Over": "Bloodbone",
-        "Equinox Valley": "Special- AFK only Dedotated Ram",
-
-        # W4 Maps
-        "Spaceway Raceway": "Purp Mushroom",
-        "TV Outpost": "TV",
-        "Donut Drive-In": "Donut",
-        "Outskirts of Fallstar Isle": "Demon Genie",
-        "Mountainous Deugh": "Soda Can",
-        "Wurm Highway": "Flying Worm",
-        "Jelly Cube Bridge": "Gelatinous Cuboid",
-        "Cocoa Tunnel": "Choccie",
-        "Standstill Plains": "Biggole Wurm",
-        "Shelled Shores": "Clammie",
-        "The Untraveled Octopath": "Octodar",
-        "Flamboyant Bayou": "Flombeige",
-        "Enclave of Eyes": "Stilted Seeker",
-        "The Rift": "Rift Monsters",
-
-        # W5 Maps
-        "Naut Sake Perimeter": "Suggma",
-        "Niagrilled Falls": "Maccie",
-        "The Killer Roundabout": "Mister Brightside",
-        "Cracker Jack Lake": "Cheese Nub",
-        "The Great Molehill": "Stiltmole",
-        "Erruption River": "Molti",
-        "Mount Doomish": "Purgatory Stalker",
-        "OJ Bay": "Citringe",
-        "Lampar Lake": "Lampar",
-        "Spitfire River": "Fire Spirit",
-        "Miner Mole Outskirts": "Biggole Mole",
-        "Crawly Catacombs": "Crawler",
-        "The Worm Nest": "Tremor Wurm",
-
-        # W6 Maps
-        "Gooble Goop Creek": "Sprout Spirit",
-        "Picnic Bridgeways": "Ricecake",
-        "Irrigation Station": "River Spirit",
-        "Troll Playground": "Baby Troll",
-        "Edge of the Valley": "Woodlin Spirit",
-        "Bamboo Laboredge": "Bamboo Spirit",
-        "Lightway Path": "Lantern Spirit",
-        "Troll Broodnest": "Mama Troll",
-        "Above the Clouds": "Leek Spirit",
-        "Sleepy Skyline": "Ceramic Spirit",
-        "Dozey Dogpark": "Skydoggie Spirit",
-        "Yolkrock Basin": "Royal Egg",
-        "Chieftain Stairway": "Minichief Spirit",
-        "Emperor's Castle Doorstep": "Samurai Guardian",
-    }
-    try:
-        return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
-    except Exception as reason:
-        return f"Unexpected Input received: {reason}"
-
-
-hardcap_symbols = 280  # Last verified as of v2.23
+hardcap_symbols = 300  # Last verified as of v2.37 Emperor
 hardcap_enhancement_eclipse = 250  # Lava might add more in the future, but there are no bonuses above 250 in v2.10
 library_subgroup_tiers = [
     'Account Wide Priorities', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
@@ -1062,6 +857,213 @@ unbookable_talents_list = [
     266, 267,  # Archer tab1 Featherweight and I See You
     446, 447,  # Mage tab1 Overclocked Energy and Farsight
 ]
+approx_max_talent_level_non_es = (
+    max_overall_book_levels
+    + 30    # Grimoire
+    + 25    # Equinox
+    + 25    # Companion: Rift Slug
+    + 20    # Arctis
+    + 15    # Symbols of Beyond
+    + 14    # ES Family Bonus (Note: Not Family Guy!)
+    + 5     # Sneak Mastery III
+    + 5     #Kattlekruk Set
+    + 1     # Maroon Warship achievement
+)
+approx_max_talent_level_es = approx_max_talent_level_non_es + 4  # Family Guy
+dn_skull_requirement_list = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
+dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
+dn_skull_value_list = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+dn_miniboss_names = [
+    'Glunko The Massive', 'Dr Defecaus', 'Baba Yaga', 'Biggie Hours', 'King Doot',
+    'Dilapidated Slush', 'Mutated Mush', 'Domeo Magmus', 'Demented Spiritlord'
+]
+reversed_dn_skull_requirement_list = dn_skull_requirement_list[::-1]
+reversed_dn_skull_value_list = dn_skull_value_list[::-1]
+dn_skull_value_to_name_dict = {
+    0: "None",
+    1: "Normal Skull",
+    2: "Copper Skull",
+    3: "Iron Skull",
+    4: "Gold Skull",
+    5: "Platinum Skull",
+    7: "Dementia Skull",
+    10: "Lava Skull",
+    20: "Eclipse Skull"
+}
+dn_next_skull_name_dict = {
+    0: "Normal Skull",
+    1: "Copper Skull",
+    2: "Iron Skull",
+    3: "Gold Skull",
+    4: "Platinum Skull",
+    5: "Dementia Skull",
+    7: "Lava Skull",
+    10: "Eclipse Skull",
+    20: "Finished!"
+}
+apocable_map_index_dict = {
+    0: [31, 30, 9, 38, 69, 120, 166],  # Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  # MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
+    2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
+    3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
+    4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
+    5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
+    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
+}
+dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
+dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])
+apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
+apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
+apoc_difficulty_name_list = [
+    'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+    'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
+]
+max_trapping_critter_types = 12
+trapping_quests_requirement_list = [
+    {"QuestName": "Frogecoin to the MOON!", 'RequiredItems': {"Critter1": 100, "Critter1A": 1}},
+    {"QuestName": "Yet another Cartoon Reference", 'RequiredItems': {"Critter2": 250, "Critter2A": 1}},
+    {"QuestName": "Small Stingers, Big Owie", 'RequiredItems': {"Critter3": 500, "Critter3A": 2}},
+    {"QuestName": "The Mouse n the Molerat", 'RequiredItems': {"Critter4": 1000, "Critter4A": 2}},
+    {"QuestName": "Happy Tree Friend", 'RequiredItems': {"Critter5": 1500, "Critter5A": 3}},
+    {"QuestName": "Noot Noot!", 'RequiredItems': {"Critter6": 2500, "Critter6A": 4}},
+    {"QuestName": "Bunny you Should Say That!", 'RequiredItems': {"Critter7": 4000, "Critter7A": 6}},
+    {"QuestName": "Rollin' Thunder", 'RequiredItems': {"Critter8": 8000, "Critter8A": 10}},
+    {"QuestName": "Glitter Critter", 'RequiredItems': {"Critter8A": 30, "Critter6A": 60, "Critter3A": 200}}
+]
+trapset_images = {
+    0: 'cardboard-traps',
+    1: 'silkskin-traps',
+    2: 'wooden-traps',
+    3: 'natural-traps',
+    4: 'steel-traps',
+    5: 'meaty-traps',
+    6: 'royal-traps',
+    7: 'egalitarian-traps',
+    8: 'forbidden-traps',
+    9: 'containment-of-the-zrgyios'
+}
+
+
+def getSkullNames(mkValue: int) -> str:
+    try:
+        return dn_skull_value_to_name_dict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input '{mkValue}' received: {reason}"
+
+
+def getNextSkullNames(mkValue: int) -> str:
+    try:
+        return dn_next_skull_name_dict.get(mkValue, f"UnknownSkull{mkValue}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
+
+
+def getEnemyNameFromMap(inputMap: str) -> str:
+    mapNametoEnemyNameDict = {
+        # W1 Maps
+        "Spore Meadows": "Green Mushroom",
+        "Froggy Fields": "Frog",
+        "Valley of the Beans": "Bored Bean",
+        "Birch Enclave": "Red Mushroom",
+        "Jungle Perimeter": "Slime",
+        "The Base of the Bark": "Stick",
+        "Hollowed Trunk": "Nutto",
+        "Where the Branches End": "Wood Mushroom",
+        "Winding Willows": "Baby Boa",
+        "Vegetable Patch": "Carrotman",
+        "Forest Outskirts": "Glublin",
+        "Encroaching Forest Villa": "Wode Board",
+        "Tucked Away": "Gigafrog",
+        "Poopy Sewers": "Poop",
+        "Rats Nest": "Rat",
+        "The Roots": "Special - Single Nutto at WorshipTD map",
+        "The Office": "Special - Poops surrounding Dr.Def",
+        "Meel's Crypt": "Special- Boop",
+
+        # W2 Maps
+        "Jar Bridge": "Sandy Pot",
+        "The Mimic Hole": "Mimic",
+        "Dessert Dunes": "Crabcake",
+        "The Grandioso Canyon": "Mafioso",
+        "Shifty Sandbox": "Sand Castle",
+        "Pincer Plateau": "Pincermin",
+        "Slamabam Straightaway": "Mashed Potato",
+        "The Ring": "Tyson",
+        "Up Up Down Down": "Moonmoon",
+        "Sands of Time": "Sand Giant",
+        "Djonnuttown": "Snelbie",
+        "Mummy Memorial": "Special- Invisible Green Mushroom inside King Doot's map",
+
+        # W3 Maps
+        "Steep Sheep Ledge": "Sheepie",
+        "Snowfield Outskirts": "Frost Flake",
+        "The Stache Split": "Sir Stache",
+        "Refrigeration Station": "Bloque",
+        "Mamooooth Mountain": "Mamooth",
+        "Rollin' Tundra": "Snowmen",
+        "Signature Slopes": "Penguin",
+        "Thermonuclear Climb": "Thermister",
+        "Waterlogged Entrance": "Quenchie",
+        "Cryo Catacombs": "Cryosnake",
+        "Overpass of Sound": "Bop Box",
+        "Crystal Basecamp": "Neyeptune",
+        "Wam Wonderland": "Dedotated Ram",
+        "Hell Hath Frozen Over": "Bloodbone",
+        "Equinox Valley": "Special- AFK only Dedotated Ram",
+
+        # W4 Maps
+        "Spaceway Raceway": "Purp Mushroom",
+        "TV Outpost": "TV",
+        "Donut Drive-In": "Donut",
+        "Outskirts of Fallstar Isle": "Demon Genie",
+        "Mountainous Deugh": "Soda Can",
+        "Wurm Highway": "Flying Worm",
+        "Jelly Cube Bridge": "Gelatinous Cuboid",
+        "Cocoa Tunnel": "Choccie",
+        "Standstill Plains": "Biggole Wurm",
+        "Shelled Shores": "Clammie",
+        "The Untraveled Octopath": "Octodar",
+        "Flamboyant Bayou": "Flombeige",
+        "Enclave of Eyes": "Stilted Seeker",
+        "The Rift": "Rift Monsters",
+
+        # W5 Maps
+        "Naut Sake Perimeter": "Suggma",
+        "Niagrilled Falls": "Maccie",
+        "The Killer Roundabout": "Mister Brightside",
+        "Cracker Jack Lake": "Cheese Nub",
+        "The Great Molehill": "Stiltmole",
+        "Erruption River": "Molti",
+        "Mount Doomish": "Purgatory Stalker",
+        "OJ Bay": "Citringe",
+        "Lampar Lake": "Lampar",
+        "Spitfire River": "Fire Spirit",
+        "Miner Mole Outskirts": "Biggole Mole",
+        "Crawly Catacombs": "Crawler",
+        "The Worm Nest": "Tremor Wurm",
+
+        # W6 Maps
+        "Gooble Goop Creek": "Sprout Spirit",
+        "Picnic Bridgeways": "Ricecake",
+        "Irrigation Station": "River Spirit",
+        "Troll Playground": "Baby Troll",
+        "Edge of the Valley": "Woodlin Spirit",
+        "Bamboo Laboredge": "Bamboo Spirit",
+        "Lightway Path": "Lantern Spirit",
+        "Troll Broodnest": "Mama Troll",
+        "Above the Clouds": "Leek Spirit",
+        "Sleepy Skyline": "Ceramic Spirit",
+        "Dozey Dogpark": "Skydoggie Spirit",
+        "Yolkrock Basin": "Royal Egg",
+        "Chieftain Stairway": "Minichief Spirit",
+        "Emperor's Castle Doorstep": "Samurai Guardian",
+    }
+    try:
+        return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
+    except Exception as reason:
+        return f"Unexpected Input received: {reason}"
+
+
 printer_indexes_being_printed_by_character_index = [
     [5, 6],  # Character Index 0
     [12, 13],
@@ -1186,5 +1188,4 @@ equipment_sets_dict = {
         ["none"],
         ["0", "0", "25", "}x_Gold_Food|effect", "}x_Gold_Food_effect"]
     ],
-
 }

@@ -86,7 +86,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         sps_adviceDict[mga].append(advice)
-    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
+    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']

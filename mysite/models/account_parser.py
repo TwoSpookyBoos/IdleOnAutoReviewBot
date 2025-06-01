@@ -274,7 +274,6 @@ def _parse_general(account):
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
     _parse_general_upgrade_vault(account)
-    _parse_general_armor_sets(account)
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
@@ -648,32 +647,6 @@ def _parse_general_upgrade_vault(account):
     account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
     for upgrade_name in account.vault['Upgrades']:
         account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
-
-def _parse_general_armor_sets(account):
-    account.armor_sets = {
-        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
-        'Sets': {}
-    }
-    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
-    try:
-        raw_armor_sets_list = raw_armor_sets.split(',')
-    except:
-        raw_armor_sets_list = []
-    for set_name, requirements in equipment_sets_dict.items():
-        clean_name = set_name.replace('_', ' ')
-        account.armor_sets['Sets'][clean_name] = {
-            'Owned': set_name in raw_armor_sets_list,
-            'Image': getItemDisplayName(requirements[0][0]),
-            'Armor': requirements[0],
-            'Tools': requirements[1],
-            'Required Tools': safer_convert(requirements[3][0], 0),
-            'Weapons': requirements[2],
-            'Required Weapons': safer_convert(requirements[3][1], 0),
-            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
-            'Base Value': safer_convert(requirements[3][2], 0)
-        }
-
 
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
@@ -1515,6 +1488,7 @@ def _parse_w3(account):
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
     _parse_w3_saltlick(account)
+    _parse_w3_armor_sets(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -1694,7 +1668,6 @@ def _parse_w3_deathnote_miniboss_kills(account):
     # Sum up all the MK value of the individual skulls
     account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
 
-
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
     account.equinox_dreams = [True]  # d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
@@ -1871,6 +1844,31 @@ def _parse_w3_saltlick(account):
             account.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
         except:
             account.saltlick[saltlickName] = 0
+
+def _parse_w3_armor_sets(account):
+    account.armor_sets = {
+        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
+        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Sets': {}
+    }
+    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
+    try:
+        raw_armor_sets_list = raw_armor_sets.split(',')
+    except:
+        raw_armor_sets_list = []
+    for set_name, requirements in equipment_sets_dict.items():
+        clean_name = set_name.replace('_', ' ')
+        account.armor_sets['Sets'][clean_name] = {
+            'Owned': set_name in raw_armor_sets_list,
+            'Image': getItemDisplayName(requirements[0][0]),
+            'Armor': requirements[0],
+            'Tools': requirements[1],
+            'Required Tools': safer_convert(requirements[3][0], 0),
+            'Weapons': requirements[2],
+            'Required Weapons': safer_convert(requirements[3][1], 0),
+            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
+            'Base Value': safer_convert(requirements[3][2], 0)
+        }
 
 
 def _parse_w4(account):
@@ -3638,7 +3636,7 @@ def _parse_w6_emperor(account):
     account.emperor = {
         'Last Showdown': safer_convert(safer_get(account.raw_optlacc_dict, 369, 0), 0),
         'Daily Attempts': 1 + safer_convert(safer_get(account.raw_optlacc_dict, 382, 0), 0),
-        'Remaining Attempts': safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
+        'Remaining Attempts': 1 - safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
         'Bonuses': {
             bonus_index: {  #Normally I'd put bonus_type here, but Lava's list contains duplicate placeholder names
                 'Bonus Type': bonus_type,
