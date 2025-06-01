@@ -1,7 +1,7 @@
 from collections import defaultdict
 from flask import g as session_data
-from consts.consts import break_you_best
-from consts.progression_tiers_updater import true_max_tiers
+from consts.consts_autoreview import break_you_best
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 

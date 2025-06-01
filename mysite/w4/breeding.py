@@ -1,17 +1,16 @@
 import copy
 
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best, build_subgroup_label, EmojiType
+from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories
 from consts.consts_w2 import critter_vials_list, max_vial_level
-from consts.progression_tiers import breeding_progressionTiers
+from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 

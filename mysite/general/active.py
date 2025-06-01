@@ -1,4 +1,4 @@
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection, Character
 from consts.consts_idleon import pearlable_skills_list, lavaFunc
 from consts.consts_general import cards_max_level, current_world, max_characters

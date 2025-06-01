@@ -1,11 +1,11 @@
 from math import ceil
 
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_math_log, safer_math_pow
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
+from consts.consts_autoreview import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
 from consts.consts_caverns import caverns_cavern_names, monument_layer_rewards, caverns_jar_rupies, getMotherlodeEfficiencyRequired, getMonumentOpalChance
 from utils.text_formatting import notateNumber
 

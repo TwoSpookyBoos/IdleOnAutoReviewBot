@@ -6,8 +6,7 @@ from flask import g as session_data
 import models.account_calcs
 import models.account_parser
 from config import app
-from consts.consts import versions_patches
-from consts.progression_tiers_updater import finalize_progression_tiers
+from consts.consts_autoreview import versions_patches
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
@@ -71,7 +70,7 @@ def main(inputData, source_string, runType="web"):
     #roastworthyBool = getRoastableStatus(session_data.account.names)
 
     # Step 3: Send that data off to all the different analyzers
-    finalize_progression_tiers()
+    # finalize_progression_tiers()
     all_sections = [
         sections_general := [
             combat_levels.getCombatLevelsAdviceSection(),

@@ -1,6 +1,6 @@
 from math import ceil, floor, log2, prod
 
-from consts.consts import ceilUpToBase, ValueToMulti, EmojiType
+from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
@@ -361,7 +361,7 @@ def _calculate_general(account):
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
-        account.alerts_AdviceDict['General'].append(Advice(
+        account.alerts_Advices['General'].append(Advice(
             label=f"You have {account.stored_assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
             picture_class="luckier-lad"
         ))
@@ -376,7 +376,7 @@ def _calculate_general_item_filter(account):
             and 'Trophy20' not in account.registered_slab  #Luckier Lad
             and account.stored_assets.get("Trophy2").amount < 75
         ):
-            account.alerts_AdviceDict['General'].append(Advice(
+            account.alerts_Advices['General'].append(Advice(
                 label=f"Lucky filtered before 75 for Luckier Lad",
                 picture_class="lucky-lad",
                 resource="luckier-lad"
@@ -384,30 +384,30 @@ def _calculate_general_item_filter(account):
         elif filtered_displayName in filter_recipes:
             for itemName in filter_recipes[filtered_displayName]:
                 if getItemCodeName(itemName) not in account.registered_slab:
-                    account.alerts_AdviceDict['General'].append(Advice(
+                    account.alerts_Advices['General'].append(Advice(
                         label=f"{filtered_displayName} filtered, {itemName} not in Slab",
                         picture_class=filtered_displayName,
                         resource=itemName
                     ))
         elif filtered_displayName in filter_never and account.autoloot:
-            account.alerts_AdviceDict['General'].append(Advice(
+            account.alerts_Advices['General'].append(Advice(
                 label=f"Why did you filter {filtered_displayName}???",
                 picture_class=filtered_displayName,
             ))
         elif filtered_codeName not in account.registered_slab:
-            account.alerts_AdviceDict['General'].append(Advice(
+            account.alerts_Advices['General'].append(Advice(
                 label=f"{filtered_displayName} filtered, not in Slab",
                 picture_class=filtered_displayName,
             ))
         elif filtered_displayName in fishing_toolkit_dict['Lures']:
             if fishing_toolkit_dict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
-                account.alerts_AdviceDict['General'].append(Advice(
+                account.alerts_Advices['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                     picture_class=filtered_displayName,
                 ))
         elif filtered_displayName in fishing_toolkit_dict['Lines']:
             if fishing_toolkit_dict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
-                account.alerts_AdviceDict['General'].append(Advice(
+                account.alerts_Advices['General'].append(Advice(
                     label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
                     picture_class=filtered_displayName,
                 ))

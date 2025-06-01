@@ -3,7 +3,7 @@ from collections import defaultdict
 from math import floor
 from flask import g
 
-from consts.consts import ValueToMulti, items_codes_and_names
+from consts.consts_autoreview import ValueToMulti, items_codes_and_names
 from consts.consts_idleon import lavaFunc, companions_list
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
@@ -3629,7 +3629,6 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
         except Exception as e:
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
 
-
 def _parse_w6_emperor(account):
     bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
     bonus_values = [int(value) for value in EmperorBon[1]]
@@ -3638,7 +3637,7 @@ def _parse_w6_emperor(account):
     account.emperor = {
         'Last Showdown': safer_convert(safer_get(account.raw_optlacc_dict, 369, 0), 0),
         'Daily Attempts': 1 + safer_convert(safer_get(account.raw_optlacc_dict, 382, 0), 0),
-        'Remaining Attempts': safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
+        'Remaining Attempts': 1 - safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
         'Bonuses': {
             bonus_index: {  #Normally I'd put bonus_type here, but Lava's list contains duplicate placeholder names
                 'Bonus Type': bonus_type,

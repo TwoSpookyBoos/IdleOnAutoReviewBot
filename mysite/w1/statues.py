@@ -1,9 +1,8 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts.consts import break_you_best
+from consts.consts_autoreview import break_you_best
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import statue_type_list, statue_count
-from consts.progression_tiers import statues_progressionTiers
+from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.logging import get_logger
 from flask import g as session_data
@@ -176,7 +175,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
     # Generate Alerts
     if depositable_statues > 0 and session_data.account.onyx_statues_unlocked:
-        session_data.account.alerts_AdviceDict['World 1'].append(Advice(
+        session_data.account.alerts_Advices['World 1'].append(Advice(
             label=f"You can upgrade {depositable_statues} {{{{ Statue{pl(depositable_statues)}|#statues }}}} to {statue_type_list[-1]}!",
             picture_class="town-marble"
         ))

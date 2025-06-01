@@ -1,7 +1,7 @@
 from flask import g as session_data
 
-from consts.consts import break_you_best
-from consts.progression_tiers_updater import true_max_tiers
+from consts.consts_autoreview import break_you_best
+from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
 
 
@@ -72,7 +72,7 @@ def getP2WProgressionTiersAdviceGroup(highest_alchemy_level):
                 progression=player_sum,
                 goal=highest_alchemy_level * 2
             ))
-            session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+            session_data.account.alerts_Advices['World 2'].append(Advice(
                 label=f"{{{{ P2W|#pay2win }}}} Player upgrades can be leveled",
                 picture_class='p2w-player',
             ))

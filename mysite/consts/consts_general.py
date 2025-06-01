@@ -1,4 +1,4 @@
-from consts.consts import EmojiType
+from consts.consts_autoreview import EmojiType
 from utils.logging import get_logger
 logger = get_logger(__name__)
 

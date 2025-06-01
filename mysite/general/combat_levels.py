@@ -1,6 +1,5 @@
-from consts.consts import break_you_best
-from consts.progression_tiers import combatLevels_progressionTiers
-from consts.progression_tiers_updater import true_max_tiers
+from consts.consts_autoreview import break_you_best
+from consts.progression_tiers import combatLevels_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
 from flask import g as session_data

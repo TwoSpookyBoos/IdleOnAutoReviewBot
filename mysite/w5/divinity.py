@@ -1,17 +1,16 @@
 from math import ceil
 
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import (
+from consts.consts_autoreview import (
     break_you_best, EmojiType
 )
 from consts.consts_w5 import divinity_offerings_dict, divinity_styles_dict, div_level_reasons_dict, divinity_arctis_breakpoints, getDivinityNameFromIndex, \
     getOfferingNameFromIndex, getStyleNameFromIndex
-from consts.progression_tiers import divinity_progressionTiers
+from consts.progression_tiers import divinity_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 
@@ -138,7 +137,7 @@ def getDootChecksAdviceGroups(lowest_divinity_level: int, highest_divinity_level
             # If you don't own Doot but do have Arctis unlocked, generate Alert if any char has no divinity link
             for char in session_data.account.all_characters:
                 if char.divinity_link == 'Unlinked':
-                    session_data.account.alerts_AdviceDict['World 5'].append(Advice(
+                    session_data.account.alerts_Advices['World 5'].append(Advice(
                         label=f"{char.character_name} isn't linked to a {{{{ Divinity|#divinity }}}}",
                         picture_class=char.class_name_icon,
                         completed=False

@@ -1,5 +1,5 @@
-from consts.consts import break_you_bestest
-from consts.progression_tiers_updater import true_max_tiers
+from consts.consts_autoreview import break_you_bestest
+from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -448,13 +448,13 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
 
 
 def getAlertsAdviceGroup() -> AdviceGroup:
-    for subgroupName in session_data.account.alerts_AdviceDict:
-        for advice in session_data.account.alerts_AdviceDict[subgroupName]:
+    for subgroupName in session_data.account.alerts_Advices:
+        for advice in session_data.account.alerts_Advices[subgroupName]:
             advice.completed = False
     alerts_AG = AdviceGroup(
         tier="",
         pre_string="Alerts",
-        advices=session_data.account.alerts_AdviceDict
+        advices=session_data.account.alerts_Advices
     )
     alerts_AG.remove_empty_subgroups()
     alerts_AG.check_for_completeness()

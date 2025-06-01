@@ -1,5 +1,5 @@
 from flask import g as session_data
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import snail_max_rank
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
@@ -105,7 +105,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                     goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
                 )
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            session_data.account.alerts_Advices['World 3'].append(Advice(
                     label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
                           f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
                           f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
@@ -130,7 +130,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
                 picture_class='carbon',
             )
         )
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+        session_data.account.alerts_Advices['World 3'].append(Advice(
             label=f"{currentMaxedTowers} TD Tower{pl(currentMaxedTowers)} at max level."
                   f"<br>Level up {{{{ Carbon|#atom-collider }}}} to increase your max Tower levels by 2.",
             picture_class='carbon',

@@ -1,8 +1,7 @@
 import copy
-from consts.progression_tiers import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers
+from consts.progression_tiers import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers, true_max_tiers
 from flask import g as session_data
 
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 

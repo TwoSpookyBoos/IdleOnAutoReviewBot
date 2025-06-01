@@ -1,5 +1,5 @@
-from consts.progression_tiers_updater import true_max_tiers
-from consts.consts import EmojiType
+from consts.progression_tiers import true_max_tiers
+from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -257,7 +257,7 @@ def getGrottoAdviceGroup():
         goal=target_string
     ))
     if cavern['PercentRemaining'] <= 1:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"Challenge {{{{ The Monarch|#glowshroom-tunnels }}}}!",
             picture_class='gloomie-mushroom'
         ))

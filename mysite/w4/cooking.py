@@ -1,9 +1,9 @@
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best, AdviceType
+from consts.consts_autoreview import break_you_best, AdviceType
 from consts.consts_w4 import max_meal_count, max_meal_level, cooking_close_enough
 from utils.text_formatting import pl
 
@@ -184,14 +184,14 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
         if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough:
             if not anyVWMaxBooked:
-                session_data.account.alerts_AdviceDict['World 4'].append(Advice(
+                session_data.account.alerts_Advices['World 4'].append(Advice(
                     label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent max booked!",
                     picture_class="beginner-talent-book",
                     progression=bestBMBook,
                     goal=session_data.account.library['MaxBookLevel']
                 ))
             if not anyVWMaxLeveled:
-                session_data.account.alerts_AdviceDict['World 4'].append(Advice(
+                session_data.account.alerts_Advices['World 4'].append(Advice(
                     label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent maxed in any presets!",
                     picture_class="talent-preset-1",
                     progression=bestBMPresetLevel,

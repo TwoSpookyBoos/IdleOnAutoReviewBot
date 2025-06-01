@@ -1,6 +1,6 @@
-from consts.consts import break_you_best
+from consts.consts_autoreview import break_you_best
 from consts.consts_w6 import gfood_codes, BEANSTACK_GOAL, SUPER_BEANSTACK_GOAL
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, Advice, AdviceGroup
 from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
@@ -62,7 +62,7 @@ def getProgressionTiersAdviceSections():
         for food_name in foods_ready_to_deposit
     ]
     if len(foods_ready_to_deposit) > 0:
-        session_data.account.alerts_AdviceDict['World 6'].append(Advice(
+        session_data.account.alerts_Advices['World 6'].append(Advice(
             label=f"Golden Food ready for {{{{Beanstalk|#beanstalk}}}}",
             picture_class="beanstalk",
             unrated=True

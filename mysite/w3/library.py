@@ -1,6 +1,6 @@
 from math import ceil
 from flask import g as session_data
-from consts.consts import break_you_best
+from consts.consts_autoreview import break_you_best
 from consts.consts_idleon import expected_talents_dict
 from consts.consts_general import current_world, arbitrary_es_family_goal
 from consts.consts_w4 import max_meal_level, cooking_close_enough
@@ -8,7 +8,7 @@ from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, ma
     library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import stamp_maxes
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.all_talentsDict import all_talentsDict
@@ -785,7 +785,7 @@ def getLibraryAdviceSection() -> AdviceSection:
     ):
         # For future reference, since this comes up from time to time. The amount of checkouts stored in the JSON is only updated when the player
         # walks into town. AutoReview makes no effort to view the TimeAway value for Library and estimate book speed to fill the gap
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+        session_data.account.alerts_Advices['World 3'].append(Advice(
             label=f"{session_data.account.library['BooksReady'] // 20} perfect {{{{ checkouts|#library }}}} available",
             picture_class='talent-book-library'
         ))

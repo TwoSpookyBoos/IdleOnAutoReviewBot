@@ -1,10 +1,9 @@
-from consts.progression_tiers import armor_sets_progressionTiers
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import armor_sets_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
@@ -25,7 +24,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
         not smithy_unlocked
         and days_toward_unlock >= 30
     ):
-        session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+        session_data.account.alerts_Advices['World 3'].append(Advice(
             label=f"{{{{Smithy|#armor-sets}}}} ready to accept Armor Sets",
             picture_class='smithy'
         ))
@@ -136,7 +135,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                 and obtained_weapons >= details['Required Weapons']
                 and session_data.account.armor_sets['Unlocked']
             ):
-                session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                session_data.account.alerts_Advices['World 3'].append(Advice(
                     label=f"{name.title()} can be {{{{completed|#armor-sets}}}}",
                     picture_class=details['Image']
                 ))
