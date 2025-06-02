@@ -4,6 +4,7 @@ from consts.consts import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
+from consts.consts_w1 import statue_type_list, statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
@@ -26,6 +27,7 @@ def calculate_account(account):
     _calculate_wave_1(account)
     _calculate_wave_2(account)
     _calculate_wave_3(account)
+    _calculate_wave_4(account)
 
 
 def _calculate_wave_1(account):
@@ -628,7 +630,7 @@ def _calculate_master_classes_compass_dust_sources(account):
 def _calculate_w1(account):
     _calculate_w1_upgrade_vault(account)
     _calculate_w1_starsigns(account)
-    _calculate_w1_statues(account)
+    # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     _calculate_w1_owl_bonuses(account)
 
@@ -718,26 +720,7 @@ def _calculate_w1_starsigns(account):
         goal=1
     )
 
-def _calculate_w1_statues(account):
-    voodooStatuficationMulti = []
-    for char in account.safe_characters:
-        if char.class_name == "Voidwalker":
-            voodooStatuficationMulti.append(
-                lavaFunc(
-                    'decay',
-                    char.max_talents_over_books + char.max_talents.get("56", 0),
-                    200,
-                    200
-                )
-            )
-    voodooStatuficationMulti = 1 + max(voodooStatuficationMulti, default=0)
 
-    onyxMulti = 2 + 0.3 * account.sailing['Artifacts'].get('The Onyx Lantern', {}).get('Level', 0)
-
-    for statueName, statueDetails in account.statues.items():
-        if statueDetails['Type'] == "Onyx":
-            account.statues[statueName]["Value"] *= onyxMulti
-        account.statues[statueName]["Value"] *= voodooStatuficationMulti
 
 def _calculate_w1_stamps(account):
     # if ("StampDoubler" == e) return
@@ -2324,3 +2307,76 @@ def _calculate_class_unique_kill_stacks(account):
             account.class_kill_talents[talent_name]['Talent Value'] * account.class_kill_talents[talent_name]['Kill Stacks']
         )
         # logger.debug(f"{account.class_kill_talents[talent_name] = }")
+
+def _calculate_wave_4(account):
+    # Mostly stuff that relies on Talent Level calculations that happen in Wave 3
+    _calculate_w1_statues(account)
+
+def _calculate_w1_statues(account):
+    voodoo_statufication_multi = [
+        lavaFunc(
+            all_talentsDict[56]['funcX'],
+            char.max_talents.get('56', 0),
+            all_talentsDict[56]['x1'],
+            all_talentsDict[56]['x2']
+        ) for char in account.vmans
+    ]
+
+    voodoo_statufication_multi = ValueToMulti(max(voodoo_statufication_multi, default=0))
+
+    vault_multi = account.vault['Upgrades']['Statue Bonanza']['Total Value']
+    vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
+
+    onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
+    onyx_index = statue_type_list.index('Onyx')
+
+    account.statues['Dragon Warrior Statue']['Value'] = (
+        account.statues['Dragon Warrior Statue']['BaseValue']
+        * account.statues['Dragon Warrior Statue']['Level']
+        * (onyx_multi if statue_type_list.index(account.statues['Dragon Warrior Statue']['Type']) >= onyx_index else 1)
+        * (vault_multi if 'Dragon Warrior Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
+        * voodoo_statufication_multi
+    )
+    dragon_multi = ValueToMulti(account.statues['Dragon Warrior Statue']['Value'])
+    logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }")
+    for statue_name, statue_details in account.statues.items():
+        if statue_name != 'Dragon Warrior Statue':
+            account.statues[statue_name]['Value'] = (
+                account.statues[statue_name]['BaseValue']
+                * account.statues[statue_name]['Level']
+                * (onyx_multi if statue_type_list.index(statue_details['Type']) >= onyx_index else 1)
+                * (vault_multi if statue_name in vault_statues else 1)
+                * voodoo_statufication_multi
+                * dragon_multi
+            )
+
+    account.statue_effect_advice = [
+        Advice(
+            label=f"Voidwalker {{{{talent|#library}}}}: Voodoo Statufication: {round(voodoo_statufication_multi, 2):g}x",
+            picture_class='voodoo-statufication'
+        ),
+        Advice(
+            label=f"Onyx base bonus: {2 * account.onyx_statues_unlocked}/2x"
+                  f"<br>Total including {{{{The Onyx Lantern |  #sailing}}}}: {round(onyx_multi, 1):g}/"
+                  f"{2 + (0.3 * max_sailing_artifact_level)}x",
+            picture_class='onyx-tools',
+            progression=account.sailing['Artifacts']['The Onyx Lantern']['Level'],
+            goal=max_sailing_artifact_level,
+            resource='the-onyx-lantern'
+        ),
+        Advice(
+            label=f"Level {account.statues['Dragon Warrior Statue']['Level']} Dragon Warrior Statue: {round(dragon_multi, 3):g}x",
+            picture_class=account.statues['Dragon Warrior Statue']['Image']
+        ),
+        Advice(
+            label=f"{{{{Upgrade Vault |  #upgrade-vault}}}}: Statue Bonanza: {account.vault['Upgrades']['Statue Bonanza']['Description'].replace('<br> <br>', '<br>')}",
+            picture_class=account.vault['Upgrades']['Statue Bonanza']['Image'],
+            progression=account.vault['Upgrades']['Statue Bonanza']['Level'],
+            goal=account.vault['Upgrades']['Statue Bonanza']['Max Level']
+        ),
+        Advice(
+            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi, 2):g}x"
+                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * vault_multi, 2):g}x",
+            picture_class='town-marble'
+        )
+    ]
