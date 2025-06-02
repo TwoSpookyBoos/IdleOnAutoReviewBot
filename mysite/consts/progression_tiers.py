@@ -409,7 +409,7 @@ stamps_progressionTiers = {
         },
         'Not Recommended': ["Sukka Foo", "Void Axe Stamp"]
     }},
-    20: {'Total Stamp Levels': 13000, 'Stamps': {
+    20: {'Stamps': {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
@@ -422,9 +422,9 @@ stamps_progressionTiers = {
             'White Essence Stamp': 104, 'Triad Essence Stamp': 112, 'Dark Triad Essence Stamp': 96, 'Nest Eggs Stamp': 240,
         },
     }},
-    21: {'Total Stamp Levels': 13000, 'Stamps': {"Specific": {},}},  # Info tier for Capacity stamps, populated later from stamp_maxes
-    22: {'Total Stamp Levels': 13000, 'Stamps': {"Specific": {},}},  # Info tier for all other previously tiered stamps, populated later from stamp_maxes
-    23: {'Total Stamp Levels': 13000, 'Stamps': {"Specific": {},}},  # Info tier for all non-tiered stamps, populated later from stamp_maxes
+    21: {'Stamps': {"Specific": {},}},  # Info tier for Capacity stamps, populated later from stamp_maxes
+    22: {'Stamps': {"Specific": {},}},  # Info tier for all other previously tiered stamps, populated later from stamp_maxes
+    23: {'Stamps': {"Specific": {},}},  # Info tier for all non-tiered stamps, populated later from stamp_maxes
 }
 smithing_progressionTiers = {
     1: {
