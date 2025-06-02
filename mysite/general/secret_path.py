@@ -173,7 +173,7 @@ def getRightHandsAdviceGroups(true_max):
 
 def getQuestAdvice(tier_SecretClass, jmans, maestros):
     secretClass_AdviceDict = {
-        "UnlockNextClass": [],
+        'UnlockNextClass': [],
     }
 
     # No Journeyman
@@ -201,19 +201,19 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
             peanuts_remaining = total_quest_peanuts - peanuts_owned - (golden_peanuts_owned * 100)
         else:
             peanuts_remaining = total_quest_peanuts - peanuts_owned - 500
-        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        secretClass_AdviceDict['UnlockNextClass'].append(Advice(
             label="On your 7th or later character, create a Journeyman. Only make 1 Secret Class character!",
             picture_class='journeyman-icon'
         ))
-        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        secretClass_AdviceDict['UnlockNextClass'].append(Advice(
             label="Skip this fool's quest. You need to stay a Beginner to become a Journeyman!",
             picture_class='promotheus'
         ))
-        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        secretClass_AdviceDict['UnlockNextClass'].append(Advice(
             label="Start the Journeyman quest chain by finding this NPC in World 1! You'll need 1651 Peanuts in total.",
             picture_class='bushlyte'
         ))
-        secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        secretClass_AdviceDict['UnlockNextClass'].append(Advice(
             label='Peanuts are crafted at the anvil',
             picture_class='peanut',
             progression=peanuts_owned,
@@ -221,23 +221,23 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
         ))
         if peanuts_remaining > 0:
             peanuts_subgroup = f'Ingredients for the remaining {peanuts_remaining} Peanuts:'
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label=peanuts_subgroup,
                 picture_class='',
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label='Hot Dogs can be purchased from both W1 Vendors daily',
                 picture_class='hot-dog',
                 progression=session_data.account.all_assets.get('FoodHealth3').amount,
                 goal=2 * peanuts_remaining
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label='Bleach Logs',
                 picture_class='bleach-logs',
                 progression=session_data.account.all_assets.get('BirchTree').amount,
                 goal=peanuts_remaining
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label='Copper Ore',
                 picture_class='copper-ore',
                 progression=session_data.account.all_assets.get('Copper').amount,
@@ -246,7 +246,7 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
 
             if golden_peanuts_owned < 5:
                 # Add advice for gold bars
-                secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                     label='Gold Bars',
                     picture_class='gold-bar',
                     progression=session_data.account.stored_assets.get('GoldBar').amount,
@@ -302,86 +302,86 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                 except:
                     continue
         if not cact1Started:
-            if session_data.account.stored_assets.get("Quest27").amount < 1:  # Quest27 = Bag o Nuts
-                secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            if session_data.account.stored_assets.get('Quest27').amount < 1:  # Quest27 = Bag o Nuts
+                secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                     label="First, you'll need to finish Goldric's quest: Dress to Impress",
                     picture_class="goldric"
                 ))
-                secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                     label="This will reward you with a Bag o Nuts needed to start the Maestro quest",
                     picture_class="bag-o-nuts"
                 ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Offer the Bag o Nuts to this NPC in World 2!",
                 picture_class="cactolyte"
             ))
         for jman in jmans:
             if not cact1complete:
                 if jman.mining_level < 32:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Mining",
-                        picture_class="mining",
+                        picture_class='mining',
                         progression=jman.mining_level,
                         goal=32
                     ))
                 if jman.smithing_level < 35:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Smithing",
-                        picture_class="smithing",
+                        picture_class='smithing',
                         progression=jman.smithing_level,
                         goal=35
                     ))
                 if jman.choppin_level < 33:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Choppin",
-                        picture_class="choppin",
+                        picture_class='choppin',
                         progression=jman.choppin_level,
                         goal=33
                     ))
             if not cact2complete:
                 if jman.fishing_level < 23:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Fishing",
-                        picture_class="fishing",
+                        picture_class='fishing',
                         progression=jman.fishing_level,
                         goal=23
                     ))
                 if jman.alchemy_level < 25:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Alchemy",
-                        picture_class="alchemy",
+                        picture_class='alchemy',
                         progression=jman.alchemy_level,
                         goal=25
                     ))
                 if jman.catching_level < 25:
-                    secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                    secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                         label=f"Level {jman.character_name}'s Catching",
-                        picture_class="catching",
+                        picture_class='catching',
                         progression=jman.catching_level,
                         goal=25
                     ))
-        if (len(secretClass_AdviceDict["UnlockNextClass"]) == 0 and cact2complete and not cact3complete) or (cact3Started and not cact3complete):
+        if (len(secretClass_AdviceDict['UnlockNextClass']) == 0 and cact2complete and not cact3complete) or (cact3Started and not cact3complete):
             # if session_data.account.assets.get("Quest35").amount < 1:  # Quest35 = Googley Eyes to spawn Biggie Hours
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Find the Googley Eyes recipe from Crabcakes to spawn Biggie Hours",
-                picture_class="googley-eyes"
+                picture_class='googley-eyes'
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Remember to have Pete the Peanut in your Inventory before spawning Biggie Hours!",
-                picture_class="pete-the-peanut"
+                picture_class='pete-the-peanut'
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="594 Defense is needed to take 0 damage from Biggie Hours. You can use your best Fisticuffs safely if you reach this amount of defense.",
-                picture_class="bucklered-up"
+                picture_class='bucklered-up'
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Alternative to stacking Defense: Use the Wooden Bow to attack from a distance. Hide down the rope if he gets too close!",
-                picture_class="wooden-bow"
+                picture_class='wooden-bow'
             ))
-        if len(secretClass_AdviceDict["UnlockNextClass"]) == 0 and cact3complete:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        if len(secretClass_AdviceDict['UnlockNextClass']) == 0 and cact3complete:
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Congrats on killing Biggie Hours! Maestro! The Stro! Mman! Now turn in the quest, silly billy.",
-                picture_class="club-maestro"
+                picture_class='club-maestro'
             ))
 
     # No Voidwalker
@@ -406,7 +406,7 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                     # logger.debug(f"playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
                     if isinstance(playerneb1Int, str):
                         playerneb1Int = safe_loads(playerneb1Int)
-                        playerneb1Int = playerneb1Int.get("Nebulyte1", ["0", "0"])
+                        playerneb1Int = playerneb1Int.get('Nebulyte1', ['0', '0'])
                         playerneb1Int = int(playerneb1Int[0])
                         # logger.debug(f"After json.loads, playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
                     # playerneb1Int = int(session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", {"Nebulyte1":[0,0]})[0])
@@ -415,14 +415,20 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                     logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
             if neb2status == -1:
                 try:
-                    neb2status = session_data.account.all_quests[maestro.character_index]["Nebulyte2"] if "Nebulyte2" in session_data.account.all_quests[
-                        maestro.character_index] else -1
+                    neb2status = (
+                        session_data.account.all_quests[maestro.character_index]['Nebulyte2']
+                        if 'Nebulyte2' in session_data.account.all_quests[maestro.character_index]
+                        else -1
+                    )
                 except:
                     continue
             if neb3status == -1:
                 try:
-                    neb3status = session_data.account.all_quests[maestro.character_index]["Nebulyte3"] if "Nebulyte3" in session_data.account.all_quests[
-                        maestro.character_index] else -1
+                    neb3status = (
+                        session_data.account.all_quests[maestro.character_index]['Nebulyte3']
+                        if 'Nebulyte3' in session_data.account.all_quests[maestro.character_index]
+                        else -1
+                    )
                 except:
                     continue
             if neb3status == 0:
@@ -431,7 +437,7 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                     # logger.debug(f"playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
                     if isinstance(playerneb3Int, str):
                         playerneb3Int = safe_loads(playerneb3Int)
-                        playerneb3Int = playerneb3Int.get("Nebulyte1", ["0", "0"])
+                        playerneb3Int = playerneb3Int.get('Nebulyte1', ['0', '0'])
                         playerneb3Int = int(playerneb3Int[0])
                         # logger.debug(f"After json.loads, playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
                     neb3gmushkills = max(playerneb3Int, neb3gmushkills)
@@ -439,57 +445,59 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                     logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
             if neb4status == -1:
                 try:
-                    neb4status = session_data.account.all_quests[maestro.character_index]["Nebulyte4"] if "Nebulyte4" in session_data.account.all_quests[
-                        maestro.character_index] else -1
+                    neb4status = (
+                        session_data.account.all_quests[maestro.character_index]['Nebulyte4']
+                        if 'Nebulyte4' in session_data.account.all_quests[maestro.character_index]
+                        else -1
+                    )
                 except:
                     continue
         if neb1status == -1:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Start the quest chain by finding this NPC in World 4!",
-                picture_class="nebulyte"
+                picture_class='nebulyte'
             ))
             addLevelAdvice = True
             for maestro in maestros:
                 if maestro.combat_level >= 150:
                     addLevelAdvice = False
             if addLevelAdvice:
-                secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+                secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                     label="Hint: You'll need a minimum Combat level of 150",
-                    picture_class="maestro-icon"
+                    picture_class='maestro-icon'
                 ))
         elif neb1status == 0:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Earn Platinum skulls (1 million kills) on all 40 W1-W3 enemies. You may use ALL characters to speed this up.",
-                picture_class="platinum-skull",
+                picture_class='platinum-skull',
                 progression=neb1platskulls,
                 goal=40
             ))
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
-                label="Check out the Death Note section to see remaining enemies",
-                picture_class="death-note",
-                as_link=True
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
+                label="Check out the {{Death Note|#death-note}} section to see remaining enemies",
+                picture_class='death-note'
             ))
         if neb2status == 0:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="What are you waiting for? Go punch Chaotic Chizoar in the face. Easy!",
-                picture_class="chaotic-chizoar-card"
+                picture_class='chaotic-chizoar-card'
             ))
         if neb3status == 0:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="Kill 12 million Green Mushrooms in W1 with ONLY your Maestro on the quest!",
-                picture_class="green-mushroom",
+                picture_class='green-mushroom',
                 progression=neb3gmushkills,
                 goal=12000000
             ))
-        if (len(secretClass_AdviceDict["UnlockNextClass"]) == 0 and neb3status >= 1) or neb4status == 0:
-            secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+        if (len(secretClass_AdviceDict['UnlockNextClass']) == 0 and neb3status >= 1) or neb4status == 0:
+            secretClass_AdviceDict['UnlockNextClass'].append(Advice(
                 label="One of us! One of us! One of us! Now turn in the quest, silly billy.",
-                picture_class="voidwalker-icon"
+                picture_class='voidwalker-icon'
             ))
 
     # No Infinilyte
     # elif tier_SecretClass == 3:
-    #     secretClass_AdviceDict["UnlockNextClass"].append(Advice(
+    #     secretClass_AdviceDict['UnlockNextClass'].append(Advice(
     #         label="Welcome to the Infinilyte waiting room",
     #         picture_class="infinilyte-icon"
     #     ))
@@ -510,16 +518,16 @@ def getProgressionTiersAdviceGroup(jmans, maestros):
 
     secret_class_advices = getQuestAdvice(tier_SecretClass, jmans, maestros)
     group_pre_strings = [
-        "Create a Journeyman",
-        "Create a Maestro",
-        "Create a Voidwalker",
-        "Wait for Lava to release the next Secret Class"
+        'Create a Journeyman',
+        'Create a Maestro',
+        'Create a Voidwalker',
+        'Wait for Lava to release the next Secret Class'
     ]
     secret_class_advice_groups = {
-        "UnlockNextClass": AdviceGroup(
-            tier=str(tier_SecretClass),
+        'UnlockNextClass': AdviceGroup(
+            tier=tier_SecretClass,
             pre_string=group_pre_strings[tier_SecretClass],
-            advices=secret_class_advices["UnlockNextClass"]
+            advices=secret_class_advices['UnlockNextClass']
         )
     }
 
