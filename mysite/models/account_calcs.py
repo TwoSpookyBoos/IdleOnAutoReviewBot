@@ -1004,7 +1004,7 @@ def _calculate_w3_collider_cost_reduction(account):
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
         + account.alchemy_bubbles['Atom Split']['BaseValue']
-        + account.stamps['Atomic Stamp']['Value']
+        + account.stamps['Atomic Stamp']['Total Value']
         + account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']
         + account.compass['Upgrades']['Atomic Cost Crash']['Total Value']
     )
