@@ -2158,7 +2158,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         'Grimoire': {
             'Value': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
             'Image': account.grimoire['Upgrades']['Skull of Major Talent']['Image'],
-            'Label': f"{{{{Grimoire |  #the-grimoire}}}}: Skull of Major Talent: "
+            'Label': f"{{{{Grimoire|#the-grimoire}}}}: Skull of Major Talent: "
                      f"+{account.grimoire['Upgrades']['Skull of Major Talent']['Level']}"
                      f"/{account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']}",
             'Progression': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
@@ -2339,7 +2339,7 @@ def _calculate_w1_statues(account):
     )
     dragon_multi = ValueToMulti(account.statues['Dragon Warrior Statue']['Value'])
     # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }")
-    
+
     for statue_name, statue_details in account.statues.items():
         if statue_name != 'Dragon Warrior Statue':
             account.statues[statue_name]['Value'] = (
