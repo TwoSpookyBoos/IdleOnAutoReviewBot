@@ -2338,7 +2338,8 @@ def _calculate_w1_statues(account):
         * voodoo_statufication_multi
     )
     dragon_multi = ValueToMulti(account.statues['Dragon Warrior Statue']['Value'])
-    logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }")
+    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }")
+    
     for statue_name, statue_details in account.statues.items():
         if statue_name != 'Dragon Warrior Statue':
             account.statues[statue_name]['Value'] = (
