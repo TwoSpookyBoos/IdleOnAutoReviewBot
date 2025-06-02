@@ -1546,7 +1546,7 @@ def _parse_w3_library(account):
 def _parse_w3_deathnote(account):
     account.apocCharactersIndexList = [c.character_index for c in account.barbs]
     account.bbCharactersIndexList = [c.character_index for c in account.bbs]
-    account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
+    account.apocalypse_character_index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
     _parse_w3_deathnote_miniboss_kills(account)
@@ -1560,9 +1560,9 @@ def _parse_w3_apocalypse_BBIndex(account):
         return None
 
 def _parse_w3_deathnote_rift_meowed(account):
-    if account.apocalypse_character_Index is not None:
+    if account.apocalypse_character_index is not None:
         riftPresent = False
-        for remainingMap in account.all_characters[account.apocalypse_character_Index].apoc_dict['MEOW']['Medium Extras']:
+        for remainingMap in account.all_characters[account.apocalypse_character_index].apoc_dict['MEOW']['Medium Extras']:
             if remainingMap[0] == 'The Rift':
                 riftPresent = True
                 break
