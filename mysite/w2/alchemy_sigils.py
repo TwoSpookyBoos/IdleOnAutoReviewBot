@@ -37,11 +37,11 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group B = Summoning Winner Bonuses
     bd = session_data.account.summoning['BattleDetails']
     player_matches_total = (
-        bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated']
-        + bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated']
-        + bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated']
-        + bd['Purple'][7]['RewardBaseValue'] * bd['Green'][7]['Defeated']
-        + bd['Cyan'][3]['RewardBaseValue'] * bd['Green'][3]['Defeated']
+        (bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated'])
+        + (bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated'])
+        + (bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated'])
+        + (bd['Purple'][7]['RewardBaseValue'] * bd['Purple'][7]['Defeated'])
+        + (bd['Cyan'][3]['RewardBaseValue'] * bd['Cyan'][3]['Defeated'])
     )
     matches_total = (
         bd['Green'][9]['RewardBaseValue']
