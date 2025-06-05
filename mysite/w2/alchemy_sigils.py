@@ -50,7 +50,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         + bd['Purple'][7]['RewardBaseValue']
         + bd['Cyan'][3]['RewardBaseValue']
     )
-    mgb = ValueToMulti(matches_total * session_data.account.summoning['WinnerBonusesMultiRest'])
+    mgb = ValueToMulti(player_matches_total * session_data.account.summoning['WinnerBonusesMultiRest'])
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
