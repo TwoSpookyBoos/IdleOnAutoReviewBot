@@ -704,7 +704,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         bubo_advice[library].append(Advice(
             label=(
                 f"Able to reach 200+ max talent level?"
-                f"<br>Refer to the {{{{ Library|#libray }}}} section for sources of Book levels and Bonus levels"
+                f"<br>Refer to the {{{{ Library|#library }}}} section for sources of Book levels and Bonus levels"
                 if best_bubo.max_talents_over_books < 200 else
                 f"Able to reach 200+ max talent level?"
             ),
