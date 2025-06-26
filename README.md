@@ -4,7 +4,7 @@ http://ieautoreview-scoli.pythonanywhere.com/
 
 ## Environment Setup
 
-_This tool is created and tested using Python 3.11._
+_This tool is created and tested using Python 3.10.5._
 <hr/>
 
 ### Using github codespaces
