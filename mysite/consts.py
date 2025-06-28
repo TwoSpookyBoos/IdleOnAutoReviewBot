@@ -6324,7 +6324,7 @@ saltLickList: list[str] = [
 ]
 maxStaticBookLevels = 140
 maxScalingBookLevels = 30
-maxSummoningBookLevels = 29
+maxSummoningBookLevels = 31
 maxOverallBookLevels = 100 + maxStaticBookLevels + maxScalingBookLevels + maxSummoningBookLevels
 approx_max_talent_level_non_es = (
     maxOverallBookLevels
@@ -8285,6 +8285,26 @@ pristineCharmsList: list = [
     {'Name': 'Jellypick', 'Image': 'jellypick', 'Bonus': '+20% Exalted Stamp bonus'},
     {'Name': 'Candy Cache', 'Image': 'candy-cache', 'Bonus': '1.40x Villager EXP'},
     {'Name': 'Mystery Fizz', 'Image': 'mystery-fizz', 'Bonus': '1.30x Extra 3rd Master Class resource'}
+]
+armorSetList: list = [
+    {'Key': 'GODSHARD_SET', 'Name': 'Godshard Set', 'Image': 'crown-of-the-gods', 'Bonus': '1.15x Higher Summoning Winner Bonus Multi'},
+    {'Key': 'COPPER_SET', 'Name': 'Copper Set', 'Image': 'copper-helmet', 'Bonus': '+60% Mining and Chopping Efficiency'},
+    {'Key': 'IRON_SET', 'Name': 'Iron Set', 'Image': 'amorok-helmet', 'Bonus': '+25% Class EXP Gain'},
+    {'Key': 'AMAROK_SET', 'Name': 'Amarok Set', 'Image': 'copper-helmet', 'Bonus': '+40% Accuracy and Defence'},
+    {'Key': 'GOLD_SET', 'Name': 'Gold Set', 'Image': 'gold-helmet', 'Bonus': '1.5x Coins Dropped by Monsters'},
+    {'Key': 'PLATINUM_SET', 'Name': 'Platinum Set', 'Image': 'platinum-helmet', 'Bonus': '+60% Fishing and Catching Efficiency'},
+    {'Key': 'EFAUNT_SET', 'Name': 'Efaunt Set', 'Image': 'efaunt-helmet', 'Bonus': '+25% Drop Rate'},
+    {'Key': 'DEMENTIA_SET', 'Name': 'Dementia Set', 'Image': 'dementia-helmet', 'Bonus': '+50% Critters And Souls Gained'},
+    {'Key': 'VOID_SET', 'Name': 'Void Set', 'Image': 'void-imperium-helmet', 'Bonus': '+10% AFK Gains'},
+    {'Key': 'CHIZOAR_SET', 'Name': 'Chizoar Set', 'Image': 'chizoar-helmet', 'Bonus': '+40% All Skill EXP Gain'},
+    {'Key': 'LUSTRE_SET', 'Name': 'Lustre Set', 'Image': 'lustre-veil', 'Bonus': '+75% Total Damage'},
+    {'Key': 'DIABOLICAL_SET', 'Name': 'Diabolical Set', 'Image': 'diabolical-headdress', 'Bonus': '+20% Faster Monster Respawning'},
+    {'Key': 'TROLL_SET', 'Name': 'Troll Set', 'Image': 'this-veil-of-the-troll', 'Bonus': '1.25x Higher Bonuses from Tome'},
+    {'Key': 'SECRET_SET', 'Name': 'Secret Set', 'Image': 'mark-of-member', 'Bonus': '1.25x Gold Food effect'},
+    {'Key': 'MAGMA_SET', 'Name': 'Magma Set', 'Image': 'magma-core-headdress', 'Bonus': '+100% Lab and Divinity EXP Gain'},
+    {'Key': 'KATTLEKRUK_SET', 'Name': 'Kattlekruk Set', 'Image': 'skulled-helmet-of-the-divine', 'Bonus': '+5 LV for all Talents'},
+    {'Key': 'MARBIGLASS_SET', 'Name': 'Marbiglass Set', 'Image': 'marbiglass-headdress', 'Bonus': '+10% All Stat'},
+    {'Key': 'EMPEROR_SET', 'Name': 'Emperor Set', 'Image': 'emperor-kabuto', 'Bonus': 'Ribbons and Exalted Stamps give 1.20x more multi'}
 ]
 sneaking_gemstones_all_values = {
     #NjGem0 = "4 130 Aquamarine 40 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 10000".split(" ")

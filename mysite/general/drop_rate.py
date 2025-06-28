@@ -564,6 +564,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         + (.01 if session_data.account.achievements['Spectre Stars']['Complete'] else 0)
         + (.25 * session_data.account.sailing['Artifacts']['The Winz Lantern']['Level'])
         + (.01 * session_data.account.merits[5][4]['Level'])
+        + (.15 if session_data.account.armor_sets['GODSHARD_SET']['Obtained'] else 0)
     )
     prisine_charm_summon_bonus_multi = 1.3 if session_data.account.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
     # The bonuses from endless summoning and everything else, except the pristine charm are addative. The charm is a multi

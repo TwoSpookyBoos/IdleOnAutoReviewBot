@@ -152,6 +152,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + account.merits[5][4]['Level']
         + int(account.achievements['Spectre Stars']['Complete'])
         + int(account.achievements['Regalis My Beloved']['Complete'])
+        + (15 if account.armor_sets['GODSHARD_SET']['Obtained'] else 0)
     )
     player_mgb_full = ValueToMulti(
         (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])

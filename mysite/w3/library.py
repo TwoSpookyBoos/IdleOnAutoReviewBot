@@ -103,6 +103,14 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if cyan14beat else 0,
         goal=1
     ))
+    # Godshard Smithy Armor Set Bonus
+    godshard_unlocked = session_data.account.armor_sets['GODSHARD_SET']['Obtained']
+    bookLevelAdvices[summoningSubgroup].append(Advice(
+        label=f"Smithy Armor Sets: God Shard Set: {'1.15' if godshard_unlocked else '0'}/1.15x",
+        picture_class="crown-of-the-gods",
+        progression=1 if godshard_unlocked else 0,
+        goal=1
+    ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
     bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryPartial'])

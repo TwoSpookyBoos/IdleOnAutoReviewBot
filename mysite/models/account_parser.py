@@ -30,7 +30,7 @@ from consts import (
     obols_dict, ignorable_obols_list,
     islands_dict, killroy_dict,
     # W3
-    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
+    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict, armorSetList,
     equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
     printerAllIndexesBeingPrinted,
     apocableMapIndexDict, apocAmountsList, apocNamesList, dn_miniboss_names, dn_miniboss_skull_requirement_list, dnSkullValueList, getSkullNames,
@@ -266,6 +266,7 @@ def _parse_general(account):
     account.daily_world_boss_kills = safer_get(account.raw_optlacc_dict, 195, 0)
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
+    _parse_armor_sets(account)
     _parse_class_unique_kill_stacks(account)
     _parse_general_gem_shop(account)
     _parse_general_gem_shop_optlacc(account)
@@ -3188,6 +3189,22 @@ def _parse_w6(account):
     _parse_w6_sneaking(account)
     _parse_w6_farming(account)
     _parse_w6_summoning(account)
+
+def _parse_armor_sets(account):
+    account.armor_sets = {}
+
+    # Get owned armor set keys from raw data
+    obtained_keys = safer_get(account.raw_optlacc_dict, 379, "")
+    if isinstance(obtained_keys, str):
+        obtained_keys = obtained_keys.split(',')
+
+    for armor_set in armorSetList:
+        key = armor_set['Key']
+        account.armor_sets[key] = {
+            'Obtained': key in obtained_keys,
+            'Image': armor_set['Image'],
+            'Bonus': armor_set['Bonus'],
+        }
 
 def _parse_w6_sneaking(account):
     account.sneaking = {
