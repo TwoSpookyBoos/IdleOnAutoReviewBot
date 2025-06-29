@@ -177,7 +177,7 @@ def getBaseClass(inputClass):
     match inputClass:
         case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
             return "Warrior"
-        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Wizard" | "Elemental Sorcerer":
+        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Arcane Cultist" | "Wizard" | "Elemental Sorcerer":
             return "Mage"
         case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
             return "Archer"
@@ -195,7 +195,7 @@ def getSubclass(inputClass):
             return "Barbarian"
         case "Squire" | "Divine Knight":
             return "Squire"
-        case "Shaman" | "Bubonic Conjuror":
+        case "Shaman" | "Bubonic Conjuror" | "Arcane Cultist":
             return "Shaman"
         case "Wizard" | "Elemental Sorcerer":
             return "Wizard"
@@ -217,7 +217,9 @@ def getEliteClass(inputClass):
             return "Blood Berserker"
         case 'Beast Master' | 'Wind Walker':
             return 'Beast Master'
-        case "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
+        case "Bubonic Conjuror" | "Arcane Cultist":
+            return "Bubonic Conjuror"
+        case "Divine Knight" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
             return inputClass
         case (
             "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
@@ -228,7 +230,7 @@ def getEliteClass(inputClass):
 
 def getMasterClass(inputClass):
     match inputClass:
-        case 'Death Bringer' | 'Wind Walker':
+        case 'Death Bringer' | 'Wind Walker' | "Arcane Cultist":
             return inputClass
         case (
             "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
