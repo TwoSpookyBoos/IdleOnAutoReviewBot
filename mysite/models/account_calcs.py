@@ -1,6 +1,6 @@
 from math import ceil, floor, log2, prod
 
-from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType
+from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types

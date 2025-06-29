@@ -1,11 +1,9 @@
-from consts.consts_w6 import emperor_bonus_images
+from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safer_math_pow, mark_advice_completed
-from utils.logging import get_logger
+from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
-from utils.text_formatting import notateNumber
+from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
