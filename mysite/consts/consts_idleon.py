@@ -31,7 +31,7 @@ classes_dict = {
     34: "Elemental Sorcerer",
     35: "Spiritual Monk",
     36: "Bubonic Conjuror",
-    37: "Arcane Cultist"
+    40: "Arcane Cultist"
 }
 skill_index_list = [
     "Combat",
