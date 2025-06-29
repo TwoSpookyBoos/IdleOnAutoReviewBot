@@ -144,7 +144,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                 and session_data.account.armor_sets['Unlocked']
                 and name not in getSetAlertExclusions()
             ):
-                session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+                session_data.account.alerts_Advices['World 3'].append(Advice(
                     label=f"All required items owned to {{{{Complete|#armor-sets}}}} the {name.title()}",
                     picture_class=details['Image']
                 ))
