@@ -1,5 +1,5 @@
 import math
-from consts.consts import ValueToMulti
+from consts.consts_autoreview import ValueToMulti
 from utils.logging import get_logger
 
 logger = get_logger(__name__)

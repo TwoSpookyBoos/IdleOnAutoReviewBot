@@ -1,15 +1,14 @@
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
-from consts.consts import break_you_best, build_subgroup_label, EmojiType
+from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_general import current_max_usable_inventory_slots
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w2 import max_vial_level, max_sigil_level
 from consts.consts_w1 import stamp_types, unavailable_stamps_list, stamp_maxes, stamps_dict, stamps_exalt_recommendations, capacity_stamps
-from consts.progression_tiers import stamps_progressionTiers
+from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -401,6 +400,8 @@ def getProgressionTiersAdviceGroup():
     missing_stamps_list = setMissingStamps()
     exclusions_dict = getStampExclusions()
 
+    added_stamps = {}
+
     #Assess Tiers
     for tier_number, requirements in stamps_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
@@ -444,6 +445,8 @@ def getProgressionTiersAdviceGroup():
 
         # SpecificStampLevels
         for stamp_name, required_level in requirements.get('Stamps', {}).get('Specific', {}).items():
+            # if added_stamps.get(stamp_name, 0) >= required_level:
+            #     continue  #Don't add the same stamp/level combo into multiple tiers
             if player_stamps[stamp_name]['Level'] < required_level:
                 if (
                     (tier_number <= max_tier and exclusions_dict.get(stamp_name, False) == False)
@@ -455,6 +458,7 @@ def getProgressionTiersAdviceGroup():
                     ):
                         stamp_Advices['Specific'][subgroup_label] = []
                     if subgroup_label in stamp_Advices['Specific']:
+                        added_stamps[stamp_name] = required_level
                         stamp_Advices['Specific'][subgroup_label].append(Advice(
                             label=f"{player_stamps[stamp_name]['StampType']}: {stamp_name}",
                             picture_class=stamp_name,

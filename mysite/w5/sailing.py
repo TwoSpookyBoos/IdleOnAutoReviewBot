@@ -1,12 +1,11 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles
-from consts.progression_tiers import sailing_progressionTiers
+from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 

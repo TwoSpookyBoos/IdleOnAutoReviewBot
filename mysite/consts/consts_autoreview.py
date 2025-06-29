@@ -113,6 +113,13 @@ switches = [
 ]
 
 ###AutoReview consts###
+class AdviceType(Enum):
+    INFO = 'Info'
+    OPT = 'Optional'
+    COMP = 'Completed'
+    OVR = 'Overwhelming'
+
+
 class EmojiType(Enum):
     NO = '❌'
     STOP = '🛑'
@@ -133,7 +140,6 @@ class EmojiType(Enum):
 break_you_best = f'<br>You best {EmojiType.HEART.value}'
 break_you_bestest = f'<br>You bestest {EmojiType.HEART.value}'
 break_keep_it_up = f"<br>Keep it up! You're on the right track! {EmojiType.HEART.value}"
-
 
 versions_patches = {
     0: "Unknown",
@@ -164,7 +170,6 @@ versions_patches = {
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 
-
 ###AutoReview Functions###
 def ceilUpToBase(inputValue: int, base: int) -> int:
     toReturn = base
@@ -188,10 +193,3 @@ def build_subgroup_label(tier_number, max_tier, pre='', post=''):
     post_note = f' ({post})' if post else ''
     final = f"{pre_note} reach {optional_note}Tier {tier_number}{post_note}"
     return final
-
-
-class AdviceType(Enum):
-    INFO = 'Info'
-    OPT = 'Optional'
-    COMP = 'Completed'
-    OVR = 'Overwhelming'

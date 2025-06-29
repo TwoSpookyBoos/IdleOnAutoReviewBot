@@ -1,6 +1,6 @@
 from flask import g as session_data
-from consts.consts import break_keep_it_up, EmojiType
-from consts.progression_tiers_updater import true_max_tiers
+from consts.consts_autoreview import break_keep_it_up, EmojiType
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor, ceil
 from utils.logging import get_logger
@@ -141,7 +141,7 @@ def getRefineryProgressionTierAdviceGroups():
                 progression='Off',
                 goal='On')
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Red Salt|#refinery }}}} is not producing",
                 picture_class=salt_dict['RedSalt'].image
             ))
@@ -152,7 +152,7 @@ def getRefineryProgressionTierAdviceGroups():
                 Advice(label=salt_dict['RedSalt'].salt_name, picture_class=salt_dict['RedSalt'].image,
                        progression=salt_dict['RedSalt'].auto_refine, goal=0, unit="%")
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Red Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 100 before auto-refining early.",
                 picture_class=salt_dict['RedSalt'].image
             ))
@@ -166,7 +166,7 @@ def getRefineryProgressionTierAdviceGroups():
                 progression='Off',
                 goal='On')
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Green Salt|#refinery }}}} is not producing",
                 picture_class=salt_dict['GreenSalt'].image
             ))
@@ -177,7 +177,7 @@ def getRefineryProgressionTierAdviceGroups():
                 Advice(label=salt_dict['GreenSalt'].salt_name, picture_class=salt_dict['GreenSalt'].image,
                        progression=salt_dict['GreenSalt'].auto_refine, goal=0, unit="%")
             )
-            session_data.account.alerts_AdviceDict['World 3'].append(Advice(
+            session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Green Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 30 before auto-refining early.",
                 picture_class=salt_dict['GreenSalt'].image
             ))

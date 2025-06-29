@@ -1,8 +1,7 @@
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
 from consts.consts_w5 import find_vendor_name
-from consts.progression_tiers import greenstack_progressionTiers
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Assets
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger

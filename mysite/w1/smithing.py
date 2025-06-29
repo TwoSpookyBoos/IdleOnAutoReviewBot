@@ -1,11 +1,10 @@
 import math
 
 from consts.consts_w1 import stamp_maxes
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts.consts import break_you_best, ValueToMulti, build_subgroup_label
+from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.consts_w2 import arcade_max_level
-from consts.progression_tiers import smithing_progressionTiers
+from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl

@@ -1,4 +1,4 @@
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -67,7 +67,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
 
     #Generate Alert
     if doublers_spent < doublers_owned:
-        session_data.account.alerts_AdviceDict['World 6'].append(Advice(
+        session_data.account.alerts_Advices['World 6'].append(Advice(
             label=f"{doublers_owned - doublers_spent} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
             picture_class='summoning'
         ))

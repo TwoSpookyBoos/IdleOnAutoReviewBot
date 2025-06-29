@@ -1,3 +1,6 @@
+from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.consts_w6 import gfood_codes
+
 combatLevels_progressionTiers = [
     # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
     [0, 0, "", 0, "", ""],
@@ -31,7 +34,7 @@ combatLevels_progressionTiers = [
     [28, 2100, "Family - Circle Obol Slot 12", 500, "Credit towards Equinox Dream 23", ""],
     [29, 2500, "Family - Sparkle Obol Slot 3", 500, "Credit towards Equinox Dream 23", ""],
     [30, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
-    [31, 4800, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
+    [31, 4855, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
     [32, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
 ]
 secret_class_progressionTiers = {
@@ -2117,4 +2120,82 @@ farming_progressionTiers = {
             'Farquad Force': 5940,
         }
     }  #440% Vines, then 99% the Alchemy Bubbles
+}
+
+###TRUE MAX TIERS###
+true_max_tiers = {
+    # General
+    'Achievements': max(achievements_progressionTiers.keys()),
+    'Active': 0,
+    'Cards': 72,  #12 sets * 6 stars
+    'Combat Levels': combatLevels_progressionTiers[-1][0],
+    'Consumables': 0,
+    'Drop Rate': 0,
+    'Event Shop': 0,
+    'Gem Shop': 0,
+    'Greenstacks': max(greenstack_progressionTiers.keys()),
+    'Endangered Greenstacks': 1,
+    'Secret Class Path': max(secret_class_progressionTiers.keys()),
+
+    # Master Classes
+    'Grimoire': 0,
+    'Compass': 0,
+
+    # World 1
+    'Bribes': max(bribes_progressionTiers.keys()),
+    'Owl': max(owl_progressionTiers.keys()),
+    'Smithing': max(smithing_progressionTiers.keys()),
+    'Stamps': max(stamps_progressionTiers.keys()),
+    'Star Signs': max(starsigns_progressionTiers.keys()),
+    'Statues': max(statues_progressionTiers.keys()),
+    'Upgrade Vault': max(vault_progressionTiers.keys()),
+
+    # World 2
+    'Bubbles': bubbles_progressionTiers[-1][0],
+    'Pay2Win': 1,
+    'Sigils': max(sigils_progressionTiers.keys()),
+    'Vials': max(vials_progressionTiers.keys()),
+    'Arcade': 0,
+    'Bonus Ballot': 0,
+    'Islands': max(islands_progressionTiers.keys()),
+    'Killroy': 0,
+    'Post Office': max(post_office_progression_tiers.keys()),
+
+    # World 3
+    'Armor Sets': 7,
+    'Atom Collider': max(atoms_progressionTiers.keys()),
+    'Buildings': 0,
+    'Death Note': deathNote_progressionTiers[-1][0],
+    'Equinox': len(dreams_that_unlock_new_bonuses) + 1,
+    'Library': len(library_subgroup_tiers),
+    'Library Characters': len(old_library_subgroup_tiers),
+    'Refinery': 1,  #Pass or Fail
+    'Salt Lick': max(salt_lick_progression_tiers.keys()),
+    'Sampling': max(sampling_progressionTiers.keys()),
+    'Trapping': max_trapping_critter_types,
+    'Prayers': max(prayers_progressionTiers.keys()),
+
+    # World 4
+    'Breeding': max(breeding_progressionTiers.keys()),
+    'Cooking': 6+1,  #TODO
+    'Rift': max(rift_progressionTiers.keys()),
+
+    # World 5
+    'Divinity': max(divinity_progressionTiers.keys()),
+    'Gaming': max(gaming_progressionTiers.keys()),
+    'Sailing': max(sailing_progressionTiers.keys()),
+    'Slab': 0,
+
+    # Caverns
+    'Glowshroom Tunnels': 0,
+    'Shallow Caverns': 0,
+    'Underground Overgrowth': 0,
+    'Villagers': 0,
+
+    # World 6
+    'Beanstalk': len(gfood_codes) * 2,
+    'Farming': max(farming_progressionTiers.keys()),
+    'Sneaking': 0,
+    'Summoning': 0,
+    'Emperor': 0
 }

@@ -1,12 +1,11 @@
 from flask import g as session_data
 
-from consts.consts import build_subgroup_label, break_you_best
+from consts.consts_autoreview import build_subgroup_label, break_you_best
 from consts.consts_w2 import min_NBLB, max_NBLB, atrisk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
     bubble_cauldron_color_list, nblb_skippable, nblb_max_index
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w6 import max_farming_crops
-from consts.progression_tiers import bubbles_progressionTiers
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 
 

@@ -1,8 +1,7 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
 from utils.logging import get_logger
-from consts.consts import break_you_best, build_subgroup_label
-from consts.progression_tiers import bribes_progressionTiers
+from consts.consts_autoreview import break_you_best, build_subgroup_label
+from consts.progression_tiers import bribes_progressionTiers, true_max_tiers
 from flask import g as session_data
 
 logger = get_logger(__name__)

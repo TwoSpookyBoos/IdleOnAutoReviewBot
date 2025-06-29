@@ -1,12 +1,11 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best
+from consts.consts_autoreview import break_you_best
 from consts.consts_general import achievement_categories
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w2 import max_po_box_before_myriad
-from consts.progression_tiers import achievements_progressionTiers
+from consts.progression_tiers import achievements_progressionTiers, true_max_tiers
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)

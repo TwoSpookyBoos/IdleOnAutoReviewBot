@@ -1,12 +1,11 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import ValueToMulti, break_you_best, build_subgroup_label, AdviceType
+from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, AdviceType
 from consts.consts_w2 import max_index_of_vials, max_vial_level, max_maxable_vials, vial_costs
-from consts.progression_tiers import vials_progressionTiers
+from consts.progression_tiers import vials_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 
@@ -94,7 +93,7 @@ def getVialsProgressionTiersAdviceGroup():
                     prog = 100 * (session_data.account.all_assets.get(player_alchemy_vials[required_vial]['Material']).amount / max(1, goal))
                     # Generate Alerts
                     if prog >= 100 and player_alchemy_vials[required_vial]['Level'] == max_vial_level-1:
-                        session_data.account.alerts_AdviceDict['World 2'].append(Advice(
+                        session_data.account.alerts_Advices['World 2'].append(Advice(
                             label=f"{required_vial} {{{{ Vial|#vials }}}} ready to be maxed!",
                             picture_class="vial-13"
                         ))

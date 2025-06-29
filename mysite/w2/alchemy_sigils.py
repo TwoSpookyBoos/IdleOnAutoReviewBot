@@ -1,12 +1,11 @@
 from flask import g as session_data
 
-from consts.consts import ValueToMulti, break_you_best, build_subgroup_label
+from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.progression_tiers import sigils_progressionTiers
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.data_formatting import mark_advice_completed
 

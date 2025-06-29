@@ -1,5 +1,5 @@
-from consts.progression_tiers_updater import true_max_tiers
-from consts.consts import EmojiType
+from consts.progression_tiers import true_max_tiers
+from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -35,7 +35,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 
     # Generate Alert
     if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"{{{{ Polonai|#villagers }}}} ready to level!",
             picture_class=villager_name
         ))
@@ -116,7 +116,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
     # Generate Alert
     if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"{{{{ Kaipu|#villagers }}}} ready to level!",
             picture_class=villager_name
         ))
@@ -209,7 +209,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
     #Generate Alert
     if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"{{{{ Cosmos|#villagers }}}} ready to level!",
             picture_class=villager_name
         ))
@@ -255,7 +255,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         )
         villager_advice[v_stats].append(unspent_pts_advice)
         if villager['Unlocked']:
-            session_data.account.alerts_AdviceDict['The Caverns Below'].append(unspent_pts_advice)
+            session_data.account.alerts_Advices['The Caverns Below'].append(unspent_pts_advice)
     # Invested Opals
     villager_advice[v_stats].append(Advice(
         label="Opals Invested",
@@ -303,7 +303,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 
     # Generate Alert
     if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"{{{{ Minau|#villagers }}}} ready to level!",
             picture_class=villager_name
         ))
@@ -397,7 +397,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
 
     # Generate Alert
     if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"{{{{ Bolaia|#villagers }}}} ready to level!",
             picture_class=villager_name
         ))

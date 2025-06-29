@@ -1,17 +1,16 @@
 from math import ceil, floor
 
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
-from consts.consts import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
+from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
 from consts.consts_general import max_characters
 from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, getRequiredCropNumber
 from consts.consts_w4 import max_meal_level
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import stamp_maxes
-from consts.progression_tiers import farming_progressionTiers
+from consts.progression_tiers import farming_progressionTiers, true_max_tiers
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)

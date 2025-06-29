@@ -263,9 +263,6 @@ stamps_dict = {
     }
 }
 capacity_stamps = ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]
-tiered_stamps = set()
-ordered_tiers_stamps = []
-remaining_stamps = []
 stamps_exalt_recommendations = [
     'Crystallin', 'Mason Jar Stamp', 'Summoner Stone Stamp', 'Multitool Stamp',
     'Matty Bag Stamp', 'Golden Sixes Stamp', 'Drippy Drop Stamp', 'Gold Ball Stamp',

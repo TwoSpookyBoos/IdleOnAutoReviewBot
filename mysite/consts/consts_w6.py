@@ -1,6 +1,6 @@
 import math
 
-from consts.consts import ValueToMulti
+from consts.consts_autoreview import ValueToMulti
 from consts.consts_idleon import lavaFunc
 from utils.logging import get_logger
 

@@ -1,5 +1,5 @@
 from consts.consts_idleon import lavaFunc
-from consts.progression_tiers_updater import true_max_tiers
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data

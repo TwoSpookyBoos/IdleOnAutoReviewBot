@@ -1,10 +1,9 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Character
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts import break_you_best, EmojiType
-from consts.progression_tiers import secret_class_progressionTiers
+from consts.consts_autoreview import break_you_best, EmojiType
+from consts.progression_tiers import secret_class_progressionTiers, true_max_tiers
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
@@ -147,7 +146,7 @@ def getRightHandsAdviceGroups(true_max):
         ),
     )
     if catchup_advices:
-        session_data.account.alerts_AdviceDict['General'].append(Advice(
+        session_data.account.alerts_Advices['General'].append(Advice(
             label=f"Your {{{{ Maestro|#secret-class-path }}}} isn't best in {len(catchup_advices)} Skill{pl(catchup_advices)}",
             picture_class='right-hand-of-action',
         ))

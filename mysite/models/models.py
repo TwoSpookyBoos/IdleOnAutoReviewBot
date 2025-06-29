@@ -8,7 +8,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from config import app
-from consts.consts import ignorable_labels
+from consts.consts_autoreview import ignorable_labels
 from consts.consts_idleon import lavaFunc, expected_talents_dict
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
@@ -1397,10 +1397,7 @@ class Account:
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
         self.data_source = source_string.value
-        self._prep_alerts_AG()
-
-    def _prep_alerts_AG(self):
-        self.alerts_AdviceDict = {
+        self.alerts_Advices = {
             'General': [],
             'World 1': [],
             'World 2': [],

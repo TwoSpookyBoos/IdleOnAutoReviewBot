@@ -3,7 +3,7 @@ from collections import defaultdict
 from math import floor
 from flask import g
 
-from consts.consts import ValueToMulti, items_codes_and_names
+from consts.consts_autoreview import ValueToMulti, items_codes_and_names
 from consts.consts_idleon import lavaFunc, companions_list
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
@@ -1850,7 +1850,7 @@ def _parse_w3_saltlick(account):
 def _parse_w3_armor_sets(account):
     account.armor_sets = {
         'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Days Remaining': 30 - max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, 0), 0)),
         'Sets': {}
     }
     raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
@@ -3628,7 +3628,6 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
         except Exception as e:
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
-
 
 def _parse_w6_emperor(account):
     bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]

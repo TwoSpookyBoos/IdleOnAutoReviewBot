@@ -1,7 +1,6 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts.consts import break_you_best, build_subgroup_label, EmojiType
-from consts.progression_tiers import owl_progressionTiers
+from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
+from consts.progression_tiers import owl_progressionTiers, true_max_tiers
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -15,7 +14,7 @@ def getNoFeathersGeneratingAlert():
             else f"You aren't generating any {{{{ Owl|#owl }}}} Feathers!",
             picture_class='feather-generation'
         )
-        session_data.account.alerts_AdviceDict['World 1'].append(alert_advice)
+        session_data.account.alerts_Advices['World 1'].append(alert_advice)
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     owl_AdviceDict = {

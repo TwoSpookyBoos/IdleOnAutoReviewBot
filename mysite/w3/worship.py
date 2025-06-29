@@ -1,8 +1,7 @@
-from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from consts.consts import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w3 import conditional_prayers, ignorable_prayers
-from consts.progression_tiers import prayers_progressionTiers
+from consts.progression_tiers import prayers_progressionTiers, true_max_tiers
 from flask import g as session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger

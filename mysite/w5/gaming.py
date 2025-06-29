@@ -2,8 +2,8 @@ import collections
 import functools
 import math
 
-from consts.progression_tiers_updater import true_max_tiers
-from consts.consts import EmojiType
+from consts.progression_tiers import true_max_tiers
+from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import safer_convert, safer_math_log
 from utils.logging import get_logger

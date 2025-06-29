@@ -1,5 +1,5 @@
 from enum import IntEnum
-from consts.consts import break_you_best
+from consts.consts_autoreview import break_you_best
 from consts.consts_general import inventory_bags_dict, storage_chests_dict, current_max_usable_inventory_slots
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from utils.data_formatting import safe_loads, mark_advice_completed
