@@ -1,3 +1,7 @@
+# The purpose of this file is making updates to consts.
+# This is "run" when the file is imported in flask_app.py so that it only runs once per deploy,
+# instead of once per profile/data submit.
+
 from consts import consts_w2, progression_tiers
 from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars
 from consts.consts_w1 import stamp_maxes, capacity_stamps, stamps_dict, unavailable_stamps_list
