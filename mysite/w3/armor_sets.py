@@ -18,11 +18,11 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
     tier_ArmorSets = 0
 
     smithy_unlocked = session_data.account.armor_sets['Unlocked']
-    days_toward_unlock = session_data.account.armor_sets['Days toward Unlock']
+    unlock_days_remaining = session_data.account.armor_sets['Days Remaining']
 
     if (
         not smithy_unlocked
-        and days_toward_unlock >= 30
+        and unlock_days_remaining == 0
     ):
         session_data.account.alerts_Advices['World 3'].append(Advice(
             label=f"{{{{Smithy|#armor-sets}}}} ready to accept Armor Sets",
@@ -47,7 +47,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
                 armor_sets_Advices['Tiers'][subgroup_label].append(Advice(
                     label=f"Unlock the Smithy by having purchased 2000 gems or waiting 30 days",
                     picture_class='smithy',
-                    progression=min(30, days_toward_unlock),
+                    progression=max(0, unlock_days_remaining),
                     goal=30
                 ))
 

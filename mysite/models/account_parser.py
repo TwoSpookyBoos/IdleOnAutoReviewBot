@@ -1850,7 +1850,7 @@ def _parse_w3_saltlick(account):
 def _parse_w3_armor_sets(account):
     account.armor_sets = {
         'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Days Remaining': 30 - max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, 0), 0)),
         'Sets': {}
     }
     raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
