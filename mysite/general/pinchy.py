@@ -1,4 +1,5 @@
-from consts import break_you_bestest, true_max_tiers
+from consts.consts import break_you_bestest
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceSection, AdviceGroup
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -12,6 +13,7 @@ class Tier:
         self,
         tier: int,
         section: str = None,
+        section_optional: bool = False,
         section_complete: bool = False,
         section_informational: bool = False,
         section_unrated: bool = False,
@@ -22,6 +24,7 @@ class Tier:
     ):
         self.tier = tier
         self.section = section
+        self.section_optional = section_optional
         self.section_complete = section_complete
         self.section_informational = section_informational
         self.section_unrated = section_unrated
@@ -125,7 +128,6 @@ class Threshold:
     def placeholder(cls):
         return cls(99, -1)
 
-
     @classmethod
     def none(cls):
         return cls(0, 0)
@@ -154,6 +156,7 @@ class Placements(dict):
     SIGILS = "Sigils"
     POST_OFFICE = "Post Office"
     ISLANDS = "Islands"
+    ARMOR_SETS = 'Armor Sets'
     REFINERY = "Refinery"
     SAMPLING = "Sampling"
     SALT_LICK = "Salt Lick"
@@ -173,9 +176,9 @@ class Placements(dict):
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
         VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
         BUBBLES, VIALS, P2W, SIGILS, POST_OFFICE, ISLANDS,
-        REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
+        ARMOR_SETS, REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
-        DIVINITY, SAILING, #GAMING,
+        DIVINITY, SAILING,  #GAMING,
         FARMING
     ]
 
@@ -200,10 +203,11 @@ class Placements(dict):
         SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,     true_max_tiers[SIGILS], 99],
         POST_OFFICE:   [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,     true_max_tiers[POST_OFFICE], 99],
         ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,     true_max_tiers[ISLANDS], 99],
+        ARMOR_SETS:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,     true_max_tiers[ARMOR_SETS], 99],
         REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
         SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
         SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,     true_max_tiers[SALT_LICK], 99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 22,     23,    true_max_tiers[DEATH_NOTE], 99],
+        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 21,     22,    true_max_tiers[DEATH_NOTE], 99],
         COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,    true_max_tiers[COLLIDER], 99],
         PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,     true_max_tiers[PRAYERS], 99],
         TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,    true_max_tiers[TRAPPING], 99],
@@ -299,8 +303,18 @@ class Thresholds(dict):
 def sort_pinchy_reviews(dictOfPRs) -> Placements:
     placements = Placements()
 
-    for section, (pinchy_tier, section_complete, section_informational, section_unrated, section_overwhelming, section_max_tier, section_true_max_tier) in dictOfPRs.items():
-        tier = Tier(pinchy_tier, section, section_complete, section_informational, section_unrated, section_overwhelming)
+    for section, (pinchy_tier, section_optional, section_complete,
+                  section_informational, section_unrated, section_overwhelming,
+                  section_max_tier, section_true_max_tier) in dictOfPRs.items():
+        tier = Tier(
+            tier=pinchy_tier,
+            section=section,
+            section_optional=section_optional,
+            section_complete=section_complete,
+            section_informational=section_informational,
+            section_unrated=section_unrated,
+            section_overwhelming=section_overwhelming,
+        )
         placements.place(tier)
 
     placements.finalise()
@@ -351,7 +365,7 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
     try:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
-        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 22:
+        elif dictOfPRs[Placements.DEATH_NOTE][0] >= 21:
             expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
             expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
@@ -380,7 +394,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             completed=section.section_complete,
             informational=section.section_informational,
             unrated=section.section_unrated,
-            overwhelming=section.section_overwhelming
+            overwhelming=section.section_overwhelming,
+            optional=section.section_optional
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.TRUE_MAX):
@@ -403,7 +418,7 @@ def generate_advice_groups(sectionsByThreshold: dict):
             advices=advices
         )
 
-        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.maxSubgroupsPerGroup + 1):
+        if not session_data.hide_overwhelming or (session_data.hide_overwhelming and len(advice_groups) < session_data.account.max_subgroups + 1):
             advice_groups.append(advice_group)
 
     return advice_groups
@@ -450,12 +465,13 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     dictOfPRs = {
         section.name: [
             section.pinchy_rating,
+            section.optional,
             section.completed,
             section.informational,
             section.unrated,
             section.overwhelming,
             section.max_tier,
-            section.true_max_tier
+            section.true_max_tier,
         ] for section in pinchable_sections if not section.unreached
     }
 
@@ -495,30 +511,33 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     sections_maxed = f"{sections_maxed_count}/{sections_total}"
 
     pinchy_high = AdviceSection(
-        name="Pinchy high",
+        name='Pinchy high',
         tier=expectedThreshold.name,
         header=pinchyExpected,
         collapse=True,
-        completed=False
+        completed=False,
+        optional=False
     )
 
     pinchy_low = AdviceSection(
-        name="Pinchy low",
+        name='Pinchy low',
         tier=lowestThresholdReached.name,
         header=f"Minimum Progression, based on weakest ranked review: {lowestThresholdReached}{equalSnippet}",
         collapse=True,
-        completed=False
+        completed=False,
+        optional=False
     )
 
     pinchy_all = AdviceSection(
-        name="Pinchy all",
+        name='Pinchy all',
         tier=sections_maxed,
         pinchy_rating=sections_maxed_count,
         header=f"Sections maxed: {sections_maxed}"
                f"{break_you_bestest if sections_maxed_count >= sections_total else ''}",
         picture='customized/grumblo_explode.png' if sections_maxed_count >= sections_total else "Pinchy.gif",
         groups=advice_groups,
-        complete=False
+        complete=False,
+        optional=False
     )
 
     return pinchy_high, pinchy_low, pinchy_all

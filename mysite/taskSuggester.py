@@ -6,21 +6,22 @@ from flask import g as session_data
 import models.account_calcs
 import models.account_parser
 from config import app
-from consts import versions_patches
+from consts.consts import versions_patches
+from consts.progression_tiers_updater import finalize_progression_tiers
 from models.custom_exceptions import UsernameBanned
 from models.models import AdviceWorld, WorldName, Account
-from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData, safer_convert
+from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
-from general import combatLevels, greenstacks, pinchy, cards, secretPath, consumables, gemShop, active, achievements, eventShop, drop_rate
+from general import combat_levels, greenstacks, pinchy, cards, secret_path, consumables, gem_shop, active, achievements, event_shop, drop_rate
 from master_classes import grimoire, compass
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
-from w2 import alchemy, post_office, killroy, islands, arcade, bonus_ballot
-from w3 import trapping, consRefinery, consDeathNote, worship, consSaltLick, consBuildings, equinox, library, sampling, collider
+from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
+from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
 from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
-from w6 import beanstalk, sneaking, farming, summoning
+from w6 import beanstalk, sneaking, farming, summoning, emperor
 
 logger = get_logger(__name__)
 
@@ -70,18 +71,19 @@ def main(inputData, source_string, runType="web"):
     #roastworthyBool = getRoastableStatus(session_data.account.names)
 
     # Step 3: Send that data off to all the different analyzers
+    finalize_progression_tiers()
     all_sections = [
         sections_general := [
-            combatLevels.getCombatLevelsAdviceSection(),
-            secretPath.getSecretClassAdviceSection(),
+            combat_levels.getCombatLevelsAdviceSection(),
+            secret_path.getSecretClassAdviceSection(),
             active.getActiveAdviceSection(),
             drop_rate.get_drop_rate_advice_section(),
             achievements.getAchievementsAdviceSection(),
             *(consumables.getConsumablesAdviceSections()),
-            gemShop.getGemShopAdviceSection(),
+            gem_shop.getGemShopAdviceSection(),
             *(greenstacks.getGStackAdviceSections()),
             cards.getCardsAdviceSection(),
-            eventShop.getEvent_ShopAdviceSection(),
+            event_shop.getEvent_ShopAdviceSection(),
         ],
         sections_master_classes := [
             grimoire.getGrimoireAdviceSection(),
@@ -97,10 +99,10 @@ def main(inputData, source_string, runType="web"):
             owl.getOwlAdviceSection()
         ],
         sections_2 := [
-            alchemy.getAlchemyBubblesAdviceSection(),
-            alchemy.getAlchemyVialsAdviceSection(),
-            alchemy.getAlchemyP2WAdviceSection(),
-            alchemy.getAlchemySigilsAdviceSection(),
+            alchemy_bubbles.getAlchemyBubblesAdviceSection(),
+            alchemy_vials.getAlchemyVialsAdviceSection(),
+            alchemy_p2w.getAlchemyP2WAdviceSection(),
+            alchemy_sigils.getAlchemySigilsAdviceSection(),
             post_office.getPostOfficeAdviceSection(),
             killroy.getKillroyAdviceSection(),
             islands.getIslandsAdviceSection(),
@@ -108,13 +110,14 @@ def main(inputData, source_string, runType="web"):
             bonus_ballot.getBonus_BallotAdviceSection()
         ],
         sections_3 := [
-            consRefinery.getConsRefineryAdviceSection(),
-            consBuildings.getConsBuildingsAdviceSection(),
+            armor_sets.getArmorSetsAdviceSection(),
+            refinery.getConsRefineryAdviceSection(),
+            buildings.getConsBuildingsAdviceSection(),
             sampling.getSamplingAdviceSection(),
             library.getLibraryAdviceSection(),
-            consDeathNote.getDeathNoteAdviceSection(),
-            consSaltLick.getSaltLickAdviceSection(),
-            collider.getColliderAdviceSection(),
+            death_note.getDeathNoteAdviceSection(),
+            salt_lick.getSaltLickAdviceSection(),
+            atom_collider.getColliderAdviceSection(),
             worship.getPrayersAdviceSection(),
             trapping.getTrappingAdviceSection(),
             equinox.getEquinoxAdviceSection(),
@@ -137,10 +140,11 @@ def main(inputData, source_string, runType="web"):
             underground_overgrowth.getUndergroundOvergrowthAdviceSection()
         ],
         sections_6 := [
-            farming.setFarmingProgressionTier(),
+            farming.getFarmingAdviceSection(),
             summoning.getSummoningAdviceSection(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),
+            emperor.getEmperorAdviceSection()
         ],
     ]
 
@@ -153,6 +157,7 @@ def main(inputData, source_string, runType="web"):
                 group.check_for_completeness()
             section.check_for_completeness()
             section.check_for_informationalness()
+            section.check_for_optional()
             # logger.debug(
             #     (f"{section} {section.tier}: "
             #      f"Unreached={section.unreached}, "
@@ -173,6 +178,7 @@ def main(inputData, source_string, runType="web"):
             group.check_for_completeness()
         section.check_for_completeness()
         section.check_for_informationalness()
+        section.check_for_optional()
         #logger.debug(f"{section}: Unreached={section.unreached}, Completed={section.completed}, Info={section.informational}, Unrated={section.unrated}")
 
     #Remove the later-rated sections if Overwhelmed mode is on
@@ -187,7 +193,7 @@ def main(inputData, source_string, runType="web"):
                     continue
                 placements_count += 1
                 for advice in group.advices['default']:
-                    if placements_count >= session_data.account.maxSubgroupsPerGroup + 1:
+                    if placements_count >= session_data.account.max_subgroups + 1:
                         # Currently this should break after 2
                         advice.overwhelming = True
                     else:
@@ -215,7 +221,8 @@ def main(inputData, source_string, runType="web"):
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,
+                    complete=False, optional=False, informational=False, unrated=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner=["generalbanner.jpg", "generalbannertext.png"]),
         AdviceWorld(name=WorldName.MASTER_CLASSES, sections=sections_master_classes, banner=["master_classes_banner.png", "master_classes_banner_text.png"]),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
@@ -230,6 +237,8 @@ def main(inputData, source_string, runType="web"):
     for world in reviews:
         world.hide_unreached_sections()  # Feel free to comment this out while testing
         world.check_for_overwhelming()
+        world.check_for_informationalness()
+        world.check_for_optional()
         #logger.debug(f"{world}: Unrated={world.unrated}, Complete={world.completed}, Info={world.informational}, Overwhelming={world.overwhelming}")
         continue
 
@@ -238,7 +247,7 @@ def main(inputData, source_string, runType="web"):
     headerData = HeaderData(inputData, verified_source_string)
     logger.info(f"{headerData.last_update = }")
 
-    if runType == "consoleTest":
-        return "Pass"
+    if runType == 'consoleTest':
+        return 'Pass'
     else:
         return reviews, headerData

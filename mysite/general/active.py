@@ -1,6 +1,11 @@
-from models.models import Advice, AdviceGroup, AdviceSection, EnemyWorld, EnemyMap, Character
-from consts import lavaFunc, stamp_maxes, pearlable_skillsList, max_VialLevel, currentWorld, dnSkullValueList, cookingCloseEnough, dnBasicMapsCount, \
-    maxCharacters, cards_max_level
+from consts.progression_tiers_updater import true_max_tiers
+from models.models import Advice, AdviceGroup, AdviceSection, Character
+from consts.consts_idleon import pearlable_skills_list, lavaFunc
+from consts.consts_general import cards_max_level, current_world, max_characters
+from consts.consts_w1 import stamp_maxes
+from consts.consts_w2 import max_vial_level
+from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
+from consts.consts_w4 import cooking_close_enough
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -104,7 +109,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     crystal_AG = AdviceGroup(
         tier="",
-        pre_string="Info- Sources of Crystal Spawn Chance",
+        pre_string="Sources of Crystal Spawn Chance",
         advices=crystal_Advice,
         informational=True,
     )
@@ -345,7 +350,7 @@ def getConsumablesAdviceList() -> list[Advice]:
 
     #If 30+ Colo tickets owned
     total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
-    if total_colo_tickets > 300 and session_data.account.highestWorldReached >= 6:
+    if total_colo_tickets > 300 and session_data.account.highest_world_reached >= 6:
         consumables.append(Advice(
             label=f"{total_colo_tickets} Colo Tickets available",
             picture_class='colosseum-ticket',
@@ -370,10 +375,10 @@ def getConsumablesAdviceList() -> list[Advice]:
         ))
 
     #Pearls and Balloons
-    if session_data.account.highestWorldReached >= 4:
+    if session_data.account.highest_world_reached >= 4:
         # Black Pearls
         if session_data.account.stored_assets.get('Pearl4').amount > 0:
-            black_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 30]
+            black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 30]
             if black_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Black Pearls on Skills under level 30:"
@@ -383,7 +388,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
         # Red Pearls
         if session_data.account.stored_assets.get('Pearl6').amount > 0:
-            red_pearlable_skills = [skillName for skillName in pearlable_skillsList if min(session_data.account.all_skills.get(skillName, [0])) < 50]
+            red_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 50]
             if red_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Divinity Pearls on Skills under level 50:"
@@ -397,7 +402,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 + session_data.account.stored_assets.get('ExpBalloon2').amount
                 + session_data.account.stored_assets.get('ExpBalloon3').amount
         ) > 0:
-            balloonable_skills = [skillName for skillName in pearlable_skillsList if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
+            balloonable_skills = [skillName for skillName in pearlable_skills_list if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
             if balloonable_skills:
                 consumables.append(Advice(
                     label=f"Spend Experience Balloons on Skills under 750 Skill Mastery for Printer Output:"
@@ -407,7 +412,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
 
     # Candy options
-    if session_data.account.highestWorldReached >= 2:
+    if session_data.account.highest_world_reached >= 2:
         if not session_data.account.maestros and session_data.account.jmans:
             consumables.append(Advice(
                 label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
@@ -415,7 +420,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 picture_class='maestro-icon',
                 resource='time-candy-1-hr'
             ))
-    if session_data.account.highestWorldReached >= 4:
+    if session_data.account.highest_world_reached >= 4:
         for character in session_data.account.all_characters:
             try:
                 if (
@@ -437,18 +442,18 @@ def getConsumablesAdviceList() -> list[Advice]:
                 picture_class='voidwalker-icon',
                 resource='time-candy-1-hr'
             ))
-    if session_data.account.highestWorldReached >= 6:
-        for worldIndex in range(1, currentWorld):
-            if session_data.account.enemy_worlds[worldIndex].lowest_skull_value < dnSkullValueList[-1]:
+    if session_data.account.highest_world_reached >= 6:
+        for worldIndex in range(1, current_world):
+            if session_data.account.enemy_worlds[worldIndex].lowest_skull_value < dn_skull_value_list[-1]:
                 consumables.append(Advice(
                     label=f"Candy World {worldIndex} kills for {{{{ Death Note|#death-note }}}}",
                     picture_class='death-note',
                     resource='time-candy-24-hr'
                 ))
-        if session_data.account.cooking['MaxRemainingMeals'] > cookingCloseEnough and session_data.account.apocalypse_character_Index is not None:
-            if session_data.account.all_characters[session_data.account.apocalypse_character_Index].apoc_dict['MEOW']['Total'] < dnBasicMapsCount:
+        if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.apocalypse_character_index is not None:
+            if session_data.account.all_characters[session_data.account.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
                 consumables.append(Advice(
-                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.apocalypse_character_Index].character_name}",
+                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.apocalypse_character_index].character_name}",
                     picture_class='death-note',
                     resource='time-candy-24-hr'
                 ))
@@ -494,7 +499,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             goal=stamp_maxes['Mason Jar Stamp'],
             resource='time-candy-1-hr'
         ))
-    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_VialLevel:
+    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
                   f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
@@ -507,7 +512,7 @@ def getConsumablesAdviceList() -> list[Advice]:
 
 def getActiveGoalsAdviceGroup() -> AdviceGroup:
     ag = AdviceGroup(
-        tier="",
+        tier='',
         pre_string="Active Farming goals, not 100% ordered yet. Pick which sounds interesting ¯\\_(ツ)_/¯",
         advices={
             "Short Term": getShortTermAdviceList(), "Cards": getCardsAdviceList(), "Long Term": getLongTermAdviceList(),
@@ -523,8 +528,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     template_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0 - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Active']
+    max_tier = true_max - optional_tiers
     tier_Active = 0
 
     #Assess Tiers
@@ -534,8 +540,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         pre_string="Progression Tiers",
         advices=template_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Active)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Active)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getBuboAdviceGroup() -> AdviceGroup:
     bb = 'Best Bubo'
@@ -560,8 +566,8 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
     if best_bubo is None:
         possible_future_bubo = (
-            len(session_data.account.mages) > 0
-            or session_data.account.character_count < maxCharacters
+                len(session_data.account.mages) > 0
+                or session_data.account.character_count < max_characters
         )
         if possible_future_bubo:
             bubo_advice['Best Bubo'] = [
@@ -576,7 +582,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         else:
             bubo_ag = AdviceGroup(
                 tier='',
-                pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
+                pre_string='Active Bubo setup for big Cranium Cooking numbers',
                 informational=True,
                 completed=True,
                 advices=[],
@@ -713,13 +719,30 @@ def getBuboAdviceGroup() -> AdviceGroup:
             goal=200
         ))
         bubo_advice[library].append(Advice(
-            label=f"Tenteyecle leveled to 200+ increases cooldown reduction from 2 to 3 seconds",
+            label="Tenteyecle leveled to 200+ increases cooldown reduction from 2 to 3 seconds",
             picture_class='tenteyecle',
             progression=ccing_preset.get('483', 0) + bubo_bonus_levels,
             goal=200
         ))
         bubo_advice[library].append(Advice(
-            label=f"Max book your Cranium Cooking! Level it too, duh.",
+            label=(
+                f"Able to reach 400+ max talent level?"
+                f"<br>Refer to the {{{{ Library|#libray }}}} section for sources of Book levels and Bonus levels"
+                if best_bubo.max_talents_over_books < 400 else
+                f"Able to reach 400+ max talent level?"
+            ),
+            picture_class='talent-book-library',
+            progression=best_bubo.max_talents_over_books,
+            goal=400
+        ))
+        bubo_advice[library].append(Advice(
+            label="Tenteyecle leveled to 400+ increases cooldown reduction from 3 to 4 seconds",
+            picture_class='tenteyecle',
+            progression=ccing_preset.get('483', 0) + bubo_bonus_levels,
+            goal=400
+        ))
+        bubo_advice[library].append(Advice(
+            label="Max book your Cranium Cooking! Level it too, duh.",
             picture_class='cranium-cooking',
             progression=ccing_preset.get('490', 0),
             goal=session_data.account.library['MaxBookLevel']
@@ -728,8 +751,8 @@ def getBuboAdviceGroup() -> AdviceGroup:
         aura_width = aura_level // 35
         next_aura_width = 35 * (aura_width + 1)
         bubo_advice[library].append(Advice(
-            label=f"Aura increases Width every 35 levels. Yours is {aura_width} wide, with the next increase at level {next_aura_width}"
-                  f"{' (not currently possible)' if next_aura_width >= 470 else ''}",
+            label=f"Aura increases Width every 35 levels. Yours is {aura_width} wide, next increase at level {next_aura_width}"
+                  f"{' (not currently possible)' if next_aura_width > 430 else ''}",
             picture_class='auspicious-aura',
             progression=aura_level,
             goal=next_aura_width,
@@ -798,7 +821,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
     bubo_ag = AdviceGroup(
         tier='',
-        pre_string='Info- Active Bubo setup for big Cranium Cooking numbers',
+        pre_string='Active Bubo setup for big Cranium Cooking numbers',
         advices=bubo_advice,
         informational=True
     )
@@ -807,7 +830,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
 
 def getActiveAdviceSection() -> AdviceSection:
-    # if session_data.account.highestWorldReached < 4:
+    # if session_data.account.highest_world_reached < 4:
     #     active_AdviceSection = AdviceSection(
     #         name="Active",
     #         tier="Not Yet Evaluated",
@@ -829,12 +852,12 @@ def getActiveAdviceSection() -> AdviceSection:
 
     tier_section = f"{overall_SectionTier}/{max_tier}"
     active_AdviceSection = AdviceSection(
-        name="Active",
+        name='Active',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header=f"Active Farming Information",
+        header='Active Farming Information',
         picture='Auto.png',
         groups=active_AdviceGroupDict.values(),
         unrated=True,

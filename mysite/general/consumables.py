@@ -1,5 +1,6 @@
 from enum import IntEnum
-from consts import expectedInventoryBagValuesDict, expectedStorageChestValuesDict, break_you_best, currentMaxUsableInventorySlots
+from consts.consts import break_you_best
+from consts.consts_general import inventory_bags_dict, storage_chests_dict, current_max_usable_inventory_slots
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
@@ -378,13 +379,13 @@ def parseInventoryBagSlots() -> AdviceGroup:
                     logger.exception(f"Could not increase character {character_index}'s bagslots by {type(bag_dict[bag])} {bag_dict[bag]}")
             else:
                 logger.warning(f"Funky bag value found in {character_index}'s bagsDict for bag {bag}: {type(bag_dict[bag])} {bag_dict[bag]}. Searching for expected value.")
-                if int(bag) in expectedInventoryBagValuesDict:
-                    logger.debug(f"Bag {bag} has a known value: {expectedInventoryBagValuesDict.get(int(bag), 0)}. All is well :)")
+                if int(bag) in inventory_bags_dict:
+                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict.get(int(bag), 0)}. All is well :)")
                 else:
                     logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
-                sum_slots += expectedInventoryBagValuesDict.get(int(bag), 0)
+                sum_slots += inventory_bags_dict.get(int(bag), 0)
         character_bag_slots_dict[character_index] = sum_slots
-        if sum_slots >= currentMaxUsableInventorySlots:
+        if sum_slots >= current_max_usable_inventory_slots:
             characters_with_max_bag_slots.append(character_index)
         elif sum_slots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
             characters_with_max_bag_slots.append(character_index)
@@ -396,12 +397,12 @@ def parseInventoryBagSlots() -> AdviceGroup:
         subgroupName = (
             f"{session_data.account.all_characters[character_index].character_name}"
             f" the {session_data.account.all_characters[character_index].class_name}: "
-            f"{min(currentMaxUsableInventorySlots, character_bag_slots_dict[character_index])}"
-            f"/{currentMaxUsableInventorySlots} usable Inventory slots"
+            f"{min(current_max_usable_inventory_slots, character_bag_slots_dict[character_index])}"
+            f"/{current_max_usable_inventory_slots} usable Inventory slots"
         )
         inventorySlots_AdviceDict[subgroupName] = [
             Advice(
-                label=f"{bag.pretty_name}: {expectedInventoryBagValuesDict[bag.value]} slots ({bag.type})",
+                label=f"{bag.pretty_name}: {inventory_bags_dict[bag.value]} slots ({bag.type})",
                 picture_class=bag.pretty_name,
                 progression=0,
                 goal=1,
@@ -414,8 +415,8 @@ def parseInventoryBagSlots() -> AdviceGroup:
             mark_advice_completed(advice)
 
     inventorySlots_AdviceGroup = AdviceGroup(
-        tier="",
-        pre_string="Collect more inventory space",
+        tier='',
+        pre_string='Collect more inventory space',
         advices=inventorySlots_AdviceDict,
         informational=True
     )
@@ -474,14 +475,14 @@ def parseStorageChests():
 
     advices['Usable Chests'] = [
             Advice(
-                label=f"{chest.pretty_name}: {expectedStorageChestValuesDict[chest.value]} slots ({chest.type})",
+                label=f"{chest.pretty_name}: {storage_chests_dict[chest.value]} slots ({chest.type})",
                 picture_class=chest.pretty_name,
                 completed=False
             ) for chest in missing_chests
         ]
 
     group = AdviceGroup(
-        tier="",
+        tier='',
         pre_string=(
             f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank"
             if advices else

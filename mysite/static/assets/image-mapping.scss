@@ -48,10 +48,12 @@ $id-map: map-merge($id-map, $all-compass);
 @import "upgrade_vault";
 @import "bribes";
 @import "owl";
+@import "statues";
 
 $id-map: map-merge($id-map, $all-vault);
 $id-map: map-merge($id-map, $bribes-map);
 $id-map: map-merge($id-map, $owl-map);
+$id-map: map-merge($id-map, $all-statues);
 
 //W2
 @import "alchemy";

@@ -1,38 +1,43 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string, compass_dusts_list, compass_path_ordering, compass_upgrades_list, compass_medallions, lavaFunc, ValueToMulti,
-    arcade_max_level,
-    # compass_progressionTiers
+from consts.consts import (
+    # compass_progressionTiers, break_you_best, infinity_string,
+    ValueToMulti, EmojiType
 )
+from consts.consts_idleon import lavaFunc
+from consts.consts_master_classes import compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_medallions
+from consts.consts_w2 import arcade_max_level
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     compass_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(compass_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Compass']
+    max_tier = true_max - optional_tiers
     tier_Compass = 0
 
     tiers_ag = AdviceGroup(
         tier=tier_Compass,
-        pre_string="Progression Tiers",
+        pre_string='Progression Tiers',
         advices=compass_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Compass)
-    return tiers_ag, overall_SectionTier, max_tier
+    overall_SectionTier = min(true_max, tier_Compass)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
-def getCompassGeneralInfoAdviceGroup(compass):
+def getCompassGeneralInfoAdviceGroup():
     general_advices = []
     general_ag = AdviceGroup(
         tier='',
-        pre_string="Compass Currencies",
-        advices=general_advices
+        pre_string='Compass Currencies',
+        advices=general_advices,
+        informational=True
     )
     general_ag.remove_empty_subgroups()
     return general_ag
@@ -237,6 +242,18 @@ def getCompassCurrenciesAdviceGroup(compass):
             goal=compass['Upgrades'][bonus_name]['Max Level'],
             resource=compass['Upgrades'][bonus_name]['Dust Image'],
         ))
+
+    mgg_label = f"Dust Multi Group G: {compass['Dust Calc']['mgg']:.2f}x"
+    currency_advices[mgg_label] = [
+        Advice(
+            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][4]['Description']}"
+                  f"<br>{session_data.account.emperor['Bonuses'][4]['Scaling']}",
+            picture_class='the-emperor',
+            progression=session_data.account.emperor['Bonuses'][4]['Wins'],
+            goal=EmojiType.INFINITY.value
+        )
+    ]
+
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:
             mark_advice_completed(advice)
@@ -244,7 +261,8 @@ def getCompassCurrenciesAdviceGroup(compass):
     currencies_ag = AdviceGroup(
         tier='',
         pre_string="Compass Currencies",
-        advices=currency_advices
+        advices=currency_advices,
+        informational=True
     )
     currencies_ag.remove_empty_subgroups()
     return currencies_ag
@@ -276,7 +294,8 @@ def getCompassAbominationsAdviceGroup(compass):
     abom_ag = AdviceGroup(
         tier='',
         pre_string="Abominations",
-        advices=abom_advices
+        advices=abom_advices,
+        informational=True
     )
     abom_ag.remove_empty_subgroups()
     return abom_ag
@@ -304,8 +323,9 @@ def getCompassMedallionsAdviceGroup(compass):
 
     medallion_ag = AdviceGroup(
         tier='',
-        pre_string="Medallions",
-        advices=medallion_advice
+        pre_string='Medallions',
+        advices=medallion_advice,
+        informational=True
     )
     medallion_ag.remove_empty_subgroups()
     return medallion_ag
@@ -372,7 +392,7 @@ def getCompassUpgradesAdviceGroups(compass):
     for path_name, path_advice in upgrades_AdviceDict.items():
         upgrades_AdviceGroups.append(AdviceGroup(
             tier='',
-            pre_string=f"Informational- {path_name}",
+            pre_string=path_name,
             advices=upgrades_AdviceDict[path_name],
             informational=True
         ))
@@ -391,7 +411,7 @@ def getCompassAdviceSection() -> AdviceSection:
             header="Come back after unlocking a Wind Walker in World 6!",
             picture='customized/Compass_NoBG.png',
             unrated=True,
-            unreached=session_data.account.highestWorldReached < 6,
+            unreached=session_data.account.highest_world_reached < 6,
             completed=False
         )
         return compass_AdviceSection
@@ -402,8 +422,8 @@ def getCompassAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     compass_AdviceGroupDict = {}
-    compass_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
-    compass_AdviceGroupDict['General'] = getCompassGeneralInfoAdviceGroup(compass)
+    compass_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
+    compass_AdviceGroupDict['General'] = getCompassGeneralInfoAdviceGroup()
     compass_AdviceGroupDict['Currencies'] = getCompassCurrenciesAdviceGroup(compass)
     compass_AdviceGroupDict['Abominations'] = getCompassAbominationsAdviceGroup(compass)
     compass_AdviceGroupDict['Medallions'] = getCompassMedallionsAdviceGroup(compass)
@@ -417,7 +437,9 @@ def getCompassAdviceSection() -> AdviceSection:
         name="The Compass",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Wind Walker and Compass Information",  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        max_tier=max_tier,
+        true_max_tier=true_max,
+        header='Wind Walker and Compass Information',  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='customized/Compass_NoBG.png',
         groups=compass_AdviceGroupDict.values(),
         completed=None,

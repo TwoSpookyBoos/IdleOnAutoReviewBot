@@ -1,5 +1,7 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import owl_progressionTiers, break_you_best
+from consts.consts import break_you_best, build_subgroup_label, EmojiType
+from consts.progression_tiers import owl_progressionTiers
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -8,10 +10,10 @@ logger = get_logger(__name__)
 def getNoFeathersGeneratingAlert():
     if session_data.account.owl['FeatherGeneration'] < 1:
         alert_advice = Advice(
-            label=f"Find the Owl in W1 and start generating Feathers!"
+            label='Find the Owl in W1 and start generating Feathers!'
             if not session_data.account.owl['Discovered']
             else f"You aren't generating any {{{{ Owl|#owl }}}} Feathers!",
-            picture_class=f"feather-generation"
+            picture_class='feather-generation'
         )
         session_data.account.alerts_AdviceDict['World 1'].append(alert_advice)
 
@@ -20,7 +22,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         "MegaFeathers": {}
     }
     infoTiers = 1
-    max_tier = max(owl_progressionTiers.keys()) - infoTiers
+    true_max = true_max_tiers['Owl']
+    max_tier = true_max - infoTiers
     tier_MegaFeathers = 0
 
     featherResetsDict = {
@@ -36,54 +39,53 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
     #Assess Tiers
     lastMFShown = -1
-    for tierNumber, tierRequirementsDict in owl_progressionTiers.items():
-        subgroupName = f"To Reach {'Informational ' if tierNumber > max_tier else ''}Tier {tierNumber}"
-        if 'MegaFeathersOwned' in tierRequirementsDict:
-            if session_data.account.owl['MegaFeathersOwned'] < tierRequirementsDict['MegaFeathersOwned']+1:
+    for tier_number, requirements in owl_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+        if 'MegaFeathersOwned' in requirements:
+            if session_data.account.owl['MegaFeathersOwned'] < requirements['MegaFeathersOwned'] + 1:
                 for mf, resets in featherResetsDict.items():
-                    if lastMFShown < mf <= tierRequirementsDict['MegaFeathersOwned']:
+                    if lastMFShown < mf <= requirements['MegaFeathersOwned']:
                         if session_data.account.owl['MegaFeathersOwned'] <= mf:
-                            if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.maxSubgroupsPerGroup:
-                                owl_AdviceDict['MegaFeathers'][subgroupName] = []
-                            if subgroupName in owl_AdviceDict['MegaFeathers']:
+                            if subgroup_label not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.max_subgroups:
+                                owl_AdviceDict['MegaFeathers'][subgroup_label] = []
+                            if subgroup_label in owl_AdviceDict['MegaFeathers']:
                                 lastMFShown = mf
-                                owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
+                                owl_AdviceDict['MegaFeathers'][subgroup_label].append(Advice(
                                     label=f"MF{mf+1}: Restart {resets} times first",
                                     picture_class=f"megafeather-{mf}" if mf < 10 else "the-great-mega-reset",
                                     progression=session_data.account.owl['FeatherRestarts'] if session_data.account.owl['MegaFeathersOwned'] == mf else 0,
                                     goal=resets
                                 ))
-        if 'BonusesOfOrion' in tierRequirementsDict:
-            if session_data.account.owl['BonusesOfOrion'] < tierRequirementsDict['BonusesOfOrion']:
-                if subgroupName not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.maxSubgroupsPerGroup:
-                    owl_AdviceDict['MegaFeathers'][subgroupName] = []
-                if subgroupName in owl_AdviceDict['MegaFeathers']:
+        if 'BonusesOfOrion' in requirements:
+            if session_data.account.owl['BonusesOfOrion'] < requirements['BonusesOfOrion']:
+                if subgroup_label not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.max_subgroups:
+                    owl_AdviceDict['MegaFeathers'][subgroup_label] = []
+                if subgroup_label in owl_AdviceDict['MegaFeathers']:
                     orion_advice = Advice(
-                            label=f"Before MF{tierRequirementsDict['MegaFeathersOwned']+1}, purchase Bonuses of Orion {tierRequirementsDict['BonusesOfOrion']}",
-                            picture_class="bonuses-of-orion",
+                            label=f"Before MF{requirements['MegaFeathersOwned']+1}, purchase Bonuses of Orion {requirements['BonusesOfOrion']}",
+                            picture_class='bonuses-of-orion',
                             progression=session_data.account.owl['BonusesOfOrion'],
-                            goal=tierRequirementsDict['BonusesOfOrion']
+                            goal=requirements['BonusesOfOrion']
                         )
                     if len(owl_AdviceDict['MegaFeathers']) > 0:
-                        owl_AdviceDict['MegaFeathers'][subgroupName].insert(-1, orion_advice)
+                        owl_AdviceDict['MegaFeathers'][subgroup_label].insert(-1, orion_advice)
                     else:
-                        owl_AdviceDict['MegaFeathers'][subgroupName].append(orion_advice)
-                    owl_AdviceDict['MegaFeathers'][subgroupName].append(Advice(
-                        label=f"{orionDRValues.get(tierRequirementsDict['BonusesOfOrion'], 'IDK')}% Drop Rate will then be yours 🎉",
-                        picture_class="drop-rate"
+                        owl_AdviceDict['MegaFeathers'][subgroup_label].append(orion_advice)
+                    owl_AdviceDict['MegaFeathers'][subgroup_label].append(Advice(
+                        label=f"{orionDRValues.get(requirements['BonusesOfOrion'], 'IDK')}% Drop Rate will then be yours {EmojiType.TADA.value}",
+                        picture_class='drop-rate'
                     ))
 
-        if subgroupName not in owl_AdviceDict["MegaFeathers"] and tier_MegaFeathers == tierNumber - 1:
-            tier_MegaFeathers = tierNumber
+        if subgroup_label not in owl_AdviceDict['MegaFeathers'] and tier_MegaFeathers == tier_number - 1:
+            tier_MegaFeathers = tier_number
 
     tiers_ag = AdviceGroup(
-        tier=tier_MegaFeathers if tier_MegaFeathers <= max_tier else "",
-        pre_string="Collect Mega Feathers and Bonuses of Orion" if tier_MegaFeathers <= max_tier else "Info- Goals at this point will take months",
+        tier=tier_MegaFeathers,
+        pre_string='Collect Mega Feathers and Bonuses of Orion',
         advices=owl_AdviceDict['MegaFeathers'],
-        informational=tier_MegaFeathers >= max_tier
     )
-    overall_SectionTier = min(max_tier + infoTiers, tier_MegaFeathers)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + infoTiers
+    overall_SectionTier = min(true_max, tier_MegaFeathers)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getOwlAdviceSection() -> AdviceSection:
     # Generate Alert Advice

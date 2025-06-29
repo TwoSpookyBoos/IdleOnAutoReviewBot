@@ -1,4 +1,5 @@
-from consts import break_you_best, lavaFunc
+from consts.consts_idleon import lavaFunc
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
@@ -7,14 +8,15 @@ logger = get_logger(__name__)
 
 def getSneakingProgressionTiersAdviceGroups():
     sneaking_AdviceDict = {
-        "Gemstones": [],
-        "JadeEmporium": [],
-        "PristineCharms": []
+        'Gemstones': [],
+        'JadeEmporium': [],
+        'PristineCharms': []
     }
-    sneaking_AdviceGroupDict = {}
+    sneaking_AdviceGroups = {}
 
-    info_tiers = 0
-    max_tier = 0 - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Sneaking']
+    max_tier = true_max - optional_tiers
     tier_Sneaking = 0
 
     # Assess Gemstones
@@ -28,22 +30,19 @@ def getSneakingProgressionTiersAdviceGroups():
     ))
 
     for gemstoneName, gemstoneData in session_data.account.sneaking['Gemstones'].items():
-        if gemstoneName == 'Emerald':
-            emerald_note = f" = {1 - (1/(max(1, session_data.account.sneaking['Gemstones']['Emerald']['BoostedValue'])/100)):.4%} cost reduction"
+        emerald_note = (
+            f" = {1 - (1/(max(1, session_data.account.sneaking['Gemstones']['Emerald']['BoostedValue'])/100)):.4%} cost reduction"
+            if gemstoneName == 'Emerald' else ''
+        )
         if session_data.account.sneaking['Gemstones']['Moissanite']['BaseValue'] > 0 and gemstoneName != 'Moissanite':
             boosted_value = (
-                f""" (+{gemstoneData['BoostedValue']:,.2f}"""
-                f"""{'%' if gemstoneName != 'Firefrost' else ''} total"""
-                f"""{emerald_note if gemstoneName == 'Emerald' else ''})"""
+                f" (+{gemstoneData['BoostedValue']:,.2f}"
+                f"{'%' if gemstoneName != 'Firefrost' else ''} total"
+                f"{emerald_note})"
             )
         else:
             boosted_value = ''
         sneaking_AdviceDict["Gemstones"].append(Advice(
-            # label="{} (Level {}: +{:.2f}% {})".format(
-            #     gemstoneName,
-            #     gemstoneData.get('Level', 0),
-            #     gemstoneData.get('Value', 0),
-            #     gemstoneData.get('Stat', '')),
             label=f"Level {gemstoneData['Level']:,} {gemstoneName}:"
                   f" +{gemstoneData['BaseValue']:,.2f}/{gemstoneData['MaxValue']:,}"
                   f"{'%' if gemstoneName != 'Firefrost' else ''} {gemstoneData['Stat']}"
@@ -75,37 +74,38 @@ def getSneakingProgressionTiersAdviceGroups():
             ))
 
     # Generate AdviceGroups
-    sneaking_AdviceGroupDict["Gemstones"] = AdviceGroup(
-        tier="",
-        pre_string="Informational- Percentage of Gemstone values",
+    sneaking_AdviceGroups['Gemstones'] = AdviceGroup(
+        tier='',
+        pre_string='Percentage of Gemstone values',
         # post_string="Formulas thanks to merlinthewizard1313",
         advices=sneaking_AdviceDict["Gemstones"],
         informational=True
     )
-    sneaking_AdviceGroupDict["JadeEmporium"] = AdviceGroup(
-        tier="",
-        pre_string="Purchase all upgrades from the Jade Emporium",
-        advices=sneaking_AdviceDict["JadeEmporium"],
+    sneaking_AdviceGroups['JadeEmporium'] = AdviceGroup(
+        tier='',
+        pre_string='Purchase all upgrades from the Jade Emporium',
+        advices=sneaking_AdviceDict['JadeEmporium'],
         informational=True
     )
-    sneaking_AdviceGroupDict["PristineCharms"] = AdviceGroup(
-        tier="",
-        pre_string="Collect all Pristine Charms",
-        advices=sneaking_AdviceDict["PristineCharms"],
+    sneaking_AdviceGroups['PristineCharms'] = AdviceGroup(
+        tier='',
+        pre_string='Collect all Pristine Charms',
+        post_string='Strategy: wear Meteorite charms on F12 at 0% detect chance. Mastery level does not matter.',
+        advices=sneaking_AdviceDict['PristineCharms'],
         informational=True
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Sneaking)
-    return sneaking_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Sneaking)
+    return sneaking_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getSneakingAdviceSection() -> AdviceSection:
-    highestSneakingSkillLevel = max(session_data.account.all_skills.get("Sneaking", [0]))
-    if highestSneakingSkillLevel < 1:
+    highest_sneaking_level = max(session_data.account.all_skills['Sneaking'])
+    if highest_sneaking_level < 1:
         sneaking_AdviceSection = AdviceSection(
-            name="Sneaking",
-            tier="0",
+            name='Sneaking',
+            tier='0/0',
             pinchy_rating=0,
-            header="Come back after unlocking the Sneaking skill in W6!",
-            picture="Dojo_Ghost.gif",
+            header='Come back after unlocking the Sneaking skill in W6!',
+            picture='Dojo_Ghost.gif',
             unrated=True,  # TODO: Fix once real tiers added
             unreached=True
         )
@@ -117,13 +117,13 @@ def getSneakingAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     sneaking_AdviceSection = AdviceSection(
-        name="Sneaking",
+        name='Sneaking',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header="Sneaking Information",  # f"Best Sneaking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="Dojo_Ghost.gif",
+        header='Sneaking Information',  # f"Best Sneaking tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        picture='Dojo_Ghost.gif',
         unrated=True,  # TODO: Fix once real tiers added
         groups=sneaking_AdviceGroupDict.values(),
     )

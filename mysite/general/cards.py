@@ -1,6 +1,7 @@
 from collections import defaultdict
 from flask import g as session_data
-from consts import break_you_best
+from consts.consts import break_you_best
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 
@@ -72,10 +73,10 @@ def getCardsAdviceSection() -> AdviceSection:
         groups.append(group)
 
     note = (
-        ""
+        ''
         if session_data.account.rift['RubyCards']
         else (
-            "Once you reach Rift 46 your max card tier will be bumped to Ruby. Until then, I will only recommend reaching Platinum rank"
+            'Once you reach Rift 46 your max card tier will be bumped to Ruby. Until then, I will only recommend reaching Platinum rank'
         )
     )
 
@@ -83,22 +84,24 @@ def getCardsAdviceSection() -> AdviceSection:
         group.hide = True
 
     max_tier = len(cardsets) * (max_card_stars + 1)
-    true_max = max_tier
+    true_max = true_max_tiers['Cards']
     curr_tier = cardset_rank_total
+    overall_SectionTier = 0
     tier = f"{curr_tier}/{max_tier}"
     section = AdviceSection(
-        name="Cards",
+        name='Cards',
         tier=tier,
-        picture="cards/Cards.png",
+        pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header=f"You have reached {tier} cardset tiers. Keep going!",
+        header=f'You have reached {tier} cardset tiers. Keep going!',
+        picture='cards/Cards.png',
         groups=groups,
         note=note,
         unrated=True
     )
 
-    if not section:
+    if not section:  #If there are no AdviceGroups
         if not session_data.account.rift['RubyCards']:
             section.tier = f"{max_tier}/{max_tier}"
             section.header = (

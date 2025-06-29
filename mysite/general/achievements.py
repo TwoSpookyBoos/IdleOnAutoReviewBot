@@ -1,14 +1,19 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import break_you_best, achievements_progressionTiers, achievement_categories, breedingTotalPets, max_poBox_before_myriad, maxFarmingCrops
+from consts.consts import break_you_best
+from consts.consts_general import achievement_categories
+from consts.consts_w6 import max_farming_crops
+from consts.consts_w2 import max_po_box_before_myriad
+from consts.progression_tiers import achievements_progressionTiers
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
 def getAchievementExclusions() -> set[str]:
     exclusionsSet = set()
-    if session_data.account.highestWorldReached >= 6:
+    if session_data.account.highest_world_reached >= 6:
         exclusionsSet.add('Golden Fly')
 
     if (
@@ -25,7 +30,7 @@ def getAchievementExclusions() -> set[str]:
         # I wouldn't go spend gems just for this achievement, but you should get it if you already spent the Gems
         exclusionsSet.add('Gilded Shells')
 
-    if session_data.account.postOffice["Total Boxes Earned"] >= max_poBox_before_myriad * 0.8:
+    if session_data.account.postOffice["Total Boxes Earned"] >= max_po_box_before_myriad * 0.8:
         # Saving Silver Pens doesn't really matter if you've got enough boxes
         exclusionsSet.add('Ink Blot')
 
@@ -33,7 +38,7 @@ def getAchievementExclusions() -> set[str]:
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
-        or session_data.account.farming['CropsUnlocked'] >= maxFarmingCrops * 0.75
+        or session_data.account.farming['CropsUnlocked'] >= max_farming_crops * 0.75
     ):
         exclusionsSet.add('Lucky Harvest')
     try:
@@ -144,8 +149,9 @@ def getAchievementStatus(achievementName):
         return 0, 1, ''
 
 def getProgressionTiersAdviceGroup():
-    infoTiers = 0
-    max_tier = max(achievements_progressionTiers.keys(), default=0) - infoTiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Achievements']
+    max_tier = true_max - optional_tiers
     achievements_AdviceDict = {category: {} for category in achievement_categories}
     tiers = {category: 0 for category in achievement_categories}
     exclusionsSet = getAchievementExclusions()
@@ -156,7 +162,7 @@ def getProgressionTiersAdviceGroup():
         for categoryName, categoryAchievementsDict in tierRequirements.items():
             for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
                 if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
-                    if subgroupName not in achievements_AdviceDict[categoryName] and len(achievements_AdviceDict[categoryName]) < session_data.account.maxSubgroupsPerGroup:
+                    if subgroupName not in achievements_AdviceDict[categoryName] and len(achievements_AdviceDict[categoryName]) < session_data.account.max_subgroups:
                         achievements_AdviceDict[categoryName][subgroupName] = []
                     if subgroupName in achievements_AdviceDict[categoryName]:
                         prog, goal, resource = getAchievementStatus(achievementName)
@@ -179,8 +185,8 @@ def getProgressionTiersAdviceGroup():
             pre_string=f"Complete achievements for {category}",
             advices=achievements_AdviceDict[category]
         )
-    overall_SectionTier = min(max_tier + infoTiers, min(tiers.values()))
-    return achievements_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + infoTiers
+    overall_SectionTier = min(true_max, min(tiers.values()))
+    return achievements_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getAchievementsAdviceSection() -> AdviceSection:
     #Generate AdviceGroups

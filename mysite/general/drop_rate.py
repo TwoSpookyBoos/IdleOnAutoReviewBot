@@ -1,10 +1,14 @@
+from consts.progression_tiers_updater import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from consts import (
-    lavaFunc, max_card_stars, maxFarmingCrops, max_land_rank_level, max_IndexOfSigils, stampsDict,
-    cards_max_level, numberOfArtifactTiers, sigilsDict, riftRewardsDict, equipment_by_bonus_dict, poBoxDict,
-    prayersDict, starsignsDict, obols_max_bonuses_dict, stamp_maxes, ValueToMulti, approx_max_talent_level_non_es, infinity_string,
-    buildingsDict, shinyDaysList
-)
+from consts.consts import ValueToMulti, EmojiType
+from consts.consts_idleon import lavaFunc
+from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
+from consts.consts_w6 import max_farming_crops, max_land_rank_level
+from consts.consts_w5 import max_sailing_artifact_level
+from consts.consts_w4 import rift_rewards_dict, shiny_days_list
+from consts.consts_w3 import buildings_dict, prayers_dict, approx_max_talent_level_non_es
+from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
+from consts.consts_w1 import stamp_maxes, starsigns_dict
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
@@ -56,7 +60,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Rift - Ruby Cards
     if not session_data.account.rift['RubyCards']:
-        ruby_cards_rift_level = next(i for i, r in riftRewardsDict.items() if r['Shorthand'] == 'RubyCards')
+        ruby_cards_rift_level = next(i for i, r in rift_rewards_dict.items() if r['Shorthand'] == 'RubyCards')
         rift_level = session_data.account.rift['Level']
         drop_rate_aw_advice[general].append(Advice(
             label=f"Rift- Ruby Cards:"
@@ -200,7 +204,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         picture_class='the-great-horned-owl',
         progression=max(0, session_data.account.owl['MegaFeathersOwned']-10),
         resource='megafeather-9',
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
 
     # Lab Nodes- Certified Stamp Book
@@ -239,8 +243,6 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     else:
         golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
 
-    golden_sixes_stamp_data = stampsDict['Combat'][37]
-    golden_sixes_max_base = lavaFunc(golden_sixes_stamp_data['funcType'], stamp_maxes['Golden Sixes Stamp'], golden_sixes_stamp_data['x1'], golden_sixes_stamp_data['x2'])
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
               f"<br>+{round(golden_sixes_stamp['Total Value'], 2):g}% Drop Rate"
@@ -322,26 +324,26 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     chilled_yarn_artifact_level = session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']
     chilled_yarn_multi = ValueToMulti(100 * session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
-    chilled_yarn_max = ValueToMulti(100 * numberOfArtifactTiers)
-    if chilled_yarn_artifact_level < numberOfArtifactTiers:
+    chilled_yarn_max = ValueToMulti(100 * max_sailing_artifact_level)
+    if chilled_yarn_artifact_level < max_sailing_artifact_level:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"{{{{ Artifacts|#artifacts }}}}- Chilled Yarn:"
                   f"<br>{round(chilled_yarn_multi, 2):g}/{round(chilled_yarn_max, 2):g}x Sigil Bonuses"
                   f"<br>Note: Improves the sigil below",
             picture_class='chilled-yarn',
             progression=chilled_yarn_artifact_level,
-            goal=numberOfArtifactTiers
+            goal=max_sailing_artifact_level
         ))
     # Alchemy - Sigils - Clover
     trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
-    trove_sigil_value = sigilsDict['Trove']['Values'][trove_sigil_level-1] * chilled_yarn_multi
-    trove_sigil_value_max = sigilsDict['Trove']['Values'][max_IndexOfSigils-1] * chilled_yarn_max
+    trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level - 1] * chilled_yarn_multi
+    trove_sigil_value_max = sigils_dict['Trove']['Values'][max_sigil_level - 1] * chilled_yarn_max
     drop_rate_aw_advice[w2].append(Advice(
         label=f"{{{{ Sigils|#sigils }}}}- Clover Sigil:"
               f"<br>+{trove_sigil_value}/{trove_sigil_value_max}% Drop Rate",
         picture_class='trove',
         progression=trove_sigil_level,
-        goal=max_IndexOfSigils
+        goal=max_sigil_level
     ))
 
     # World 3
@@ -372,11 +374,19 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[w3].append(Advice(
         label=f"Shrines- Clover Shrine:"
               f"<br>+{round(session_data.account.shrines['Clover Shrine']['Value'], 2):g}% Drop Rate "
-              f"({buildingsDict[22]['ValueBase']}% base + {buildingsDict[22]['ValueIncrement']}% per level)"
+              f"({buildings_dict[22]['ValueBase']}% base + {buildings_dict[22]['ValueIncrement']}% per level)"
               f"{shrine_exta_bonus_text}",
         picture_class='clover-shrine',
         progression=session_data.account.shrines['Clover Shrine']['Level'],
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
+    ))
+
+    efaunt_set = session_data.account.armor_sets['Sets']['EFAUNT SET']
+    drop_rate_aw_advice[w3].append(Advice(
+        label=f"{{{{Set bonus|#armor-sets}}}}: Efaunt Set: {efaunt_set['Description']}",
+        picture_class=efaunt_set['Image'],
+        progression=int(efaunt_set['Owned']),
+        goal=1
     ))
 
     # World 4
@@ -387,10 +397,10 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         for shiny_name, shiny_details in session_data.account.breeding['Species'][world].items():
             if shiny_details['ShinyBonus'] == 'Drop Rate':
                 drop_rate_aw_advice[w4].append(Advice(
-                    label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}: +{shiny_details['ShinyLevel']}/{len(shinyDaysList)}%",
+                    label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}: +{shiny_details['ShinyLevel']}/{len(shiny_days_list)}%",
                     picture_class=shiny_name,
                     progression=shiny_details['ShinyLevel'],
-                    goal=len(shinyDaysList)
+                    goal=len(shiny_days_list)
                 ))
 
     # Rift - Sneak Mastery 1
@@ -416,10 +426,18 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
             progression=grey_tome_book['Level'],
             goal=grey_tome_book['Max Level']
         ))
+    troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
+    if not troll_set['Owned']:
+        drop_rate_aw_advice[w4].append(Advice(
+            label=f"{{{{Set bonus|#armor-sets}}}}: Troll Set: {troll_set['Description']}",
+            picture_class=troll_set['Image'],
+            progression=int(troll_set['Owned']),
+            goal=1
+        ))
     drop_rate_aw_advice[w4].append(Advice(
         label=f"""Tome- Red Pages:"""
-              f"""<br>+{round(session_data.account.tome['Bonuses']['Drop Rarity']['Total Value'], 3):g}% Drop Rate"""
-              f"""<br>{'Unknown, sorry 🙁' if not session_data.account.tome['Data Present'] else ''}"""
+              f"""<br>+{round(session_data.account.tome['Bonuses']['Drop Rarity']['Total Value'], 2):g}% Drop Rate"""
+              f"""<br>{f'Unknown, sorry {EmojiType.FROWN.value}' if not session_data.account.tome['Data Present'] else ''}"""
               f"""{f"{session_data.account.tome['Total Points']:,}" if session_data.account.tome['Data Present'] else ''} Total Tome Points"""
               f"""<br>Increases every 100 points over 8000""",
         picture_class='red-tome-pages',
@@ -437,7 +455,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{round(caverns_measurements_yards['Value'], 1):g}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
         picture_class=caverns_measurements_yards['Image'],
         progression=caverns_measurements_yards['Level'],
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
 
     # Caverns - Schematics - Gloomie Lootie
@@ -448,7 +466,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{5 * grotto_cavern['OpalsFound']}% Drop Rate (+5% per Cavern cleared)",
         picture_class=gloomie_lootie_schematic['Image'],
         progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
 
     # Caverns - Schematics - Sanctum of LOOT
@@ -459,7 +477,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{20 * temple_cavern['OpalsFound']}% Drop Rate (+20% per Sanctum cleared)",
         picture_class=sanctum_of_loot_schematic['Image'],
         progression=temple_cavern['OpalsFound'] if sanctum_of_loot_schematic['Purchased'] else 0,
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
 
     # Caverns - Wisdom Monument
@@ -470,7 +488,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"<br>+{round(wisdom_monument_drop_rate['Value'], 2):g}% Drop Rate",
         picture_class='cavern-13',
         progression=wisdom_monument_drop_rate['Level'],
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
     ))
 
     # World 6
@@ -505,7 +523,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"{'<br>Note: Value only increases after 100 crops found' if (crops_unlocked <= 100) else ''}",
         picture_class=highlighter['Image'],
         progression=crops_unlocked,
-        goal=maxFarmingCrops
+        goal=max_farming_crops
     ))
 
     # Farming - Land Rank - Seed of Loot
@@ -531,6 +549,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         progression=int(cotton_candy_obtained),
         goal=1
     ))
+
+    secret_set = session_data.account.armor_sets['Sets']['SECRET SET']
+    if not secret_set['Owned']:
+        drop_rate_aw_advice[w6].append(Advice(
+            label=f"{{{{Set bonus|#armor-sets}}}}: Secret Set: {secret_set['Description']}",
+            picture_class=secret_set['Image'],
+            progression=int(secret_set['Owned']),
+            goal=1
+        ))
 
     # Sneaking - Beanstalk - Golden Cake
     beanstack_requirements = [0, '10K', '100K']
@@ -577,7 +604,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
               f"{f'<br>Note: Max value can be further increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
         picture_class='summoning',
         progression=summoning_battles['Endless'],
-        goal=infinity_string
+        goal=EmojiType.INFINITY.value
+    ))
+
+    drop_rate_aw_advice[w6].append(Advice(
+        label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][11]['Description']}"
+              f"<br>{session_data.account.emperor['Bonuses'][11]['Scaling']}",
+        picture_class='the-emperor',
+        progression=session_data.account.emperor['Bonuses'][11]['Wins'],
+        goal=EmojiType.INFINITY.value
     ))
 
     for subgroup in drop_rate_aw_advice:
@@ -585,8 +620,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
             mark_advice_completed(advice)
 
     drop_rate_ag = AdviceGroup(
-        tier="",
-        pre_string="Info- Account wide sources of Drop Rate",
+        tier='',
+        pre_string="Account wide sources of Drop Rate",
         post_string="Note: External DR bonus modifiers are included in Values shown, but only listed if missing or not maxed.",
         advices=drop_rate_aw_advice,
         informational=True,
@@ -739,17 +774,13 @@ def get_drop_rate_player_advice_group():
     ))
 
     # Add up Infinite Star Sign levels
-    infinite_star_sign_levels = 0
-    for world_species in session_data.account.breeding['Species'].values():
-        for pet_species in world_species.values():
-            if pet_species['ShinyBonus'] == 'Infinite Star Signs':
-                infinite_star_sign_levels += infinite_star_sign_shiny_base * pet_species['ShinyLevel']
+    infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs']
     
     # Passive Star Signs are skipped by infinite star signs. The easiest way to account for this is to
     # just +1 the total ISS for each passive that WOULD have been counted. Then we can just compare index to ISS
     i = 1
-    while i < min(len(starsignsDict), infinite_star_sign_levels):
-        infinite_star_sign_levels += int(starsignsDict[i]['Passive'])
+    while i < min(len(starsigns_dict), infinite_star_sign_levels):
+        infinite_star_sign_levels += int(starsigns_dict[i]['Passive'])
         i += 1
 
     # Star Sign - Pirate Booty
@@ -783,7 +814,7 @@ def get_drop_rate_player_advice_group():
     ))
 
     # Post Office - Non Predatory Loot Box
-    nplb = next(b for b in poBoxDict.values() if b['Name'] == 'Non Predatory Loot Box')
+    nplb = next(b for b in po_box_dict.values() if b['Name'] == 'Non Predatory Loot Box')
     nplb_dr_max_value = lavaFunc(
         funcType=nplb['1_funcType'],
         level=nplb['Max Level'],
@@ -814,7 +845,7 @@ def get_drop_rate_player_advice_group():
         ))
 
     # Prayers - Midas Minded
-    midas_minded_data = next(p for p in prayersDict.values() if p['Name'] == 'Midas Minded')
+    midas_minded_data = next(p for p in prayers_dict.values() if p['Name'] == 'Midas Minded')
     midas_minded_bonus_max = lavaFunc(
         funcType=midas_minded_data['bonus_funcType'],
         level=midas_minded_data['MaxLevel'],
@@ -861,9 +892,9 @@ def get_drop_rate_player_advice_group():
             mark_advice_completed(advice)
 
     drop_rate_ag = AdviceGroup(
-        tier="",
-        pre_string="Info- Player specific sources of Drop Rate",
-        post_string="Note: non-limited equipment that is worse than what you already have for the slot is excluded",
+        tier='',
+        pre_string="Player specific sources of Drop Rate",
+        # post_string="Note: Non-limited equipment that is worse than what you already have for the slot is excluded",
         advices=drop_rate_pp_advice,
         informational=True,
     )
@@ -873,9 +904,9 @@ def get_progression_tiers_advice_group() -> tuple[AdviceGroup, int, int, int]:
     template_advice_dict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    true_max = 0
-    max_tier = true_max - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Drop Rate']
+    max_tier = true_max - optional_tiers
     tier_DropRate = 0
 
     #Assess Tiers
@@ -897,12 +928,12 @@ def get_drop_rate_advice_section() -> AdviceSection:
     # Generate AdviceSection
     tier_section = f"{overall_section_tier}/{max_tier}"
     drop_rate_advice_section = AdviceSection(
-        name="Drop Rate",
+        name='Drop Rate',
         tier=tier_section,
         pinchy_rating=overall_section_tier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header=f"Drop Rate Information",
+        header='Drop Rate Information',
         picture='data/VaultUpg18.png',
         groups=drop_rate_advice_group_dict.values(),
         unrated=True,
