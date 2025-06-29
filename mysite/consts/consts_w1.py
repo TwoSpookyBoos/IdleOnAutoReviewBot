@@ -426,8 +426,8 @@ statues_dict = {
     25: {"Name": "Compost Statue", "ItemName": "EquipmentStatues26", "Effect": "% Farming EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    28: {"Name": "Villager Statue", "ItemName": "EquipmentStatues29", "Effect": "% Villager EXP", "BaseValue": 0, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"},
-    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"}
+    28: {"Name": "Villager Statue", "ItemName": "EquipmentStatues29", "Effect": "% Villager EXP", "BaseValue": 0.3, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"},
+    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0.2, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"}
 }
 statue_type_list = ['Normal', 'Gold', 'Onyx']
 statue_count = len(statues_dict.keys())

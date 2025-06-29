@@ -412,7 +412,7 @@ stamps_progressionTiers = {
         },
         'Not Recommended': ["Sukka Foo", "Void Axe Stamp"]
     }},
-    20: {'Total Stamp Levels': 13000, 'Stamps': {
+    20: {'Stamps': {
         "Specific": {
             "Mason Jar Stamp": 96, "Matty Bag Stamp": 380, 'Crystallin': 270,
             "Lil' Mining Baggy Stamp": 280, 'Summoner Stone Stamp': 120, 'Drippy Drop Stamp': 155,
@@ -425,9 +425,9 @@ stamps_progressionTiers = {
             'White Essence Stamp': 104, 'Triad Essence Stamp': 112, 'Dark Triad Essence Stamp': 96, 'Nest Eggs Stamp': 240,
         },
     }},
-    21: {'Total Stamp Levels': 13000, 'Stamps': {'Specific': {},}},  # Optional tier for Capacity stamps, populated later from stamp_maxes
-    22: {'Total Stamp Levels': 13000, 'Stamps': {'Specific': {},}},  # Optional tier for all other previously tiered stamps, populated later from stamp_maxes
-    23: {'Total Stamp Levels': 13000, 'Stamps': {'Specific': {},}},  # Optional tier for all non-tiered stamps, populated later from stamp_maxes
+    21: {'Stamps': {"Specific": {},}},  # Info tier for Capacity stamps, populated later from stamp_maxes
+    22: {'Stamps': {"Specific": {},}},  # Info tier for all other previously tiered stamps, populated later from stamp_maxes
+    23: {'Stamps': {"Specific": {},}},  # Info tier for all non-tiered stamps, populated later from stamp_maxes
 }
 smithing_progressionTiers = {
     1: {
@@ -690,14 +690,14 @@ bubbles_progressionTiers = [
      {'Laaarrrryyyy': 150, 'Hammer Hammer': 150, 'Cookin Roadkill': 105, 'All For Kill': 167},
      "80% max value",
      "Larry at 150 = 72% chance for +2 levels. Somewhere around level 125-150, this bubble should pass 100m Dementia Ore cost and be available to level with Boron upgrades from the W3 Atom Collider in Construction.  It should be, in my opinion, the ONLY Utility Bubble you spend these daily clicks on until it reaches 501. If you cannot afford the Particles needed to level Larry, invest into Sampling Bubbles."],
-    [8, 120,
+    [8, 0,
      {'Roid Ragin': 567, 'Warriors Rule': 284, 'Hearty Diggy': 567, 'Stronk Tools': 397, 'Multorange': 170, 'Dream Of Ironfish': 170},
      {'Swift Steppin': 567},
      {'Stable Jenius': 567, 'Mage Is Best': 284, 'Hocus Choppus': 567, 'Le Brain Tools': 397, 'Severapurple': 170, 'Tree Sleeper': 227},
      {'Hammer Hammer': 180},
      "85% max value",
      ""],
-    [9, 120,
+    [9, 0,
      {'Roid Ragin': 740, 'Warriors Rule': 450, 'Hearty Diggy': 900, 'Stronk Tools': 630, 'Multorange': 270, 'Dream Of Ironfish': 270},
      {'Swift Steppin': 740, 'Archer Or Bust': 450, 'Premigreen': 270},
      {'Stable Jenius': 740, 'Mage Is Best': 450, 'Hocus Choppus': 900, 'Le Brain Tools': 630, 'Severapurple': 270, 'Tree Sleeper': 360},
@@ -705,14 +705,14 @@ bubbles_progressionTiers = [
       'Droppin Loads': 280, 'Buff Boi Talent': 100, 'Fast Boi Talent': 100, 'Smart Boi Talent': 100},
      "90% max value",
      ""],
-    [10, 120,
+    [10, 0,
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570},
      {'Swift Steppin': 840},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
      {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 1000, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
      "95% max value",
      ""],
-    [11, 120,
+    [11, 0,
      {'Roid Ragin': 900},
      {'Swift Steppin': 900},
      {'Stable Jenius': 900},
@@ -723,7 +723,7 @@ bubbles_progressionTiers = [
      },
      "98% max value",
      ""],
-    [12, 120,
+    [12, 0,
      {'Roid Ragin': 1000},
      {'Swift Steppin': 1000},
      {'Stable Jenius': 1000},
@@ -734,7 +734,7 @@ bubbles_progressionTiers = [
      },
      "99% max value",
      ""],
-    [13, 120,
+    [13, 0,
      {  #'Roid Ragin': 9000,
       'Slabi Orefish': 540, 'Slabi Strength': 540,  # 'Endgame Eff I': 540,
       'Tome Strength': 540},

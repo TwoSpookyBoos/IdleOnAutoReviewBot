@@ -5,7 +5,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import (
     # compass_progressionTiers, break_you_best, infinity_string,
-    ValueToMulti
+    ValueToMulti, EmojiType
 )
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_medallions
@@ -242,6 +242,18 @@ def getCompassCurrenciesAdviceGroup(compass):
             goal=compass['Upgrades'][bonus_name]['Max Level'],
             resource=compass['Upgrades'][bonus_name]['Dust Image'],
         ))
+
+    mgg_label = f"Dust Multi Group G: {compass['Dust Calc']['mgg']:.2f}x"
+    currency_advices[mgg_label] = [
+        Advice(
+            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][4]['Description']}"
+                  f"<br>{session_data.account.emperor['Bonuses'][4]['Scaling']}",
+            picture_class='the-emperor',
+            progression=session_data.account.emperor['Bonuses'][4]['Wins'],
+            goal=EmojiType.INFINITY.value
+        )
+    ]
+
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:
             mark_advice_completed(advice)

@@ -139,7 +139,7 @@ def main(inputData, source_string, runType="web"):
             underground_overgrowth.getUndergroundOvergrowthAdviceSection()
         ],
         sections_6 := [
-            farming.setFarmingProgressionTier(),
+            farming.getFarmingAdviceSection(),
             summoning.getSummoningAdviceSection(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),

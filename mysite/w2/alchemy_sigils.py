@@ -36,11 +36,11 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group B = Summoning Winner Bonuses
     bd = session_data.account.summoning['BattleDetails']
     player_matches_total = (
-        bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated']
-        + bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated']
-        + bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated']
-        + bd['Purple'][7]['RewardBaseValue'] * bd['Green'][7]['Defeated']
-        + bd['Cyan'][3]['RewardBaseValue'] * bd['Green'][3]['Defeated']
+        (bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated'])
+        + (bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated'])
+        + (bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated'])
+        + (bd['Purple'][7]['RewardBaseValue'] * bd['Purple'][7]['Defeated'])
+        + (bd['Cyan'][3]['RewardBaseValue'] * bd['Cyan'][3]['Defeated'])
     )
     matches_total = (
         bd['Green'][9]['RewardBaseValue']
@@ -49,7 +49,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         + bd['Purple'][7]['RewardBaseValue']
         + bd['Cyan'][3]['RewardBaseValue']
     )
-    mgb = ValueToMulti(matches_total * session_data.account.summoning['WinnerBonusesMultiFull'])
+    mgb = ValueToMulti(player_matches_total * session_data.account.summoning['WinnerBonusesMultiRest'])
     mgb_label = f"Multi Group B: {mgb:.3f}x"
 
     # Multi Group C = Tuttle Vial
@@ -149,7 +149,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     ))
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         speed_Advice[mgb_label].append(advice)
-    speed_Advice[mgb_label].extend(session_data.account.summoning['WinnerBonusesSummaryFull'])
+    speed_Advice[mgb_label].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(

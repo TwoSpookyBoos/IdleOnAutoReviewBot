@@ -47,10 +47,10 @@ from consts.consts_w6 import (
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
     summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images
 )
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Advice
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals, safer_math_pow
+from models.models import Character, buildMaps, EnemyWorld, Card, Assets
+from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
-from utils.text_formatting import getItemDisplayName, numberToLetter, notateNumber
+from utils.text_formatting import getItemDisplayName, numberToLetter
 
 logger = get_logger(__name__)
 
@@ -273,8 +273,6 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
-    _parse_general_upgrade_vault(account)
-    _parse_general_armor_sets(account)
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
@@ -581,100 +579,6 @@ def _parse_general_event_points_shop(account):
                 'Image': bonusDetails['Image']
             }
 
-def _parse_general_upgrade_vault(account):
-    account.vault = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
-    }
-    #Parse Vault Upgrades
-    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
-    if not raw_vault:
-        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
-        if clean_name.split('!')[0] in vault_stack_types:
-            stack_type = clean_name.split('!')[0]
-            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
-        vault_section = 0
-        for list_index, vault_section_index in enumerate(vault_section_indexes):
-            if upgrade_index <= vault_section_index:
-                vault_section = list_index + 1
-                break
-        try:
-            account.vault['Upgrades'][clean_name] = {
-                'Level': int(raw_vault[upgrade_index]),
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': (
-                    f"{upgrade_values_list[9].replace('_', ' ')}"
-                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
-                ),
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-        except:
-            # logger.exception(f"Vault parse error on index {upgrade_index}")
-            account.vault['Upgrades'][clean_name] = {
-                'Level': 0,
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': (
-                    f"{upgrade_values_list[9].replace('_', ' ')}"
-                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
-                ),
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-    #logger.debug(account.vault)
-
-    #Sum total upgrades
-    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
-    for upgrade_name in account.vault['Upgrades']:
-        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
-
-def _parse_general_armor_sets(account):
-    account.armor_sets = {
-        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
-        'Sets': {}
-    }
-    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
-    try:
-        raw_armor_sets_list = raw_armor_sets.split(',')
-    except:
-        raw_armor_sets_list = []
-    for set_name, requirements in equipment_sets_dict.items():
-        clean_name = set_name.replace('_', ' ')
-        account.armor_sets['Sets'][clean_name] = {
-            'Owned': set_name in raw_armor_sets_list,
-            'Image': getItemDisplayName(requirements[0][0]),
-            'Armor': requirements[0],
-            'Tools': requirements[1],
-            'Required Tools': safer_convert(requirements[3][0], 0),
-            'Weapons': requirements[2],
-            'Required Weapons': safer_convert(requirements[3][1], 0),
-            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
-            'Base Value': safer_convert(requirements[3][2], 0)
-        }
-
-
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
     _parse_master_classes_compass(account)
@@ -962,12 +866,82 @@ def _parse_master_classes_exalted_stamps(account):
                 account.stamps[stampValuesDict['Name']]['Exalted'] = False
 
 def _parse_w1(account):
+    _parse_w1_upgrade_vault(account)
     _parse_w1_starsigns(account)
     _parse_w1_forge(account)
     _parse_w1_bribes(account)
     _parse_w1_stamps(account)
     _parse_w1_owl(account)
     _parse_w1_statues(account)
+
+def _parse_w1_upgrade_vault(account):
+    account.vault = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
+    }
+    #Parse Vault Upgrades
+    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
+    if not raw_vault:
+        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
+    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
+        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
+        if len(upgrade_values_list) >= 11:
+            if upgrade_values_list != '_':
+                secondary_description = f"<br>{upgrade_values_list[10].replace('_', ' ')}"
+            else:
+                secondary_description = ''
+        else:
+            secondary_description = ''
+        if clean_name.split('!')[0] in vault_stack_types:
+            stack_type = clean_name.split('!')[0]
+            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
+        vault_section = 0
+        for list_index, vault_section_index in enumerate(vault_section_indexes):
+            if upgrade_index <= vault_section_index:
+                vault_section = list_index + 1
+                break
+        try:
+            account.vault['Upgrades'][clean_name] = {
+                'Level': int(raw_vault[upgrade_index]),
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
+            }
+        except:
+            # logger.exception(f"Vault parse error on index {upgrade_index}")
+            account.vault['Upgrades'][clean_name] = {
+                'Level': 0,
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
+            }
+    #logger.debug(account.vault)
+
+    #Sum total upgrades
+    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
+    for upgrade_name in account.vault['Upgrades']:
+        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
@@ -1131,10 +1105,11 @@ def _parse_w1_statues(account):
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
-                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statues()
                 'Farmer': statueDetails['Farmer'],
                 'Target': statueDetails['Target'],
             }
+        account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
         if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statue_type_list) - 1:
             account.maxed_statues += 1
 
@@ -1515,6 +1490,7 @@ def _parse_w3(account):
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
     _parse_w3_saltlick(account)
+    _parse_w3_armor_sets(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -1570,7 +1546,7 @@ def _parse_w3_library(account):
 def _parse_w3_deathnote(account):
     account.apocCharactersIndexList = [c.character_index for c in account.barbs]
     account.bbCharactersIndexList = [c.character_index for c in account.bbs]
-    account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
+    account.apocalypse_character_index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
     _parse_w3_deathnote_miniboss_kills(account)
@@ -1584,9 +1560,9 @@ def _parse_w3_apocalypse_BBIndex(account):
         return None
 
 def _parse_w3_deathnote_rift_meowed(account):
-    if account.apocalypse_character_Index is not None:
+    if account.apocalypse_character_index is not None:
         riftPresent = False
-        for remainingMap in account.all_characters[account.apocalypse_character_Index].apoc_dict['MEOW']['Medium Extras']:
+        for remainingMap in account.all_characters[account.apocalypse_character_index].apoc_dict['MEOW']['Medium Extras']:
             if remainingMap[0] == 'The Rift':
                 riftPresent = True
                 break
@@ -1693,7 +1669,6 @@ def _parse_w3_deathnote_miniboss_kills(account):
         }
     # Sum up all the MK value of the individual skulls
     account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
-
 
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
@@ -1871,6 +1846,31 @@ def _parse_w3_saltlick(account):
             account.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
         except:
             account.saltlick[saltlickName] = 0
+
+def _parse_w3_armor_sets(account):
+    account.armor_sets = {
+        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
+        'Days toward Unlock': max(30, safer_convert(safer_get(account.raw_optlacc_dict, 381, False), False)),
+        'Sets': {}
+    }
+    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
+    try:
+        raw_armor_sets_list = raw_armor_sets.split(',')
+    except:
+        raw_armor_sets_list = []
+    for set_name, requirements in equipment_sets_dict.items():
+        clean_name = set_name.replace('_', ' ')
+        account.armor_sets['Sets'][clean_name] = {
+            'Owned': set_name in raw_armor_sets_list,
+            'Image': getItemDisplayName(requirements[0][0]),
+            'Armor': requirements[0],
+            'Tools': requirements[1],
+            'Required Tools': safer_convert(requirements[3][0], 0),
+            'Weapons': requirements[2],
+            'Required Weapons': safer_convert(requirements[3][1], 0),
+            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
+            'Base Value': safer_convert(requirements[3][2], 0)
+        }
 
 
 def _parse_w4(account):

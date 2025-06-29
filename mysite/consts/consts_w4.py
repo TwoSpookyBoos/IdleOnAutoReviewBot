@@ -28,6 +28,7 @@ def get_final_combat_level_required_for_tome() -> int:
 max_cooking_tables = 10  # Last verified as of v2.34
 max_meal_count = 67  # Last verified as of v2.34
 max_meal_level = 110  # Last verified as of v2.34
+max_cooking_ribbon = 23
 cooking_close_enough = 300  # Last adjusted v2.34
 cooking_meal_dict = {
     0:{"Name": "Turkey a la Thank", "Description": "Do I smell gratitude? Oh, no, that's colonialization...", "Effect": "+{% Total Damage", "BaseValue": 2},

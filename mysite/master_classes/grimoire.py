@@ -8,7 +8,7 @@ from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import (
     # grimoire_progressionTiers, break_you_best, infinity_string,
-    ValueToMulti,
+    ValueToMulti, EmojiType,
 )
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import grimoire_bones_list
@@ -219,6 +219,17 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
             picture_class='graveyard-shift-tombstone',
             completed=True,
             informational=True
+        )
+    ]
+
+    mgg_label = f"Bone Multi Group G: {grimoire['Bone Calc']['mgg']:.2f}x"
+    currency_advices[mgg_label] = [
+        Advice(
+            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][1]['Description']}"
+                  f"<br>{session_data.account.emperor['Bonuses'][1]['Scaling']}",
+            picture_class='the-emperor',
+            progression=session_data.account.emperor['Bonuses'][1]['Wins'],
+            goal=EmojiType.INFINITY.value
         )
     ]
 

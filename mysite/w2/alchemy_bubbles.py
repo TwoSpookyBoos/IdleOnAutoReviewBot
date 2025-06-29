@@ -218,7 +218,14 @@ def getBubblesProgressionTiersAdviceGroup():
                 subgroup_label not in bubble_Advices['Unlock And Level']
                 and len(bubble_Advices['Unlock And Level']) < session_data.account.max_subgroups
             ):
-                bubble_Advices['Unlock And Level'][subgroup_label] = []
+                bubble_Advices['Unlock And Level'][subgroup_label] = [(
+                    Advice(
+                        label=f"Unlock {tier[1]} total bubbles",
+                        picture_class='alchemy',
+                        progression=sum_total_bubbles_unlocked,
+                        goal=tier[1]
+                    )
+                )]
             if subgroup_label in bubble_Advices['Unlock And Level']:
                 for cauldron_index, unlocked_bubbles in enumerate(per_cauldron_bubbles_unlocked):
                     if unlocked_bubbles < (5 * next_world_missing_bubbles):
