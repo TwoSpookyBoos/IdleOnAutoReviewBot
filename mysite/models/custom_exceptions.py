@@ -50,7 +50,6 @@ class UserDataException(BaseCustomException):
         self.data = data
 
 
-
 class DataTooLong(UserDataException):
     faq = True
     msg_base = (

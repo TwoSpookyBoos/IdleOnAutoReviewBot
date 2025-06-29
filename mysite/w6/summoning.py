@@ -1,11 +1,10 @@
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string, summoningDict, summoning_doubler_recommendations, getSummoningDoublerPtsCost,
-    # summoning_progressionTiers
-)
+from consts.consts_w6 import summoning_doubler_recommendations, summoning_dict
+from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -14,24 +13,24 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     summoning_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(summoning_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Summoning']
+    max_tier = true_max - optional_tiers
     tier_Summoning = 0
 
     #Assess Tiers
-    # for tier, requirements in summoning_progressionTiers.items():
+    # for tier_number, requirements in summoning_progressionTiers.items():
     #     subgroup_name = f'To reach Tier {tier}'
 
     tiers_ag = AdviceGroup(
         tier=tier_Summoning,
-        pre_string="Progression Tiers",
+        pre_string='Progression Tiers',
         advices=summoning_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Summoning)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Summoning)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getEndlessAdviceGroup() -> AdviceGroup:
-    endless_advice = []
     eb = session_data.account.summoning['BattleDetails']['Endless']
 
     endless_advice = [
@@ -46,8 +45,9 @@ def getEndlessAdviceGroup() -> AdviceGroup:
 
     endless_ag = AdviceGroup(
         tier='',
-        pre_string='Informational- Upcoming Endless Rewards',
-        advices=endless_advice
+        pre_string='Upcoming Endless Rewards',
+        advices=endless_advice,
+        informational=True
     )
     endless_ag.remove_empty_subgroups()
     return endless_ag
@@ -59,7 +59,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
         sources: [],
         doublers: []
     }
-    upgrades_advice.update({f"{k} Upgrades":[] for k in summoningDict.keys()})
+    upgrades_advice.update({f"{k} Upgrades":[] for k in summoning_dict.keys()})
 
     summoning = session_data.account.summoning
     doublers_spent = summoning['Doubled Upgrades']
@@ -67,7 +67,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
 
     #Generate Alert
     if doublers_spent < doublers_owned:
-        session_data.account.alerts_AdviceDict['World 6'].append(Advice(
+        session_data.account.alerts_Advices['World 6'].append(Advice(
             label=f"{doublers_owned - doublers_spent} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
             picture_class='summoning'
         ))
@@ -133,20 +133,21 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
 
     upgrades_ag = AdviceGroup(
         tier='',
-        pre_string='Informational- Doublers and Upgrades',
-        advices=upgrades_advice
+        pre_string='Doublers and Upgrades',
+        advices=upgrades_advice,
+        informational=True
     )
     return upgrades_ag
 
 def getSummoningAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    highestSummoningSkillLevel = max(session_data.account.all_skills["Summoning"])
-    if highestSummoningSkillLevel < 1:
+    highest_summoning_level = max(session_data.account.all_skills['Summoning'])
+    if highest_summoning_level < 1:
         summoning_AdviceSection = AdviceSection(
-            name="Summoning",
-            tier="Not Yet Evaluated",
-            header="Come back after unlocking Summoning!",
-            picture="",
+            name='Summoning',
+            tier='0/0',
+            header='Come back after unlocking Summoning!',
+            picture='wiki/Summoner_Stone.png',
             unrated=True,
             unreached=True,
             completed=False
@@ -164,13 +165,13 @@ def getSummoningAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     summoning_AdviceSection = AdviceSection(
-        name="Summoning",
+        name='Summoning',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Summoning Information",  #Best Summoning tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture="wiki/Summoner_Stone.png",
+        picture='wiki/Summoner_Stone.png',
         groups=summoning_AdviceGroupDict.values(),
         completed=None,
         unrated=True,

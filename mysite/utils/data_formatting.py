@@ -10,8 +10,10 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts import humanReadableClasses, skillIndexList, emptySkillList, maxCharacters, obols_dict
-from models.custom_exceptions import ProfileNotFound, EmptyResponse, APIConnectionFailed, WtfDataException
+from consts.consts_idleon import classes_dict, skill_index_list, empty_skill_list
+from consts.consts_general import max_characters
+from consts.consts_w2 import obols_dict
+from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
 from .logging import get_logger
 from config import app
@@ -63,8 +65,8 @@ class HeaderData:
             self.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
             self.is_stale = deltaTime.total_seconds() >= 24 * 60 * 60
 
-        except Exception as e:
-            logger.warning("Unable to parse last updated time.")
+        except:
+            logger.exception("Unable to parse last updated time.")
             self.elapsed = "00:00:00:00"
             self.last_update = "Unable to parse last updated time, sorry :("
 
@@ -314,8 +316,8 @@ def getCharacterDetails(inputJSON, runType):
     kill_lists = {}
     obols_list = {}
     obol_upgrades_list = {}
-    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * maxCharacters))
-    alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * maxCharacters))
+    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * max_characters))
+    alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * max_characters))
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
@@ -365,7 +367,7 @@ def getCharacterDetails(inputJSON, runType):
 
 def getAllSkillLevelsDict(inputJSON, playerCount):
     allSkillsDict = {
-        'Skills': {skill: [] for skill in skillIndexList}
+        'Skills': {skill: [] for skill in skill_index_list}
     }
     for characterIndex in range(0, playerCount):
         if characterIndex not in allSkillsDict:
@@ -373,16 +375,16 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
         try:
             characterSkillList = inputJSON[f'Lv0_{characterIndex}']
         except:
-            characterSkillList = emptySkillList
+            characterSkillList = empty_skill_list
             logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all 0s for levels")
-        for skillCounter in range(0, len(skillIndexList)):
+        for skillCounter in range(0, len(skill_index_list)):
             try:
-                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = characterSkillList[skillCounter]
-                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(characterSkillList[skillCounter])
+                allSkillsDict[characterIndex][skill_index_list[skillCounter]] = characterSkillList[skillCounter]
+                allSkillsDict['Skills'][skill_index_list[skillCounter]].append(characterSkillList[skillCounter])
             except:
-                allSkillsDict[characterIndex][skillIndexList[skillCounter]] = 0
-                allSkillsDict['Skills'][skillIndexList[skillCounter]].append(0)
-                logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skillIndexList[skillCounter]}")
+                allSkillsDict[characterIndex][skill_index_list[skillCounter]] = 0
+                allSkillsDict['Skills'][skill_index_list[skillCounter]].append(0)
+                logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skill_index_list[skillCounter]}")
     return allSkillsDict
 
 # This returns incomplete data, since the obols_dict currently only contains DR obols
@@ -417,22 +419,22 @@ def get_obol_totals(obol_list, obol_upgrade_dict):
     return obols_totals
 
 def getHumanReadableClasses(classNumber):
-    return humanReadableClasses.get(classNumber, f"Unknown class: {classNumber}")
+    return classes_dict.get(classNumber, f"Unknown class: {classNumber}")
 
 
-def getSpecificSkillLevelsList(desiredSkill: str|int) -> list[int]:
+def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
     if isinstance(desiredSkill, str):
         try:
             return session_data.account.all_skills[desiredSkill]
         except:
             logger.exception(f"Could not retrieve skill data for {desiredSkill}")
-            return emptySkillList
+            return empty_skill_list
     elif isinstance(desiredSkill, int):
         try:
-            return session_data.account.all_skills[skillIndexList[desiredSkill]]
+            return session_data.account.all_skills[skill_index_list[desiredSkill]]
         except:
             logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
-            return emptySkillList
+            return empty_skill_list
 
 
 def setCustomTiers(filename="input.csv"):
@@ -506,12 +508,12 @@ def mark_advice_completed(advice, force=False):
     if force:
         complete()
 
-    elif not advice.goal and str(advice.progression).endswith("+"):
+    elif not advice.goal and str(advice.progression).endswith('+'):
         advice.completed = True
 
-    elif not advice.goal and str(advice.progression).endswith("%"):
+    elif not advice.goal and str(advice.progression).endswith('%'):
         try:
-            if float(str(advice.progression).strip("%")) > 100:
+            if float(str(advice.progression).strip('%')) > 100:
                 complete()
         except:
             pass

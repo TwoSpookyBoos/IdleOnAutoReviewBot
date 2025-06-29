@@ -2,22 +2,21 @@ import collections
 import functools
 import math
 
+from consts.progression_tiers import true_max_tiers
+from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import safer_convert, safer_math_log
-from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import gaming_progressionTiers, break_you_best, infinity_string, snailMaxRank
+from consts.consts_w5 import snail_max_rank
 
 logger = get_logger(__name__)
 
 def getSnailResetTarget(snail_rank):
     if snail_rank == 0:
         return 0  # Can't actually happen, but...
-    elif snail_rank < 5:
-        return 1  # Special case
     else:
-        return snail_rank - snail_rank % 5
+        return max(1, snail_rank - snail_rank % 5)
 
 # Cache the info since iteration is involved (up to ~0.035 seconds)
 @functools.cache
@@ -51,7 +50,7 @@ def getSnailLevelUpInfo(final_ballad_bonus, target_confidence_levels):
 
         encouragements = {}
 
-        for level in range(snailMaxRank):
+        for level in range(snail_max_rank):
             cost_to_level[level, level] = 0
 
             base = test_encouragement(level, 0)
@@ -110,7 +109,7 @@ def getSnailLevelUpInfo(final_ballad_bonus, target_confidence_levels):
                     probabilities[mail_used+3+next_encourage, level+1] += success
 
                 reset = fail * r_chance
-                fail = fail * (1 - r_chance) # Just a failure
+                fail = fail * (1 - r_chance)  # Just a failure
 
                 # Standard failure
                 probabilities[mail_used+3, level] += fail
@@ -125,14 +124,14 @@ def getSnailLevelUpInfo(final_ballad_bonus, target_confidence_levels):
 
     encouragement_info = {}
 
-    for level in range(snailMaxRank):
+    for level in range(snail_max_rank):
         encourage = encouragements[level]
         encouragement_info[level] = (encourage,
                                      success_chance(level, encourage),
                                      reset_chance(level, encourage))
 
     safety_limits = {}
-    for level in range(snailMaxRank):
+    for level in range(snail_max_rank):
         for target_confidence, mail, safety_chance in compute_safety_limits(level):
             safety_limits[level, target_confidence] = (mail, safety_chance)
 
@@ -153,11 +152,11 @@ def getSnailInformationGroup() -> AdviceGroup:
         label=(
             f"Current Snail Rank: {snail_data['SnailRank']}"
             if snail_data['Level'] > 0 else
-            f"Snail import not yet unlocked"
+            'Snail import not yet unlocked'
         ),
         picture_class='immortal-snail',
         progression=snail_data['SnailRank'],
-        goal=snailMaxRank
+        goal=snail_max_rank
     ))
     if snail_data['SnailRank'] > 0:
         snail_AdviceDict['General'].append(Advice(
@@ -190,7 +189,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     label=f"<br>{num_trebel_stacks} Trebel Note stacks for a bonus of {final_ballad_bonus:0.2f}x",
                     picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
                     progression=num_trebel_stacks,
-                    goal=infinity_string,
+                    goal=EmojiType.INFINITY.value,
                     resource='harp-note-3'
                 ))
             else:
@@ -224,13 +223,13 @@ def getSnailInformationGroup() -> AdviceGroup:
 
             # Current Rank Info
             current_level = snail_data['SnailRank']
-            subgroupName = f"Current Rank {current_level} Info"
-            snail_AdviceDict[subgroupName] = []
+            subgroup_label = f'Current Rank {current_level} Info'
+            snail_AdviceDict[subgroup_label] = []
             num_encourage, s_chance, r_chance = encouragement_info[current_level]
 
             encouragements_short_by = max(0, num_encourage - snail_data['Encouragements'])
 
-            snail_AdviceDict[subgroupName].append(make_encouragement_advice(current_level, "Step 1"))
+            snail_AdviceDict[subgroup_label].append(make_encouragement_advice(current_level, "Step 1"))
 
             for target_idx, target_confidence in enumerate(TARGET_CONFIDENCE_LEVELS):
                 mail_needed, overall_chance = safety_thresholds[current_level, target_confidence]
@@ -242,7 +241,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                 except IndexError:
                     pass
 
-                snail_AdviceDict[subgroupName].append(Advice(
+                snail_AdviceDict[subgroup_label].append(Advice(
                     label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} extra mail",
                     picture_class='snail-envelope',
                     progression=max(0, floored_envelopes - encouragements_short_by),
@@ -250,8 +249,8 @@ def getSnailInformationGroup() -> AdviceGroup:
                 ))
 
             # All relevant encouragement info
-            subgroupName = "Relevant Encouragement Info (for resets or advancement)"
-            snail_AdviceDict[subgroupName] = []
+            subgroup_label = 'Relevant Encouragement Info (for resets or advancement)'
+            snail_AdviceDict[subgroup_label] = []
 
             for level in range(min_snail_rank, target_snail_rank + 1):
                 rank_type = (
@@ -260,28 +259,29 @@ def getSnailInformationGroup() -> AdviceGroup:
                     else 'Current'
                 )
 
-                snail_AdviceDict[subgroupName].append(make_encouragement_advice(level, f"{rank_type} Rank {level}"))
+                snail_AdviceDict[subgroup_label].append(make_encouragement_advice(level, f"{rank_type} Rank {level}"))
 
     snail_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string='Snail Information',
+        pre_string='Snail Ranks',
         post_string='Safety means your chance of not ending up worse than you started due to potential Resets',
         advices=snail_AdviceDict,
         informational=True,
-        completed=snail_data['SnailRank']>=snailMaxRank
+        completed=snail_data['SnailRank'] >= snail_max_rank
     )
     snail_AdviceGroup.remove_empty_subgroups()
     return snail_AdviceGroup
 
 def getGamingProgressionTierAdviceGroups():
-    gaming_AdviceGroupDict = {}
-    info_tiers = 0
-    max_tier = 0  #max(gaming_progressionTiers.keys()) - info_tiers
+    gaming_AdviceGroups = {}
+    optional_tiers = 0
+    true_max = true_max_tiers['Gaming']
+    max_tier = true_max - optional_tiers
 
     # Generate AdviceGroups (none right now!)
 
-    overall_SectionTier = min(max_tier + info_tiers, 0)
-    return gaming_AdviceGroupDict, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, 0)
+    return gaming_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getGamingAdviceSection() -> AdviceSection:
     highestGamingSkillLevel = max(session_data.account.all_skills.get('Gaming', [0]))
@@ -298,7 +298,7 @@ def getGamingAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroup
     gaming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getGamingProgressionTierAdviceGroups()
-    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snailMaxRank:
+    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_rank:
         gaming_AdviceGroupDict['Snail'] = getSnailInformationGroup()
 
     # Generate AdviceSection

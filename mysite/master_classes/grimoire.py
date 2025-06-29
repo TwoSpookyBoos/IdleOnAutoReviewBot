@@ -1,33 +1,38 @@
 from math import ceil
 
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed, safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string, grimoire_bones_list, lavaFunc, arcade_max_level, ValueToMulti,
-    # grimoire_progressionTiers
+from consts.consts_autoreview import (
+    # grimoire_progressionTiers, break_you_best, infinity_string,
+    ValueToMulti, EmojiType,
 )
+from consts.consts_idleon import lavaFunc
+from consts.consts_master_classes import grimoire_bones_list
+from consts.consts_w2 import arcade_max_level
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int]:
+def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     grimoire_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(grimoire_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Grimoire']
+    max_tier = true_max - optional_tiers
     tier_Grimoire = 0
 
     tiers_ag = AdviceGroup(
         tier=tier_Grimoire,
-        pre_string="Progression Tiers",
+        pre_string='Progression Tiers',
         advices=grimoire_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Grimoire)
-    return tiers_ag, overall_SectionTier, max_tier
+    overall_SectionTier = min(true_max, tier_Grimoire)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 
 def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
@@ -206,14 +211,25 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         ),
         Advice(
             label=f"<br>Per stack: +{tombstone_per_stack:.3f}%"
-                  f"<br>10 stacks: {ValueToMulti(10 * tombstone_per_stack):.3f}x"
-                  f"<br>20 stacks: {ValueToMulti(20 * tombstone_per_stack):.3f}x"
-                  f"<br>30 stacks: {ValueToMulti(30 * tombstone_per_stack):.3f}x"
-                  f"<br>40 stacks: {ValueToMulti(40 * tombstone_per_stack):.3f}x"
-                  f"<br>50 stacks: {ValueToMulti(50 * tombstone_per_stack):.3f}x",
+                  f"<br>50 stacks: {ValueToMulti(50 * tombstone_per_stack):.3f}x"
+                  f"<br>100 stacks: {ValueToMulti(100 * tombstone_per_stack):.3f}x"
+                  f"<br>200 stacks: {ValueToMulti(200 * tombstone_per_stack):.3f}x"
+                  f"<br>300 stacks: {ValueToMulti(300 * tombstone_per_stack):.3f}x"
+                  f"<br>500 stacks: {ValueToMulti(500 * tombstone_per_stack):.3f}x",
             picture_class='graveyard-shift-tombstone',
             completed=True,
             informational=True
+        )
+    ]
+
+    mgg_label = f"Bone Multi Group G: {grimoire['Bone Calc']['mgg']:.2f}x"
+    currency_advices[mgg_label] = [
+        Advice(
+            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][1]['Description']}"
+                  f"<br>{session_data.account.emperor['Bonuses'][1]['Scaling']}",
+            picture_class='the-emperor',
+            progression=session_data.account.emperor['Bonuses'][1]['Wins'],
+            goal=EmojiType.INFINITY.value
         )
     ]
 
@@ -224,7 +240,8 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     currency_ag = AdviceGroup(
         tier='',
         pre_string='Grimoire Currencies',
-        advices=currency_advices
+        advices=currency_advices,
+        informational=True
     )
     # currency_ag.remove_empty_subgroups()
     return currency_ag
@@ -261,8 +278,9 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
 
     upgrades_ag = AdviceGroup(
         tier='',
-        pre_string="Grimoire Upgrades info",
-        advices=upgrades_AdviceDict
+        pre_string='Grimoire Upgrades',
+        advices=upgrades_AdviceDict,
+        informational=True
     )
     upgrades_ag.remove_empty_subgroups()
     return upgrades_ag
@@ -277,7 +295,7 @@ def getGrimoireAdviceSection() -> AdviceSection:
             header="Come back after unlocking a Death Bringer in World 6!",
             picture='customized/Wraith.gif',
             unrated=True,
-            unreached=session_data.account.highestWorldReached < 6,
+            unreached=session_data.account.highest_world_reached < 6,
             completed=False
         )
         return grimoire_AdviceSection
@@ -287,18 +305,17 @@ def getGrimoireAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroups
     grimoire_AdviceGroupDict = {}
-    grimoire_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier = getProgressionTiersAdviceGroup()
+    grimoire_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     grimoire_AdviceGroupDict['Currencies'] = getGrimoireCurrenciesAdviceGroup(grimoire)
     grimoire_AdviceGroupDict['Upgrades'] = getGrimoireUpgradesAdviceGroup(grimoire)
-
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     grimoire_AdviceSection = AdviceSection(
-        name="The Grimoire",
+        name='The Grimoire',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header=f"Death Bringer and Grimoire Information",  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        header='Death Bringer and Grimoire Information',  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='customized/Wraith.gif',
         groups=grimoire_AdviceGroupDict.values(),
         completed=None,

@@ -138,6 +138,7 @@ $world-contents: (
     honker: img('wiki/Honker.png'),
     equinox-valley-mirror: img('wiki/Equinox_Valley_Mirror.gif'),
     collider-toggle: img('Collider_Toggle.png'),
+    smithy: img('customized/smithy.gif'),
 // World 4
     gobo: img('wiki/Gobo.gif'),
     outer-world-town-vendor: img('wiki/Outer_World_Town_Vendor.gif'),
@@ -330,6 +331,7 @@ $world-monsters: (
     minichief-spirit: img('wiki/Minichief_Spirit_Idle.gif'),
     samurai-guardian: img('wiki/Samurai_Guardian_Idle.gif'),
     crystal-candalight: img('wiki/Crystal_Candalight_Idle.gif'),
+    the-emperor: img('data/Boss6.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);

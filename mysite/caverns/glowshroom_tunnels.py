@@ -1,14 +1,13 @@
+from consts.progression_tiers import true_max_tiers
+from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best,
-    getMotherlodeEfficiencyRequired, getMonumentOpalChance, monument_layer_rewards, infinity_string, justice_monument_currencies,
-    schematics_unlocking_harp_strings, harp_notes, getHarpNoteUnlockCost, caverns_cavern_names, ValueToMulti
-    # glowshroom_tunnels_progressionTiers
-)
-from utils.text_formatting import pl, notateNumber
+# from consts.consts import glowshroom_tunnels_progressionTiers, break_you_best, ValueToMulti
+from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, monument_layer_rewards, justice_monument_currencies, harp_notes, \
+    getMotherlodeEfficiencyRequired, getMonumentOpalChance, getHarpNoteUnlockCost
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -67,7 +66,7 @@ def getHarpAdviceGroup(schematics):
             ),
             picture_class=f"harp-chord-{chord_letter}",
             progression=chord_details['Level'],
-            goal=infinity_string
+            goal=EmojiType.INFINITY.value
         ) for chord_letter, chord_details in cavern['Chords'].items()
     ]
     cavern_advice[chord_stats].insert(0, Advice(
@@ -92,10 +91,9 @@ def getHarpAdviceGroup(schematics):
             note_advice = Advice(
                 f"{harp_notes[note_index]}s: {notateNumber('Basic', note_amount, 2)}",
                 picture_class=f'harp-note-{note_index}',
-                goal=infinity_string,
+                goal=EmojiType.INFINITY.value,
             )
         cavern_advice[n_stats].append(note_advice)
-
 
     cavern_ag = AdviceGroup(
         tier='',
@@ -259,7 +257,7 @@ def getGrottoAdviceGroup():
         goal=target_string
     ))
     if cavern['PercentRemaining'] <= 1:
-        session_data.account.alerts_AdviceDict['The Caverns Below'].append(Advice(
+        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
             label=f"Challenge {{{{ The Monarch|#glowshroom-tunnels }}}}!",
             picture_class='gloomie-mushroom'
         ))
@@ -345,7 +343,7 @@ def getJusticeAdviceGroup() -> AdviceGroup:
             ),
             picture_class=bonus['Image'],
             progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
-            goal=100 if bonus['ScalingValue'] > 30 else infinity_string,
+            goal=100 if bonus['ScalingValue'] > 30 else EmojiType.INFINITY.value,
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
@@ -374,8 +372,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     glowshroom_tunnels_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(glowshroom_tunnels_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Glowshroom Tunnels']
+    max_tier = true_max - optional_tiers
     tier_Glowshroom_Tunnels = 0
 
     #Assess Tiers
@@ -385,8 +384,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         pre_string="Progression Tiers",
         advices=glowshroom_tunnels_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Glowshroom_Tunnels)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Glowshroom_Tunnels)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 
 def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
@@ -421,7 +420,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     glowshroom_tunnels_AdviceSection = AdviceSection(
-        name="Glowshroom Tunnels",
+        name='Glowshroom Tunnels',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,

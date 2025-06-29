@@ -143,6 +143,7 @@ EquipmentHats77: Magma Core Headdress
 EquipmentHats83: Skulled Helmet of the Divine
 EquipmentHats105: Marbiglass Headdress
 EquipmentHats106: Crown of the Gods
+EquipmentHats119: Emperor Kabuto
 EquipmentHats107: Shiny Bored Beanie
 EquipmentHats84: The Crow Perch
 EquipmentHats21: Birthday Hat
@@ -273,6 +274,7 @@ EquipmentShirts35: Magma Core Wavemaille
 EquipmentShirts36: Serrated Chest of the Divine
 EquipmentShirts37: Marbiglass Tunic
 EquipmentShirts38: Robe of the Gods
+EquipmentShirts39: Emperor Sokutai Ho
 EquipmentPants1: Torn Jeans
 EquipmentPants2: Copper Platelegs
 EquipmentPants3: Iron Platelegs
@@ -302,6 +304,7 @@ EquipmentPants26: Magma Core Battleskirt
 EquipmentPants27: Spiked Leggings of the Divine
 EquipmentPants29: Marbiglass Legplates
 EquipmentPants30: Tatters of the Gods
+EquipmentPants31: Emperor Zubon
 EquipmentShoes1: Copper Boots
 EquipmentShoes9: Flip Flops
 EquipmentShoes10: Flap Flops
@@ -341,6 +344,7 @@ EquipmentShoes35: Magma Core Lavarunners
 EquipmentShoes36: Devious Slippers of the Divine
 EquipmentShoes37: Marbiglass Soles
 EquipmentShoes38: Drip of the Gods
+EquipmentShoes40: Emperor Geta
 EquipmentPendant1: Mint Icey
 EquipmentPendant2: Strawbu Icey
 EquipmentPendant3: Rok Road Icey
@@ -412,6 +416,7 @@ EquipmentRings33: Dune Killer Ring
 EquipmentRings34: Magma Killer Ring
 EquipmentRings35: Zero Point Stopwatch
 EquipmentRings36: Demented Emperor Opal
+EquipmentRings37: Spirit Killer Ring
 EquipmentRingsChat1: Love Ring
 EquipmentRingsChat2: Leafy Ring
 EquipmentRingsChat3: Wealth Ring
@@ -439,6 +444,7 @@ EquipmentCape13: Eternal Flames of The Divine
 EquipmentCape14: Phoenix Wings
 EquipmentCape15: Giant Nightshade
 EquipmentCape16: Timeless Watch
+EquipmentCape17: Gilded Emperor Wings
 EquipmentGown0: Pyromancer Robes
 EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
@@ -1094,6 +1100,7 @@ Chiz1: Chizoar Stalagmite
 TrollPart: Troll Scales
 KrukPart: Kruk Tooth
 KrukPart2: Kruk Cavity Tooth
+EmpPart: Emperor Ribbon
 LavaA1: Suggma Ashes
 LavaA1b: Royal Suggma Urn
 LavaA2: Plated Crumbs
@@ -1236,6 +1243,7 @@ ObolTroll: Jagged Obol of Massive Trolling
 ObolFrog: Grumpy Obol of the Grandfrogger
 ObolKnight: Vigilant Obol of Ice Guard
 ObolKruk: Molten Obol of Dead Divine
+ObolEmp: Gilded Obol of the Emperor
 MaxCapBagT2: Miniature Mining Pouch
 MaxCapBag1: Cramped Mining Pouch
 MaxCapBag2: Small Mining Pouch
@@ -1942,6 +1950,8 @@ GemP25: Hyper Obol Stack
 GemP30: Sand of Time
 GemP38: Rupie Slug
 GemP44: Equinox Pingy
+GemP45: Lifetime Tickets
+GemP46: Single Entry
 EquipmentHats31: Smitty's Bubble Blowing Hat
 EquipmentHats32: Bandit Bob Mask
 EquipmentHats33: Paper Bag

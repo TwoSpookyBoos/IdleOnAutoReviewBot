@@ -1,15 +1,13 @@
 from math import ceil
+
+from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed, safer_math_log, safer_math_pow
 from utils.logging import get_logger
 from flask import g as session_data
-from consts import (
-    break_you_best, infinity_string,
-    caverns_jar_rupies,
-    getMotherlodeEfficiencyRequired, monument_layer_rewards, getMonumentOpalChance, caverns_cavern_names, ValueToMulti,
-    # shallow_caverns_progressionTiers
-)
-from utils.text_formatting import pl, notateNumber
+from consts.consts_autoreview import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
+from consts.consts_caverns import caverns_cavern_names, monument_layer_rewards, caverns_jar_rupies, getMotherlodeEfficiencyRequired, getMonumentOpalChance
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -132,7 +130,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
             ),
             picture_class=jar_details['Image'],
             progression=f'{pow10_stacks:.2f}',
-            goal=infinity_string,
+            goal=EmojiType.INFINITY.value,
             informational=True
         ))
 
@@ -142,7 +140,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
             label=f"{collectible_name}: {collectible_values['Description']}",
             picture_class=collectible_values['Image'],
             progression=collectible_values['Level'],
-            goal=infinity_string,  #caverns_jar_collectibles_max_level
+            goal=EmojiType.INFINITY.value,  #caverns_jar_collectibles_max_level
             informational=True
         ) for collectible_name, collectible_values in collectibles.items()  # if collectible_values['Description'] != 'Boosts a future cavern... futuuure..!'
     ]
@@ -200,7 +198,6 @@ def getMotherlodeAdviceGroup():
         pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
         advices=cavern_advice,
         informational=True,
-        picture_class='cavern-2'
     )
     return cavern_ag
 
@@ -265,7 +262,7 @@ def getWisdomAdviceGroup() -> AdviceGroup:
             ),
             picture_class=bonus['Image'],
             progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
-            goal=100 if bonus['ScalingValue'] > 30 else infinity_string,
+            goal=100 if bonus['ScalingValue'] > 30 else EmojiType.INFINITY.value,
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
@@ -359,7 +356,7 @@ def getGambitAdviceGroup() -> AdviceGroup:
             ),
             goal=(
                 1 if not bonus_details['ScalesWithPts']
-                else infinity_string
+                else EmojiType.INFINITY.value
             )
         ) for bonus_index, bonus_details in bonuses.items()
     ]
@@ -463,8 +460,9 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     shallow_caverns_AdviceDict = {
         'Tiers': {},
     }
-    info_tiers = 0
-    max_tier = 0  #max(shallow_caverns_progressionTiers.keys(), default=0) - info_tiers
+    optional_tiers = 0
+    true_max = true_max_tiers['Underground Overgrowth']
+    max_tier = true_max - optional_tiers
     tier_Shallow_Caverns = 0
 
     #Assess Tiers
@@ -474,8 +472,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         pre_string="Progression Tiers",
         advices=shallow_caverns_AdviceDict['Tiers']
     )
-    overall_SectionTier = min(max_tier + info_tiers, tier_Shallow_Caverns)
-    return tiers_ag, overall_SectionTier, max_tier, max_tier + info_tiers
+    overall_SectionTier = min(true_max, tier_Shallow_Caverns)
+    return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     #Check if player has reached this section
@@ -502,7 +500,6 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict['Wisdom'] = getWisdomAdviceGroup()
     shallow_caverns_AdviceGroupDict['Gambit'] = getGambitAdviceGroup()
     shallow_caverns_AdviceGroupDict['Temple'] = getTempleAdviceGroup()
-
 
     for ag in shallow_caverns_AdviceGroupDict.values():
         ag.remove_empty_subgroups()

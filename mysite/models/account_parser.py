@@ -2,58 +2,50 @@ import copy
 from collections import defaultdict
 from math import floor
 from flask import g
-from consts import (
-    # General
-    lavaFunc, ValueToMulti, items_codes_and_names,
-    maxCharacters,
-    gfood_codes,
-    card_raw_data, cardset_names, decode_enemy_name,
-    gemShopDict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
-    guild_bonuses_dict, familyBonusesDict, achievementsList, allMeritsDict, starsignsDict,
-    event_points_shop_dict,
-    npc_tokens,
-    companions,
-    # Master Classes
-    grimoire_upgrades_list, grimoire_bones_list, grimoire_dont_scale,
-    compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_titans, compass_medallions,
-    # W1
-    stampsDict, stampTypes, bribesDict,
-    forgeUpgradesDict,
-    statuesDict, statueTypeList, statueCount,
-    vault_upgrades_list, vault_stack_types, vault_dont_scale, vault_section_indexes,
-    # W2
-    bubblesDict, max_IndexOfImplementedBubbles,
-    vialsDict, max_IndexOfVials, getReadableVialNames, max_VialLevel,
-    sigilsDict,
-    arcadeBonuses, arcade_max_level,
-    ballotDict,
-    obols_dict, ignorable_obols_list,
-    islands_dict, killroy_dict,
-    # W3
-    refineryDict, buildingsDict, saltLickList, atomsList, colliderStorageLimitList, buildings_shrines, prayersDict,
-    equinoxBonusesDict, max_implemented_dreams, dreamsThatUnlockNewBonuses,
-    printerAllIndexesBeingPrinted,
-    apocableMapIndexDict, apocAmountsList, apocNamesList, dn_miniboss_names, dn_miniboss_skull_requirement_list, dnSkullValueList, getSkullNames,
-    # W4
-    riftRewardsDict,
-    labJewelsDict, labBonusesDict, labChipsDict,
-    maxMealCount, maxMealLevel, cookingMealDict, maxCookingTables,
-    maxNumberOfTerritories, territoryNames, slotUnlockWavesList, breedingUpgradesDict, breedingGeneticsList,
-    breedingShinyBonusList, breedingSpeciesDict, getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti,
-    # W5
-    sailingDict, captainBuffs,
-    getStyleNameFromIndex, divinity_divinitiesDict, getDivinityNameFromIndex, gamingSuperbitsDict,
-    # W6
-    jade_emporium, pristineCharmsList, sneaking_gemstones_all_values, getGemstoneBaseValue, getGemstonePercent,
-    marketUpgradeDetails, landrankDict, cropDepotDict, maxFarmingCrops, summoningBattleCountsDict, summoningDict, summoning_endlessEnemies,
-    summoning_endlessDict, max_summoning_upgrades, summoning_sanctuary_counts, summoning_upgrades, summoning_match_colors,
-    # Caverns
-    caverns_villagers, caverns_conjuror_majiks, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, caverns_cavern_names,
-    caverns_measurer_measurements, caverns_measurer_HI55, getCavernResourceImage, max_buckets, max_sediments, sediment_bars, getVillagerEXPRequired,
-    monument_bonuses, bell_clean_improvements, bell_ring_bonuses, getBellExpRequired, getGrottoKills, lamp_wishes, key_cards, getWishCost,
-    schematics_unlocking_harp_chords, harp_chord_effects, max_harp_notes, lamp_world_wish_values, caverns_librarian_studies,
-    caverns_jar_max_rupies, caverns_jar_collectibles_count, caverns_jar_collectibles, caverns_jar_jar_types, caverns_jar_max_jar_types,
-    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, caverns_gambit_total_challenges, schematics_unlocking_gambit_challenges
+
+from consts.consts_autoreview import ValueToMulti, items_codes_and_names
+from consts.consts_idleon import lavaFunc, companions_list
+from consts.consts_general import (
+    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
+    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, decode_enemy_name
+)
+from consts.consts_master_classes import (
+    grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
+    compass_titans, compass_path_ordering, compass_medallions, vault_upgrades_list, vault_dont_scale, vault_stack_types, vault_section_indexes
+)
+from consts.consts_w1 import (
+    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
+)
+from consts.consts_w2 import (
+    max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
+    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames
+)
+from consts.consts_w3 import (
+    max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
+    collider_storage_limit_list, prayers_dict, salt_lick_list, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
+    apocable_map_index_dict,
+    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
+)
+from consts.consts_w4 import (
+    max_cooking_tables, max_meal_count, max_meal_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
+    max_breeding_territories, slot_unlock_waves_list, territory_names, breeding_upgrades_dict, breeding_genetics_list, breeding_shiny_bonus_list, breeding_species_dict,
+    getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
+)
+from consts.consts_w5 import (
+    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens
+)
+from consts.consts_caverns import (
+    getCavernResourceImage, caverns_cavern_names, caverns_villagers, caverns_engineer_schematics,
+    caverns_engineer_schematics_unlock_order, schematics_unlocking_harp_chords, max_buckets, sediment_bars, max_sediments, caverns_conjuror_majiks,
+    caverns_measurer_measurements, caverns_measurer_HI55, caverns_librarian_studies, monument_bonuses, bell_ring_bonuses, bell_clean_improvements,
+    harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
+    caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
+    caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
+)
+from consts.consts_w6 import (
+    jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
+    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
@@ -172,7 +164,7 @@ def _parse_switches(account):
     else:
         account.autoloot = False
 
-    account.maxSubgroupsPerGroup = 3  #1 if g.single_tier else 3
+    account.max_subgroups = 3
     account.library_group_characters = g.library_group_characters
 
 def _parse_companions(account):
@@ -202,7 +194,7 @@ def _parse_companions(account):
         logger.debug(f"No companion data present in JSON. Relying only on Switches")
 
     # Match the Companion IDs to their names
-    for c_index, c_name in enumerate(companions):
+    for c_index, c_name in enumerate(companions_list):
         account.companions[c_name] = c_index in simplified_companion_set
 
     # Account for the manual entries in the Switches
@@ -229,7 +221,7 @@ def _parse_characters(account, run_type):
     account.safe_character_indexes = [char.character_index for char in account.all_characters if char]
     account.all_skills = perSkillDict
     account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", {})) for i in range(account.character_count)]
-    account.max_toon_count = max(maxCharacters, character_count)  # OPTIMIZE: find a way to read this from somewhere
+    account.max_toon_count = max(max_characters, character_count)  # OPTIMIZE: find a way to read this from somewhere
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
@@ -281,12 +273,11 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
-    _parse_general_upgrade_vault(account)
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
     raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
-    for purchaseName, purchaseIndex in gemShopDict.items():
+    for purchaseName, purchaseIndex in gem_shop_dict.items():
         try:
             account.gemshop[purchaseName] = safer_convert(raw_gem_items_purchased[purchaseIndex], 0)
         except Exception as e:
@@ -299,7 +290,7 @@ def _parse_general_gem_shop_optlacc(account):
     for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
             account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
-        except Exception as e:
+        except:
             if max(account.raw_optlacc_dict.keys()) < details[0]:
                 logger.info(f"Error parsing {purchase_name} because optlacc_index {details[0]} not present in JSON. Defaulting to 0")
             else:
@@ -369,29 +360,29 @@ def _parse_class_unique_kill_stacks(account):
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
-    for className in familyBonusesDict.keys():
+    for className in family_bonuses_dict.keys():
         # Create the skeleton for all current classes, with level and value of 0
         account.family_bonuses[className] = {'Level': 0, 'Value': 0}
     for char in account.safe_characters:
         for className in [char.base_class, char.sub_class, char.elite_class]:
-            if className in familyBonusesDict:
+            if className in family_bonuses_dict:
                 if char.combat_level > account.family_bonuses[className]['Level']:
                     account.family_bonuses[className]['Level'] = char.combat_level
     for className in account.family_bonuses.keys():
         try:
             account.family_bonuses[className]['Value'] = lavaFunc(
-                familyBonusesDict[className]['funcType'],
-                account.family_bonuses[className]['Level'] - min(familyBonusesDict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
-                familyBonusesDict[className]['x1'],
-                familyBonusesDict[className]['x2'])
+                family_bonuses_dict[className]['funcType'],
+                account.family_bonuses[className]['Level'] - min(family_bonuses_dict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
+                family_bonuses_dict[className]['x1'],
+                family_bonuses_dict[className]['x2'])
         except:
             logger.exception(f"Error parsing Family Bonus for {className}. Defaulting to 0 value")
             account.family_bonuses[className]['Value'] = 0
         account.family_bonuses[className]['DisplayValue'] = (
-            f"{'+' if familyBonusesDict[className]['PrePlus'] else ''}"
+            f"{'+' if family_bonuses_dict[className]['PrePlus'] else ''}"
             f"{account.family_bonuses[className]['Value']:.2f}"
-            f"{familyBonusesDict[className]['PostDisplay']}"
-            f" {familyBonusesDict[className]['Stat']}"
+            f"{family_bonuses_dict[className]['PostDisplay']}"
+            f" {family_bonuses_dict[className]['Stat']}"
         )
 
 def _parse_dungeon_upgrades(account):
@@ -512,7 +503,7 @@ def _parse_general_printer(account):
         sample_values = []
     for sampleIndex, sampleItem in enumerate(sample_names):
         if sampleItem:
-            if sampleIndex in printerAllIndexesBeingPrinted:
+            if sampleIndex in printer_all_indexes_being_printed:
                 if sampleIndex // 7 not in account.printer['CurrentPrintsByCharacter']:
                     account.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
                 if getItemDisplayName(sampleItem) not in account.printer['CurrentPrintsByCharacter'][sampleIndex // 7]:
@@ -588,74 +579,6 @@ def _parse_general_event_points_shop(account):
                 'Image': bonusDetails['Image']
             }
 
-def _parse_general_upgrade_vault(account):
-    account.vault = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
-    }
-    #Parse Vault Upgrades
-    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
-    if not raw_vault:
-        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
-        if clean_name.split('!')[0] in vault_stack_types:
-            stack_type = clean_name.split('!')[0]
-            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
-        for list_index, vault_section_index in enumerate(vault_section_indexes):
-            if upgrade_index <= vault_section_index:
-                vault_section = list_index+1
-                break
-        try:
-            account.vault['Upgrades'][clean_name] = {
-                'Level': int(raw_vault[upgrade_index]),
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': (
-                    f"{upgrade_values_list[9].replace('_', ' ')}"
-                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
-                ),
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-        except Exception as e:
-            # logger.exception(f"Vault parse error on index {upgrade_index}")
-            account.vault['Upgrades'][clean_name] = {
-                'Level': 0,
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': (
-                    f"{upgrade_values_list[9].replace('_', ' ')}"
-                    f"<br>{upgrade_values_list[10].replace('_', ' ') if len(upgrade_values_list) >= 10 else ''}"
-                ),
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-    #logger.debug(account.vault)
-
-    #Sum total upgrades
-    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
-    for upgrade_name in account.vault['Upgrades']:
-        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
-
-
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
     _parse_master_classes_compass(account)
@@ -701,7 +624,7 @@ def _parse_master_classes_grimoire(account):
                     'Description': upgrade_values_list[9].replace('_', ' '),
                     'Scaling Value': upgrade_index not in grimoire_dont_scale
                 }
-            except Exception as e:
+            except:
                 #logger.exception(f"Error parsing Grimoire Index {upgrade_index}")
                 account.grimoire['Upgrades'][clean_name] = {
                     'Level': 0,
@@ -822,7 +745,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
                     'Path Ordering': path_ordering if path_name != 'Abomination' else path_ordering + 1,
                     'Description': clean_description,
                 }
-            except Exception as e:
+            except:
                 if raw_compass_upgrades:
                     # No need for 200 exceptions if they don't have any Compass data
                     logger.exception(f"Error parsing Compass Upgrade Index {upgrade_index} ({clean_name})")
@@ -929,9 +852,9 @@ def _parse_master_classes_exalted_stamps(account):
         raw_compass.append([])
     raw_stamps_exalted = raw_compass[4]
 
-    for stampType in stampsDict:
-        exalted_stamp_type = numberToLetter(stampTypes.index(stampType))
-        for stampIndex, stampValuesDict in stampsDict[stampType].items():
+    for stampType in stamps_dict:
+        exalted_stamp_type = numberToLetter(stamp_types.index(stampType))
+        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
             try:
                 exalted_stamp_key = f"{exalted_stamp_type}{stampIndex}"
                 # if exalted_stamp_key in raw_stamps_exalted:
@@ -943,6 +866,7 @@ def _parse_master_classes_exalted_stamps(account):
                 account.stamps[stampValuesDict['Name']]['Exalted'] = False
 
 def _parse_w1(account):
+    _parse_w1_upgrade_vault(account)
     _parse_w1_starsigns(account)
     _parse_w1_forge(account)
     _parse_w1_bribes(account)
@@ -950,11 +874,80 @@ def _parse_w1(account):
     _parse_w1_owl(account)
     _parse_w1_statues(account)
 
+def _parse_w1_upgrade_vault(account):
+    account.vault = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
+    }
+    #Parse Vault Upgrades
+    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
+    if not raw_vault:
+        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
+    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
+        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
+        if len(upgrade_values_list) >= 11:
+            if upgrade_values_list != '_':
+                secondary_description = f"<br>{upgrade_values_list[10].replace('_', ' ')}"
+            else:
+                secondary_description = ''
+        else:
+            secondary_description = ''
+        if clean_name.split('!')[0] in vault_stack_types:
+            stack_type = clean_name.split('!')[0]
+            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
+        vault_section = 0
+        for list_index, vault_section_index in enumerate(vault_section_indexes):
+            if upgrade_index <= vault_section_index:
+                vault_section = list_index + 1
+                break
+        try:
+            account.vault['Upgrades'][clean_name] = {
+                'Level': int(raw_vault[upgrade_index]),
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
+            }
+        except:
+            # logger.exception(f"Vault parse error on index {upgrade_index}")
+            account.vault['Upgrades'][clean_name] = {
+                'Level': 0,
+                'Index': upgrade_index,
+                'Image': f"vault-upgrade-{upgrade_index}",
+                'Cost Base': safer_convert(upgrade_values_list[1], 0),
+                'Cost Increment': float(upgrade_values_list[2]),
+                # 'Placeholder3': upgrade_values_list[3],
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Scaling Value': upgrade_index not in vault_dont_scale,
+                'Vault Section': vault_section
+            }
+    #logger.debug(account.vault)
+
+    #Sum total upgrades
+    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
+    for upgrade_name in account.vault['Upgrades']:
+        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
+
 def _parse_w1_starsigns(account):
     account.star_signs = {}
     account.star_sign_extras = {"UnlockedSigns": 0}
     raw_star_signs = safe_loads(account.raw_data.get("StarSg", {}))
-    for signIndex, signValuesDict in starsignsDict.items():
+    for signIndex, signValuesDict in starsigns_dict.items():
         account.star_signs[signValuesDict['Name']] = {
             'Index': signIndex,
             'Passive': signValuesDict['Passive'],
@@ -976,7 +969,7 @@ def _parse_w1_starsigns(account):
             account.star_signs[signValuesDict['Name']]['Unlocked'] = False
 
 def _parse_w1_forge(account):
-    account.forge_upgrades = copy.deepcopy(forgeUpgradesDict)
+    account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
     raw_forge_upgrades = account.raw_data.get("ForgeLV", [])
     for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
         try:
@@ -989,9 +982,9 @@ def _parse_w1_bribes(account):
     account.bribes = {}
     raw_bribes_list = safe_loads(account.raw_data.get("BribeStatus", []))
     overall_bribe_index = 0
-    for bribeSet in bribesDict:
+    for bribeSet in bribes_dict:
         account.bribes[bribeSet] = {}
-        for bribeIndex, bribeName in enumerate(bribesDict[bribeSet]):
+        for bribeIndex, bribeName in enumerate(bribes_dict[bribeSet]):
             try:
                 account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[overall_bribe_index], -1)
             except Exception as e:
@@ -1002,7 +995,7 @@ def _parse_w1_bribes(account):
 def _parse_w1_stamps(account):
     account.stamps = {}
     account.stamp_totals = {"Total": 0}
-    for stampType in stampTypes:
+    for stampType in stamp_types:
         account.stamp_totals[stampType] = 0
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))
     raw_stamps_dict = {}
@@ -1026,19 +1019,19 @@ def _parse_w1_stamps(account):
                         logger.debug(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
                     except:
                         logger.exception(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
-    for stampType in stampsDict:
-        for stampIndex, stampValuesDict in stampsDict[stampType].items():
+    for stampType in stamps_dict:
+        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
             try:
                 account.stamps[stampValuesDict['Name']] = {
                     'Index': stampIndex,
                     'Material': stampValuesDict['Material'],
-                    'Level': safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Max': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Delivered': safer_convert(raw_stamp_max_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0) > 0,
+                    'Level': safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Max': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
+                    'Delivered': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0) > 0,
                     'StampType': stampType,
                     'Value': lavaFunc(
                         stampValuesDict['funcType'],
-                        safer_convert(raw_stamps_dict.get(stampTypes.index(stampType), {}).get(stampIndex, 0), 0),
+                        safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
                         stampValuesDict['x1'],
                         stampValuesDict['x2'],
                     ),
@@ -1075,9 +1068,9 @@ def _parse_w1_statues(account):
     # "StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
     raw_statue_type_list = safe_loads(account.raw_data.get("StuG", []))
     if not raw_statue_type_list:
-        raw_statue_type_list = [0] * statueCount
-    account.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statueTypeList.index("Onyx")
-    statue_levels = [0] * statueCount
+        raw_statue_type_list = [0] * statue_count
+    account.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statue_type_list.index("Onyx")
+    statue_levels = [0] * statue_count
 
     # Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
     for char in account.safe_characters:
@@ -1090,11 +1083,11 @@ def _parse_w1_statues(account):
             logger.warning(f"Per-Character statue level Parse error for Character{char.character_index}: {e}. Skipping them.")
             continue
 
-    for statueIndex, statueDetails in statuesDict.items():
+    for statueIndex, statueDetails in statues_dict.items():
         try:
             account.statues[statueDetails['Name']] = {
                 'Level': statue_levels[statueIndex],
-                'Type': statueTypeList[raw_statue_type_list[statueIndex]],  # Description: Normal, Gold, Onyx
+                'Type': statue_type_list[raw_statue_type_list[statueIndex]],  # Description: Normal, Gold, Onyx
                 'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-2
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
@@ -1107,16 +1100,17 @@ def _parse_w1_statues(account):
             logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
             account.statues[statueDetails['Name']] = {
                 'Level': 0,
-                'Type': statueTypeList[raw_statue_type_list[statueIndex]],
+                'Type': statue_type_list[raw_statue_type_list[statueIndex]],
                 'TypeNumber': raw_statue_type_list[0],
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
-                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
+                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statues()
                 'Farmer': statueDetails['Farmer'],
                 'Target': statueDetails['Target'],
             }
-        if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statueTypeList) - 1:
+        account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
+        if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statue_type_list) - 1:
             account.maxed_statues += 1
 
 
@@ -1138,37 +1132,37 @@ def _parse_w2_vials(account):
     raw_alchemy_vials = safe_loads(account.raw_data.get("CauldronInfo", [0, 0, 0, 0, {}])[4])
     if "length" in raw_alchemy_vials:
         del raw_alchemy_vials["length"]
-    while len(raw_alchemy_vials) < max_IndexOfVials:
-        raw_alchemy_vials[int(max_IndexOfVials - manualVialsAdded)] = 0
+    while len(raw_alchemy_vials) < max_index_of_vials:
+        raw_alchemy_vials[int(max_index_of_vials - manualVialsAdded)] = 0
         manualVialsAdded += 1
     if manualVialsAdded:
         logger.warning(f"Vials list shorter than expected by {manualVialsAdded}: Likely old data. Defaulted in level 0s for them all.")
     for vialKey, vialValue in raw_alchemy_vials.items():
         try:
-            if int(vialKey) < max_IndexOfVials:
+            if int(vialKey) < max_index_of_vials:
                 account.alchemy_vials[getReadableVialNames(vialKey)] = {
                     'Level': int(vialValue),
                     'BaseValue': lavaFunc(
-                        vialsDict[int(vialKey)]['funcType'],
+                        vials_dict[int(vialKey)]['funcType'],
                         int(vialValue),
-                        vialsDict[int(vialKey)]['x1'],
-                        vialsDict[int(vialKey)]['x2'],
+                        vials_dict[int(vialKey)]['x1'],
+                        vials_dict[int(vialKey)]['x2'],
                     ),
-                    'Material': vialsDict[int(vialKey)]['Material'],
-                    'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
+                    'Material': vials_dict[int(vialKey)]['Material'],
+                    'Image': getItemDisplayName(vials_dict[int(vialKey)]['Material'])
                 }
         except Exception as e:
             logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
             account.alchemy_vials[getReadableVialNames(vialKey)] = {
                 'Level': 0,
                 'BaseValue': 0,
-                'Material': vialsDict[int(vialKey)]['Material'],
-                'Image': getItemDisplayName(vialsDict[int(vialKey)]['Material'])
+                'Material': vials_dict[int(vialKey)]['Material'],
+                'Image': getItemDisplayName(vials_dict[int(vialKey)]['Material'])
             }
 
     account.maxed_vials = 0
     for vial in account.alchemy_vials.values():
-        if vial.get("Level", 0) >= max_VialLevel:
+        if vial.get("Level", 0) >= max_vial_level:
             account.maxed_vials += 1
 
 def _parse_w2_cauldrons(account):
@@ -1235,10 +1229,10 @@ def _parse_w2_bubbles(account):
         ]
     except:
         all_raw_bubbles = [
-            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},  #+1 to compensate for range() stopping before max
-            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
-            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
-            {k:0 for k in range(0, max_IndexOfImplementedBubbles + 1)},
+            {k:0 for k in range(0, max_implemented_bubble_index + 1)},  #+1 to compensate for range() stopping before max
+            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
+            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
+            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
         ]
 
     account.alchemy_cauldrons['OrangeUnlocked'] = sum([1 for v in all_raw_bubbles[0].values() if v > 0])
@@ -1252,61 +1246,61 @@ def _parse_w2_bubbles(account):
         + account.alchemy_cauldrons['YellowUnlocked']
     )
 
-    for cauldronIndex in bubblesDict:
-        for bubbleIndex in bubblesDict[cauldronIndex]:
-            if bubbleIndex <= max_IndexOfImplementedBubbles:  #Don't waste time calculating unimplemented bubbles
+    for cauldronIndex in bubbles_dict:
+        for bubbleIndex in bubbles_dict[cauldronIndex]:
+            if bubbleIndex <= max_implemented_bubble_index:  #Don't waste time calculating unimplemented bubbles
                 try:
-                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
                         "CauldronIndex": cauldronIndex,
                         "BubbleIndex": bubbleIndex,
                         "Level": all_raw_bubbles[cauldronIndex][bubbleIndex],
                         "BaseValue": lavaFunc(
-                            bubblesDict[cauldronIndex][bubbleIndex]["funcType"],
+                            bubbles_dict[cauldronIndex][bubbleIndex]["funcType"],
                             all_raw_bubbles[cauldronIndex][bubbleIndex],
-                            bubblesDict[cauldronIndex][bubbleIndex]["x1"],
-                            bubblesDict[cauldronIndex][bubbleIndex]["x2"]),
-                        "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
+                            bubbles_dict[cauldronIndex][bubbleIndex]["x1"],
+                            bubbles_dict[cauldronIndex][bubbleIndex]["x2"]),
+                        "Material": getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
                 except:
-                    account.alchemy_bubbles[bubblesDict[cauldronIndex][bubbleIndex]['Name']] = {
+                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
                         "CauldronIndex": cauldronIndex,
                         "BubbleIndex": bubbleIndex,
                         "Level": 0,
                         "BaseValue": 0.0,
-                        "Material": getItemDisplayName(bubblesDict[cauldronIndex][bubbleIndex]['Material'])
+                        "Material": getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
 
 def _parse_w2_p2w(account):
     account.alchemy_p2w = {
-        "Sigils": copy.deepcopy(sigilsDict)
+        'Sigils': copy.deepcopy(sigils_dict)
     }
-    raw_p2w_list = safe_loads(account.raw_data.get("CauldronP2W", []))
+    raw_p2w_list = safe_loads(account.raw_data.get('CauldronP2W', []))
     for subElementIndex, subElementValue in enumerate(raw_p2w_list):
         if not isinstance(subElementValue, list):
             raw_p2w_list[subElementIndex] = [subElementValue]
     try:
-        account.alchemy_p2w["Cauldrons"] = raw_p2w_list[0]
+        account.alchemy_p2w['Cauldrons'] = raw_p2w_list[0]
     except:
-        account.alchemy_p2w["Cauldrons"] = [0] * 12
+        account.alchemy_p2w['Cauldrons'] = [0] * 12
     try:
-        account.alchemy_p2w["Liquids"] = raw_p2w_list[1]
+        account.alchemy_p2w['Liquids'] = raw_p2w_list[1]
     except:
-        account.alchemy_p2w["Liquids"] = [0] * 8
+        account.alchemy_p2w['Liquids'] = [0] * 8
     try:
-        account.alchemy_p2w["Vials"] = raw_p2w_list[2]
+        account.alchemy_p2w['Vials'] = raw_p2w_list[2]
     except:
-        account.alchemy_p2w["Vials"] = [0] * 2
+        account.alchemy_p2w['Vials'] = [0] * 2
     try:
-        account.alchemy_p2w["Player"] = raw_p2w_list[3]
+        account.alchemy_p2w['Player'] = raw_p2w_list[3]
     except:
-        account.alchemy_p2w["Player"] = [0] * 2
+        account.alchemy_p2w['Player'] = [0] * 2
 
-    for sigilName in account.alchemy_p2w["Sigils"]:
+    for sigilName in account.alchemy_p2w['Sigils']:
         try:
-            account.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] = float(raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"]])
-            account.alchemy_p2w["Sigils"][sigilName]["Level"] = raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
+            account.alchemy_p2w['Sigils'][sigilName]['PlayerHours'] = float(raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"]])
+            account.alchemy_p2w['Sigils'][sigilName]['Level'] = raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
         except:
-            pass  # Already defaulted to 0s in consts.sigilsDict
+            pass  # Already defaulted to 0s in consts.sigils_dict
         
 def _parse_w2_postOffice(account):
     account.postOffice = {
@@ -1320,12 +1314,12 @@ def _parse_w2_arcade(account):
     account.arcade_currency = {
         'Balls': safer_get(account.raw_optlacc_dict, 74, 0),
         'Gold Balls': safer_get(account.raw_optlacc_dict, 75, 0),
-        'Royale Balls': safer_get(account.raw_optlacc_dict, 324, 0),
+        'Cosmic Balls': safer_get(account.raw_optlacc_dict, 324, 0),
     }
 
     account.arcade = {}
     raw_arcade_upgrades = safe_loads(account.raw_data.get('ArcadeUpg', []))
-    for upgrade_index, upgrade_details in arcadeBonuses.items():
+    for upgrade_index, upgrade_details in arcade_bonuses.items():
         try:
             account.arcade[upgrade_index] = {
                 'Level': raw_arcade_upgrades[upgrade_index],
@@ -1336,7 +1330,7 @@ def _parse_w2_arcade(account):
                     upgrade_details['x2']
                 ),
                 'MaxValue':(
-                    2  #Royale
+                    2  #Cosmic
                     * 2  #Reindeer Companion
                     * lavaFunc(
                         upgrade_details['funcType'],
@@ -1345,10 +1339,10 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Royale': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
+                'Cosmic': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
                 'Material': (
                     '' if raw_arcade_upgrades[upgrade_index] == 101
-                    else 'arcade-royale-ball' if raw_arcade_upgrades[upgrade_index] == 100
+                    else 'arcade-cosmic-ball' if raw_arcade_upgrades[upgrade_index] == 100
                     else 'arcade-gold-ball'
                 ),
                 'Image': f'arcade-bonus-{upgrade_index}',
@@ -1366,7 +1360,7 @@ def _parse_w2_arcade(account):
                     upgrade_details['x2']
                 ),
                 'MaxValue':(
-                    2  #Royale
+                    2  #Cosmic
                     * 2  #Reindeer Companion
                     * lavaFunc(
                         upgrade_details['funcType'],
@@ -1375,7 +1369,7 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Royale': False,
+                'Cosmic': False,
                 'Material': 'arcade-gold-ball',
                 'Image': f'arcade-bonus-{upgrade_index}',
                 'Display Type': upgrade_details['displayType'],
@@ -1391,7 +1385,7 @@ def _parse_w2_ballot(account):
         "Week": safer_get(account.raw_optlacc_dict, 309, 0),
         "Buffs": {}
     }
-    for buffIndex, buffValuesDict in ballotDict.items():
+    for buffIndex, buffValuesDict in ballot_dict.items():
         account.ballot['Buffs'][buffIndex] = {
             'Description': buffValuesDict['Description'],
             'BaseValue': buffValuesDict['BaseValue'],
@@ -1496,11 +1490,12 @@ def _parse_w3(account):
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
     _parse_w3_saltlick(account)
+    _parse_w3_armor_sets(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
     raw_refinery_list = safe_loads(account.raw_data.get("Refinery", []))
-    for saltColor, saltDetails in refineryDict.items():
+    for saltColor, saltDetails in refinery_dict.items():
         try:
             account.refinery[saltColor] = {
                 'Rank': raw_refinery_list[saltDetails[0]][1],
@@ -1527,7 +1522,7 @@ def _parse_w3_refinery(account):
 def _parse_w3_buildings(account):
     account.construction_buildings = {}
     raw_buildings_list = safe_loads(account.raw_data.get("Tower", []))
-    for buildingIndex, buildingValuesDict in buildingsDict.items():
+    for buildingIndex, buildingValuesDict in buildings_dict.items():
         try:
             account.construction_buildings[buildingValuesDict['Name']] = {
                 'Level': int(raw_buildings_list[buildingIndex]),
@@ -1551,7 +1546,7 @@ def _parse_w3_library(account):
 def _parse_w3_deathnote(account):
     account.apocCharactersIndexList = [c.character_index for c in account.barbs]
     account.bbCharactersIndexList = [c.character_index for c in account.bbs]
-    account.apocalypse_character_Index = _parse_w3_apocalypse_BBIndex(account)
+    account.apocalypse_character_index = _parse_w3_apocalypse_BBIndex(account)
     account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
     _parse_w3_deathnote_kills(account)
     _parse_w3_deathnote_miniboss_kills(account)
@@ -1565,9 +1560,9 @@ def _parse_w3_apocalypse_BBIndex(account):
         return None
 
 def _parse_w3_deathnote_rift_meowed(account):
-    if account.apocalypse_character_Index is not None:
+    if account.apocalypse_character_index is not None:
         riftPresent = False
-        for remainingMap in account.all_characters[account.apocalypse_character_Index].apoc_dict['MEOW']['Medium Extras']:
+        for remainingMap in account.all_characters[account.apocalypse_character_index].apoc_dict['MEOW']['Medium Extras']:
             if remainingMap[0] == 'The Rift':
                 riftPresent = True
                 break
@@ -1584,16 +1579,16 @@ def _parse_w3_deathnote_kills(account):
 
         # If the character's subclass is Barbarian, add their special Apoc-Only kills to EnemyMap's zow_dict
         if characterIndex in account.apocCharactersIndexList:
-            for worldIndex in range(0, len(apocableMapIndexDict)):
-                for mapIndex in apocableMapIndexDict[worldIndex]:
+            for worldIndex in range(0, len(apocable_map_index_dict)):
+                for mapIndex in apocable_map_index_dict[worldIndex]:
                     try:
                         account.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsDict.get(mapIndex, [0])[0])
                     except:
                         account.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
 
         # Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
-        for worldIndex in range(1, len(apocableMapIndexDict)):
-            for mapIndex in apocableMapIndexDict[worldIndex]:
+        for worldIndex in range(1, len(apocable_map_index_dict)):
+            for mapIndex in apocable_map_index_dict[worldIndex]:
                 try:
                     account.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsDict.get(mapIndex, [0])[0])
                 except:
@@ -1613,12 +1608,12 @@ def _parse_w3_deathnote_kills(account):
             for enemy_map in account.enemy_maps[worldIndex]:
                 if barbCharacterIndex in account.enemy_maps[worldIndex][enemy_map].zow_dict:
                     kill_count = account.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
-                    for apocIndex, apocAmount in enumerate(apocAmountsList):
+                    for apocIndex, apocAmount in enumerate(apoc_amounts_list):
                         if kill_count < apocAmount:
-                            # characterDict[barbCharacterIndex].apoc_dict[apocNamesList[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
+                            # characterDict[barbCharacterIndex].apoc_dict[apoc_names_list[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
                             account.all_characters[barbCharacterIndex].addUnmetApoc(
-                                apocNamesList[apocIndex],
-                                account.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                                apoc_names_list[apocIndex],
+                                account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apocIndex]),
                                 [
                                     account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
                                     apocAmount - kill_count if apocIndex < 3 else kill_count,  # kills short of zow/chow/meow
@@ -1628,16 +1623,16 @@ def _parse_w3_deathnote_kills(account):
                                 ]
                             )
                         else:
-                            account.all_characters[barbCharacterIndex].increaseApocTotal(apocNamesList[apocIndex])
+                            account.all_characters[barbCharacterIndex].increaseApocTotal(apoc_names_list[apocIndex])
                 else:
                     # This condition can be hit when reviewing data from before a World release
                     # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
-                    for apocIndex, apocAmount in enumerate(apocAmountsList):
+                    for apocIndex, apocAmount in enumerate(apoc_amounts_list):
                         account.all_characters[barbCharacterIndex].addUnmetApoc(
-                            apocNamesList[apocIndex], account.enemy_maps[worldIndex][enemy_map].getRating(apocNamesList[apocIndex]),
+                            apoc_names_list[apocIndex], account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apocIndex]),
                             [
                                 account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                apocAmountsList[apocIndex],  # kills short of zow/chow/meow
+                                apoc_amounts_list[apocIndex],  # kills short of zow/chow/meow
                                 0,  # percent toward zow/chow/meow
                                 account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
                                 worldIndex
@@ -1664,7 +1659,7 @@ def _parse_w3_deathnote_miniboss_kills(account):
             elif kill_count < skull_requirement and kills_to_next_skull == 0:
                 kills_to_next_skull = skull_requirement - kill_count
                 percent_to_next_skull = 100 * (kills_to_next_skull / skull_requirement)
-        skull_mk_value = dnSkullValueList[skull_number] if len(dnSkullValueList) >= skull_number else 0
+        skull_mk_value = dn_skull_value_list[skull_number] if len(dn_skull_value_list) >= skull_number else 0
         skull_name = getSkullNames(skull_mk_value)
         account.miniboss_deathnote['Minis'][mb_name] = {
             'Kills': kill_count,
@@ -1674,7 +1669,6 @@ def _parse_w3_deathnote_miniboss_kills(account):
         }
     # Sum up all the MK value of the individual skulls
     account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
-
 
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
@@ -1687,7 +1681,7 @@ def _parse_w3_equinox_dreams(account):
     account.total_dreams_completed = sum(account.equinox_dreams) - 1  # Remove the placeholder in 0th index
     account.total_equinox_bonuses_unlocked = 0
     account.remaining_equinox_dreams_unlocking_new_bonuses = []
-    for dreamNumber in dreamsThatUnlockNewBonuses:
+    for dreamNumber in dreams_that_unlock_new_bonuses:
         if account.equinox_dreams[dreamNumber] == True:
             account.total_equinox_bonuses_unlocked += 1
         else:
@@ -1696,7 +1690,7 @@ def _parse_w3_equinox_dreams(account):
 def _parse_w3_equinox_bonuses(account):
     account.equinox_bonuses = {}
     raw_equinox_bonuses = safe_loads(account.raw_data.get("Dream", [0] * 30))
-    for bonusIndex, bonusValueDict in equinoxBonusesDict.items():
+    for bonusIndex, bonusValueDict in equinox_bonuses_dict.items():
         upgradeName = bonusValueDict['Name']
         account.equinox_bonuses[upgradeName] = {
             'PlayerMaxLevel': 0,  # This will get updated in the next Try block. Do not fret, dear reader.
@@ -1731,16 +1725,16 @@ def _parse_w3_shrines(account):
                 "Hours": float(raw_shrines_list[shrineIndex][4]),
                 5: int(raw_shrines_list[shrineIndex][5]),
                 "BaseValue": (
-                    buildingsDict[18 + shrineIndex]['ValueBase']
-                    + (buildingsDict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
+                    buildings_dict[18 + shrineIndex]['ValueBase']
+                    + (buildings_dict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
                     if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
                 ),
                 "Value": (
-                    buildingsDict[18 + shrineIndex]['ValueBase']
-                    + (buildingsDict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
+                    buildings_dict[18 + shrineIndex]['ValueBase']
+                    + (buildings_dict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
                     if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
                 ),
-                'Image': buildingsDict[18 + shrineIndex]['Image']
+                'Image': buildings_dict[18 + shrineIndex]['Image']
             }
         except:
             account.shrines[shrineName] = {
@@ -1752,7 +1746,7 @@ def _parse_w3_shrines(account):
                 5: 0,
                 "BaseValue": 0,
                 "Value": 0,
-                'Image': buildingsDict[18 + shrineIndex]['Image']
+                'Image': buildings_dict[18 + shrineIndex]['Image']
             }
 
 def _parse_w3_atom_collider(account):
@@ -1761,9 +1755,9 @@ def _parse_w3_atom_collider(account):
         'Magnesium Days': safer_get(account.raw_optlacc_dict, 363, 0)
     }
     try:
-        account.atom_collider['StorageLimit'] = colliderStorageLimitList[safer_get(account.raw_optlacc_dict, 133, -1)]
+        account.atom_collider['StorageLimit'] = collider_storage_limit_list[safer_get(account.raw_optlacc_dict, 133, -1)]
     except:
-        account.atom_collider['StorageLimit'] = colliderStorageLimitList[-1]
+        account.atom_collider['StorageLimit'] = collider_storage_limit_list[-1]
     try:
         account.atom_collider['Particles'] = account.raw_data.get("Divinity", {})[39]
     except:
@@ -1774,7 +1768,7 @@ def _parse_w3_atom_collider(account):
 def _parse_w3_atoms(account):
     account.atom_collider['Atoms'] = {}
     raw_atoms_list = safe_loads(account.raw_data.get("Atoms", []))
-    for atomIndex, atomInfoList in enumerate(atomsList):
+    for atomIndex, atomInfoList in enumerate(atoms_list):
         try:
             account.atom_collider['Atoms'][atomInfoList[0]] = {
                 'Level': int(raw_atoms_list[atomIndex]),
@@ -1807,7 +1801,7 @@ def _parse_w3_atoms(account):
 def _parse_w3_prayers(account):
     account.prayers = {}
     raw_prayers_list = safe_loads(account.raw_data.get("PrayOwned", []))
-    for prayerIndex, prayerValuesDict in prayersDict.items():
+    for prayerIndex, prayerValuesDict in prayers_dict.items():
         account.prayers[prayerValuesDict['Name']] = {
             'DisplayName': prayerValuesDict['Display'],
             'Material': prayerValuesDict['Material'],
@@ -1847,11 +1841,36 @@ def _parse_w3_prayers(account):
 def _parse_w3_saltlick(account):
     account.saltlick = {}
     raw_saltlick_list = safe_loads(account.raw_data.get("SaltLick"))
-    for saltlickIndex, saltlickName in enumerate(saltLickList):
+    for saltlickIndex, saltlickName in enumerate(salt_lick_list):
         try:
             account.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
         except:
             account.saltlick[saltlickName] = 0
+
+def _parse_w3_armor_sets(account):
+    account.armor_sets = {
+        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
+        'Days Remaining': 30 - max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, 0), 0)),
+        'Sets': {}
+    }
+    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
+    try:
+        raw_armor_sets_list = raw_armor_sets.split(',')
+    except:
+        raw_armor_sets_list = []
+    for set_name, requirements in equipment_sets_dict.items():
+        clean_name = set_name.replace('_', ' ')
+        account.armor_sets['Sets'][clean_name] = {
+            'Owned': set_name in raw_armor_sets_list,
+            'Image': getItemDisplayName(requirements[0][0]),
+            'Armor': requirements[0],
+            'Tools': requirements[1],
+            'Required Tools': safer_convert(requirements[3][0], 0),
+            'Weapons': requirements[2],
+            'Required Weapons': safer_convert(requirements[3][1], 0),
+            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
+            'Base Value': safer_convert(requirements[3][2], 0)
+        }
 
 
 def _parse_w4(account):
@@ -1868,7 +1887,7 @@ def _parse_w4_cooking(account):
         'MealsUnder30': 0,
         'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
         'PlayerTotalMealLevels': 0,
-        'MaxTotalMealLevels': maxMealCount * maxMealLevel,
+        'MaxTotalMealLevels': max_meal_count * max_meal_level,
         'PlayerMissingPlateUpgrades': []
     }
     _parse_w4_cooking_tables(account)
@@ -1877,7 +1896,7 @@ def _parse_w4_cooking(account):
 
 def _parse_w4_cooking_tables(account):
     emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
-    emptyCooking = [emptyTable for table in range(maxCookingTables)]
+    emptyCooking = [emptyTable for table in range(max_cooking_tables)]
     raw_cooking_list = safe_loads(account.raw_data.get("Cooking", emptyCooking))
     for sublistIndex, value in enumerate(raw_cooking_list):
         if isinstance(raw_cooking_list[sublistIndex], list):
@@ -1888,29 +1907,29 @@ def _parse_w4_cooking_tables(account):
     account.cooking['Tables Owned'] = sum(1 for table in account.cooking['Tables'] if table[0] == 2)
 
 def _parse_w4_cooking_meals(account):
-    emptyMeal = [0] * maxMealCount
+    emptyMeal = [0] * max_meal_count
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
     emptyMeals = [emptyMeal for meal in range(4)]
     raw_meals_list = safe_loads(account.raw_data.get("Meals", emptyMeals))
-    # Make the sublists maxMealCount long
+    # Make the sublists max_meal_count long
     for sublistIndex, value in enumerate(raw_meals_list):
         if isinstance(raw_meals_list[sublistIndex], list):
-            while len(raw_meals_list[sublistIndex]) < maxMealCount:
+            while len(raw_meals_list[sublistIndex]) < max_meal_count:
                 raw_meals_list[sublistIndex].append(0)
-            while len(raw_meals_list[sublistIndex]) > maxMealCount:
+            while len(raw_meals_list[sublistIndex]) > max_meal_count:
                 raw_meals_list[sublistIndex].pop()
 
     account.meals = {}
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     for index, mealLevel in enumerate(raw_meals_list[0]):
         # Create meal dict
-        account.meals[cookingMealDict[index]['Name']] = {
+        account.meals[cooking_meal_dict[index]['Name']] = {
             'Level': int(mealLevel),
-            'Value': int(mealLevel) * cookingMealDict[index]['BaseValue'],  # Mealmulti applied in calculate section
-            'BaseValue': cookingMealDict[index]['BaseValue'],
-            'Effect': cookingMealDict[index]['Effect'],
+            'Value': int(mealLevel) * cooking_meal_dict[index]['BaseValue'],  # Mealmulti applied in calculate section
+            'BaseValue': cooking_meal_dict[index]['BaseValue'],
+            'Effect': cooking_meal_dict[index]['Effect'],
             'Index': index,
-            'Image': f"{cookingMealDict[index]['Name']}-meal"
+            'Image': f"{cooking_meal_dict[index]['Name']}-meal"
         }
 
         if int(mealLevel) > 0:
@@ -1948,7 +1967,6 @@ def _parse_w4_tome(account):
     }
 
 
-
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
     _parse_w4_lab_chips(account, raw_lab)
@@ -1960,7 +1978,7 @@ def _parse_w4_lab_chips(account, raw_lab):
     raw_labChips_list = raw_lab
     if len(raw_labChips_list) >= 15:
         raw_labChips_list = raw_labChips_list[15]
-    for labChipIndex, labChip in labChipsDict.items():
+    for labChipIndex, labChip in lab_chips_dict.items():
         try:
             account.labChips[labChip["Name"]] = max(0, int(raw_labChips_list[labChipIndex]))
         except:
@@ -1969,7 +1987,7 @@ def _parse_w4_lab_chips(account, raw_lab):
 def _parse_w4_lab_bonuses(account, raw_lab):
     # TODO: Actually figure out lab :(
     account.labBonuses = {}
-    for index, node in labBonusesDict.items():
+    for index, node in lab_bonuses_dict.items():
         account.labBonuses[node["Name"]] = {
             "Enabled": True,
             "Owned": True,  # For W6 nodes
@@ -1981,7 +1999,7 @@ def _parse_w4_jewels(account, raw_lab):
     # TODO: Account for if the jewel is actually connected.
 
     account.labJewels = {}
-    for jewelIndex, jewelInfo in labJewelsDict.items():
+    for jewelIndex, jewelInfo in lab_jewels_dict.items():
         try:
             account.labJewels[jewelInfo["Name"]] = {
                 "Owned": bool(raw_lab[14][jewelIndex]),
@@ -2010,7 +2028,7 @@ def _parse_w4_rift(account):
             if account.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
                 account.rift['Unlocked'] = True
                 break
-    for riftLevel, riftBonusDict in riftRewardsDict.items():
+    for riftLevel, riftBonusDict in rift_rewards_dict.items():
         account.rift[riftBonusDict['Shorthand']] = account.rift['Level'] >= riftLevel
 
 def _parse_w4_breeding(account):
@@ -2075,12 +2093,12 @@ def _parse_w4_breeding(account):
 
 def _parse_w4_breeding_defaults(account):
     # Abilities defaulted to False
-    for genetic in breedingGeneticsList:
+    for genetic in breeding_genetics_list:
         account.breeding["Genetics"][genetic] = False
 
     # Total Shiny Bonus Levels defaulted to 0
     # Grouped Bonus per Shiny Bonus defaulted to empty list
-    for bonus in breedingShinyBonusList:
+    for bonus in breeding_shiny_bonus_list:
         account.breeding["Total Shiny Levels"][bonus] = 0
         account.breeding['Grouped Bonus'][bonus] = []
 
@@ -2092,12 +2110,12 @@ def _parse_w4_breeding_misc(account):
         pass
 
     # Number of Pet Slots Unlocked
-    for requirement in slotUnlockWavesList:
+    for requirement in slot_unlock_waves_list:
         if account.breeding['ArenaMaxWave'] > requirement:
             account.breeding['PetSlotsUnlocked'] += 1
 
 def _parse_w4_breeding_upgrades(account, rawBreeding):
-    for upgradeIndex, upgradeValuesDict in breedingUpgradesDict.items():
+    for upgradeIndex, upgradeValuesDict in breeding_upgrades_dict.items():
         try:
             account.breeding['Upgrades'][upgradeValuesDict['Name']] = {
                 'Level': rawBreeding[2][upgradeIndex],
@@ -2113,14 +2131,14 @@ def _parse_w4_breeding_upgrades(account, rawBreeding):
 
 def _parse_w4_breeding_territories(account):
     account.breeding["Highest Unlocked Territory Number"] = safer_get(account.raw_optlacc_dict, 85, 0)
-    account.breeding["Highest Unlocked Territory Name"] = territoryNames[min(maxNumberOfTerritories, account.breeding["Highest Unlocked Territory Number"])]
+    account.breeding["Highest Unlocked Territory Name"] = territory_names[min(max_breeding_territories, account.breeding["Highest Unlocked Territory Number"])]
 
-    for territoryIndex in range(0, maxNumberOfTerritories):
+    for territoryIndex in range(0, max_breeding_territories):
         if territoryIndex < account.breeding["Highest Unlocked Territory Number"]:
-            account.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': True}
+            account.breeding['Territories'][territory_names[territoryIndex + 1]] = {'Unlocked': True}
 
         else:
-            account.breeding['Territories'][territoryNames[territoryIndex + 1]] = {'Unlocked': False}
+            account.breeding['Territories'][territory_names[territoryIndex + 1]] = {'Unlocked': False}
 
 def _parse_w4_breeding_pets(account, rawBreeding):
     # Unlocked Counts per World
@@ -2144,7 +2162,7 @@ def _parse_w4_breeding_pets(account, rawBreeding):
             account.breeding['Shiny Days'][f"W{index - 21}"].append(safer_convert(entry, 0.0))
 
     # Parse data for each individual pet, increase their shiny bonus level, and mark their Genetic as obtained
-    for worldIndex, worldPetsDict in breedingSpeciesDict.items():
+    for worldIndex, worldPetsDict in breeding_species_dict.items():
         account.breeding['Species'][worldIndex] = {}
         for petIndex, petValuesDict in worldPetsDict.items():
             try:
@@ -2251,7 +2269,7 @@ def _parse_w5_gaming(account):
             account.gaming['SuperBitsString'] = ''
             account.gaming['Envelopes'] = 0
 
-    for index, valuesDict in gamingSuperbitsDict.items():
+    for index, valuesDict in gaming_superbits_dict.items():
         try:
             account.gaming['SuperBits'][valuesDict['Name']] = {
                 'Unlocked': valuesDict['CodeString'] in account.gaming['SuperBitsString'],
@@ -2307,7 +2325,7 @@ def _parse_w5_sailing(account):
         account.sum_artifact_tiers = sum(raw_sailing_list[3])
     except:
         account.sum_artifact_tiers = 0
-    for islandIndex, islandValuesDict in sailingDict.items():
+    for islandIndex, islandValuesDict in sailing_dict.items():
         try:
             account.sailing['Islands'][islandValuesDict['Name']] = {
                 'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
@@ -2361,8 +2379,8 @@ def _parse_w5_sailing_captains(account):
         try:
             account.sailing['Captains'][captainIndex] = {
                 'Tier': captainDetails[0],
-                'TopBuff': captainBuffs[captainDetails[1]],
-                'BottomBuff': captainBuffs[captainDetails[2]],
+                'TopBuff': captain_buffs[captainDetails[1]],
+                'BottomBuff': captain_buffs[captainDetails[2]],
                 'Level': captainDetails[3],
                 # 'EXP': captainDetails[4],
                 'TopBuffBaseValue': captainDetails[5],
@@ -2381,7 +2399,7 @@ def _parse_w5_sailing_captains(account):
 
 def _parse_w5_divinity(account):
     account.divinity = {
-        'Divinities': copy.deepcopy(divinity_divinitiesDict),
+        'Divinities': copy.deepcopy(divinity_divinities_dict),
         'DivinityLinks': {}
     }
     raw_divinity_list = safe_loads(account.raw_data.get("Divinity", []))
@@ -2527,8 +2545,8 @@ def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, e
         raw_pocket_div_links = [-1, -1]
     for entry_index, entry_value in enumerate(raw_pocket_div_links):
         if int(entry_value) != -1 and entry_index < account.caverns['Majiks']['Pocket Divinity']['Level']:
-            if int(entry_value)+1 in divinity_divinitiesDict:
-                account.caverns['PocketDivinityLinks'].append(divinity_divinitiesDict[int(entry_value)+1]['Name'])
+            if int(entry_value)+1 in divinity_divinities_dict:
+                account.caverns['PocketDivinityLinks'].append(divinity_divinities_dict[int(entry_value) + 1]['Name'])
             else:
                 logger.exception(f"Pocket Divinity link value of {entry_value}+1 not found in consts.divinity_divinitiesDict")
                 account.caverns['PocketDivinityLinks'].append('')
@@ -2565,8 +2583,8 @@ def _parse_caverns_schematics(account, raw_schematics_list):
                         'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
                         'Resource': resource_type
                     }
-                except Exception as e:
-                    logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}. Usually caused by HolesInfo[40] not being updated after new schematics were added!")
+                except:
+                    logger.exception(f"Error processing schematic {clean_name} at index {schematic_index}. Usually caused by HolesInfo[40] not being updated after new schematics were added!")
                     account.caverns['Schematics'][clean_name] = {
                         'Purchased': False,
                         'Image': f'engineer-schematic-{schematic_index}',
@@ -3188,6 +3206,7 @@ def _parse_w6(account):
     _parse_w6_sneaking(account)
     _parse_w6_farming(account)
     _parse_w6_summoning(account)
+    _parse_w6_emperor(account)
 
 def _parse_w6_sneaking(account):
     account.sneaking = {
@@ -3202,13 +3221,13 @@ def _parse_w6_sneaking(account):
     if not raw_ninja_list:
         logger.warning(f"Sneaking data not present{', as expected' if account.version < 200 else ''}.")
     _parse_w6_pristine_charms(account, raw_ninja_list)
-    _parse_w6_gemstones(account, raw_ninja_list)
+    _parse_w6_gemstones(account)
     _parse_w6_jade_emporium(account, raw_ninja_list)
     _parse_w6_beanstalk(account, raw_ninja_list)
 
 def _parse_w6_pristine_charms(account, raw_ninja_list):
     raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-    for pristineCharmIndex, pristineCharmDict in enumerate(pristineCharmsList):
+    for pristineCharmIndex, pristineCharmDict in enumerate(pristine_charms_list):
         try:
             account.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
                 'Obtained': bool(raw_pristine_charms_list[pristineCharmIndex]),
@@ -3222,7 +3241,7 @@ def _parse_w6_pristine_charms(account, raw_ninja_list):
                 'Bonus': pristineCharmDict['Bonus'],
             }
 
-def _parse_w6_gemstones(account, raw_ninja_list):
+def _parse_w6_gemstones(account):
     for gemstone_name, gemstone_values in sneaking_gemstones_all_values.items():
         level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
         account.sneaking['Gemstones'][gemstone_name] = {
@@ -3350,7 +3369,7 @@ def _parse_w6_farming_crops(account, rawCrops):
             continue
 
 def _parse_w6_farming_crop_depot(account):
-    for bonusIndex, bonusDetails in cropDepotDict.items():
+    for bonusIndex, bonusDetails in crop_depot_dict.items():
         account.farming['Depot'][bonusIndex] = {
             'BonusString': bonusDetails['BonusString'],
             'Image': bonusDetails['Image'],
@@ -3365,13 +3384,13 @@ def _parse_w6_farming_crop_depot(account):
             ),
             'BaseValuePlus1': lavaFunc(
                 bonusDetails['funcType'],
-                min(maxFarmingCrops, account.farming['CropsUnlocked'] + 1) if bonusIndex != 7 else min(maxFarmingCrops - 100, account.farming['CropsUnlocked'] + 1),
+                min(max_farming_crops, account.farming['CropsUnlocked'] + 1) if bonusIndex != 7 else min(max_farming_crops - 100, account.farming['CropsUnlocked'] + 1),
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
             'MaxValue': lavaFunc(
                 bonusDetails['funcType'],
-                maxFarmingCrops,
+                max_farming_crops,
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
@@ -3384,7 +3403,7 @@ def _parse_w6_farming_markets(account, rawMarkets):
         account.farming['MagicBeans'] = int(float(rawMarkets[1]))
     except:
         pass
-    for marketUpgradeIndex, marketUpgrade in enumerate(marketUpgradeDetails):
+    for marketUpgradeIndex, marketUpgrade in enumerate(market_upgrade_details):
         try:
             account.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
                 'Level': rawMarkets[marketUpgradeIndex + 2],
@@ -3427,7 +3446,7 @@ def _parse_w6_farming_land_ranks(account, rawRanks):
         account.farming['LandRankTotalRanks'] = 0
         account.farming['LandRankMinPlot'] = 0
         account.farming['LandRankMaxPlot'] = 0
-    for upgradeIndex, upgradeValuesDict in landrankDict.items():
+    for upgradeIndex, upgradeValuesDict in landrank_dict.items():
         try:
             account.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
                 'Level': rawRanks[2][upgradeIndex],
@@ -3508,7 +3527,7 @@ def _parse_w6_summoning(account):
     # raw_summoning_list[1] = List of codified names of enemies from battles won
     account.summoning["Battles"] = {}
     account.summoning["BattleDetails"] = {}
-    for color in summoningDict:
+    for color in summoning_dict:
         account.summoning["BattleDetails"][color] = {}
     _parse_w6_summoning_battles(account, raw_summoning_list[1])
 
@@ -3531,12 +3550,12 @@ def _parse_w6_summoning_battles(account, rawBattles):
     regular_battles = [battle for battle in safe_battles if not battle.startswith('rift')]
     account.summoning['Battles']['NormalTotal'] = len(regular_battles)
 
-    if account.summoning['Battles']['NormalTotal'] >= summoningBattleCountsDict["Normal"]:
-        account.summoning["Battles"] = summoningBattleCountsDict
+    if account.summoning['Battles']['NormalTotal'] >= summoning_battle_counts_dict["Normal"]:
+        account.summoning["Battles"] = summoning_battle_counts_dict
         account.summoning['AllBattlesWon'] = True
     else:
         account.summoning['AllBattlesWon'] = False
-        for colorName, colorDict in summoningDict.items():
+        for colorName, colorDict in summoning_dict.items():
             account.summoning["Battles"][colorName] = 0
             for battleIndex, battleValuesDict in colorDict.items():
                 if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
@@ -3545,7 +3564,7 @@ def _parse_w6_summoning_battles(account, rawBattles):
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
 
-    for colorName, colorDict in summoningDict.items():
+    for colorName, colorDict in summoning_dict.items():
         for battleIndex, battleValuesDict in colorDict.items():
             account.summoning["BattleDetails"][colorName][battleIndex + 1] = {
                 'Defeated': battleValuesDict['EnemyID'] in rawBattles,
@@ -3609,3 +3628,31 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
         except Exception as e:
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
+
+def _parse_w6_emperor(account):
+    bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
+    bonus_values = [int(value) for value in EmperorBon[1]]
+    fight_map = [int(value) for value in EmperorBon[2]]
+
+    account.emperor = {
+        'Last Showdown': safer_convert(safer_get(account.raw_optlacc_dict, 369, 0), 0),
+        'Daily Attempts': 1 + safer_convert(safer_get(account.raw_optlacc_dict, 382, 0), 0),
+        'Remaining Attempts': 1 - safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
+        'Bonuses': {
+            bonus_index: {  #Normally I'd put bonus_type here, but Lava's list contains duplicate placeholder names
+                'Bonus Type': bonus_type,
+                'Wins': 0,
+                'Value Per Win': bonus_values[bonus_index],
+                'Total Value': 0,
+                'Image': emperor_bonus_images[bonus_index],
+            } for bonus_index, bonus_type in enumerate(bonus_types)
+        },
+        'Upcoming': {}
+    }
+
+    for running_total in range(0, account.emperor['Last Showdown']):
+        fight_map_index = running_total % 48
+        bonus_type = bonus_types[fight_map[fight_map_index]]
+        bonus_index = bonus_types.index(bonus_type)
+        account.emperor['Bonuses'][bonus_index]['Wins'] += 1
+        # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_type]['Value Per Win'])} {bonus_type}")
