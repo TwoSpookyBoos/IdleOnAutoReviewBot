@@ -1741,15 +1741,19 @@ equipment_by_bonus_dict = {
         'Efaunt Helmet': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'efaunt-helmet'},
         'Skulled Helmet of the Divine': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'skulled-helmet-of-the-divine'},
         'Crown of the Gods': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}, 'Image': 'crown-of-the-gods'},
+        'Emperor Kabuto': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 30}, 'Image': 'emperor-kabuto'},
         # Pendants
         'Chaotic Amarok Pendant': {'Type': 'Pendant', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 20}, 'Misc2': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'chaotic-amarok-pendant'},
         # Chests
         'Robe of the Gods': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}, 'Image': 'robe-of-the-gods'},
+        'Emperor Sokutai Ho': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 25}, 'Image': 'emperor-sokutai-ho'},
         # Legs
         'Tatters of the Gods': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}, 'Image': 'tatters-of-the-gods'},
+        'Emperor Zubon': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 35}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 20}, 'Image': 'emperor-zubon'},
         # Feet
         'Devious Slippers of the Divine': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}, 'Image': 'devious-slippers-of-the-divine'},
         'Drip of the Gods': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}, 'Image': 'drip-of-the-gods'},
+        'Emperor Geta': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 20}, 'Image': 'emperor-geta'},
         # Premium Hats
         'Siege Captain Cap': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'siege-captain-cap'},
         'Goldberry': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'goldberry'},
@@ -1759,10 +1763,13 @@ equipment_by_bonus_dict = {
         'One of the Divine': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}, 'Image': 'one-of-the-divine'},
         # Capes
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
+        'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
         # Nametags
         '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-idleon-nametag'},
         'Balling Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'balling-nametag'},
         'Aethermoon Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'aethermoon-nametag'},
+        'Deadbones Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 25}, 'Misc2': {'Bonus': 'DropRate', 'Value': 35}, 'Image': 'deadbones-nametag'},
+        'Treasure Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'Money', 'Value': 25}, 'Image': 'treasure-nametag'},
         # Attire
         'Cobalt Robe':    {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
         'Evergreen Robe': {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}, 'Image': 'evergreen-robe'},

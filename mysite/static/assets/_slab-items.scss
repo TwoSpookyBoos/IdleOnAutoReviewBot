@@ -392,6 +392,9 @@ $equipment-weapons: (
     staff-of-the-undead-plague: img('wiki/Staff_of_the_Undead_Plague.png'),
     sparky-marble-staff: img('wiki/Sparky_Marble_Staff.png'),
     magnifique-godcaster: img('wiki/Magnifique_Godcaster.png'),
+
+    // Arcanist Wands
+    arcanist-staff: img('data/EquipmentWandsArc0.png'),
 );
 
 $equipment-hats: (
@@ -417,6 +420,7 @@ $equipment-hats: (
     goldberry: img('data/EquipmentHats116.png'),
     orange-beanie: img('data/EquipmentHats117.png'),
     windwalker-hood: img('data/EquipmentHats118.png'),
+    arcanist-crown: img('data/EquipmentHats122.png'),
     copper-helmet: img('wiki/Copper_Helmet.png'),
     iron-helmet: img('wiki/Iron_Helmet.png'),
     gold-helmet: img('wiki/Gold_Helmet.png'),
@@ -695,6 +699,9 @@ $equipment-jewelry: (
     tempest-ring-of-gold:       img('data/EquipmentRingsTempest6.png'),
     tempest-ring-of-death:      img('data/EquipmentRingsTempest7.png'),
     tempest-ring-of-punchies:   img('data/EquipmentRingsTempest8.png'),
+
+    // Arcanist Rings
+    arcanist-cultist-ring: img('data/EquipmentRingsArc0.png')
 );
 
 $equipment-capes: (
@@ -716,6 +723,7 @@ $equipment-capes: (
     giant-nightshade: img('wiki/Giant_Nightshade.png'),
     timeless-watch: img('wiki/Timeless_Watch.png'),
     gilded-emperor-wings: img('data/EquipmentCape17.png'),
+    chains-of-the-gilded-vaultguard: img('data/EquipmentCape18.png'),
 );
 
 $equipment-gowns: (
@@ -723,6 +731,7 @@ $equipment-gowns: (
     cobalt-robe: img('data/EquipmentGown1.png'),
     abyssal-robe: img('data/EquipmentGown2.png'),
     evergreen-robe: img('data/EquipmentGown3.png'),
+    silkshard-robe: img('data/EquipmentGown4.png'),
 );
 
 $equipment-keychains: (
@@ -802,6 +811,8 @@ $equipment-nametags: (
     spectacular-4th-year-nametag: img('data/EquipmentNametag17.png'),
     fourth-anniversary-idleon-nametag: img('data/EquipmentNametag18.png'),
     aethermoon-nametag: img('data/EquipmentNametag19.png'),
+    deadbones-nametag: img('data/EquipmentNametag20.png'),
+    treasure-nametag: img('data/EquipmentNametag21.png'),
 );
 
 $equipment-tools: (
@@ -1056,6 +1067,7 @@ $consumables: (
     star-talent-reset-potion: img('wiki/Star_Talent_Reset_Potion.png'),
     sub-class-swap-token: img('wiki/Sub_Class_Swap_Token.png'),
     elite-class-swap-token: img('wiki/Elite_Class_Swap_Token.png'),
+    complete-class-redo-token: img('data/ClassSwapC.png'),
     post-office-box-reseto-magnifico: img('wiki/Post_Office_Box_Reseto_Magnifico.png'),
     anvil-reset-whetstone: img('wiki/Anvil_Reset_Whetstone.png'),
 
@@ -1074,6 +1086,7 @@ $consumables: (
     pet-egg: img('wiki/Pet_Egg.png'),
     crop-transfer-ticket: img('wiki/Crop_Transfer_Ticket.png'),
     blinding-lantern: img('wiki/Blinding_Lantern.png'),
+    funny-2hr-fishy: img('data/GemP36.png'),
 
     // Time Candies
     time-candy-1-hr: img('wiki/1_HR_Time_Candy.png'),
@@ -1090,6 +1103,13 @@ $consumables: (
     hat-premiumifier: img('wiki/Hat_Premiumifier.png'),
     premium-stone-refunder: img('wiki/Premium_Stone_Refunder.png'),
     premium-hat-swapper: img('wiki/Premium_Bonus_Swapper.png'),
+
+    // Master Class AFK Tokens
+    aethermoon: img('data/Quest96.png'),
+    aether-fragment: img('data/Quest100.png'),
+    charred-bone: img('data/Quest97.png'),
+    charred-fragment: img('data/Quest98.png'),
+    arcane-rock: img('data/Quest101.png'),
 );
 
 $quest-items: (
