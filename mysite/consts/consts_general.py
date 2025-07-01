@@ -1764,6 +1764,7 @@ equipment_by_bonus_dict = {
         # Capes
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
         'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
+        'Chains of the Gilded Vaultguard': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'ClassExpMulti', 'Value': 100}, 'Misc2': {'Bonus': 'DropRateMulti', 'Value': 40}, 'Image': 'chains-of-the-gilded-vaultguard'},
         # Nametags
         '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'third-anniversary-idleon-nametag'},
         'Balling Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'balling-nametag'},
