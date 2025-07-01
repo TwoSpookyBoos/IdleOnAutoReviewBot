@@ -445,10 +445,12 @@ EquipmentCape14: Phoenix Wings
 EquipmentCape15: Giant Nightshade
 EquipmentCape16: Timeless Watch
 EquipmentCape17: Gilded Emperor Wings
+EquipmentCape18: Chains of the Gilded Vaultguard
 EquipmentGown0: Pyromancer Robes
 EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
 EquipmentGown3: Evergreen Robe
+EquipmentGown4: Silkshard Robe
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1416,6 +1418,8 @@ EquipmentNametag16: Lovely Day Nametag
 EquipmentNametag17: Spectacular 4th Year Nametag
 EquipmentNametag18: Fourth Anniversary Idleon Nametag
 EquipmentNametag19: Aethermoon Nametag
+EquipmentNametag20: Deadbones Nametag
+EquipmentNametag21: Treasure Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1627,6 +1631,7 @@ ResetCompleted: Talent Point Reset Potion
 ResetCompletedS: Star Talent Reset Potion
 ClassSwap: Sub Class Swap Token
 ClassSwapB: Elite Class Swap Token
+ClassSwapC: Complete Class Redo Token
 ResetBox: Post Office Box Reseto Magnifico
 Ht: Hat Premiumifier
 StonePremRestore: Premium Stone Refunder
@@ -1740,6 +1745,9 @@ Quest95: Birthday Candle
 Quest96: Aethermoon
 Quest97: Charred Bone
 Quest98: Charred Fragment
+Quest99: Prisma Bubble
+Quest100: Aether Fragment
+Quest101: Arcane Rock
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1952,6 +1960,7 @@ GemP38: Rupie Slug
 GemP44: Equinox Pingy
 GemP45: Lifetime Tickets
 GemP46: Single Entry
+GemP36: Funny 2hr Fishy
 EquipmentHats31: Smitty's Bubble Blowing Hat
 EquipmentHats32: Bandit Bob Mask
 EquipmentHats33: Paper Bag
@@ -2005,6 +2014,7 @@ EquipmentHats115: Celebration Mane
 EquipmentHats116: Goldberry
 EquipmentHats117: Orange Beanie
 EquipmentHats118: Windwalker Hood
+EquipmentHats122: Arcanist Crown
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2271,3 +2281,5 @@ StoneTempestR0: Tempest Ring Stone 60 PCT
 StoneTempestR1: Tempest Ring Stone 30 PCT
 StoneTempestR2: Tempest Ring Stone 10 PCT
 WWcoin: Wind Walker Medallion
+EquipmentWandsArc0: Arcanist Staff
+EquipmentRingsArc0: Cultist Ring
