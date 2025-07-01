@@ -383,7 +383,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     efaunt_set = session_data.account.armor_sets['Sets']['EFAUNT SET']
     drop_rate_aw_advice[w3].append(Advice(
-        label=f"{{{{Set bonus|#armor-sets}}}}: Efaunt Set: {efaunt_set['Description']}",
+        label=f"{{{{Set bonus|#armor-sets}}}}- Efaunt Set:"
+              f"<br>{efaunt_set['Description']}",
         picture_class=efaunt_set['Image'],
         progression=int(efaunt_set['Owned']),
         goal=1
@@ -397,7 +398,8 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         for shiny_name, shiny_details in session_data.account.breeding['Species'][world].items():
             if shiny_details['ShinyBonus'] == 'Drop Rate':
                 drop_rate_aw_advice[w4].append(Advice(
-                    label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}: +{shiny_details['ShinyLevel']}/{len(shiny_days_list)}%",
+                    label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}:"
+                          f"<br>+{shiny_details['ShinyLevel']}/{len(shiny_days_list)}% Drop Rate",
                     picture_class=shiny_name,
                     progression=shiny_details['ShinyLevel'],
                     goal=len(shiny_days_list)
@@ -419,7 +421,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     if grey_tome_book['Level'] < grey_tome_book['Max Level']:
         upgrades_to_unlock = grey_tome_book['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
         drop_rate_aw_advice[w4].append(Advice(
-            label=f"{{{{Grimoire|#the-grimoire}}}}: Grey Tome Book:"
+            label=f"{{{{Grimoire|#the-grimoire}}}}- Grey Tome Book:"
                   f"<br>{round(grey_tome_book['Total Value'], 2):g}x higher bonus from Tome Red Pages"
                   f"{f'<br>Requires {upgrades_to_unlock} more upgrades to unlock' if upgrades_to_unlock > 0 else ''}",
             picture_class=session_data.account.grimoire['Upgrades']['Grey Tome Book']['Image'],
@@ -429,7 +431,9 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
     if not troll_set['Owned']:
         drop_rate_aw_advice[w4].append(Advice(
-            label=f"{{{{Set bonus|#armor-sets}}}}: Troll Set: {troll_set['Description']}",
+            label=f"{{{{Set bonus|#armor-sets}}}}- Troll Set:"
+                  f"<br>{troll_set['Description']}"
+                  f"<br>Note: Increases the Tome bonus below",
             picture_class=troll_set['Image'],
             progression=int(troll_set['Owned']),
             goal=1
@@ -451,7 +455,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Caverns - Measurments - Yards
     caverns_measurements_yards = session_data.account.caverns['Measurements'][15]
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}: Measurement 15:"
+        label=f"{{{{ Caverns|#villagers }}}}- Measurement 15:"
               f"<br>+{round(caverns_measurements_yards['Value'], 1):g}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
         picture_class=caverns_measurements_yards['Image'],
         progression=caverns_measurements_yards['Level'],
@@ -462,7 +466,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
     gloomie_lootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}: Schematic {gloomie_lootie_schematic['UnlockOrder']}: Gloomie Lootie:"
+        label=f"{{{{ Caverns|#villagers }}}}- Schematic {gloomie_lootie_schematic['UnlockOrder']}: Gloomie Lootie:"
               f"<br>+{5 * grotto_cavern['OpalsFound']}% Drop Rate (+5% per Cavern cleared)",
         picture_class=gloomie_lootie_schematic['Image'],
         progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
@@ -473,7 +477,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     temple_cavern = session_data.account.caverns['Caverns']['The Temple']
     sanctum_of_loot_schematic = session_data.account.caverns['Schematics']['Sanctum of LOOT']
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}: Schematic {sanctum_of_loot_schematic['UnlockOrder']}: Sanctum of LOOT:"
+        label=f"{{{{ Caverns|#villagers }}}}- Schematic {sanctum_of_loot_schematic['UnlockOrder']}: Sanctum of LOOT:"
               f"<br>+{20 * temple_cavern['OpalsFound']}% Drop Rate (+20% per Sanctum cleared)",
         picture_class=sanctum_of_loot_schematic['Image'],
         progression=temple_cavern['OpalsFound'] if sanctum_of_loot_schematic['Purchased'] else 0,
@@ -484,7 +488,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     wisdom_drop_rate_index = 26
     wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
     drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Cavern 13|#underground-overgrowth }}}}: Wisdom Monument:"
+        label=f"{{{{ Cavern 13|#underground-overgrowth }}}}- Wisdom Monument:"
               f"<br>+{round(wisdom_monument_drop_rate['Value'], 2):g}% Drop Rate",
         picture_class='cavern-13',
         progression=wisdom_monument_drop_rate['Level'],
@@ -553,7 +557,9 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     secret_set = session_data.account.armor_sets['Sets']['SECRET SET']
     if not secret_set['Owned']:
         drop_rate_aw_advice[w6].append(Advice(
-            label=f"{{{{Set bonus|#armor-sets}}}}: Secret Set: {secret_set['Description']}",
+            label=f"{{{{Set bonus|#armor-sets}}}}- Secret Set:"
+                  f"<br>{secret_set['Description']}"
+                  f"<br>Note: Increases Golden Food bonus below",
             picture_class=secret_set['Image'],
             progression=int(secret_set['Owned']),
             goal=1
@@ -601,15 +607,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Summoning Bonuses|#summoning }}}}- Drop Rate:"
               f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max_modded:g}% Drop Rate"
-              f"{f'<br>Note: Max value can be further increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
+              f"{f'<br>Note: Max value can be increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
         picture_class='summoning',
         progression=summoning_battles['Endless'],
         goal=EmojiType.INFINITY.value
     ))
 
     drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][11]['Description']}"
-              f"<br>{session_data.account.emperor['Bonuses'][11]['Scaling']}",
+        label=f"{{{{Emperor Showdowns|#emperor}}}}- Drop Rate:"
+              f"<br>{session_data.account.emperor['Bonuses'][11]['Description']} ({session_data.account.emperor['Bonuses'][11]['Scaling']})",
         picture_class='the-emperor',
         progression=session_data.account.emperor['Bonuses'][11]['Wins'],
         goal=EmojiType.INFINITY.value
@@ -717,6 +723,11 @@ def get_drop_rate_player_advice_group():
             equipment_drop_rate = equipment_data['Misc1']['Value']
         elif equipment_data.get('Misc2', False) and equipment_data['Misc2']['Bonus'] == 'DropRate':
             equipment_drop_rate = equipment_data['Misc2']['Value']
+        equipment_drop_rate_multi = 0
+        if equipment_data.get('Misc1', False) and equipment_data['Misc1']['Bonus'] == 'DropRateMulti':
+            equipment_drop_rate_multi = equipment_data['Misc1']['Value']
+        elif equipment_data.get('Misc2', False) and equipment_data['Misc2']['Bonus'] == 'DropRateMulti':
+            equipment_drop_rate_multi = equipment_data['Misc2']['Value']
         if not drop_rate_equipment.get(equipment_data['Type'], False):
             drop_rate_equipment[equipment_data['Type']] = []
         drop_rate_equipment[equipment_data['Type']].append({
@@ -724,7 +735,8 @@ def get_drop_rate_player_advice_group():
             'Limited': equipment_data['Limited'],
             'Type': equipment_data['Type'],
             'Owned': next((a.amount > 0 for a in session_data.account.all_assets.values() if a.name == equipment_name), False),
-            'Value': equipment_drop_rate,
+            'DropRate': equipment_drop_rate,
+            'DropRateMulti': equipment_drop_rate_multi,
             'Image': equipment_data['Image'],
             'Note': equipment_data.get('Note', '')
         })
@@ -735,12 +747,17 @@ def get_drop_rate_player_advice_group():
         # Each slot is already sorted best to worst so we just break out of the slot loop once we have an owned item
         # Because of the lack of availability, we'll show ALL limited items all the time. Even if something better is owned
         best_value = 0
-        for equipment in sorted(slot_list, key=lambda e: e['Value'], reverse=True):
-            if equipment['Value'] >= best_value:
-                best_value = max(best_value, equipment['Value'] * equipment['Owned'])
+        for equipment in sorted(slot_list, key=lambda e: e['DropRate'], reverse=True):
+            if equipment['DropRate'] >= best_value or equipment['DropRateMulti'] > 0:
+                best_value = max(best_value, equipment['DropRate'] * equipment['Owned'])
+                drop_rate_text = f"+{equipment['DropRate']}% Drop Rate"
+                if equipment['DropRate'] > 0 and equipment['DropRateMulti'] > 0:
+                    drop_rate_text = f"+{equipment['DropRateMulti']}% Drop Rate MULTI | +{equipment['DropRate']}% Drop Rate"
+                elif equipment['DropRate'] == 0 and equipment['DropRateMulti'] > 0:
+                    drop_rate_text = f"+{equipment['DropRateMulti']}% Drop Rate MULTI"
                 drop_rate_pp_advice[eqp].append(Advice(
-                    label=f"{equipment['Type']}- {equipment['Name']}:"
-                          f"<br>+{equipment['Value']}% Drop Rate{' (Limited availability)' if equipment['Limited'] else ''}"
+                    label=f"{equipment['Type']}- {equipment['Name']}:{' (Limited availability)' if equipment['Limited'] else ''}"
+                          f"<br>{drop_rate_text}"
                           f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
                     picture_class=equipment['Image'],
                     progression=int(equipment['Owned']),
