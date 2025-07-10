@@ -76,6 +76,8 @@ To tail the webserver logs use
 docker logs -f iarb
 ```
 #### PyCharm
+Make sure that `mysite` is marked as `Sources Root`
+
 Run one of the two saved run configurations.
 <hr/>
 

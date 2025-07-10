@@ -24,7 +24,7 @@ from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
     collider_storage_limit_list, prayers_dict, salt_lick_list, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
     apocable_map_index_dict,
-    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
+    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict, totems_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -1491,6 +1491,7 @@ def _parse_w3(account):
     _parse_w3_prayers(account)
     _parse_w3_saltlick(account)
     _parse_w3_armor_sets(account)
+    _parse_w3_worship(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -1872,6 +1873,15 @@ def _parse_w3_armor_sets(account):
             'Base Value': safer_convert(requirements[3][2], 0)
         }
 
+def _parse_w3_worship(account):
+    account.worship = {
+        'Totems': totems_dict
+    }
+    raw_totem_data = safe_loads(account.raw_data.get("TotemInfo", []))
+    if len(raw_totem_data) > 0:
+        waves = raw_totem_data[0]
+        for i in range(len(totems_dict)):
+            account.worship["Totems"][i]["Waves"] = waves[i]
 
 def _parse_w4(account):
     _parse_w4_cooking(account)

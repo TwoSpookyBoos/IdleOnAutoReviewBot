@@ -1,10 +1,13 @@
+from consts.consts_w1 import stamp_maxes
+from consts.consts_w2 import max_vial_level
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import max_nblb_bubbles
+from consts.consts_w4 import max_nblb_bubbles, max_meal_level
 from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -181,6 +184,129 @@ def getSailingProgressionTierAdviceGroups():
     overall_SectionTier = min(true_max, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
+def getSailingSpeedAdviceGroup() -> AdviceGroup:
+    speed_advices = []
+
+    registered_slab_count = len(session_data.account.registered_slab)
+
+    ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
+    ad_tablet_bonus_percent = 4 * ad_tablet_level * (registered_slab_count - 500) / 10
+
+    speed_advices.append(Advice(
+        label=f"{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%",
+        picture_class='10-ad-tablet',
+        progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
+        goal=3
+    ))
+
+    cards = ['Crawler', 'Kattlekruk']
+    for card_name in cards:
+        speed_advices.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
+
+    goharut = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Goharut'), None)
+    speed_advices.append(Advice(
+        label=f"{goharut.get('Name')} Blessing: +{4 * goharut.get('BlessingLevel')}%",
+        picture_class=goharut.get('Name'),
+        progression=goharut.get('BlessingLevel'),
+        goal=100,
+        resource=goharut.get('BlessingMaterial')
+    ))
+
+    purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'), None)
+    anyone_linked_to_purrmep: bool = False
+    for char in session_data.account.safe_characters:
+        if char.divinity_link == "Purrmep":
+            anyone_linked_to_purrmep = True
+            break
+
+    speed_advices.append(Advice(
+        label=f"At least one {purrmep.get('Name')} Minor Link: +50%",
+        picture_class=purrmep.get('Name'),
+        progression=1 if anyone_linked_to_purrmep else 0,
+        goal=1
+    ))
+
+    speed_advices.append(Advice(
+        label=f"{purrmep.get('Name')} Blessing: +{3 * purrmep.get('BlessingLevel')}%",
+        picture_class=purrmep.get('Name'),
+        progression=purrmep.get('BlessingLevel'),
+        goal=100,
+        resource=purrmep.get('BlessingMaterial')
+    ))
+
+    bagur = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Bagur'), None)
+    speed_advices.append(Advice(
+        label=f"{bagur.get('Name')} Blessing: +{5 * bagur.get('BlessingLevel')}%",
+        picture_class=bagur.get('Name'),
+        progression=bagur.get('BlessingLevel'),
+        goal=100,
+        resource=bagur.get('BlessingMaterial')
+    ))
+
+    has_msa_sailing = session_data.account.gaming['SuperBits']['MSA Sailing']['Unlocked']
+    total_worship_waves = sum([totem['Waves'] for totem in session_data.account.worship['Totems'].values()])
+    speed_advices.append(Advice(
+        label=f"MSA Sailing: +{has_msa_sailing * total_worship_waves / 10}% (+0.1% per wave in Worship)",
+        picture_class="worship",
+        progression=total_worship_waves,
+        goal=len(session_data.account.worship['Totems'].keys()) * 300,
+    ))
+
+    boaty_bubble = session_data.account.alchemy_bubbles['Boaty Bubble']
+    speed_advices.append(Advice(
+        label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{round(boaty_bubble['BaseValue'], 2)}/135%",
+        picture_class='boaty-bubble',
+        progression=boaty_bubble['Level'],
+        resource=boaty_bubble['Material'],
+    ))
+
+    popped_corn = session_data.account.meals['Popped Corn']
+    speed_advices.append(Advice(
+        label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",
+        picture_class=popped_corn['Image'],
+        progression=popped_corn['Level'],
+        goal=max_meal_level
+    ))
+
+    has_skill_mastery = session_data.account.rift['SkillMastery']
+    total_sailing_level = sum(session_data.account.all_skills['Sailing'])
+
+    speed_advices.append(Advice(
+        label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: +{has_skill_mastery * 15}%",
+        picture_class="skill-mastery",
+        progression=total_sailing_level,
+        goal=200
+    ))
+
+    sailboat_stamp = session_data.account.stamps['Sailboat Stamp']
+    speed_advices.append(Advice(
+        label=f"Sailboat Stamp: {round(sailboat_stamp['Total Value'], 2):g}%",
+        picture_class='Sailboat Stamp',
+        progression=sailboat_stamp['Level'],
+        goal=stamp_maxes['Sailboat Stamp'],
+        resource=sailboat_stamp['Material'],
+    ))
+
+    oj_jooce_vial = session_data.account.alchemy_vials['Oj Jooce (Orange Slice)']
+    speed_advices.append(Advice(
+        label=f"{{{{ Vial|#vials }}}}: Oj Jooce: {oj_jooce_vial['Value']:.2f}%",
+        picture_class='orange-slice',
+        progression=oj_jooce_vial['Level'],
+        goal=max_vial_level
+    ))
+
+    for advice in speed_advices:
+        mark_advice_completed(advice)
+
+    sailingSpeedAdviceGroup = AdviceGroup(
+        tier='',
+        pre_string='Sources of Sailing Speed',
+        advices=speed_advices,
+        informational=True,
+    )
+
+    return sailingSpeedAdviceGroup
+
 def getSailingAdviceSection() -> AdviceSection:
     highest_sailing_level = max(session_data.account.all_skills['Sailing'])
     if highest_sailing_level < 1:
@@ -196,6 +322,8 @@ def getSailingAdviceSection() -> AdviceSection:
 
     #Generate AdviceGroup
     sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSailingProgressionTierAdviceGroups()
+
+    sailing_AdviceGroupDict["SailingSpeed"] = getSailingSpeedAdviceGroup()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
