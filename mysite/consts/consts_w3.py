@@ -183,15 +183,15 @@ salt_lick_list: list[str] = [
     'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
 ]
 
-totems_dict = {
-    0: {'Name': 'Goblin Gorefest', 'Waves': 0},
-    1: {'Name': 'Wakawaka War', 'Waves': 0},
-    2: {'Name': 'Acorn Assault', 'Waves': 0},
-    3: {'Name': 'Frosty Firefight', 'Waves': 0},
-    4: {'Name': 'Clash of Cans', 'Waves': 0},
-    5: {'Name': 'Citric Conflict', 'Waves': 0},
-    6: {'Name': 'Breezy Battle', 'Waves': 0}
-}
+totems_list = [
+    "Goblin Gorefest",
+    "Wakawaka War",
+    "Acorn Assault",
+    "Frosty Firefight",
+    "Clash of Cans",
+    "Citric Conflict",
+    "Breezy Battle"
+]
 
 max_static_book_levels = 140
 max_scaling_book_levels = 30
