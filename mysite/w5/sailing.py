@@ -280,7 +280,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
         ],
         f'Multi Group A: {multi_group_a}x': [
             Advice(
-                label=f"Anyone Minor Linked to {purrmep.get('Name')}: +{purrmep_minor_bonus}%",
+                label=f"Anyone Minor Linked to {purrmep.get('Name')}: +{purrmep_minor_bonus:.2f}%",
                 picture_class=purrmep.get('Name'),
                 progression=int(char_linked_to_purrmep is not None),
                 goal=1
