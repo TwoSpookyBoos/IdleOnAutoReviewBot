@@ -183,6 +183,7 @@ salt_lick_list: list[str] = [
     'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
 ]
 
+totems_max_wave = 300
 totems_list = [
     "Goblin Gorefest",
     "Wakawaka War",

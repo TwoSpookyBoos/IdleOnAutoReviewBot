@@ -1,6 +1,7 @@
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level
-from models.models import AdviceSection, AdviceGroup, Advice
+from consts.consts_w3 import totems_max_wave
+from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -185,118 +186,202 @@ def getSailingProgressionTierAdviceGroups():
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getSailingSpeedAdviceGroup() -> AdviceGroup:
-    speed_advices = []
-
-    registered_slab_count = len(session_data.account.registered_slab)
-
-    ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
-    ad_tablet_bonus_percent = 4 * ad_tablet_level * (registered_slab_count - 500) / 10
-
-    speed_advices.append(Advice(
-        label=f"{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%",
-        picture_class='10-ad-tablet',
-        progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
-        goal=3
-    ))
-
-    cards = ['Crawler', 'Kattlekruk']
-    for card_name in cards:
-        speed_advices.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
-
-    goharut = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Goharut'), None)
-    speed_advices.append(Advice(
-        label=f"{goharut.get('Name')} Blessing: +{4 * goharut.get('BlessingLevel')}%",
-        picture_class=goharut.get('Name'),
-        progression=goharut.get('BlessingLevel'),
-        goal=100,
-        resource=goharut.get('BlessingMaterial')
-    ))
-
-    purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'), None)
-    anyone_linked_to_purrmep: bool = False
+    # Multi Group A -- Purrmep Minor Link, Cards, Bubble
+    purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'))
+    purrmep_base_max_minor_bonus = 50
+    char_linked_to_purrmep: Character | None = None
     for char in session_data.account.safe_characters:
-        if char.divinity_link == "Purrmep":
-            anyone_linked_to_purrmep = True
+        if char.divinity_link == 'Purrmep':
+            char_linked_to_purrmep = char
             break
 
-    speed_advices.append(Advice(
-        label=f"At least one {purrmep.get('Name')} Minor Link: +50%",
-        picture_class=purrmep.get('Name'),
-        progression=1 if anyone_linked_to_purrmep else 0,
-        goal=1
-    ))
-
-    speed_advices.append(Advice(
-        label=f"{purrmep.get('Name')} Blessing: +{3 * purrmep.get('BlessingLevel')}%",
-        picture_class=purrmep.get('Name'),
-        progression=purrmep.get('BlessingLevel'),
-        goal=100,
-        resource=purrmep.get('BlessingMaterial')
-    ))
-
-    bagur = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Bagur'), None)
-    speed_advices.append(Advice(
-        label=f"{bagur.get('Name')} Blessing: +{5 * bagur.get('BlessingLevel')}%",
-        picture_class=bagur.get('Name'),
-        progression=bagur.get('BlessingLevel'),
-        goal=100,
-        resource=bagur.get('BlessingMaterial')
-    ))
-
-    has_msa_sailing = session_data.account.gaming['SuperBits']['MSA Sailing']['Unlocked']
-    total_worship_waves = sum([totem['Waves'] for totem in session_data.account.worship['Totems'].values()])
-    speed_advices.append(Advice(
-        label=f"MSA Sailing: +{has_msa_sailing * total_worship_waves / 10}% (+0.1% per wave in Worship)",
-        picture_class="worship",
-        progression=total_worship_waves,
-        goal=len(session_data.account.worship['Totems'].keys()) * 300,
-    ))
+    crawler: Card = next(card for card in session_data.account.cards if card.name == 'Crawler')
+    kattlekruk: Card = next(card for card in session_data.account.cards if card.name == 'Kattlekruk')
 
     boaty_bubble = session_data.account.alchemy_bubbles['Boaty Bubble']
-    speed_advices.append(Advice(
-        label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{round(boaty_bubble['BaseValue'], 2)}/135%",
-        picture_class='boaty-bubble',
-        progression=boaty_bubble['Level'],
-        resource=boaty_bubble['Material'],
-    ))
 
-    popped_corn = session_data.account.meals['Popped Corn']
-    speed_advices.append(Advice(
-        label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",
-        picture_class=popped_corn['Image'],
-        progression=popped_corn['Level'],
-        goal=max_meal_level
-    ))
+    big_p = session_data.account.alchemy_bubbles['Big P']
 
-    has_skill_mastery = session_data.account.rift['SkillMastery']
-    total_sailing_level = sum(session_data.account.all_skills['Sailing'])
+    purrmep_minor_bonus = 0
+    if char_linked_to_purrmep is not None:
+        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p['BaseValue'] * purrmep_base_max_minor_bonus
 
-    speed_advices.append(Advice(
-        label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: +{has_skill_mastery * 15}%",
-        picture_class="skill-mastery",
-        progression=total_sailing_level,
-        goal=200
-    ))
+    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble['BaseValue']) / 125
+    multi_group_a = round(multi_group_a, 2)
+
+    # Multi Group B -- Goharut Blessing
+    goharut = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Goharut'))
+
+    multi_group_b = 1 + (4 * goharut['BlessingLevel']) / 100
+    multi_group_b = round(multi_group_b, 2)
+
+    # Multi Group C -- Purrmep Blessing
+    multi_group_c = 1 + (3 * purrmep['BlessingLevel']) / 100
+    multi_group_c = round(multi_group_c, 2)
+
+    # Multi Group D -- Ballot Bonus
+
+    sailing_ballot_buff_index, sailing_ballot_buff = next(
+        (i, buff) for i, buff in session_data.account.ballot['Buffs'].items()
+        if 'Sailing Speed' in buff['Description']
+    )
+    is_current_ballot_buff = session_data.account.ballot['CurrentBuff'] == sailing_ballot_buff_index
+    sailing_ballot_buff_mult = 1 + is_current_ballot_buff * sailing_ballot_buff['Value'] / 100
+
+    multi_group_d = sailing_ballot_buff_mult
+    multi_group_d = round(multi_group_d, 2)
+
+    # Multi Group E -- All other bonuses
+    bagur = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Bagur'), None)
+
+    ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
+    registered_slab_count = len(session_data.account.registered_slab)
+    lab_bonus_slab_sovereignty = session_data.account.labBonuses['Slab Sovereignty']
+    lab_bonus_slab_sovereignty_mult = (1 + (lab_bonus_slab_sovereignty['Value'] / 100) * lab_bonus_slab_sovereignty['Enabled'])
+    ad_tablet_bonus_percent = ((4 * ad_tablet_level * ((registered_slab_count - 500) // 10)) * lab_bonus_slab_sovereignty_mult) if registered_slab_count >= 500 else 0
 
     sailboat_stamp = session_data.account.stamps['Sailboat Stamp']
-    speed_advices.append(Advice(
-        label=f"Sailboat Stamp: {round(sailboat_stamp['Total Value'], 2):g}%",
-        picture_class='Sailboat Stamp',
-        progression=sailboat_stamp['Level'],
-        goal=stamp_maxes['Sailboat Stamp'],
-        resource=sailboat_stamp['Material'],
-    ))
+
+    boat_statue = session_data.account.statues['Boat Statue']
+
+    popped_corn = session_data.account.meals['Popped Corn']
 
     oj_jooce_vial = session_data.account.alchemy_vials['Oj Jooce (Orange Slice)']
-    speed_advices.append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Oj Jooce: {oj_jooce_vial['Value']:.2f}%",
-        picture_class='orange-slice',
-        progression=oj_jooce_vial['Level'],
-        goal=max_vial_level
-    ))
 
-    for advice in speed_advices:
-        mark_advice_completed(advice)
+    has_skill_mastery: bool = session_data.account.rift['SkillMastery']
+    total_sailing_level = sum(session_data.account.all_skills['Sailing'])
+
+    has_msa_sailing: bool = session_data.account.gaming['SuperBits']['MSA Sailing']['Unlocked']
+    total_worship_waves = sum([totem['Waves'] for totem in session_data.account.worship['Totems'].values()])
+
+    c_shanti_minor = session_data.account.star_signs['C. Shanti Minor']
+
+    multi_group_e = 1 + (
+            5 * bagur['BlessingLevel'] +
+            ad_tablet_bonus_percent +
+            sailboat_stamp['Total Value'] +
+            (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
+            popped_corn['Value'] +
+            oj_jooce_vial['Value'] +
+            has_skill_mastery * (total_sailing_level > 200) * 15 +
+            has_msa_sailing * (total_worship_waves // 10) +
+            c_shanti_minor['Unlocked'] * 20
+    ) / 125
+    multi_group_e = round(multi_group_e, 2)
+
+    multi_total = round(multi_group_a * multi_group_b * multi_group_c * multi_group_d * multi_group_e, 2)
+
+    speed_advices = {
+        f'Total: {multi_total}x': [
+            Advice(
+                label=f'Total Sailing Speed bonus: {multi_total}x',
+                picture_class='sailing',
+            )
+        ],
+        f'Multi Group A: {multi_group_a}x': [
+            Advice(
+                label=f"Anyone Minor Linked to {purrmep.get('Name')}: +{purrmep_minor_bonus}%",
+                picture_class=purrmep.get('Name'),
+                progression=int(char_linked_to_purrmep is not None),
+                goal=1
+            ),
+            crawler.getAdvice(),
+            kattlekruk.getAdvice(),
+            Advice(
+                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{boaty_bubble['BaseValue']:.2f}/135%",
+                picture_class='boaty-bubble',
+                progression=boaty_bubble['Level'],
+                resource=boaty_bubble['Material'],
+            )
+        ],
+        f'Multi Group B: {multi_group_b}x': [
+            Advice(
+                label=f"{goharut.get('Name')} Blessing: +{4 * goharut.get('BlessingLevel')}%",
+                picture_class=goharut.get('Name'),
+                progression=goharut.get('BlessingLevel'),
+                goal=100,
+                resource=goharut.get('BlessingMaterial')
+            )
+        ],
+        f'Multi Group C: {multi_group_c}x': [
+            Advice(
+                label=f"{purrmep.get('Name')} Blessing: +{3 * purrmep.get('BlessingLevel')}%",
+                picture_class=purrmep.get('Name'),
+                progression=purrmep.get('BlessingLevel'),
+                goal=100,
+                resource=purrmep.get('BlessingMaterial')
+            )
+        ],
+        f'Multi Group D: {multi_group_d}x': [
+            Advice(
+                label=f"Weekly Ballot: {sailing_ballot_buff_mult}x/{1 + sailing_ballot_buff['Value'] / 100}x"
+                      f"<br>(Buff {'is Active' if is_current_ballot_buff else 'is Inactive'})",
+                picture_class=sailing_ballot_buff['Image'],
+                progression=int(is_current_ballot_buff),
+                goal=1
+            )
+        ],
+        f'Multi Group E: {multi_group_e}x': [
+            Advice(
+                label=f"{bagur.get('Name')} Blessing: +{5 * bagur.get('BlessingLevel')}%",
+                picture_class=bagur.get('Name'),
+                progression=bagur.get('BlessingLevel'),
+                goal=100,
+                resource=bagur.get('BlessingMaterial')
+            ),
+            Advice(
+                label=f'{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%',
+                picture_class='10-ad-tablet',
+                progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
+                goal=max_sailing_artifact_level
+            ),
+            Advice(
+                label=f"Sailboat Stamp: +{sailboat_stamp['Total Value']:.2f}%",
+                picture_class='Sailboat Stamp',
+                progression=sailboat_stamp['Level'],
+                goal=stamp_maxes['Sailboat Stamp'],
+                resource=sailboat_stamp['Material'],
+            ),
+            Advice(
+                label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",
+                picture_class=boat_statue['Image'],
+            ),
+            Advice(
+                label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",
+                picture_class=popped_corn['Image'],
+                progression=popped_corn['Level'],
+                goal=max_meal_level
+            ),
+            Advice(
+                label=f"{{{{ Vial|#vials }}}}: Oj Jooce: +{oj_jooce_vial['Value']:.2f}%",
+                picture_class='orange-slice',
+                progression=oj_jooce_vial['Level'],
+                goal=max_vial_level
+            ),
+            Advice(
+                label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",
+                picture_class='skill-mastery',
+                progression=has_msa_sailing * total_sailing_level,
+                goal=200
+            ),
+            Advice(
+                label=f'MSA Sailing: +{has_msa_sailing * total_worship_waves // 10}% (+1% per 10 waves in Worship)',
+                picture_class='worship',
+                progression=total_worship_waves,
+                goal=len(session_data.account.worship['Totems'].keys()) * totems_max_wave,
+            ),
+            Advice(
+                label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {'+20% if equipped' if c_shanti_minor['Unlocked'] else 'Locked.'}",
+                picture_class='c-shanti-minor',
+                progression=int(c_shanti_minor['Unlocked']),
+                goal=1
+            )
+        ]
+    }
+
+    for subgroup in speed_advices:
+        for advice in speed_advices[subgroup]:
+            mark_advice_completed(advice)
 
     sailingSpeedAdviceGroup = AdviceGroup(
         tier='',
@@ -323,10 +408,10 @@ def getSailingAdviceSection() -> AdviceSection:
     #Generate AdviceGroup
     sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSailingProgressionTierAdviceGroups()
 
-    sailing_AdviceGroupDict["SailingSpeed"] = getSailingSpeedAdviceGroup()
+    sailing_AdviceGroupDict['SailingSpeed'] = getSailingSpeedAdviceGroup()
 
     # Generate AdviceSection
-    tier_section = f"{overall_SectionTier}/{max_tier}"
+    tier_section = f'{overall_SectionTier}/{max_tier}'
     sailing_AdviceSection = AdviceSection(
         name='Sailing',
         tier=tier_section,
