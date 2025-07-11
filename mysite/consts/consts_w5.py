@@ -69,7 +69,6 @@ goldrelic_multis_dict = {
     3: 3,
     4: 5
 }
-divinity_max_blessing_level = 100
 divinity_divinities_dict = {
     1: {
         "Name": "Snehebatu",
