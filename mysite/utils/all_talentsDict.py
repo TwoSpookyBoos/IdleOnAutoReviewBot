@@ -5465,4 +5465,17 @@ all_talentsDict = {
           'x1': 5,
           'x2': 100,
           'y1': 0,
-          'y2': 0}}
+          'y2': 0},
+    657: {'activeData': None,
+          'description': 'All monsters drop +{% more coins. Use these coins to buy all sorts of things!',
+          'funcX': 'decay',
+          'funcY': 'txt',
+          'lvlUpText': '+{% Coins',
+          'name': 'Cash Money',
+          'skillIndex': 657,
+          'subClass': 'Special Talent 1',
+          'x1': 70,
+          'x2': 50,
+          'y1': 0,
+          'y2': 0}
+}
