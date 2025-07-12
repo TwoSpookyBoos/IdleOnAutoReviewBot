@@ -9,13 +9,8 @@ logger = get_logger(__name__)
 
 star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
-
-def getCardsAdviceSection() -> AdviceSection:
-    cards = session_data.account.cards
+def getUnlockableAdviceGroup(cards, groups):
     unlockable = [card for card in cards if card.star == -1]
-
-    groups = list()
-
     if unlockable:
         advices = defaultdict(list)
         for card in unlockable:
@@ -33,27 +28,17 @@ def getCardsAdviceSection() -> AdviceSection:
         )
         groups.append(group_unlockable)
 
-    cardsets = defaultdict(list)
-    for card in cards:
-        cardsets[card.cardset].append(card)
-
-    cardsets = {
-        name: sorted(cards, key=lambda card: card.diff_to_next)
-        for name, cards in cardsets.items()
-    }
-
-    max_card_stars = 5 if session_data.account.rift['RubyCards'] else 4
+def getCardsetAdviceGroups(cardsets, max_card_stars, groups):
     cardset_rank_total = 0
-
     for name, cardset in cardsets.items():
         cardset_stars_sum = sum(min(card.star, max_card_stars) + 1 for card in cardset)
         cardset_star, cardset_diff = divmod(cardset_stars_sum, len(cardset))
         cardset_star = min(cardset_star, max_card_stars)
         cardset_star_next = (cardset_star + 1) * len(cardset)
-        cardset_maxed = cardset_stars_sum == cardset_star_next  #96/96 Blunder Hills, for instance
+        cardset_maxed = cardset_stars_sum == cardset_star_next  # 96/96 Blunder Hills, for instance
 
         cardset_rank_total += cardset_star + cardset_maxed
-        #logger.debug(f"{name} at {cardset_stars_sum}/{cardset_star_next} toward {star_tiers[cardset_star]} is worth {cardset_star + cardset_maxed} total cardset tiers")
+        # logger.debug(f"{name} at {cardset_stars_sum}/{cardset_star_next} toward {star_tiers[cardset_star]} is worth {cardset_star + cardset_maxed} total cardset tiers")
 
         advices = [
             Advice(
@@ -71,6 +56,26 @@ def getCardsAdviceSection() -> AdviceSection:
             informational=True
         )
         groups.append(group)
+    return cardset_rank_total
+
+
+def getCardsAdviceSection() -> AdviceSection:
+    cards = session_data.account.cards
+    cardsets = defaultdict(list)
+    for card in cards:
+        cardsets[card.cardset].append(card)
+
+    cardsets = {
+        name: sorted(cards, key=lambda card: card.diff_to_next)
+        for name, cards in cardsets.items()
+    }
+
+    max_card_stars = 5 if session_data.account.rift['RubyCards'] else 4
+
+    groups = list()
+
+    getUnlockableAdviceGroup(cards, groups)
+    cardset_rank_total = getCardsetAdviceGroups(cardsets, max_card_stars, groups)
 
     note = (
         ''
