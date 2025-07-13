@@ -82,7 +82,7 @@ def getCardDropChanceAdviceGroup(groups):
     card_champ_bubble = session_data.account.alchemy_bubbles['Card Champ']
     card_champ_bubble_bonus = card_champ_bubble['BaseValue']
 
-    multi_group_a = ValueToMulti(
+    multi_group_a = (
             bribe_bonus +
             int(pokaminni['Unlocked']) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
@@ -91,9 +91,9 @@ def getCardDropChanceAdviceGroup(groups):
             guild_bonus_bonus +
             max_equipment_card_drop_chance_bonus +
             card_champ_bubble_bonus
-    )
+    ) / 100
 
-    multi_group_a_jman = ValueToMulti(
+    multi_group_a_jman = (
             bribe_bonus +
             int(pokaminni['Unlocked']) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
@@ -103,7 +103,7 @@ def getCardDropChanceAdviceGroup(groups):
             guild_bonus_bonus +
             max_equipment_card_drop_chance_bonus +
             card_champ_bubble_bonus
-    )
+    ) / 100
 
     multi_group_a = round(multi_group_a, 2)
     multi_group_a_jman = round(multi_group_a_jman, 2)
