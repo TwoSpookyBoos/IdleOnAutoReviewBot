@@ -121,7 +121,8 @@ def getCardDropChanceAdviceGroup(groups):
                 picture_class='dementia-obol-of-cards',
             )
         ],
-        f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [
+        f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
+        f'Multi Group A - account-wide': [
             Advice(
                 label=f"{{{{ Bribe|#bribes }}}}: Five Aces in the Deck: "
                       f"+{bribe_bonus}/20%",
@@ -129,16 +130,6 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
                 goal=1
             ),
-            Advice(
-                label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {'+15% if equipped' if pokaminni['Unlocked'] else 'Locked.'}",
-                picture_class='pokaminni',
-                progression=int(pokaminni['Unlocked']),
-                goal=1
-            ),
-            gigafrog.getAdvice(),
-            snelbie.getAdvice(),
-            sir_stache.getAdvice(),
-            egggulyte.getAdvice(),
             Advice(
                 label=f"{{{{ Vial|#vials }}}}: Anearful: +{anearful_vial['Value']:.2f}%",
                 picture_class='glublin-ear',
@@ -153,8 +144,10 @@ def getCardDropChanceAdviceGroup(groups):
                 resource=card_stamp['Material'],
             ),
             Advice(
-                label=f"Cards Galore Talent: +{cards_galore_talent_bonus:.2f}% if maxed (Jman only)",
-                picture_class="cards-galore",
+                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
+                picture_class='boaty-bubble',
+                progression=card_champ_bubble['Level'],
+                resource=card_champ_bubble['Material'],
             ),
             Advice(
                 label=f"Guild Bonus- C2 Card Spotter:"
@@ -162,23 +155,36 @@ def getCardDropChanceAdviceGroup(groups):
                 picture_class=guild_bonus['Image'],
                 progression=guild_bonus['Level'],
                 goal=guild_bonus['Max Level']
+            )
+        ],
+        f'Multi Group A - character-specific': [
+            gigafrog.getAdvice(),
+            snelbie.getAdvice(),
+            sir_stache.getAdvice(),
+            egggulyte.getAdvice(),
+            Advice(
+                label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {'+15% if equipped' if pokaminni['Unlocked'] else 'Locked.'}",
+                picture_class='pokaminni',
+                progression=int(pokaminni['Unlocked']),
+                goal=1
             ),
             Advice(
-                label=f'Full Card Drop Chance Obols (personal and family): +{max_obol_card_drop_chance}%',
+                label=f'Full Card Drop Chance Obols: +{max_obol_card_drop_chance}%'
+                      f'<br>Both personal and family, all rerolled for +1% Card Drop Chance',
                 picture_class="dementia-obol-of-cards"
             ),
             Advice(
-                label=f'2x 8 Ball Keychains: +20%',
+                label=f'2x 8 Ball Keychains: 2x +10%',
                 picture_class="eight-ball-chain"
-            ),
-            Advice(
-                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
-                picture_class='boaty-bubble',
-                progression=card_champ_bubble['Level'],
-                resource=card_champ_bubble['Material'],
             )
         ],
-        f'Multi Group B: {multi_group_b}x': [
+        f'Multi Group A - class-specific': [
+            Advice(
+                label=f"Cards Galore Talent: +{cards_galore_talent_bonus:.2f}% if maxed (Jman only)",
+                picture_class="cards-galore",
+            )
+        ],
+        f'Multi Group B: {multi_group_b}x (character-specific)': [
             Advice(
                 label=f"Cardiovascular!: {cardiovascular_bonus}x if maxed",
                 picture_class="cardiovascular",
