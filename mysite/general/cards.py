@@ -116,9 +116,14 @@ def getCardDropChanceAdviceGroup(groups):
     card_drop_chance_advices = {
         f'Total: {multi_total}x ({multi_total_jman}x if Jman)': [
             Advice(
-                label=f'Total Card Drop Chance bonus: {multi_total}x ({multi_total_jman}x if Jman)'
-                      f'<br>Also includes a flat 20% (additive) bonus',
+                label=f'Total Card Drop Chance bonus: {multi_total}x ({multi_total_jman}x if Jman)',
                 picture_class='dementia-obol-of-cards',
+            )
+        ],
+        f'Base Chance: +20%': [
+            Advice(
+                label="Passive +20% bonus. Not multiplied by other Multi Groups",
+                picture_class=""
             )
         ],
         f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
