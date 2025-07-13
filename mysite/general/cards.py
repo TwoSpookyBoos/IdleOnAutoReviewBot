@@ -1,6 +1,6 @@
 from collections import defaultdict
 from flask import g as session_data
-from consts.consts_autoreview import break_you_best
+from consts.consts_autoreview import break_you_best, ValueToMulti
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_dict, obols_max_bonuses_dict
@@ -41,7 +41,7 @@ def getCardDropChanceAdviceGroup(groups):
     cardiovascular_max_level = 100
 
     cardiovascular_dict_entry = all_talentsDict[cardiovascular_id]
-    cardiovascular_bonus = 1 + lavaFunc(cardiovascular_dict_entry['funcX'], cardiovascular_max_level, cardiovascular_dict_entry['x1'], cardiovascular_dict_entry['x2']) / 100
+    cardiovascular_bonus = ValueToMulti(lavaFunc(cardiovascular_dict_entry['funcX'], cardiovascular_max_level, cardiovascular_dict_entry['x1'], cardiovascular_dict_entry['x2']))
     cardiovascular_bonus = round(cardiovascular_bonus, 2)
 
     multi_group_b = cardiovascular_bonus
@@ -82,7 +82,7 @@ def getCardDropChanceAdviceGroup(groups):
     card_champ_bubble = session_data.account.alchemy_bubbles['Card Champ']
     card_champ_bubble_bonus = card_champ_bubble['BaseValue']
 
-    multi_group_a = 1 + (
+    multi_group_a = ValueToMulti(
             bribe_bonus +
             int(pokaminni['Unlocked']) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
@@ -91,9 +91,9 @@ def getCardDropChanceAdviceGroup(groups):
             guild_bonus_bonus +
             max_equipment_card_drop_chance_bonus +
             card_champ_bubble_bonus
-    ) / 100
+    )
 
-    multi_group_a_jman = 1 + (
+    multi_group_a_jman = ValueToMulti(
             bribe_bonus +
             int(pokaminni['Unlocked']) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
@@ -103,7 +103,7 @@ def getCardDropChanceAdviceGroup(groups):
             guild_bonus_bonus +
             max_equipment_card_drop_chance_bonus +
             card_champ_bubble_bonus
-    ) / 100
+    )
 
     multi_group_a = round(multi_group_a, 2)
     multi_group_a_jman = round(multi_group_a_jman, 2)
