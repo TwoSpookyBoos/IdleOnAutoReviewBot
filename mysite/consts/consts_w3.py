@@ -183,6 +183,17 @@ salt_lick_list: list[str] = [
     'Alchemy Liquids', 'TD Points', 'Movespeed', 'Multikill', 'Damage',
 ]
 
+totems_max_wave = 300
+totems_list = [
+    "Goblin Gorefest",
+    "Wakawaka War",
+    "Acorn Assault",
+    "Frosty Firefight",
+    "Clash of Cans",
+    "Citric Conflict",
+    "Breezy Battle"
+]
+
 max_static_book_levels = 140
 max_scaling_book_levels = 30
 max_summoning_book_levels = 31
