@@ -187,7 +187,7 @@ def getCardDropChanceAdviceGroup(groups):
         ],
         f'Multi Group B: {multi_group_b}x (character-specific)': [
             Advice(
-                label=f"Cardiovascular!: {cardiovascular_bonus}x if maxed",
+                label=f'Star Talent "Cardiovascular!": {cardiovascular_bonus}x if maxed',
                 picture_class="cardiovascular",
             )
         ],
