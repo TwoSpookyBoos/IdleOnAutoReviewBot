@@ -390,7 +390,7 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
     return allSkillsDict
 
 # This returns incomplete data, since the obols_dict currently only contains DR obols
-# Dispite this, the function is written to work with whatever data is added to the obols_dict
+# Despite this, the function is written to work with whatever data is added to the obols_dict
 def get_obol_totals(obol_list, obol_upgrade_dict):
     obols_totals = {}
     for obol_index, obol_name in enumerate(obol_list):
