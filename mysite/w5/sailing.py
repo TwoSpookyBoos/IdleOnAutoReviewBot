@@ -1,12 +1,12 @@
 from consts.consts_w1 import stamp_maxes
-from consts.consts_w2 import max_vial_level
+from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_autoreview import break_you_best, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles, max_meal_level
 from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
@@ -212,11 +212,11 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
     # Multi Group B -- Goharut Blessing
     goharut = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Goharut'))
 
-    multi_group_b = 1 + (4 * goharut['BlessingLevel']) / 100
+    multi_group_b = ValueToMulti(4 * goharut['BlessingLevel'])
     multi_group_b = round(multi_group_b, 2)
 
     # Multi Group C -- Purrmep Blessing
-    multi_group_c = 1 + (3 * purrmep['BlessingLevel']) / 100
+    multi_group_c = ValueToMulti(3 * purrmep['BlessingLevel'])
     multi_group_c = round(multi_group_c, 2)
 
     # Multi Group D -- Ballot Bonus
@@ -226,7 +226,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
         if 'Sailing Speed' in buff['Description']
     )
     is_current_ballot_buff = session_data.account.ballot['CurrentBuff'] == sailing_ballot_buff_index
-    sailing_ballot_buff_mult = 1 + is_current_ballot_buff * sailing_ballot_buff['Value'] / 100
+    sailing_ballot_buff_mult = ValueToMulti(is_current_ballot_buff * sailing_ballot_buff['Value'])
 
     multi_group_d = sailing_ballot_buff_mult
     multi_group_d = round(multi_group_d, 2)
@@ -237,7 +237,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
     ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
     registered_slab_count = len(session_data.account.registered_slab)
     lab_bonus_slab_sovereignty = session_data.account.labBonuses['Slab Sovereignty']
-    lab_bonus_slab_sovereignty_mult = (1 + (lab_bonus_slab_sovereignty['Value'] / 100) * lab_bonus_slab_sovereignty['Enabled'])
+    lab_bonus_slab_sovereignty_mult = ValueToMulti(lab_bonus_slab_sovereignty['Value']) * lab_bonus_slab_sovereignty['Enabled']
     ad_tablet_bonus_percent = ((4 * ad_tablet_level * ((registered_slab_count - 500) // 10)) * lab_bonus_slab_sovereignty_mult) if registered_slab_count >= 500 else 0
 
     sailboat_stamp = session_data.account.stamps['Sailboat Stamp']
@@ -290,8 +290,9 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{boaty_bubble['BaseValue']:.2f}/135%",
                 picture_class='boaty-bubble',
-                progression=boaty_bubble['Level'],
                 resource=boaty_bubble['Material'],
+                progression=boaty_bubble['Level'],
+                goal=max_NBLB
             )
         ],
         f'Multi Group B: {multi_group_b}x': [
@@ -314,7 +315,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
         ],
         f'Multi Group D: {multi_group_d}x': [
             Advice(
-                label=f"Weekly Ballot: {sailing_ballot_buff_mult}x/{1 + sailing_ballot_buff['Value'] / 100}x"
+                label=f"Weekly Ballot: {sailing_ballot_buff_mult}x/{ValueToMulti(sailing_ballot_buff['Value'])}x"
                       f"<br>(Buff {'is Active' if is_current_ballot_buff else 'is Inactive'})",
                 picture_class=sailing_ballot_buff['Image'],
                 progression=int(is_current_ballot_buff),

@@ -1415,6 +1415,12 @@ def _parse_w2_obols(account):
             'Hexagon': {'Total': 0},
             'Sparkle': {'Total': 0},
         },
+        'Card Drop Chance': {
+            'Circle': {'Total': 0},
+            'Square': {'Total': 0},
+            'Hexagon': {'Total': 0},
+            'Sparkle': {'Total': 0},
+        },
     }
     raw_owned_obols = []
     for jsonkey in [
