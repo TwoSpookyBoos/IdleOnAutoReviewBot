@@ -1,5 +1,5 @@
 from consts.consts_w1 import stamp_maxes
-from consts.consts_w2 import max_vial_level
+from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
 from utils.data_formatting import mark_advice_completed
@@ -290,8 +290,9 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{boaty_bubble['BaseValue']:.2f}/135%",
                 picture_class='boaty-bubble',
-                progression=boaty_bubble['Level'],
                 resource=boaty_bubble['Material'],
+                progression=boaty_bubble['Level'],
+                goal=max_NBLB
             )
         ],
         f'Multi Group B: {multi_group_b}x': [

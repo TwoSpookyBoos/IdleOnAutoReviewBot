@@ -146,8 +146,9 @@ def getCardDropChanceAdviceGroup(groups):
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
                 picture_class='boaty-bubble',
-                progression=card_champ_bubble['Level'],
                 resource=card_champ_bubble['Material'],
+                progression=card_champ_bubble['Level'],
+                goal=3960
             ),
             Advice(
                 label=f"Guild Bonus- C2 Card Spotter:"
