@@ -714,6 +714,7 @@ def getPetDamageAdviceGroup():
         pre_string='Sources of Pet Damage',
         advices=pet_damage_advices,
         informational=True,
+        completed=all([territory['Unlocked'] for territory in session_data.account.breeding['Territories'].values()]) and session_data.account.breeding['ArenaMaxWave'] >= breeding_last_arena_bonus_unlock_wave
     )
     return pet_damage_advice_group
 
@@ -735,8 +736,6 @@ def getBreedingAdviceSection() -> AdviceSection:
     breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
     breeding_AdviceGroupDict['ActiveBM'] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
-
-    # if any([territory['Unlocked'] == False for territory in session_data.account.breeding['Territories'].values()]) or session_data.account.breeding['ArenaMaxWave'] < breeding_last_arena_bonus_unlock_wave:
     breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()
 
     #Generate AdviceSection
