@@ -591,7 +591,7 @@ def getPetDamageAdviceGroup():
     # Multi Group A
     blooming_axe_breeding_upgrade = session_data.account.breeding['Upgrades']['Blooming Axe']
     blooming_axe_breeding_upgrade_bonus = blooming_axe_breeding_upgrade['Value']
-    multi_group_a = round(ValueToMulti(blooming_axe_breeding_upgrade_bonus), 2)
+    multi_group_a = ValueToMulti(blooming_axe_breeding_upgrade_bonus)
 
     # Multi Group B
     electrolyte_vial = session_data.account.alchemy_vials['Electrolyte (Condensed Zap)']
@@ -626,18 +626,16 @@ def getPetDamageAdviceGroup():
     pet_punchies_vault_upgrade = session_data.account.vault['Upgrades']['Pet Punchies']
     pet_punchies_vault_upgrade_bonus = pet_punchies_vault_upgrade['Total Value']
 
-    multi_group_b = round(
-        ValueToMulti(
-            electrolyte_vial_bonus +
-            barley_lost_achievement_bonus +
-            croissant_meal_bonus +
-            wedding_cake_meal_bonus +
-            arena_spirit_talent_bonus +
-            power_bowower_star_sign_bonus +
-            pet_damage_arcade_bonus_bonus +
-            pet_punchies_vault_upgrade_bonus
+    multi_group_b = ValueToMulti(
+        electrolyte_vial_bonus +
+        barley_lost_achievement_bonus +
+        croissant_meal_bonus +
+        wedding_cake_meal_bonus +
+        arena_spirit_talent_bonus +
+        power_bowower_star_sign_bonus +
+        pet_damage_arcade_bonus_bonus +
+        pet_punchies_vault_upgrade_bonus
         )
-        , 2)
 
     multi_total = round(multi_group_a * multi_group_b, 2)
 
@@ -648,7 +646,7 @@ def getPetDamageAdviceGroup():
                 picture_class='vault-upgrade-58'
             )
         ],
-        f'Multi Group A: {multi_group_a}x': [
+        f'Multi Group A: {round(multi_group_a, 2)}x': [
             Advice(
                 label=f'Breeding Upgrade - Blooming Axe: +{blooming_axe_breeding_upgrade_bonus}%',
                 picture_class='breeding-bonus-5',
@@ -656,7 +654,7 @@ def getPetDamageAdviceGroup():
                 goal=blooming_axe_breeding_upgrade['MaxLevel']
             )
         ],
-        f'Multi Group B: {multi_group_b}x': [
+        f'Multi Group B: {round(multi_group_b, 2)}x': [
             Advice(
                 label=f'{{{{ Vial|#vials }}}} - Electrolyte: +{electrolyte_vial_bonus:.2f}%',
                 picture_class='condensed-zap',
@@ -682,7 +680,7 @@ def getPetDamageAdviceGroup():
                 goal=max_meal_level
             ),
             Advice(
-                label=f'Passive Talent - Arena Spirit: +{arena_spirit_talent_bonus:.2f}%',
+                label=f'Beast Master Talent passive- Arena Spirit: +{arena_spirit_talent_bonus:.2f}%',
                 picture_class='arena-spirit',
                 progression=highest_arena_spirit_level,
                 goal=approx_max_talent_level_non_es
@@ -738,8 +736,8 @@ def getBreedingAdviceSection() -> AdviceSection:
     breeding_AdviceGroupDict['ActiveBM'] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
 
-    if any([territory['Unlocked'] == False for territory in session_data.account.breeding['Territories'].values()]) or session_data.account.breeding['ArenaMaxWave'] < breeding_last_arena_bonus_unlock_wave:
-        breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()
+    # if any([territory['Unlocked'] == False for territory in session_data.account.breeding['Territories'].values()]) or session_data.account.breeding['ArenaMaxWave'] < breeding_last_arena_bonus_unlock_wave:
+    breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
