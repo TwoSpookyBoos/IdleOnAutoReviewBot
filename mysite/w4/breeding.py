@@ -618,7 +618,7 @@ def getPetDamageAdviceGroup():
                 highest_arena_spirit_goal_level = char.max_talents_over_books
         except:
             continue
-    arena_spirit_talent_bonus = lavaFunc(arena_spirit_talent['funcX'], highest_arena_spirit_level, arena_spirit_talent['x1'], arena_spirit_talent['x2'])
+    arena_spirit_talent_bonus = lavaFunc(arena_spirit_talent['funcY'], highest_arena_spirit_level, arena_spirit_talent['y1'], arena_spirit_talent['y2'])
 
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
     power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30
