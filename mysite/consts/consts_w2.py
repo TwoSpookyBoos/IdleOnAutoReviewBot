@@ -626,12 +626,24 @@ obols_dict = {
     "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck"), 'Base': {'LUK': 5, '%_DROP_CHANCE': 10}},
     "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava"), 'Base': {'LUK': 10, '%_DROP_CHANCE': 14}},
     "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_CHANCE': 15}},
+
+    #Card Drop Chance
+    "ObolBronzeCard":   {"Shape":"Circle", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolBronzeCard"), "Base": {"%_CARD_DROP_CHANCE": 1}},
+    "ObolSilverCard":   {"Shape": "Square", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolSilverCard"), "Base": {"%_CARD_DROP_CHANCE": 3, "STR": 1, "AGI": 1, "WIS": 1}},
+    "ObolGoldCard":     {"Shape": "Hexagon", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolGoldCard"), "Base": {"%_CARD_DROP_CHANCE": 5, "STR": 2, "AGI": 2, "WIS": 2}},
+    "ObolPlatinumCard": {"Shape": "Hexagon", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolPlatinumCard"), "Base": {"%_CARD_DROP_CHANCE": 7, "STR": 3, "AGI": 3, "WIS": 3}},
+    "ObolPinkCard":     {"Shape": "Sparkle", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolPinkCard"), "Base": {"%_CARD_DROP_CHANCE": 10, "STR": 5, "AGI": 5, "WIS": 5, "WP": 1}},
 }
 obols_max_bonuses_dict = {
-    'PlayerDropRatePractical': 134,  #12*4=48% circles, 6*8=48% squares,  2*11=22% hex, 1*16=16% sparkle
-    'PlayerDropRateTrue': 172,       #12*5=60% circles, 6*11=66% squares, 2*15=30% hex, 1*16=16% sparkle
-    'FamilyDropRatePractical': 188,  #12*4=48% circles, 4*8=32% squares,  4*11=44% hex, 4*16=64% sparkle
-    'FamilyDropRateTrue': 228        #12*5=60% circles, 4*11=44% squares, 4*15=60% hex, 4*16=64% sparkle
+    'PlayerDropRatePractical': 134,         #12*4=48% circles, 6*8=48% squares,  2*11=22% hex, 1*16=16% sparkle
+    'PlayerDropRateTrue': 172,              #12*5=60% circles, 6*11=66% squares, 2*15=30% hex, 1*16=16% sparkle
+    'FamilyDropRatePractical': 188,         #12*4=48% circles, 4*8=32% squares,  4*11=44% hex, 4*16=64% sparkle
+    'FamilyDropRateTrue': 228,              #12*5=60% circles, 4*11=44% squares, 4*15=60% hex, 4*16=64% sparkle
+
+    'PlayerCardDropChancePractical': 75,    #12*2=24% circles, 6*4=24% square, 2*8=16% hex, 1*11=11% sparkle
+    'PlayerCardDropChanceTrue': 75 ,        #12*2=24% circles, 6*4=24% square, 2*8=16% hex, 1*11=11% sparkle
+    'FamilyCardDropChancePractical': 116,   #12*2=24% circles, 4*4=16% square, 4*8=32% hex, 4*11=44% sparkle
+    'FamilyCardDropChanceTrue': 116         #12*2=24% circles, 4*4=16% square, 4*8=32% hex, 4*11=44% sparkle
 }
 ignorable_obols_list = [
     'Blank', 'LockedInvSpace', 'ObolLocked1', 'ObolLocked2', 'ObolLocked3', 'ObolLocked4',

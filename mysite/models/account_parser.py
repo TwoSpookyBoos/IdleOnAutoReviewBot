@@ -120,9 +120,9 @@ def _all_stored_items(account) -> Assets:
         pair_item_name_to_quantity = zip(account.raw_data.get(name_key, list()), account.raw_data.get(quantity_key, list()))
         for name, count in pair_item_name_to_quantity:
             if name not in all_stuff_stored_or_in_inv:
-                all_stuff_stored_or_in_inv[name] = int(count)
+                all_stuff_stored_or_in_inv[name] = safer_convert(count, 0)
             else:
-                all_stuff_stored_or_in_inv[name] += int(count)
+                all_stuff_stored_or_in_inv[name] += safer_convert(count, 0)
 
     return Assets(all_stuff_stored_or_in_inv)
 
@@ -1410,6 +1410,12 @@ def _parse_w2_obols(account):
             'Sparkle': {'Total': 0},
         },
         'Choppin': {
+            'Circle': {'Total': 0},
+            'Square': {'Total': 0},
+            'Hexagon': {'Total': 0},
+            'Sparkle': {'Total': 0},
+        },
+        'Card Drop Chance': {
             'Circle': {'Total': 0},
             'Square': {'Total': 0},
             'Hexagon': {'Total': 0},
