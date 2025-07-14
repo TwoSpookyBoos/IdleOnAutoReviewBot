@@ -181,6 +181,7 @@ lab_jewels_dict = {
 }
 max_nblb_bubbles = 10
 max_breeding_territories = 24  # as of w6 launch
+breeding_last_arena_bonus_unlock_wave = 200
 index_first_territory_assigned_pet = 28
 slot_unlock_waves_list = [2, 15, 50, 125]
 territory_names = [

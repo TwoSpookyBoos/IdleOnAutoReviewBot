@@ -11,7 +11,7 @@ from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level
+from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave
 from consts.consts_w2 import critter_vials_list, max_vial_level, arcade_max_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
@@ -737,7 +737,9 @@ def getBreedingAdviceSection() -> AdviceSection:
     breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
     breeding_AdviceGroupDict['ActiveBM'] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
-    breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()
+
+    if any([territory['Unlocked'] == False for territory in session_data.account.breeding['Territories'].values()]) or session_data.account.breeding['ArenaMaxWave'] < breeding_last_arena_bonus_unlock_wave:
+        breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
