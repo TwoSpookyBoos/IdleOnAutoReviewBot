@@ -608,11 +608,14 @@ def getPetDamageAdviceGroup():
 
     arena_spirit_talent = next(talent for talent in all_talentsDict.values() if talent['name'] == 'Arena Spirit')
     highest_arena_spirit_level = 0
+    highest_arena_spirit_goal_level = 0
     for char in session_data.account.safe_characters:
         talents = char.current_preset_talents
         try:
-            arena_spirit_level = talents[str(arena_spirit_talent['skillIndex'])]
-            highest_arena_spirit_level = max(highest_arena_spirit_level, arena_spirit_level)
+            arena_spirit_level = talents[str(arena_spirit_talent['skillIndex'])] + char.total_bonus_talent_levels
+            if arena_spirit_level > highest_arena_spirit_level:
+                highest_arena_spirit_level = arena_spirit_level
+                highest_arena_spirit_goal_level = char.max_talents_over_books
         except:
             continue
     arena_spirit_talent_bonus = lavaFunc(arena_spirit_talent['funcX'], highest_arena_spirit_level, arena_spirit_talent['x1'], arena_spirit_talent['x2'])
@@ -683,7 +686,7 @@ def getPetDamageAdviceGroup():
                 label=f'Beast Master Talent passive- Arena Spirit: +{arena_spirit_talent_bonus:.2f}%',
                 picture_class='arena-spirit',
                 progression=highest_arena_spirit_level,
-                goal=approx_max_talent_level_non_es
+                goal=highest_arena_spirit_goal_level
             ),
             Advice(
                 label=f"{{{{ Star Sign|#star-signs }}}} -  Power Bowower: {'+30% if equipped' if power_bowower_star_sign['Unlocked'] else 'Locked.'}",
