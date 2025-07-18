@@ -1,4 +1,6 @@
 import copy
+
+from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers, true_max_tiers
 from flask import g as session_data
 
@@ -16,6 +18,33 @@ def getInfluencers():
     results = [(cons_mastery or carbon_unlocked), honker_vial_level, poisonic_level]
     #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")
     return results
+
+def generateShrineLevelingAlerts():
+    shrine_data = session_data.account.shrines
+    unlocked_shrines = [value['Image'] for key, value in session_data.account.construction_buildings.items() if value['Type'] == 'Shrine' and value['Level'] > 0]
+    unlocked_shrines_data = {key: {'map_index': shrine['MapIndex'], 'leveled_by': [], 'image': shrine['Image']} for key, shrine in shrine_data.items() if shrine['Image'] in unlocked_shrines}
+
+    shrine_world_tour_active = session_data.account.labBonuses['Shrine World Tour']['Enabled']
+    reached_world_6 = session_data.account.highest_world_reached >= 6
+    has_collective_bargaining_agreement = session_data.account.sneaking['JadeEmporium']['Shrine Collective Bargaining Agreement']['Obtained']
+    xp_reset_warning = '' if reached_world_6 and has_collective_bargaining_agreement else f'<br>{EmojiType.WARNING.value} Moving this shrine will lose xp progress for the current level!'
+
+    for char in session_data.account.safe_characters:
+        char_current_map = char.current_map_index
+        char_current_world = (char_current_map // 50) + 1
+        for shrine_name, shrine_data in unlocked_shrines_data.items():
+            shrine_current_map = shrine_data['map_index']
+            shrine_current_world = (shrine_current_map // 50) + 1
+            char_is_leveling = char_current_map == shrine_current_map or (shrine_world_tour_active and char_current_world == shrine_current_world)
+            if char_is_leveling:
+                unlocked_shrines_data[shrine_name]['leveled_by'].append(char)
+    for shrine_name, shrine_data in unlocked_shrines_data.items():
+        if len(shrine_data['leveled_by']) > 0:
+            continue
+        session_data.account.alerts_Advices['General'].append(Advice(
+            label=f'Your {shrine_name} is not being leveled by anyone{xp_reset_warning}',
+            picture_class=shrine_data['image']
+        ))
 
 def getProgressionTiersAdviceGroup():
     building_Advices = {}
@@ -205,6 +234,9 @@ def getConsBuildingsAdviceSection() -> AdviceSection:
             unreached=True
         )
         return building_AdviceSection
+
+    # Generate Alerts
+    generateShrineLevelingAlerts()
 
     #Generate AdviceGroups
     building_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()

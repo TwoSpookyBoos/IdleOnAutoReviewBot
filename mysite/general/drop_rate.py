@@ -334,12 +334,12 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
             progression=chilled_yarn_artifact_level,
             goal=max_sailing_artifact_level
         ))
-    # Alchemy - Sigils - Clover
+    # Alchemy - Sigils - Trove
     trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
-    trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level - 1] * chilled_yarn_multi
-    trove_sigil_value_max = sigils_dict['Trove']['Values'][max_sigil_level - 1] * chilled_yarn_max
+    trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level] * chilled_yarn_multi
+    trove_sigil_value_max = sigils_dict['Trove']['Values'][max_sigil_level] * chilled_yarn_max
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Sigils|#sigils }}}}- Clover Sigil:"
+        label=f"{{{{ Sigils|#sigils }}}}- Trove Sigil:"
               f"<br>+{trove_sigil_value}/{trove_sigil_value_max}% Drop Rate",
         picture_class='trove',
         progression=trove_sigil_level,

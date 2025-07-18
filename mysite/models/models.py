@@ -138,6 +138,7 @@ class Character:
         equipped_prayers: list,
         all_skill_levels: dict,
         max_talents: dict,
+        current_map_index: int,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
         current_preset_talent_bar: dict,
@@ -165,6 +166,7 @@ class Character:
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
+        self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents

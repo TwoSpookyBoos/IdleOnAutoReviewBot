@@ -11,7 +11,7 @@ from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave
+from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
 from consts.consts_w2 import critter_vials_list, max_vial_level, arcade_max_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
@@ -580,9 +580,10 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
             advices=breeding_Advices['ShinyLevels'],
         )
         if len(breeding_Advices['ShinyLevels']) == 0:
+            maxed_shinies = [pet_info[0] for bonus_group in breeding_dict['Grouped Bonus'].values() for pet_info in bonus_group if pet_info[1] == 20 ]
             breeding_AdviceGroups['MaxShinyLevels'] = AdviceGroup(
                 tier=tier_MaxShinyLevels,
-                pre_string='Max level Shinies',
+                pre_string=f'Max level Shinies ({len(maxed_shinies)}/{breeding_total_pets})',
                 advices=breeding_Advices['MaxShinyLevels'],
             )
     return breeding_AdviceGroups, overall_SectionTier, max_tier, true_max

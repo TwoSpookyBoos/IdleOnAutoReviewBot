@@ -307,6 +307,7 @@ def getCharacterDetails(inputJSON, runType):
     characterMaxTalents = {}
     characterCurrentPresetTalents = {}
 
+    current_map_index = {}
     characterSecondaryPresetTalents = {}
     current_preset_talent_bar = {}
     secondary_preset_talent_bar = {}
@@ -323,6 +324,7 @@ def getCharacterDetails(inputJSON, runType):
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
+        current_map_index[character_index] = safe_loads(inputJSON.get(f'CurrentMap_{character_index}', 0))
         postOfficeList.append(safe_loads(inputJSON.get(f'POu_{character_index}', [0]*36)))
         equipped_prayers[character_index] = safe_loads(inputJSON.get(f'Prayers_{character_index}', []))
         characterMaxTalents[character_index] = safe_loads(inputJSON.get(f'SM_{character_index}', {}))
@@ -340,28 +342,29 @@ def getCharacterDetails(inputJSON, runType):
         secondary_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadoutpre_{character_index}', []))
 
         characterDict[character_index] = dict(
+            alchemy_job=alchemy_jobs_list[character_index],
+            all_skill_levels=characterSkillsDict[character_index],
+            base_class=getBaseClass(character_classes[character_index]),
+            big_alch_bubbles=big_alch_bubbles_dict[character_index],
             character_index=character_index,
             character_name=character_names[character_index],
             class_name=character_classes[character_index],
-            base_class=getBaseClass(character_classes[character_index]),
-            sub_class=getSubclass(character_classes[character_index]),
-            elite_class=getEliteClass(character_classes[character_index]),
-            master_class=getMasterClass(character_classes[character_index]),
-            equipped_prayers=equipped_prayers[character_index],
-            all_skill_levels=characterSkillsDict[character_index],
-            max_talents=characterMaxTalents[character_index],
-            current_preset_talents=characterCurrentPresetTalents[character_index],
-            secondary_preset_talents=characterSecondaryPresetTalents[character_index],
+            current_map_index=current_map_index[character_index],
             current_preset_talent_bar=current_preset_talent_bar[character_index],
-            secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
-            po_boxes=postOfficeList[character_index],
+            current_preset_talents=characterCurrentPresetTalents[character_index],
+            elite_class=getEliteClass(character_classes[character_index]),
             equipped_lab_chips=equipped_lab_chips[character_index],
+            equipped_prayers=equipped_prayers[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
-            obols=obols_list[character_index],
+            master_class=getMasterClass(character_classes[character_index]),
+            max_talents=characterMaxTalents[character_index],
             obol_upgrades=obol_upgrades_list[character_index],
-            big_alch_bubbles=big_alch_bubbles_dict[character_index],
-            alchemy_job=alchemy_jobs_list[character_index]
+            obols=obols_list[character_index],
+            po_boxes=postOfficeList[character_index],
+            secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
+            secondary_preset_talents=characterSecondaryPresetTalents[character_index],
+            sub_class=getSubclass(character_classes[character_index]),
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]

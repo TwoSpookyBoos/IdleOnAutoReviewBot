@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from flask import g as session_data
 
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
@@ -8,6 +10,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.data_formatting import mark_advice_completed
+from utils.text_formatting import pl
 
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
@@ -199,6 +202,10 @@ def getSigilsProgressionTiersAdviceGroup():
     max_tier = true_max - optional_tiers
     tier_Sigils = 0
     player_sigils = session_data.account.alchemy_p2w['Sigils']
+    player_sigil_assignments = defaultdict(lambda: 0)
+    for char in session_data.account.safe_characters:
+        if char.alchemy_job_group == 'Sigils':
+            player_sigil_assignments[char.alchemy_job_string] += 1
 
     # Assess Tiers
     for tier_number, requirements in sigils_progressionTiers.items():
@@ -224,9 +231,13 @@ def getSigilsProgressionTiersAdviceGroup():
                     and len(sigils_Advices['Sigils']) < session_data.account.max_subgroups
                 ):
                     sigils_Advices['Sigils'][subgroup_label] = []
+                has_chars_assigned = player_sigil_assignments[requiredSigil] > 0
+                info_text = ''
+                if has_chars_assigned:
+                    info_text = f' (Being unlocked by {player_sigil_assignments[requiredSigil]} character{pl(player_sigil_assignments[requiredSigil])})'
                 if subgroup_label in sigils_Advices['Sigils']:
                     sigils_Advices['Sigils'][subgroup_label].append(Advice(
-                        label=f"Unlock {requiredSigil}",
+                        label=f"Unlock {requiredSigil}{info_text}",
                         picture_class=requiredSigil,
                         progression=f"{player_sigils[requiredSigil]['PlayerHours']:.2f}",
                         goal=player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]
@@ -245,9 +256,15 @@ def getSigilsProgressionTiersAdviceGroup():
                         prog = f"{player_sigils[requiredSigil]['PlayerHours']:.2f}"
                     else:
                         prog = f"{player_sigils[requiredSigil]['PlayerHours']:.0f}"
+                    sigil_level_ready = player_sigils[requiredSigil]['PlayerHours'] > player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]
+                    has_chars_assigned = player_sigil_assignments[requiredSigil] > 0
+                    info_text = ''
+                    if has_chars_assigned:
+                        info_text = f' (Being leveled by {player_sigil_assignments[requiredSigil]} character{pl(player_sigil_assignments[requiredSigil])})'
+                    if sigil_level_ready:
+                        info_text = '. Go look at the Sigils screen to redeem your level!'
                     sigils_Advices['Sigils'][subgroup_label].append(Advice(
-                        label=f"Level up {requiredSigil}"
-                              f"{'. Go look at the Sigils screen to redeem your level!' if player_sigils[requiredSigil]['PlayerHours'] > player_sigils[requiredSigil]['Requirements'][requiredLevel - 1] else ''}",
+                        label=f"Level up {requiredSigil}{info_text}",
                         picture_class=f"{requiredSigil}-{requiredLevel}",
                         progression=f"{0 if requiredLevel > player_sigils[requiredSigil]['PrechargeLevel'] + 1 else prog}",
                         goal=f"{player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
