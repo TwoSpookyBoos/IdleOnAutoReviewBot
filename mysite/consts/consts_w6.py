@@ -235,7 +235,7 @@ pristine_charms_list: list = [
     {'Name': 'Twinkle Taffy', 'Image': 'twinkle-taffy', 'Bonus': '1.30x Extra Wind Walker Dust'},
     {'Name': 'Jellypick', 'Image': 'jellypick', 'Bonus': '+20% Exalted Stamp bonus'},
     {'Name': 'Candy Cache', 'Image': 'candy-cache', 'Bonus': '1.40x Villager EXP'},
-    {'Name': 'Mystery Fizz', 'Image': 'mystery-fizz', 'Bonus': '1.30x Extra 3rd Master Class resource'}
+    {'Name': 'Mystery Fizz', 'Image': 'mystery-fizz', 'Bonus': '1.30x Extra Arcane Cultist Tachyons'}
 ]
 sneaking_gemstones_all_values = {
     #NjGem0 = "4 130 Aquamarine 40 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 10000".split(" ")
