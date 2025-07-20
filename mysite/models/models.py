@@ -294,22 +294,48 @@ class Character:
 
     def fix_talent_bars(self):
         #Current preset
-        self.current_preset_talent_bar = [
-            attack_entry
-            for list_of_attack_bars in self.current_preset_talent_bar
-            for attack_entry in list_of_attack_bars
-            if attack_entry != 'Null'
-        ]
-        # print(f"Character{self.character_index} Primary bar: {self.current_preset_talent_bar}")
+        try:
+            temp_list = []
+            for list_of_attack_bars in self.current_preset_talent_bar:
+                if isinstance(list_of_attack_bars, int):
+                    # Accounts who claimed WW through the AFK trick aren't initialized properly into a list
+                    temp_list.append(list_of_attack_bars)
+                elif isinstance(list_of_attack_bars, list):
+                    for talent_entry in list_of_attack_bars:
+                        if talent_entry != 'Null':
+                            temp_list.append(talent_entry)
+            self.current_preset_talent_bar = temp_list
+            # self.current_preset_talent_bar = [
+            #     attack_entry
+            #     for list_of_attack_bars in self.current_preset_talent_bar
+            #     for attack_entry in list_of_attack_bars
+            #     if attack_entry != 'Null'
+            # ]
+            # print(f"Character{self.character_index} Primary bar: {self.current_preset_talent_bar}")
+        except:
+            self.current_preset_talent_bar = []
 
         #Secondary preset
-        self.secondary_preset_talent_bar = [
-            attack_entry
-            for list_of_attack_bars in self.secondary_preset_talent_bar
-            for attack_entry in list_of_attack_bars
-            if attack_entry != 'Null'
-        ]
-        # print(f"Character{self.character_index} Secondary bar: {self.secondary_preset_talent_bar}")
+        try:
+            temp_list = []
+            for list_of_attack_bars in self.current_preset_talent_bar:
+                if isinstance(list_of_attack_bars, int):
+                    # Accounts who claimed WW through the AFK trick aren't initialized properly into a list
+                    temp_list.append(list_of_attack_bars)
+                elif isinstance(list_of_attack_bars, list):
+                    for talent_entry in list_of_attack_bars:
+                        if talent_entry != 'Null':
+                            temp_list.append(talent_entry)
+            self.current_preset_talent_bar = temp_list
+            # self.secondary_preset_talent_bar = [
+            #     attack_entry
+            #     for list_of_attack_bars in self.secondary_preset_talent_bar
+            #     for attack_entry in list_of_attack_bars
+            #     if attack_entry != 'Null'
+            # ]
+            # print(f"Character{self.character_index} Secondary bar: {self.secondary_preset_talent_bar}")
+        except:
+            self.secondary_preset_talent_bar = []
 
     def fixKillDict(self):
         for mapIndex in self.kill_dict:
