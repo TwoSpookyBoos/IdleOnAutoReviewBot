@@ -19,6 +19,7 @@ from consts.consts_w3 import (
     apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
+from models.custom_exceptions import VeryOldDataException
 from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -1424,6 +1425,8 @@ class Account:
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
+        if self.version < 191:  #190.5 was the Falloween event before W6 released
+            raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {
             'General': [],

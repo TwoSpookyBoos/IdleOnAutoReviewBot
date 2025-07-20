@@ -1128,42 +1128,45 @@ def _parse_w2(account):
 
 def _parse_w2_vials(account):
     account.alchemy_vials = {}
-    manualVialsAdded = 0
-    raw_alchemy_vials = safe_loads(account.raw_data.get("CauldronInfo", [0, 0, 0, 0, {}])[4])
-    if "length" in raw_alchemy_vials:
-        del raw_alchemy_vials["length"]
-    while len(raw_alchemy_vials) < max_index_of_vials:
-        raw_alchemy_vials[int(max_index_of_vials - manualVialsAdded)] = 0
-        manualVialsAdded += 1
-    if manualVialsAdded:
-        logger.warning(f"Vials list shorter than expected by {manualVialsAdded}: Likely old data. Defaulted in level 0s for them all.")
-    for vialKey, vialValue in raw_alchemy_vials.items():
+    raw_alchemy_vials = safe_loads(account.raw_data.get('CauldronInfo', [0, 0, 0, 0, {}])[4])
+    if 'length' in raw_alchemy_vials:
+        del raw_alchemy_vials['length']
+    if len(raw_alchemy_vials) < max_index_of_vials:
+        logger.warning(f'Vials list shorter than expected by {max_index_of_vials - len(raw_alchemy_vials)}')
+
+    #Normalize Vial data
+    cleaner_alchemy_vials = {}
+    for key, value in raw_alchemy_vials.items():
         try:
-            if int(vialKey) < max_index_of_vials:
-                account.alchemy_vials[getReadableVialNames(vialKey)] = {
-                    'Level': int(vialValue),
-                    'BaseValue': lavaFunc(
-                        vials_dict[int(vialKey)]['funcType'],
-                        int(vialValue),
-                        vials_dict[int(vialKey)]['x1'],
-                        vials_dict[int(vialKey)]['x2'],
-                    ),
-                    'Material': vials_dict[int(vialKey)]['Material'],
-                    'Image': getItemDisplayName(vials_dict[int(vialKey)]['Material'])
-                }
+            # Attempts to normalize the data, which may otherwise have strings or floats as keys and values
+            cleaner_alchemy_vials[int(key)] = int(value)
+        except:
+            logger.warning(f'Unable to normalize Vials level to int: {type(value)}: {value}. Replacing with 0.')
+            cleaner_alchemy_vials[int(key)] = 0
+
+    for vial_index, vial_values in vials_dict.items():
+        try:
+            account.alchemy_vials[getReadableVialNames(vial_index)] = {
+                'Level': cleaner_alchemy_vials[vial_index],
+                'BaseValue': lavaFunc(
+                    vials_dict[vial_index]['funcType'],
+                    cleaner_alchemy_vials[vial_index],
+                    vials_dict[vial_index]['x1'],
+                    vials_dict[vial_index]['x2'],
+                ),
+                'Material': vials_dict[vial_index]['Material'],
+                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
+            }
         except Exception as e:
-            logger.warning(f"Alchemy Vial Parse error at vialKey {vialKey}: {e}. Defaulting to level 0")
-            account.alchemy_vials[getReadableVialNames(vialKey)] = {
+            logger.warning(f"Alchemy Vial Parse error at vial_index {vial_index}: {e}. Defaulting to level 0")
+            account.alchemy_vials[getReadableVialNames(vial_index)] = {
                 'Level': 0,
                 'BaseValue': 0,
-                'Material': vials_dict[int(vialKey)]['Material'],
-                'Image': getItemDisplayName(vials_dict[int(vialKey)]['Material'])
+                'Material': vials_dict[vial_index]['Material'],
+                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
             }
 
-    account.maxed_vials = 0
-    for vial in account.alchemy_vials.values():
-        if vial.get("Level", 0) >= max_vial_level:
-            account.maxed_vials += 1
+    account.maxed_vials = sum([details['Level'] >= max_vial_level for name, details in account.alchemy_vials.items()])
 
 def _parse_w2_cauldrons(account):
     raw_cauldron_upgrades = account.raw_data.get('CauldUpgLVs', [])

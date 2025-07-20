@@ -112,3 +112,13 @@ class WtfDataException(BaseCustomException):
     def __init__(self, data):
         super().__init__()
         self.data = data
+
+class VeryOldDataException(BaseCustomException):
+    reportable = False
+    faq = True
+    dirname = "old"
+    msg_base = "This data is from before World 6 released and is too old to review with any real value.<br>Please refresh your Data and try again!"
+
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
