@@ -3,7 +3,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_w6 import summoning_doubler_recommendations, summoning_dict
+from consts.consts_w6 import summoning_doubler_recommendations, summoning_dict, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
 
@@ -139,6 +139,26 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
     )
     return upgrades_ag
 
+def getSummoningStoneAdviceGroup() -> AdviceGroup:
+    summoning_stone_advice = []
+    for index, (color, data) in enumerate(session_data.account.summoning['Summoning Stones'].items()):
+        mult_text = f"<br>{data['Wins'] + 1}x multiplier to {color} summoning upgrades" if data['Wins'] > 0 else ''
+        summoning_stone_advice.append(Advice(
+            label=f"{summoning_stone_names[color]} ({data['Location']})"
+                  f"{mult_text}"
+                  f"<br>DMG: {notateNumber('Basic', summoning_stone_boss_damage_function(data['Base DMG'], data['Wins'] + 1))}"
+                  f"<br>HP: {notateNumber('Basic', summoning_stone_boss_hp_function(data['Base HP'], data['Wins'] + 1))}",
+            picture_class=data['StoneImage'],
+            progression=data['Wins'],
+            resource=data['BossImage']
+        ))
+    return AdviceGroup(
+        tier='',
+        pre_string='Summoning Stones',
+        advices=summoning_stone_advice,
+        informational=True,
+    )
+
 def getSummoningAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     highest_summoning_level = max(session_data.account.all_skills['Summoning'])
@@ -161,6 +181,7 @@ def getSummoningAdviceSection() -> AdviceSection:
     summoning_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     summoning_AdviceGroupDict['Upgrades'] = getUpgradesAdviceGroup()
     summoning_AdviceGroupDict['Endless'] = getEndlessAdviceGroup()
+    summoning_AdviceGroupDict['Summoning Stones'] = getSummoningStoneAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
