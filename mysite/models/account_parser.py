@@ -662,7 +662,8 @@ def _parse_master_classes_compass(account):
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
         'Medallions': {},
-        'Total Medallions': 0
+        'Total Medallions': 0,
+        'Aethermoons Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 401, False), False)
     }
     #Parse Compass Upgrades
     raw_compass = safe_loads(account.raw_data.get('Compass', []))
