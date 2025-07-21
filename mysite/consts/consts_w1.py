@@ -450,9 +450,9 @@ event_points_shop_dict = {
     'Golden Square': {'Cost': 23, 'Code': 'n', 'Description': 'Get +1 Trimmed Constrution slot', 'Image': 'event-shop-14'},
     'Summoning Star': {'Cost': 30, 'Code': 'o', 'Description': 'Get +10 Summoning Doublers', 'Image': 'event-shop-15'},
     'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': 'Get +13% higher Ballot Bonus Multi from Voting', 'Image': 'event-shop-16'},
-    'Automated Mail': {'Cost': 15, 'Code': 'q', 'Description': 'Get +5 Boxes at the Post Office every day', 'Image': 'event-shop-17'},
-    'Smiley Statue': {'Cost': 30, 'Code': 'r', 'Description': 'All statues give 1.30x higher bonuses', 'Image': 'event-shop-18'},
-    'Extra Exaltedness': {'Cost': 35, 'Code': 's', 'Description': 'Get +1 Exalted Stamp use, and +20% Exalt Bonus.', 'Image': 'event-shop-19'},
+    'Extra Page 2': {'Cost': 22, 'Code': 'u', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-17'},
+    'Extra Exaltedness': {'Cost': 35, 'Code': 's', 'Description': 'Get +1 Exalted Stamp use, and +20% Exalt Bonus.', 'Image': 'event-shop-18'},
+    'Smiley Statue': {'Cost': 30, 'Code': 'r', 'Description': 'All statues give 1.30x higher bonuses', 'Image': 'event-shop-19'},
     'Government Subsidy': {'Cost': 17, 'Code': 't', 'Description': 'Get 1.60x more coins from defeating monsters', 'Image': 'event-shop-20'},
-    'Extra Page 2': {'Cost': 22, 'Code': 'u', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-8'},
+    'Automated Mail': {'Cost': 15, 'Code': 'q', 'Description': 'Get +5 Boxes at the Post Office every day', 'Image': 'event-shop-21'},
 }
