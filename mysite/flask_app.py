@@ -32,6 +32,7 @@ from models.custom_exceptions import (
     JSONDecodeError,
     WtfDataException,
     DataTooLong,
+    VeryOldDataException
 )
 from utils.text_formatting import (
     is_username,
@@ -176,6 +177,10 @@ def results() -> Response | str:
         #I'm not paying extra to store that garbage. -Scoli
         # dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
         # error = e.msg_display.format(dirname)
+        error = e.msg_display
+        response = error, 400
+
+    except VeryOldDataException as e:
         error = e.msg_display
         response = error, 400
 

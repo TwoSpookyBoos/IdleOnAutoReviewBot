@@ -19,6 +19,7 @@ from consts.consts_w3 import (
     apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
+from models.custom_exceptions import VeryOldDataException
 from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -138,6 +139,7 @@ class Character:
         equipped_prayers: list,
         all_skill_levels: dict,
         max_talents: dict,
+        current_map_index: int,
         current_preset_talents: dict,
         secondary_preset_talents: dict,
         current_preset_talent_bar: dict,
@@ -165,6 +167,7 @@ class Character:
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
+        self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
@@ -292,22 +295,48 @@ class Character:
 
     def fix_talent_bars(self):
         #Current preset
-        self.current_preset_talent_bar = [
-            attack_entry
-            for list_of_attack_bars in self.current_preset_talent_bar
-            for attack_entry in list_of_attack_bars
-            if attack_entry != 'Null'
-        ]
-        # print(f"Character{self.character_index} Primary bar: {self.current_preset_talent_bar}")
+        try:
+            temp_list = []
+            for list_of_attack_bars in self.current_preset_talent_bar:
+                if isinstance(list_of_attack_bars, int):
+                    # Accounts who claimed WW through the AFK trick aren't initialized properly into a list
+                    temp_list.append(list_of_attack_bars)
+                elif isinstance(list_of_attack_bars, list):
+                    for talent_entry in list_of_attack_bars:
+                        if talent_entry != 'Null':
+                            temp_list.append(talent_entry)
+            self.current_preset_talent_bar = temp_list
+            # self.current_preset_talent_bar = [
+            #     attack_entry
+            #     for list_of_attack_bars in self.current_preset_talent_bar
+            #     for attack_entry in list_of_attack_bars
+            #     if attack_entry != 'Null'
+            # ]
+            # print(f"Character{self.character_index} Primary bar: {self.current_preset_talent_bar}")
+        except:
+            self.current_preset_talent_bar = []
 
         #Secondary preset
-        self.secondary_preset_talent_bar = [
-            attack_entry
-            for list_of_attack_bars in self.secondary_preset_talent_bar
-            for attack_entry in list_of_attack_bars
-            if attack_entry != 'Null'
-        ]
-        # print(f"Character{self.character_index} Secondary bar: {self.secondary_preset_talent_bar}")
+        try:
+            temp_list = []
+            for list_of_attack_bars in self.current_preset_talent_bar:
+                if isinstance(list_of_attack_bars, int):
+                    # Accounts who claimed WW through the AFK trick aren't initialized properly into a list
+                    temp_list.append(list_of_attack_bars)
+                elif isinstance(list_of_attack_bars, list):
+                    for talent_entry in list_of_attack_bars:
+                        if talent_entry != 'Null':
+                            temp_list.append(talent_entry)
+            self.current_preset_talent_bar = temp_list
+            # self.secondary_preset_talent_bar = [
+            #     attack_entry
+            #     for list_of_attack_bars in self.secondary_preset_talent_bar
+            #     for attack_entry in list_of_attack_bars
+            #     if attack_entry != 'Null'
+            # ]
+            # print(f"Character{self.character_index} Secondary bar: {self.secondary_preset_talent_bar}")
+        except:
+            self.secondary_preset_talent_bar = []
 
     def fixKillDict(self):
         for mapIndex in self.kill_dict:
@@ -1396,6 +1425,8 @@ class Account:
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
+        if self.version < 191:  #190.5 was the Falloween event before W6 released
+            raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {
             'General': [],

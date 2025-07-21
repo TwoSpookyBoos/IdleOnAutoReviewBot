@@ -13,7 +13,7 @@ def getVialsProgressionTiersAdviceGroup():
     vial_Advices = {
         'Early Vials': {},
         'Maxed Vials': {},
-        'Vials to max next': []
+        'Vials to max next (preserves Greenstacks)': []
     }
     optional_tiers = 1
     true_max = true_max_tiers['Vials']
@@ -85,19 +85,19 @@ def getVialsProgressionTiersAdviceGroup():
                 # Rule breaker here. Instead of requiring exact Vials per level, I only require a total amount.
                 # So instead of the usual subgroup_label, I just display up to a particular number
                 if (
-                    len(vial_Advices['Vials to max next']) < max_advices_per_group
+                    len(vial_Advices['Vials to max next (preserves Greenstacks)']) < max_advices_per_group
                     or vials_shown_this_tier  #All vials in a tier are roughly the same difficulty, not perfectly ordered. Show 1, show all
                 ):
                     vials_shown_this_tier = True
                     goal = int(vial_costs[player_alchemy_vials[required_vial]['Level']])
-                    prog = 100 * (session_data.account.all_assets.get(player_alchemy_vials[required_vial]['Material']).amount / max(1, goal))
+                    prog = 100 * ( max(0, session_data.account.all_assets.get(player_alchemy_vials[required_vial]['Material']).amount - 10_000_000) / max(1, goal))
                     # Generate Alerts
                     if prog >= 100 and player_alchemy_vials[required_vial]['Level'] == max_vial_level-1:
                         session_data.account.alerts_Advices['World 2'].append(Advice(
                             label=f"{required_vial} {{{{ Vial|#vials }}}} ready to be maxed!",
                             picture_class="vial-13"
                         ))
-                    vial_Advices['Vials to max next'].append(Advice(
+                    vial_Advices['Vials to max next (preserves Greenstacks)'].append(Advice(
                         label=f"{required_vial}"
                               f"{'<br>NEEDS TO BE UNLOCKED!' if player_alchemy_vials[required_vial]['Level'] == 0 else ''}"
                               f"{'<br>Ready for level ' if prog >= 100 else ' toward level '}"
@@ -108,7 +108,7 @@ def getVialsProgressionTiersAdviceGroup():
                         unit='%'
                     ))
 
-    vial_Advices['Maxed Vials']['Vials to max next'] = vial_Advices['Vials to max next']  #Ensure this is the last subgroup
+    vial_Advices['Maxed Vials']['Vials to max next (preserves Greenstacks)'] = vial_Advices['Vials to max next (preserves Greenstacks)']  #Ensure this is the last subgroup
 
     if len(virile_vials_list) < max_expected_vv:
         vial_Advices['Early Vials'][f"{AdviceType.INFO.value}- Shaman's Virile Vials"] = [
