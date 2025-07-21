@@ -104,6 +104,7 @@ class StorageChest(StorageItemMixin, IntEnum):
     NINJA_CHEST = 104
     HOLIDAY_CHEST = 105
     VALENSLIME_CHEST = 106
+    BURIED_TREASURE_CHEST = 107
 
     @classmethod
     def dropped(cls):
@@ -144,7 +145,7 @@ class StorageChest(StorageItemMixin, IntEnum):
     @classmethod
     def limited(cls):
         return (
-            cls.HOLIDAY_CHEST, cls.VALENSLIME_CHEST
+            cls.HOLIDAY_CHEST, cls.VALENSLIME_CHEST, cls.BURIED_TREASURE_CHEST
         )
 
     @classmethod

@@ -1019,7 +1019,8 @@ storage_chests_dict = {
     103:4,
     104:3,
     105:16,
-    106:16
+    106:16,
+    107:16
 }
 current_max_usable_inventory_slots = 104  #As of v2.36 Charred Bones
 

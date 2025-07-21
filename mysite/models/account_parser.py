@@ -45,7 +45,7 @@ from consts.consts_caverns import (
 from consts.consts_w6 import (
     jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations, summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
@@ -662,7 +662,8 @@ def _parse_master_classes_compass(account):
         'Abominations': {},
         'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
         'Medallions': {},
-        'Total Medallions': 0
+        'Total Medallions': 0,
+        'Aethermoons Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 401, False), False)
     }
     #Parse Compass Upgrades
     raw_compass = safe_loads(account.raw_data.get('Compass', []))
@@ -3572,6 +3573,21 @@ def _parse_w6_summoning(account):
 
     # Used later to create a list of Advices for Winner Bonuses. Can be added directly into an AdviceGroup as the advices attribute
     account.summoning['WinnerBonusesAdvice'] = []
+
+    account.summoning['Summoning Stones'] = {}
+    raw_kr_best = safe_loads(account.raw_data.get('KRbest', {}))
+    if raw_kr_best:
+        for colorIndex in range(len(summoning_match_colors)):
+            wins = safer_get(raw_kr_best, f'SummzTrz{colorIndex}', 0)
+            color = summoning_match_colors[colorIndex]
+            account.summoning['Summoning Stones'][color] = {
+                'Wins': wins,
+                'Location': summoning_stone_locations[colorIndex],
+                'Base HP': int(summoning_stone_boss_base_hp[colorIndex]),
+                'Base DMG': int(summoning_stone_boss_base_damage[colorIndex]),
+                'StoneImage': summoning_stone_stone_images[colorIndex],
+                'BossImage': summoning_stone_boss_images[colorIndex]
+            }
 
 def _parse_w6_summoning_battles(account, rawBattles):
     safe_battles = [safer_convert(battle, '') for battle in rawBattles]
