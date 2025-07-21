@@ -142,14 +142,13 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
 def getSummoningStoneAdviceGroup() -> AdviceGroup:
     summoning_stone_advice = []
     for index, (color, data) in enumerate(session_data.account.summoning['Summoning Stones'].items()):
-        mult_text = f"<br>{data['Wins'] + 1}x multiplier to {color} summoning upgrades" if data['Wins'] > 0 else ''
+        mult_text = f"<br>{data['Wins']} wins: {data['Wins'] + 1}x multi to {color} upgrades"
         summoning_stone_advice.append(Advice(
             label=f"{summoning_stone_names[color]} ({data['Location']})"
                   f"{mult_text}"
                   f"<br>DMG: {notateNumber('Basic', summoning_stone_boss_damage_function(data['Base DMG'], data['Wins'] + 1))}"
                   f"<br>HP: {notateNumber('Basic', summoning_stone_boss_hp_function(data['Base HP'], data['Wins'] + 1))}",
             picture_class=data['StoneImage'],
-            progression=data['Wins'],
             resource=data['BossImage']
         ))
     return AdviceGroup(
