@@ -360,7 +360,8 @@ textarea {
     height: 50px;
 }
 
-h1, strong {
+h1,
+strong {
     color: var(--fg-title);
 }
 
@@ -399,13 +400,33 @@ h1, strong {
 
 }
 
-.hidden { display: none !important; }
-.hidden-unrated { display: none !important; }
-.hidden-optional { display: none !important; }
-.hidden-completed { display: none !important; }
-.hidden-informational { display: none !important; }
-.hidden-overwhelming { display: none !important; }
-.hidden-children-hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
+
+.hidden-unrated {
+    display: none !important;
+}
+
+.hidden-optional {
+    display: none !important;
+}
+
+.hidden-completed {
+    display: none !important;
+}
+
+.hidden-informational {
+    display: none !important;
+}
+
+.hidden-overwhelming {
+    display: none !important;
+}
+
+.hidden-children-hidden {
+    display: none !important;
+}
 
 
 #veil {
@@ -417,14 +438,14 @@ h1, strong {
     z-index: -2;
     background-color: hsla(0deg, 0%, 0%, 0);
     transition: background-color .5s linear,
-                z-index .5s linear;
+        z-index .5s linear;
 
     &.sidebar-open {
         right: 0;
         z-index: 97;
         background-color: hsla(0deg, 0%, 0%, 0.7);
         transition: background-color .5s linear,
-                    z-index 0s linear;
+            z-index 0s linear;
     }
 }
 
@@ -449,7 +470,8 @@ body {
             display: flex;
             flex-direction: column;
             width: 100%;
-            max-width: 120em; /*1920px*/
+            max-width: 120em;
+            /*1920px*/
 
             header {
                 font-family: "Rubik", sans-serif;
@@ -464,8 +486,13 @@ body {
 
                 color: var(--fg-last-update);
 
-                &.json { background-color: var(--bg-header-json); }
-                &.public { background-color:var(--bg-header-public); }
+                &.json {
+                    background-color: var(--bg-header-json);
+                }
+
+                &.public {
+                    background-color: var(--bg-header-public);
+                }
 
                 * {
                     display: flex;
@@ -474,6 +501,7 @@ body {
 
                 #data-source-name {
                     color: #a5c2ff;
+
                     &:visited {
                         color: #e6a5ff;
                     }
@@ -497,6 +525,7 @@ body {
                         font-family: 'Kode Mono', sans-serif;
                         position: relative;
                     }
+
                     #last-update {
                         position: absolute;
                         display: inline-block;
@@ -513,6 +542,7 @@ body {
                         color: var(--fg-last-update);
                         line-height: 1.6em;
                     }
+
                     &:hover #last-update {
                         visibility: visible;
                     }
@@ -538,10 +568,12 @@ body {
                                 max-width: 95%;
                                 height: fit-content;
                             }
+
                             &.light {
                                 display: var(--banner-display-light);
                                 height: 50px;
                             }
+
                             &.dark {
                                 display: var(--banner-display-dark);
                                 width: 100%;
@@ -555,7 +587,8 @@ body {
                         row-gap: 20px;
                     }
 
-                    &.world-content, .sections {
+                    &.world-content,
+                    .sections {
                         row-gap: 0;
                     }
 
@@ -590,12 +623,15 @@ body {
                                     display: flex;
                                     flex-direction: row;
                                     justify-content: space-between;
+
                                     @media (max-width: 600px) {
                                         flex-direction: column;
                                         row-gap: 10px;
                                     }
+
                                     span {
                                         color: var(--fg-subheading);
+
                                         &:nth-child(2) {
                                             display: flex;
                                             align-items: center;
@@ -625,7 +661,7 @@ body {
                                     display: none;
                                 }
 
-                                & > li {
+                                &>li {
                                     display: grid;
                                     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
                                     row-gap: 10px;
@@ -656,7 +692,7 @@ body {
 
                                     color: var(--fg);
 
-                                    #cards & > span {
+                                    #cards &>span {
                                         display: flex;
                                         align-items: center;
                                         column-gap: 7px;
@@ -688,11 +724,12 @@ body {
                                         scrollbar-width: auto;
                                         scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
-                                        & > *:not(.progress-bar) {
+                                        &>*:not(.progress-bar) {
                                             z-index: 1;
                                         }
 
-                                        &::before, &::after {
+                                        &::before,
+                                        &::after {
                                             z-index: 2;
                                             position: sticky;
                                             display: block;
@@ -727,6 +764,7 @@ body {
                                             }
 
                                         }
+
                                         .advice {
                                             display: flex;
                                             position: relative;
@@ -739,10 +777,13 @@ body {
                                                 content: '';
                                                 height: 40px;
                                             }
-                                            .progress-box, .progress-bar {
+
+                                            .progress-box,
+                                            .progress-bar {
                                                 display: block;
                                                 z-index: 0;
                                             }
+
                                             .progress-box {
                                                 position: absolute;
                                                 left: 0;
@@ -750,10 +791,13 @@ body {
                                                 width: 100%;
                                                 z-index: -1;
                                                 background: var(--progress-box-bg);
+                                                display: flex;
+                                                flex-direction: row;
 
                                                 .progress-bar {
                                                     height: 100%;
                                                 }
+
                                                 &.gilded {
                                                     border: 1px solid rgba(255, 217, 0, 0.4);
                                                     box-shadow: 0 0 5px 0 inset gold;
@@ -761,7 +805,8 @@ body {
                                             }
                                         }
 
-                                        .advice::before, .resource {
+                                        .advice::before,
+                                        .resource {
                                             min-width: var(--advice-icon-width);
 
                                             background-size: contain;
@@ -780,13 +825,15 @@ body {
 
                                         .goal {
                                             padding-right: 20px;
+
                                             &.gilded {
                                                 color: var(--fg-goal-complete);
                                                 font-size: 1.9em;
                                             }
                                         }
 
-                                        li, li a {
+                                        li,
+                                        li a {
                                             display: inline-flex;
                                             align-items: center;
                                             column-gap: var(--advice-icon-gap);
@@ -837,12 +884,22 @@ body {
 
                         .progress-box .progress-bar {
                             background: var(--#{$world}-progress-color);
+
+                            &.secondary {
+                                // have a 50% transparent color for the secondary progress bar using the var(--#{$world}-progress-color);
+                                background: repeating-linear-gradient(135deg,
+                                    var(--#{$world}-progress-color),
+                                    var(--#{$world}-progress-color) 10px,
+                                    #0000 10px,
+                                    #00000000 20px);
+                                box-shadow: 0 0 5px 0 inset rgba(0, 255, 171, 0.26);
+                            }
                         }
 
                         .subheading {
                             background: var(--#{$world}-bg-subheading);
 
-                            .heading-wrapper > span {
+                            .heading-wrapper>span {
                                 color: var(--#{$world}-fg-subheading);
                             }
                         }
@@ -854,7 +911,8 @@ body {
                                 &:nth-child(#{$oddity}) {
                                     background-color: var(--#{$world}-bg-advice-group-#{$oddity});
 
-                                    .table::before, .table::after {
+                                    .table::before,
+                                    .table::after {
                                         --table-edge-bg-to: var(--#{$world}-bg-advice-group-#{$oddity});
                                     }
                                 }
@@ -880,7 +938,8 @@ body {
                 bottom: calc((var(--nav-height) + var(--nav-padding) * 2) + 10px);
             }
 
-            #scroll-to-top, #expand-collapse {
+            #scroll-to-top,
+            #expand-collapse {
                 height: 40px;
                 width: 40px;
 
@@ -910,12 +969,15 @@ body {
             #expand-collapse {
                 background-color: #a22a45;
                 flex-direction: column-reverse;
+
                 &.closed {
                     flex-direction: column;
                 }
+
                 &::after {
                     transform: rotate(-135deg) translateY(2px) translateX(2px);
                 }
+
                 &::before {
                     transform: rotate(45deg) translateY(2px) translateX(2px);
                 }
@@ -926,7 +988,8 @@ body {
             font-family: "Open Sans", sans-serif;
             color: oldlace;
             width: 100%;
-            margin-top: auto; /*always sticks to the bottom of the page*/
+            margin-top: auto;
+            /*always sticks to the bottom of the page*/
             padding: 20px;
             display: flex;
             align-items: center;
@@ -965,6 +1028,7 @@ body {
 @media (max-width: 600px) {
     body .container-fluid .main-wrapper header {
         flex-direction: column;
+
         #update-time {
             width: unset;
 
@@ -973,14 +1037,17 @@ body {
                 justify-content: center;
                 align-items: center;
             }
+
             #last-update {
                 right: unset;
             }
         }
+
         * {
             flex-direction: column;
             align-items: center;
         }
+
         #data-source-text {
             display: none;
         }
@@ -996,7 +1063,9 @@ body {
         }
 
         section {
-            .subheading, .advice-group {
+
+            .subheading,
+            .advice-group {
                 padding-left: 5vw;
                 padding-right: 5vw;
             }
@@ -1025,56 +1094,168 @@ body {
         width: 0.5vw;
     }
 }
+
 @keyframes to-center {
     0% {
         right: 12.5%;
         transform: translateX(12.5%);
     }
+
     5% {
         right: 25%;
         transform: translateX(25%);
     }
+
     10% {
         right: 37.5%;
         transform: translateX(37.5%);
     }
+
     15% {
         right: 50%;
         transform: translateX(50%);
     }
+
     90% {
         right: 50%;
         transform: translateX(50%);
     }
+
     95% {
         right: 25%;
         transform: translateX(25%);
     }
+
     100% {
         right: 0;
         transform: translateX(0%);
     }
 }
+
 @keyframes shake {
-    0%   { transform: translate(calc(12.5% + 1px), 1px)  rotate(0deg)  scale(110%); position: absolute; right: 12.5%; }
-    5%   { transform: translate(calc(25% + -1px), -2px)  rotate(-3deg) scale(130%); position: absolute; right: 25%;   }
-    10%  { transform: translate(calc(37.5% + -3px), 0px) rotate(3deg)  scale(170%); position: absolute; right: 37.5%; }
-    15%  { transform: translate(calc(50% + 3px), 2px)    rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    20%  { transform: translate(calc(50% + 1px), -1px)   rotate(3deg)  scale(200%); position: absolute; right: 50%;   }
-    25%  { transform: translate(calc(50% + -1px), 2px)   rotate(-3deg) scale(200%); position: absolute; right: 50%;   }
-    30%  { transform: translate(calc(50% + -3px), 1px)   rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    35%  { transform: translate(calc(50% + 3px), 1px)    rotate(-3deg) scale(200%); position: absolute; right: 50%;   }
-    40%  { transform: translate(calc(50% + -1px), -1px)  rotate(3deg)  scale(200%); position: absolute; right: 50%;   }
-    45%  { transform: translate(calc(50% + 1px), 2px)    rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    50%  { transform: translate(calc(50% + 1px), -2px)   rotate(-3deg) scale(200%); position: absolute; right: 50%;   }
-    55%  { transform: translate(calc(50% + 1px), 1px)    rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    60%  { transform: translate(calc(50% + -1px), -2px)  rotate(-3deg) scale(200%); position: absolute; right: 50%;   }
-    65%  { transform: translate(calc(50% + -3px), 0px)   rotate(3deg)  scale(200%); position: absolute; right: 50%;   }
-    70%  { transform: translate(calc(50% + 3px), 2px)    rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    75%  { transform: translate(calc(50% + 1px), -1px)   rotate(3deg)  scale(200%); position: absolute; right: 50%;   }
-    80%  { transform: translate(calc(50% + -1px), 2px)   rotate(-3deg) scale(200%); position: absolute; right: 50%;   }
-    85%  { transform: translate(calc(50% + -3px), 1px)   rotate(0deg)  scale(200%); position: absolute; right: 50%;   }
-    90%  { transform: translate(calc(50% + 3px), 1px)    rotate(-3deg) scale(200%); position: absolute; right: 37.5%; }
-    95%  { transform: translate(calc(25% + -1px), -1px)  rotate(3deg)  scale(150%); position: absolute; right: 25%;   }
-    100% { transform: translate(calc(1px), -2px)         rotate(-3deg) scale(100%); position: absolute; right: 12.5%; }
+    0% {
+        transform: translate(calc(12.5% + 1px), 1px) rotate(0deg) scale(110%);
+        position: absolute;
+        right: 12.5%;
+    }
+
+    5% {
+        transform: translate(calc(25% + -1px), -2px) rotate(-3deg) scale(130%);
+        position: absolute;
+        right: 25%;
+    }
+
+    10% {
+        transform: translate(calc(37.5% + -3px), 0px) rotate(3deg) scale(170%);
+        position: absolute;
+        right: 37.5%;
+    }
+
+    15% {
+        transform: translate(calc(50% + 3px), 2px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    20% {
+        transform: translate(calc(50% + 1px), -1px) rotate(3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    25% {
+        transform: translate(calc(50% + -1px), 2px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    30% {
+        transform: translate(calc(50% + -3px), 1px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    35% {
+        transform: translate(calc(50% + 3px), 1px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    40% {
+        transform: translate(calc(50% + -1px), -1px) rotate(3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    45% {
+        transform: translate(calc(50% + 1px), 2px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    50% {
+        transform: translate(calc(50% + 1px), -2px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    55% {
+        transform: translate(calc(50% + 1px), 1px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    60% {
+        transform: translate(calc(50% + -1px), -2px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    65% {
+        transform: translate(calc(50% + -3px), 0px) rotate(3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    70% {
+        transform: translate(calc(50% + 3px), 2px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    75% {
+        transform: translate(calc(50% + 1px), -1px) rotate(3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    80% {
+        transform: translate(calc(50% + -1px), 2px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    85% {
+        transform: translate(calc(50% + -3px), 1px) rotate(0deg) scale(200%);
+        position: absolute;
+        right: 50%;
+    }
+
+    90% {
+        transform: translate(calc(50% + 3px), 1px) rotate(-3deg) scale(200%);
+        position: absolute;
+        right: 37.5%;
+    }
+
+    95% {
+        transform: translate(calc(25% + -1px), -1px) rotate(3deg) scale(150%);
+        position: absolute;
+        right: 25%;
+    }
+
+    100% {
+        transform: translate(calc(1px), -2px) rotate(-3deg) scale(100%);
+        position: absolute;
+        right: 12.5%;
+    }
 }

@@ -328,7 +328,8 @@ def getDailyAdviceList() -> list[Advice]:
         daily.append(Advice(
             label=f"Spend remaining daily Minigame plays",
             picture_class='daily-minigame-plays',
-            progression=session_data.account.minigame_plays_remaining
+            progression=session_data.account.minigame_plays_remaining,
+            goal=0
         ))
     if session_data.account.daily_world_boss_kills < 300:
         daily.append(Advice(

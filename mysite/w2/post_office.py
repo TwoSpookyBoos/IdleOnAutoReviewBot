@@ -86,19 +86,25 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getBoxesAdviceGroup(character):
     total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
+    remaining_points = max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested)
 
-    po_Advices = {
-        tab_name: [
-            Advice(
-                label=boxName,
-                picture_class=boxName,
-                progression=boxDetails['Level'],
-                goal=boxDetails['Max Level'],
-                completed=boxDetails['Level'] >= boxDetails['Max Level']
-            ) for boxName, boxDetails in character.po_boxes_invested.items() if boxDetails['Tab'] == tab_name
-        ] for tab_name in post_office_tabs
-    }
+    po_Advices = {}
+    for tab_name in post_office_tabs:
+        po_Advices[tab_name] = []
+        for box_name, box_details in character.po_boxes_invested.items():
+            needed_for_completion = (box_details['Max Level'] - box_details['Level'])
+            using_points = min(remaining_points, needed_for_completion)
+            remaining_points = max(0, remaining_points - using_points)
 
+            advice = Advice(
+                label=box_name,
+                picture_class=box_name,
+                progression=box_details['Level'],
+                goal=box_details['Max Level'],
+                completed=box_details['Level'] >= box_details['Max Level'],
+                potential=using_points)
+            
+            po_Advices[tab_name].append(advice)
     for subgroup in po_Advices:
         for advice in po_Advices[subgroup]:
             mark_advice_completed(advice)
