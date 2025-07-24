@@ -635,7 +635,7 @@ class Advice(AdviceBase):
                 return None
 
             # Sanitize the value from all commas
-            val = res[0].replace(',', '').replace('.', '')
+            val = res[0].replace(',', '')
             try:
                 return float(val)
             except ValueError:
