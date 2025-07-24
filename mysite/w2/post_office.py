@@ -109,7 +109,6 @@ def getBoxesAdviceGroup(character):
         po_Advices[tab_name].append(advice)
         mark_advice_completed(advice)
 
-
     char_ag = AdviceGroup(
         tier='',
         pre_string=f"Boxes for {character.character_name} the {character.class_name}",
