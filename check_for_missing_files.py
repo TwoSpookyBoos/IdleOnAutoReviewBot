@@ -8,10 +8,14 @@ data_pattern = re.compile(r'data/[^"\')\s]+?\.png')
 root_dir = './mysite'
 image_dir = './mysite/static/imgs'
 
+excluded_files = ['image_fetcher.js']
+
 USE_PATTERN = wiki_pattern
 
 for dirpath, _, filenames in os.walk(root_dir):
     for filename in filenames:
+        if filename in excluded_files:
+            continue
         file_path = os.path.join(dirpath, filename)
         try:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
