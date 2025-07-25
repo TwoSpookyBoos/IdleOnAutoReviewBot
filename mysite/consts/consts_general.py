@@ -1152,14 +1152,14 @@ guild_bonuses_dict = {
     'REM Fighting': {'Image': 'rem-fighting', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
     'Make or Break': {'Image': 'make-or-break', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
     'Multi Tool': {'Image': 'multi-tool', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
-    'Skilley Skiller': {'Image': 'skilley-skiller', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
+    'Sleepy Skiller': {'Image': 'sleepy-skiller', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
     'Coin Supercharger': {'Image': 'coin-supercharger', 'Max Level': 100, 'Max Value': 16.667, 'funcType': 'decay', 'x1': 20, 'x2': 20},
     'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'Max Level': 50, 'Max Value': 0, 'funcType': 'special1', 'x1': 200, 'x2': 50},  # This value decreases to a min value of 0
     'Gold Charm': {'Image': 'gold-charm', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
     'Star Dazzle': {'Image': 'star-dazzle', 'Max Level': 50, 'Max Value': 60, 'funcType': 'decay', 'x1': 120, 'x2': 50},
     'C2 Card Spotter': {'Image': 'c2-card-spotter', 'Max Level': 50, 'Max Value': 30, 'funcType': 'decay', 'x1': 60, 'x2': 50},
     'Bestone': {'Image': 'bestone', 'Max Level': 50, 'Max Value': 8, 'funcType': 'decay', 'x1': 16, 'x2': 50},
-    'Sleepy Skillet': {'Image': 'sleepy-skillet', 'Max Level': 200, 'Max Value': 18.75, 'funcType': 'decay', 'x1': 30, 'x2': 120},
+    'Skilley Skillet': {'Image': 'skilley-skillet', 'Max Level': 200, 'Max Value': 18.75, 'funcType': 'decay', 'x1': 30, 'x2': 120},
     'Craps': {'Image': 'craps', 'Max Level': 50, 'Max Value': 14, 'funcType': 'decay', 'x1': 28, 'x2': 50},
     'Anotha One': {'Image': 'anotha-one', 'Max Level': 50, 'Max Value': 13, 'funcType': 'decay', 'x1': 26, 'x2': 50},
     'Wait A Minute': {'Image': 'wait-a-minute', 'Max Level': 0, 'Max Value': 0, 'funcType': 'add', 'x1': 1, 'x2': 0}
