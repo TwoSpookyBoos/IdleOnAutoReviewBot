@@ -93,3 +93,9 @@ or, using make:
 cd mysite
 make test
 ```
+
+## Code Analyzers
+
+`/utils/code-analyzers` contains analyzer scripts to check for duplicate scss variables, unresolved image references, etc.
+
+These can be executed by directly executing the file with Python.
