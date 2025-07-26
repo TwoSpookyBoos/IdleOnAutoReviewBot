@@ -5,8 +5,8 @@ from urllib.parse import unquote
 wiki_pattern = re.compile(r'wiki/[^"\')\s]+?\.png')
 data_pattern = re.compile(r'data/[^"\')\s]+?\.png')
 
-root_dir = './mysite'
-image_dir = './mysite/static/imgs'
+root_dir = '../..'
+image_dir = '../../static/imgs'
 
 excluded_files = ['image_fetcher.js']
 
@@ -24,5 +24,5 @@ for dirpath, _, filenames in os.walk(root_dir):
                         decoded_match = unquote(match)
                         if not os.path.isfile(os.path.join(image_dir, decoded_match)):
                             print(f'MISSING: {decoded_match} in {file_path}')
-        except (UnicodeDecodeError, PermissionError):
+        except:
             continue
