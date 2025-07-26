@@ -46,21 +46,9 @@ def getCompassCurrenciesAdviceGroup(compass):
     currency_advices = {}
 
     #Basic Currencies
-    currency_advices['Currencies'] = [
-        Advice(
-            label=f"{dust_name}: {notateNumber('Basic', compass[f'Dust{dust_index}'], 3)}",
-            picture_class=f'compass-dust-{dust_index-1}',
-            informational=True,
-            completed=True
-        ) for dust_index, dust_name in enumerate(compass_dusts_list, start=1)
-    ]
-    currency_advices['Currencies'].insert(0, Advice(
-        label=f"Total Dusts Collected: {notateNumber('Basic', compass['Total Dust Collected'], 3)}",
-        picture_class='dustwalker',
-        informational=True,
-        completed=True
-    ))
-    currency_advices['Currencies'].insert(0, Advice(
+    currency_advices['Currencies'] = []
+
+    currency_advices['Currencies'].append(Advice(
         label=(
             f"""Daily Top of the Mornin' kills: """
             f"""{compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value']}"""
@@ -71,6 +59,37 @@ def getCompassCurrenciesAdviceGroup(compass):
         goal=compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value'],
         informational=True
     ))
+
+    currency_advices['Currencies'].append(Advice(
+        label=f"Total Dusts Collected: {notateNumber('Basic', compass['Total Dust Collected'], 3)}",
+        picture_class='dustwalker',
+        informational=True,
+        completed=True
+    ))
+
+    if compass['Aethermoons Enabled']:
+        currency_advices['Currencies'].append(Advice(
+            label=f"Aethermoons Enabled! Collect 1 per two full AFK hour while fighting on a Wind Walker. Maximize your /hr display "
+                  f"within AFK Info screen before consuming!",
+            picture_class='aethermoon',
+            progression=1,
+            goal=1
+        ))
+    else:
+        currency_advices['Currencies'].append(Advice(
+            label=f"Fight with Tempest Form enabled to collect 1,000 Aether Fragments, then use the stack. "
+                  f"This enables AFK Fighting on Wind Walkers to produce 1 Aethermoon per two hours!",
+            picture_class='aether-fragment',
+            progression=min(1000, session_data.account.all_assets.get('Quest100').amount),
+            goal=1000
+        ))
+
+    currency_advices['Currencies'].extend([Advice(
+        label=f"{dust_name}: {notateNumber('Basic', compass[f'Dust{dust_index}'], 3)}",
+        picture_class=f'compass-dust-{dust_index - 1}',
+        informational=True,
+        completed=True
+    ) for dust_index, dust_name in enumerate(compass_dusts_list, start=1)])
 
     # Dust Multi calculation groups
     currency_advices['Currencies'].append(Advice(

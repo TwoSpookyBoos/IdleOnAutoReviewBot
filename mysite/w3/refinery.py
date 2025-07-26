@@ -136,7 +136,7 @@ def getRefineryProgressionTierAdviceGroups():
         if salt_dict['RedSalt'].salt_rank < 100:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['RedSalt'].salt_name} is not producing",
+                label=f"{salt_dict['RedSalt'].salt_name} Production: Off",
                 picture_class=salt_dict['RedSalt'].image,
                 progression='Off',
                 goal='On')
@@ -148,12 +148,14 @@ def getRefineryProgressionTierAdviceGroups():
     if salt_dict['RedSalt'].auto_refine != 0:
         if salt_dict['RedSalt'].salt_rank < 100:
             tier_AutoRefine = 0
-            refinery_AdviceDict['AutoRefine'].append(
-                Advice(label=salt_dict['RedSalt'].salt_name, picture_class=salt_dict['RedSalt'].image,
-                       progression=salt_dict['RedSalt'].auto_refine, goal=0, unit="%")
-            )
+            refinery_AdviceDict['AutoRefine'].append(Advice(
+                label=f"{salt_dict['RedSalt'].salt_name} Auto Refine: ON",
+                picture_class=salt_dict['RedSalt'].image,
+                progression='ON',
+                goal='OFF'
+            ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
-                label=f"{{{{ Red Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 100 before auto-refining early.",
+                label=f"{{{{ Red Salt|#refinery }}}} is set to Auto Refine: ON. Recommended to reach Rank 100+ before enabling Auto Refine.",
                 picture_class=salt_dict['RedSalt'].image
             ))
 
@@ -161,11 +163,11 @@ def getRefineryProgressionTierAdviceGroups():
         if salt_dict['GreenSalt'].salt_rank < 30:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['GreenSalt'].salt_name} is not producing",
+                label=f"{salt_dict['GreenSalt'].salt_name} Production: Off",
                 picture_class=salt_dict['GreenSalt'].image,
                 progression='Off',
-                goal='On')
-            )
+                goal='On'
+            ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Green Salt|#refinery }}}} is not producing",
                 picture_class=salt_dict['GreenSalt'].image
@@ -173,12 +175,14 @@ def getRefineryProgressionTierAdviceGroups():
     if salt_dict['GreenSalt'].auto_refine != 0:
         if salt_dict['GreenSalt'].salt_rank < 30:
             tier_AutoRefine = 0
-            refinery_AdviceDict['AutoRefine'].append(
-                Advice(label=salt_dict['GreenSalt'].salt_name, picture_class=salt_dict['GreenSalt'].image,
-                       progression=salt_dict['GreenSalt'].auto_refine, goal=0, unit="%")
-            )
+            refinery_AdviceDict['AutoRefine'].append(Advice(
+                label=f"{salt_dict['GreenSalt'].salt_name} Auto Refine: ON",
+                picture_class=salt_dict['GreenSalt'].image,
+                progression='ON',
+                goal='OFF'
+            ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
-                label=f"{{{{ Green Salt|#refinery }}}} auto-refining early. Recommended to at least reach Rank 30 before auto-refining early.",
+                label=f"{{{{ Green Salt|#refinery }}}} is set to Auto Refine: ON. Recommended to reach Rank 30+ before enabling Auto Refine.",
                 picture_class=salt_dict['GreenSalt'].image
             ))
 
@@ -276,7 +280,7 @@ def getRefineryProgressionTierAdviceGroups():
     # Generate AdviceGroups
     refinery_AdviceGroupDict['AutoRefine'] = AdviceGroup(
         tier=tier_AutoRefine,
-        pre_string="Red and Green Salts should always be set to 0% Auto-Refine and On to produce salts",
+        pre_string="Red and Green Salts should be ENABLED and set to Auto Refine: OFF to allow ranking up",
         advices=refinery_AdviceDict['AutoRefine']
     )
     refinery_AdviceGroupDict['Merits'] = AdviceGroup(
