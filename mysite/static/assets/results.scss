@@ -417,14 +417,14 @@ h1, strong {
     z-index: -2;
     background-color: hsla(0deg, 0%, 0%, 0);
     transition: background-color .5s linear,
-                z-index .5s linear;
+        z-index .5s linear;
 
     &.sidebar-open {
         right: 0;
         z-index: 97;
         background-color: hsla(0deg, 0%, 0%, 0.7);
         transition: background-color .5s linear,
-                    z-index 0s linear;
+            z-index 0s linear;
     }
 }
 
@@ -750,6 +750,8 @@ body {
                                                 width: 100%;
                                                 z-index: -1;
                                                 background: var(--progress-box-bg);
+                                                display: flex;
+                                                flex-direction: row;
 
                                                 .progress-bar {
                                                     height: 100%;
@@ -780,6 +782,7 @@ body {
 
                                         .goal {
                                             padding-right: 20px;
+
                                             &.gilded {
                                                 color: var(--fg-goal-complete);
                                                 font-size: 1.9em;
@@ -837,6 +840,15 @@ body {
 
                         .progress-box .progress-bar {
                             background: var(--#{$world}-progress-color);
+
+                            &.secondary {
+                                background: repeating-linear-gradient(135deg,
+                                    var(--#{$world}-progress-color),
+                                    var(--#{$world}-progress-color) 10px,
+                                    #0000 10px,
+                                    #00000000 20px);
+                                box-shadow: 0 0 5px 0 inset rgba(0, 255, 171, 0.26);
+                            }
                         }
 
                         .subheading {

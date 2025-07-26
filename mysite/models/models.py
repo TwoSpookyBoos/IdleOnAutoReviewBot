@@ -557,6 +557,7 @@ class Advice(AdviceBase):
             unrated: bool = False,
             overwhelming: bool = False,
             optional: bool = False,
+            potential: Any = "",
             **extra
     ):
         super().__init__(**extra)
@@ -566,6 +567,7 @@ class Advice(AdviceBase):
             picture_class = f"x{picture_class}"
         self.picture_class: str = picture_class
         self.progression: str = str(progression)
+        self.potential: str = str(potential)
         self.goal: str = str(goal)
         self.unit: str = unit
         self.value_format: str = value_format
@@ -586,7 +588,29 @@ class Advice(AdviceBase):
         if self.goal == "✔":
             self.status = "gilded"
 
-        self.percent = self.__calculate_progress_box_width()
+        numeric_progression = self.__extract_float(self.progression)
+        numeric_potential = self.__extract_float(self.potential)
+        numeric_goal = self.__extract_float(self.goal)
+
+        self.percent: float = 0.0
+        if(numeric_goal is not None and numeric_progression is not None):
+            # NOTE: This was an idea to handle cases, where progras is decending
+            # Ill have to look into the overwhelming attr
+            # if(numeric_goal < numeric_progression):
+            #     numeric_progression, numeric_goal = numeric_goal, numeric_progression
+            #     numeric_potential = numeric_goal - numeric_progression
+
+            self.percent = self.__calculate_progress_box_width_numeric(
+                numeric_progression, numeric_goal
+            )
+            self.potential_percent = self.__calculate_progress_box_width_numeric(
+                numeric_potential, numeric_goal
+            )
+
+            # prevent overflow of potential percent
+            if (self.percent + self.potential_percent) > 100:
+                self.potential_percent = 100 - self.percent
+
         self.overwhelming = overwhelming
         self.optional = optional
 
@@ -598,26 +622,38 @@ class Advice(AdviceBase):
     def __str__(self) -> str:
         return self.label
 
-    def __calculate_progress_box_width(self) -> str:
-        percentage = next((num for num in [self.goal, self.progression] if num.endswith("%")), None)
-        if not all(num.endswith("%") for num in [self.goal, self.progression]) and percentage:
-            try:
-                # Extract just the number, cast to float, min with 100, reapply %
-                # This should prevent progress bars going way off to the right due to percentage being over 100%
-                percentage = f"{min(100, float(percentage.split('%')[0]))}%"
-                return percentage
-            except:
-                return percentage
+    def __extract_float(self, value: str | float | int) -> float:
+        """
+        Extracts a float from a string, 
+        """
+        if (value is None):
+            return None
+        if (isinstance(value, str)):
+            float_re = re.compile(r'((?:\d+|,)+(?:\.\d+)?)')
+            res = float_re.search(value)
+            if res is None or len(res.groups()) != 1:
+                return None
 
-        float_re = re.compile(r'\d+(.\d+)?')
-        progression = float_re.search(self.progression)
-        goal = float_re.search(self.goal)
-        try:
-            percentage = round(100 * float(progression[0]) / float(goal[0]), 2)
-            percentage = percentage if percentage < 100 else 100
-            return f"{percentage}%"
-        except (ZeroDivisionError, IndexError, TypeError, ValueError):
-            return "0"
+            # Sanitize the value from all commas
+            val = res[0].replace(',', '')
+            try:
+                return float(val)
+            except ValueError:
+                # Just in case
+                return None
+        elif (isinstance(value, (int, float))):
+            return float(value)
+        return value
+
+    def __calculate_progress_box_width_numeric(self, calc_num: float, goal_num: float) -> float:
+        if calc_num is None or goal_num is None:
+            return 0.0
+
+        if goal_num == 0:
+            return 0.0 # A goal of 0 currently makes no sense, since descending progression is not supported
+
+        percentage = round(100 * calc_num / goal_num, 2)
+        return min(percentage, 100.0)
 
     def update_optional(self, parent_value: bool):
         self.optional = parent_value
@@ -1419,13 +1455,14 @@ def buildMaps() -> dict[int, dict]:
         )
     return mapDict
 
+
 @session_singleton
 class Account:
 
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
-        if self.version < 191:  #190.5 was the Falloween event before W6 released
+        if self.version < 191:  # 190.5 was the Falloween event before W6 released
             raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {
