@@ -270,6 +270,7 @@ $compass-etc: (
     eternal-hunt-grave: img('customized/Eternal_Hunt_Grave.png') //Frame 0 of 1x/sprite-576-26.png
 );
 
-$all-compass: map-merge($compass-upgrades, $compass-dusts);
-$all-compass: map-merge($all-compass, $compass-abominations);
+$all-compass: map-merge($compass-upgrades, $compass-abominations);
+$all-compass: map-merge($all-compass, $compass-dusts);
+$all-compass: map-merge($all-compass, $compass-equipment);
 $all-compass: map-merge($all-compass, $compass-etc);

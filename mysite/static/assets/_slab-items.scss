@@ -1,3 +1,10 @@
+@import "equinox";
+@import "caverns";
+@import "world-contents";
+@import "sneaking";
+@import "gem-shop";
+@import "compass";
+
 $resources: (
     // Ores
     copper-ore: img('wiki/Copper_Ore.png'),
@@ -11,7 +18,7 @@ $resources: (
     marble-ore: img('wiki/Marble_Ore.png'),
     dreadlo-ore: img('wiki/Dreadlo_Ore.png'),
     godshard-ore: img('wiki/Godshard_Ore.png'),
-    motherlode-ore: img('wiki/Motherlode_Ore.png'),
+    motherlode-ore: map-get($motherlode-resources, motherlode-ore),
     // Bars
     copper-bar: img('wiki/Copper_Bar.png'),
     iron-bar: img('wiki/Iron_Bar.png'),
@@ -80,25 +87,25 @@ $resources: (
     firefly: img('wiki/Firefly.png'),
     fractal-fly: img('wiki/Fractal_Fly.png'),
     // Critters
-    froge: img('wiki/Froge.png'),
+    froge: map-get($world-monsters, froge),
     poison-froge: img('wiki/Poison_Froge.png'),
-    crabbo: img('wiki/Crabbo.png'),
+    crabbo: map-get($world-monsters, crabbo),
     mutant-crabbo: img('wiki/Mutant_Crabbo.png'),
-    scorpie: img('wiki/Scorpie.png'),
+    scorpie: map-get($world-monsters, scorpie),
     crescent-scorpie: img('wiki/Crescent_Scorpie.png'),
-    mousey: img('wiki/Mousey.png'),
+    mousey: map-get($world-monsters, mousey),
     nakeo-moleo: img('wiki/Nakeo_Moleo.png'),
-    owlio: img('wiki/Owlio.png'),
+    owlio: map-get($world-monsters, owlio),
     minervowl: img('wiki/Minervowl.png'),
-    pingy: img('wiki/Pingy.png'),
+    pingy: map-get($world-monsters, pingy),
     eternal-lord-of-the-undying-ember: img('wiki/Eternal_Lord_of_The_Undying_Ember.png'),
-    bunny: img('wiki/Bunny.png'),
+    bunny: map-get($world-monsters, bunny),
     purbunni: img('wiki/Purbunni.png'),
-    dung-beat: img('wiki/Dung_Beat.png'),
+    dung-beat: map-get($world-monsters, dung-beat),
     jade-scarab: img('wiki/Jade_Scarab.png'),
-    honker: img('wiki/Honker.png'),
+    honker: map-get($world-monsters, honker),
     diamond-duck: img('wiki/Diamond_Duck.png'),
-    blobfish: img('wiki/Blobfish.png'),
+    blobfish: map-get($world-monsters, blobfish),
     voodofish: img('wiki/Voodofish.png'),
     tuttle: img('Tuttle.png'),
     tottoise: img('Tottoise.png'),
@@ -237,7 +244,7 @@ $monster-drops: (
     contact-lense: img('wiki/Contact_Lense.png'),
     black-lense: img('wiki/Black_Lense.png'),
     blood-bone: img('wiki/Blood_Bone.png'),
-    equinox-mirror: img('wiki/Equinox_Mirror.png'),
+    equinox-mirror: map-get($equinox, equinox-mirror),
     chizoar-spike: img('wiki/Chizoar_Spike.png'),
     chizoar-stalagmite: img('wiki/Chizoar_Stalagmite.png'),
     //W4
@@ -373,11 +380,11 @@ $equipment-weapons: (
     doublestring-godshooter: img('wiki/Doublestring_Godshooter.png'),
     
     // Tempest Bows
-    tempest-bow-of-dust:    img('data/EquipmentBowsTempest0.png'),
-    tempest-bow-of-ice:     img('data/EquipmentBowsTempest1.png'),
-    tempest-bow-of-fire:    img('data/EquipmentBowsTempest2.png'),
-    tempest-bow-of-wind:    img('data/EquipmentBowsTempest3.png'),
-    tempest-bow-of-grass:   img('data/EquipmentBowsTempest4.png'),
+    tempest-bow-of-dust: map-get($compass-equipment, tempest-bow-of-dust),
+    tempest-bow-of-ice: map-get($compass-equipment, tempest-bow-of-ice),
+    tempest-bow-of-fire: map-get($compass-equipment, tempest-bow-of-fire),
+    tempest-bow-of-wind: map-get($compass-equipment, tempest-bow-of-wind),
+    tempest-bow-of-grass: map-get($compass-equipment, tempest-bow-of-grass),
 
     // Wands
     gnarled-wand: img('wiki/Gnarled_Wand.png'),
@@ -478,20 +485,20 @@ $equipment-hats: (
     adornment-of-the-high-priest: img('wiki/Adornment_of_the_High_Priest.png'),
 
     // Ninja Hats
-    straw-hat: img('wiki/Straw_Hat.png'),
-    wig-bandana: img('wiki/Wig_Bandana.png'),
-    funky-hat: img('wiki/Funky_Hat.png'),
-    reinforced-headband: img('wiki/Reinforced_Headband.png'),
-    shogun-helmet: img('wiki/Shogun_Helmet.png'),
-    gilded-headband: img('wiki/Gilded_Headband.png'),
-    bamboo-hat: img('wiki/Bamboo_Hat.png'),
-    festive-beast-mask: img('wiki/Festive_Beast_Mask.png'),
-    spirited-mane: img('wiki/Spirited_Mane.png'),
-    fiery-mane: img('wiki/Fiery_Mane.png'),
-    guardian-mane: img('wiki/Guardian_Mane.png'),
-    fanned-blossomage: img('wiki/Fanned_Blossomage.png'),
-    dainty-brim: img('wiki/Dainty_Brim.png'),
-    charcoal-hat: img('wiki/Charcoal_Hat.png'),
+    straw-hat: map-get($hats, straw-hat),
+    wig-bandana: map-get($hats, wig-bandana),
+    funky-hat: map-get($hats, funky-hat),
+    reinforced-headband: map-get($hats, reinforced-headband),
+    shogun-helmet: map-get($hats, shogun-helmet),
+    gilded-headband: map-get($hats, bamboo-hat),
+    bamboo-hat: map-get($hats, bamboo-hat),
+    festive-beast-mask: map-get($hats, festive-beast-mask),
+    spirited-mane: map-get($hats, spirited-mane),
+    fiery-mane: map-get($hats, fiery-mane),
+    guardian-mane: map-get($hats, guardian-mane),
+    fanned-blossomage: map-get($hats, fanned-blossomage),
+    dainty-brim: map-get($hats, dainty-brim),
+    charcoal-hat: map-get($hats, charcoal-hat),
 
     // Premium Hats
     diamon-horns: img('wiki/Diamon_Horns.png'),
@@ -692,15 +699,15 @@ $equipment-jewelry: (
     bob-ring: img('wiki/Bob_Ring.png'),
     
     //Tempest Rings
-    tempest-ring-of-leef:       img('data/EquipmentRingsTempest0.png'),
-    tempest-ring-of-ice:        img('data/EquipmentRingsTempest1.png'),
-    tempest-ring-of-lava:       img('data/EquipmentRingsTempest2.png'),
-    tempest-ring-of-carbon:     img('data/EquipmentRingsTempest3.png'),
-    tempest-ring-of-power:      img('data/EquipmentRingsTempest4.png'),
-    tempest-ring-of-defense:    img('data/EquipmentRingsTempest5.png'),
-    tempest-ring-of-gold:       img('data/EquipmentRingsTempest6.png'),
-    tempest-ring-of-death:      img('data/EquipmentRingsTempest7.png'),
-    tempest-ring-of-punchies:   img('data/EquipmentRingsTempest8.png'),
+    tempest-ring-of-leef: map-get($compass-equipment, tempest-ring-of-leef),
+    tempest-ring-of-ice: map-get($compass-equipment, tempest-ring-of-ice),
+    tempest-ring-of-lava: map-get($compass-equipment, tempest-ring-of-lava),
+    tempest-ring-of-carbon: map-get($compass-equipment, tempest-ring-of-carbon),
+    tempest-ring-of-power: map-get($compass-equipment, tempest-ring-of-power),
+    tempest-ring-of-defense: map-get($compass-equipment, tempest-ring-of-defense),
+    tempest-ring-of-gold: map-get($compass-equipment, tempest-ring-of-gold),
+    tempest-ring-of-death: map-get($compass-equipment, tempest-ring-of-death),
+    tempest-ring-of-punchies: map-get($compass-equipment, tempest-ring-of-punchies),
 
     // Arcanist Rings
     arcanist-cultist-ring: img('data/EquipmentRingsArc0.png')
@@ -738,7 +745,7 @@ $equipment-gowns: (
 
 $equipment-keychains: (
     // Dungeon Chains
-    simple-key-chain: img('wiki/Simple_Key_Chain.png'),
+    simple-key-chain: map-get($gem-shop, simple-key-chain),
     leafy-chain: img('wiki/Leafy_Chain.png'),
     red-sneaker-chain: img('wiki/Red_Sneaker_Chain.png'),
     wartooth-chain: img('wiki/Wartooth_Chain.png'),
@@ -746,7 +753,7 @@ $equipment-keychains: (
     piggy-chain: img('wiki/Piggy_Chain.png'),
     dumbphone-chain: img('wiki/Dumbphone_Chain.png'),
     horn-chain: img('wiki/Horn_Chain.png'),
-    rustic-key-chain: img('wiki/Rustic_Key_Chain.png'),
+    rustic-key-chain: map-get($gem-shop, rustic-key-chain),
     taco-chain: img('wiki/Taco_Chain.png'),
     cactus-chain: img('wiki/Cactus_Chain.png'),
     relic-chain: img('wiki/Relic_Chain.png'),
@@ -755,7 +762,7 @@ $equipment-keychains: (
     whatamelon-chain: img('wiki/Whatamelon_Chain.png'),
     nine-ball-chain: img('wiki/9_Ball_Chain.png'),
     pincer-hand-chain: img('wiki/Pincer_Hand_Chain.png'),
-    gilded-key-chain: img('wiki/Gilded_Key_Chain.png'),
+    gilded-key-chain: map-get($gem-shop, gilded-key-chain),
     sushi-chain: img('wiki/Sushi_Chain.png'),
     time-candy-chain: img('wiki/Time_Candy_Chain.png'),
     star-blobulyte-galaxy-chain: img('wiki/Star_Blobulyte_Galaxy_Chain.png'),
@@ -1048,32 +1055,32 @@ $equipment-stones: (
     mystery-upgrade-stone-iv: img('data/StoneZ4.png'),
 
     // Premium
-    premium-agi-stone: img('data/StonePremAGI.png'),
-    premium-luk-stone: img('data/StonePremLUK.png'),
-    premium-restore-stone: img('data/StonePremRestore.png'),
+    premium-agi-stone: map-get($gem-shop, premium-agi-stone),
+    premium-luk-stone: map-get($gem-shop, premium-luk-stone),
+    premium-restore-stone: map-get($gem-shop, premium-restore-stone),
     premium-star-stone: img('data/StonePremSTAR.png'),
-    premium-statswap-stone: img('data/StonePremStatswap.png'),
-    premium-str-stone: img('data/StonePremSTR.png'),
-    premium-wis-stone: img('data/StonePremWIS.png'),
+    premium-statswap-stone: map-get($gem-shop, premium-statswap-stone),
+    premium-str-stone: map-get($gem-shop, premium-str-stone),
+    premium-wis-stone: map-get($gem-shop, premium-wis-stone),
 
     // Tempest
-    tempest-bow-stone-60-pct: img('data/StoneTempestB0.png'),
-    tempest-bow-stone-30-pct: img('data/StoneTempestB1.png'),
-    tempest-bow-stone-10-pct: img('data/StoneTempestB2.png'),
-    tempest-ring-stone-60-pct: img('data/StoneTempestR0.png'),
-    tempest-ring-stone-30-pct: img('data/StoneTempestR1.png'),
-    tempest-ring-stone-10-pct: img('data/StoneTempestR2.png'),
+    tempest-bow-stone-60-pct: map-get($compass-equipment, tempest-bow-stone-60-pct),
+    tempest-bow-stone-30-pct: map-get($compass-equipment, tempest-bow-stone-30-pct),
+    tempest-bow-stone-10-pct: map-get($compass-equipment, tempest-bow-stone-10-pct),
+    tempest-ring-stone-60-pct: map-get($compass-equipment, tempest-ring-stone-60-pct),
+    tempest-ring-stone-30-pct: map-get($compass-equipment, tempest-ring-stone-30-pct),
+    tempest-ring-stone-10-pct: map-get($compass-equipment, tempest-ring-stone-10-pct),
 );
 
 $consumables: (
     // Reset Tokens
     talent-point-reset-fragment: img('wiki/Talent_Point_Reset_Fragment.png'),
-    talent-point-reset-potion: img('wiki/Talent_Point_Reset_Potion.png'),
-    star-talent-reset-potion: img('wiki/Star_Talent_Reset_Potion.png'),
-    sub-class-swap-token: img('wiki/Sub_Class_Swap_Token.png'),
+    talent-point-reset-potion: map-get($gem-shop, talent-point-reset-potion),
+    star-talent-reset-potion: map-get($gem-shop, star-talent-reset-potion),
+    sub-class-swap-token: map-get($gem-shop, sub-class-swap-token),
     elite-class-swap-token: img('wiki/Elite_Class_Swap_Token.png'),
     complete-class-redo-token: img('data/ClassSwapC.png'),
-    post-office-box-reseto-magnifico: img('wiki/Post_Office_Box_Reseto_Magnifico.png'),
+    post-office-box-reseto-magnifico: map-get($gem-shop, post-office-box-reseto-magnifico),
     anvil-reset-whetstone: img('wiki/Anvil_Reset_Whetstone.png'),
 
     // Balloons + Pearls
@@ -1085,10 +1092,10 @@ $consumables: (
     divinity-pearl: img('wiki/Divinity_Pearl.png'),
 
     // Various Time Skips
-    bottled-wind: img('wiki/Bottled_Wind.png'),
-    gaming-fertilizer: img('wiki/Gaming_Fertilizer.png'),
+    bottled-wind: map-get($gem-shop, bottled-wind),
+    gaming-fertilizer: map-get($gem-shop, gaming-fertilizer),
     cooking-ladle: img('wiki/Cooking_Ladle.png'),
-    pet-egg: img('wiki/Pet_Egg.png'),
+    pet-egg: map-get($gem-shop, pet-egg),
     crop-transfer-ticket: img('wiki/Crop_Transfer_Ticket.png'),
     blinding-lantern: img('wiki/Blinding_Lantern.png'),
     funny-2hr-fishy: img('data/GemP36.png'),
@@ -1105,9 +1112,9 @@ $consumables: (
     cosmic-time-candy: img('data/Timecandy9.png'),
 
     // Premium Hat stuff
-    hat-premiumifier: img('data/Ht.png'),
-    premium-stone-refunder: img('data/StonePremRestore.png'),
-    premium-hat-swapper: img('data/StonePremStatswap.png'),
+    hat-premiumifier: map-get($gem-shop, hat-premiumifier),
+    premium-stone-refunder: map-get($gem-shop, premium-stone-refunder),
+    premium-statswap-stone: map-get($gem-shop, premium-statswap-stone),
 
     // Master Class AFK Tokens
     aethermoon: img('data/Quest96.png'),
@@ -1217,7 +1224,7 @@ $dungeon-items: (
     legendary-rng-item: img('wiki/Legendary_RNG_Item.png'),
     loot-dice: img('wiki/Dungeon_Loot_Dice.png'),
     // Dungeon Foods
-    hot-dog: img('wiki/Hot_Dog.png'),
+    hot-dog: map-get($equipment-foods, hot-dog),
     big-cake: img('wiki/Big_Cake.png'),
     // Dungeon Drops
     poisoned-leg: img('wiki/Poisoned_Leg.png'),
