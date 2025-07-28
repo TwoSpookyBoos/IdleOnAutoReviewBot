@@ -5,10 +5,10 @@ from urllib.parse import unquote
 wiki_pattern = re.compile(r'wiki/[^"\')\s]+?\.png')
 data_pattern = re.compile(r'data/[^"\')\s]+?\.png')
 
-root_dir = '../..'
-image_dir = '../../static/imgs'
+root_dir = './mysite'
+image_dir = './mysite/static/imgs'
 
-excluded_files = ['image_fetcher.js']
+excluded_files = ['image_fetcher.js', 'image-mapping.css']
 
 USE_PATTERN = wiki_pattern
 
