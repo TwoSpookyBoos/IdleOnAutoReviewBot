@@ -1,3 +1,5 @@
+@import "world-contents";
+
 $shrines: (
     woodular-shrine: img('wiki/Woodular_Shrine.png'),
     isaccian-shrine: img('wiki/Isaccian_Shrine.png'),
@@ -25,19 +27,19 @@ $towers: (
 );
 
 $utilities: (
-    three-d-printer: img('wiki/3D_Printer.png'),
-    talent-book-library: img('wiki/Talent_Book_Library.png'),
-    death-note: img('wiki/Death_Note.png'),
-    salt-lick: img('wiki/Salt_Lick.png'),
+    three-d-printer: map-get($world-contents, three-d-printer),
+    talent-book-library: map-get($world-contents, talent-book-library),
+    death-note: map-get($world-contents, death-note),
+    salt-lick: map-get($world-contents, salt-lick),
     chest-space: img('wiki/Chest_Space.png'),
     cost-cruncher: img('wiki/Cost_Cruncher.png'),
-    critter-drone: img('wiki/Critter_Drone.gif'),
-    automation-arm: img('wiki/Auto_Arm.gif'),
-    ez-totem: img('wiki/EZ_Totem.gif'),
+    critter-drone: map-get($world-contents, critter-drone),
+    automation-arm: map-get($world-contents, automation-arm),
+    ez-totem: map-get($world-contents, ez-totem),
     atom-collider: img('wiki/Atom_Collider.png'),
-    refinery: img('wiki/Refinery.gif'),
-    construction-table: img('wiki/Construction_Table.gif'),
-    prayer-stone: img('wiki/Prayer_Stone.gif')
+    refinery: map-get($world-contents, refinery),
+    construction-table: map-get($world-contents, construction-table),
+    prayer-stone: map-get($world-contents,prayer-stone )
 );
 
 $atoms: (

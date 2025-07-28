@@ -1,3 +1,5 @@
+@import "world-contents";
+
 $breeding-map: (
 // GENETICS
     fighter: img('data/GeneReady0.png'),
@@ -72,11 +74,11 @@ $breeding-map: (
     beefie: img('wiki/Beefie_Idle.gif'),
     crescent-spud: img('wiki/Crescent_Spud_Idle.gif'),
     chippy: img('wiki/Chippy_Idle.gif'),
-    xylobone: img('wiki/Xylobone_Idle.gif'),
+    xylobone: map-get($world-monsters, xylobone),
     breeding-bunny: img('wiki/Bunny_Idle.gif'),
     mecho-mouse: img('wiki/Mecho_Mouse_Idle.gif'),
     panda: img('wiki/Panda_Idle.gif'),
-    dog: img('wiki/Dog_Idle.gif'),
+    dog: map-get($world-contents, dog),
     cool-bird: img('wiki/Cool_Bird_Idle.gif'),
     hedgehog: img('wiki/Hedgehog_Idle.gif'),
     wild-boar: img('wiki/Wild_Boar_Idle.gif'),
