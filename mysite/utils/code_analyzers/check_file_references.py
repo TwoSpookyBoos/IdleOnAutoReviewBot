@@ -8,7 +8,7 @@ data_pattern = re.compile(r'data/[^"\')\s]+?\.png')
 root_dir = './mysite'
 image_dir = './mysite/static/imgs'
 
-excluded_files = ['image_fetcher.js', 'image-mapping.css']
+excluded_files = ['image_fetcher.js', 'image-mapping.css', 'check_duplicate_scss_variables.py']
 
 USE_PATTERN = wiki_pattern
 
