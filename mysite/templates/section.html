@@ -27,8 +27,9 @@
                             {% endif %}
                             {% for advice in advices %}
                                 <li class="advice {{ advice.css_class }} lazy"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                                    <span class="progress-box{% if not progress_bars or advice.percent == "0" %} hidden{% endif %} {{ advice.status }}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                                        <span class="progress-bar" style="width: {{ advice.percent }};"></span>
+                                    <span class="progress-box{% if not progress_bars or (advice.percent == 0 and advice.potential_percent == 0) %} hidden{% endif %} {{ advice.status }}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
+                                        <span class="progress-bar" style="width: {{ advice.percent }}%;"></span>
+                                        <span class="progress-bar secondary" style="width: {{ advice.potential_percent }}%;"></span>
                                     </span>
                                 {% if advice.as_link %}
                                     <a href="#{{ advice.css_class }}">{{ advice.label }}</a>

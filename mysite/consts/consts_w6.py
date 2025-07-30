@@ -856,6 +856,7 @@ summoning_stone_names = {
 summoning_stone_locations = ['Bamboo Laboredge', 'Lightway Path', 'Yolkrock Basin', 'Equinox Valley', 'Jelly Cube Bridge', 'Crawly Catacombs', 'Emperor\'s Castle Doorstep']
 summoning_stone_stone_images = ['white-essence-stone', 'green-essence-stone', 'yellow-essence-stone', 'blue-essence-stone', 'purple-essence-stone', 'red-essence-stone', 'cyan-essence-stone']
 summoning_stone_boss_images = ['king-doot', 'glunko-the-massive', 'demented-spiritlord', 'dilapidated-slush', 'mutated-mush', 'domeo-magmus', 'the-emperor']
+summoning_stone_fight_codenames = ['babaMummy', 'slimeB', 'mini6a', 'mini3a', 'mini4a', 'mini5a', 'Boss6']
 
 summoning_stone_boss_base_hp = "250000 1000000 150000000 10000000 4000000 40000000 500000000 2000000000 12000000000".split(" ")
 summoning_stone_boss_hp_function = lambda base_hp, boss_round: 2 * base_hp * (4000 ** (boss_round - 1))
