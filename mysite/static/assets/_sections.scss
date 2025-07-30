@@ -1,4 +1,5 @@
 @import "world-contents";
+@import "skill-icons";
 
 $sections-map: (
     //Banners
@@ -52,7 +53,7 @@ $sections-map: (
     rift: img('wiki/Rift_Ripper.gif'),
     equinox: img('wiki/Equinox_Mirror.png'),
 //W5
-    divinity: img('wiki/Divinity_Skill_Icon.png'),
+    divinity: map-get($skill-icons, divinity),
     slab: img('Slab.png'),
 //Caverns
     villagers: img('wiki/Hole_Campfire.gif'),
