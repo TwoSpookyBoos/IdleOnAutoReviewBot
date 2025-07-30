@@ -45,7 +45,8 @@ from consts.consts_caverns import (
 from consts.consts_w6 import (
     jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations, summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
+    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
@@ -3591,19 +3592,30 @@ def _parse_w6_summoning(account):
 
 def _parse_w6_summoning_battles(account, rawBattles):
     safe_battles = [safer_convert(battle, '') for battle in rawBattles]
-    regular_battles = [battle for battle in safe_battles if not battle.startswith('rift')]
+    regular_battles = [
+        battle
+        for battle in safe_battles
+        if (
+            not battle.startswith('rift')  #Removes Endless fights
+            and battle not in summoning_stone_fight_codenames  #Removes Summoning Stone fights
+        )
+    ]
     account.summoning['Battles']['NormalTotal'] = len(regular_battles)
 
-    if account.summoning['Battles']['NormalTotal'] >= summoning_battle_counts_dict["Normal"]:
-        account.summoning["Battles"] = summoning_battle_counts_dict
-        account.summoning['AllBattlesWon'] = True
-    else:
-        account.summoning['AllBattlesWon'] = False
-        for colorName, colorDict in summoning_dict.items():
-            account.summoning["Battles"][colorName] = 0
-            for battleIndex, battleValuesDict in colorDict.items():
-                if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
-                    account.summoning["Battles"][colorName] = battleIndex + 1
+    # I don't know if this might be needed in the future, so leaving it commented here
+    # summoning_stone_battles = [
+    #     battle
+    #     for battle in safe_battles
+    #     if battle in summoning_stone_fight_codenames
+    # ]
+
+    for colorName, colorDict in summoning_dict.items():
+        account.summoning["Battles"][colorName] = 0
+        for battleIndex, battleValuesDict in colorDict.items():
+            if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
+                account.summoning["Battles"][colorName] = battleIndex + 1
+        if account.summoning["Battles"][colorName] != summoning_battle_counts_dict[colorName]:
+            account.summoning['AllBattlesWon'] = False
 
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
