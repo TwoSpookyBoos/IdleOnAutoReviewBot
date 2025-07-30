@@ -3609,6 +3609,7 @@ def _parse_w6_summoning_battles(account, rawBattles):
     #     if battle in summoning_stone_fight_codenames
     # ]
 
+    account.summoning['AllBattlesWon'] = True
     for colorName, colorDict in summoning_dict.items():
         account.summoning["Battles"][colorName] = 0
         for battleIndex, battleValuesDict in colorDict.items():
