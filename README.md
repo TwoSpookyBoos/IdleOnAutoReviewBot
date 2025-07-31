@@ -94,8 +94,11 @@ cd mysite
 make test
 ```
 
-## Code Analyzers
+## Image Maintenance Tools
 
-`/utils/code-analyzers` contains analyzer scripts to check for duplicate scss variables, unresolved image references, etc.
+`/utils/image_tools/` contains various scripts to help with maintenance of asset images.
+
+- `check_duplicate_scss_variables.py`: scans files for scss variables with the same name and image reference
+- `check_file_references.py`: scans files for image references and checks if any are missing
 
 These can be executed by directly executing the file with Python.
