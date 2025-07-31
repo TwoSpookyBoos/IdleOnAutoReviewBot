@@ -221,7 +221,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     totalVialReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value'] + session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
     costReduction_Advices['Vials'].append(Advice(
         label='Total Vial reduction (90% hardcap)',
-        picture_class='vials',
+        picture_class='vial-1',
         progression=f"{totalVialReduction:.2f}",
         goal=90,
         unit="%"
