@@ -1,3 +1,4 @@
+@import "alchemy";
 @import "world-contents";
 @import "skill-icons";
 
@@ -34,7 +35,7 @@ $sections-map: (
     statues: img('Town_Marble.gif'),
     owl: img('Owl.gif'),
 //W2
-    vials: img('wiki/Vial-level-1.png'),
+    vials: map-get($vials, vial-1),
     sigils: img('Sigils.png'),
     islands: img('wiki/Island_Expeditions_Boat.gif'),
     post-office: img('wiki/Postboy_Pablob.gif'),

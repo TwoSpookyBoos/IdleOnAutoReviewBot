@@ -51,7 +51,7 @@ def getVialsProgressionTiersAdviceGroup():
                 vial_Advices['Early Vials'][subgroupName].append(Advice(
                     label=f"Unlock {requirements.get('Unlocked', 0) - unlocked_vials} more "
                           f"vial{pl(requirements.get('Unlocked', 0) - unlocked_vials, '', 's')}",
-                    picture_class='vials',
+                    picture_class='vial-1',
                     progression=unlocked_vials,
                     goal=requirements.get('Unlocked', 0),
                     optional=tier_number > max_tier
@@ -71,7 +71,7 @@ def getVialsProgressionTiersAdviceGroup():
             if subgroupName in vial_Advices['Maxed Vials']:
                 vial_Advices['Maxed Vials'][subgroupName].append(Advice(
                     label=f"Max {requirements.get('Maxed', 0)} total vials",
-                    picture_class="vial-max",
+                    picture_class="vial-13",
                     progression=len(maxed_vials_list),
                     goal=requirements.get('Maxed', 0)
                 ))
@@ -114,7 +114,7 @@ def getVialsProgressionTiersAdviceGroup():
         vial_Advices['Early Vials'][f"{AdviceType.INFO.value}- Shaman's Virile Vials"] = [
             Advice(
                 label='Total level 4+ Vials',
-                picture_class='vial-l4',
+                picture_class='vial-4',
                 progression=len(virile_vials_list),
                 goal=max_expected_vv,
                 informational=True
@@ -216,7 +216,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
             name='Vials',
             tier='Not Yet Evaluated',
             header='Come back after unlocking the Alchemy skill in World 2!',
-            picture='Alchemy_Vial-level-1.png',
+            picture='aVials1.png',
             unreached=True
         )
         return vial_AdviceSection
@@ -235,7 +235,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Vial tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='Alchemy_Vial-level-1.png',
+        picture='aVials1.png',
         groups=vial_AdviceGroupDict.values()
     )
     return vial_AdviceSection
