@@ -1,29 +1,30 @@
 @import "world-contents";
 
 $shrines: (
-    woodular-shrine: img('wiki/Woodular_Shrine.png'),
-    isaccian-shrine: img('wiki/Isaccian_Shrine.png'),
-    crystal-shrine: img('wiki/Crystal_Shrine.png'),
-    pantheon-shrine: img('wiki/Pantheon_Shrine.png'),
-    clover-shrine: img('wiki/Clover_Shrine.png'),
-    summereading-shrine: img('wiki/Summereading_Shrine.png'),
-    crescent-shrine: img('wiki/Crescent_Shrine.png'),
-    shrine-box: img('shrine-box.png'),
-    shrine-box2: img('shrine-box2.png'),
-    undead-shrine: img('wiki/Undead_Shrine.png'),
-    primordial-shrine: img('wiki/Primordial_Shrine.png')
+    woodular-shrine: img('data/ConTower18.png'),
+    isaccian-shrine: img('data/ConTower19.png'),
+    crystal-shrine: img('data/ConTower20.png'),
+    pantheon-shrine: img('data/ConTower21.png'),
+    clover-shrine: img('data/ConTower22.png'),
+    summereading-shrine: img('data/ConTower23.png'),
+    crescent-shrine: img('data/ConTower24.png'),
+    undead-shrine: img('data/ConTower25.png'),
+    primordial-shrine: img('data/ConTower26.png'),
+
+    shrine-box: img('customized/shrine-box.png'),
+    shrine-box2: img('customized/shrine-box2.png')
 );
 
 $towers: (
-    pulse-mage: img('wiki/Pulse_Mage.png'),
-    fireball-lobber: img('wiki/Fireball_Lobber.png'),
-    boulder-roller: img('wiki/Boulder_Roller.png'),
-    frozone-malone: img('wiki/Frozone_Malone.png'),
-    stormcaller: img('wiki/Stormcaller.png'),
-    party-starter: img('wiki/Party_Starter.png'),
-    kraken-cosplayer: img('wiki/Kraken_Cosplayer.png'),
-    poisonic-elder: img('wiki/Poisonic_Elder.png'),
-    voidinator: img('wiki/Voidinator.png'),
+    pulse-mage: img('data/ConTower9.png'),
+    fireball-lobber: img('data/ConTower10.png'),
+    boulder-roller: img('data/ConTower11.png'),
+    frozone-malone: img('data/ConTower12.png'),
+    stormcaller: img('data/ConTower13.png'),
+    party-starter: img('data/ConTower14.png'),
+    kraken-cosplayer: img('data/ConTower15.png'),
+    poisonic-elder: img('data/ConTower16.png'),
+    voidinator: img('data/ConTower17.png'),
 );
 
 $utilities: (
@@ -31,12 +32,12 @@ $utilities: (
     talent-book-library: map-get($world-contents, talent-book-library),
     death-note: map-get($world-contents, death-note),
     salt-lick: map-get($world-contents, salt-lick),
-    chest-space: img('wiki/Chest_Space.png'),
-    cost-cruncher: img('wiki/Cost_Cruncher.png'),
+    chest-space: img('data/ConTower0.png'),
+    cost-cruncher: img('data/ConTower1.png'),
     critter-drone: map-get($world-contents, critter-drone),
     automation-arm: map-get($world-contents, automation-arm),
     ez-totem: map-get($world-contents, ez-totem),
-    atom-collider: img('wiki/Atom_Collider.png'),
+    atom-collider: img('data/ConTower8.png'),
     refinery: map-get($world-contents, refinery),
     construction-table: map-get($world-contents, construction-table),
     prayer-stone: map-get($world-contents,prayer-stone )
