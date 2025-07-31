@@ -21,6 +21,6 @@ for dirpath, _, filenames in os.walk(root_dir):
                     for match in [*wiki_pattern.findall(line), *data_pattern.findall(line)]:
                         decoded_match = unquote(match)
                         if not os.path.isfile(os.path.join(image_dir, decoded_match)):
-                            print(f'MISSING: {decoded_match} in {file_path}')
+                            print(f"MISSING: {decoded_match} in '{filename}'")
         except:
             continue

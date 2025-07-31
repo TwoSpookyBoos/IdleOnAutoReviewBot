@@ -21,7 +21,7 @@ for dirpath, _, filenames in os.walk(root_dir):
                     match = property_pattern.match(line)
                     if match:
                         var_name = match.group(1)
-                        var_definitions[var_name].append((file_path, lineno, line.strip()))
+                        var_definitions[var_name].append((filename, lineno, line.strip()))
         except:
             continue
 
