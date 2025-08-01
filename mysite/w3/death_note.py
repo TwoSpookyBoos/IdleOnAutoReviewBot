@@ -238,7 +238,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 tier_combo['WOW'] = tier[0]
             else:
                 if apocalypse_character_Index is not None:
-                    if session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total'] >= tier[11]:
+                    if session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total'] >= tier[12]:
                         tier_combo['WOW'] = tier[0]
                     else:
                         wows_for_next_tier = f"({session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total']}/{tier[12]})"
