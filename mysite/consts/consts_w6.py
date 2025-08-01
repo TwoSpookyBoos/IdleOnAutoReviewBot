@@ -854,7 +854,7 @@ summoning_stone_names = {
     'Cyan': 'Zephyer'
 }
 summoning_stone_locations = ['Bamboo Laboredge', 'Lightway Path', 'Yolkrock Basin', 'Equinox Valley', 'Jelly Cube Bridge', 'Crawly Catacombs', 'Emperor\'s Castle Doorstep']
-summoning_stone_stone_images = ['white-essence-stone', 'green-essence-stone', 'yellow-essence-stone', 'blue-essence-stone', 'purple-essence-stone', 'red-essence-stone', 'cyan-essence-stone']
+summoning_stone_stone_images = ['white-summoning-stone', 'green-summoning-stone', 'yellow-summoning-stone', 'blue-summoning-stone', 'purple-summoning-stone', 'red-summoning-stone', 'cyan-summoning-stone']
 summoning_stone_boss_images = ['king-doot', 'glunko-the-massive', 'demented-spiritlord', 'dilapidated-slush', 'mutated-mush', 'domeo-magmus', 'the-emperor']
 summoning_stone_fight_codenames = ['babaMummy', 'slimeB', 'mini6a', 'mini3a', 'mini4a', 'mini5a', 'Boss6']
 
