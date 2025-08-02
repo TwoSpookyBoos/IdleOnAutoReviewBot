@@ -1,40 +1,20 @@
-
-$mining: img('wiki/Mining_Skill_Icon.png');
-$smithing: img('wiki/Smithing.png');
-$choppin: img('wiki/Choppin_Skill_Icon.png');
-$fishing: img('wiki/Fishing_Skill_Icon.png');
-$alchemy: img('wiki/Alchemy_Skill_Icon.png');
-$catching: img('wiki/Catching_Skill_Icon.png');
-$trapping: img('wiki/Trapping_Skill_Icon.png');
-$construction: img('wiki/Construction_Skill_Icon.png');
-$worship: img('wiki/Worship_Skill_Icon.png');
-$cooking: img('wiki/Cooking_Skill_Icon.png');
-$breeding: img('wiki/Breeding_Skill_Icon.png');
-$laboratory: img('wiki/Laboratory_Skill_Icon.png');
-$sailing: img('wiki/Sailing_Skill_Icon.png');
-$gaming: img('wiki/Gaming_Skill_Icon.png');
-$divinity: img('wiki/Divinity_Skill_Icon.png');
-$farming: img('wiki/Farming_Skill_Icon.png');
-$sneaking: img('wiki/Sneaking_Skill_Icon.png');
-$summoning: img('wiki/Summoning_Skill_Icon.png');
-
 $skill-icons: (
-    mining: $mining,
-    smithing: $smithing,
-    choppin: $choppin,
-    fishing: $fishing,
-    alchemy: $alchemy,
-    catching: $catching,
-    trapping: $trapping,
-    construction: $construction,
-    worship: $worship,
-    cooking: $cooking,
-    breeding: $breeding,
-    laboratory: $laboratory,
-    sailing: $sailing,
-    gaming: $gaming,
-    divinity: $divinity,
-    farming: $farming,
-    sneaking: $sneaking,
-    summoning: $summoning,
+    mining: img('data/ClassIcons42.png'),
+    smithing: img('data/ClassIcons43.png'),
+    choppin: img('data/ClassIcons44.png'),
+    fishing: img('data/ClassIcons45.png'),
+    alchemy: img('data/ClassIcons46.png'),
+    catching: img('data/ClassIcons47.png'),
+    trapping: img('data/ClassIcons48.png'),
+    construction: img('data/ClassIcons49.png'),
+    worship: img('data/ClassIcons50.png'),
+    cooking: img('data/ClassIcons51.png'),
+    breeding: img('data/ClassIcons52.png'),
+    laboratory: img('data/ClassIcons53.png'),
+    sailing: img('data/ClassIcons54.png'),
+    divinity: img('data/ClassIcons55.png'),
+    gaming: img('data/ClassIcons56.png'),
+    farming: img('data/ClassIcons57.png'),
+    sneaking: img('data/ClassIcons58.png'),
+    summoning: img('data/ClassIcons59.png'),
 );

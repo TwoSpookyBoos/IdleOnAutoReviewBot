@@ -1,3 +1,5 @@
+@import "world-contents";
+
 $prayers: (
     big-brain-time: img('wiki/Big_Brain_Time.png'),
     skilled-dimwit: img('wiki/Skilled_Dimwit.png'),
@@ -21,14 +23,14 @@ $prayers: (
 );
 
 $totems: (
-    goblin-gorfest-totem: img('wiki/Goblin_Gorfest_Totem.gif'),
-    acorn-assault-totem: img('wiki/Acorn_Assault_Totem.gif'),
-    wakawaka-war-totem: img('wiki/Wakawaka_War_Totem.gif'),
-    ez-totem: img('wiki/EZ_Totem.gif'),
-    frosty-firefight-totem: img('wiki/Frosty_Firefight_Totem.gif'),
-    clash-of-cans-totem: img('wiki/Clash_of_Cans_Totem.gif'),
-    citric-conflict-totem: img('wiki/Citric_Conflict_Totem.gif'),
-    breezy-battle-totem: img('wiki/Breezy_Battle_Totem.gif')
+    goblin-gorfest-totem: map-get($world-contents, goblin-gorfest-totem),
+    acorn-assault-totem: map-get($world-contents, acorn-assault-totem ),
+    wakawaka-war-totem: map-get($world-contents, wakawaka-war-toem),
+    ez-totem: map-get($world-contents, ez-totem),
+    frosty-firefight-totem: map-get($world-contents, frosty-firefight-totem),
+    clash-of-cans-totem: map-get($world-contents, clash-of-cans-totem),
+    citric-conflict-totem: map-get($world-contents, citric-conflict-totem),
+    breezy-battle-totem: map-get($world-contents, breezy-battle-totem)
 );
 
 $skulls: (

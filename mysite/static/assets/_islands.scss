@@ -1,3 +1,5 @@
+@import "world-contents";
+
 $islands: (
     trash-island: img('wiki/Trash_Island.png'),
     rando-island: img('wiki/Rando_Island.png'),
@@ -8,8 +10,8 @@ $islands: (
 );
 
 $island-etc: (
-    island-expeditions-board: img('wiki/Island_Expeditions_Board.gif'),
-    island-expeditions-boat: img('wiki/Island_Expeditions_Boat.gif'),
+    island-expeditions-board: map-get($world-contents, island-expeditions-board),
+    island-expeditions-boat: map-get($world-contents, island-expeditions-boat),
     shimmer-target-dummy: img('wiki/Shimmer_Island_Dummy_Target.gif'),
     shimmer-blue-fairy: img('wiki/Shimmer_Island_Fairy.gif'),
     shimmer-pink-fairy: img('wiki/Shimmer_Island_Fairy_2.gif'),

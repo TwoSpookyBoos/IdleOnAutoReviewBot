@@ -291,7 +291,7 @@ def getGamingAdviceSection() -> AdviceSection:
             tier='0',
             pinchy_rating=0,
             header='Come back after unlocking the Gaming skill in W5!',
-            picture='wiki/Gaming_Skill_Icon.png',
+            picture='data/ClassIcons56.png',
             unreached=True
         )
         return gaming_AdviceSection
@@ -308,7 +308,7 @@ def getGamingAdviceSection() -> AdviceSection:
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         header='Gaming Information',  #f"Best Gaming tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='wiki/Gaming_Skill_Icon.png',
+        picture='data/ClassIcons56.png',
         groups=gaming_AdviceGroupDict.values(),
         unrated=True
     )

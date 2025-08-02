@@ -1,3 +1,7 @@
+@import "alchemy";
+@import "world-contents";
+@import "skill-icons";
+
 $sections-map: (
     //Banners
     banner-general: url('https://www.legendsofidleon.com/static/CharacterHorizontal2-580d154e754cdc4e59a0a30f781a3123.png'),
@@ -31,11 +35,11 @@ $sections-map: (
     statues: img('Town_Marble.gif'),
     owl: img('Owl.gif'),
 //W2
-    vials: img('wiki/Vial-level-1.png'),
+    vials: map-get($vials, vial-1),
     sigils: img('Sigils.png'),
     islands: img('wiki/Island_Expeditions_Boat.gif'),
     post-office: img('wiki/Postboy_Pablob.gif'),
-    killroy: img('wiki/Killroy.gif'),
+    killroy: map-get($world-contents, killroy),
     pay2win: img('pay2win.png'),
     kangaroo: img('Kangaroo.gif'),
     arcade: img('wiki/Arcade_Gold_Ball.png'),
@@ -50,7 +54,7 @@ $sections-map: (
     rift: img('wiki/Rift_Ripper.gif'),
     equinox: img('wiki/Equinox_Mirror.png'),
 //W5
-    divinity: img('wiki/Divinity_Skill_Icon.png'),
+    divinity: map-get($skill-icons, divinity),
     slab: img('Slab.png'),
 //Caverns
     villagers: img('wiki/Hole_Campfire.gif'),

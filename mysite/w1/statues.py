@@ -98,7 +98,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     ))
     deposit_Advices.append(Advice(
         label='Total Vial value (100% hardcap)',
-        picture_class='vials',
+        picture_class='vial-1',
         progression=f'{min(100, vial_value):.2f}',
         goal=100,
     ))

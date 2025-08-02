@@ -12,12 +12,12 @@ $villagers: (
 );
 
 $villager-banners: (
-    villager-explore: img('wiki/Villager_Explore.png'),
-    villager-engineer: img('wiki/Villager_Engineer.png'),
-    villager-bonuses: img('wiki/Villager_Bonuses.png'),
-    villager-measure: img('wiki/Villager_Measure.png'),
-    //villager-legacy: img('wiki/Villager_Legacy.png'),
-    villager-studies: img('wiki/Villager_Studies.png'),
+    villager-explore: img('data/HoleUItab0.png'),
+    villager-engineer: img('data/HoleUItab1.png'),
+    villager-bonuses: img('data/HoleUItab2.png'),
+    villager-measure: img('data/HoleUItab3.png'),
+    villager-studies: img('data/HoleUItab4.png'),
+    villager-legacy: img('data/HoleUItab5.png'),
 );
 
 $schematics: (
@@ -166,7 +166,7 @@ $well-sediment: (
 );
 
 $motherlode-resources: (
-    motherlode-ore: img('wiki/Motherlode_Ore.png'), //Technically a duplicate in slab-items
+    motherlode-ore: img('wiki/Motherlode_Ore.png'),
     motherlode-bugs: img('wiki/Fractal_Fly.png'),
     motherlode-logs: img('data/MotherlodeTREE_x1.png'),
     motherlode-fish: img('data/MotherlodeFISH.png'),
@@ -189,11 +189,11 @@ $monuments: (
     //Bravery
     monument-basic-sword: img('wiki/HoleBraverySword.png'),
     monument-special-sword: img('wiki/HoleBraverySwordb.png'),
-    bravery-bonus-0: img('wiki/Mining_Skill_Icon.png'),
+    bravery-bonus-0: img('data/ClassIcons42.png'),
     bravery-bonus-1: img('wiki/HoleWellBucket0.png'),
-    bravery-bonus-2: img('wiki/Cooking_Skill_Icon.png'),
+    bravery-bonus-2: img('data/ClassIcons51.png'),
     bravery-bonus-3: img('wiki/Opal.png'),
-    bravery-bonus-4: img('wiki/Gaming_Skill_Icon.png'),
+    bravery-bonus-4: img('data/ClassIcons56.png'),
     bravery-bonus-5: img('wiki/HoleBraveryChest.png'),
     bravery-bonus-6: img('wiki/Attack_Icon.png'),
     bravery-bonus-7: img('customized/measimg2.png'),
@@ -210,11 +210,11 @@ $monuments: (
     justice-currency-4: img('customized/Justice_Currency_4.png'),  //Popularity
     justice-currency-5: img('customized/Justice_Currency_5.png'),  //Dismissal
     justice-currency-6: img('customized/Justice_Currency_MH_D.png'),  // Custom Mental Health + Dismissal by Trialpears
-    justice-bonus-10: img('wiki/Catching_Skill_Icon.png'),
+    justice-bonus-10: img('data/ClassIcons47.png'),
     justice-bonus-11: img('customized/HolePOI5.png'),
     justice-bonus-12: img('wiki/Captain_Effect_3.png'),
     justice-bonus-13: img('wiki/Opal.png'),
-    justice-bonus-14: img('wiki/Summoning_Skill_Icon.png'),
+    justice-bonus-14: img('data/ClassIcons58.png'),
     justice-bonus-15: img('wiki/HoleBraveryChest.png'),
     justice-bonus-16: img('customized/weekly_bosses_Req_Icon_s.png'),  //Class exp
     justice-bonus-17: img('customized/HolePOI6.png'),
@@ -227,11 +227,11 @@ $monuments: (
     wisdom-row: img('customized/Wisdom_Row.png'),  //Credit to Listix
     wisdom-square: img('customized/Wisdom_Square.png'),  //Credit to Listix
     wisdom-icon: img('data/Wisdom_Monument_x1.png'),
-    wisdom-bonus-20: img('wiki/Choppin_Skill_Icon.png'),
+    wisdom-bonus-20: img('data/ClassIcons44.png'),
     wisdom-bonus-21: img('customized/HolePOI10.png'),
     wisdom-bonus-22: img('wiki/Jade_Coin.png'),
     wisdom-bonus-23: img('wiki/Opal.png'),
-    wisdom-bonus-24: img('wiki/Farming_Skill_Icon.png'),
+    wisdom-bonus-24: img('data/ClassIcons57.png'),
     wisdom-bonus-25: img('wiki/HoleBraveryChest.png'),
     wisdom-bonus-26: img('wiki/Orion_DR.png'),
     wisdom-bonus-27: img('customized/measimg13.png'),
@@ -375,14 +375,14 @@ $gambit: (
     gambit-bonus-1:  img('wiki/Opal.png'),
     gambit-bonus-2:  img('wiki/Dungeon_Credits_Flurbo_Edition.png'),
     gambit-bonus-3:  img('customized/All_Cavern_Resources.gif'),
-    gambit-bonus-4:  img('wiki/Armor_Upgrade_Stone_VI.png'),
-    gambit-bonus-5:  img('wiki/Summoning_Skill_Icon.png'),
+    gambit-bonus-4:  img('data/StoneA7.png'),
+    gambit-bonus-5:  img('data/ClassIcons59.png'),
     gambit-bonus-6:  img('data/Ribbon19.png'),
     gambit-bonus-7:  img('wiki/Coins.gif'),
     gambit-bonus-8:  img('wiki/Orion.gif'),
     gambit-bonus-9:  img('Construction_Table.gif'),
     gambit-bonus-10: img('customized/Gaming_Envelope.png'),
-    gambit-bonus-11: img('wiki/Sneaking_Skill_Icon.png'),
+    gambit-bonus-11: img('data/ClassIcons58.png'),
     gambit-bonus-12: img('data/Bone0_x1.png'),
     gambit-bonus-13: img('wiki/Atoms.png'),
     gambit-bonus-14: img('customized/Rift_Guy.png'),
