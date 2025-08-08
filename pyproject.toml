@@ -10,6 +10,6 @@ dependencies = [
     "libsass==0.23.0",
     "pytest==8.3.5",
     "pyyaml==6.0.2",
-    "requests==2.32.3",
+    "requests==2.32.4",
     "ua-parser==1.0.1",
 ]
