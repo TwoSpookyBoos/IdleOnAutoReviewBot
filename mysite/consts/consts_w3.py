@@ -775,7 +775,7 @@ combat_talentsDict = {
         "High": {
             362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
+            300: {"Name": "360 Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
             363: {"Name": "Nacho Party", "Tab": "Tab 4", 'Optimal': [0, 13, True]},
             361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
