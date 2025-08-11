@@ -216,7 +216,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
             name='Vials',
             tier='Not Yet Evaluated',
             header='Come back after unlocking the Alchemy skill in World 2!',
-            picture='aVials1.png',
+            picture='data/aVials1.png',
             unreached=True
         )
         return vial_AdviceSection
@@ -235,7 +235,7 @@ def getAlchemyVialsAdviceSection() -> AdviceSection:
         max_tier=max_tier,
         true_max_tier=true_max,
         header=f"Best Vial tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='aVials1.png',
+        picture='data/aVials1.png',
         groups=vial_AdviceGroupDict.values()
     )
     return vial_AdviceSection
