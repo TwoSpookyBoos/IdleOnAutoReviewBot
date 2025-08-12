@@ -418,7 +418,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
                       f"<br>Pearls, Balloons, and Candies are all valid here!",
                 picture_class='maestro-icon',
-                resource='time-candy-1-hr'
+                resource='x1-hr-time-candy'
             ))
     if session_data.account.highest_world_reached >= 4:
         for character in session_data.account.all_characters:
@@ -432,7 +432,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     consumables.append(Advice(
                         label=f"Candy {character.character_name} through W4 maps to obtain their Elite Class",
                         picture_class=character.class_name_icon,
-                        resource='time-candy-4-hr'
+                        resource='x4-hr-time-candy'
                     ))
             except:
                 continue
@@ -440,7 +440,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             consumables.append(Advice(
                 label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
                 picture_class='voidwalker-icon',
-                resource='time-candy-1-hr'
+                resource='x1-hr-time-candy'
             ))
     if session_data.account.highest_world_reached >= 6:
         for worldIndex in range(1, current_world):
@@ -448,14 +448,14 @@ def getConsumablesAdviceList() -> list[Advice]:
                 consumables.append(Advice(
                     label=f"Candy World {worldIndex} kills for {{{{ Death Note|#death-note }}}}",
                     picture_class='death-note',
-                    resource='time-candy-24-hr'
+                    resource='x24-hr-time-candy'
                 ))
         if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.apocalypse_character_index is not None:
             if session_data.account.all_characters[session_data.account.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
                 consumables.append(Advice(
                     label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.apocalypse_character_index].character_name}",
                     picture_class='death-note',
-                    resource='time-candy-24-hr'
+                    resource='x24-hr-time-candy'
                 ))
 
         total_gold_cakes = session_data.account.all_assets.get('FoodG13').amount
@@ -467,7 +467,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             consumables.append(Advice(
                 label=f"Candy materials to Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',
-                resource='time-candy-24-hr',
+                resource='x24-hr-time-candy',
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="10K"
             ))
@@ -478,7 +478,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             consumables.append(Advice(
                 label=f"Candy materials to Super Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',
-                resource='time-candy-24-hr',
+                resource='x24-hr-time-candy',
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="100K"
             ))
@@ -487,7 +487,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             consumables.append(Advice(
                 label=f"Get another 100k Golden Cakes to wear while farming",
                 picture_class='golden-cake',
-                resource='time-candy-24-hr',
+                resource='x24-hr-time-candy',
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="100K"
             ))
@@ -497,7 +497,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             picture_class='mason-jar-stamp',
             progression=session_data.account.stamps['Mason Jar Stamp']['Level'],
             goal=stamp_maxes['Mason Jar Stamp'],
-            resource='time-candy-1-hr'
+            resource='x1-hr-time-candy'
         ))
     if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
         consumables.append(Advice(
@@ -505,7 +505,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                   f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
                   f"<br>Ideally, you want 150k+ capacity before going too hard",
             picture_class='smeltin-erryday',
-            resource='time-candy-1-hr'
+            resource='x1-hr-time-candy'
         ))
 
     return consumables

@@ -309,7 +309,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
     currentMaxInventorySlots = 96  #As of v2.35 4th Anniversary
     currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
     defaultInventorySlots = 16  # Characters have 16 inventory slots by default
-    account_wide_inventory_bags = ['Fourth Anniversary Bag']
+    account_wide_inventory_bags = ['4th Anniversary Bag']
     character_bag_dict = {}
     character_missing_bags_dict = {}
     character_bag_slots_dict = {}
@@ -348,7 +348,7 @@ def parseInventoryBagSlots() -> AdviceGroup:
         ),
         Advice(
             label=f"4th Anniversary Bag: 8 slots (Limited Availability)",
-            picture_class='fourth-anniversary-bag',
+            picture_class='x4th-anniversary-bag',
             progression=int(fourth_anni_bag_owned),
             goal=1
         ),
