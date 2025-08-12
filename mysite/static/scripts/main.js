@@ -535,6 +535,7 @@ const hiddenElements = {
     "hidden-informational": new Set(),
     "hidden-unrated": new Set(),
     "hidden-overwhelming": new Set(),
+    "hidden-optional": new Set(),
     [kidsHiddenClass]: new Set()
 }
 
@@ -786,7 +787,10 @@ function animateStaleData() {
     if (!isDesktop) return;
     requestAnimationFrame(() => {
         setTimeout(() => {
-            document.querySelector('.stale').style.animation ='shake 1s linear'
+            const staleDataElement = document.querySelector('.stale')
+            if (staleDataElement) {
+                document.querySelector('.stale').style.animation = 'shake 1s linear'
+            }
         }, 0);
     });
 }
