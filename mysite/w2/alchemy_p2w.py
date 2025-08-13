@@ -61,7 +61,7 @@ def getP2WProgressionTiersAdviceGroup(highest_alchemy_level):
         if vials_sum < vials_max:
             p2w_Advices['Pay2Win'].append(Advice(
                 label='Vial Upgrades',
-                picture_class='vials',
+                picture_class='vial-1',
                 progression=vials_sum,
                 goal=vials_max
             ))

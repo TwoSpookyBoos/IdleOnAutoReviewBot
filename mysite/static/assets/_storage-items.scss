@@ -1,3 +1,5 @@
+@import "gem-shop";
+
 $inventory-bags: (
     inventory-bag-a: img('wiki/Inventory_Bag_A.png'),
     inventory-bag-b: img('wiki/Inventory_Bag_B.png'),
@@ -7,7 +9,7 @@ $inventory-bags: (
     inventory-bag-f: img('wiki/Inventory_Bag_F.png'),
     inventory-bag-g: img('wiki/Inventory_Bag_G.png'),
     inventory-bag-h: img('wiki/Inventory_Bag_H.png'),
-    inventory-bag-u: img('wiki/Inventory_Bag_U.png'),
+    inventory-bag-u: map-get($gem-shop, inventory-bag-u),
     inventory-bag-v: img('wiki/Inventory_Bag_V.png'),
     inventory-bag-w: img('wiki/Inventory_Bag_W.png'),
     inventory-bag-x: img('wiki/Inventory_Bag_X.png'),
@@ -25,7 +27,7 @@ $inventory-bags: (
     shivering-sack: img('wiki/Shivering_Sack.png'),
     mamooth-hide-bag: img('wiki/Mamooth_Hide_Bag.png'),
     peeper-pouch: img('wiki/Peeper_Pouch.png'),
-    fourth-anniversary-bag: img('data/InvBag112.png'),
+    x4th-anniversary-bag: img('data/InvBag112.png'),
     treasure-totebag: img('data/InvBag113.png'),
     rucksack-of-riches: img('data/InvBag114.png'),
     eternal-hunter-bag: img('customized/Eternal_Hunter_Bag.png'),  //Credit to Listix
@@ -67,9 +69,9 @@ $storage-chests: (
     ninja-chest: img('wiki/Ninja_Chest.png'),
     holiday-chest: img('data/InvStorageH.png'),
     valenslime-chest: img('data/InvStorageL.png'),
-    cosmic-storage-chest: img('wiki/Cosmic_Storage_Chest.png'),
+    cosmic-storage-chest: map-get($gem-shop, cosmic-storage-chest),
     buried-treasure-chest: img('wiki/Buried_Treasure_Chest.png'),
-    storage-chest-90: img('wiki/Storage_Chest_90.png'),
+    storage-chest-90: map-get($gem-shop, storage-chest-90),
     storage-chest-91: img('wiki/Storage_Chest_91.png'),
     storage-chest-92: img('wiki/Storage_Chest_92.png'),
     storage-chest-93: img('wiki/Storage_Chest_93.png'),

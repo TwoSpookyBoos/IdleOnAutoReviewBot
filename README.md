@@ -93,3 +93,13 @@ or, using make:
 cd mysite
 make test
 ```
+
+## Image Maintenance Tools
+
+`/utils/image_tools/` contains various scripts to help with maintenance of asset images.
+
+- `check_duplicate_scss_variables.py`: scans files for scss variables with the same name and image reference
+- `check_file_references.py`: scans files for image references and checks if any are missing
+- `sprite_extractor.py`: cuts spritesheets from `.fnt` files and extracts sprites that are defined in `sprite_extractor_dict.py`  
+
+These can be executed by directly executing the file itself with Python.
