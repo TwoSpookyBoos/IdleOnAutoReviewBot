@@ -504,7 +504,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
                   f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
                   f"<br>Ideally, you want 150k+ capacity before going too hard",
-            picture_class='smeltin-erryday',
+            picture_class='smeltin--erryday',
             resource='x1-hr-time-candy'
         ))
 
