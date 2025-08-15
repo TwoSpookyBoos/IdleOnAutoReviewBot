@@ -1,5 +1,5 @@
 $grimoire-upgrades: (
-    grimoire-upgrade--1: img('customized/GrimoireUpgBlank.png'),
+    grimoire-upgrade--1: img('customized/Blank.png'),
     grimoire-upgrade-0: img('data/GrimoireUpg0.png'),
     grimoire-upgrade-1: img('data/GrimoireUpg1.png'),
     grimoire-upgrade-2: img('data/GrimoireUpg2.png'),
@@ -55,14 +55,18 @@ $grimoire-upgrades: (
     grimoire-upgrade-52: img('data/GrimoireUpg52.png'),
     grimoire-upgrade-53: img('data/GrimoireUpg53.png'),
     grimoire-upgrade-54: img('data/GrimoireUpg54.png'),
-    grimoire-upgrade-55: img('data/GrimoireUpg55.png')
+    grimoire-upgrade-55: img('data/GrimoireUpg55.png'),
 );
 
 $grimoire-bones: (
     grimoire-bone-0: img('data/Bone0_x1.png'),
+    femur:           img('data/Bone0_x1.png'),
     grimoire-bone-1: img('data/Bone1_x1.png'),
+    ribcage:         img('data/Bone1_x1.png'),
     grimoire-bone-2: img('data/Bone2_x1.png'),
-    grimoire-bone-3: img('data/Bone3_x1.png')
+    cranium:         img('data/Bone2_x1.png'),
+    grimoire-bone-3: img('data/Bone3_x1.png'),
+    bovinae:         img('data/Bone3_x1.png')
 );
 
 $grimoire-etc: (

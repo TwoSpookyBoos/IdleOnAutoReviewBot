@@ -40,9 +40,11 @@ $id-map: map-merge($id-map, $guild-bonus-map);
 //Master Classes
 @import "grimoire";
 @import "compass";
+@import "tesseract";
 
 $id-map: map-merge($id-map, $all-grimoire);
 $id-map: map-merge($id-map, $all-compass);
+$id-map: map-merge($id-map, $all-tesseract);
 
 //W1
 @import "upgrade_vault";
