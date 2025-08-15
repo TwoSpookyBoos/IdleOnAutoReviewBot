@@ -223,11 +223,14 @@ expected_talents_dict = {
 }
 base_crystal_chance = 0.0005  # 1 in 2000
 companions_list = [
+    # Source Code: CompanionDB = function ()
     # Batch 1
     'King Doot', 'Rift Slug', 'Dedotated Ram', 'Crystal Custard', 'Sheepie', 'Molti', 'Bored Bean', 'Slime', 'Sandy Pot', 'Bloque', 'Frog',
     # Batch 2
     'Glunko Supreme', 'Ancient Golem', 'Samurai Guardian', 'Rift Jocund', 'Leek Spirit', 'Crystal Capybara', 'Biggole Mole', 'Gigafrog',
     'Mashed Potato', 'Flying Worm', 'Poisonic Frog', 'Quenchie', 'Green Mushroom',
     # Exclusives
-    'Cool Bird', 'Axolotl', 'Mallay', 'Reindeer'
+    'Cool Bird', 'Axolotl', 'Mallay', 'Reindeer', 'RIP Tide',
+    # Batch 3
+    'Squirrel', 'Piggo', 'Wild Boar', 'Whale', 'Chippy', 'Bunny', 'Panda', 'Hedgehog'
 ]

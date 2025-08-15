@@ -1110,6 +1110,7 @@ gem_shop_optlacc_dict = {
     'Lifetime Tickets': [382, EmojiType.INFINITY.value]
 }
 gem_shop_bundles_dict = {
+    # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
     'bun_c': 'Starter Pack',
@@ -1140,8 +1141,9 @@ gem_shop_bundles_dict = {
     'bon_c': 'Blazing Star Anniversary Pack',
     'bon_d': 'Midnight Tide Anniversary Pack',
     'bon_e': 'Lush Emerald Anniversary Pack',
-    'bon_f': 'Eternal Hunter Pack'
-}  # As of 2.36.0
+    'bon_f': 'Eternal Hunter Pack',
+    'bon_g': 'Gilded Treasure',
+}  # As of 2.38.0
 
 #Guild
 guild_bonuses_dict = {
