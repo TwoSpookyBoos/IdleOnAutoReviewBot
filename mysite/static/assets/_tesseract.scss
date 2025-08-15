@@ -82,24 +82,24 @@ $tesseract-equipment: (
 );
 
 $tesseract-etc: (
-    arcane-crystal-0:       img('data/ArcCry_0.png')
-    arcane-crystal-0a:      img('data/ArcCrya_0.png')
-    arcane-crystal-0b:      img('data/ArcCryb_0.png')
-    arcane-crystal-1:       img('data/ArcCry_1.png')
-    arcane-crystal-1a:      img('data/ArcCrya_1.png')
-    arcane-crystal-1b:      img('data/ArcCryb_1.png')
-    arcane-crystal-2:       img('data/ArcCry_2.png')
-    arcane-crystal-2a:      img('data/ArcCrya_2.png')
-    arcane-crystal-2b:      img('data/ArcCryb_2.png')
-    arcane-crystal-3:       img('data/ArcCry_3.png')
-    arcane-crystal-3a:      img('data/ArcCrya_3.png')
-    arcane-crystal-3b:      img('data/ArcCryb_3.png')
-    arcane-crystal-4:       img('data/ArcCry_4.png')
-    arcane-crystal-4a:      img('data/ArcCrya_4.png')
-    arcane-crystal-4b:      img('data/ArcCryb_4.png')
-    arcane-crystal-5:       img('data/ArcCry_5.png')
-    arcane-crystal-5a:      img('data/ArcCrya_5.png')
-    arcane-crystal-5b:      img('data/ArcCryb_5.png')
+    arcane-crystal-0:       img('data/ArcCry_0.png'),
+    arcane-crystal-0a:      img('data/ArcCrya_0.png'),
+    arcane-crystal-0b:      img('data/ArcCryb_0.png'),
+    arcane-crystal-1:       img('data/ArcCry_1.png'),
+    arcane-crystal-1a:      img('data/ArcCrya_1.png'),
+    arcane-crystal-1b:      img('data/ArcCryb_1.png'),
+    arcane-crystal-2:       img('data/ArcCry_2.png'),
+    arcane-crystal-2a:      img('data/ArcCrya_2.png'),
+    arcane-crystal-2b:      img('data/ArcCryb_2.png'),
+    arcane-crystal-3:       img('data/ArcCry_3.png'),
+    arcane-crystal-3a:      img('data/ArcCrya_3.png'),
+    arcane-crystal-3b:      img('data/ArcCryb_3.png'),
+    arcane-crystal-4:       img('data/ArcCry_4.png'),
+    arcane-crystal-4a:      img('data/ArcCrya_4.png'),
+    arcane-crystal-4b:      img('data/ArcCryb_4.png'),
+    arcane-crystal-5:       img('data/ArcCry_5.png'),
+    arcane-crystal-5a:      img('data/ArcCrya_5.png'),
+    arcane-crystal-5b:      img('data/ArcCryb_5.png'),
 );
 
 $all-tesseract: map-merge($tesseract-upgrades, $tesseract-tachyons);
