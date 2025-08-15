@@ -4,6 +4,7 @@
 @import "sneaking";
 @import "gem-shop";
 @import "compass";
+@import "tesseract";
 
 $resources: (
     // Ores
@@ -401,7 +402,7 @@ $equipment-weapons: (
     magnifique-godcaster: img('wiki/Magnifique_Godcaster.png'),
 
     // Arcanist Wands
-    arcanist-staff: img('data/EquipmentWandsArc0.png'),
+    arcanist-staff: map-get($tesseract-equipment, arcanist-staff),
 );
 
 $equipment-hats: (
@@ -710,7 +711,7 @@ $equipment-jewelry: (
     tempest-ring-of-punchies: map-get($compass-equipment, tempest-ring-of-punchies),
 
     // Arcanist Rings
-    arcanist-cultist-ring: img('data/EquipmentRingsArc0.png')
+    arcanist-cultist-ring: map-get($tesseract-equipment, arcanist-cultist-ring)
 );
 
 $equipment-capes: (
@@ -778,27 +779,29 @@ $equipment-keychains: (
 );
 
 $equipment-trophies: (
-    king-of-food: img('wiki/King_of_Food.png'),
-    lucky-lad: img('wiki/Lucky_Lad.png'),
-    luckier-lad: img('wiki/Luckier_Lad.png'),
-    club-member: img('wiki/Club_Member.png'),
-    dice-dynamo: img('wiki/Dice_Dynamo.png'),
-    blunder-hero: img('wiki/Blunder_Hero.png'),
-    original-gamer: img('wiki/Original_Gamer.png'),
-    trailblazer: img('wiki/Trailblazer.png'),
-    ultra-unboxer: img('wiki/Ultra_Unboxer.png'),
-    critter-baron: img('wiki/Critter_Baron.png'),
-    yumyum-sheriff: img('wiki/YumYum_Sheriff.png'),
-    megalodon: img('wiki/Megalodon.png'),
-    club-maestro: img('wiki/Club_Maestro.png'),
-    beach-bro: img('wiki/Beach_Bro.png'),
-    frost-prince: img('wiki/Frost_Prince.png'),
-    idle-skiller: img('wiki/Idle_Skiller.png'),
-    one-of-the-divine: img('wiki/One_of_the_Divine.png'),
-    nebula-royal: img('wiki/Nebula_Royal.png'),
-    master-of-nothing: img('wiki/Master_of_Nothing.png'),
-    baller: img('wiki/Baller.png'),
-    gladiator: img('wiki/Gladiator.png'),
+    king-of-food:       img('data/Trophy1.png'),
+    lucky-lad:          img('data/Trophy2.png'),
+    club-member:        img('data/Trophy3.png'),
+    dice-dynamo:        img('data/Trophy4.png'),
+    i-made-this-game:   img('data/Trophy5.png'),
+    blunder-hero:       img('data/Trophy6.png'),
+    original-gamer:     img('data/Trophy7.png'),
+    trailblazer:        img('data/Trophy8.png'),
+    ultra-unboxer:      img('data/Trophy9.png'),
+    critter-baron:      img('data/Trophy10.png'),
+    yumyum-sheriff:     img('data/Trophy11.png'),
+    megalodon:          img('data/Trophy12.png'),
+    club-maestro:       img('data/Trophy13.png'),
+    beach-bro:          img('data/Trophy14.png'),
+    frost-prince:       img('data/Trophy15.png'),
+    idle-skiller:       img('data/Trophy16.png'),
+    one-of-the-divine:  img('data/Trophy17.png'),
+    master-of-nothing:  img('data/Trophy18.png'),
+    nebula-royal:       img('data/Trophy19.png'),
+    luckier-lad:        img('data/Trophy20.png'),
+    baller:             img('data/Trophy21.png'),
+    gladiator:          img('data/Trophy22.png'),
+    heroic-spirit:      img('data/Trophy23.png'),
 );
 
 $equipment-nametags: (
