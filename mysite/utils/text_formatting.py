@@ -30,9 +30,9 @@ def numberToLetter(inputNumber: int) -> str:
 def kebab(string: str) -> str:
     """
     Converts any string to kebab-case format.
-    Spaces turn to hyphens, non-word characters are removed.
+    Spaces and apostrophes turn to hyphens, non-word characters are removed.
     """
-    return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-"))
+    return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-").replace("'", "-"))
 
 
 def is_username(data) -> bool:
@@ -52,7 +52,7 @@ def json_schema_valid(data) -> bool:
 
 
 class InputType(enum.Enum):
-    """What did the user send to us? His username, one of the links to public profiles, or a data JSON?"""
+    """What did the user send to us? Their username, one of the links to public profiles, or a data JSON?"""
     ALL = 'all'
     IE = 'IE'
     IT = 'IT'

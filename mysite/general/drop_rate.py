@@ -29,7 +29,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     passive_drop_rate_cards = [
         'Domeo Magmus',
         'Ancient Golem',
-        'IdleOn Fourth Anniversary'
+        'IdleOn 4th Anniversary'
     ]
 
     general = 'General'

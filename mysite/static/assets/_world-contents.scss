@@ -22,6 +22,7 @@ $world-contents: (
     hamish: img('wiki/Hamish.gif'),
     rocklyte: img('wiki/Rocklyte.gif'),
     toadstall: img('wiki/Toadstall.gif'),
+    froge: img('wiki/Froge.png'),
     grandfrog-s-gazebo-entrance: img('wiki/Grandfrog%27s_Gazebo_Entrance.png'),
     promotheus: img('wiki/Promotheus.gif'),
     birch-tree: img('wiki/Birch_Tree.png'),
@@ -86,7 +87,6 @@ $world-contents: (
     snake-jar: img('wiki/Snake_Jar.gif'),
     bandit-bob: img('wiki/Bandit_Bob.gif'),
     butterfly-bar: img('wiki/Butterfly_Bar.png'),
-    mimic: img('wiki/Mimic_Idle.gif'),
     gangster-gus: img('wiki/Gangster_Gus.gif'),
     crypt-of-snakenhotep-entrance: img('wiki/Crypt_of_Snakenhotep_Entrance.png'),
     speccius: img('wiki/Speccius.gif'),
@@ -94,7 +94,6 @@ $world-contents: (
     xxx-cattleprod-xxx: img('wiki/XxX_Cattleprod_XxX.gif'),
     goldric: img('wiki/Goldric.gif'),
     sentient-bowl: img('wiki/Sentient_Bowl.png'),
-    mashed-potato: img('wiki/Mashed_Potato_Idle.gif'),
     carpetiem: img('wiki/Carpetiem.gif'),
     scorpie: img('wiki/Scorpie.png'),
     loominadi: img('wiki/Loominadi.gif'),
@@ -186,11 +185,9 @@ $world-contents: (
     spirit-village-vendor: img('wiki/Spirit_Village_Vendor.gif'),
     lafu-shi: img('wiki/Lafu_Shi.gif'),
     spirit-sungmin: img('wiki/Spirit_Sungmin.gif'),
-    farming-skill-icon: img('wiki/Farming_Skill_Icon.png'),
     crop-scientist: img('Crop_Scientist.gif'),
     jade-vendor: img('wiki/Jade_Vendor.gif'),
     emporium-quick-ref-access: img('wiki/Emporium_Quick_Ref_Access.png'),
-    summoning-skill-icon: img('wiki/Summoning_Skill_Icon.png'),
     hoov: img('wiki/Hoov.gif'),
     whimsical-colosseum: img('wiki/Whimsical_Colosseum_Sprite.png'),
     bamboo-tree: img('wiki/Bamboo_Tree.png'),
@@ -202,6 +199,7 @@ $world-contents: (
     sussy-gene: img('wiki/Sussy_Gene.gif'),
     potti: img('wiki/Potti.gif'),
     effervescent-eucalyptus-tree: img('wiki/Effervescent_Eucalyptus_Tree.png'),
+    tuttle: img('Tuttle.png')
 );
 
 $world-monsters: (
@@ -218,7 +216,6 @@ $world-monsters: (
     bored-bean: img('wiki/Bored_Bean_Idle.gif'),
     red-mushroom: img('wiki/Red_Mushroom_Idle.gif'),
     slime: img('wiki/Slime_Idle.gif'),
-    froge: img('wiki/Froge.png'),
     baby-boa: img('wiki/Baby_Boa_Idle.gif'),
     carrotman: img('wiki/Carrotman_Idle.gif'),
     glublin: img('wiki/Glublin_Idle.gif'),
@@ -311,7 +308,7 @@ $world-monsters: (
     crawler: img('wiki/Crawler_Idle.gif'),
     tremor-wurm: img('wiki/Tremor_Wurm_Idle.gif'),
     crystal-capybara: img('wiki/Crystal_Capybara_Idle.gif'),
-    kattlecruk-boss: img('wiki/Kattlecruk_%28boss%29.png'),
+    kattlekruk-boss: img('wiki/Kattlekruk_%28boss%29.png'),
 // Caverns
     dawg-den-dawgs: img('wiki/Dawgs_Idle.gif'),
     gloomie-mushroom: img('wiki/Gloomie_Mushroom_Idle.gif'),

@@ -231,7 +231,7 @@ skill_talentsDict = {
             456: {"Name": "Unt'WIS'ted Robes", "Tab": "Tab 2"},
             459: {"Name": "Individual Insight", "Tab": "Tab 2"},
             488: {"Name": "Wis Wumbo", "Tab": "Tab 3"},
-            449: {"Name": "Active Afk-er", "Tab": "Tab 1"},
+            449: {"Name": "Active Afk'er", "Tab": "Tab 1"},
         },
         "Low": {
             452: {"Name": "Mana Overdrive", "Tab": "Tab 2"},
@@ -382,7 +382,7 @@ skill_talentsDict = {
         },
         "Low": {
             175: {"Name": "Undying Passion", "Tab": "Tab 4"},
-            176: {"Name": "One Thousand Hours Played", "Tab": "Tab 4"},  # Account-wide EXP bumped to Low
+            176: {"Name": "1000 Hours Played", "Tab": "Tab 4"},  # Account-wide EXP bumped to Low
         },
     },
     # Agility Skills
@@ -747,7 +747,7 @@ combat_talentsDict = {
             426: {'Name': 'Elemental Mayhem', 'Tab': 'Tab 5'},
             362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
+            300: {"Name": "360 Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
             361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
         },
@@ -775,7 +775,7 @@ combat_talentsDict = {
         "High": {
             362: {"Name": "Whale Wallop", "Tab": "Tab 4", 'Optimal': [0, 17, True]},
             301: {"Name": "Bear Trap", "Tab": "Tab 3", 'Optimal': [0, 30, True]},
-            300: {"Name": "Three-Sixty Noscope", "Tab": "Tab 3", },
+            300: {"Name": "360 Noscope", "Tab": "Tab 3", },
             270: {"Name": "Piercing Arrow", "Tab": "Tab 2", 'Optimal': [0, 40, True]},
             363: {"Name": "Nacho Party", "Tab": "Tab 4", 'Optimal': [0, 13, True]},
             361: {"Name": "Boar Rush", "Tab": "Tab 4", 'Optimal': [0, 20, True]},
