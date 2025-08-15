@@ -104,4 +104,4 @@ $tesseract-etc: (
 
 $all-tesseract: map-merge($tesseract-upgrades, $tesseract-tachyons);
 $all-tesseract: map-merge($all-tesseract, $tesseract-equipment);
-$all-tesseract: map-merge($all-tesseract, $tesseract-etc;
+$all-tesseract: map-merge($all-tesseract, $tesseract-etc);

@@ -4,6 +4,7 @@
 @import "sneaking";
 @import "gem-shop";
 @import "compass";
+@import "tesseract";
 
 $resources: (
     // Ores
@@ -194,7 +195,6 @@ $monster-drops: (
     red-spore-cap: img('wiki/Red_Spore_Cap.png'),
     slime-sludge: img('wiki/Slime_Sludge.png'),
     snake-skin: img('wiki/Snake_Skin.png'),
-    carrot-cube: img('wiki/Carrot_Cube.png'),
     carrot-cube: img('wiki/Carrot_Cube.png'),
     glublin-ear: img('wiki/Glublin_Ear.png'),
     plank: img('wiki/Plank.png'),
