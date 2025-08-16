@@ -91,14 +91,8 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     vial_value = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value']
 
     deposit_Advices.append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Skinny 0 Cal (Snake Skin) to level {max_vial_level}",
+        label=f"Total Skinny 0 Cal (Snake Skin) {{{{ Vial|#vials }}}} value (100% hardcap)",
         picture_class='snake-skin',
-        progression=session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Level'],
-        goal=max_vial_level
-    ))
-    deposit_Advices.append(Advice(
-        label='Total Vial value (100% hardcap)',
-        picture_class='vial-1',
         progression=f'{min(100, vial_value):.2f}',
         goal=100,
     ))
