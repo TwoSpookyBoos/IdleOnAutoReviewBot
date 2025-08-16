@@ -31,10 +31,7 @@ def getVialsProgressionTiersAdviceGroup():
     unlocked_vials = sum(1 for vial in player_alchemy_vials.values() if vial['Level'] > 0)
 
     #Assess Tiers
-    if session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value'] < 100:
-        advice_TrailingMaxedVials = ' Maxed Snake Skin vial and 3.08x total vial effect will guarantee you double all deposited statues :D'
-    else:
-        advice_TrailingMaxedVials = ''
+    advice_TrailingMaxedVials = ''
 
     for tier_number, requirements in vials_progressionTiers.items():
         #tier[3] = list ParticularVialsMaxed
