@@ -1,0 +1,44 @@
+<div class="advice-group{% if advice_group.hide %} hidden{% endif %} {% if is_tabbed %} advice-group-tabbed-tab-content{% endif %}"
+        {% for attr, val in advice_group.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
+    {% if advice_group.heading %}
+        <span class="{{ advice_group.picture_class }}">{{ advice_group.heading }}</span>
+    {% endif %}
+    <ul class="table">
+        {% for title, advices in advice_group.advices.items() %}
+            {% if title != "default" %}
+                <li class="advice-title"><strong>{{ title }}</strong></li>
+            {% endif %}
+            {% for advice in advices %}
+                <li class="advice {{ advice.css_class }} lazy"
+                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
+                                    <span class="progress-box{% if not progress_bars or (advice.percent == 0 and advice.potential_percent == 0) %} hidden{% endif %} {{ advice.status }}"
+                                            {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
+                                            {% endif %}{% endfor %}>
+                                        <span class="progress-bar" style="width: {{ advice.percent }}%;"></span>
+                                        <span class="progress-bar secondary"
+                                              style="width: {{ advice.potential_percent }}%;"></span>
+                                    </span>
+                    {% if advice.as_link %}
+                        <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
+                    {% else %}
+                        {{ advice.label | safe }}
+                    {% endif %}
+                </li>
+                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}"
+                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
+                        {% endif %}{% endfor %}></li>
+                <li class="prog"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
+                {% endif %}{% endfor %}>{{ advice.progression }}</li>
+                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"
+                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
+                        {% endif %}{% endfor %}></li>
+                <li class="goal {{ advice.status }}"
+                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
+                        {% endif %}{% endfor %}>{{ advice.goal }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% if advice_group.post_string %}
+        <span class="post-string">{{ advice_group.post_string }}</span>
+    {% endif %}
+</div>
