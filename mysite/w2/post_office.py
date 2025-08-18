@@ -143,8 +143,8 @@ def getPostOfficeAdviceSection() -> AdviceSection:
     boxes_advice = getBoxesAdviceGroup()
     if isinstance(boxes_advice, TabbedAdviceGroup):
         postOffice_AdviceGroupDict['Boxes'] = boxes_advice
-        postOffice_AdviceGroupDict['Boxes'] = boxes_advice
     else:
+        # Merges the 2 dictionaries. No duplicate keys are present
         postOffice_AdviceGroupDict = postOffice_AdviceGroupDict | boxes_advice
 
     # Generate AdviceSection
