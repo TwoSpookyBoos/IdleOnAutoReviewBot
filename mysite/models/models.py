@@ -862,6 +862,10 @@ class TabbedAdviceGroup:
         for _, group in self.tabbed_advices.values():
             group.set_overwhelming(overwhelming)
 
+    def remove_empty_subgroups(self):
+        for _, group in self.tabbed_advices.values():
+            group.remove_empty_subgroups()
+
     @property
     def dataset(self) -> list:
         return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "optional"]]

@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
+from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -84,7 +85,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     overall_SectionTier = min(true_max, tier_PostOffice)
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
-def getBoxesAdviceGroup() -> TabbedAdviceGroup | dict[str, AdviceGroup]:
+def getBoxesAdviceGroup() -> TabbedAdviceGroup:
     tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
     for character in session_data.account.all_characters:
         total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
@@ -121,7 +122,7 @@ def getBoxesAdviceGroup() -> TabbedAdviceGroup | dict[str, AdviceGroup]:
                 informational=True,
             )
         )
-    return TabbedAdviceGroup(tabbed_advices) if session_data.account.tabbed_advice_groups else {tab.label: advice_group for tab, advice_group in tabbed_advices.values()}
+    return TabbedAdviceGroup(tabbed_advices)
 
 
 def getPostOfficeAdviceSection() -> AdviceSection:
@@ -140,12 +141,8 @@ def getPostOfficeAdviceSection() -> AdviceSection:
     # Generate AdviceGroups
     postOffice_AdviceGroupDict = {}
     postOffice_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    boxes_advice = getBoxesAdviceGroup()
-    if isinstance(boxes_advice, TabbedAdviceGroup):
-        postOffice_AdviceGroupDict['Boxes'] = boxes_advice
-    else:
-        # Merges the 2 dictionaries. No duplicate keys are present
-        postOffice_AdviceGroupDict = postOffice_AdviceGroupDict | boxes_advice
+    boxes_advice_group = getBoxesAdviceGroup()
+    add_tabbed_advice_group_or_spread_advice_group_list(postOffice_AdviceGroupDict, boxes_advice_group, "Boxes")
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
