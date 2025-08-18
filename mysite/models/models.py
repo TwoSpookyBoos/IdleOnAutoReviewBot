@@ -701,7 +701,7 @@ class AdviceGroup(AdviceBase):
         self.completed = completed
         self.informational = informational
         self.overwhelming = overwhelming
-        self.optional = False
+        self.optional = optional
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
@@ -833,10 +833,14 @@ class TabbedAdviceGroupTab:
         self.label = label
 
 class TabbedAdviceGroup:
+    completed = None
+    informational = None
+    optional = None
+    __compare_by = ["tier"]
+
     def __init__(self, tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]]):
         self.tabbed_advices = tabbed_advices
-        self.completed = None
-        self.informational = None
+        self.tier = min([advice_group._coerce_to_int("tier") for _, advice_group in tabbed_advices.values()])
         self.check_for_informationalness()
 
     def check_for_completeness(self):
@@ -849,13 +853,45 @@ class TabbedAdviceGroup:
             return
         self.informational = all([group.informational for _, group in self.tabbed_advices.values()]) and len([group for _, group in self.tabbed_advices.values() if group]) > 0
 
+    def check_for_optional(self, max_tier: int):
+        for _, advice_group in self.tabbed_advices.values():
+            advice_group.check_for_optional(max_tier)
+        self.optional = all([advice_group.optional for _, advice_group in self.tabbed_advices.values()])
+
     def set_overwhelming(self, overwhelming: bool):
         for _, group in self.tabbed_advices.values():
             group.set_overwhelming(overwhelming)
 
     @property
     def dataset(self) -> list:
-        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational"]]
+        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational", "optional"]]
+
+    def _is_valid_operand(self, other):
+        return all(hasattr(other, field) for field in self.__compare_by)
+
+    def _coerce_to_int(self, field):
+        try:
+            return int(getattr(self, field))
+        except ValueError:
+            return 999
+
+    def __eq__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            self._coerce_to_int(field) == other._coerce_to_int(field)
+            for field in self.__compare_by
+        )
+
+    def __lt__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+
+        return all(
+            self._coerce_to_int(field) < other._coerce_to_int(field)
+            for field in self.__compare_by
+        )
 
 class AdviceSection(AdviceBase):
     """
