@@ -726,7 +726,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
             anyBookAdvice = True
 
     character_specific_tabbed_advice_group = TabbedAdviceGroup(character_specific_advice_groups)
-    character_AdviceGroups = add_tabbed_advice_group_or_spread_advice_group_list(character_AdviceGroups, character_specific_tabbed_advice_group, "Character Priorities")
+    add_tabbed_advice_group_or_spread_advice_group_list(character_AdviceGroups, character_specific_tabbed_advice_group, "Character Priorities")
 
     # Account-wide Star Talents
     awt = "VIP Star Talents"
