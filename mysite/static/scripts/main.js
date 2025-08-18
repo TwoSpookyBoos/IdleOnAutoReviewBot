@@ -429,10 +429,10 @@ function fetchPlayerAdvice() {
 
 const storeUserParams = (data) => Object
     .entries(defaults)
-    .forEach(([k, v]) => localStorage.setItem(k, data[k] || v))
+    .forEach(([k, v]) => localStorage.setItem(k, data[k] ?? (v === "on" ? "off" : v)))
 
 const fetchStoredUserParams = () => {
-    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) || v]))
+    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) ?? v]))
     const queryStringParams = new URLSearchParams(storedUserParams)
     if (storedUserParams.player.startsWith("{")) {
         // empty player if it's JSON
