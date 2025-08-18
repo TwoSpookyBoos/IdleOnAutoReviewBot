@@ -827,6 +827,36 @@ class AdviceGroup(AdviceBase):
                     for advice in value:
                         advice.update_optional(self.optional)
 
+class TabbedAdviceGroupTab:
+    def __init__(self, picture_class: str = "", label: str = ""):
+        self.picture_class = picture_class
+        self.label = label
+
+class TabbedAdviceGroup:
+    def __init__(self, tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]]):
+        self.tabbed_advices = tabbed_advices
+        self.completed = None
+        self.informational = None
+        self.check_for_informationalness()
+
+    def check_for_completeness(self):
+        if self.completed is not None:
+            return
+        self.completed = all(advice_group.completed for _, advice_group in self.tabbed_advices.values())
+
+    def check_for_informationalness(self):
+        if self.informational is not None:
+            return
+        self.informational = all([group.informational for _, group in self.tabbed_advices.values()]) and len([group for _, group in self.tabbed_advices.values() if group]) > 0
+
+    def set_overwhelming(self, overwhelming: bool):
+        for _, group in self.tabbed_advices.values():
+            group.set_overwhelming(overwhelming)
+
+    @property
+    def dataset(self) -> list:
+        return [[attr, getattr(self, attr, False)] for attr in ["completed", "informational"]]
+
 class AdviceSection(AdviceBase):
     """
     Contains a list of `AdviceGroup` objects
@@ -869,7 +899,7 @@ class AdviceSection(AdviceBase):
         self.tier: str = tier
         self._raw_header: str = header
         self.picture: str = picture
-        self.groups: list[AdviceGroup] = groups
+        self.groups: list[AdviceGroup | TabbedAdviceGroup] = groups
         self.pinchy_rating: int = pinchy_rating
         self.max_tier: int = max_tier
         self.true_max_tier: int = true_max_tier
@@ -918,7 +948,7 @@ class AdviceSection(AdviceBase):
         return self._groups
 
     @groups.setter
-    def groups(self, groups: list[AdviceGroup]):
+    def groups(self, groups: list[AdviceGroup | TabbedAdviceGroup]):
         # filters out empty groups by checking if group has no advices
         self._groups = [group for group in groups if group]
         #self.check_for_completeness()

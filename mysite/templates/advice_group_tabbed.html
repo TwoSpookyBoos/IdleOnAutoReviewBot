@@ -1,0 +1,11 @@
+<div class="advice-group-tabbed" {% for attr, val in group.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
+    <div class="advice-group-tabbed-tabs">
+        {% for tab, advice_group in group.tabbed_advices.values() %}
+            {% include 'advice_group_tabbed_tab.html' %}
+        {% endfor %}
+    </div>
+    {% for _, advice_group in group.tabbed_advices.values() %}
+        {% set is_tabbed=True %}
+        {% include 'advice_group.html' %}
+    {% endfor %}
+</div>
