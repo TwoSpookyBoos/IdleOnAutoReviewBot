@@ -701,7 +701,7 @@ class AdviceGroup(AdviceBase):
         self.completed = completed
         self.informational = informational
         self.overwhelming = overwhelming
-        self.optional = False
+        self.optional = optional
 
     def __str__(self) -> str:
         return ", ".join(map(str, self.advices))
