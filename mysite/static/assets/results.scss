@@ -648,8 +648,7 @@ body {
 
                                     .advice-group-tabbed-tabs {
                                         display: flex;
-                                        gap: 8px;
-                                        justify-content: space-evenly;
+                                        justify-content: start;
                                     }
 
                                     .advice-group-tabbed-tab {
@@ -677,6 +676,25 @@ body {
                                             text-overflow: ellipsis;
                                             width: 100%;
                                             min-width: 0;
+                                        }
+                                    }
+
+                                    @media (max-width: 600px) {
+                                        .advice-group-tabbed-tabs {
+                                            flex-wrap: wrap;
+                                        }
+
+                                        .advice-group-tabbed-tab {
+                                            flex: 0 0 16.66%;
+                                            max-width: 16.66%;
+
+                                            &:last-child{
+                                                border-radius: unset;
+                                            }
+
+                                            &:nth-child(6) {
+                                                border-top-right-radius: 20px;
+                                            }
                                         }
                                     }
 
