@@ -615,7 +615,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
     #Character Specific
     character_specific_advices = {}
     character_specific_advice_groups: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
-    for char in session_data.account.safe_characters: #type: Character
+    for index, char in enumerate(session_data.account.safe_characters): #type: int, Character
         character_specific_advices[char.character_name] = {}
         talentNumbersAdded = []
 
@@ -715,7 +715,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
         char_tiers[char.character_name] = char_tier
 
         character_specific_advice_groups[char.character_name] = (
-            TabbedAdviceGroupTab(kebab(char.class_name_icon), char.character_name),
+            TabbedAdviceGroupTab(kebab(char.class_name_icon), str(index + 1)),
             AdviceGroup(
                 tier=char_tier,
                 pre_string=f"Priority Checkouts for {char.character_name} the {char.class_name}",

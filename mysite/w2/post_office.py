@@ -87,7 +87,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getBoxesAdviceGroup() -> TabbedAdviceGroup:
     tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
-    for character in session_data.account.all_characters:
+    for index, character in enumerate(session_data.account.all_characters): #type int, Character
         total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
         remaining_points = max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested)
 
@@ -113,7 +113,7 @@ def getBoxesAdviceGroup() -> TabbedAdviceGroup:
             mark_advice_completed(advice)
 
         tabbed_advices[character.character_name] = (
-            TabbedAdviceGroupTab(kebab(character.class_name_icon), character.character_name),
+            TabbedAdviceGroupTab(kebab(character.class_name_icon), str(index + 1)),
             AdviceGroup(
                 tier='',
                 pre_string=f"Boxes for {character.character_name} the {character.class_name}",
