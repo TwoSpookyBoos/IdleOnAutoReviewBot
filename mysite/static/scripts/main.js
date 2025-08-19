@@ -618,39 +618,8 @@ function hideComposite(event) {
         });
     })
 
-    hideEmptyTabs(checkboxOn)
+    recalculate_tab_selections()
 }
-
-function hideEmptyTabs(hide) {
-    const tabbedAdviceGroups = document.querySelectorAll(".advice-group-tabbed")
-    for (const tabbedAdviceGroup of tabbedAdviceGroups) {
-        const tabs = tabbedAdviceGroup.querySelectorAll(".advice-group-tabbed-tab")
-        const tabContents = tabbedAdviceGroup.querySelectorAll(".advice-group-tabbed-tab-content")
-
-        for (let i = 0; i < tabs.length; i++) {
-            tabs[i].classList.toggle("tab-active", false)
-            tabContents[i].style.display = "none"
-            if (hide) {
-                if (Array.from(tabContents[i].classList).filter(c => Object.keys(hiddenElements).includes(c)).length > 0) {
-                    tabs[i].classList.toggle(kidsHiddenClass, true)
-                    tabs[i].classList.toggle("tab-active", false)
-                    hiddenElements[kidsHiddenClass].add(tabs[i])
-                }
-            } else {
-                tabs[i].classList.toggle(kidsHiddenClass, false)
-            }
-
-        }
-
-        const firstVisibleTab = Array.from(tabbedAdviceGroup.querySelectorAll(".advice-group-tabbed-tab")).find(tab => !Array.from(tab.classList).includes(kidsHiddenClass))
-        const firstVisibleTabIndex = Array.from(tabs).indexOf(firstVisibleTab)
-        if (firstVisibleTab !== undefined) {
-            tabs[firstVisibleTabIndex].classList.toggle("tab-active", true)
-            tabContents[firstVisibleTabIndex].style.display = "flex"
-        }
-    }
-}
-
 
 let searchTimer
 
@@ -770,6 +739,9 @@ function handleParallax() {
 
     const switchBackground = () => {
         Array.from(background.children).forEach(bg => bg.style.opacity = "0");
+        if (dominantBackground === undefined){
+            return;
+        }
         const backgroundToFocus = document.getElementById(dominantElement.bg);
         if (backgroundToFocus) {
             backgroundToFocus.style.opacity = "1";
@@ -843,10 +815,6 @@ function initialize_tabbed_advice_group_logic() {
         }
 
         deactivateAll();
-        if (tabs.length > 0 && contents.length > 0) {
-            tabs[0].classList.add('tab-active');
-            contents[0].style.display = 'flex';
-        }
 
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -855,6 +823,18 @@ function initialize_tabbed_advice_group_logic() {
                 contents[index].style.display = 'flex';
             });
         });
+    });
+
+    recalculate_tab_selections()
+}
+
+function recalculate_tab_selections() {
+    const tabGroups = document.querySelectorAll('.advice-group-tabbed');
+
+    tabGroups.forEach(group => {
+        const tabs = group.querySelectorAll('.advice-group-tabbed-tab');
+        const firstVisibleTab = Array.from(tabs).find(tab => tab.checkVisibility())
+        firstVisibleTab.click()
     });
 }
 

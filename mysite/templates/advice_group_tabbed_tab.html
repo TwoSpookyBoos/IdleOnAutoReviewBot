@@ -1,3 +1,4 @@
-<div class="advice-group-tabbed-tab{% if tab.picture_class %} {{ tab.picture_class }}{% endif %}">
+<div class="advice-group-tabbed-tab{% if tab.picture_class %} {{ tab.picture_class }}{% endif %}"
+        {% for attr, val in tab.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
     <p>{{ tab.label }}</p>
 </div>
