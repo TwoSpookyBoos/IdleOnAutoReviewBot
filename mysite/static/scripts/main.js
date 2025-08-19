@@ -770,6 +770,9 @@ function handleParallax() {
 
     const switchBackground = () => {
         Array.from(background.children).forEach(bg => bg.style.opacity = "0");
+        if (dominantBackground === undefined){
+            return;
+        }
         const backgroundToFocus = document.getElementById(dominantElement.bg);
         if (backgroundToFocus) {
             backgroundToFocus.style.opacity = "1";
