@@ -48,7 +48,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     crystal_Advice[aw].append(Advice(
-        label=f"Level {session_data.account.stamps['Crystallin']['Level']}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin']['Value'] / 100:.3f}x",
+        label=f"Level {session_data.account.stamps['Crystallin']['Level']}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin']['Total Value'] / 100:.3f}x",
         picture_class="crystallin",
         progression=session_data.account.stamps['Crystallin']['Level'],
         goal=stamp_maxes['Crystallin']
