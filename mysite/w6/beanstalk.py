@@ -100,11 +100,13 @@ def getProgressionTiersAdviceSections():
     )
 
     beanstalk_advice_group = {}
-    beanstalk_advice_group['Tiers'] = AdviceGroup(
+    tier_advice_group = AdviceGroup(
         tier=overall_section_tier,
         pre_string='Deposit Golden Foods to the Beanstalk',
         advices=beanstalk_advice['Tiers'],
     )
+    tier_advice_group.remove_empty_subgroups()
+    beanstalk_advice_group['Tiers'] = tier_advice_group
     return beanstalk_advice_group, overall_section_tier, max_tier, true_max
 
 
