@@ -172,6 +172,7 @@ class Placements(dict):
     SAILING = "Sailing"
     #GAMING = "Gaming"
     FARMING = "Farming"
+    BEANSTALK = "Beanstalk"
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
         VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
@@ -179,46 +180,47 @@ class Placements(dict):
         ARMOR_SETS, REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING,  #GAMING,
-        FARMING
+        FARMING, BEANSTALK
     ]
 
     sectionThresholds = {
         # [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,99] #template
-        #               W1   W2          W3              W4              W5              W6              W7              Max    True    Placeholder
-        COMBAT_LEVELS: [0,   3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,    true_max_tiers[COMBAT_LEVELS], 99],
-        SECRET_CLASS_PATH:[0,0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,     true_max_tiers[SECRET_CLASS_PATH], 99],
-        ACHIEVEMENTS:  [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,     true_max_tiers[ACHIEVEMENTS], 99],
-        GSTACKS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,     true_max_tiers[GSTACKS], 99],
-        Q_GSTACKS:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,     true_max_tiers[Q_GSTACKS], 99],
-        VAULT:         [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      2,  3,  3,      3,     true_max_tiers[VAULT], 99],
-        STAMPS:        [0,   1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,     12, 13, 14,     15, 16, 17,     20,    true_max_tiers[STAMPS], 99],
-        BRIBES:        [0,   1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,     true_max_tiers[BRIBES], 99],
-        SMITHING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,     true_max_tiers[SMITHING], 99],
-        STATUES:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,    true_max_tiers[STATUES], 99],
-        STAR_SIGNS:    [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,     true_max_tiers[STAR_SIGNS], 99],
-        OWL:           [0,   0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  2,  2,      2,  2,  2,      3,     true_max_tiers[OWL], 99],
-        BUBBLES:       [0,   0, 0, 0,    0,  0,  1,      1,  1,  2,      2,  2,  3,      3,  4,  5,      7,  9, 10,      12,    true_max_tiers[BUBBLES], 99],
-        VIALS:         [0,   0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,    true_max_tiers[VIALS], 99],
-        P2W:           [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[P2W], 99],
-        SIGILS:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,     true_max_tiers[SIGILS], 99],
-        POST_OFFICE:   [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,     true_max_tiers[POST_OFFICE], 99],
-        ISLANDS:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,     true_max_tiers[ISLANDS], 99],
-        ARMOR_SETS:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,     true_max_tiers[ARMOR_SETS], 99],
-        REFINERY:      [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[REFINERY], 99],
-        SAMPLING:      [0,   0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,    true_max_tiers[SAMPLING], 99],
-        SALT_LICK:     [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,     true_max_tiers[SALT_LICK], 99],
-        DEATH_NOTE:    [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 21,     22,    true_max_tiers[DEATH_NOTE], 99],
-        COLLIDER:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,    true_max_tiers[COLLIDER], 99],
-        PRAYERS:       [0,   0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,     true_max_tiers[PRAYERS], 99],
-        TRAPPING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,    true_max_tiers[TRAPPING], 99],
-        EQUINOX:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,    true_max_tiers[EQUINOX], 99],
-        BREEDING:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,    true_max_tiers[BREEDING], 99],
-        COOKING:       [0,   0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,     true_max_tiers[COOKING], 99],
-        RIFT:          [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,    true_max_tiers[RIFT], 99],
-        DIVINITY:      [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,    true_max_tiers[DIVINITY], 99],
-        SAILING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,    true_max_tiers[SAILING], 99],
-        #GAMING:        [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,     true_max_tiers[GAMING], 99],
-        FARMING:       [0,   0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      9,     true_max_tiers[FARMING], 99],
+        #                   W1      W2          W3              W4              W5              W6              W7              Prac. Max   True Max    Placeholder
+        COMBAT_LEVELS:      [0,     3, 7, 8,    10, 14, 15,     16, 17, 18,     19, 21, 23,     24, 25, 27,     28, 29, 30,     32,         true_max_tiers[COMBAT_LEVELS], 99],
+        SECRET_CLASS_PATH:  [0,     0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  3,      3,  3,  3,      3,  3,  3,      3,          true_max_tiers[SECRET_CLASS_PATH], 99],
+        ACHIEVEMENTS:       [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,          true_max_tiers[ACHIEVEMENTS], 99],
+        GSTACKS:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,          true_max_tiers[GSTACKS], 99],
+        Q_GSTACKS:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,          true_max_tiers[Q_GSTACKS], 99],
+        VAULT:              [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      2,  3,  3,      3,          true_max_tiers[VAULT], 99],
+        STAMPS:             [0,     1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,      12, 13, 14,     15, 16, 17,     20,         true_max_tiers[STAMPS], 99],
+        BRIBES:             [0,     1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,          true_max_tiers[BRIBES], 99],
+        SMITHING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,          true_max_tiers[SMITHING], 99],
+        STATUES:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,  5,  7,      11,         true_max_tiers[STATUES], 99],
+        STAR_SIGNS:         [0,     0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  4,      5,  5,  6,      6,          true_max_tiers[STAR_SIGNS], 99],
+        OWL:                [0,     0, 0, 0,    1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  2,  2,      2,  2,  2,      3,          true_max_tiers[OWL], 99],
+        BUBBLES:            [0,     0, 0, 0,    0,  0,  1,      1,  1,  2,      2,  2,  3,      3,  4,  5,      7,  9, 10,      12,         true_max_tiers[BUBBLES], 99],
+        VIALS:              [0,     0, 0, 0,    1,  1,  2,      2,  3,  4,      5,  6,  7,      8,  9,  10,     12, 20, 25,     26,         true_max_tiers[VIALS], 99],
+        P2W:                [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  1,      1,  1,  1,      1,  1,  1,      1,          true_max_tiers[P2W], 99],
+        SIGILS:             [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      8,          true_max_tiers[SIGILS], 99],
+        POST_OFFICE:        [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,          true_max_tiers[POST_OFFICE], 99],
+        ISLANDS:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      4,          true_max_tiers[ISLANDS], 99],
+        ARMOR_SETS:         [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,          true_max_tiers[ARMOR_SETS], 99],
+        REFINERY:           [0,     0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,  1,  1,      1,          true_max_tiers[REFINERY], 99],
+        SAMPLING:           [0,     0, 0, 0,    0,  1,  1,      1,  2,  2,      2,  3,  3,      3,  4,  5,      6,  7,  8,      10,         true_max_tiers[SAMPLING], 99],
+        SALT_LICK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      9,          true_max_tiers[SALT_LICK], 99],
+        DEATH_NOTE:         [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      3,  5,  5,      5,  5,  6,      10, 17, 21,     22,         true_max_tiers[DEATH_NOTE], 99],
+        COLLIDER:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,         true_max_tiers[COLLIDER], 99],
+        PRAYERS:            [0,     0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,          true_max_tiers[PRAYERS], 99],
+        TRAPPING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,         true_max_tiers[TRAPPING], 99],
+        EQUINOX:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,         true_max_tiers[EQUINOX], 99],
+        BREEDING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,         true_max_tiers[BREEDING], 99],
+        COOKING:            [0,     0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      3,  4,  4,      5,  5,  5,      6,          true_max_tiers[COOKING], 99],
+        RIFT:               [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,         true_max_tiers[RIFT], 99],
+        DIVINITY:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,         true_max_tiers[DIVINITY], 99],
+        SAILING:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,         true_max_tiers[SAILING], 99],
+        #GAMING:             [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,          true_max_tiers[GAMING], 99],
+        FARMING:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      9,          true_max_tiers[FARMING], 99],
+        BEANSTALK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,          true_max_tiers[BEANSTALK], 99],
     }
     section_count = len(sectionThresholds)
 
