@@ -1,10 +1,11 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
+from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
-from consts.consts_w2 import post_office_tabs
 from consts.progression_tiers import post_office_progression_tiers, true_max_tiers
+from utils.text_formatting import kebab
 
 logger = get_logger(__name__)
 
@@ -17,8 +18,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     max_tier = true_max - optional_tiers
     tier_PostOffice = 0
 
-    #Assess Tiers
-    boxes_advised = {char.character_name:[] for char in session_data.account.all_characters}
+    # Assess Tiers
+    boxes_advised = {char.character_name: [] for char in session_data.account.all_characters}
     for tier_number, requirements in post_office_progression_tiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
@@ -84,39 +85,45 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     overall_SectionTier = min(true_max, tier_PostOffice)
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
-def getBoxesAdviceGroup(character):
-    total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
-    remaining_points = max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested)
+def getBoxesAdviceGroup() -> TabbedAdviceGroup:
+    tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
+    for index, character in enumerate(session_data.account.all_characters): #type int, Character
+        total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
+        remaining_points = max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested)
 
-    po_Advices = {}
+        po_Advices = {}
 
-    for box_name, box_details in character.po_boxes_invested.items():
-        needed_for_completion = (box_details['Max Level'] - box_details['Level'])
-        using_points = min(remaining_points, needed_for_completion)
-        remaining_points = max(0, remaining_points - using_points)
+        for box_name, box_details in character.po_boxes_invested.items():
+            needed_for_completion = (box_details['Max Level'] - box_details['Level'])
+            using_points = min(remaining_points, needed_for_completion)
+            remaining_points = max(0, remaining_points - using_points)
 
-        advice = Advice(
-            label=box_name,
-            picture_class=box_name,
-            progression=box_details['Level'],
-            goal=box_details['Max Level'],
-            potential=using_points)
-        
-        tab_name = box_details['Tab']
-        if tab_name not in po_Advices:
-            po_Advices[tab_name] = []
-        
-        po_Advices[tab_name].append(advice)
-        mark_advice_completed(advice)
+            advice = Advice(
+                label=box_name,
+                picture_class=box_name,
+                progression=box_details['Level'],
+                goal=box_details['Max Level'],
+                potential=using_points)
 
-    char_ag = AdviceGroup(
-        tier='',
-        pre_string=f"Boxes for {character.character_name} the {character.class_name}",
-        advices=po_Advices,
-        post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested):,.0f}",
-        informational=True,
-    )
-    return char_ag
+            tab_name = box_details['Tab']
+            if tab_name not in po_Advices:
+                po_Advices[tab_name] = []
+
+            po_Advices[tab_name].append(advice)
+            mark_advice_completed(advice)
+
+        tabbed_advices[character.character_name] = (
+            TabbedAdviceGroupTab(kebab(character.class_name_icon), str(index + 1)),
+            AdviceGroup(
+                tier='',
+                pre_string=f"Boxes for {character.character_name} the {character.class_name}",
+                advices=po_Advices,
+                post_string=f"Available points : {max(0, session_data.account.postOffice['Total Boxes Earned'] - total_points_invested):,.0f}",
+                informational=True,
+            )
+        )
+    return TabbedAdviceGroup(tabbed_advices)
+
 
 def getPostOfficeAdviceSection() -> AdviceSection:
     if session_data.account.highest_world_reached < 2:
@@ -131,13 +138,13 @@ def getPostOfficeAdviceSection() -> AdviceSection:
         )
         return postOffice_AdviceSection
 
-    #Generate AdviceGroups
+    # Generate AdviceGroups
     postOffice_AdviceGroupDict = {}
     postOffice_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    for character in session_data.account.all_characters:
-        postOffice_AdviceGroupDict[character.character_name] = getBoxesAdviceGroup(character)
-    
-    #Generate AdviceSection
+    boxes_advice_group = getBoxesAdviceGroup()
+    add_tabbed_advice_group_or_spread_advice_group_list(postOffice_AdviceGroupDict, boxes_advice_group, "Boxes")
+
+    # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     postOffice_AdviceSection = AdviceSection(
         name='Post Office',

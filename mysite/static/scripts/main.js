@@ -33,6 +33,7 @@ const defaults = {
     hide_informational: "off",
     hide_unrated: "off",
     progress_bars: "off",
+    tabbed_advice_groups: "on",
     handedness: "off",
     light: "off"
 }
@@ -348,7 +349,7 @@ function setFormValues() {
     const userParams = fetchStoredUserParams()
 
     Object.entries(defaults).forEach(([k, v]) => {
-        const userValue = userParams[k] || v
+        const userValue = userParams[k] ?? v
         const input = form.querySelector(`[name=${k}]`)
         if (k === "player")
             input.value = userValue
@@ -416,6 +417,7 @@ function fetchPlayerAdvice() {
                 }
                 loadResults(html);
                 initResultsUI();
+                initialize_tabbed_advice_group_logic();
                 break;
             default:
                 throw new Error(statusCode.toString());
@@ -427,10 +429,10 @@ function fetchPlayerAdvice() {
 
 const storeUserParams = (data) => Object
     .entries(defaults)
-    .forEach(([k, v]) => localStorage.setItem(k, data[k] || v))
+    .forEach(([k, v]) => localStorage.setItem(k, data[k] ?? (v === "on" ? "off" : v)))
 
 const fetchStoredUserParams = () => {
-    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) || v]))
+    const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) ?? v]))
     const queryStringParams = new URLSearchParams(storedUserParams)
     if (storedUserParams.player.startsWith("{")) {
         // empty player if it's JSON
@@ -540,11 +542,19 @@ const hiddenElements = {
 }
 
 function allHidden(siblings) {
-    if (siblings.length < 1) return false
-    // make a union of all hidden elements
-    const allHiddenElements = Object.values(hiddenElements).reduce((all, set) => all.union(set), new Set()),
-        siblingSet = new Set([...siblings]);
-    return allHiddenElements.isSupersetOf(siblingSet);
+    if (siblings.length < 1) return false;
+
+    const allHiddenElements = new Set();
+    for (const set of Object.values(hiddenElements)) {
+        for (const el of set) {
+            allHiddenElements.add(el);
+        }
+    }
+
+    for (const sib of siblings) {
+        if (!allHiddenElements.has(sib)) return false;
+    }
+    return true;
 }
 
 function hideEmptySubgroupTitles(adviceGroup) {
@@ -572,14 +582,6 @@ function hideEmptySubgroupTitles(adviceGroup) {
         })
 }
 
-const hidableElements = [
-    "article",
-    "section",
-    ".advice-group",
-    ".advice-title",
-    ".progress-box", ".advice", ".resource", ".prog", ".arrow", ".arrow-hidden", ".goal"
-];
-
 function hideComposite(event) {
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
@@ -598,14 +600,15 @@ function hideComposite(event) {
     }
 
     const elementsToRecurse = [
-        [hidableElements[2], hidableElements[4]], // groups, advice
-        [hidableElements[1], hidableElements[2]], // sections, groups
-        [hidableElements[0], hidableElements[1]]  // worlds, sections
-    ]
+        ["article", "section"],         // hide world if all sections within are hidden
+        ["section", ".advice-group"],   // hide section if all advice groups within are hidden
+        [".advice-group", ".advice"]    // hide advice group if all pieces of advice within are hidden
+    ].reverse() // has to be processed in reverse order (deeper nested elements first), but writing it out in this order makes it more readable
 
     // first handle subgroup titles
-    document.querySelectorAll(elementsToRecurse[0][0])
-        .forEach(g => hideEmptySubgroupTitles(g, hiddenClass));
+    for (const element of document.querySelectorAll(elementsToRecurse[0][0])) {
+        hideEmptySubgroupTitles(element, hiddenClass)
+    }
 
     // recurse through groups, sections, and worlds and hide them if needed
     elementsToRecurse.forEach(([parentStr, childStr]) => {
@@ -614,8 +617,9 @@ function hideComposite(event) {
             parent.classList.toggle(kidsHiddenClass, shouldHide)
         });
     })
-}
 
+    recalculate_tab_selections()
+}
 
 let searchTimer
 
@@ -735,6 +739,9 @@ function handleParallax() {
 
     const switchBackground = () => {
         Array.from(background.children).forEach(bg => bg.style.opacity = "0");
+        if (dominantBackground === undefined){
+            return;
+        }
         const backgroundToFocus = document.getElementById(dominantElement.bg);
         if (backgroundToFocus) {
             backgroundToFocus.style.opacity = "1";
@@ -792,6 +799,42 @@ function animateStaleData() {
                 document.querySelector('.stale').style.animation = 'shake 1s linear'
             }
         }, 0);
+    });
+}
+
+function initialize_tabbed_advice_group_logic() {
+    const tabGroups = document.querySelectorAll('.advice-group-tabbed');
+
+    tabGroups.forEach(group => {
+        const tabs = group.querySelectorAll('.advice-group-tabbed-tab');
+        const contents = group.querySelectorAll('.advice-group-tabbed-tab-content');
+
+        function deactivateAll() {
+            tabs.forEach(tab => tab.classList.remove('tab-active'));
+            contents.forEach(content => content.style.display = 'none');
+        }
+
+        deactivateAll();
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                deactivateAll();
+                tab.classList.add('tab-active');
+                contents[index].style.display = 'flex';
+            });
+        });
+    });
+
+    recalculate_tab_selections()
+}
+
+function recalculate_tab_selections() {
+    const tabGroups = document.querySelectorAll('.advice-group-tabbed');
+
+    tabGroups.forEach(group => {
+        const tabs = group.querySelectorAll('.advice-group-tabbed-tab');
+        const firstVisibleTab = Array.from(tabs).find(tab => tab.checkVisibility())
+        firstVisibleTab.click()
     });
 }
 

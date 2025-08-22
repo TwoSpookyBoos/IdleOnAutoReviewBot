@@ -1,4 +1,5 @@
-<section id="{{ section.css_class }}"{% for attr, val in section.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
+<section id="{{ section.css_class }}"
+        {% for attr, val in section.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
     <h1 class="subheading{% if section %} toggler{% endif %}{% if section.collapse %} folded{% endif %}">
         {% if section.picture %}
             <img src="{{ section.picture | img }}" alt="{{ section.name }}" loading="lazy">
@@ -15,39 +16,11 @@
             {% endif %}
             <li id="{{ section.css_class }}-tier" class="groups">
                 {% for group in section.groups %}
-                    {% if group %}
-                    <div class="advice-group{% if group.hide %} hidden{% endif %}"{% for attr, val in group.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                        {% if group.heading %}
-                            <span class="{{ group.picture_class }}">{{ group.heading }}</span>
-                        {% endif %}
-                        <ul class="table">
-                        {% for title, advices in group.advices.items() %}
-                            {% if title != "default" %}
-                                <li class="advice-title"><strong>{{ title }}</strong></li>
-                            {% endif %}
-                            {% for advice in advices %}
-                                <li class="advice {{ advice.css_class }} lazy"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                                    <span class="progress-box{% if not progress_bars or (advice.percent == 0 and advice.potential_percent == 0) %} hidden{% endif %} {{ advice.status }}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                                        <span class="progress-bar" style="width: {{ advice.percent }}%;"></span>
-                                        <span class="progress-bar secondary" style="width: {{ advice.potential_percent }}%;"></span>
-                                    </span>
-                                {% if advice.as_link %}
-                                    <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
-                                {% else %}
-                                    {{ advice.label | safe }}
-                                {% endif %}
-                                </li>
-                                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}></li>
-                                <li class="prog"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>{{ advice.progression }}</li>
-                                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}></li>
-                                <li class="goal {{ advice.status }}"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>{{ advice.goal }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                        </ul>
-                        {% if group.post_string %}
-                            <span class="post-string">{{ group.post_string }}</span>
-                        {% endif %}
-                    </div>
+                    {% if group.tabbed_advices is defined %}
+                        {% include 'advice_group_tabbed.html' %}
+                    {% else %}
+                        {% set advice_group = group %}
+                        {% include 'advice_group.html' %}
                     {% endif %}
                 {% endfor %}
             </li>

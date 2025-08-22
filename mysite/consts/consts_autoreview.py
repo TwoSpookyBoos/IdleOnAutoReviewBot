@@ -103,6 +103,13 @@ switches = [
         "static": "false",
     },
     {
+        "label": "Use tabbed advice groups where possible",
+        "name": "tabbed_advice_groups",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Handedness",
         "name": "handedness",
         "true": "L",

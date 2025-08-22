@@ -2232,7 +2232,7 @@ def _calculate_general_crystal_spawn_chance(account):
 
     account_wide = (
         base_crystal_chance
-        * ValueToMulti(account.stamps['Crystallin']['Value'])
+        * ValueToMulti(account.stamps['Crystallin']['Total Value'])
         * ValueToMulti(total_card_chance)
     )
 
