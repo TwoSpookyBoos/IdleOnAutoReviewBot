@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_idleon import lavaFunc
@@ -862,7 +863,7 @@ summoning_stone_boss_base_hp = "250000 1000000 150000000 10000000 4000000 400000
 summoning_stone_boss_hp_function = lambda base_hp, boss_round: 2 * base_hp * (4000 ** (boss_round - 1))
 
 summoning_stone_boss_base_damage = "2000 5000 1000000 75000 20000 300000 5000000 100000000 100000000".split(" ")
-summoning_stone_boss_damage_function = lambda base_damage, boss_round: 0.8 * base_damage * (4000 ** (boss_round - 1))
+summoning_stone_boss_damage_function = lambda base_damage, boss_round: Decimal(0.8) * base_damage * (4000 ** (boss_round - 1))
 
 summoning_dict = {
     summoning_match_colors[0]: {
