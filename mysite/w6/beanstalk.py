@@ -18,6 +18,28 @@ def getProgressionTiersAdviceSections():
     max_tier = true_max - optional_tiers
     overall_section_tier = 0
 
+    food_sources = {
+        "Golden Peanut": "Smithing",
+        "Golden Jam": "W1 Colo (efficient) or W6 Colo (fast)",
+        "Golden Kebabs": "W2 Colo (efficient) or W6 Colo (fast)",
+        "Golden Meat Pie": "W2 Crystals",
+        "Golden Nomwich": "W1 Crystals",
+        "Golden Ham": "W3 Crystals",
+        "Golden Bread": "W3 Colo (efficient) or W5 Colo (fast)",
+        "Golden Ribs": "W4 Crystals",
+        "Golden Cheese": "W3 Crystals",
+        "Golden Grilled Cheese Nomwich": "W5 Crystals",
+        "Golden Hampter Gummy Candy": "W5 Crystals",
+        "Golden Nigiri": "W6 Crystals",
+        "Golden Dumpling": "W6 Crystals",
+        "Golden Cake": "Smithing",
+        "Butter Bar": "Catching Butterflies"
+    }
+
+    def get_food_advice_label(food_code):
+        food_name = getItemDisplayName(food_code)
+        return f"{food_name}: {food_sources[food_name]}"
+
     super_beanstack_bought = session_data.account.sneaking['JadeEmporium']['Supersized Gold Beanstacking']['Obtained']
     # Assets contains totals from Storage and inventories
     gold_foods = dict.fromkeys(gfood_codes, 0)
@@ -39,11 +61,11 @@ def getProgressionTiersAdviceSections():
 
     beanstalk_advice["Tiers"][build_subgroup_label(1, max_tier) + ": Collect 10,000 of these Golden Foods"] = sorted([
         Advice(
-            label=getItemDisplayName(golden_food),
-            picture_class=getItemDisplayName(golden_food),
-            progression=f"{int(gold_foods[golden_food]) / BEANSTACK_GOAL :.02%}",
+            label=get_food_advice_label(golden_food_code),
+            picture_class=getItemDisplayName(golden_food_code),
+            progression=f"{int(gold_foods[golden_food_code]) / BEANSTACK_GOAL :.02%}",
             goal="100%",
-        ) for golden_food in tier_0_foods],
+        ) for golden_food_code in tier_0_foods],
         key=lambda advice: float(advice.progression.strip("%")),
         reverse=True
     )
@@ -60,11 +82,11 @@ def getProgressionTiersAdviceSections():
 
     beanstalk_advice["Tiers"][build_subgroup_label(2, max_tier) + ": Collect 100,000 of these Golden Foods"] = buy_jade_emporium_upgrade_advice + sorted([
         Advice(
-            label=getItemDisplayName(golden_food),
-            picture_class=getItemDisplayName(golden_food),
-            progression=f"{int(gold_foods[golden_food]) / SUPER_BEANSTACK_GOAL :.02%}",
+            label=get_food_advice_label(golden_food_code),
+            picture_class=getItemDisplayName(golden_food_code),
+            progression=f"{int(gold_foods[golden_food_code]) / SUPER_BEANSTACK_GOAL :.02%}",
             goal="100%",
-        ) for golden_food in tier_1_foods],
+        ) for golden_food_code in tier_1_foods],
         key=lambda advice: float(advice.progression.strip("%")),
         reverse=True
     )
@@ -78,19 +100,19 @@ def getProgressionTiersAdviceSections():
     optional_food_advices = []
     optional_food_advices += [
         Advice(
-            label=getItemDisplayName(golden_food) + ": 10k",
-            picture_class=getItemDisplayName(golden_food),
-            progression=f"{int(gold_foods[golden_food]) / BEANSTACK_GOAL :.02%}",
+            label=get_food_advice_label(golden_food_code) + " (10k)",
+            picture_class=getItemDisplayName(golden_food_code),
+            progression=f"{int(gold_foods[golden_food_code]) / BEANSTACK_GOAL :.02%}",
             goal="100%",
-        ) for golden_food in optional_tier_0_foods
+        ) for golden_food_code in optional_tier_0_foods
     ]
     optional_food_advices += [
         Advice(
-            label=getItemDisplayName(golden_food) + ": 100k",
-            picture_class=getItemDisplayName(golden_food),
-            progression=f"{int(gold_foods[golden_food]) / SUPER_BEANSTACK_GOAL :.02%}",
+            label=get_food_advice_label(golden_food_code) + " (100k)",
+            picture_class=getItemDisplayName(golden_food_code),
+            progression=f"{int(gold_foods[golden_food_code]) / SUPER_BEANSTACK_GOAL :.02%}",
             goal="100%",
-        ) for golden_food in optional_tier_1_foods
+        ) for golden_food_code in optional_tier_1_foods
     ]
 
     beanstalk_advice["Tiers"][build_subgroup_label(3, max_tier)] = sorted(
