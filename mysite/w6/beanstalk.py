@@ -20,12 +20,12 @@ def getProgressionTiersAdviceSections():
 
     food_sources = {
         "Golden Peanut": "Smithing",
-        "Golden Jam": "W6 Colosseum",
-        "Golden Kebabs": "W6 Colosseum",
+        "Golden Jam": "W1 Colo (efficient) or W6 Colo (fast)",
+        "Golden Kebabs": "W2 Colo (efficient) or W6 Colo (fast)",
         "Golden Meat Pie": "W2 Crystals",
         "Golden Nomwich": "W1 Crystals",
         "Golden Ham": "W3 Crystals",
-        "Golden Bread": "W5 Colosseum",
+        "Golden Bread": "W3 Colo (efficient) or W5 Colo (fast)",
         "Golden Ribs": "W4 Crystals",
         "Golden Cheese": "W3 Crystals",
         "Golden Grilled Cheese Nomwich": "W5 Crystals",
