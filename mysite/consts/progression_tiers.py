@@ -2193,7 +2193,7 @@ true_max_tiers = {
     'Villagers': 0,
 
     # World 6
-    'Beanstalk': len(gfood_codes) * 2,
+    'Beanstalk': 3,
     'Farming': max(farming_progressionTiers.keys()),
     'Sneaking': 0,
     'Summoning': 0,
