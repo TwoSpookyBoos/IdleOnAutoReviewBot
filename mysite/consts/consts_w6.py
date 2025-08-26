@@ -213,6 +213,40 @@ jade_emporium = [
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
 BEANSTACK_GOAL = 10**4
 SUPER_BEANSTACK_GOAL = 10**5
+gfood_sources = {
+    "Golden Peanut": "Smithing",
+    "Golden Jam": "W1 Colo (efficient) or W6 Colo (fast)",
+    "Golden Kebabs": "W2 Colo (efficient) or W6 Colo (fast)",
+    "Golden Meat Pie": "W2 Crystals",
+    "Golden Nomwich": "W1 Crystals",
+    "Golden Ham": "W3 Crystals",
+    "Golden Bread": "W3 Colo (efficient) or W5 Colo (fast)",
+    "Golden Ribs": "W4 Crystals",
+    "Golden Cheese": "W3 Crystals",
+    "Golden Grilled Cheese Nomwich": "W5 Crystals",
+    "Golden Hampter Gummy Candy": "W5 Crystals",
+    "Golden Nigiri": "W6 Crystals",
+    "Golden Dumpling": "W6 Crystals",
+    "Golden Cake": "Smithing",
+    "Butter Bar": "Catching Butterflies"
+}
+gfood_resource_images = {
+        "Golden Peanut": 'smithing',
+        "Golden Jam": 'colosseum-ticket',
+        "Golden Kebabs": 'colosseum-ticket',
+        "Golden Meat Pie": 'crystal-crabal',
+        "Golden Nomwich": 'crystal-carrot',
+        "Golden Ham": 'crystal-cattle',
+        "Golden Bread": 'colosseum-ticket',
+        "Golden Ribs": 'crystal-custard',
+        "Golden Cheese": 'crystal-cattle',
+        "Golden Grilled Cheese Nomwich": 'crystal-capybara',
+        "Golden Hampter Gummy Candy": 'crystal-capybara',
+        "Golden Nigiri": 'crystal-candalight',
+        "Golden Dumpling": 'crystal-candalight',
+        "Golden Cake": 'smithing',
+        "Butter Bar": 'butterfly-bar'
+    }
 pristine_charms_list: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
