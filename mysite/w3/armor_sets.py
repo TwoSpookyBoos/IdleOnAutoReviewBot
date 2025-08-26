@@ -1,5 +1,6 @@
 from consts.progression_tiers import armor_sets_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -38,11 +39,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
             requirements.get('Unlocked', False) == True
             and not smithy_unlocked
         ):
-            if (
-                subgroup_label not in armor_sets_Advices['Tiers']
-                and len(armor_sets_Advices['Tiers']) < session_data.account.max_subgroups
-            ):
-                armor_sets_Advices['Tiers'][subgroup_label] = []
+            add_subgroup_if_available_slot(armor_sets_Advices['Tiers'], subgroup_label)
             if subgroup_label in armor_sets_Advices['Tiers']:
                 armor_sets_Advices['Tiers'][subgroup_label].append(Advice(
                     label=f"Unlock the Smithy by having purchased 2000 gems or waiting 30 days",
@@ -54,11 +51,7 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
         # Unlock particular sets
         for set_name in requirements.get('Sets', []):
             if not player_sets[set_name]['Owned']:
-                if (
-                    subgroup_label not in armor_sets_Advices['Tiers']
-                    and len(armor_sets_Advices['Tiers']) < session_data.account.max_subgroups
-                ):
-                    armor_sets_Advices['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(armor_sets_Advices['Tiers'], subgroup_label)
                 if subgroup_label in armor_sets_Advices['Tiers']:
                     armor_sets_Advices['Tiers'][subgroup_label].append(Advice(
                         label=f"Complete the {set_name.title()}: {player_sets[set_name]['Description']}",

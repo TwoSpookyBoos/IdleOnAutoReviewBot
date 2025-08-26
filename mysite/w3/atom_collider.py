@@ -5,6 +5,7 @@ from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -259,11 +260,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         #Atom levels
         for atom_name, level in requirements.get('Atoms', {}).items():
             if atom_name not in exclusionsList and player_atoms[atom_name]['Level'] < level:
-                if (
-                    subgroup_label not in collider_AdviceDict['Atoms']
-                    and len(collider_AdviceDict['Atoms']) < session_data.account.max_subgroups
-                ):
-                    collider_AdviceDict['Atoms'][subgroup_label] = []
+                add_subgroup_if_available_slot(collider_AdviceDict['Atoms'], subgroup_label)
                 if subgroup_label in collider_AdviceDict['Atoms']:
                     collider_AdviceDict['Atoms'][subgroup_label].append(Advice(
                         label=atom_name,

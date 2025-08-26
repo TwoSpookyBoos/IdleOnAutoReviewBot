@@ -7,6 +7,7 @@ from consts.consts_w4 import cooking_close_enough
 from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
 
 def getBubbleExclusions():
@@ -245,11 +246,7 @@ def getBubblesProgressionTiersAdviceGroup():
                     if session_data.account.alchemy_bubbles[required_bubble]['Level'] < tier[type_index + 2][required_bubble]:
                         requirementsMet[type_index] = False
                         subgroup_including_percent_label = f"{subgroup_label}{f' ({tier[6]})' if bubble_type != 'Utility Bubbles' else ''}"
-                        if (
-                            subgroup_including_percent_label not in bubble_Advices[bubble_type]
-                            and len(bubble_Advices[bubble_type]) < session_data.account.max_subgroups
-                        ):
-                            bubble_Advices[bubble_type][subgroup_including_percent_label] = []
+                        add_subgroup_if_available_slot(bubble_Advices[bubble_type], subgroup_including_percent_label)
                         if subgroup_including_percent_label in bubble_Advices[bubble_type]:
                             printing = session_data.account.alchemy_bubbles[required_bubble]['Material'] in session_data.account.printer['AllCurrentPrints']
                             bubble_Advices[bubble_type][subgroup_including_percent_label].append(Advice(

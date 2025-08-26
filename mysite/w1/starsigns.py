@@ -1,6 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import starsigns_progressionTiers, true_max_tiers
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -24,8 +25,7 @@ def getProgressionTiersAdviceGroup():
         # Total Unlocked Starsigns
         if sse.get('UnlockedSigns', 0) < requirements['UnlockedSigns']:
             # logger.debug(f"Requirement failure at Tier {tier_number} - Unlocked Signs: {sse['UnlockedSigns']} < {requirements['UnlockedSigns']}")
-            if subgroupName not in starsigns_AdviceDict['Signs'] and len(starsigns_AdviceDict['Signs']) < session_data.account.max_subgroups:
-                starsigns_AdviceDict['Signs'][subgroupName] = []
+            add_subgroup_if_available_slot(starsigns_AdviceDict['Signs'], subgroupName)
             if subgroupName in starsigns_AdviceDict['Signs']:
                 starsigns_AdviceDict['Signs'][subgroupName].append(Advice(
                     label=f"Unlock {requirements['UnlockedSigns'] - sse.get('UnlockedSigns', 0)} more Star Signs (Min to unlock {requirements['Goal']})",
@@ -38,11 +38,7 @@ def getProgressionTiersAdviceGroup():
         if requirements['SpecificSigns']:
             for ssName in requirements['SpecificSigns']:
                 if not ss.get(ssName, {}).get('Unlocked', False):
-                    if (
-                        subgroupName not in starsigns_AdviceDict['Signs']
-                        and len(starsigns_AdviceDict['Signs']) < session_data.account.max_subgroups
-                    ):
-                        starsigns_AdviceDict['Signs'][subgroupName] = []
+                    add_subgroup_if_available_slot(starsigns_AdviceDict['Signs'], subgroupName)
                     if subgroupName in starsigns_AdviceDict['Signs']:
                         starsigns_AdviceDict['Signs'][subgroupName].append(Advice(
                             label=f"Unlock {ssName}",

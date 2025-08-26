@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -32,11 +33,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                                 char.po_boxes_invested[box_name]['Level'] < box_level
                                 and box_name not in boxes_advised[char.character_name]
                             ):
-                                if (
-                                    subgroup_label not in po_Advices['Tiers']
-                                    and len(po_Advices['Tiers']) < session_data.account.max_subgroups
-                                ):
-                                    po_Advices['Tiers'][subgroup_label] = []
+                                add_subgroup_if_available_slot(po_Advices['Tiers'], subgroup_label)
                                 if subgroup_label in po_Advices['Tiers']:
                                     po_Advices['Tiers'][subgroup_label].append(Advice(
                                         label=f"{char.character_name}: {box_name}",
@@ -57,11 +54,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                             box_details['Level'] < box_details['Max Level']
                             and box_name not in boxes_advised[char.character_name]
                         ):
-                            if (
-                                    subgroup_label not in po_Advices['Tiers']
-                                    and len(po_Advices['Tiers']) < session_data.account.max_subgroups
-                            ):
-                                po_Advices['Tiers'][subgroup_label] = []
+                            add_subgroup_if_available_slot(po_Advices['Tiers'], subgroup_label)
                             if subgroup_label in po_Advices['Tiers']:
                                 po_Advices['Tiers'][subgroup_label].append(Advice(
                                     label=f"{char.character_name}: {box_name}",

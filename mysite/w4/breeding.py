@@ -1,8 +1,8 @@
 import copy
 
 from consts.consts_idleon import lavaFunc
-from consts.consts_w3 import approx_max_talent_level_non_es
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, notateNumber
@@ -539,11 +539,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
                     for pet_details in breeding_dict['Grouped Bonus'][shiny_type]:
                         if pet_details[1] < len(shiny_days_list):
                             all_requirements_met = False
-                            if (
-                                subgroup_label not in breeding_Advices['MaxShinyLevels']
-                                    and len(breeding_Advices['MaxShinyLevels']) < session_data.account.max_subgroups
-                            ):
-                                breeding_Advices['MaxShinyLevels'][subgroup_label] = []
+                            add_subgroup_if_available_slot(breeding_Advices['MaxShinyLevels'], subgroup_label)
                             if subgroup_label in breeding_Advices['MaxShinyLevels']:
                                 breeding_Advices['MaxShinyLevels'][subgroup_label].append(Advice(
                                     label=f"{shiny_type}: {pet_details[0]}",

@@ -6,6 +6,7 @@ from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgrou
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -205,11 +206,7 @@ def getProgressionTiersAdviceGroup():
         #Cash Points
         for character_index, upgrade_count in enumerate(player_cash_points):
             if upgrade_count < requirements.get('Cash Points', 0):
-                if (
-                    subgroup_label not in smithing_Advices['Cash Points']
-                    and len(smithing_Advices['Cash Points']) < session_data.account.max_subgroups
-                ):
-                    smithing_Advices['Cash Points'][subgroup_label] = []
+                add_subgroup_if_available_slot(smithing_Advices['Cash Points'], subgroup_label)
                 if subgroup_label in smithing_Advices['Cash Points']:
                     smithing_Advices['Cash Points'][subgroup_label].append(Advice(
                         label=session_data.account.all_characters[character_index].character_name,
@@ -223,11 +220,7 @@ def getProgressionTiersAdviceGroup():
         #Monster Points
         for character_index, upgrade_count in enumerate(player_monster_points):
             if upgrade_count < requirements.get('Monster Points', 0):
-                if (
-                    subgroup_label not in smithing_Advices['Monster Points']
-                    and len(smithing_Advices['Monster Points']) < session_data.account.max_subgroups
-                ):
-                    smithing_Advices['Monster Points'][subgroup_label] = []
+                add_subgroup_if_available_slot(smithing_Advices['Monster Points'], subgroup_label)
                 if subgroup_label in smithing_Advices['Monster Points']:
                     smithing_Advices['Monster Points'][subgroup_label].append(Advice(
                         label=session_data.account.all_characters[character_index].character_name,
@@ -241,11 +234,7 @@ def getProgressionTiersAdviceGroup():
 
         #Forge Upgrades
         if sum_ForgeUpgrades < requirements.get('Forge Total', 0):
-            if (
-                subgroup_label not in smithing_Advices['Forge Upgrades']
-                and len(smithing_Advices['Forge Upgrades']) < session_data.account.max_subgroups
-            ):
-                smithing_Advices['Forge Upgrades'][subgroup_label] = []
+            add_subgroup_if_available_slot(smithing_Advices['Forge Upgrades'], subgroup_label)
             if subgroup_label in smithing_Advices['Forge Upgrades']:
                 smithing_Advices['Forge Upgrades'][subgroup_label].append(Advice(
                     label=f"Purchase {requirements.get('Forge Total', 0)} total Forge upgrades"

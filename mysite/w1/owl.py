@@ -1,6 +1,7 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.progression_tiers import owl_progressionTiers, true_max_tiers
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -45,8 +46,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                 for mf, resets in featherResetsDict.items():
                     if lastMFShown < mf <= requirements['MegaFeathersOwned']:
                         if session_data.account.owl['MegaFeathersOwned'] <= mf:
-                            if subgroup_label not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.max_subgroups:
-                                owl_AdviceDict['MegaFeathers'][subgroup_label] = []
+                            add_subgroup_if_available_slot(owl_AdviceDict['MegaFeathers'], subgroup_label)
                             if subgroup_label in owl_AdviceDict['MegaFeathers']:
                                 lastMFShown = mf
                                 owl_AdviceDict['MegaFeathers'][subgroup_label].append(Advice(
@@ -57,8 +57,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                                 ))
         if 'BonusesOfOrion' in requirements:
             if session_data.account.owl['BonusesOfOrion'] < requirements['BonusesOfOrion']:
-                if subgroup_label not in owl_AdviceDict['MegaFeathers'] and len(owl_AdviceDict['MegaFeathers']) < session_data.account.max_subgroups:
-                    owl_AdviceDict['MegaFeathers'][subgroup_label] = []
+                add_subgroup_if_available_slot(owl_AdviceDict['MegaFeathers'], subgroup_label)
                 if subgroup_label in owl_AdviceDict['MegaFeathers']:
                     orion_advice = Advice(
                             label=f"Before MF{requirements['MegaFeathersOwned']+1}, purchase Bonuses of Orion {requirements['BonusesOfOrion']}",

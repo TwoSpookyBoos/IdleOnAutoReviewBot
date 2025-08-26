@@ -2,6 +2,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w6 import gfood_codes, BEANSTACK_GOAL, SUPER_BEANSTACK_GOAL, gfood_data
 from consts.progression_tiers import true_max_tiers, beanstalk_progressionTiers
 from models.models import AdviceSection, Advice, AdviceGroup
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import getItemDisplayName
 from flask import g as session_data
 from utils.logging import get_logger
@@ -36,11 +37,7 @@ def getProgressionTiersAdviceSections():
         #10k
         for gold_food in requirements.get('10k', []):
             if not session_data.account.sneaking['Beanstalk'][gold_food]['Beanstacked']:
-                if (
-                    subgroup_label not in beanstalk_advice['Tiers']
-                    and len(beanstalk_advice['Tiers']) < session_data.account.max_subgroups
-                ):
-                    beanstalk_advice['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
                 if subgroup_label in beanstalk_advice['Tiers']:
                     beanstalk_advice['Tiers'][subgroup_label].append(Advice(
                         label=f"10k: {get_food_advice_label(gold_food)}",
@@ -53,11 +50,7 @@ def getProgressionTiersAdviceSections():
         #SuperBeanstack purchased
         if requirements.get('SuperBeanstack Purchased', False):
             if not super_beanstack_bought:
-                if (
-                    subgroup_label not in beanstalk_advice['Tiers']
-                    and len(beanstalk_advice['Tiers']) < session_data.account.max_subgroups
-                ):
-                    beanstalk_advice['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
                 if subgroup_label in beanstalk_advice['Tiers']:
                     beanstalk_advice['Tiers'][subgroup_label].append(Advice(
                         label=f"Purchase \"Supersized Gold Beanstacking\" from the Jade Emporium",
@@ -69,11 +62,7 @@ def getProgressionTiersAdviceSections():
         # 100k
         for gold_food in requirements.get('100k', []):
             if not session_data.account.sneaking['Beanstalk'][gold_food]['SuperBeanstacked']:
-                if (
-                    subgroup_label not in beanstalk_advice['Tiers']
-                    and len(beanstalk_advice['Tiers']) < session_data.account.max_subgroups
-                ):
-                    beanstalk_advice['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
                 if subgroup_label in beanstalk_advice['Tiers']:
                     beanstalk_advice['Tiers'][subgroup_label].append(Advice(
                         label=f"100k: {get_food_advice_label(gold_food)}",

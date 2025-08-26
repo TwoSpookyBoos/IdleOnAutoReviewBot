@@ -2,6 +2,7 @@ from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -52,11 +53,7 @@ def getSailingProgressionTierAdviceGroups():
         if 'Islands Discovered' in requirements:
             if session_data.account.sailing['Islands Discovered'] < requirements['Islands Discovered']:
                 shortBy = requirements['Islands Discovered'] - session_data.account.sailing['Islands Discovered']
-                if (
-                    subgroup_label not in sailing_Advices['Islands Discovered']
-                    and len(sailing_Advices['Islands Discovered']) < session_data.account.max_subgroups
-                ):
-                    sailing_Advices['Islands Discovered'][subgroup_label] = []
+                add_subgroup_if_available_slot(sailing_Advices['Islands Discovered'], subgroup_label)
                 if subgroup_label in sailing_Advices['Islands Discovered']:
                     sailing_Advices['Islands Discovered'][subgroup_label].append(Advice(
                         label=f"Discover {shortBy} more Island{pl(shortBy)}",
@@ -71,11 +68,7 @@ def getSailingProgressionTierAdviceGroups():
         if 'Captains And Boats' in requirements:
             if session_data.account.sailing['CaptainsOwned'] < requirements['Captains And Boats']:
                 shortBy = requirements['Captains And Boats'] - session_data.account.sailing['CaptainsOwned']
-                if (
-                    subgroup_label not in sailing_Advices['Captains And Boats']
-                    and len(sailing_Advices['Captains And Boats']) < session_data.account.max_subgroups
-                ):
-                    sailing_Advices['Captains And Boats'][subgroup_label] = []
+                add_subgroup_if_available_slot(sailing_Advices['Captains And Boats'], subgroup_label)
                 if subgroup_label in sailing_Advices['Captains And Boats']:
                     sailing_Advices['Captains And Boats'][subgroup_label].append(Advice(
                         label=f"Hire {shortBy} more Captain{pl(shortBy)}",
@@ -85,11 +78,7 @@ def getSailingProgressionTierAdviceGroups():
                     ))
             if session_data.account.sailing['BoatsOwned'] < requirements['Captains And Boats']:
                 shortBy = requirements['Captains And Boats'] - session_data.account.sailing['BoatsOwned']
-                if (
-                    subgroup_label not in sailing_Advices['Captains And Boats']
-                    and len(sailing_Advices['Captains And Boats']) < session_data.account.max_subgroups
-                ):
-                    sailing_Advices['Captains And Boats'][subgroup_label] = []
+                add_subgroup_if_available_slot(sailing_Advices['Captains And Boats'], subgroup_label)
                 if subgroup_label in sailing_Advices['Captains And Boats']:
                     sailing_Advices['Captains And Boats'][subgroup_label].append(Advice(
                         label=f"Purchase {shortBy} more Boat{pl(shortBy)}",
@@ -104,11 +93,7 @@ def getSailingProgressionTierAdviceGroups():
         if session_data.account.sum_artifact_tiers < total_artifacts:
             if 'Eldritch' in requirements:
                 if not session_data.account.rift['EldritchArtifacts']:
-                    if (
-                        subgroup_label not in sailing_Advices['Artifacts']
-                        and len(sailing_Advices['Artifacts']) < session_data.account.max_subgroups
-                    ):
-                        sailing_Advices['Artifacts'][subgroup_label] = []
+                    add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
                             label="Unlock Eldritch tier Artifacts by completing {{ Rift|#rift }} 30",
@@ -118,8 +103,7 @@ def getSailingProgressionTierAdviceGroups():
                         ))
             if 'Sovereign' in requirements:
                 if not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
-                    if subgroup_label not in sailing_Advices['Artifacts'] and len(sailing_Advices['Artifacts']) < session_data.account.max_subgroups:
-                        sailing_Advices['Artifacts'][subgroup_label] = []
+                    add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
                             label="Purchase \"Sovereign Artifacts\" from the {{ Jade Emporium|#sneaking }} in W6",
@@ -129,8 +113,7 @@ def getSailingProgressionTierAdviceGroups():
                         ))
             if 'ExtraLanterns' in requirements:
                 if not session_data.account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-                    if subgroup_label not in sailing_Advices['Artifacts'] and len(sailing_Advices['Artifacts']) < session_data.account.max_subgroups:
-                        sailing_Advices['Artifacts'][subgroup_label] = []
+                    add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
                             label="Purchase \"Brighter Lighthouse Bulb\" from the {{ Jade Emporium|#sneaking }} in W6",
@@ -153,8 +136,7 @@ def getSailingProgressionTierAdviceGroups():
                 for artifact_name, artifact_tier in requirements['Artifacts'].items():
                     if session_data.account.sailing['Artifacts'].get(artifact_name, {}).get('Level', 0) < artifact_tier:
                         if artifact_name not in delays_dict.get(tier_number, []):
-                            if subgroup_label not in sailing_Advices['Artifacts'] and len(sailing_Advices['Artifacts']) < session_data.account.max_subgroups:
-                                sailing_Advices['Artifacts'][subgroup_label] = []
+                            add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                             if subgroup_label in sailing_Advices['Artifacts']:
                                 sailing_Advices['Artifacts'][subgroup_label].append(Advice(
                                     label=artifact_name,
