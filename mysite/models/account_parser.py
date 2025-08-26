@@ -3297,7 +3297,8 @@ def _parse_w6_jade_emporium(account, raw_ninja_list):
         try:
             account.sneaking['JadeEmporium'][upgradeDict['Name']] = {
                 'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
-                'Bonus': upgradeDict['Bonus']
+                'Bonus': upgradeDict['Bonus'],
+                'Image': upgradeDict['Name']
             }
         except:
             continue

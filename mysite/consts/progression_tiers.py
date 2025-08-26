@@ -2121,6 +2121,40 @@ farming_progressionTiers = {
         }
     }  #440% Vines, then 99% the Alchemy Bubbles
 }
+beanstalk_progressionTiers = {
+    0: {},
+    1: {
+        '10k': [
+            'PeanutG', 'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5',
+            'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12'
+        ]
+    },
+    2: {
+        '10k': [
+             'FoodG6', 'FoodG13'  #Bread and Cakes
+        ],
+        'SuperBeanstack Purchased': True,
+    },
+    3: {
+        '100k': [
+            'PeanutG', 'FoodG1', 'FoodG2', 'FoodG3', 'FoodG5', 'FoodG7',
+            'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12'
+        ]
+    },
+    4: {
+        '100k': [
+            'FoodG13'  #Cakes
+        ]
+    },
+    5: {
+        '10k': [
+            'ButterBar', 'FoodG4'
+        ],
+        '100k': [
+            'ButterBar', 'FoodG4', 'FoodG6'
+        ]
+    },
+}
 
 ###TRUE MAX TIERS###
 true_max_tiers = {
@@ -2193,7 +2227,7 @@ true_max_tiers = {
     'Villagers': 0,
 
     # World 6
-    'Beanstalk': 3,
+    'Beanstalk': max(beanstalk_progressionTiers.keys()),
     'Farming': max(farming_progressionTiers.keys()),
     'Sneaking': 0,
     'Summoning': 0,

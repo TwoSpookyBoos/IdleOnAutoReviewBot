@@ -220,7 +220,7 @@ class Placements(dict):
         SAILING:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,         true_max_tiers[SAILING], 99],
         #GAMING:             [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,          true_max_tiers[GAMING], 99],
         FARMING:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  1,      2,  3,  4,      9,          true_max_tiers[FARMING], 99],
-        BEANSTALK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  1,  1,      2,          true_max_tiers[BEANSTALK], 99],
+        BEANSTALK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,          true_max_tiers[BEANSTALK], 99],
     }
     section_count = len(sectionThresholds)
 
