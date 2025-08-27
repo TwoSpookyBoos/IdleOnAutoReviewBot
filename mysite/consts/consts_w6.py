@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_idleon import lavaFunc
@@ -212,6 +213,69 @@ jade_emporium = [
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
 BEANSTACK_GOAL = 10**4
 SUPER_BEANSTACK_GOAL = 10**5
+gfood_data = {
+    "Golden Peanut": {
+        "Source": "Smithing",
+        "Resource Image": "smithing"
+    },
+    "Golden Jam": {
+        "Source": "W1 Colo (efficient) or W6 Colo (fast)",
+        "Resource Image": "colosseum-ticket"
+    },
+    "Golden Kebabs": {
+        "Source": "W2 Colo (efficient) or W6 Colo (fast)",
+        "Resource Image": "colosseum-ticket"
+    },
+    "Golden Meat Pie": {
+        "Source": "W2 Crystals",
+        "Resource Image": "crystal-crabal"
+    },
+    "Golden Nomwich": {
+        "Source": "W1 Crystals",
+        "Resource Image": "crystal-carrot"
+    },
+    "Golden Ham": {
+        "Source": "W3 Crystals",
+        "Resource Image": "crystal-cattle"
+    },
+    "Golden Bread": {
+        "Source": "W3 Colo (efficient) or W5 Colo (fast)",
+        "Resource Image": "colosseum-ticket"
+    },
+    "Golden Ribs": {
+        "Source": "W4 Crystals",
+        "Resource Image": "crystal-custard"
+    },
+    "Golden Cheese": {
+        "Source": "W3 Crystals",
+        "Resource Image": "crystal-cattle"
+    },
+    "Golden Grilled Cheese Nomwich": {
+        "Source": "W5 Crystals",
+        "Resource Image": "crystal-capybara"
+    },
+    "Golden Hampter Gummy Candy": {
+        "Source": "W5 Crystals",
+        "Resource Image": "crystal-capybara"
+    },
+    "Golden Nigiri": {
+        "Source": "W6 Crystals",
+        "Resource Image": "crystal-candalight"
+    },
+    "Golden Dumpling": {
+        "Source": "W6 Crystals",
+        "Resource Image": "crystal-candalight"
+    },
+    "Golden Cake": {
+        "Source": "Smithing",
+        "Resource Image": "smithing"
+    },
+    "Butter Bar": {
+        "Source": "Catching Butterflies",
+        "Resource Image": "butterfly-bar"
+    }
+}
+
 pristine_charms_list: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
@@ -862,7 +926,7 @@ summoning_stone_boss_base_hp = "250000 1000000 150000000 10000000 4000000 400000
 summoning_stone_boss_hp_function = lambda base_hp, boss_round: 2 * base_hp * (4000 ** (boss_round - 1))
 
 summoning_stone_boss_base_damage = "2000 5000 1000000 75000 20000 300000 5000000 100000000 100000000".split(" ")
-summoning_stone_boss_damage_function = lambda base_damage, boss_round: 0.8 * base_damage * (4000 ** (boss_round - 1))
+summoning_stone_boss_damage_function = lambda base_damage, boss_round: Decimal(0.8) * base_damage * (4000 ** (boss_round - 1))
 
 summoning_dict = {
     summoning_match_colors[0]: {

@@ -9,6 +9,7 @@ from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 
@@ -211,11 +212,7 @@ def getSigilsProgressionTiersAdviceGroup():
     for tier_number, requirements in sigils_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         if 'Ionized Sigils' in requirements.get('Other', {}) and not session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
-            if (
-                subgroup_label not in sigils_Advices['Sigils']
-                and len(sigils_Advices['Sigils']) < session_data.account.max_subgroups
-            ):
-                sigils_Advices['Sigils'][subgroup_label] = []
+            add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
             if subgroup_label in sigils_Advices['Sigils']:
                 sigils_Advices['Sigils'][subgroup_label].append(Advice(
                     label=f"{{{{ Jade Emporium|#sneaking }}}}: Purchase Ionized Sigils to unlock Red sigils",
@@ -226,11 +223,7 @@ def getSigilsProgressionTiersAdviceGroup():
         # Unlock new Sigils
         for requiredSigil, requiredLevel in requirements.get('Unlock', {}).items():
             if player_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
-                if (
-                    subgroup_label not in sigils_Advices['Sigils']
-                    and len(sigils_Advices['Sigils']) < session_data.account.max_subgroups
-                ):
-                    sigils_Advices['Sigils'][subgroup_label] = []
+                add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
                 has_chars_assigned = player_sigil_assignments[requiredSigil] > 0
                 info_text = ''
                 if has_chars_assigned:
@@ -246,11 +239,7 @@ def getSigilsProgressionTiersAdviceGroup():
         # Level Up unlocked Sigils
         for requiredSigil, requiredLevel in requirements.get('LevelUp', {}).items():
             if player_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
-                if (
-                    subgroup_label not in sigils_Advices['Sigils']
-                    and len(sigils_Advices['Sigils']) < session_data.account.max_subgroups
-                ):
-                    sigils_Advices['Sigils'][subgroup_label] = []
+                add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
                 if subgroup_label in sigils_Advices['Sigils']:
                     if player_sigils[requiredSigil]['PlayerHours'] < 100:
                         prog = f"{player_sigils[requiredSigil]['PlayerHours']:.2f}"

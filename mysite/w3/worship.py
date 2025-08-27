@@ -3,6 +3,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w3 import conditional_prayers, ignorable_prayers
 from consts.progression_tiers import prayers_progressionTiers, true_max_tiers
 from flask import g as session_data
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -37,11 +38,7 @@ def setPrayersProgressionTierAdviceGroup():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         for prayer_name, prayer_level in requirements.items():
             if player_prayers[prayer_name]['Level'] < prayer_level:
-                if (
-                    subgroup_label not in prayers_Advices['Recommended']
-                    and len(prayers_Advices['Recommended']) < session_data.account.max_subgroups
-                ):
-                    prayers_Advices['Recommended'][subgroup_label] = []
+                add_subgroup_if_available_slot(prayers_Advices['Recommended'], subgroup_label)
                 if subgroup_label in prayers_Advices['Recommended']:
                     prayers_Advices['Recommended'][subgroup_label].append(Advice(
                         label=prayer_name,

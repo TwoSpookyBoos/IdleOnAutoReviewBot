@@ -1,5 +1,6 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -408,11 +409,7 @@ def getProgressionTiersAdviceGroup():
 
         # TotalLevelStamps
         if session_data.account.stamp_totals.get('Total', 0) < requirements.get('Total Stamp Levels', 0):
-            if (
-                subgroup_label not in stamp_Advices['Stamp Levels']
-                and len(stamp_Advices['Stamp Levels']) < session_data.account.max_subgroups
-            ):
-                stamp_Advices['Stamp Levels'][subgroup_label] = []
+            add_subgroup_if_available_slot(stamp_Advices['Stamp Levels'], subgroup_label)
             if subgroup_label in stamp_Advices['Stamp Levels']:
                 stamp_Advices['Stamp Levels'][subgroup_label].append(Advice(
                     label='Total Stamp Levels',
@@ -427,11 +424,7 @@ def getProgressionTiersAdviceGroup():
         for stamp_type in stamp_types:
             for required_stamp in requirements.get('Stamps').get(stamp_type, []):
                 if required_stamp in missing_stamps_list and exclusions_dict.get(required_stamp, False) == False:
-                    if (
-                        subgroup_label not in stamp_Advices['Find Required']
-                        and len(stamp_Advices['Find Required']) < session_data.account.max_subgroups
-                    ):
-                        stamp_Advices['Find Required'][subgroup_label] = []
+                    add_subgroup_if_available_slot(stamp_Advices['Find Required'], subgroup_label)
                     if subgroup_label in stamp_Advices['Find Required']:
                         stamp_Advices['Find Required'][subgroup_label].append(Advice(
                             label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material'].replace('-', ' ').title()}",
@@ -452,11 +445,7 @@ def getProgressionTiersAdviceGroup():
                     (tier_number <= max_tier and exclusions_dict.get(stamp_name, False) == False)
                     or (tier_number > max_tier and player_stamps[stamp_name]['Delivered'])
                 ):
-                    if (
-                        subgroup_label not in stamp_Advices['Specific']
-                        and len(stamp_Advices['Specific']) < session_data.account.max_subgroups
-                    ):
-                        stamp_Advices['Specific'][subgroup_label] = []
+                    add_subgroup_if_available_slot(stamp_Advices['Specific'], subgroup_label)
                     if subgroup_label in stamp_Advices['Specific']:
                         added_stamps[stamp_name] = required_level
                         stamp_Advices['Specific'][subgroup_label].append(Advice(

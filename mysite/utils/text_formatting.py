@@ -1,5 +1,6 @@
 import enum
 import re
+from decimal import Decimal
 from pathlib import Path
 
 import yaml
@@ -144,7 +145,7 @@ stringToDecimal = {
     "K": 1e3,
     "": 1
 }
-def notateNumber(inputType: str, inputValue: float, decimals=2, overrideCharacter="", matchString=None):
+def notateNumber(inputType: str, inputValue: float | Decimal, decimals=2, overrideCharacter="", matchString=None):
     """
     :param inputType: 'Basic' or 'Match'
     :param inputValue: The Value needing to be notated
@@ -153,16 +154,17 @@ def notateNumber(inputType: str, inputValue: float, decimals=2, overrideCharacte
     :param matchString: The entire value to match to
     :return:
     """
+    inputValue = Decimal(inputValue)
     match inputType:
         case "Basic":
-            if float(abs(inputValue)) >= 1e18:
+            if abs(inputValue) >= 1e18:
                 result = f"{inputValue:.{decimals}e}"
-            elif float(abs(inputValue)) < 1e3:
+            elif abs(inputValue) < 1e3:
                 result = f"{inputValue:.{decimals}f}"
             else:
                 for k, v in stringToDecimal.items():
-                    if float(abs(inputValue)) >= v:
-                        result = f"{inputValue / v:.{decimals}f}{k}"
+                    if abs(inputValue) >= v:
+                        result = f"{round(inputValue / Decimal(v), decimals)}{k}"
                         break
         case "Match":
             if not overrideCharacter and isinstance(matchString, str):
@@ -173,9 +175,9 @@ def notateNumber(inputType: str, inputValue: float, decimals=2, overrideCharacte
                 else:
                     overrideCharacter = ''
             if overrideCharacter and overrideCharacter.isalpha():
-                result = f"{inputValue / stringToDecimal[overrideCharacter.upper()]:.{decimals}f}{overrideCharacter.upper()}"
+                result = f"{round(inputValue / Decimal(stringToDecimal[overrideCharacter.upper()]), decimals)}{overrideCharacter.upper()}"
             elif overrideCharacter and overrideCharacter.isdigit():
-                result = f"{inputValue / float(f'1e{overrideCharacter}'):.{decimals}f}e+{overrideCharacter}"
+                result = f"{round(inputValue / Decimal(f'1e{overrideCharacter}'), decimals)}e+{overrideCharacter}"
             else:
                 result = notateNumber('Basic', inputValue, decimals)
             # if matchString.upper() in stringToDecimal:
