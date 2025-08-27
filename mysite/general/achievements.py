@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best
@@ -161,8 +162,7 @@ def getProgressionTiersAdviceGroup():
         for categoryName, categoryAchievementsDict in tierRequirements.items():
             for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
                 if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
-                    if subgroupName not in achievements_AdviceDict[categoryName] and len(achievements_AdviceDict[categoryName]) < session_data.account.max_subgroups:
-                        achievements_AdviceDict[categoryName][subgroupName] = []
+                    add_subgroup_if_available_slot(achievements_AdviceDict[categoryName], subgroupName)
                     if subgroupName in achievements_AdviceDict[categoryName]:
                         prog, goal, resource = getAchievementStatus(achievementName)
                         achievements_AdviceDict[categoryName][subgroupName].append(Advice(

@@ -1,6 +1,7 @@
 from math import ceil, floor
 
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
@@ -914,11 +915,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
 
         #Farming Level
         if highest_farming_level < requirements.get('Farming Level', 0):
-            if (
-                subgroup_label not in farming_Advices['Tiers']
-                and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-            ):
-                farming_Advices['Tiers'][subgroup_label] = []
+            add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
             if subgroup_label in farming_Advices['Tiers']:
                 advice_types_added.add('Farming Level')
                 farming_Advices['Tiers'][subgroup_label].append(Advice(
@@ -930,11 +927,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
 
         # Unlock Crops
         if farming['CropsUnlocked'] < requirements.get('Crops Unlocked', 0):
-            if (
-                subgroup_label not in farming_Advices['Tiers']
-                and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-            ):
-                farming_Advices['Tiers'][subgroup_label] = []
+            add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
             if subgroup_label in farming_Advices['Tiers']:
                 advice_types_added.add('Crops Unlocked')
                 shortby = requirements.get('Crops Unlocked', 0) - farming['CropsUnlocked']
@@ -950,11 +943,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
             requiredStats = requirements['Stats']
             if 'Value' in requiredStats:
                 if farming['Value']['FinalMin'] < requiredStats['Value']:
-                    if (
-                        subgroup_label not in farming_Advices['Tiers']
-                        and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-                    ):
-                        farming_Advices['Tiers'][subgroup_label] = []
+                    add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         advice_types_added.add('Value Stat')
                         farming_Advices['Tiers'][subgroup_label].append(Advice(
@@ -967,11 +956,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         #Day Market
         for r_name, r_level in requirements.get('Day Market', {}).items():
             if farming['MarketUpgrades'][r_name]['Level'] < r_level:
-                if (
-                    subgroup_label not in farming_Advices['Tiers']
-                    and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-                ):
-                    farming_Advices['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                 if subgroup_label in farming_Advices['Tiers']:
                     advice_types_added.add('Day Market')
                     material_crop_number = getRequiredCropNumber(r_name, r_level)
@@ -991,11 +976,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         for set_number, set_requirements in requirements.get('Land Ranks', {}).items():
             for r_name, r_level in set_requirements.items():
                 if farming['LandRankDatabase'][r_name]['Level'] < r_level and r_name not in lr_exclusions:
-                    if (
-                        subgroup_label not in farming_Advices['Tiers']
-                        and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-                    ):
-                        farming_Advices['Tiers'][subgroup_label] = []
+                    add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         if r_name in one_point_landranks:
                             current = farming['LandRankDatabase'][r_name]['Value']
@@ -1119,8 +1100,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         total_nm_entries = 0
         for r_name, r_level in requirements.get('Night Market', {}).items():
             if farming['MarketUpgrades'][r_name]['Level'] < r_level:
-                if subgroup_label not in farming_Advices['Tiers'] and len(farming_Advices['Tiers']) < session_data.account.max_subgroups:
-                    farming_Advices['Tiers'][subgroup_label] = []
+                add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                 if subgroup_label in farming_Advices['Tiers']:
                     if r_name in multis:
                         current = ValueToMulti(farming['MarketUpgrades'][r_name]['Value'])
@@ -1155,11 +1135,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         if 'Alchemy Bubbles' in requirements:
             for r_name, r_level in requirements['Alchemy Bubbles'].items():
                 if r_level > session_data.account.alchemy_bubbles[r_name]['Level']:
-                    if (
-                        subgroup_label not in farming_Advices['Tiers']
-                        and len(farming_Advices['Tiers']) < session_data.account.max_subgroups
-                    ):
-                        farming_Advices['Tiers'][subgroup_label] = []
+                    add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         advice_types_added.add('Alchemy Bubbles')
                         farming_Advices['Tiers'][subgroup_label].append(Advice(

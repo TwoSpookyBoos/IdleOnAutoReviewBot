@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -39,11 +40,7 @@ def getVialsProgressionTiersAdviceGroup():
 
         #Total Vials Unlocked
         if unlocked_vials < requirements.get('Unlocked', 0):
-            if (
-                subgroupName not in vial_Advices['Early Vials']
-                and len(vial_Advices['Early Vials']) < session_data.account.max_subgroups
-            ):
-                vial_Advices['Early Vials'][subgroupName] = []
+            add_subgroup_if_available_slot(vial_Advices['Early Vials'], subgroupName)
             if subgroupName in vial_Advices['Early Vials']:
                 vial_Advices['Early Vials'][subgroupName].append(Advice(
                     label=f"Unlock {requirements.get('Unlocked', 0) - unlocked_vials} more "
@@ -60,11 +57,7 @@ def getVialsProgressionTiersAdviceGroup():
         if len(maxed_vials_list) < requirements.get('Maxed', 0):
             if tier_TotalVialsMaxed >= 20:
                 advice_TrailingMaxedVials += requirements.get('Notes', '')
-            if (
-                    subgroupName not in vial_Advices['Maxed Vials']
-                    and len(vial_Advices['Maxed Vials']) < session_data.account.max_subgroups
-            ):
-                vial_Advices['Maxed Vials'][subgroupName] = []
+            add_subgroup_if_available_slot(vial_Advices['Maxed Vials'], subgroupName)
             if subgroupName in vial_Advices['Maxed Vials']:
                 vial_Advices['Maxed Vials'][subgroupName].append(Advice(
                     label=f"Max {requirements.get('Maxed', 0)} total vials",

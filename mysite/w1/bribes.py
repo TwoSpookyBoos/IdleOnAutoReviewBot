@@ -1,4 +1,5 @@
 from models.models import Advice, AdviceGroup, AdviceSection
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import bribes_progressionTiers, true_max_tiers
@@ -27,11 +28,7 @@ def getProgressionTiersAdviceGroup():
         subgroup_label = build_subgroup_label(tier, max_tier)
         for set_name, specific_bribes in requirements.items():
             if len(specific_bribes) > sum_bribes_list[set_name]:
-                if (
-                    subgroup_label not in bribe_AdviceDict
-                    and len(bribe_AdviceDict) < session_data.account.max_subgroups
-                ):
-                    bribe_AdviceDict[subgroup_label] = []
+                add_subgroup_if_available_slot(bribe_AdviceDict, subgroup_label)
                 if subgroup_label in bribe_AdviceDict:
                     for bribe in specific_bribes:
                         if player_bribes[set_name][bribe] <= 0:

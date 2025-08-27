@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
@@ -83,11 +84,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         for island_name in requirements.get('Islands', []):
             if not session_data.account.islands[island_name]['Unlocked']:
-                if (
-                    subgroup_label not in island_Advices
-                    and len(island_Advices) < session_data.account.max_subgroups
-                ):
-                    island_Advices[subgroup_label] = []
+                add_subgroup_if_available_slot(island_Advices, subgroup_label)
                 if subgroup_label in island_Advices:
                     island_Advices[subgroup_label].append(Advice(
                         label=f'Unlock {island_name}',

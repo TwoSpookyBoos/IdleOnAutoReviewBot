@@ -1,6 +1,7 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import vault_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -24,11 +25,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         if 'Include' in requirements:
             for upgrade_name in requirements['Include']:
                 if upgrades[upgrade_name]['Level'] < upgrades[upgrade_name]['Max Level']:
-                    if (
-                        subgroup_label not in vault_AdviceDict['Tiers']
-                        and len(vault_AdviceDict['Tiers']) < session_data.account.max_subgroups
-                    ):
-                        vault_AdviceDict['Tiers'][subgroup_label] = []
+                    add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                     if subgroup_label in vault_AdviceDict['Tiers']:
                         vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
                             label=(
@@ -45,11 +42,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
             for upgrade_name, upgrade_details in session_data.account.vault['Upgrades'].items():
                 if upgrade_name not in requirements['Exclude']:
                     if upgrade_details['Level'] < upgrade_details['Max Level']:
-                        if (
-                            subgroup_label not in vault_AdviceDict['Tiers']
-                            and len(vault_AdviceDict['Tiers']) < session_data.account.max_subgroups
-                        ):
-                            vault_AdviceDict['Tiers'][subgroup_label] = []
+                        add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                         if subgroup_label in vault_AdviceDict['Tiers']:
                             vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
                                 label=(
