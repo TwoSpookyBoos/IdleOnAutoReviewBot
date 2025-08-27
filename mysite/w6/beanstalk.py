@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 
 def get_food_advice_label(food_code):
     food_name = getItemDisplayName(food_code)
-    return f"{food_name}: {gfood_data[food_name]["Source"]}"
+    return f"{food_name}: {gfood_data[food_name]['Source']}"
 
 def getProgressionTiersAdviceSections():
     beanstalk_advice = {
