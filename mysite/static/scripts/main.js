@@ -394,7 +394,7 @@ function loadErrorPopup(html, statusCode) {
 }
 
 function renderWorld(worldCode){
-    fetch(`/${worldCode}`, {
+    return fetch(`/${worldCode}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -442,8 +442,9 @@ function processAutoReview() {
 
 function loadHtmlIntoMain(html) {
     loadResults(html);
-    initResultsUI();
+    initialize_world_tab_logic()
     initialize_tabbed_advice_group_logic();
+    initResultsUI();
 }
 
 const storeUserParams = (data) => Object
@@ -819,6 +820,34 @@ function animateStaleData() {
             }
         }, 0);
     });
+}
+
+function initialize_world_tab_logic() {
+    const worldTabs = document.querySelectorAll(".world-tab")
+    const deactivateAll = () => worldTabs.forEach(worldTab => worldTab.classList.toggle('world-tab-active', false))
+
+    worldTabs.forEach(worldTab => worldTab.addEventListener('click', (event) => {
+        deactivateAll()
+        const worldTab = event.currentTarget
+        worldTab.classList.toggle('world-tab-active', true)
+        const worldCode = worldTab.id.split('-').slice(2).join('-')
+        renderWorld(worldCode).then(() =>
+            scrollWorldTabIntoView(worldTab.id)
+        )
+    }));
+}
+
+function scrollWorldTabIntoView(worldTabId) {
+    const worldTabContainer = document.querySelector(".world-tabs")
+    const worldTabContainerRect = worldTabContainer.getBoundingClientRect()
+
+    const worldTab = document.getElementById(worldTabId)
+    const worldTabRect = worldTab.getBoundingClientRect()
+
+    const leftOffset = (worldTabRect.left + worldTabRect.width / 2) - (worldTabContainerRect.left + worldTabContainerRect.width / 2)
+    const topOffset = (worldTabRect.top + worldTabRect.width / 2) - (worldTabContainerRect.top + worldTabContainerRect.width / 2)
+
+    worldTabContainer.scrollBy({left: leftOffset, top: topOffset})
 }
 
 function initialize_tabbed_advice_group_logic() {

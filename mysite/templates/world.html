@@ -1,4 +1,4 @@
-<article id="{{ world.id }}">
+<article id="{{ world.id }}" {% if index == 0 %}class="world-active"{% endif %}>
     <h1 class="banner{% if world.id != "pinchy" %} toggler{% endif %}">
     {% if world.banner %}
         <img src="{{ world.banner[0] | img }}" alt="{{ world.name }}" title="{{ world.name }}" class="dark">

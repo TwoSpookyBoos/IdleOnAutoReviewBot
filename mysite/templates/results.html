@@ -1,7 +1,11 @@
 {% if reviews | ensure_data %}
     {% include 'header.html' %}
+    {% if all_reviews %}
+        {% include 'world_tabs.html' %}
+    {% endif %}
     <main id="mainresults">
         {% for world in reviews %}
+            {% set index = loop.index0 %}
             {% include "world.html" %}
         {% endfor %}
     </main>

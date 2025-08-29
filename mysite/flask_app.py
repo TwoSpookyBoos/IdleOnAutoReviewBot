@@ -116,10 +116,11 @@ def decode_b64_autoreview(b64_autoreview):
 
 def render_world(world_id, b64_autoreview):
     reviews, headerData = decode_b64_autoreview(b64_autoreview)
-    reviews = [world for world in reviews if world.id == world_id]
+    target_review = [world for world in reviews if world.id == world_id]
     return render_template(
         "results.html",
-        reviews=reviews,
+        reviews=target_review,
+        all_reviews=reviews,
         header=headerData,
     )
 
@@ -127,6 +128,41 @@ def render_world(world_id, b64_autoreview):
 def pinchy() -> str:
     return render_world("pinchy", request.data)
 
+@app.route("/general", methods=["POST"])
+def general() -> str:
+    return render_world("general", request.data)
+
+@app.route("/master-classes", methods=["POST"])
+def master_classes() -> str:
+    return render_world("master-classes", request.data)
+
+@app.route("/blunder-hills", methods=["POST"])
+def blunder_hills() -> str:
+    return render_world("blunder-hills", request.data)
+
+@app.route("/yum-yum-desert", methods=["POST"])
+def yum_yum_desert() -> str:
+    return render_world("yum-yum-desert", request.data)
+
+@app.route("/frostbite-tundra", methods=["POST"])
+def frostbite_tundra() -> str:
+    return render_world("frostbite-tundra", request.data)
+
+@app.route("/hyperion-nebula", methods=["POST"])
+def hyperion_nebula() -> str:
+    return render_world("hyperion-nebula", request.data)
+
+@app.route("/smolderin--plateau", methods=["POST"])
+def smolderin_plateau() -> str:
+    return render_world("smolderin--plateau", request.data)
+
+@app.route("/caverns", methods=["POST"])
+def caverns() -> str:
+    return render_world("caverns", request.data)
+
+@app.route("/spirited-valley", methods=["POST"])
+def spirited_valley() -> str:
+    return render_world("spirited-valley", request.data)
 
 
 @app.route("/results", methods=["POST"])
