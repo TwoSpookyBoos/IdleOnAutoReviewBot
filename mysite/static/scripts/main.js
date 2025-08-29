@@ -66,7 +66,7 @@ function defineFormSubmitAction() {
         target.innerHTML = ""
         spinner.spin(target)
 
-        fetchPlayerAdvice()
+        processAutoReview()
         toggleSidebar()
     })
 }
@@ -393,7 +393,21 @@ function loadErrorPopup(html, statusCode) {
     }
 }
 
-function fetchPlayerAdvice() {
+function renderWorld(worldCode){
+    fetch(`/${worldCode}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sessionStorage.getItem("autoReview"))
+    }).then(response => {
+        return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
+    }).then(([html, statusCode]) => {
+        loadHtmlIntoMain(html)
+    })
+}
+
+function processAutoReview() {
     fetch("/results", {
         method: 'POST',
         headers: {
@@ -402,29 +416,34 @@ function fetchPlayerAdvice() {
         body: JSON.stringify(fetchStoredUserParams())
     }).then(response => {
         return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
-    }).then(([html, statusCode]) => {
+    }).then(([b64AutoReview, statusCode]) => {
         switch (statusCode) {
             case 400:
             case 403:
             case 404:
             case 500:
-                loadErrorPopup(html, statusCode)
+                loadErrorPopup(b64AutoReview, statusCode)
                 break;
             case 200:
-                if (html === "") {
+                if (b64AutoReview === "") {
                     openSidebarIfFirstAccess();
                     return;
                 }
-                loadResults(html);
-                initResultsUI();
-                initialize_tabbed_advice_group_logic();
-                break;
+                sessionStorage.setItem("autoReview", b64AutoReview)
+                renderWorld("pinchy")
+                return
             default:
                 throw new Error(statusCode.toString());
         }
     }).catch(error => {
         console.error('Error:', error);
     });
+}
+
+function loadHtmlIntoMain(html) {
+    loadResults(html);
+    initResultsUI();
+    initialize_tabbed_advice_group_logic();
 }
 
 const storeUserParams = (data) => Object
@@ -848,12 +867,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fonts are loaded, now run your code
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        processAutoReview();
     }).catch(() => {
         console.error('One or more fonts failed to load.');
         // You can still run your code here or handle the error
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        processAutoReview();
     });
 });
