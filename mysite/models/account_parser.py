@@ -168,6 +168,7 @@ def _parse_switches(account):
     account.max_subgroups = 3
     account.library_group_characters = g.library_group_characters
     account.tabbed_advice_groups = g.tabbed_advice_groups
+    account.single_page_layout = g.single_page_layout
 
 def _parse_companions(account):
     # Companions v2

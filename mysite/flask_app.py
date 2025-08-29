@@ -119,10 +119,14 @@ def render_world(world_id, b64_autoreview):
     target_review = [world for world in reviews if world.id == world_id]
     return render_template(
         "results.html",
-        reviews=target_review,
+        reviews=target_review if world_id != "all-worlds" else reviews,
         all_reviews=reviews,
         header=headerData,
     )
+
+@app.route("/all-worlds", methods=["POST"])
+def all_worlds() -> str:
+    return render_world("all-worlds", request.data)
 
 @app.route("/pinchy", methods=["POST"])
 def pinchy() -> str:

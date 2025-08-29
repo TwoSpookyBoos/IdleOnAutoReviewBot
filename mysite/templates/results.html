@@ -1,6 +1,6 @@
 {% if reviews | ensure_data %}
     {% include 'header.html' %}
-    {% if all_reviews %}
+    {% if all_reviews and all_reviews != reviews %}
         {% include 'world_tabs.html' %}
     {% endif %}
     <main id="mainresults">

@@ -34,6 +34,7 @@ const defaults = {
     hide_unrated: "off",
     progress_bars: "off",
     tabbed_advice_groups: "on",
+    single_page_layout: "off",
     handedness: "off",
     light: "off"
 }
@@ -430,7 +431,12 @@ function processAutoReview() {
                     return;
                 }
                 sessionStorage.setItem("autoReview", b64AutoReview)
-                renderWorld("pinchy")
+                const singlePageLayoutInput = document.getElementById("single_page_layout")
+                if (singlePageLayoutInput.value === "on") {
+                    renderWorld("all-worlds")
+                } else if (singlePageLayoutInput.value === "off") {
+                    renderWorld("pinchy")
+                }
                 return
             default:
                 throw new Error(statusCode.toString());

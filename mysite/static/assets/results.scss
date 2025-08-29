@@ -576,10 +576,6 @@ body {
                     font-variant-ligatures: none;
                     text-shadow: var(--fg-shadow);
 
-                    &:not(.world-active){
-                        display: none;
-                    }
-
                     .banner {
                         display: flex;
                         justify-content: center;
