@@ -242,15 +242,13 @@ greenstack_item_difficulty_groups = {
         ]
     },
     15: {
-        'Crystal Enemy Drops': [
-            'StoneA2'
-        ],
         "Other Skilling Resources": [
             "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A",
             "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A",
             "Critter11A"
         ],
         'Rare Drops': [
+            'StoneA2', #W1 Armor Upgrade Stone II
             'DesertA1b',  #W2 Glass Shard
             'SnowA2a',  #W3 Yellow Snowflake
             'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell + Lost Batteries
