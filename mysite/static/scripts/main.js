@@ -448,8 +448,9 @@ function processAutoReview() {
 
 function loadHtmlIntoMain(html) {
     loadResults(html);
-    initialize_world_tab_logic()
-    initialize_tabbed_advice_group_logic();
+    initializeWorldTabLogic();
+    initializeTabbedAdviceGroupLogic();
+    initializeAnchorLinkLogic();
     initResultsUI();
 }
 
@@ -765,7 +766,7 @@ function handleParallax() {
 
     const switchBackground = () => {
         Array.from(background.children).forEach(bg => bg.style.opacity = "0");
-        if (dominantBackground === undefined){
+        if (dominantBackground === undefined || dominantElement === undefined){
             return;
         }
         const backgroundToFocus = document.getElementById(dominantElement.bg);
@@ -828,7 +829,38 @@ function animateStaleData() {
     });
 }
 
-function initialize_world_tab_logic() {
+function scrollToAnchor(anchor){
+    const element = document.getElementById(anchor)
+    if (element){
+        element.scrollIntoView({block: 'start'})
+        return
+    }
+    throw new Error(`No element with id ${anchor} found.`)
+
+}
+
+function initializeAnchorLinkLogic() {
+    const anchorLinks = Array.from(document.querySelectorAll("a")).filter(a =>
+        a.href.includes("#") && !['', 'top'].includes(a.href.split('#').at(-1))
+    )
+    anchorLinks.forEach(a => {
+        const singlePageLayoutInput = document.getElementById("single_page_layout")
+        if (singlePageLayoutInput.value === "on") {
+            a.href = '#' + a.href.split('#').at(-1)
+        } else if (singlePageLayoutInput.value === "off") {
+            const [world, anchor] = a.href.split('/').at(-1).split("#")
+            if (world.startsWith('?')) {
+                //throw new Error(`Found anchor without specified world on ${a}`)
+            }
+            a.addEventListener('click', (e) => {
+                e.preventDefault()
+                renderWorld(world).then(() => scrollToAnchor(anchor))
+            })
+        }
+    })
+}
+
+function initializeWorldTabLogic() {
     const worldTabs = document.querySelectorAll(".world-tab")
     const deactivateAll = () => worldTabs.forEach(worldTab => worldTab.classList.toggle('world-tab-active', false))
 
@@ -856,7 +888,7 @@ function scrollWorldTabIntoView(worldTabId) {
     worldTabContainer.scrollBy({left: leftOffset, top: topOffset})
 }
 
-function initialize_tabbed_advice_group_logic() {
+function initializeTabbedAdviceGroupLogic() {
     const tabGroups = document.querySelectorAll('.advice-group-tabbed');
 
     tabGroups.forEach(group => {

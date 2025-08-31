@@ -19,7 +19,7 @@
                                               style="width: {{ advice.potential_percent }}%;"></span>
                                     </span>
                     {% if advice.as_link %}
-                        <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
+                        <a href="{{ '/' + advice.world_name.name.lower().replace('_','-') if advice.world_name else '' }}#{{ advice.css_class }}">{{ advice.label }}</a>
                     {% else %}
                         {{ advice.label | safe }}
                     {% endif %}

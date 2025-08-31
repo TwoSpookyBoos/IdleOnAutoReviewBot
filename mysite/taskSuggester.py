@@ -71,8 +71,8 @@ def main(inputData, source_string, runType="web"):
 
     # Step 3: Send that data off to all the different analyzers
     # finalize_progression_tiers()
-    all_sections = [
-        sections_general := [
+    all_sections = {
+        WorldName.GENERAL: [
             combat_levels.getCombatLevelsAdviceSection(),
             secret_path.getSecretClassAdviceSection(),
             active.getActiveAdviceSection(),
@@ -84,11 +84,11 @@ def main(inputData, source_string, runType="web"):
             cards.getCardsAdviceSection(),
             event_shop.getEvent_ShopAdviceSection(),
         ],
-        sections_master_classes := [
+        WorldName.MASTER_CLASSES: [
             grimoire.getGrimoireAdviceSection(),
             compass.getCompassAdviceSection()
         ],
-        sections_1 := [
+        WorldName.BLUNDER_HILLS: [
             upgrade_vault.getVaultAdviceSection(),
             stamps.getStampAdviceSection(),
             bribes.getBribesAdviceSection(),
@@ -97,7 +97,7 @@ def main(inputData, source_string, runType="web"):
             starsigns.getStarsignsAdviceSection(),
             owl.getOwlAdviceSection()
         ],
-        sections_2 := [
+        WorldName.YUM_YUM_DESERT: [
             alchemy_bubbles.getAlchemyBubblesAdviceSection(),
             alchemy_vials.getAlchemyVialsAdviceSection(),
             alchemy_p2w.getAlchemyP2WAdviceSection(),
@@ -108,7 +108,7 @@ def main(inputData, source_string, runType="web"):
             arcade.getArcadeAdviceSection(),
             bonus_ballot.getBonus_BallotAdviceSection()
         ],
-        sections_3 := [
+        WorldName.FROSTBITE_TUNDRA: [
             armor_sets.getArmorSetsAdviceSection(),
             refinery.getConsRefineryAdviceSection(),
             buildings.getConsBuildingsAdviceSection(),
@@ -121,37 +121,38 @@ def main(inputData, source_string, runType="web"):
             trapping.getTrappingAdviceSection(),
             equinox.getEquinoxAdviceSection(),
         ],
-        sections_4 := [
+        WorldName.HYPERION_NEBULA: [
             breeding.getBreedingAdviceSection(),
             cooking.getCookingAdviceSection(),
             rift.getRiftAdviceSection(),
         ],
-        sections_5 := [
+        WorldName.SMOLDERIN__PLATEAU: [
             slab.getSlabAdviceSection(),
             divinity.getDivinityAdviceSection(),
             sailing.getSailingAdviceSection(),
             gaming.getGamingAdviceSection(),
         ],
-        sections_caverns := [
+        WorldName.CAVERNS: [
             villagers.getVillagersAdviceSection(),
             shallow_caverns.getShallowCavernsAdviceSection(),
             glowshroom_tunnels.getGlowshroomTunnelsAdviceSection(),
             underground_overgrowth.getUndergroundOvergrowthAdviceSection()
         ],
-        sections_6 := [
+        WorldName.SPIRITED_VALLEY: [
             farming.getFarmingAdviceSection(),
             summoning.getSummoningAdviceSection(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),
             emperor.getEmperorAdviceSection()
         ],
-    ]
+    }
 
     #Sort sections into rated and unrated, as well as checking for completeness
     unrated_sections = []
     pinchable_sections = []
-    for section_list in all_sections:
+    for world_name, section_list in all_sections.items():
         for section in section_list:
+            section.world_name = world_name
             for group in section.groups:
                 group.check_for_completeness()
             section.check_for_completeness()
@@ -166,9 +167,9 @@ def main(inputData, source_string, runType="web"):
             #      )
             # )
             if section.unrated:
-                unrated_sections.append(section)
+                unrated_sections.append((world_name, section))
             else:
-                pinchable_sections.append(section)
+                pinchable_sections.append((world_name, section))
 
     #Pinchy Evaluation
     sections_pinchy = pinchy.generatePinchyWorld(pinchable_sections, unrated_sections)
@@ -202,16 +203,16 @@ def main(inputData, source_string, runType="web"):
         #Remove all the later-rated Sections
         # sections_general = [section for section in sections_general if section.name in sections_to_keep]
         # sections_master_classes = [section for section in sections_master_classes if section.name in sections_to_keep]
-        # sections_1 = [section for section in sections_1 if section.name in sections_to_keep]
-        # sections_2 = [section for section in sections_2 if section.name in sections_to_keep]
-        # sections_3 = [section for section in sections_3 if section.name in sections_to_keep]
-        # sections_4 = [section for section in sections_4 if section.name in sections_to_keep]
-        # sections_5 = [section for section in sections_5 if section.name in sections_to_keep]
+        # sections_blunder_hills = [section for section in sections_blunder_hills if section.name in sections_to_keep]
+        # sections_yum_yum_desert = [section for section in sections_yum_yum_desert if section.name in sections_to_keep]
+        # sections_frostbite_tundra = [section for section in sections_frostbite_tundra if section.name in sections_to_keep]
+        # sections_hyperion_nebula = [section for section in sections_hyperion_nebula if section.name in sections_to_keep]
+        # sections_smolderin__plateau = [section for section in sections_smolderin__plateau if section.name in sections_to_keep]
         # sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
-        # sections_6 = [section for section in sections_6 if section.name in sections_to_keep]
+        # sections_spirited_valley = [section for section in sections_spirited_valley if section.name in sections_to_keep]
 
         #Remove later-rated Groups within the remaining Sections
-        for section_list in [sections_general, sections_master_classes, sections_1, sections_2, sections_3, sections_4, sections_5, sections_caverns, sections_6]:
+        for section_list in all_sections.values():
             for s in section_list:
                 s.set_overwhelming(s.name not in sections_to_keep)
                 # logger.debug(f"{s.name} started with {len(s.groups)}")
@@ -220,17 +221,17 @@ def main(inputData, source_string, runType="web"):
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title='Pinchy AutoReview', collapse=False,
                     complete=False, optional=False, informational=False, unrated=False),
-        AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner=["generalbanner.jpg", "generalbannertext.png"]),
-        AdviceWorld(name=WorldName.MASTER_CLASSES, sections=sections_master_classes, banner=["master_classes_banner.png", "master_classes_banner_text.png"]),
-        AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
-        AdviceWorld(name=WorldName.YUMYUM_DESERT, sections=sections_2, banner=["w2banner.png", "w2bannertext.png"]),
-        AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=sections_3, banner=["w3banner.png", "w3bannertext.png"]),
-        AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=sections_4, banner=["w4banner.png", "w4bannertext.png"]),
-        AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner=["w5banner.png", "w5bannertext.png"]),
-        AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, banner=["cavernsbanner.png", "cavernsbannertext.png"]),
-        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner=["w6banner.png", "w6bannertext.png"]),
+        AdviceWorld(name=WorldName.GENERAL, sections=all_sections[WorldName.GENERAL], banner=['generalbanner.jpg', 'generalbannertext.png']),
+        AdviceWorld(name=WorldName.MASTER_CLASSES, sections=all_sections[WorldName.MASTER_CLASSES], banner=['master_classes_banner.png', 'master_classes_banner_text.png']),
+        AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=all_sections[WorldName.BLUNDER_HILLS], banner=['w1banner.png', 'w1bannertext.png']),
+        AdviceWorld(name=WorldName.YUM_YUM_DESERT, sections=all_sections[WorldName.YUM_YUM_DESERT], banner=['w2banner.png', 'w2bannertext.png']),
+        AdviceWorld(name=WorldName.FROSTBITE_TUNDRA, sections=all_sections[WorldName.FROSTBITE_TUNDRA], banner=['w3banner.png', 'w3bannertext.png']),
+        AdviceWorld(name=WorldName.HYPERION_NEBULA, sections=all_sections[WorldName.HYPERION_NEBULA], banner=['w4banner.png', 'w4bannertext.png']),
+        AdviceWorld(name=WorldName.SMOLDERIN__PLATEAU, sections=all_sections[WorldName.SMOLDERIN__PLATEAU], banner=['w5banner.png', 'w5bannertext.png']),
+        AdviceWorld(name=WorldName.CAVERNS, sections=all_sections[WorldName.CAVERNS], banner=['cavernsbanner.png', 'cavernsbannertext.png']),
+        AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=all_sections[WorldName.SPIRITED_VALLEY], banner=['w6banner.png', 'w6bannertext.png']),
     ]
 
     for world in reviews:
