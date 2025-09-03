@@ -201,15 +201,15 @@ def main(inputData, source_string, runType="web"):
                         sections_to_keep.append(advice.label)
 
         #Remove all the later-rated Sections
-        # sections_general = [section for section in sections_general if section.name in sections_to_keep]
-        # sections_master_classes = [section for section in sections_master_classes if section.name in sections_to_keep]
-        # sections_blunder_hills = [section for section in sections_blunder_hills if section.name in sections_to_keep]
-        # sections_yum_yum_desert = [section for section in sections_yum_yum_desert if section.name in sections_to_keep]
-        # sections_frostbite_tundra = [section for section in sections_frostbite_tundra if section.name in sections_to_keep]
-        # sections_hyperion_nebula = [section for section in sections_hyperion_nebula if section.name in sections_to_keep]
-        # sections_smolderin__plateau = [section for section in sections_smolderin__plateau if section.name in sections_to_keep]
-        # sections_caverns = [section for section in sections_caverns if section.name in sections_to_keep]
-        # sections_spirited_valley = [section for section in sections_spirited_valley if section.name in sections_to_keep]
+        # all_sections[WorldName.GENERAL] = [section for section in all_sections[WorldName.GENERAL] if section.name in sections_to_keep]
+        # all_sections[WorldName.MASTER_CLASSES] = [section for section in all_sections[WorldName.MASTER_CLASSES] if section.name in sections_to_keep]
+        # all_sections[WorldName.BLUNDER_HILLS] = [section for section in all_sections[WorldName.BLUNDER_HILLS] if section.name in sections_to_keep]
+        # all_sections[WorldName.YUM_YUM_DESERT] = [section for section in all_sections[WorldName.YUM_YUM_DESERT] if section.name in sections_to_keep]
+        # all_sections[WorldName.FROSTBITE_TUNDRA] = [section for section in all_sections[WorldName.FROSTBITE_TUNDRA] if section.name in sections_to_keep]
+        # all_sections[WorldName.HYPERION_NEBULA] = [section for section in all_sections[WorldName.HYPERION_NEBULA] if section.name in sections_to_keep]
+        # all_sections[WorldName.SMOLDERIN__PLATEAU] = [section for section in all_sections[WorldName.SMOLDERIN__PLATEAU] if section.name in sections_to_keep]
+        # all_sections[WorldName.CAVERNS] = [section for section in all_sections[WorldName.CAVERNS] if section.name in sections_to_keep]
+        # all_sections[WorldName.SPIRITED_VALLEY] = [section for section in all_sections[WorldName.SPIRITED_VALLEY] if section.name in sections_to_keep]
 
         #Remove later-rated Groups within the remaining Sections
         for section_list in all_sections.values():
