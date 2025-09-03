@@ -192,7 +192,6 @@ def results() -> Response | str:
             compressed_data = zlib.compress(pickled_data.encode())
             b64_data = base64.urlsafe_b64encode(compressed_data)
             response = b64_data
-            pass
 
         name = name_for_logging(name_or_data, headerData, "index.html")
         # log_browser_data(name)
