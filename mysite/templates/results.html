@@ -5,7 +5,6 @@
     {% endif %}
     <main id="mainresults">
         {% for world in reviews %}
-            {% set index = loop.index0 %}
             {% include "world.html" %}
         {% endfor %}
     </main>

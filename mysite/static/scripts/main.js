@@ -404,7 +404,9 @@ function renderWorld(worldCode){
     }).then(response => {
         return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
     }).then(([html, statusCode]) => {
-        loadHtmlIntoMain(html)
+        if (statusCode === 200) {
+            loadHtmlIntoMain(html)
+        }
     })
 }
 
@@ -843,15 +845,12 @@ function initializeAnchorLinkLogic() {
     const anchorLinks = Array.from(document.querySelectorAll("a")).filter(a =>
         a.href.includes("#") && !['', 'top'].includes(a.href.split('#').at(-1))
     )
+    const singlePageLayout = document.getElementById("single_page_layout").value
     anchorLinks.forEach(a => {
-        const singlePageLayoutInput = document.getElementById("single_page_layout")
-        if (singlePageLayoutInput.value === "on") {
+        if (singlePageLayout === "on") {
             a.href = '#' + a.href.split('#').at(-1)
-        } else if (singlePageLayoutInput.value === "off") {
+        } else if (singlePageLayout === "off") {
             const [world, anchor] = a.href.split('/').at(-1).split("#")
-            if (world.startsWith('?')) {
-                //throw new Error(`Found anchor without specified world on ${a}`)
-            }
             a.addEventListener('click', (e) => {
                 e.preventDefault()
                 renderWorld(world).then(() => scrollToAnchor(anchor))
