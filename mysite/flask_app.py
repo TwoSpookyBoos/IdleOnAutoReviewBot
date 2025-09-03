@@ -1,9 +1,12 @@
+import base64
 import json
 import traceback
 import uuid
+import zlib
 from datetime import datetime
 from pathlib import Path
 
+import jsonpickle
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
@@ -105,6 +108,66 @@ def switches():
         for switch in consts.consts_autoreview.switches
     ]
 
+def decode_b64_autoreview(b64_autoreview):
+    decoded_data = base64.urlsafe_b64decode(b64_autoreview)
+    decompressed_data = zlib.decompress(decoded_data)
+    reviews, headerData = jsonpickle.decode(decompressed_data.decode())
+    return reviews, headerData
+
+def render_world(world_id, b64_autoreview):
+    reviews, headerData = decode_b64_autoreview(b64_autoreview)
+    target_review = [world for world in reviews if world.id == world_id]
+    return render_template(
+        "results.html",
+        reviews=target_review if world_id != "all-worlds" else reviews,
+        all_reviews=reviews,
+        header=headerData,
+    )
+
+@app.route("/all-worlds", methods=["POST"])
+def all_worlds() -> str:
+    return render_world("all-worlds", request.data)
+
+@app.route("/pinchy", methods=["POST"])
+def pinchy() -> str:
+    return render_world("pinchy", request.data)
+
+@app.route("/general", methods=["POST"])
+def general() -> str:
+    return render_world("general", request.data)
+
+@app.route("/master-classes", methods=["POST"])
+def master_classes() -> str:
+    return render_world("master-classes", request.data)
+
+@app.route("/blunder-hills", methods=["POST"])
+def blunder_hills() -> str:
+    return render_world("blunder-hills", request.data)
+
+@app.route("/yum-yum-desert", methods=["POST"])
+def yum_yum_desert() -> str:
+    return render_world("yum-yum-desert", request.data)
+
+@app.route("/frostbite-tundra", methods=["POST"])
+def frostbite_tundra() -> str:
+    return render_world("frostbite-tundra", request.data)
+
+@app.route("/hyperion-nebula", methods=["POST"])
+def hyperion_nebula() -> str:
+    return render_world("hyperion-nebula", request.data)
+
+@app.route("/smolderin--plateau", methods=["POST"])
+def smolderin_plateau() -> str:
+    return render_world("smolderin--plateau", request.data)
+
+@app.route("/caverns", methods=["POST"])
+def caverns() -> str:
+    return render_world("caverns", request.data)
+
+@app.route("/spirited-valley", methods=["POST"])
+def spirited_valley() -> str:
+    return render_world("spirited-valley", request.data)
+
 
 @app.route("/results", methods=["POST"])
 def results() -> Response | str:
@@ -122,13 +185,19 @@ def results() -> Response | str:
     name_or_data: str | dict = ""
     try:
         name_or_data, source_string = parse_user_input()
-
+        response = ""
         if name_or_data:
             reviews, headerData = autoReviewBot(name_or_data, source_string)
+            pickled_data = jsonpickle.encode([reviews, headerData])
+            compressed_data = zlib.compress(pickled_data.encode())
+            b64_data = base64.urlsafe_b64encode(compressed_data)
+            response = b64_data
 
         name = name_for_logging(name_or_data, headerData, "index.html")
         # log_browser_data(name)
-        response = render_template(
+
+        # evaluate, but don't actually output, full template to catch any template-side errors at the point of submission
+        render_template(
             page,
             reviews=reviews,
             header=headerData,

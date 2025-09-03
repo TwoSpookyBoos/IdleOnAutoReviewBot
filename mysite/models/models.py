@@ -470,10 +470,10 @@ class WorldName(Enum):
     CAVERNS = "Caverns"
     WORLD6 = "World 6"
     BLUNDER_HILLS = "Blunder Hills"
-    YUMYUM_DESERT = "Yum-Yum Desert"
+    YUM_YUM_DESERT = "Yum-Yum Desert"
     FROSTBITE_TUNDRA = "Frostbite Tundra"
     HYPERION_NEBULA = "Hyperion Nebula"
-    SMOLDERIN_PLATEAU = "Smolderin' Plateau"
+    SMOLDERIN__PLATEAU = "Smolderin' Plateau"
     SPIRITED_VALLEY = "Spirited Valley"
     THE_CAVERNS_BELOW = "The Caverns Below"
 
@@ -964,6 +964,7 @@ class AdviceSection(AdviceBase):
         informational: bool | None = None,
         overwhelming: bool | None = False,
         optional: bool | None = None,
+        world_name: WorldName | None = None,
         **extra,
     ):
         super().__init__(collapse, **extra)
@@ -982,6 +983,7 @@ class AdviceSection(AdviceBase):
         self.informational = informational
         self.overwhelming = overwhelming
         self.optional = optional
+        self.world_name = world_name
         self.check_for_optional()
 
     @property

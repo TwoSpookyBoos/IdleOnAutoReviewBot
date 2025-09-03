@@ -34,6 +34,7 @@ const defaults = {
     hide_unrated: "off",
     progress_bars: "off",
     tabbed_advice_groups: "on",
+    single_page_layout: "off",
     handedness: "off",
     light: "off"
 }
@@ -66,7 +67,7 @@ function defineFormSubmitAction() {
         target.innerHTML = ""
         spinner.spin(target)
 
-        fetchPlayerAdvice()
+        processAutoReview()
         toggleSidebar()
     })
 }
@@ -393,7 +394,23 @@ function loadErrorPopup(html, statusCode) {
     }
 }
 
-function fetchPlayerAdvice() {
+function renderWorld(worldCode){
+    return fetch(`/${worldCode}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sessionStorage.getItem("autoReview"))
+    }).then(response => {
+        return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
+    }).then(([html, statusCode]) => {
+        if (statusCode === 200) {
+            loadHtmlIntoMain(html)
+        }
+    })
+}
+
+function processAutoReview() {
     fetch("/results", {
         method: 'POST',
         headers: {
@@ -402,29 +419,41 @@ function fetchPlayerAdvice() {
         body: JSON.stringify(fetchStoredUserParams())
     }).then(response => {
         return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
-    }).then(([html, statusCode]) => {
+    }).then(([b64AutoReview, statusCode]) => {
         switch (statusCode) {
             case 400:
             case 403:
             case 404:
             case 500:
-                loadErrorPopup(html, statusCode)
+                loadErrorPopup(b64AutoReview, statusCode)
                 break;
             case 200:
-                if (html === "") {
+                if (b64AutoReview === "") {
                     openSidebarIfFirstAccess();
                     return;
                 }
-                loadResults(html);
-                initResultsUI();
-                initialize_tabbed_advice_group_logic();
-                break;
+                sessionStorage.setItem("autoReview", b64AutoReview)
+                const singlePageLayoutInput = document.getElementById("single_page_layout")
+                if (singlePageLayoutInput.value === "on") {
+                    renderWorld("all-worlds")
+                } else if (singlePageLayoutInput.value === "off") {
+                    renderWorld("pinchy")
+                }
+                return
             default:
                 throw new Error(statusCode.toString());
         }
     }).catch(error => {
         console.error('Error:', error);
     });
+}
+
+function loadHtmlIntoMain(html) {
+    loadResults(html);
+    initializeWorldTabLogic();
+    initializeTabbedAdviceGroupLogic();
+    initializeAnchorLinkLogic();
+    initResultsUI();
 }
 
 const storeUserParams = (data) => Object
@@ -739,7 +768,7 @@ function handleParallax() {
 
     const switchBackground = () => {
         Array.from(background.children).forEach(bg => bg.style.opacity = "0");
-        if (dominantBackground === undefined){
+        if (dominantBackground === undefined || dominantElement === undefined){
             return;
         }
         const backgroundToFocus = document.getElementById(dominantElement.bg);
@@ -802,7 +831,63 @@ function animateStaleData() {
     });
 }
 
-function initialize_tabbed_advice_group_logic() {
+function scrollToAnchor(anchor){
+    const element = document.getElementById(anchor)
+    if (element){
+        element.scrollIntoView({block: 'start'})
+        return
+    }
+    throw new Error(`No element with id ${anchor} found.`)
+
+}
+
+function initializeAnchorLinkLogic() {
+    const anchorLinks = Array.from(document.querySelectorAll("a")).filter(a =>
+        a.href.includes("#") && !['', 'top'].includes(a.href.split('#').at(-1))
+    )
+    const singlePageLayout = document.getElementById("single_page_layout").value
+    anchorLinks.forEach(a => {
+        if (singlePageLayout === "on") {
+            a.href = '#' + a.href.split('#').at(-1)
+        } else if (singlePageLayout === "off") {
+            const [world, anchor] = a.href.split('/').at(-1).split("#")
+            a.addEventListener('click', (e) => {
+                e.preventDefault()
+                renderWorld(world).then(() => scrollToAnchor(anchor))
+            })
+        }
+    })
+}
+
+function initializeWorldTabLogic() {
+    const worldTabs = document.querySelectorAll(".world-tab")
+    const deactivateAll = () => worldTabs.forEach(worldTab => worldTab.classList.toggle('world-tab-active', false))
+
+    worldTabs.forEach(worldTab => worldTab.addEventListener('click', (event) => {
+        deactivateAll()
+        const worldTab = event.currentTarget
+        worldTab.classList.toggle('world-tab-active', true)
+        const worldCode = worldTab.id.split('-').slice(2).join('-')
+        renderWorld(worldCode).then(() =>
+            scrollWorldTabIntoView(worldTab.id)
+        )
+    }));
+}
+
+function scrollWorldTabIntoView(worldTabId) {
+    const worldTabContainer = document.querySelector(".world-tabs")
+    const worldTabContainerRect = worldTabContainer.getBoundingClientRect()
+
+    const worldTab = document.getElementById(worldTabId)
+    const worldTabRect = worldTab.getBoundingClientRect()
+
+    const leftOffset = (worldTabRect.left + worldTabRect.width / 2) - (worldTabContainerRect.left + worldTabContainerRect.width / 2)
+    const topOffset = (worldTabRect.top + worldTabRect.width / 2) - (worldTabContainerRect.top + worldTabContainerRect.width / 2)
+
+    worldTabContainer.scrollBy({left: leftOffset, top: topOffset})
+}
+
+function initializeTabbedAdviceGroupLogic() {
     const tabGroups = document.querySelectorAll('.advice-group-tabbed');
 
     tabGroups.forEach(group => {
@@ -848,12 +933,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fonts are loaded, now run your code
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        processAutoReview();
     }).catch(() => {
         console.error('One or more fonts failed to load.');
         // You can still run your code here or handle the error
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        processAutoReview();
     });
 });

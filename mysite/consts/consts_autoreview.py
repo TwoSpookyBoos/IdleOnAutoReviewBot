@@ -110,6 +110,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Single-page layout",
+        "name": "single_page_layout",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Handedness",
         "name": "handedness",
         "true": "L",

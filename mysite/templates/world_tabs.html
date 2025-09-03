@@ -1,0 +1,11 @@
+<div class="world-tabs {{ "json" if header.data_source == "JSON" else "public" }}">
+    {% for world in all_reviews %}
+        <button class="world-tab{{" world-tab-active" if world.id == reviews[0].id else "" }}" id="world-tab-{{ world.id }}">
+            {% if world.banner %}
+                <img src="/static/imgs/{{ world.banner[1] }}"/>
+            {% else %}
+                <span class="world-tab-pinchy">Pinchy AutoReview</span>
+            {% endif %}
+        </button>
+    {% endfor %}
+</div>

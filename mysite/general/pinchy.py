@@ -1,6 +1,6 @@
 from consts.consts_autoreview import break_you_bestest
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceSection, AdviceGroup
+from models.models import Advice, AdviceSection, AdviceGroup, WorldName
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -20,7 +20,8 @@ class Tier:
         section_overwhelming: bool = False,
         current: 'Threshold' = None,
         previous: 'Threshold' = None,
-        next: 'Threshold' = None
+        next: 'Threshold' = None,
+        world_name: WorldName = None
     ):
         self.tier = tier
         self.section = section
@@ -32,6 +33,7 @@ class Tier:
         self.current = current
         self.previous = previous
         self.next = next
+        self.world_name = world_name
 
     def __str__(self):
         return f"{self.section}: T{self.tier}"
@@ -307,7 +309,7 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
     for section, (pinchy_tier, section_optional, section_complete,
                   section_informational, section_unrated, section_overwhelming,
-                  section_max_tier, section_true_max_tier) in dictOfPRs.items():
+                  section_max_tier, section_true_max_tier, world_name) in dictOfPRs.items():
         tier = Tier(
             tier=pinchy_tier,
             section=section,
@@ -316,6 +318,7 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
             section_informational=section_informational,
             section_unrated=section_unrated,
             section_overwhelming=section_overwhelming,
+            world_name=world_name
         )
         placements.place(tier)
 
@@ -397,7 +400,8 @@ def generate_advice_list(sections: list[Tier], threshold: Threshold):
             informational=section.section_informational,
             unrated=section.section_unrated,
             overwhelming=section.section_overwhelming,
-            optional=section.section_optional
+            optional=section.section_optional,
+            world_name=section.world_name
         ) for section in sections
     ]
     if threshold == Threshold.fromname(Threshold.TRUE_MAX):
@@ -426,9 +430,9 @@ def generate_advice_groups(sectionsByThreshold: dict):
     return advice_groups
 
 
-def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
+def getUnratedLinksAdviceGroup(unrated_sections: list[tuple[str, AdviceSection]]) -> AdviceGroup:
     unrated_advice = []
-    for section in unrated_sections:
+    for world_name, section in unrated_sections:
         if not section.unreached:
             unrated_advice.append(
                 Advice(
@@ -437,7 +441,8 @@ def getUnratedLinksAdviceGroup(unrated_sections) -> AdviceGroup:
                     as_link=True,
                     completed=section.completed,
                     unrated=section.unrated,
-                    informational=section.informational
+                    informational=section.informational,
+                    world_name=world_name
                 )
             )
     unrated_AG = AdviceGroup(
@@ -463,7 +468,7 @@ def getAlertsAdviceGroup() -> AdviceGroup:
     return alerts_AG
 
 
-def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_sections: list[AdviceSection]):
+def generatePinchyWorld(pinchable_sections: list[tuple[str, AdviceSection]], unrated_sections: list[tuple[str, AdviceSection]]):
     dictOfPRs = {
         section.name: [
             section.pinchy_rating,
@@ -474,7 +479,8 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
             section.overwhelming,
             section.max_tier,
             section.true_max_tier,
-        ] for section in pinchable_sections if not section.unreached
+            world_name,
+        ] for world_name, section in pinchable_sections if not section.unreached
     }
 
     sectionPlacements: Placements = sort_pinchy_reviews(dictOfPRs)
@@ -482,7 +488,7 @@ def generatePinchyWorld(pinchable_sections: list[AdviceSection], unrated_section
     lowestThresholdReached: Threshold = sectionPlacements.lowest
 
     placements_per_section = sectionPlacements.per_section()
-    for section in pinchable_sections:
+    for _, section in pinchable_sections:
         try:
             section.pinchy_placement = placements_per_section[section.name]
         except KeyError:

@@ -5,3 +5,4 @@ babel
 pyyaml
 libsass
 pytest
+jsonpickle
