@@ -195,6 +195,8 @@ def results() -> Response | str:
 
         name = name_for_logging(name_or_data, headerData, "index.html")
         # log_browser_data(name)
+
+        # evaluate, but don't actually output, full template to catch any template-side errors at the point of submission
         render_template(
             page,
             reviews=reviews,
