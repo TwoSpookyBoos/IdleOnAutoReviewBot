@@ -321,6 +321,7 @@ def getCharacterDetails(inputJSON, runType):
     obol_upgrades_list = {}
     big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * max_characters))
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * max_characters))
+    equipped_cards_codenames = {}
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
@@ -340,6 +341,7 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips[character_index] = []
         current_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadout_{character_index}', []))
         secondary_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadoutpre_{character_index}', []))
+        equipped_cards_codenames[character_index] = [codename for codename in safe_loads(inputJSON.get(f'CardEquip_{character_index}', [])) if codename != 'B']
 
         characterDict[character_index] = dict(
             alchemy_job=alchemy_jobs_list[character_index],
@@ -365,6 +367,7 @@ def getCharacterDetails(inputJSON, runType):
             secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
             sub_class=getSubclass(character_classes[character_index]),
+            equipped_cards_codenames=equipped_cards_codenames[character_index]
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]

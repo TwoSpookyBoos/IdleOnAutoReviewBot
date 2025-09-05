@@ -152,6 +152,8 @@ class Character:
         kill_dict: dict,
         big_alch_bubbles: list[str],
         alchemy_job: int,
+        equipped_cards: list['Card'] = None,
+        equipped_cards_codenames: list[str] = None
     ):
 
         self.character_index: int = character_index
@@ -292,6 +294,9 @@ class Character:
         self.printed_materials = {}
 
         self.setPolytheismLink()
+
+        self.equipped_cards = equipped_cards if equipped_cards else []
+        self.equipped_cards_codenames = equipped_cards_codenames if equipped_cards_codenames else []
 
     def fix_talent_bars(self):
         #Current preset

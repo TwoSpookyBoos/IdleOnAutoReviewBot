@@ -95,6 +95,11 @@ def _make_cards(account):
             description=card_values['Description']
         ) for decoded_enemy_name, card_values in parsed_card_data.items()
     ]
+
+    for character in g.account.all_characters:
+        for equipped_card_codename in character.equipped_cards_codenames:
+            equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
+            character.equipped_cards.append(equipped_card)
     # cards = [
     #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
     #     for cardset, cards in card_data.items()
