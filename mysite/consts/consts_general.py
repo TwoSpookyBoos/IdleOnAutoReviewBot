@@ -425,11 +425,36 @@ for item_name in gstackable_codenames_expected:
 max_card_stars = 5
 key_cards = 'Cards0'
 cards_max_level = 6
+
+#Source: `IDforCardSETbonus`
+cardset_identifiers = [
+    "{%_EXP_if_below_Lv_50",
+    "{%_All_Food_Effect",
+    "{%_Skill_Efficiency",
+    "{%_Skill_EXP_Gain",
+    "{%_DEF_and_ACC",
+    "{%_Skill_AFK_Gain_Rate",
+    "{%_Crit_Chance",
+    "{%_Fight_AFK_Gain_Rate",
+    "{%_Multikill_Per_Tier",
+    "{%_more_Dungeon_Credits",
+    "{%_Dmg,_Drop,_and_EXP",
+    "{%_Drop_Rate",
+]
+
 cardset_names = [
-    "Blunder Hills", "Yum-Yum Desert", "Easy Resources",
-    "Medium Resources", "Frostbite Tundra", "Hard Resources",
-    "Hyperion Nebula", "Smolderin' Plateau", "Spirited Valley",
-    "Dungeons", "Bosses n Nightmares", "Events"
+    "Blunder Hills",
+    "Yum-Yum Desert",
+    "Easy Resources",
+    "Medium Resources",
+    "Frostbite Tundra",
+    "Hard Resources",
+    "Hyperion Nebula",
+    "Smolderin' Plateau",
+    "Spirited Valley",
+    "Dungeons",
+    "Bosses n Nightmares",
+    "Events"
 ]
 card_raw_data = [
     [
