@@ -738,7 +738,7 @@ def _calculate_w1_stamps(account):
         )
         + (20 * account.sneaking['PristineCharms']['Jellypick']['Obtained'])
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
-        + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
+        + (MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value']) * account.armor_sets['Sets']['EMPEROR SET']['Owned'])
     )
 
     for stamp_name, stamp_values in account.stamps.items():
