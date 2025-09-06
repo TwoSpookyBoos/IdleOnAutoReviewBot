@@ -1,7 +1,7 @@
 <div class="advice-group{% if advice_group.hide %} hidden{% endif %} {% if is_tabbed %} advice-group-tabbed-tab-content{% endif %}"
         {% for attr, val in advice_group.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
     {% if advice_group.heading %}
-        <span class="{{ advice_group.picture_class }}">{{ advice_group.heading }}</span>
+        <span class="{{ advice_group.picture_class }}">{{ advice_group.heading | safe}}</span>
     {% endif %}
     <ul class="table">
         {% for title, advices in advice_group.advices.items() %}
