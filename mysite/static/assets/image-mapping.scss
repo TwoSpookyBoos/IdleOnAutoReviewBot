@@ -6,6 +6,7 @@
 @import "slab-items";
 @import "sections";
 @import "skill-icons";
+@import "stat-icons";
 @import "classes";
 @import "talents";
 @import "gem-shop";
@@ -23,6 +24,7 @@
 $id-map: map-merge($all-world-contents, $all-slab);
 $id-map: map-merge($id-map, $sections-map);
 $id-map: map-merge($id-map, $skill-icons);
+$id-map: map-merge($id-map, $stat-icons);
 $id-map: map-merge($id-map, $character-classes);
 $id-map: map-merge($id-map, $talents);
 $id-map: map-merge($id-map, $gem-shop);
