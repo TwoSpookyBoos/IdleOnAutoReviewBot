@@ -1133,6 +1133,7 @@ def _parse_w2(account):
     _parse_w2_obols(account)
     _parse_w2_islands(account)
     _parse_w2_killroy(account)
+    _parse_w2_weekly_boss(account)
 
 def _parse_w2_vials(account):
     account.alchemy_vials = {}
@@ -1495,6 +1496,8 @@ def _parse_w2_killroy_skull_shop(account):
         'Jade Multi': 1 + ((safer_get(account.raw_optlacc_dict, 230, 0) / (300 + safer_get(account.raw_optlacc_dict, 230, 0))) * 2),
     }
 
+def _parse_w2_weekly_boss(account):
+    account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)
 
 def _parse_w3(account):
     _parse_w3_refinery(account)
