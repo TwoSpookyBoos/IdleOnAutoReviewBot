@@ -152,9 +152,10 @@ class Character:
         kill_dict: dict,
         big_alch_bubbles: list[str],
         alchemy_job: int,
+        main_stats: dict[str, int],
+        equipped_cardset: str,
         equipped_cards: list['Card'] = None,
         equipped_cards_codenames: list[str] = None,
-        equipped_cardset: str = "",
         equipped_star_signs: list[int] = None
     ):
 
@@ -297,9 +298,10 @@ class Character:
 
         self.setPolytheismLink()
 
+        self.main_stats = main_stats
+        self.equipped_cardset = equipped_cardset
         self.equipped_cards = equipped_cards if equipped_cards else []
         self.equipped_cards_codenames = equipped_cards_codenames if equipped_cards_codenames else []
-        self.equipped_cardset = equipped_cardset
         self.equipped_star_signs = equipped_star_signs if equipped_star_signs else []
 
     def fix_talent_bars(self):
