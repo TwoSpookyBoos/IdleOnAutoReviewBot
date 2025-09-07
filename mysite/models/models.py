@@ -468,6 +468,8 @@ class Character:
             self.alchemy_job_string = f'UnknownJob{self.alchemy_job}'
             self.alchemy_job_group = 'UnknownJobGroup'
 
+    def has_card_doubler(self):
+        return any(chip in self.equipped_lab_chips for chip in ['Omega Nanochip', 'Omega Motherboard'])
 
 class WorldName(Enum):
     PINCHY = "Pinchy"
@@ -633,7 +635,7 @@ class Advice(AdviceBase):
     def __str__(self) -> str:
         return self.label
 
-    def __extract_float(self, value: str | float | int) -> float:
+    def __extract_float(self, value: str | float | int) -> float | None:
         """
         Extracts a float from a string, 
         """
@@ -1391,28 +1393,28 @@ class Card:
 
         return (self.coefficient * tier_coefficient**2) + 1
 
-    def getCurrentValue(self):
-        return self.level * self.value_per_level
+    def getCurrentValue(self, optional_character: Character=None):
+        return self.level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
 
-    def getMaxValue(self):
-        return cards_max_level * self.value_per_level
+    def getMaxValue(self, optional_character: Character=None):
+        return cards_max_level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
 
-    def getFormattedXY(self):
+    def getFormattedXY(self, optional_character: Character=None):
         result = (
             f"{'+' if '+' in self.description else ''}"
-            + f"{self.getCurrentValue():.3g}/{self.getMaxValue():.3g}"
+            + f"{self.getCurrentValue(optional_character):.3g}/{self.getMaxValue(optional_character):.3g}"
             + f"{'%' if '%' in self.description else ''}"
             + f"{self.description.replace('+{', '').replace('%', '')}"
         )
         return result
 
-    def getAdvice(self, optional_starting_note='', optional_ending_note=''):
+    def getAdvice(self, optional_starting_note='', optional_ending_note='', optional_character: Character=None):
         a = Advice(
-            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}"
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY(optional_character)}"
                   f"{'<br>' if optional_ending_note else ''}{optional_ending_note}",
             picture_class=self.css_class,
             progression=self.level,
-            goal=self.max_level
+            goal=self.max_level,
         )
         return a
 
