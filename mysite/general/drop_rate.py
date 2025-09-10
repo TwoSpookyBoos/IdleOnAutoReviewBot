@@ -1,6 +1,5 @@
-from typing import Literal
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character
+from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
@@ -913,8 +912,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         equipment_advice, equipment_bonus = get_equipment_advice_for_stat(
             character,
             'DropRate',
+            '%_DROP_CHANCE',
             'Drop Rate',
-            'flat',
             'Drop Rate - '
         )
 
@@ -922,8 +921,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         equipment_multi_advice, equipment_multi_bonus = get_equipment_advice_for_stat(
             character,
             'DropRateMulti',
+            '%_DROP_CHANCE_MULTI',
             'Drop Rate Multi',
-            'flat',
             'Drop Rate Multi - '
         )
         equipment_multi_bonus_as_mult = ValueToMulti(equipment_multi_bonus)
@@ -1228,25 +1227,34 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
     return TabbedAdviceGroup(tabbed_advices)
 
 
-def get_equipment_advice_for_stat(character: Character, stat: str, stat_human_readable_format: str, flat_or_multi: Literal['flat', 'multi'], advice_group_prefix: str):
+def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename: str, stat_human_readable_format: str, advice_group_prefix: str):
     equipment_advice: dict[str, list[Advice]] = {}
     equipment_bonus = 0
     equipment_dict: dict[str, list] = {}
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
-        equipment_drop_rate = ((misc1.get('Bonus', '') == stat) * misc1.get('Value', 0)) + ((misc2.get('Bonus', '') == stat) * misc2.get('Value', 0))
-        equipped = [equipment.name for equipment in character.equipment.equips].count(equipment_name)
-        if equipped:
-            equipment_bonus += equipment_drop_rate
+        equipment_drop_rate_base = ((misc1.get('Bonus', '') == stat) * misc1.get('Value', 0)) + ((misc2.get('Bonus', '') == stat) * misc2.get('Value', 0))
+        equipped_equipment: Asset | None = next(iter([equipment for equipment in character.equipment.equips if equipment_name == equipment.name]), None)
+        equipped_equipment_bonus = 0
+        if equipped_equipment is not None:
+            misc1 = equipped_equipment.stats.get('misc_1_txt', None)
+            misc2 = equipped_equipment.stats.get('misc_2_txt', None)
+            if misc1 == stat_codename:
+                equipped_equipment_bonus += equipped_equipment.stats['misc_1_val']
+            elif misc2 == stat_codename:
+                equipped_equipment_bonus += equipped_equipment.stats['misc_2_val']
+            else:
+                equipped_equipment_bonus += equipment_drop_rate_base
+        equipment_bonus += equipped_equipment_bonus
         slot = equipment_data.get('Type')
         if advice_group_prefix + slot not in equipment_dict.keys():
             equipment_dict[advice_group_prefix + slot] = []
         equipment_dict[advice_group_prefix + slot].append({
             'Name': equipment_name,
-            stat: equipment_drop_rate,
+            stat: equipment_drop_rate_base,
             'Image': equipment_data['Image'],
-            'Equipped': equipped,
+            'Equipped': int(equipped_equipment_bonus == equipment_drop_rate_base),
             'Limited': equipment_data.get('Limited', False),
             'Note': equipment_data.get('Note', '')
         })
@@ -1258,7 +1266,7 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_human_re
         for equipment in equipment_list:
             equipment_advice[slot].append(Advice(
                 label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:"
-                      f"<br>{f'+{equipment[stat]} % {stat_human_readable_format}' if flat_or_multi == 'flat' else f'x{equipment[stat]} {stat_human_readable_format}'}"
+                      f"<br>+{equipment[stat]}% {stat_human_readable_format}"
                       f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
                 picture_class=equipment['Image'],
                 progression=equipment['Equipped'],

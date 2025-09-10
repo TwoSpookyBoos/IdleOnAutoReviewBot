@@ -44,13 +44,24 @@ class Equipment:
         if safeStatus:
             order = raw_data.get(f"EquipOrder_{toon_index}", [])
             quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
+
+            equips_data = json.loads(raw_data.get(f'EMm0_{toon_index}', ''))
+            equips_data = [{index: item_data} for index, item_data in equips_data.items()]
+            for i in range(len(order[0]) - 1):
+                key = str(i)
+                if not any(key in d.keys() for d in equips_data):
+                    equips_data.insert(i, {key: {}})
+            equips_data = sorted(equips_data, key=lambda sub_dict: int(list(sub_dict.keys())[0]))
+            equips_data = [list(item.values())[0] for item in equips_data]
+            equips_data = [equips_data, [{} for _ in range(len(order[1]) - 1)], [{} for _ in range(len(order[2]) - 1)]]
+
             groups = list()
-            for o, q in zip(order, quantity):
+            for o, q, d in zip(order, quantity, equips_data):
                 o.pop("length", None)
                 q.pop("length", None)
                 o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
-                groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
+                groups.append([Asset(name, float(count), **stats) for name, count, stats in zip(o, q, d)])
 
             inv_order = raw_data.get(f"InventoryOrder_{toon_index}", [])
             inv_quantity = raw_data.get(f"ItemQTY_{toon_index}", [])
@@ -1164,7 +1175,7 @@ class AdviceWorld(AdviceBase):
 
 
 class Asset:
-    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):
+    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = "", **stats):
         if isinstance(codename, Asset):
             self.name: str = codename.name
             self.codename: str = codename.codename
@@ -1177,6 +1188,24 @@ class Asset:
             self.amount: float = amount
             self.quest: str = ""
             self.quest_giver: str = ""
+            self.stats = {}
+            self.set_stats(stats)
+            pass
+
+    def set_stats(self, stats: dict):
+        wanted_stats = {
+            'UQ1txt': 'misc_1_txt',
+            'UQ1val': 'misc_1_val',
+            'UQ2txt': 'misc_2_txt',
+            'UQ2val': 'misc_2_val'
+        }
+        for key, value in stats.items():
+            try:
+                if value != 0:
+                    self.stats[wanted_stats[key]] = value
+                    pass
+            except KeyError:
+                pass
 
     def __eq__(self, other):
         match other:
