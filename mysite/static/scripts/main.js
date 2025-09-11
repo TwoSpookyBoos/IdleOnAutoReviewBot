@@ -833,7 +833,7 @@ function recalculate_tab_selections() {
 
     tabGroups.forEach(group => {
         const tabs = group.querySelectorAll('.advice-group-tabbed-tab');
-        const firstVisibleTab = Array.from(tabs).find(tab => tab.checkVisibility())
+        const firstVisibleTab = Array.from(tabs).find(tab => tab.display !== "none")
         firstVisibleTab.click()
     });
 }
