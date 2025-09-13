@@ -1237,37 +1237,49 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
     processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
 
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
+        is_keychain = equipment_data['Type'] == 'Keychain'
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
         equipment_drop_rate_base = ((misc1.get('Bonus', '') == stat) * misc1.get('Value', 0)) + ((misc2.get('Bonus', '') == stat) * misc2.get('Value', 0))
-        equipped_equipment: Asset | None = next(iter([equipment for equipment in character.equipment.equips if equipment_name == equipment.name]), None)
-        equipped_equipment_bonus = 0
-        if equipped_equipment is not None:
-            misc1 = equipped_equipment.stats.get('misc_1_txt', None)
-            misc2 = equipped_equipment.stats.get('misc_2_txt', None)
-            if misc1 == stat_codename:
-                equipped_equipment_bonus += equipped_equipment.stats['misc_1_val']
-            if misc2 == stat_codename:
-                equipped_equipment_bonus += equipped_equipment.stats['misc_2_val']
-            if equipment_bonus == 0:
-                equipped_equipment_bonus += equipment_drop_rate_base
-        if (motherboard_equipped and equipment_data['Type'] == 'Trophy' or
-                software_equipped and equipment_data['Type'] == 'Keychain' or
-                processor_equipped and equipment_data['Type'] == 'Pendant'):
-            equipped_equipment_bonus *= 2
-        equipment_bonus += equipped_equipment_bonus
-        slot = equipment_data.get('Type')
-        if advice_group_prefix + slot not in equipment_dict.keys():
-            equipment_dict[advice_group_prefix + slot] = []
-        equipment_dict[advice_group_prefix + slot].append({
-            'Name': equipment_name,
-            'Slot': slot,
-            stat: equipment_drop_rate_base,
-            'Image': equipment_data['Image'],
-            'Equipped': int(equipped_equipment_bonus >= equipment_drop_rate_base),
-            'Limited': equipment_data.get('Limited', False),
-            'Note': equipment_data.get('Note', '')
-        })
+        equipped_equipment: list[Asset | None] = [equipment for equipment in character.equipment.equips if equipment_name == equipment.name]
+        if not equipped_equipment:
+            equipped_equipment = [None] # So the loop below is executed once
+            if is_keychain:
+                equipped_equipment = [None, None] # So the loop below is executed twice
+
+        for index, item in enumerate(equipped_equipment):
+            equipped_equipment_bonus = 0
+            can_be_boosted_by_chips = index == 0
+            if item is not None:
+                misc1 = item.stats.get('misc_1_txt', None)
+                misc2 = item.stats.get('misc_2_txt', None)
+                if misc1 == stat_codename:
+                    equipped_equipment_bonus += item.stats['misc_1_val']
+                if misc2 == stat_codename:
+                    equipped_equipment_bonus += item.stats['misc_2_val']
+                if equipped_equipment_bonus == 0:
+                    equipped_equipment_bonus += equipment_drop_rate_base
+            if (motherboard_equipped and equipment_data['Type'] == 'Trophy' or
+                    software_equipped and is_keychain or
+                    processor_equipped and equipment_data['Type'] == 'Pendant') and can_be_boosted_by_chips:
+                equipped_equipment_bonus *= 2
+            equipment_bonus += equipped_equipment_bonus
+
+            slot = equipment_data.get('Type')
+            if advice_group_prefix + slot not in equipment_dict.keys():
+                equipment_dict[advice_group_prefix + slot] = []
+
+            equipment_dict[advice_group_prefix + slot].append({
+                'Name': equipment_name,
+                'Slot': slot,
+                stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
+                'Image': equipment_data['Image'],
+                'EquippedAndMaxed': int(equipped_equipment_bonus == equipment_drop_rate_base or equipped_equipment_bonus == 2 * equipment_drop_rate_base),
+                'Limited': equipment_data.get('Limited', False),
+                'Note': equipment_data.get('Note', ''),
+                'Can be boosted': can_be_boosted_by_chips
+            })
+
     for slot, equipment_list in equipment_dict.items():
         if invalid_weapon_type(character.base_class, slot[len(advice_group_prefix):]):
             continue
@@ -1301,13 +1313,14 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 goal=1
             ))
 
-        for equipment in equipment_list:
-            if motherboard_equipped and equipment['Slot'] == 'Trophy':
+        for index, equipment in enumerate(equipment_list):
+            if motherboard_equipped and equipment['Slot'] == 'Trophy' and equipment['Can be boosted']:
                 equipment[stat] *= 2
                 equipment['Note'] += f"<br>Boosted by Silkrode Motherboard"
-            if software_equipped and equipment['Slot'] == 'Keychain':
-                equipment['Note'] += f"<br>First boosted by Silkrode Software"
-            if processor_equipped and equipment['Slot'] == 'Pendant':
+            if software_equipped and equipment['Slot'] == 'Keychain' and equipment['Can be boosted']:
+                # We don't mult by 2 here because it's already handled in the parsing of the "real" stats. Only Keychains have variable Drop Rate so we have to handle it there.
+                equipment['Note'] += f"<br>Boosted by Silkrode Software"
+            if processor_equipped and equipment['Slot'] == 'Pendant' and equipment['Can be boosted']:
                 equipment[stat] *= 2
                 equipment['Note'] += f"<br>Boosted by Silkrode Processor"
 
@@ -1316,10 +1329,10 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                       f"<br>+{equipment[stat]}% {stat_human_readable_format}"
                       f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
                 picture_class=equipment['Image'],
-                progression=equipment['Equipped'],
-                goal=2 if 'Keychain' in slot else 1
+                progression=equipment['EquippedAndMaxed'],
+                goal=1
             ))
-            if equipment['Equipped']:
+            if equipment['EquippedAndMaxed'] and index != len(equipment_list) - 1 and equipment['Name'] != equipment_list[index + 1]['Name']:
                 # Don't check items that come after the equipped item because they are worse than the equipped item
                 break
     return equipment_advice, equipment_bonus
