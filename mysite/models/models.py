@@ -44,13 +44,24 @@ class Equipment:
         if safeStatus:
             order = raw_data.get(f"EquipOrder_{toon_index}", [])
             quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
+
+            equips_data = safe_loads(raw_data.get(f'EMm0_{toon_index}', ''))
+            equips_data = [{index: item_data} for index, item_data in equips_data.items()]
+            for i in range(len(order[0]) - 1):
+                key = str(i)
+                if not any(key in d.keys() for d in equips_data):
+                    equips_data.insert(i, {key: {}})
+            equips_data = sorted(equips_data, key=lambda sub_dict: int(list(sub_dict.keys())[0]))
+            equips_data = [list(item.values())[0] for item in equips_data]
+            equips_data = [equips_data, [{} for _ in range(len(order[1]) - 1)], [{} for _ in range(len(order[2]) - 1)]]
+
             groups = list()
-            for o, q in zip(order, quantity):
+            for o, q, d in zip(order, quantity, equips_data):
                 o.pop("length", None)
                 q.pop("length", None)
                 o = dict(sorted(o.items(), key=lambda i: int(i[0]))).values()
                 q = dict(sorted(q.items(), key=lambda i: int(i[0]))).values()
-                groups.append([Asset(name, float(count)) for name, count in zip(o, q)])
+                groups.append([Asset(name, float(count), **stats) for name, count, stats in zip(o, q, d)])
 
             inv_order = raw_data.get(f"InventoryOrder_{toon_index}", [])
             inv_quantity = raw_data.get(f"ItemQTY_{toon_index}", [])
@@ -152,6 +163,11 @@ class Character:
         kill_dict: dict,
         big_alch_bubbles: list[str],
         alchemy_job: int,
+        main_stats: dict[str, int],
+        equipped_cardset: str,
+        equipped_cards: list['Card'] = None,
+        equipped_cards_codenames: list[str] = None,
+        equipped_star_signs: list[int] = None
     ):
 
         self.character_index: int = character_index
@@ -292,6 +308,12 @@ class Character:
         self.printed_materials = {}
 
         self.setPolytheismLink()
+
+        self.main_stats = main_stats
+        self.equipped_cardset = equipped_cardset
+        self.equipped_cards = equipped_cards if equipped_cards else []
+        self.equipped_cards_codenames = equipped_cards_codenames if equipped_cards_codenames else []
+        self.equipped_star_signs = equipped_star_signs if equipped_star_signs else []
 
     def fix_talent_bars(self):
         #Current preset
@@ -457,6 +479,8 @@ class Character:
             self.alchemy_job_string = f'UnknownJob{self.alchemy_job}'
             self.alchemy_job_group = 'UnknownJobGroup'
 
+    def has_card_doubler(self):
+        return any(chip in self.equipped_lab_chips for chip in ['Omega Nanochip', 'Omega Motherboard'])
 
 class WorldName(Enum):
     PINCHY = "Pinchy"
@@ -622,7 +646,7 @@ class Advice(AdviceBase):
     def __str__(self) -> str:
         return self.label
 
-    def __extract_float(self, value: str | float | int) -> float:
+    def __extract_float(self, value: str | float | int) -> float | None:
         """
         Extracts a float from a string, 
         """
@@ -1151,7 +1175,7 @@ class AdviceWorld(AdviceBase):
 
 
 class Asset:
-    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = ""):
+    def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = "", **stats):
         if isinstance(codename, Asset):
             self.name: str = codename.name
             self.codename: str = codename.codename
@@ -1164,6 +1188,24 @@ class Asset:
             self.amount: float = amount
             self.quest: str = ""
             self.quest_giver: str = ""
+            self.stats = {}
+            self.set_stats(stats)
+            pass
+
+    def set_stats(self, stats: dict):
+        wanted_stats = {
+            'UQ1txt': 'misc_1_txt',
+            'UQ1val': 'misc_1_val',
+            'UQ2txt': 'misc_2_txt',
+            'UQ2val': 'misc_2_val'
+        }
+        for key, value in stats.items():
+            try:
+                if value != 0:
+                    self.stats[wanted_stats[key]] = value
+                    pass
+            except KeyError:
+                pass
 
     def __eq__(self, other):
         match other:
@@ -1380,28 +1422,28 @@ class Card:
 
         return (self.coefficient * tier_coefficient**2) + 1
 
-    def getCurrentValue(self):
-        return self.level * self.value_per_level
+    def getCurrentValue(self, optional_character: Character=None):
+        return self.level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
 
-    def getMaxValue(self):
-        return cards_max_level * self.value_per_level
+    def getMaxValue(self, optional_character: Character=None):
+        return cards_max_level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
 
-    def getFormattedXY(self):
+    def getFormattedXY(self, optional_character: Character=None):
         result = (
             f"{'+' if '+' in self.description else ''}"
-            + f"{self.getCurrentValue():.3g}/{self.getMaxValue():.3g}"
+            + f"{self.getCurrentValue(optional_character):.3g}/{self.getMaxValue(optional_character):.3g}"
             + f"{'%' if '%' in self.description else ''}"
             + f"{self.description.replace('+{', '').replace('%', '')}"
         )
         return result
 
-    def getAdvice(self, optional_starting_note='', optional_ending_note=''):
+    def getAdvice(self, optional_starting_note='', optional_ending_note='', optional_character: Character=None):
         a = Advice(
-            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY()}"
+            label=f"{optional_starting_note}{' ' if optional_starting_note else ''}{self.cardset}- {self.name} card:<br>{self.getFormattedXY(optional_character)}"
                   f"{'<br>' if optional_ending_note else ''}{optional_ending_note}",
             picture_class=self.css_class,
             progression=self.level,
-            goal=self.max_level
+            goal=self.max_level,
         )
         return a
 

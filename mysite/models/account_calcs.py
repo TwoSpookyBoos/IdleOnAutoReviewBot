@@ -118,7 +118,8 @@ def _calculate_w3_armor_sets(account):
         # Calculate the Total Value and Generate Description
         if '{' in account.armor_sets['Sets'][set_name]['Bonus Type']:
             account.armor_sets['Sets'][set_name]['Total Value'] = (
-                account.armor_sets['Sets'][set_name]['Base Value']
+                account.armor_sets['Sets'][set_name]['Owned']
+                * account.armor_sets['Sets'][set_name]['Base Value']
                 * armor_set_multi
             )
             account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
@@ -126,7 +127,8 @@ def _calculate_w3_armor_sets(account):
             )
         if '}' in account.armor_sets['Sets'][set_name]['Bonus Type']:
             account.armor_sets['Sets'][set_name]['Total Value'] = ValueToMulti(
-                account.armor_sets['Sets'][set_name]['Base Value']
+                account.armor_sets['Sets'][set_name]['Owned']
+                * account.armor_sets['Sets'][set_name]['Base Value']
                 * armor_set_multi
             )
             account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
@@ -719,7 +721,6 @@ def _calculate_w1_starsigns(account):
         progression=1 if account.labChips.get('Silkrode Nanochip', 0) > 0 else 0,
         goal=1
     )
-
 
 
 def _calculate_w1_stamps(account):

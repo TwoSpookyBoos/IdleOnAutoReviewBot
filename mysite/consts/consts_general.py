@@ -425,11 +425,36 @@ for item_name in gstackable_codenames_expected:
 max_card_stars = 5
 key_cards = 'Cards0'
 cards_max_level = 6
+
+#Source: `IDforCardSETbonus`
+cardset_identifiers = [
+    "{%_EXP_if_below_Lv_50",
+    "{%_All_Food_Effect",
+    "{%_Skill_Efficiency",
+    "{%_Skill_EXP_Gain",
+    "{%_DEF_and_ACC",
+    "{%_Skill_AFK_Gain_Rate",
+    "{%_Crit_Chance",
+    "{%_Fight_AFK_Gain_Rate",
+    "{%_Multikill_Per_Tier",
+    "{%_more_Dungeon_Credits",
+    "{%_Dmg,_Drop,_and_EXP",
+    "{%_Drop_Rate",
+]
+
 cardset_names = [
-    "Blunder Hills", "Yum-Yum Desert", "Easy Resources",
-    "Medium Resources", "Frostbite Tundra", "Hard Resources",
-    "Hyperion Nebula", "Smolderin' Plateau", "Spirited Valley",
-    "Dungeons", "Bosses n Nightmares", "Events"
+    "Blunder Hills",
+    "Yum-Yum Desert",
+    "Easy Resources",
+    "Medium Resources",
+    "Frostbite Tundra",
+    "Hard Resources",
+    "Hyperion Nebula",
+    "Smolderin' Plateau",
+    "Spirited Valley",
+    "Dungeons",
+    "Bosses n Nightmares",
+    "Events"
 ]
 card_raw_data = [
     [
@@ -1724,59 +1749,82 @@ allMeritsDict = {
         7: {"Name": "Not Implemented", "Level": 0, "MaxLevel": 0},
     },  #World8
 }
+
+# Each `Type` within a Stat should be sorted from best to worst (best first)
 equipment_by_bonus_dict = {
     'DropRate': {
-        # Weapons
+        ## Weapons
+        # Fisticuffs
         'Mittens of the Gods': {'Type': 'Fisticuffs', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 120}, 'Misc2': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'mittens-of-the-gods'},
+        # Spears
         'Massive Godbreaker': {'Type': 'Spear', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'massive-godbreaker'},
+        # Bows
         'Doublestring Godshooter': {'Type': 'Bow', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'doublestring-godshooter'},
+        # Wands
         'Magnifique Godcaster': {'Type': 'Wand', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 60}, 'Misc2': {'Bonus': 'DropRate', 'Value': 20}, 'Image': 'magnifique-godcaster'},
-        # Tools
+
+        ## Tools
+        # Pickaxes
         'Destroyer of the Mollo Gomme': {'Type': 'Pickaxe', 'Limited': False, 'Misc1': {'Bonus': 'MiningEff', 'Value': 35}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'destroyer-of-the-mollo-gomme'},
+        # Hatchets
         'Annihilator of the Yggdrasil': {'Type': 'Hatchet', 'Limited': False, 'Misc1': {'Bonus': 'ChoppingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'annihilator-of-the-yggdrasil'},
+        # Rods
         'Angler of the Iliunne': {'Type': 'Rod', 'Limited': False, 'Misc1': {'Bonus': 'FishingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'angler-of-the-iliunne'},
+        # Nets
         'Wrangler of the Qoxzul': {'Type': 'Net', 'Limited': False, 'Misc1': {'Bonus': 'CatchingEff', 'Value': 12}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'wrangler-of-the-qoxzul'},
+        # Traps
         'Containment of the Zrgyios': {'Type': 'Trap', 'Limited': False, 'Misc1': {'Bonus': 'AfkGain', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'containment-of-the-zrgyios'},
+        # Skulls
+        'Crystal Skull of Esquire Vnoze': {'Type': 'Skull', 'Limited': False, 'Misc1': {'Bonus': 'AfkGain', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'crystal-skull-of-esquire-vnoze'},
+
+        ## Equipment
         # Helmets
-        '3rd Anniversary Ice Cream Topper': {'Type': 'Helmet', 'Limited': True, 'Misc1': {'Bonus': 'MonsterXp', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'x3rd-anniversary-ice-cream-topper'},
-        'Efaunt Helmet': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'efaunt-helmet'},
-        'Skulled Helmet of the Divine': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'skulled-helmet-of-the-divine'},
-        'Crown of the Gods': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}, 'Image': 'crown-of-the-gods'},
         'Emperor Kabuto': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 30}, 'Image': 'emperor-kabuto'},
+        'Crown of the Gods': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 22}, 'Image': 'crown-of-the-gods'},
+        'Skulled Helmet of the Divine': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 30}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'skulled-helmet-of-the-divine'},
+        'Efaunt Helmet': {'Type': 'Helmet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'efaunt-helmet'},
+        '3rd Anniversary Ice Cream Topper': {'Type': 'Helmet', 'Limited': True, 'Misc1': {'Bonus': 'MonsterXp', 'Value': 4}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'x3rd-anniversary-ice-cream-topper'},
         # Pendants
         'Chaotic Amarok Pendant': {'Type': 'Pendant', 'Limited': False, 'Misc1': {'Bonus': 'Damage', 'Value': 20}, 'Misc2': {'Bonus': 'DropRate', 'Value': 5}, 'Image': 'chaotic-amarok-pendant'},
+        'Strung Steamy': {'Type': 'Pendant', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'strung-steamy'},
         # Chests
-        'Robe of the Gods': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}, 'Image': 'robe-of-the-gods'},
         'Emperor Sokutai Ho': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 25}, 'Image': 'emperor-sokutai-ho'},
+        'Robe of the Gods': {'Type': 'Chest', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 16}, 'Image': 'robe-of-the-gods'},
         # Legs
-        'Tatters of the Gods': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}, 'Image': 'tatters-of-the-gods'},
         'Emperor Zubon': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 35}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 20}, 'Image': 'emperor-zubon'},
+        'Tatters of the Gods': {'Type': 'Legs', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 14}, 'Image': 'tatters-of-the-gods'},
         # Feet
-        'Devious Slippers of the Divine': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}, 'Image': 'devious-slippers-of-the-divine'},
-        'Drip of the Gods': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}, 'Image': 'drip-of-the-gods'},
         'Emperor Geta': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 20}, 'Image': 'emperor-geta'},
+        'Drip of the Gods': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Misc2': {'Bonus': 'MultikillPerTier', 'Value': 12}, 'Image': 'drip-of-the-gods'},
+        'Devious Slippers of the Divine': {'Type': 'Feet', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 15}, 'Misc2': {'Bonus': 'Damage', 'Value': 8}, 'Image': 'devious-slippers-of-the-divine'},
         # Premium Hats
         'Siege Captain Cap': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'siege-captain-cap'},
         'Goldberry': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'goldberry'},
         # Trophies
-        'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
-        'Luckier Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}, 'Image': 'luckier-lad'},
         'One of the Divine': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}, 'Image': 'one-of-the-divine'},
+        'Luckier Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}, 'Image': 'luckier-lad'},
+        'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
+        'Ultra Unboxer': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'ultra-unboxer'},
         # Capes
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
         'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
-        'Chains of the Gilded Vaultguard': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'ClassExpMulti', 'Value': 100}, 'Misc2': {'Bonus': 'DropRateMulti', 'Value': 40}, 'Image': 'chains-of-the-gilded-vaultguard'},
         # Nametags
-        '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'x3rd-anniversary-idleon-nametag'},
+        'Deadbones Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 25}, 'Misc2': {'Bonus': 'DropRate', 'Value': 35}, 'Image': 'deadbones-nametag', 'Note': 'Also has a x1.25 Drop Rate MULTI'},
         'Balling Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 40}, 'Image': 'balling-nametag'},
-        'Aethermoon Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'aethermoon-nametag'},
-        'Deadbones Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 25}, 'Misc2': {'Bonus': 'DropRate', 'Value': 35}, 'Image': 'deadbones-nametag'},
         'Treasure Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 25}, 'Misc2': {'Bonus': 'Money', 'Value': 25}, 'Image': 'treasure-nametag'},
+        'Aethermoon Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 80}, 'Misc2': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'aethermoon-nametag'},
+        '3rd Anniversary IdleOn Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'AfkGain', 'Value': 3}, 'Misc2': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'x3rd-anniversary-idleon-nametag'},
         # Attire
-        'Cobalt Robe':    {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
         'Evergreen Robe': {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'ClassXp', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 75}, 'Image': 'evergreen-robe'},
+        'Cobalt Robe': {'Type': 'Attire', 'Limited': True, 'Misc1': {'Bonus': 'Damage', 'Value': 100}, 'Misc2': {'Bonus': 'DropRate', 'Value': 60}, 'Image': 'cobalt-robe'},
         # Keychains
-        'Relic Chain': {'Type': 'Keychain', 'Limited': False, 'Note': 'Relic can roll up to +16% total Drop Rate<br>All other Tier 2 keychains can only roll up to +8% Drop Rate', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
+        'Relic Chain': {'Type': 'Keychain', 'Limited': False, 'Note': 'Relic can roll up to +16% total Drop Rate (+32% if boosted)<br>All other Tier 2 keychains can only roll up to +8% Drop Rate', 'Misc1': {'Bonus': 'DropRate', 'Value': 16}, 'Image': 'relic-chain'}
+    },
+    'DropRateMulti': {
+        # Capes
+        'Chains of the Gilded Vaultguard': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'ClassExpMulti', 'Value': 100}, 'Misc2': {'Bonus': 'DropRateMulti', 'Value': 40}, 'Image': 'chains-of-the-gilded-vaultguard'},
+        # NameTags
+        'Deadbones Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 25}, 'Misc2': {'Bonus': 'DropRate', 'Value': 35}, 'Image': 'deadbones-nametag', 'Note': 'Also has a flat 35% Drop Rate bonus'},
     }
 }
 
