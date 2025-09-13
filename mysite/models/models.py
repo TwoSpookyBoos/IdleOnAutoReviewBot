@@ -45,7 +45,7 @@ class Equipment:
             order = raw_data.get(f"EquipOrder_{toon_index}", [])
             quantity = raw_data.get(f"EquipQTY_{toon_index}", [])
 
-            equips_data = json.loads(raw_data.get(f'EMm0_{toon_index}', ''))
+            equips_data = safe_loads(raw_data.get(f'EMm0_{toon_index}', ''))
             equips_data = [{index: item_data} for index, item_data in equips_data.items()]
             for i in range(len(order[0]) - 1):
                 key = str(i)
