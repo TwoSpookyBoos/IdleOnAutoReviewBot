@@ -905,9 +905,6 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if events_equipped:
             cardset_bonus = events_value
 
-        # TODO: fix parsing of Keychain, currently always just gives the max
-        # TODO: REMAINING SILKRODE CHIPS
-
         # Equipment - Flat Drop Rate
         equipment_advice, equipment_bonus = get_equipment_advice_for_stat(
             character,
