@@ -1117,8 +1117,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         boss_battle_spillover_value_max = boss_battle_spillover_value_per_tier_max * 5
         talent_advice.append(Advice(
             label=f"Special Talent - Boss Battle Spillover:"
-                  f"<br>+{round(boss_battle_spillover_value, 1)}%/{boss_battle_spillover_value_max}% Drop Rate"
-                  + f"<br>Can be increased by defeating more weekly boss difficulties!" if session_data.account.weekly_boss_kills < 5 else '',
+                  f"<br>+{round(boss_battle_spillover_value, 1)}%/{boss_battle_spillover_value_max}% Drop Rate" 
+                  f"{'<br>Can be increased by defeating more weekly boss difficulties!' if session_data.account.weekly_boss_kills < 5 else ''}",
             picture_class='boss-battle-spillover',
             progression=char_boss_battle_spillover_level,
             goal=100,
@@ -1231,6 +1231,11 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
     equipment_advice: dict[str, list[Advice]] = {}
     equipment_bonus = 0
     equipment_dict: dict[str, list] = {}
+
+    motherboard_equipped = "Silkrode Motherboard" in character.equipped_lab_chips
+    software_equipped = "Silkrode Software" in character.equipped_lab_chips
+    processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
+
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
@@ -1242,19 +1247,24 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
             misc2 = equipped_equipment.stats.get('misc_2_txt', None)
             if misc1 == stat_codename:
                 equipped_equipment_bonus += equipped_equipment.stats['misc_1_val']
-            elif misc2 == stat_codename:
+            if misc2 == stat_codename:
                 equipped_equipment_bonus += equipped_equipment.stats['misc_2_val']
-            else:
+            if equipment_bonus == 0:
                 equipped_equipment_bonus += equipment_drop_rate_base
+        if (motherboard_equipped and equipment_data['Type'] == 'Trophy' or
+                software_equipped and equipment_data['Type'] == 'Keychain' or
+                processor_equipped and equipment_data['Type'] == 'Pendant'):
+            equipped_equipment_bonus *= 2
         equipment_bonus += equipped_equipment_bonus
         slot = equipment_data.get('Type')
         if advice_group_prefix + slot not in equipment_dict.keys():
             equipment_dict[advice_group_prefix + slot] = []
         equipment_dict[advice_group_prefix + slot].append({
             'Name': equipment_name,
+            'Slot': slot,
             stat: equipment_drop_rate_base,
             'Image': equipment_data['Image'],
-            'Equipped': int(equipped_equipment_bonus == equipment_drop_rate_base),
+            'Equipped': int(equipped_equipment_bonus >= equipment_drop_rate_base),
             'Limited': equipment_data.get('Limited', False),
             'Note': equipment_data.get('Note', '')
         })
@@ -1263,7 +1273,44 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
             continue
         if slot not in equipment_advice.keys():
             equipment_advice[slot] = []
+
+        if "Trophy" in slot:
+            equipment_advice[slot].append(Advice(
+                label=f"Lab Chips - Silkrode Motherboard"
+                      f"<br>Doubles Misc. Bonuses of equipped Trophy",
+                picture_class='silkrode-motherboard',
+                progression=int(motherboard_equipped),
+                goal=1
+            ))
+
+        if "Keychain" in slot:
+            equipment_advice[slot].append(Advice(
+                label=f"Lab Chips - Silkrode Software"
+                      f"<br>Doubles Misc. Bonuses of (upper) equipped Keychain",
+                picture_class='silkrode-software',
+                progression=int(software_equipped),
+                goal=1
+            ))
+
+        if "Pendant" in slot:
+            equipment_advice[slot].append(Advice(
+                label=f"Lab Chips - Silkrode Processor"
+                      f"<br>Doubles Misc. Bonuses of equipped Pendant",
+                picture_class='silkrode-processor',
+                progression=int(processor_equipped),
+                goal=1
+            ))
+
         for equipment in equipment_list:
+            if motherboard_equipped and equipment['Slot'] == 'Trophy':
+                equipment[stat] *= 2
+                equipment['Note'] += f"<br>Boosted by Silkrode Motherboard"
+            if software_equipped and equipment['Slot'] == 'Keychain':
+                equipment['Note'] += f"<br>First boosted by Silkrode Software"
+            if processor_equipped and equipment['Slot'] == 'Pendant':
+                equipment[stat] *= 2
+                equipment['Note'] += f"<br>Boosted by Silkrode Processor"
+
             equipment_advice[slot].append(Advice(
                 label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:"
                       f"<br>+{equipment[stat]}% {stat_human_readable_format}"
