@@ -1179,7 +1179,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         # Wrap Up
         character_specific_advice = {
-            f'Luck - +{round(dr_from_luk, 2)}x Drop Rate': dr_from_luk_advice,
+            f'Luck - +{round(dr_from_luk, 2)}% Drop Rate': dr_from_luk_advice,
             f'Cards - +{round(card_bonus, 1)}% Drop Rate': card_advice,
             f'Card Set - +{round(cardset_bonus, 1)}% Drop Rate': cardset_advice,
             f'Equipment Drop Rate - Total: +{round(equipment_bonus, 1)}% Drop Rate': [],
