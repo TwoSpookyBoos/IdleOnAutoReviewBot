@@ -118,7 +118,8 @@ def _calculate_w3_armor_sets(account):
         # Calculate the Total Value and Generate Description
         if '{' in account.armor_sets['Sets'][set_name]['Bonus Type']:
             account.armor_sets['Sets'][set_name]['Total Value'] = (
-                account.armor_sets['Sets'][set_name]['Base Value']
+                account.armor_sets['Sets'][set_name]['Owned']
+                * account.armor_sets['Sets'][set_name]['Base Value']
                 * armor_set_multi
             )
             account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
@@ -126,7 +127,8 @@ def _calculate_w3_armor_sets(account):
             )
         if '}' in account.armor_sets['Sets'][set_name]['Bonus Type']:
             account.armor_sets['Sets'][set_name]['Total Value'] = ValueToMulti(
-                account.armor_sets['Sets'][set_name]['Base Value']
+                account.armor_sets['Sets'][set_name]['Owned']
+                * account.armor_sets['Sets'][set_name]['Base Value']
                 * armor_set_multi
             )
             account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
@@ -721,7 +723,6 @@ def _calculate_w1_starsigns(account):
     )
 
 
-
 def _calculate_w1_stamps(account):
     # if ("StampDoubler" == e) return
     # 100
@@ -738,7 +739,7 @@ def _calculate_w1_stamps(account):
         )
         + (20 * account.sneaking['PristineCharms']['Jellypick']['Obtained'])
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
-        + (MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value']) * account.armor_sets['Sets']['EMPEROR SET']['Owned'])
+        + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
     )
 
     for stamp_name, stamp_values in account.stamps.items():
