@@ -792,7 +792,7 @@ def invalid_weapon_type(base_class, slot):
         return slot in ['Spear', 'Wand', 'Fisticuffs']
     if base_class == 'Mage':
         return slot in ['Spear', 'Bow', 'Fisticuffs']
-    if base_class == 'Journeyman':
+    if base_class in ['Journeyman', 'Beginner'] :
         return slot in ['Spear', 'Bow', 'Wand']
     raise ValueError(f'Provided unknown base_class: {base_class}')
 
@@ -1071,7 +1071,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             char_world = (char_map // 50) + 1
 
             shrine_data = session_data.account.shrines['Clover Shrine']
-            shrine_map = shrine_data['map_index']
+            shrine_map = shrine_data['MapIndex']
             shrine_world = (shrine_map // 50) + 1
 
             if session_data.account.labBonuses['Shrine World Tour']['Enabled']:
@@ -1097,7 +1097,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         # Talents - Special Talent: Boss Battle Spillover
         bbs_index = 655
         boss_battle_spillover = all_talentsDict[bbs_index]
-        char_boss_battle_spillover_level = character.current_preset_talents[str(bbs_index)]
+        char_boss_battle_spillover_level = character.current_preset_talents.get(str(bbs_index), 0)
         boss_battle_spillover_value_per_tier = lavaFunc(
             funcType=boss_battle_spillover['funcX'],
             level=char_boss_battle_spillover_level,
@@ -1127,7 +1127,9 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if character.base_class == 'Archer':
             robbinghood_index = 279
             robbinghood = all_talentsDict[robbinghood_index]
-            char_robbinghood_level = character.current_preset_talents[str(robbinghood_index)] + character.total_bonus_talent_levels
+            char_robbinghood_level = character.current_preset_talents.get(str(robbinghood_index), 0)
+            if char_robbinghood_level > 0:
+                char_robbinghood_level += character.total_bonus_talent_levels
             robbinghood_value = lavaFunc(
                 funcType=robbinghood['funcX'],
                 level=char_robbinghood_level,
@@ -1154,7 +1156,9 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if character.base_class == 'Journeyman':
             looty_booty_index = 24
             looty_booty = all_talentsDict[looty_booty_index]
-            char_looty_booty_level = character.current_preset_talents[str(looty_booty_index)] + character.total_bonus_talent_levels
+            char_looty_booty_level = character.current_preset_talents.get(str(looty_booty_index), 0)
+            if char_looty_booty_level > 0:
+                char_looty_booty_level += character.total_bonus_talent_levels
             looty_booty_value = lavaFunc(
                 funcType=looty_booty['funcX'],
                 level=char_looty_booty_level,
