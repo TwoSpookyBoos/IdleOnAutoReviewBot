@@ -21,18 +21,29 @@ def test_valid_input_post(client, conf):
     assert response.status_code == 200
 
 
-testing_data = [
-    str(file) for file in Path("tests/testing-data").iterdir() if file.is_file()
+passing_test_data = [
+    str(file) for file in Path("tests/testing-data/passing").iterdir() if file.is_file()
 ]
 
+failing_test_data = [
+    str(file) for file in Path("tests/testing-data/failing").iterdir() if file.is_file()
+]
 
-@pytest.mark.parametrize("datafile", testing_data)
-def test_json(client, conf, datafile):
+@pytest.mark.parametrize("datafile", passing_test_data)
+def test_valid_json(client, conf, datafile):
     with open(datafile, "r") as f:
         data = json.load(f)
 
-    response = client.post("/results", data=json.dumps(data), headers=conf.headers)
-    assert response.status_code == 200
+    response = client.post("/results", data=json.dumps({'player': json.dumps(data)}), headers=conf.headers)
+    assert response.status_code == 200 and len(response.data) > 0
+
+@pytest.mark.parametrize("datafile", failing_test_data)
+def test_invalid_json(client, conf, datafile):
+    with open(datafile, "r") as f:
+        data = json.load(f)
+
+    response = client.post("/results", data=json.dumps({'player': json.dumps(data)}), headers=conf.headers)
+    assert response.status_code != 200 and response.status_code < 500
 
 
 def test_username_too_long_post(client):
