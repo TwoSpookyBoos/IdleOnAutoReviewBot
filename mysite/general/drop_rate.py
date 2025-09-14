@@ -794,7 +794,8 @@ def invalid_weapon_type(base_class, slot):
         return slot in ['Spear', 'Bow', 'Fisticuffs']
     if base_class in ['Journeyman', 'Beginner'] :
         return slot in ['Spear', 'Bow', 'Wand']
-    raise ValueError(f'Provided unknown base_class: {base_class}')
+    logger.warning(f'Provided unknown base_class: {base_class}')
+    return True
 
 
 def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdviceGroup:
