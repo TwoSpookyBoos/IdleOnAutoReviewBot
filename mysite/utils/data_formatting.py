@@ -51,24 +51,24 @@ class HeaderData:
 
     def __getLastUpdatedTime(self):
         try:
-            timeAwayDict = safe_loads(session_data.account.raw_data["TimeAway"])
-            lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
-            lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
-            currentTimeUTC = datetime.datetime.utcnow()
-            deltaTime = currentTimeUTC - lastUpdatedTimeUTC
+            time_away_dict = safe_loads(session_data.account.raw_data['TimeAway'])
+            last_updated_time_epoch = time_away_dict['GlobalTime']
+            last_updated_time_utc = datetime.datetime.fromtimestamp(last_updated_time_epoch, datetime.timezone.utc)
+            current_time_utc = datetime.datetime.now(datetime.timezone.utc)
+            deltaTime = current_time_utc - last_updated_time_utc
             days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
             hours, rest = divmod(rest, 60 * 60)
             minutes, seconds = divmod(rest, 60)
 
             locale = request.accept_languages.best.replace("-", "_")
             self.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
-            self.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+            self.last_update = format_datetime(last_updated_time_utc, locale=locale) + " UTC"
             self.is_stale = deltaTime.total_seconds() >= 24 * 60 * 60
 
         except:
-            logger.exception("Unable to parse last updated time.")
-            self.elapsed = "00:00:00:00"
-            self.last_update = "Unable to parse last updated time, sorry :("
+            logger.exception('Unable to parse last updated time.')
+            self.elapsed = '00:00:00:00'
+            self.last_update = 'Unable to parse last updated time, sorry :('
 
 
 def getJSONfromAPI(runType, username="scoli", source_string=InputType.ALL):
@@ -354,8 +354,6 @@ def getCharacterDetails(inputJSON, runType):
         main_stats_array = safe_loads(inputJSON.get(f'PVStatList_{character_index}', [0, 0, 0, 0]))
         main_stats[character_index] = {'STR': main_stats_array[0], 'AGI': main_stats_array[1], 'WIS': main_stats_array[2], 'LUK': main_stats_array[3]}
 
-
-
         characterDict[character_index] = dict(
             alchemy_job=alchemy_jobs_list[character_index],
             all_skill_levels=characterSkillsDict[character_index],
@@ -574,7 +572,7 @@ def scrape_slab():
 
     # Prepare the dictionary for YAML conversion
     item_dict = {internal: display for internal, display in matches}
-    # This stuff isn't exactly an item but it does show up
+    # This stuff isn't exactly an item, but it does show up
     item_dict.update(dict(
         Blank="Blank",
         LockedInvSpace="Locked Inventory Space",
