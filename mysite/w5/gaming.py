@@ -242,7 +242,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     pass
 
                 snail_AdviceDict[subgroup_label].append(Advice(
-                    label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} extra mail",
+                    label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} extra unspent mail",
                     picture_class='snail-envelope',
                     progression=max(0, floored_envelopes - encouragements_short_by),
                     goal=mail_needed
