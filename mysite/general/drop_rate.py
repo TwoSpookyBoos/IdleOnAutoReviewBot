@@ -1242,7 +1242,7 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
         equipment_drop_rate_base = ((misc1.get('Bonus', '') == stat) * misc1.get('Value', 0)) + ((misc2.get('Bonus', '') == stat) * misc2.get('Value', 0))
-        equipped_equipment: list[Asset | None] = [equipment for equipment in character.equipment.equips if equipment_name == equipment.name]
+        equipped_equipment: list[Asset | None] = [equipment for equipment in character.equipment.equips if equipment_name == equipment.name] + [tool for tool in character.equipment.tools if equipment_name == tool.name]
         if not equipped_equipment:
             equipped_equipment = [None] # So the loop below is executed once
             if is_keychain:
