@@ -17,7 +17,9 @@
             <li id="{{ section.css_class }}-tier" class="groups">
                 {% for group in section.groups %}
                     {% if group.tabbed_advices is defined %}
-                        {% include 'advice_group_tabbed.html' %}
+                        {% if group.tabbed_advices | length > 0 %}
+                            {% include 'advice_group_tabbed.html' %}
+                        {% endif %}
                     {% else %}
                         {% set advice_group = group %}
                         {% include 'advice_group.html' %}

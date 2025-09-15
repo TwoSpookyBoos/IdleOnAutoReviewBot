@@ -95,6 +95,11 @@ def _make_cards(account):
             description=card_values['Description']
         ) for decoded_enemy_name, card_values in parsed_card_data.items()
     ]
+
+    for character in g.account.all_characters:
+        for equipped_card_codename in character.equipped_cards_codenames:
+            equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
+            character.equipped_cards.append(equipped_card)
     # cards = [
     #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
     #     for cardset, cards in card_data.items()
@@ -1128,6 +1133,7 @@ def _parse_w2(account):
     _parse_w2_obols(account)
     _parse_w2_islands(account)
     _parse_w2_killroy(account)
+    _parse_w2_weekly_boss(account)
 
 def _parse_w2_vials(account):
     account.alchemy_vials = {}
@@ -1490,6 +1496,8 @@ def _parse_w2_killroy_skull_shop(account):
         'Jade Multi': 1 + ((safer_get(account.raw_optlacc_dict, 230, 0) / (300 + safer_get(account.raw_optlacc_dict, 230, 0))) * 2),
     }
 
+def _parse_w2_weekly_boss(account):
+    account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)
 
 def _parse_w3(account):
     _parse_w3_refinery(account)

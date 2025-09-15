@@ -11,7 +11,7 @@ from babel.dates import format_datetime
 from flask import request, g as session_data
 
 from consts.consts_idleon import classes_dict, skill_index_list, empty_skill_list
-from consts.consts_general import max_characters
+from consts.consts_general import max_characters, cardset_identifiers, cardset_names
 from consts.consts_w2 import obols_dict
 from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
@@ -51,24 +51,24 @@ class HeaderData:
 
     def __getLastUpdatedTime(self):
         try:
-            timeAwayDict = safe_loads(session_data.account.raw_data["TimeAway"])
-            lastUpdatedTimeEpoch = timeAwayDict["GlobalTime"]
-            lastUpdatedTimeUTC = datetime.datetime.utcfromtimestamp(lastUpdatedTimeEpoch)
-            currentTimeUTC = datetime.datetime.utcnow()
-            deltaTime = currentTimeUTC - lastUpdatedTimeUTC
+            time_away_dict = safe_loads(session_data.account.raw_data['TimeAway'])
+            last_updated_time_epoch = time_away_dict['GlobalTime']
+            last_updated_time_utc = datetime.datetime.fromtimestamp(last_updated_time_epoch, datetime.timezone.utc)
+            current_time_utc = datetime.datetime.now(datetime.timezone.utc)
+            deltaTime = current_time_utc - last_updated_time_utc
             days, rest = divmod(deltaTime.total_seconds(), 24 * 60 * 60)
             hours, rest = divmod(rest, 60 * 60)
             minutes, seconds = divmod(rest, 60)
 
             locale = request.accept_languages.best.replace("-", "_")
             self.elapsed = f"{days:02g}:{hours:02g}:{minutes:02g}:{int(seconds):02g}"
-            self.last_update = format_datetime(lastUpdatedTimeUTC, locale=locale) + " UTC"
+            self.last_update = format_datetime(last_updated_time_utc, locale=locale) + " UTC"
             self.is_stale = deltaTime.total_seconds() >= 24 * 60 * 60
 
         except:
-            logger.exception("Unable to parse last updated time.")
-            self.elapsed = "00:00:00:00"
-            self.last_update = "Unable to parse last updated time, sorry :("
+            logger.exception('Unable to parse last updated time.')
+            self.elapsed = '00:00:00:00'
+            self.last_update = 'Unable to parse last updated time, sorry :('
 
 
 def getJSONfromAPI(runType, username="scoli", source_string=InputType.ALL):
@@ -321,6 +321,10 @@ def getCharacterDetails(inputJSON, runType):
     obol_upgrades_list = {}
     big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * max_characters))
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * max_characters))
+    equipped_cards_codenames = {}
+    equipped_cardset = {}
+    equipped_star_signs = {}
+    main_stats = {}
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
@@ -340,6 +344,15 @@ def getCharacterDetails(inputJSON, runType):
             equipped_lab_chips[character_index] = []
         current_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadout_{character_index}', []))
         secondary_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadoutpre_{character_index}', []))
+        equipped_cards_codenames[character_index] = [codename for codename in safe_loads(inputJSON.get(f'CardEquip_{character_index}', [])) if codename != 'B']
+        try:
+            equipped_carset_identifier = list(safe_loads(inputJSON.get(f'CSetEq_{character_index}', {})).keys())[0]
+            equipped_cardset[character_index] = cardset_names[cardset_identifiers.index(equipped_carset_identifier)]
+        except IndexError:
+            equipped_cardset[character_index] = ""
+        equipped_star_signs[character_index] = [int(star_sign_id) for star_sign_id in inputJSON.get(f'PVtStarSign_{character_index}','_,')[:-1].split(',') if star_sign_id != '_']
+        main_stats_array = safe_loads(inputJSON.get(f'PVStatList_{character_index}', [0, 0, 0, 0]))
+        main_stats[character_index] = {'STR': main_stats_array[0], 'AGI': main_stats_array[1], 'WIS': main_stats_array[2], 'LUK': main_stats_array[3]}
 
         characterDict[character_index] = dict(
             alchemy_job=alchemy_jobs_list[character_index],
@@ -365,6 +378,10 @@ def getCharacterDetails(inputJSON, runType):
             secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
             sub_class=getSubclass(character_classes[character_index]),
+            equipped_cards_codenames=equipped_cards_codenames[character_index],
+            equipped_cardset=equipped_cardset[character_index],
+            equipped_star_signs=equipped_star_signs[character_index],
+            main_stats=main_stats[character_index]
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]
@@ -555,7 +572,7 @@ def scrape_slab():
 
     # Prepare the dictionary for YAML conversion
     item_dict = {internal: display for internal, display in matches}
-    # This stuff isn't exactly an item but it does show up
+    # This stuff isn't exactly an item, but it does show up
     item_dict.update(dict(
         Blank="Blank",
         LockedInvSpace="Locked Inventory Space",

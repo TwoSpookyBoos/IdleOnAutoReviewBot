@@ -28,7 +28,7 @@
       </ENTRIES>
     </EXTENSION>
     <option name="SCRIPT_NAME" value="flask" />
-    <option name="PARAMETERS" value="run" />
+    <option name="PARAMETERS" value="--debug run" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="true" />
