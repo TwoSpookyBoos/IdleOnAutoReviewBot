@@ -64,10 +64,11 @@ function defineFormSubmitAction() {
 
         const target = document.querySelector("#top")
         target.innerHTML = ""
-        spinner.spin(target)
-
-        fetchPlayerAdvice()
-        toggleSidebar()
+        if (fetchStoredUserParams()['player'] !== '') {
+            spinner.spin(target)
+            toggleSidebar()
+            fetchPlayerAdvice()
+        }
     })
 }
 
@@ -435,7 +436,7 @@ const fetchStoredUserParams = () => {
     const storedUserParams = Object.fromEntries(Object.entries(defaults).map(([k, v]) => [k, localStorage.getItem(k) ?? v]))
     const queryStringParams = new URLSearchParams(storedUserParams)
     if (storedUserParams.player.startsWith("{")) {
-        // empty player if it's JSON
+        // remove player from URL if it's JSON
         queryStringParams.delete("player")
     }
     history.pushState(null, '', `?${queryStringParams}`)
