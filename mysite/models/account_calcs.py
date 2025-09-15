@@ -247,7 +247,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + account.merits[5][4]['Level']
         + int(account.achievements['Spectre Stars']['Complete'])
         + int(account.achievements['Regalis My Beloved']['Complete'])
-        + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']) * account.armor_sets['Sets']['GODSHARD SET']['Owned']
+        + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
     )  #This is used to calculate bonus 19, library max level
 
     player_mgb_rest = ValueToMulti(
@@ -256,7 +256,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + int(account.achievements['Spectre Stars']['Complete'])
         + int(account.achievements['Regalis My Beloved']['Complete'])
         + account.summoning['Endless Bonuses']['x Winner Bonuses']
-        + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']) * account.armor_sets['Sets']['GODSHARD SET']['Owned']
+        + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
         + MultiToValue(account.emperor['Bonuses'][8]['Total Value'])
     )
 
@@ -290,8 +290,8 @@ def _calculate_w6_summoning_winner_bonuses(account):
     ))
     account.summoning['WinnerBonusesAdvice'].append(Advice(
         label=f"{{{{Armor Set|#armor-sets}}}}: Godshard Set: "
-              f"{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']) * account.armor_sets['Sets']['GODSHARD SET']['Owned'], 1):g}"
-              f"/{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']), 1):g}%",
+              f"+{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']), 1):g}"
+              f"/{round(account.armor_sets['Sets']['GODSHARD SET']['Base Value'], 1):g}%",
         picture_class=account.armor_sets['Sets']['GODSHARD SET']['Image'],
         progression=int(account.armor_sets['Sets']['GODSHARD SET']['Owned']),
         goal=1
@@ -1183,7 +1183,7 @@ def _calculate_w4_lab_bonuses(account):
 def _calculate_w4_tome_bonuses(account):
     tome_bonus_multi = ValueToMulti(
         account.grimoire['Upgrades']['Grey Tome Book']['Level']
-        + (MultiToValue(account.armor_sets['Sets']['TROLL SET']['Total Value']) * account.armor_sets['Sets']['TROLL SET']['Owned'])
+        + MultiToValue(account.armor_sets['Sets']['TROLL SET']['Total Value'])
     )
     # DMG
 
@@ -2107,11 +2107,11 @@ def _calculate_w3_equinox_max_levels(account):
 def _calculate_general_character_bonus_talent_levels(account):
     account.bonus_talents = {
         'Kattelkruk Set': {
-            'Value': 5 * account.armor_sets['Sets']['KATTLEKRUK SET']['Owned'],
+            'Value': account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value'],
             'Image': account.armor_sets['Sets']['KATTLEKRUK SET']['Image'],
             'Label': f"{{{{Set bonus|#armor-sets}}}}: Kattlekruk Set: "
-                     f"+{round(account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value'] * account.armor_sets['Sets']['KATTLEKRUK SET']['Owned'], 2):g}"
-                     f"/{round(account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value'], 2):g}",
+                     f"+{account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value']:g}"
+                     f"/{account.armor_sets['Sets']['KATTLEKRUK SET']['Base Value']:g}",
             'Progression': int(account.armor_sets['Sets']['KATTLEKRUK SET']['Owned']),
             'Goal': 1
         },
