@@ -1468,7 +1468,9 @@ class EnemyWorld:
                     [self.maps_dict[enemy_map_index].map_name,
                      self.maps_dict[enemy_map_index].kills_to_next_skull,
                      self.maps_dict[enemy_map_index].percent_toward_next_skull,
-                     self.maps_dict[enemy_map_index].monster_image])
+                     self.maps_dict[enemy_map_index].monster_image,
+                     self.maps_dict[enemy_map_index].kill_count],
+                )
             for skullDict in self.lowest_skulls_dict:
                 self.lowest_skulls_dict[skullDict] = sorted(self.lowest_skulls_dict[skullDict], key=lambda item: item[2], reverse=True)
             for skullDict in self.lowest_skulls_dict:

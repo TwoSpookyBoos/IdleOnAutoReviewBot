@@ -1,11 +1,11 @@
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import current_world
-from consts.consts_w3 import apoc_names_list, apoc_difficulty_name_list
+from consts.consts_w3 import apoc_names_list, apoc_difficulty_name_list, dn_delays, dn_skull_value_to_name_dict, getDNKillRequirement
 from consts.progression_tiers import deathNote_progressionTiers, true_max_tiers
 from flask import g as session_data
 
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.text_formatting import pl
+from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 
 
@@ -33,12 +33,11 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
         }
         for enemy in char.apoc_dict[apoc_name][difficulty_name]:
             subgroupName = f'World {enemy[4]}' if enemy[4] != 0 else 'Scattered Extras'
-            advices[char.character_name][subgroupName].append(
-                Advice(
-                    label=enemy[0],
-                    picture_class=enemy[3],
-                    goal=f"{enemy[1]:,}"),
-            )
+            advices[char.character_name][subgroupName].append(Advice(
+                label=enemy[0],
+                picture_class=enemy[3],
+                goal=f"{enemy[1]:,}"
+            ))
     for toon_name, toon_advice_list in advices.items():
         ags.append(AdviceGroup(
             tier='',
@@ -61,6 +60,14 @@ def getDeathNoteProgressionTiersAdviceGroup():
         'CHOW': {},
         'MEOW': {},
         'WOW': {}
+    }
+    deathnote_failed_skull_type = {
+        'W1': '',
+        'W2': '',
+        'W3': '',
+        'W4': '',
+        'W5': '',
+        'W6': '',
     }
     optional_tiers = 2
     true_max = true_max_tiers['Death Note']
@@ -106,10 +113,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
             highest_chow_count = session_data.account.all_characters[barb_index].apoc_dict['CHOW']['Total']
             highest_chow_count_index = barb_index
 
-
     # Assess Tiers
     for tier in deathNote_progressionTiers:
-        # tier[0] = int tier
+        # tier[0] = int tier_number
         # tier[1] = int w1LowestSkull
         # tier[2] = int w2LowestSkull
         # tier[3] = int w3LowestSkull
@@ -125,19 +131,38 @@ def getDeathNoteProgressionTiersAdviceGroup():
         # tier[13] = str Notes
 
         # Basic Worlds
-        for worldIndex in world_indexes:
-            if tier_combo[worldIndex] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
-                if full_death_note_dict[worldIndex].lowest_skull_value >= tier[worldIndex]:
-                    tier_combo[worldIndex] = tier[0]
+        for world_index in world_indexes:
+            if tier_combo[world_index] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
+                if full_death_note_dict[world_index].lowest_skull_value >= tier[world_index]:
+                    tier_combo[world_index] = tier[0]
                 else:
-                    for enemy in full_death_note_dict[worldIndex].lowest_skulls_dict[full_death_note_dict[worldIndex].lowest_skull_value]:
-                        deathnote_AdviceDict[f'W{worldIndex}'].append(Advice(
-                            label=enemy[0],
-                            picture_class=enemy[3],
-                            progression=enemy[2],
-                            goal=100,
-                            unit='%'
-                        ))
+                    required_kills = getDNKillRequirement(skull_value=tier[world_index])
+                    for skull_value in full_death_note_dict[world_index].lowest_skulls_dict:
+                        if skull_value < tier[world_index]:
+                            for enemy in full_death_note_dict[world_index].lowest_skulls_dict[skull_value]:
+                                if (
+                                    tier[world_index] < dn_delays.get(enemy[0], {}).get('DelayUntilSkull', 0)
+                                    or tier[0] < dn_delays.get(enemy[0], {}).get('DelayUntilTier', 0)
+                                ):
+                                    # Skip certain maps until particular Skull values or Tier number
+                                    continue
+                                else:
+                                    if deathnote_failed_skull_type[f'W{world_index}'] == '':
+                                        # Store the type of skull failed to be used in the AG header
+                                        deathnote_failed_skull_type[f'W{world_index}'] = dn_skull_value_to_name_dict[tier[world_index]]
+                                    deathnote_AdviceDict[f'W{world_index}'].append(Advice(
+                                        label=(
+                                            f"{enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
+                                        ),
+                                        picture_class=enemy[3],
+                                        progression=enemy[2],
+                                        goal=100,
+                                        unit='%'
+                                    ))
+
+                    if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
+                        # logger.debug(f"Pass: W{world_index} requirement{pl(full_death_note_dict[world_index].lowest_skulls_dict[full_death_note_dict[world_index].lowest_skull_value])} delayed in T{tier[0]}")
+                        tier_combo[world_index] = tier[0]
 
         # ZOW
         if tier_combo['ZOW'] >= (tier[0] - 1):  # Only evaluate if they already met the previous tier's requirement
@@ -153,7 +178,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                 deathnote_AdviceDict['ZOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highest_zow_count_index].apoc_dict['ZOW'][difficultyName]:
                                 deathnote_AdviceDict["ZOW"][difficultyName].append(Advice(
-                                    label=enemy[0],
+                                    label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                     picture_class=enemy[3],
                                     progression=enemy[2],
                                     goal=100,
@@ -183,7 +208,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                 deathnote_AdviceDict['CHOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highest_chow_count_index].apoc_dict['CHOW'][difficultyName]:
                                 deathnote_AdviceDict["CHOW"][difficultyName].append(Advice(
-                                    label=enemy[0],
+                                    label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                     picture_class=enemy[3],
                                     progression=enemy[2],
                                     goal=100,
@@ -216,7 +241,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
                                 for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]:
                                     deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
-                                        label=enemy[0],
+                                        label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                         picture_class=enemy[3],
                                         progression=enemy[2],
                                         goal=100,
@@ -249,7 +274,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     deathnote_AdviceDict['WOW'][difficulty_name] = []
                                 for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW'][difficulty_name]:
                                     deathnote_AdviceDict['WOW'][difficulty_name].append(Advice(
-                                        label=enemy[0],
+                                        label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                         picture_class=enemy[3],
                                         progression=enemy[2],
                                         goal=100,
@@ -269,11 +294,15 @@ def getDeathNoteProgressionTiersAdviceGroup():
     # Generate Advice Groups
     deathnote_AdviceGroups = {}
     # Basic Worlds
-    for worldIndex in world_indexes:
-        deathnote_AdviceGroups[f'W{worldIndex}'] = AdviceGroup(
-            tier=tier_combo[worldIndex],
-            pre_string=f"Kill more W{worldIndex} enemies to reach a minimum skull of {full_death_note_dict[worldIndex].next_lowest_skull_name}",
-            advices=deathnote_AdviceDict[f'W{worldIndex}'],
+    for world_index in world_indexes:
+        deathnote_AdviceGroups[f'W{world_index}'] = AdviceGroup(
+            tier=tier_combo[world_index],
+            pre_string=(
+                f"Complete a minimum of {deathnote_failed_skull_type[f'W{world_index}']} "
+                f"({notateNumber('Basic', getDNKillRequirement(skull_name=deathnote_failed_skull_type[f'W{world_index}']), 0)})"
+                f" in W{world_index}"
+            ),
+            advices=deathnote_AdviceDict[f'W{world_index}'],
         )
 
     # ZOW
