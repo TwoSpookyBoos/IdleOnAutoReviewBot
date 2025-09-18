@@ -360,7 +360,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ballot_value = session_data.account.ballot['Buffs'][27]['Value']
     ballot_value_active = ballot_value * ballot_active
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{ballot_value_active}/{ballot_value:}% Drop Rate"
+        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{round(ballot_value_active, 2)}/{round(ballot_value, 2)}% Drop Rate"
               f"<br>(Buff {ballot_status})",
         picture_class='ballot-27',
         progression=int(ballot_active),
