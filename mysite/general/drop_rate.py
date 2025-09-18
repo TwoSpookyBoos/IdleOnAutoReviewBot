@@ -1276,7 +1276,7 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 'Slot': slot,
                 stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
                 'Image': equipment_data['Image'],
-                'EquippedAndMaxed': int(equipped_equipment_bonus == equipment_drop_rate_base or equipped_equipment_bonus == 2 * equipment_drop_rate_base),
+                'EquippedAndMaxed': int(((not can_be_boosted_by_chips) and equipped_equipment_bonus >= equipment_drop_rate_base) or (can_be_boosted_by_chips and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
                 'Limited': equipment_data.get('Limited', False),
                 'Note': equipment_data.get('Note', ''),
                 'Can be boosted': can_be_boosted_by_chips
