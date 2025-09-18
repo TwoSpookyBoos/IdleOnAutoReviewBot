@@ -917,7 +917,7 @@ apocable_map_index_dict = {
 dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
 dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])
 apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
-apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
+apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "Unfiltered"]
 apoc_difficulty_name_list = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'

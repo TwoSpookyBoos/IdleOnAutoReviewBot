@@ -1637,8 +1637,9 @@ def _parse_w3_deathnote_kills(account):
                                 account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apocIndex]),
                                 [
                                     account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                    apocAmount - kill_count if apocIndex < 3 else kill_count,  # kills short of zow/chow/meow
-                                    floor((kill_count / apocAmount) * 100),  # percent toward zow/chow/meow
+                                    apocAmount - kill_count if apocIndex < len(apoc_amounts_list) else kill_count,  # kills short of Apoc stack
+                                    # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
+                                    min(99, floor(round((kill_count / apocAmount) * 100))),  # percent toward Apoc stack
                                     account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
                                     worldIndex
                                 ]

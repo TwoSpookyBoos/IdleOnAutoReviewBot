@@ -1,3 +1,4 @@
+from math import floor
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import current_world
 from consts.consts_w3 import apoc_names_list, apoc_difficulty_name_list, dn_delays, dn_skull_value_to_name_dict, getDNKillRequirement
@@ -14,7 +15,7 @@ logger = get_logger(__name__)
 def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
     advices = {}
     ags = []
-    apoc_name = apoc_names_list[-1]
+    apoc_name = apoc_names_list[-1]  #This is the Unfiltered placeholder that stores just kill_count without any goal
     difficulty_name = apoc_difficulty_name_list[-2]
     #logger.debug(f"apocCharactersIndexList: {session_data.account.apocCharactersIndexList}")
     for character_index in session_data.account.apocCharactersIndexList:
@@ -138,7 +139,10 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 else:
                     required_kills = getDNKillRequirement(skull_value=tier[world_index])
                     for skull_value in full_death_note_dict[world_index].lowest_skulls_dict:
+                        skull_name = dn_skull_value_to_name_dict[skull_value]
                         if skull_value < tier[world_index]:
+                            # Looking for previously skipped enemy requirements where {skull_value} < {tier[world_index]}
+                            # I promise this should be < not <=. You'll get negative amounts remaining if you use <=
                             for enemy in full_death_note_dict[world_index].lowest_skulls_dict[skull_value]:
                                 if (
                                     tier[world_index] < dn_delays.get(enemy[0], {}).get('DelayUntilSkull', 0)
@@ -155,13 +159,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                             f"{enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
                                         ),
                                         picture_class=enemy[3],
-                                        progression=enemy[2],
+                                        progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
                                         goal=100,
-                                        unit='%'
+                                        unit='%',
+                                        resource=skull_name
                                     ))
-
+                    # After checking every rele
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
-                        # logger.debug(f"Pass: W{world_index} requirement{pl(full_death_note_dict[world_index].lowest_skulls_dict[full_death_note_dict[world_index].lowest_skull_value])} delayed in T{tier[0]}")
                         tier_combo[world_index] = tier[0]
 
         # ZOW

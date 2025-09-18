@@ -1559,7 +1559,7 @@ class EnemyMap:
             for skullValueIndex in range(1, len(reversed_dn_skull_value_list)):
                 if self.skull_mk_value == reversed_dn_skull_value_list[skullValueIndex]:
                     self.kills_to_next_skull = ceil(reversed_dn_skull_requirement_list[skullValueIndex - 1] - self.kill_count)
-                    self.percent_toward_next_skull = floor((self.kill_count / reversed_dn_skull_requirement_list[skullValueIndex - 1]) * 100)
+                    self.percent_toward_next_skull = floor(round(self.kill_count / reversed_dn_skull_requirement_list[skullValueIndex - 1] * 100))
 
 def buildMaps() -> dict[int, dict]:
     mapDict = {
