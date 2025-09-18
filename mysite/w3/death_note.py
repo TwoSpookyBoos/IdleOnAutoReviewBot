@@ -164,7 +164,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                         unit='%',
                                         resource=skull_name
                                     ))
-                    # After checking every rele
+                    # If all failed requirements were delayed, be sure to increase the Tier as this counts as a Pass
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
                         tier_combo[world_index] = tier[0]
 
