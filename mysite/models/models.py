@@ -1468,7 +1468,9 @@ class EnemyWorld:
                     [self.maps_dict[enemy_map_index].map_name,
                      self.maps_dict[enemy_map_index].kills_to_next_skull,
                      self.maps_dict[enemy_map_index].percent_toward_next_skull,
-                     self.maps_dict[enemy_map_index].monster_image])
+                     self.maps_dict[enemy_map_index].monster_image,
+                     self.maps_dict[enemy_map_index].kill_count],
+                )
             for skullDict in self.lowest_skulls_dict:
                 self.lowest_skulls_dict[skullDict] = sorted(self.lowest_skulls_dict[skullDict], key=lambda item: item[2], reverse=True)
             for skullDict in self.lowest_skulls_dict:
@@ -1557,7 +1559,7 @@ class EnemyMap:
             for skullValueIndex in range(1, len(reversed_dn_skull_value_list)):
                 if self.skull_mk_value == reversed_dn_skull_value_list[skullValueIndex]:
                     self.kills_to_next_skull = ceil(reversed_dn_skull_requirement_list[skullValueIndex - 1] - self.kill_count)
-                    self.percent_toward_next_skull = floor((self.kill_count / reversed_dn_skull_requirement_list[skullValueIndex - 1]) * 100)
+                    self.percent_toward_next_skull = floor(round(self.kill_count / reversed_dn_skull_requirement_list[skullValueIndex - 1] * 100))
 
 def buildMaps() -> dict[int, dict]:
     mapDict = {

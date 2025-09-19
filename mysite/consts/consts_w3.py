@@ -884,37 +884,30 @@ approx_max_talent_level_es = approx_max_talent_level_non_es + 4  # Family Guy
 dn_skull_requirement_list = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
 dn_skull_value_list = [0, 1, 2, 3, 4, 5, 7, 10, 20]
+dn_skull_names = [
+    'None',
+    'Normal Skull',
+    'Copper Skull',
+    'Iron Skull',
+    'Gold Skull',
+    'Platinum Skull',
+    'Dementia Skull',
+    'Lava Skull',
+    'Eclipse Skull',
+]
+dn_skull_value_to_name_dict = dict(zip(dn_skull_value_list, dn_skull_names))
+dn_skull_name_to_requirement_normal = dict(zip(dn_skull_names, dn_skull_requirement_list))
+dn_skull_name_to_requirement_miniboss = dict(zip(dn_skull_names, dn_miniboss_skull_requirement_list))
 dn_miniboss_names = [
     'Glunko The Massive', 'Dr Defecaus', 'Baba Yaga', 'Biggie Hours', 'King Doot',
     'Dilapidated Slush', 'Mutated Mush', 'Domeo Magmus', 'Demented Spiritlord'
 ]
 reversed_dn_skull_requirement_list = dn_skull_requirement_list[::-1]
 reversed_dn_skull_value_list = dn_skull_value_list[::-1]
-dn_skull_value_to_name_dict = {
-    0: "None",
-    1: "Normal Skull",
-    2: "Copper Skull",
-    3: "Iron Skull",
-    4: "Gold Skull",
-    5: "Platinum Skull",
-    7: "Dementia Skull",
-    10: "Lava Skull",
-    20: "Eclipse Skull"
-}
-dn_next_skull_name_dict = {
-    0: "Normal Skull",
-    1: "Copper Skull",
-    2: "Iron Skull",
-    3: "Gold Skull",
-    4: "Platinum Skull",
-    5: "Dementia Skull",
-    7: "Lava Skull",
-    10: "Eclipse Skull",
-    20: "Finished!"
-}
+
 apocable_map_index_dict = {
-    0: [31, 30, 9, 38, 69, 120, 166],  # Barbarian only, not in regular DeathNote
-    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15],  # MapIndex 31 for Brown Mushrooms was moved into 0 because they're very slow
+    0: [30, 9, 38, 69, 120, 166],  # Barbarian only, not in regular DeathNote
+    1: [1, 2, 14, 17, 16, 13, 18, 19, 24, 26, 27, 28, 8, 15, 31],
     2: [51, 52, 53, 57, 58, 59, 60, 62, 63, 64, 65],
     3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
@@ -924,11 +917,22 @@ apocable_map_index_dict = {
 dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
 dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])
 apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
-apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "64bitOverflow"]
+apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "Unfiltered"]
 apoc_difficulty_name_list = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
 ]
+dn_delays = {
+    # DelayUntilTier allows a monster map to be skipped until a particular tier
+    # DelayUntilSkull allows a monster map to be skipped until the tier requires a particular Skull value, i.e. 20 for Eclipse Skull
+    #W1
+    'Where the Branches End': {'DelayUntilTier': 22},
+    #W6
+    'Yolkrock Basin': {'DelayUntilSkull': dn_skull_value_list[7]},
+    'Chieftain Stairway': {'DelayUntilSkull': dn_skull_value_list[7]},
+    "Emperor's Castle Doorstep": {'DelayUntilSkull': dn_skull_value_list[8]}
+}
+
 max_trapping_critter_types = 12
 trapping_quests_requirement_list = [
     {"QuestName": "Frogecoin to the MOON!", 'RequiredItems': {"Critter1": 100, "Critter1A": 1}},
@@ -963,10 +967,13 @@ def getSkullNames(mkValue: int) -> str:
 
 
 def getNextSkullNames(mkValue: int) -> str:
-    try:
-        return dn_next_skull_name_dict.get(mkValue, f"UnknownSkull{mkValue}")
-    except Exception as reason:
-        return f"Unexpected Input received: {reason}"
+    if mkValue == dn_skull_value_list[-1]:
+        return "Finished!"
+    else:
+        try:
+            return dn_skull_names[dn_skull_value_list.index(mkValue) + 1]
+        except Exception as reason:
+            return f"Unexpected Input '{mkValue}' received: {reason}"
 
 
 def getEnemyNameFromMap(inputMap: str) -> str:
@@ -1073,6 +1080,23 @@ def getEnemyNameFromMap(inputMap: str) -> str:
         return mapNametoEnemyNameDict.get(inputMap, f"UnknownMap:{inputMap}")
     except Exception as reason:
         return f"Unexpected Input received: {reason}"
+
+
+def getDNKillRequirement(miniboss=False, skull_value=None, skull_name=''):
+    required_kills = 0
+    if skull_value is not None:
+        required_kills = (
+            dn_skull_requirement_list[dn_skull_value_list.index(skull_value)]
+            if miniboss is False else
+            dn_miniboss_skull_requirement_list[dn_skull_value_list.index(skull_value)]
+        )
+    elif skull_name != '':
+        required_kills = (
+            dn_skull_name_to_requirement_normal[skull_name]
+            if miniboss is False else
+            dn_skull_name_to_requirement_miniboss[skull_name]
+        )
+    return required_kills
 
 
 printer_indexes_being_printed_by_character_index = [
