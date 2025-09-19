@@ -1629,31 +1629,32 @@ def _parse_w3_deathnote_kills(account):
             for enemy_map in account.enemy_maps[worldIndex]:
                 if barbCharacterIndex in account.enemy_maps[worldIndex][enemy_map].zow_dict:
                     kill_count = account.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
-                    for apocIndex, apocAmount in enumerate(apoc_amounts_list):
-                        if kill_count < apocAmount:
-                            # characterDict[barbCharacterIndex].apoc_dict[apoc_names_list[apocIndex]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
+                    for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
+                        if kill_count < apoc_amount:
+                            # characterDict[barbCharacterIndex].apoc_dict[apoc_names_list[apoc_index]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
                             account.all_characters[barbCharacterIndex].addUnmetApoc(
-                                apoc_names_list[apocIndex],
-                                account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apocIndex]),
+                                apoc_names_list[apoc_index],
+                                account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
                                 [
                                     account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                    apocAmount - kill_count if apocIndex < 3 else kill_count,  # kills short of zow/chow/meow
-                                    floor((kill_count / apocAmount) * 100),  # percent toward zow/chow/meow
+                                    apoc_amount - kill_count if apoc_index < len(apoc_amounts_list) - 1 else kill_count,  # kills short of Apoc stack
+                                    # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
+                                    min(99, floor(round((kill_count / apoc_amount) * 100))),  # percent toward Apoc stack
                                     account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
                                     worldIndex
                                 ]
                             )
                         else:
-                            account.all_characters[barbCharacterIndex].increaseApocTotal(apoc_names_list[apocIndex])
+                            account.all_characters[barbCharacterIndex].increaseApocTotal(apoc_names_list[apoc_index])
                 else:
                     # This condition can be hit when reviewing data from before a World release
                     # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
-                    for apocIndex, apocAmount in enumerate(apoc_amounts_list):
+                    for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
                         account.all_characters[barbCharacterIndex].addUnmetApoc(
-                            apoc_names_list[apocIndex], account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apocIndex]),
+                            apoc_names_list[apoc_index], account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
                             [
                                 account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                apoc_amounts_list[apocIndex],  # kills short of zow/chow/meow
+                                apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
                                 0,  # percent toward zow/chow/meow
                                 account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
                                 worldIndex
