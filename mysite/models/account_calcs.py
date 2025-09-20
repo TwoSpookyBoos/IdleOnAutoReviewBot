@@ -34,9 +34,9 @@ def _calculate_wave_1(account):
     # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
     _calculate_w3_armor_sets(account)
+    _calculate_w2_arcade(account)
     _calculate_w6_emperor(account)
     _calculate_w6_summoning_winner_bonuses(account)
-    _calculate_w2_arcade(account)
     _calculate_w4_tome(account)
 
 def _calculate_caverns_majiks(account):
