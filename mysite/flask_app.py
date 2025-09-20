@@ -139,6 +139,10 @@ def results() -> Response | str:
             **get_user_preferences(),
         )
 
+        ### Throws an error if certain conditions are met. Should only be uncommented during local development for before/after checks ###
+        # from tests.test_client import execute_test_checks
+        # execute_test_checks(response)
+
     except UserDataException as ude:
         logger.error(ude.msg)
         error = ude.msg_display

@@ -3720,7 +3720,6 @@ def _parse_w6_emperor(account):
 
     for running_total in range(0, account.emperor['Last Showdown']):
         fight_map_index = running_total % 48
-        bonus_type = bonus_types[fight_map[fight_map_index]]
-        bonus_index = bonus_types.index(bonus_type)
+        bonus_index = fight_map[fight_map_index]
         account.emperor['Bonuses'][bonus_index]['Wins'] += 1
-        # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_type]['Value Per Win'])} {bonus_type}")
+        # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win'])} {account.emperor['Bonuses'][bonus_index]['Bonus Type']}")

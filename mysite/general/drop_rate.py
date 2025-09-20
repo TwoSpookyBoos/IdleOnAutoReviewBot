@@ -360,7 +360,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ballot_value = session_data.account.ballot['Buffs'][27]['Value']
     ballot_value_active = ballot_value * ballot_active
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{ballot_value_active}/{ballot_value:}% Drop Rate"
+        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{round(ballot_value_active, 2)}/{round(ballot_value, 2)}% Drop Rate"
               f"<br>(Buff {ballot_status})",
         picture_class='ballot-27',
         progression=int(ballot_active),
@@ -1276,7 +1276,7 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 'Slot': slot,
                 stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
                 'Image': equipment_data['Image'],
-                'EquippedAndMaxed': int(equipped_equipment_bonus == equipment_drop_rate_base or equipped_equipment_bonus == 2 * equipment_drop_rate_base),
+                'EquippedAndMaxed': int(((not can_be_boosted_by_chips) and equipped_equipment_bonus >= equipment_drop_rate_base) or (can_be_boosted_by_chips and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
                 'Limited': equipment_data.get('Limited', False),
                 'Note': equipment_data.get('Note', ''),
                 'Can be boosted': can_be_boosted_by_chips

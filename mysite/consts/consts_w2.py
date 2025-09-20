@@ -1,3 +1,4 @@
+from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName
 
 max_index_of_vials = 75  # Last verified as of v2.29
@@ -360,59 +361,33 @@ atrisk_lithium_advanced_bubbles = [
     'Tree Sleeper', 'Pious At Heart', 'Slabe Wisdom', 'Essence Boost-Purple',
     'Petting The Rift', 'Big P', 'Atom Split'
 ]  #Advanced being anvil mats, monster mats, critters, souls, sailing treasures in W4+ bubbles
+
+# ArcadeShopInfo last pulled from code in v2.41
+arcade_shop_info = ["+{_Base_Damage 1 0 add _ +{_Dmg -1".split(" "), "+{_Base_Defence 0.2 0 add _ +{_Def -1".split(" "), "+{%_Total_Accuracy 60 100 decay _ +{%_Acc -1".split(" "), "+{%_Mining_EXP_gain 60 100 decay % +{%_Min_EXP -1".split(" "), "+{%_Fishing_EXP_gain 60 100 decay % +{%_Fish_EXP -1".split(" "), "+{%_Sample_Size 4 100 decay % +{%_Size -1".split(" "), "+{%_AFK_Gains_Rate 4 100 decay % +{%_Rate -1".split(" "), "+{_Cap_for_all_Liquids 25 100 decay % +{_Cap -1".split(" "), "+{%_Multikill_per_Tier 10 100 decay % +{%_Multikill -1".split(" "), "+{%_Catching_EXP_gain 50 100 decay % +{%_Catch_EXP -1".split(" "), "+{%_Cash_from_Mobs 20 100 decay % +{%_Cash -1".split(" "), "+{%_Cash_from_Mobs 30 100 decay % +{%_Cash -1".split(" "), "+{%_Class_EXP_gain 20 100 decay % +{%_EXP -1".split(" "), "+{%_Shiny_Chance 100 100 decay % +{%_Chance -1".split(" "), "+{%_Trapping_EXP 50 100 decay % +{%_Trap_EXP -1".split(" "), "+{_Starting_TD_Pts 1 0 add _ +{_Worship_Pts -1".split(" "), "+{_Tab_1_Talent_Pt 1 10 intervalAdd _ +1_Pt_per_10_LVs -1".split(" "), "+{_Weapon_Power 0.07 0 add _ +{_Wep_POW -1".split(" "), "+{%_Skill_EXP_gain 20 100 decay % +{%_EXP -1".split(" "), "+{_Base_STR 1 0 add _ +{_STR -1".split(" "), "+{_Base_AGI 1 0 add _ +{_AGI -1".split(" "), "+{_Base_WIS 1 0 add _ +{_WIS -1".split(" "), "+{_Base_LUK 1 0 add _ +{_LUK -1".split(" "), "+{%_Trapping_Critters 30 100 decay % +{%_Critters -1".split(" "), "+{%_Worship_Souls 30 100 decay % +{%_Souls -1".split(" "), "+{%_Refinery_Speed 30 100 decay % +{%_Speed -1".split(" "), "+{%_Forge_Capacity 100 100 decay % +{%_Cap -1".split(" "), "+{%_Drop_Rate 30 100 decay % +{%_Drop -1".split(" "), "+{%_Cook_SPD_multi 40 100 decay % +{%_SPD -1".split(" "), "+{%_Lab_EXP_gain 30 100 decay % +{%_EXP -1".split(" "), "+{%_Breed_Pet_DMG 40 100 decay % +{%_DMG -1".split(" "), "+{%_Nugget_Regen 30 100 decay % +{%_Regen -1".split(" "), "+{%_Arti_Find 50 100 decay % +{%_Chance -1".split(" "), "+{%_Sailing_Loot 30 100 decay % +{%_Loot -1".split(" "), "+{%_W_Ess_gain 40 100 decay % +{%_W_Ess -1".split(" "), "+{%_Jade_gain 50 100 decay % +{%_Jade -1".split(" "), "+{%_Farming_EXP 30 100 decay % +{%_EXP -1".split(" "), "+{%_Divinity_EXP 40 100 decay % +{%_EXP -1".split(" "), "+{%_Villager_XP_multi 40 100 decay % +{%_XP_multi -1".split(" "), "+{%_Gold_Ball_Gain 1 0 add % +{%_Balls -1".split(" "), "+{%_Deathbringer_Bones 1 0 add % +{%_Bones -1".split(" "), "+{%_Equinox_Fill_Rate .75 0 add % +{%_Fill_Rate -1".split(" "), "+{%_Monument_AFK .5 0 add % +{%_AFK -1".split(" "), "+{%_Sigil_Speed 1 0 add % +{%_Speed -1".split(" "), "+{%_Construction_Build 2 0 add % +{%_Build_Rate -1".split(" "), "+{%_Burger 1 0 add % +{%_Burger -1".split(" "), "+{%_Total_Damage 2 0 add % +{%_Damage -1".split(" "), "+{%_Windwalker_Dust 1 0 add % +{%_Dust -1".split(" "), "+{%_Medallion_Chance 0.5 0 add % +{%_Chance -1".split(" "), "+{%_Breedability_Rate 100 100 decay % +{%_Breed_Rate -1".split(" "), "+{%_Arcane_Tachyons 1 0 add % +{%_Tachyons 17".split(" "), "+{%_Emperor_Bonuses 0.2 0 add % +{%_Bonus 42".split(" "), "+{%_Sneaking_XP_multi 100 100 decay % +{%_XP_multi 29".split(" "), "+{%_Summon_XP_multi 100 100 decay % +{%_XP_multi 23".split(" "), "+{%_Prisma_Bonuses 10 100 decay % +{%_Bonus 21".split(" ")]
+arcade_stat_name_overrides = {
+    'Shiny Chance': 'Shiny Critter Chance',
+    'Cook SPD multi': 'Cooking Speed multi',
+    'Breed Pet DMG': 'Breeding Pet DMG',
+    'Nugget Regen': 'Nugget Generation',
+    'Arti Find': 'Artifact Find Chance',
+    'W Ess gain': 'White Essence gain',
+    'Gold Ball Gain': 'Gold Ball gain',
+    'Deathbringer Bones': 'Death Bringer Bones',
+    'Construction Build': 'Construction Build Rate',
+    'Burger': 'Burger (does nothing atm)',
+    'Windwalker Dust': 'Wind Walker Dust',
+    'Arcane Tachyons': 'Arcane Cultist Tachyons',
+    'Summon XP multi': 'Summoning XP multi',
+    'Prisma Bonuses': 'Prisma Bubble Bonus',
+}
 arcade_bonuses = {
-    # ArcadeShopInfo last pulled from code during v2.35 4th anniversary
-    # ["+{_Base_Damage 1 0 add _ +{_Dmg".split(" "), "+{_Base_Defence 0.2 0 add _ +{_Def".split(" "), "+{%_Total_Accuracy 60 100 decay _ +{%_Acc".split(" "), "+{%_Mining_EXP_gain 60 100 decay % +{%_Min_EXP".split(" "), "+{%_Fishing_EXP_gain 60 100 decay % +{%_Fish_EXP".split(" "), "+{%_Sample_Size 4 100 decay % +{%_Size".split(" "), "+{%_AFK_Gains_Rate 4 100 decay % +{%_Rate".split(" "), "+{_Cap_for_all_Liquids 25 100 decay % +{_Cap".split(" "), "+{%_Multikill_per_Tier 10 100 decay % +{%_Multikill".split(" "), "+{%_Catching_EXP_gain 50 100 decay % +{%_Catch_EXP".split(" "), "+{%_Cash_from_Mobs 20 100 decay % +{%_Cash".split(" "), "+{%_Cash_from_Mobs 30 100 decay % +{%_Cash".split(" "), "+{%_Class_EXP_gain 20 100 decay % +{%_EXP".split(" "), "+{%_Shiny_Chance 100 100 decay % +{%_Chance".split(" "), "+{%_Trapping_EXP 50 100 decay % +{%_Trap_EXP".split(" "), "+{_Starting_TD_Pts 1 0 add _ +{_Worship_Pts".split(" "), "+{_Tab_1_Talent_Pt 1 10 intervalAdd _ +1_Pt_per_10_LVs".split(" "), "+{_Weapon_Power 0.07 0 add _ +{_Wep_POW".split(" "), "+{%_Skill_EXP_gain 20 100 decay % +{%_EXP".split(" "), "+{_Base_STR 1 0 add _ +{_STR".split(" "), "+{_Base_AGI 1 0 add _ +{_AGI".split(" "), "+{_Base_WIS 1 0 add _ +{_WIS".split(" "), "+{_Base_LUK 1 0 add _ +{_LUK".split(" "), "+{%_Trapping_Critters 30 100 decay % +{%_Critters".split(" "), "+{%_Worship_Souls 30 100 decay % +{%_Souls".split(" "), "+{%_Refinery_Speed 30 100 decay % +{%_Speed".split(" "), "+{%_Forge_Capacity 100 100 decay % +{%_Cap".split(" "), "+{%_Drop_Rate 30 100 decay % +{%_Drop".split(" "), "+{%_Cook_SPD_multi 40 100 decay % +{%_SPD".split(" "), "+{%_Lab_EXP_gain 30 100 decay % +{%_EXP".split(" "), "+{%_Breed_Pet_DMG 40 100 decay % +{%_DMG".split(" "), "+{%_Nugget_Regen 30 100 decay % +{%_Regen".split(" "), "+{%_Arti_Find 50 100 decay % +{%_Chance".split(" "), "+{%_Sailing_Loot 30 100 decay % +{%_Loot".split(" "), "+{%_W_Ess_gain 40 100 decay % +{%_W_Ess".split(" "), "+{%_Jade_gain 50 100 decay % +{%_Jade".split(" "), "+{%_Farming_EXP 30 100 decay % +{%_EXP".split(" "), "+{%_Divinity_EXP 40 100 decay % +{%_EXP".split(" "), "+{%_Villager_XP_multi 40 100 decay % +{%_XP_multi".split(" "), "+{%_Gold_Ball_Gain 1 0 add % +{%_Balls".split(" "), "+{%_Deathbringer_Bones 1 0 add % +{%_Bones".split(" "), "+{%_Equinox_Fill_Rate .75 0 add % +{%_Fill_Rate".split(" "), "+{%_Monument_AFK .5 0 add % +{%_AFK".split(" "), "+{%_Sigil_Speed 1 0 add % +{%_Speed".split(" "), "+{%_Construction_Build 2 0 add % +{%_Build_Rate".split(" "), "+{%_Burger 1 0 add % +{%_Burger".split(" "), "+{%_Total_Damage 2 0 add % +{%_Damage".split(" ")]
-    0:  {"Stat": "Base Damage", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    1:  {"Stat": "Base Defence", "x1": 0.2, "x2": 0, "funcType": "add", "displayType": ""},
-    2:  {"Stat": "Total Accuracy", "x1": 60, "x2": 100, "funcType": "decay", "displayType": ""},
-    3:  {"Stat": "Mining EXP gain", "x1": 60, "x2": 100, "funcType": "decay", "displayType": "%"},
-    4:  {"Stat": "Fishing EXP gain", "x1": 60, "x2": 100, "funcType": "decay", "displayType": "%"},
-    5:  {"Stat": "Sample Size", "x1": 4, "x2": 100, "funcType": "decay", "displayType": "%"},
-    6:  {"Stat": "AFK Gains Rate", "x1": 4, "x2": 100, "funcType": "decay", "displayType": "%"},
-    7:  {"Stat": "Cap for all Liquids", "x1": 25, "x2": 100, "funcType": "decay", "displayType": "%"},
-    8:  {"Stat": "Multikill per Tier", "x1": 10, "x2": 100, "funcType": "decay", "displayType": "%"},
-    9:  {"Stat": "Catching EXP gain", "x1": 50, "x2": 100, "funcType": "decay", "displayType": "%"},
-    10: {"Stat": "Cash from Mobs", "x1": 20, "x2": 100, "funcType": "decay", "displayType": "%"},
-    11: {"Stat": "Cash from Mobs", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    12: {"Stat": "Class EXP gain", "x1": 20, "x2": 100, "funcType": "decay", "displayType": "%"},
-    13: {"Stat": "Shiny Critter Chance", "x1": 100, "x2": 100, "funcType": "decay", "displayType": "%"},
-    14: {"Stat": "Trapping EXP", "x1": 50, "x2": 100, "funcType": "decay", "displayType": "%"},
-    15: {"Stat": "Starting TD Pts", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    16: {"Stat": "Tab 1 Talent Pt", "x1": 1, "x2": 10, "funcType": "intervalAdd", "displayType": ""},
-    17: {"Stat": "Weapon Power", "x1": 0.07, "x2": 0, "funcType": "add", "displayType": ""},
-    18: {"Stat": "Skill EXP gain", "x1": 20, "x2": 100, "funcType": "decay", "displayType": "%"},
-    19: {"Stat": "Base STR", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    20: {"Stat": "Base AGI", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    21: {"Stat": "Base WIS", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    22: {"Stat": "Base LUK", "x1": 1, "x2": 0, "funcType": "add", "displayType": ""},
-    23: {"Stat": "Trapping Critters", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    24: {"Stat": "Worship Souls", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    25: {"Stat": "Refinery Speed", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    26: {"Stat": "Forge Capacity", "x1": 100, "x2": 100, "funcType": "decay", "displayType": "%"},
-    27: {"Stat": "Drop Rate", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    28: {"Stat": "Cooking Speed multi", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
-    29: {"Stat": "Lab EXP gain", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    30: {"Stat": "Breeding Pet DMG", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
-    31: {"Stat": "Nugget Generation", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    32: {"Stat": "Artifact Find Chance", "x1": 50, "x2": 100, "funcType": "decay", "displayType": "%"},
-    33: {"Stat": "Sailing Loot", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    34: {"Stat": "White Essence gain", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
-    35: {"Stat": "Jade gain", "x1": 50, "x2": 100, "funcType": "decay", "displayType": "%"},
-    36: {"Stat": "Farming EXP", "x1": 30, "x2": 100, "funcType": "decay", "displayType": "%"},
-    37: {"Stat": "Divinity EXP", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
-    38: {"Stat": "Villager XP multi", "x1": 40, "x2": 100, "funcType": "decay", "displayType": "%"},
-    39: {"Stat": "Gold Ball gain", "x1": 1, "x2": 0, "funcType": "add", "displayType": "%"},
-    40: {'Stat': 'Death Bringer Bones', 'x1': 1, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    41: {'Stat': 'Equinox Fill Rate', 'x1': 0.75, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    42: {'Stat': 'Monument AFK', 'x1': 0.50, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    43: {'Stat': 'Sigil Speed', 'x1': 1, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    44: {'Stat': 'Construction Build Rate', 'x1': 2, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    45: {'Stat': 'Burger (does nothing atm)', 'x1': 1, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    46: {'Stat': 'Total Damage', 'x1': 2, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    47: {'Stat': 'Wind Walker Dust', 'x1': 1, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    48: {'Stat': 'Medallion Chance', 'x1': 0.5, 'x2': 0, 'funcType': 'add', 'displayType': '%'},
-    49: {'Stat': 'Breedability Rate', 'x1': 100, 'x2': 100, 'funcType': 'decay', 'displayType': '%'}
+    index: {
+        'Stat': arcade_stat_name_overrides.get(" ".join(stat_code.split("_")[1:]), " ".join(stat_code.split("_")[1:])),
+        'x1': parse_number(x1),
+        'x2': parse_number(x2),
+        'funcType': func_type,
+        'displayType': '%' if stat_code.split("_")[0][-1] == '%' else ''
+    } for index, [stat_code, x1, x2, func_type, _, _, _] in enumerate(arcade_shop_info)
 }
 arcade_max_level = 100
 post_office_tabs = ["Bob's Boxes", "Charlie's Crates"]

@@ -297,7 +297,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
         ],
         f'Multi Group D: {multi_group_d}x': [
             Advice(
-                label=f"Weekly Ballot: {sailing_ballot_buff_mult}x/{ValueToMulti(sailing_ballot_buff['Value'])}x"
+                label=f"Weekly Ballot: {round(sailing_ballot_buff_mult, 2)}x/{round(ValueToMulti(sailing_ballot_buff['Value']), 2)}x"
                       f"<br>(Buff {'is Active' if is_current_ballot_buff else 'is Inactive'})",
                 picture_class=sailing_ballot_buff['Image'],
                 progression=int(is_current_ballot_buff),
