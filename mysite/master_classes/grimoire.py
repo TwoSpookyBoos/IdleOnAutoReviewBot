@@ -181,6 +181,15 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         resource=ab40['Material'],
     ))
 
+    lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
+    lab_jewel_active = lab_jewel['Enabled']
+    currency_advices[mge_label].append(Advice(
+        label=f"Lab Jewel 'Deadly Wrath Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}%",
+        picture_class='deadly-wrath-jewel',
+        progression=int(lab_jewel_active),
+        goal=1
+    ))
+
     mgf_label = f"Bone Multi Group F: {grimoire['Bone Calc']['mgf']:.2f}x"
     db_index = None
     tombstone_preset_level = 100

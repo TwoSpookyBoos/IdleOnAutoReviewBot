@@ -553,6 +553,7 @@ def _calculate_master_classes_grimoire_bone_sources(account):
             account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
             + (account.grimoire['Upgrades']['Bovinae Hoarding']['Total Value'] * safer_math_log(account.grimoire['Bone4'], 'Lava'))
             + account.arcade[40]['Value']
+            + account.labJewels['Deadly Wrath Jewel']['Value'] * account.labJewels['Deadly Wrath Jewel']['Enabled']
         ),
         'mgf': 1,
         'mgg': account.emperor['Bonuses'][1]['Total Value']
@@ -615,6 +616,7 @@ def _calculate_master_classes_compass_dust_sources(account):
         'mgf': ValueToMulti(
             + compass_percent
             + account.arcade[47]['Value']
+            + account.labJewels['North Winds Jewel']['Value'] * account.labJewels['North Winds Jewel']['Enabled']
             + account.compass['Upgrades']['De Dust I']['Total Value']
             + account.compass['Upgrades']['De Dust II']['Total Value']
             + account.compass['Upgrades']['De Dust III']['Total Value']
