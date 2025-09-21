@@ -253,7 +253,11 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
     upgrades_AdviceDict['General Info'] = []
 
     #Upgrades
-    upgrades_AdviceDict['Upgrades'] = [
+    upgrades_AdviceDict['Upgrades'] = [Advice(
+        label=f"Total Grimoire Upgrades: {grimoire['Total Upgrades']:,}",
+        picture_class='grimoire'
+    )]
+    upgrades_AdviceDict['Upgrades'] += [
         Advice(
             label=(
                 f"{upgrade_name}: {upgrade_details['Description']}"
@@ -267,10 +271,6 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
             resource=upgrade_details['Bone Image']
         ) for upgrade_name, upgrade_details in grimoire['Upgrades'].items()
     ]
-    upgrades_AdviceDict['Upgrades'].insert(0, Advice(
-        label=f"Total Grimoire Upgrades: {grimoire['Total Upgrades']:,}",
-        picture_class='grimoire',
-    ))
 
     for subgroup in upgrades_AdviceDict:
         for advice in upgrades_AdviceDict[subgroup]:
