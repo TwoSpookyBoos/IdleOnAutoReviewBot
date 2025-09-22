@@ -726,13 +726,7 @@ def _calculate_w1_starsigns(account):
 
 
 def _calculate_w1_stamps(account):
-    # if ("StampDoubler" == e) return
-    # 100
-    # + (n._customBlock_AtomCollider("AtomBonuses", 12, 0)
-    # + (n._customBlock_Ninja("PristineBon", 20, 0)
-    # + n._customBlock_Windwalker("CompassBonus", 76, 0)
-    # + n._customBlock_GetSetBonus("EMPEROR_SET", "Bonus", 0, 0))))
-
+    # `"StampDoubler" == d` in source
     account.exalted_stamp_multi = ValueToMulti(
         100  #base
         + (
@@ -742,6 +736,7 @@ def _calculate_w1_stamps(account):
         + (20 * account.sneaking['PristineCharms']['Jellypick']['Obtained'])
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
         + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
+        + (20 * account.event_points_shop['Bonuses']['Extra Exaltedness']['Owned'])
     )
 
     for stamp_name, stamp_values in account.stamps.items():
