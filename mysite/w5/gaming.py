@@ -200,7 +200,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     goal=1
                 ))
 
-            TARGET_CONFIDENCE_LEVELS = (0.80, 0.90, 0.95, 0.99, 0.999)
+            TARGET_CONFIDENCE_LEVELS = (0.90, 0.95, 0.99, 0.999)
 
             encouragement_info, safety_thresholds = getSnailLevelUpInfo(final_ballad_bonus, TARGET_CONFIDENCE_LEVELS)
 
