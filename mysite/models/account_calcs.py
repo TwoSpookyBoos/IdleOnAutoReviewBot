@@ -34,9 +34,9 @@ def _calculate_wave_1(account):
     # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
     _calculate_w3_armor_sets(account)
+    _calculate_w2_arcade(account)
     _calculate_w6_emperor(account)
     _calculate_w6_summoning_winner_bonuses(account)
-    _calculate_w2_arcade(account)
     _calculate_w4_tome(account)
 
 def _calculate_caverns_majiks(account):
@@ -146,14 +146,14 @@ def _calculate_w6_emperor(account):
         + (5 * account.sneaking['JadeEmporium']['Emperor Season Pass']['Obtained'])
         + (6 * account.gemshop['Lifetime Tickets'])
     )
-    emperor_bonus_multi = ValueToMulti(0)
+    emperor_bonus_multi = ValueToMulti(account.arcade[51]['Value']) # TODO: ArcaneUpgBonus48 (additive to Arcade bonus)
 
     for bonus_index, bonus_values in account.emperor['Bonuses'].items():
         if '{' in bonus_values['Bonus Type']:
             account.emperor['Bonuses'][bonus_index]['Scaling'] = (
                 f"+{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}"
                 f"{'%' if bonus_index != 3 else ''} per level")
-            account.emperor['Bonuses'][bonus_index]['Total Value'] = (
+            account.emperor['Bonuses'][bonus_index]['Total Value'] = floor(
                 account.emperor['Bonuses'][bonus_index]['Wins']
                 * account.emperor['Bonuses'][bonus_index]['Value Per Win']
                 * emperor_bonus_multi
@@ -165,17 +165,17 @@ def _calculate_w6_emperor(account):
             account.emperor['Bonuses'][bonus_index]['Scaling'] = (
                 f"+{ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win']) - 1:.2f}x per level"
             )
-            account.emperor['Bonuses'][bonus_index]['Total Value'] = ValueToMulti(
+            account.emperor['Bonuses'][bonus_index]['Total Value'] = ValueToMulti(floor(
                 account.emperor['Bonuses'][bonus_index]['Wins']
                 * account.emperor['Bonuses'][bonus_index]['Value Per Win']
                 * emperor_bonus_multi
-            )
+            ))
             account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
                 '}', f"{account.emperor['Bonuses'][bonus_index]['Total Value']:.2f}"
             )
         if '$' in bonus_values['Bonus Type']:
             account.emperor['Bonuses'][bonus_index]['Scaling'] = ''
-            value = (
+            value = floor(
                 account.emperor['Bonuses'][bonus_index]['Wins']
                 * account.emperor['Bonuses'][bonus_index]['Value Per Win']
                 * emperor_bonus_multi

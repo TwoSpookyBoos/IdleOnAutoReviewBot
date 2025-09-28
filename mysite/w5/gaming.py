@@ -5,7 +5,7 @@ import math
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safer_convert, safer_math_log
+from utils.data_formatting import safer_convert, safer_math_log, mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_w5 import snail_max_rank
@@ -200,7 +200,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     goal=1
                 ))
 
-            TARGET_CONFIDENCE_LEVELS = (0.80, 0.90, 0.95, 0.99, 0.999)
+            TARGET_CONFIDENCE_LEVELS = (0.90, 0.95, 0.99)
 
             encouragement_info, safety_thresholds = getSnailLevelUpInfo(final_ballad_bonus, TARGET_CONFIDENCE_LEVELS)
 
@@ -214,7 +214,7 @@ def getSnailInformationGroup() -> AdviceGroup:
 
                 return Advice(
                     label=f"{label_prefix}: Encourage the snail {num_encourage} times."
-                          f"<br>Game will display {s_chance:0.2%} success, {r_chance:0.2%} reset chance",
+                          f"<br>Game will display {s_chance:0.2%} success, {r_chance:0.2%} reset chance at {num_encourage} encourages.",
                     picture_class='immortal-snail',
                     progression=snail_data['Encouragements'] if level == snail_data['SnailRank'] else 0,
                     goal=num_encourage,
@@ -242,7 +242,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     pass
 
                 snail_AdviceDict[subgroup_label].append(Advice(
-                    label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} extra unspent mail",
+                    label=f"Step 2: Choose a safety level. {target_confidence:.1%} safety = {mail_needed} unspent mail",
                     picture_class='snail-envelope',
                     progression=max(0, floored_envelopes - encouragements_short_by),
                     goal=mail_needed
@@ -260,6 +260,10 @@ def getSnailInformationGroup() -> AdviceGroup:
                 )
 
                 snail_AdviceDict[subgroup_label].append(make_encouragement_advice(level, f"{rank_type} Rank {level}"))
+
+    for subgroup in snail_AdviceDict:
+        for advice in snail_AdviceDict[subgroup]:
+            mark_advice_completed(advice)
 
     snail_AdviceGroup = AdviceGroup(
         tier='',

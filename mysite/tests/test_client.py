@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -6,6 +7,9 @@ import yaml
 
 from models.custom_exceptions import UserDataException, UsernameBanned
 
+def execute_test_checks(response: bytes | str):
+    if re.findall(r"\.\d{7,}", str(response)):
+        raise Exception("Found floating point precision error.")
 
 def test_index(client):
     response = client.get("/")
@@ -35,6 +39,7 @@ def test_valid_json(client, conf, datafile):
         data = json.load(f)
 
     response = client.post("/results", data=json.dumps({'player': json.dumps(data)}), headers=conf.headers)
+    execute_test_checks(response.data)
     assert response.status_code == 200 and len(response.data) > 0
 
 @pytest.mark.parametrize("datafile", failing_test_data)
@@ -43,6 +48,7 @@ def test_invalid_json(client, conf, datafile):
         data = json.load(f)
 
     response = client.post("/results", data=json.dumps({'player': json.dumps(data)}), headers=conf.headers)
+    execute_test_checks(response.data)
     assert response.status_code != 200 and response.status_code < 500
 
 

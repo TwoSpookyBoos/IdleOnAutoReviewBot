@@ -360,7 +360,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ballot_value = session_data.account.ballot['Buffs'][27]['Value']
     ballot_value_active = ballot_value * ballot_active
     drop_rate_aw_advice[w2].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{ballot_value_active}/{ballot_value:}% Drop Rate"
+        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{round(ballot_value_active, 2)}/{round(ballot_value, 2)}% Drop Rate"
               f"<br>(Buff {ballot_status})",
         picture_class='ballot-27',
         progression=int(ballot_active),
@@ -956,7 +956,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         ))
 
         # Add up Infinite Star Sign levels
-        infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs']
+        infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs'] * 2 + 5
 
         # Passive Star Signs are skipped by infinite star signs. The easiest way to account for this is to
         # just +1 the total ISS for each passive that WOULD have been counted. Then we can just compare index to ISS
@@ -1248,10 +1248,16 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
             equipped_equipment = [None] # So the loop below is executed once
             if is_keychain:
                 equipped_equipment = [None, None] # So the loop below is executed twice
+        if len(equipped_equipment) == 1 and is_keychain:
+            equipped_equipment.append(None) # So the loop below is executed twice
 
         for index, item in enumerate(equipped_equipment):
             equipped_equipment_bonus = 0
-            can_be_boosted_by_chips = index == 0
+            slot = equipment_data.get('Type')
+            can_be_boosted = slot in ['Trophy', 'Keychain', 'Pendant'] and index == 0
+            is_boosted = (motherboard_equipped and slot == 'Trophy' or
+                          software_equipped and is_keychain and index == 0 or
+                          processor_equipped and slot == 'Pendant')
             if item is not None:
                 misc1 = item.stats.get('misc_1_txt', None)
                 misc2 = item.stats.get('misc_2_txt', None)
@@ -1261,13 +1267,10 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                     equipped_equipment_bonus += item.stats['misc_2_val']
                 if equipped_equipment_bonus == 0:
                     equipped_equipment_bonus += equipment_drop_rate_base
-            if (motherboard_equipped and equipment_data['Type'] == 'Trophy' or
-                    software_equipped and is_keychain or
-                    processor_equipped and equipment_data['Type'] == 'Pendant') and can_be_boosted_by_chips:
+            if is_boosted:
                 equipped_equipment_bonus *= 2
             equipment_bonus += equipped_equipment_bonus
 
-            slot = equipment_data.get('Type')
             if advice_group_prefix + slot not in equipment_dict.keys():
                 equipment_dict[advice_group_prefix + slot] = []
 
@@ -1276,10 +1279,10 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 'Slot': slot,
                 stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
                 'Image': equipment_data['Image'],
-                'EquippedAndMaxed': int(equipped_equipment_bonus == equipment_drop_rate_base or equipped_equipment_bonus == 2 * equipment_drop_rate_base),
+                'EquippedAndMaxed': int(((not is_boosted) and equipped_equipment_bonus >= equipment_drop_rate_base) or (is_boosted and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
                 'Limited': equipment_data.get('Limited', False),
                 'Note': equipment_data.get('Note', ''),
-                'Can be boosted': can_be_boosted_by_chips
+                'Can be boosted': can_be_boosted
             })
 
     for slot, equipment_list in equipment_dict.items():
