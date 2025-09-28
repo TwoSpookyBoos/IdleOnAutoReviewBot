@@ -956,7 +956,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         ))
 
         # Add up Infinite Star Sign levels
-        infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs']
+        infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs'] * 2 + 5
 
         # Passive Star Signs are skipped by infinite star signs. The easiest way to account for this is to
         # just +1 the total ISS for each passive that WOULD have been counted. Then we can just compare index to ISS
