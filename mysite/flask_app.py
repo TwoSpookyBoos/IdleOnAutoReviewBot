@@ -48,6 +48,8 @@ from utils.logging import (
 )
 from utils.template_filters import *
 
+from w1.owl import runDynamicOwlCalc
+
 
 logger = get_logger(__name__)
 
@@ -302,6 +304,13 @@ def beta() -> Response:
 def logtest():
     logger.info("Logging works")
     return "Hello, World!"
+
+
+@app.route("/dynamic-owl-calc", methods=["GET"])
+def dynamic_owl_calc() -> Response | str:
+    output = '\n'.join(runDynamicOwlCalc(request.args))
+
+    return output.replace('\n', '<br>')
 
 
 def autoReviewBot(
