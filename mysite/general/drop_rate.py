@@ -859,7 +859,9 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
                 card_bonus += card.getCurrentValue(optional_character=character)
                 starting_note = f'(EQUIPPED {EmojiType.CHECK.value}) '
                 equipped_slot = character.equipped_cards_codenames.index(card.codename)
-                if equipped_slot in [0, 7] and character.has_card_doubler():
+                if equipped_slot == 0 and "Omega Nanochip" in character.equipped_card_doublers:
+                    starting_note = f'(DOUBLED {EmojiType.CHECK.value}{EmojiType.CHECK.value}) '
+                elif equipped_slot == 7 and "Omega Motherboard" in character.equipped_card_doublers:
                     starting_note = f'(DOUBLED {EmojiType.CHECK.value}{EmojiType.CHECK.value}) '
             card_advice.append(card.getAdvice(optional_character=character, optional_starting_note=starting_note, optional_ending_note=end_note))
 
