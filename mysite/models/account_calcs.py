@@ -479,12 +479,14 @@ def _calculate_general_highest_world_reached(account):
 
 
 def _calculate_master_classes(account):
-    _calculate_master_classes_grimoire(account)
+    _calculate_master_classes_grimoire_upgrades(account)
     # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
     _calculate_master_classes_compass_upgrades(account)
     _calculate_master_classes_compass_dust_sources(account)
+    _calculate_master_classes_tesseract_upgrades(account)
+    _calculate_master_classes_tesseract_tachyon_sources(account)
 
-def _calculate_master_classes_grimoire(account):
+def _calculate_master_classes_grimoire_upgrades(account):
     grimoire_multi = ValueToMulti(
         account.grimoire['Upgrades']['Writhing Grimoire']['Level']
         * account.grimoire['Upgrades']['Writhing Grimoire']['Value Per Level']
@@ -629,6 +631,71 @@ def _calculate_master_classes_compass_dust_sources(account):
         'mgg': account.emperor['Bonuses'][4]['Total Value']
     }
     account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
+
+def _calculate_master_classes_tesseract_upgrades(account):
+    for upgrade_name, upgrade_details in account.tesseract['Upgrades'].items():
+        tesseract_multi = 1
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.tesseract['Upgrades'][upgrade_name]['Description']:
+            account.tesseract['Upgrades'][upgrade_name]['Total Value'] = (
+                    account.tesseract['Upgrades'][upgrade_name]['Level']
+                    * account.tesseract['Upgrades'][upgrade_name]['Value Per Level']
+                    * tesseract_multi
+            )
+            account.tesseract['Upgrades'][upgrade_name]['Description'] = account.tesseract['Upgrades'][upgrade_name]['Description'].replace(
+                '{', f"{account.tesseract['Upgrades'][upgrade_name]['Total Value']}"
+            )
+        if '}' in account.tesseract['Upgrades'][upgrade_name]['Description']:
+            account.tesseract['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
+                account.tesseract['Upgrades'][upgrade_name]['Level']
+                * account.tesseract['Upgrades'][upgrade_name]['Value Per Level']
+                * tesseract_multi
+            )
+            account.tesseract['Upgrades'][upgrade_name]['Description'] = account.tesseract['Upgrades'][upgrade_name]['Description'].replace(
+                '}', f"{account.tesseract['Upgrades'][upgrade_name]['Total Value']:.2f}"
+            )
+
+def _calculate_master_classes_tesseract_tachyon_sources(account):
+    # _customBlock_ArcaneType: "ExtraTachyon" == d
+    tesseract_preset_level = 100
+    backup_energy_preset_level = 100
+
+    tesseract_talent_index = 586
+    backup_energy_talent_index = 599
+
+    for ac in account.acs:
+        tesseract_preset_level = max(tesseract_preset_level, ac.current_preset_talents.get(str(tesseract_talent_index), 0), ac.secondary_preset_talents.get(str(tesseract_talent_index), 0))
+        backup_energy_preset_level = max(backup_energy_preset_level, ac.current_preset_talents.get(str(backup_energy_talent_index), 0), ac.secondary_preset_talents.get(str(backup_energy_talent_index), 0))
+
+    tesseract_talent_bonus_value = lavaFunc(
+        funcType=all_talentsDict[tesseract_talent_index]['funcX'],
+        level=tesseract_preset_level,
+        x1=all_talentsDict[tesseract_talent_index]['x1'],
+        x2=all_talentsDict[tesseract_talent_index]['x2'],
+    )
+
+    backup_energy_bonus_value = lavaFunc(
+        funcType=all_talentsDict[backup_energy_talent_index]['funcX'],
+        level=backup_energy_talent_index,
+        x1=all_talentsDict[backup_energy_talent_index]['x1'],
+        x2=all_talentsDict[backup_energy_talent_index]['x2'],
+    )
+
+    account.tesseract['Tachyon Calc'] = {
+        'mga': ValueToMulti(
+            account.tesseract['Upgrades']['Ripple in Spacetime']['Total Value']
+            + tesseract_talent_bonus_value
+            + account.tesseract['Upgrades']['Verdon Hoarding']['Total Value'] * safer_math_log(account.tesseract['Tachyon3'], 10)
+            + account.tesseract['Upgrades']['Aurion Hoarding']['Total Value'] * safer_math_log(account.tesseract['Tachyon6'], 10)
+            # + Extra Tachyon from Equipment
+            + account.labJewels['Eternal Energy Jewel']['Value'] * account.labJewels['Eternal Energy Jewel']['Owned']
+            + account.arcade[50]['Value']
+        ),
+        'mgb': account.emperor['Bonuses'][6]['Total Value'],
+        'mgc': ValueToMulti(backup_energy_bonus_value),
+        'mgd': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned']
+    }
+    account.tesseract['Tachyon Calc']['Total'] = prod(account.tesseract['Tachyon Calc'].values())
 
 
 def _calculate_w1(account):

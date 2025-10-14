@@ -95,13 +95,6 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         if db.secondary_preset_talents.get('196', 0) > grimoire_preset_level:
             grimoire_preset_level = db.secondary_preset_talents.get('196', 0)
 
-    grimoire_percent = lavaFunc(
-        funcType=all_talentsDict[196]['funcX'],
-        level=grimoire_preset_level,
-        x1=all_talentsDict[196]['x1'],
-        x2=all_talentsDict[196]['x2'],
-    )
-
     mgb_label = f"Bone Multi Group B: {grimoire['Bone Calc']['mgb']:.3f}x"
     currency_advices[mgb_label] = [
         Advice(
