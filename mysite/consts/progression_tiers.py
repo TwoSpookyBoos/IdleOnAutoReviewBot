@@ -2174,6 +2174,7 @@ true_max_tiers = {
     # Master Classes
     'Grimoire': 0,
     'Compass': 0,
+    'Tesseract': 0,
 
     # World 1
     'Bribes': max(bribes_progressionTiers.keys()),
