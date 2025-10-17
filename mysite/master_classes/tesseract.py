@@ -1,9 +1,12 @@
 from flask import g as session_data
 
 from consts.consts_autoreview import EmojiType
+from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
+from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from utils.text_formatting import notateNumber
@@ -51,7 +54,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     arcane_cultist_index = None
     tesseract_preset_level = 100
-    tesseract_talent_index = '586'
+    tesseract_talent_index = 586
 
     for arcane_cultist in session_data.account.acs:
         if arcane_cultist_index is None:
@@ -61,6 +64,80 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
             tesseract_preset_level = arcane_cultist.current_preset_talents.get(tesseract_talent_index, 0)
         if arcane_cultist.secondary_preset_talents.get(tesseract_talent_index, 0) > tesseract_preset_level:
             tesseract_preset_level = arcane_cultist.secondary_preset_talents.get(tesseract_talent_index, 0)
+
+
+    mga_label = f"Tachyon Multi Group A: {tesseract['Tachyon Calc']['mga']:.2f}x"
+    currency_advices[mga_label] = []
+
+    ripple_in_spacetime = tesseract['Upgrades']['Ripple in Spacetime']
+    currency_advices[mga_label].append(
+        Advice(
+            label=f"Tesseract Upgrade 'Ripple in Spacetime':"
+                  f"<br>+{ripple_in_spacetime['Total Value']}% Tachyons",
+            picture_class=ripple_in_spacetime['Image'],
+            progression=ripple_in_spacetime['Level'],
+            goal=ripple_in_spacetime['Max Level'],
+            resource=ripple_in_spacetime['Tachyon Image']
+        )
+    )
+
+    tesseract_talent_bonus_value = lavaFunc(
+        funcType=all_talentsDict[tesseract_talent_index]['funcX'],
+        level=tesseract_preset_level,
+        x1=all_talentsDict[tesseract_talent_index]['x1'],
+        x2=all_talentsDict[tesseract_talent_index]['x2'],
+    )
+
+    currency_advices[mga_label].append(
+        Advice(
+            label=f"Tesseract Talent: +{tesseract_talent_bonus_value}% Tachyons",
+            picture_class='tesseract'
+        )
+    )
+
+    verdon_hoarding = tesseract['Upgrades']['Verdon Hoarding']
+    currency_advices[mga_label].append(
+        Advice(
+            label=f"Tesseract Upgrade 'Verdon Hoarding':"
+                  f"<br>+{verdon_hoarding['Total Value']}% Tachyons",
+            picture_class=verdon_hoarding['Image'],
+            progression=verdon_hoarding['Level'],
+            goal=verdon_hoarding['Max Level'],
+            resource=verdon_hoarding['Tachyon Image']
+        )
+    )
+
+    aurion_hoarding = tesseract['Upgrades']['Aurion Hoarding']
+    currency_advices[mga_label].append(
+        Advice(
+            label=f"Tesseract Upgrade 'Aurion Hoarding':"
+                  f"<br>+{aurion_hoarding['Total Value']}% Tachyons",
+            picture_class=aurion_hoarding['Image'],
+            progression=aurion_hoarding['Level'],
+            goal=aurion_hoarding['Max Level'],
+            resource=aurion_hoarding['Tachyon Image']
+        )
+    )
+
+    # TODO: Tachyons from Equipment
+
+    lab_jewel = session_data.account.labJewels['Eternal Energy Jewel']
+    lab_jewel_active = lab_jewel['Enabled']
+    currency_advices[mga_label].append(Advice(
+        label=f"Lab Jewel 'Eternal Energy Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}% Tachyons",
+        picture_class='deadly-wrath-jewel',
+        progression=int(lab_jewel_active),
+        goal=1
+    ))
+
+    arcade_bonus = session_data.account.arcade[50]
+    currency_advices[mga_label].append(Advice(
+        label=f"Arcade Bonus 50: {arcade_bonus['Display']}",
+        picture_class=arcade_bonus['Image'],
+        progression=arcade_bonus['Level'],
+        goal=arcade_max_level + 1,
+        resource=arcade_bonus['Material'],
+    ))
 
     mgb_label = f"Tachyon Multi Group B: {tesseract['Tachyon Calc']['mgb']:.2f}x"
 
@@ -75,15 +152,35 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         )
     ]
 
+    mgc_label = f"Bone Multi Group C: {tesseract['Tachyon Calc']['mgc']:.2f}x"
+    mystery_fizz = session_data.account.sneaking['PristineCharms']['Mystery Fizz']
+    currency_advices[mgc_label] = [
+        Advice(
+            label=f"{{{{Sneaking|#sneaking}}}}: Pristine Charm: Mystery Fizz"
+                  f"<br>{mystery_fizz['Bonus']}",
+            picture_class=mystery_fizz['Image'],
+            progression=int(mystery_fizz['Obtained']),
+            goal=1
+        )
+    ]
+
     mgd_label = f"Tachyon Multi Group D: {tesseract['Tachyon Calc']['mgd']:.2f}x"
+    currency_advices[mgd_label] = [
+        Advice(
+            label=f"Backup Energy Talent: {tesseract['Tachyon Calc']['mgd']:.2f}x Tachyons",
+            picture_class='backup-energy',
+        )
+    ]
+
+    mge_label = f"Tachyon Multi Group E: {tesseract['Tachyon Calc']['mge']:.2f}x"
 
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
     missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
     has_arcanist_pack = session_data.account.gemshop['Bundles']['bun_x']['Owned']
-    ac_pack_value = 1.2 if has_arcanist_pack else 1
-    currency_advices[mgd_label] = [Advice(
+    ac_pack_value = tesseract['Tachyon Calc']['mge']
+    currency_advices[mge_label] = [Advice(
         label=f"Gemshop - Arcane Cultist Pack:"
-              f"<br>{ac_pack_value}/1.2x Extra Tachyons"
+              f"<br>{ac_pack_value}/1.2x Tachyons"
               f"{missing_bundle_data_txt}",
         picture_class='gem',
         progression=int(has_arcanist_pack) if not missing_bundle_data else 'IDK',

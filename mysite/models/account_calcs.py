@@ -692,8 +692,9 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
             + account.arcade[50]['Value']
         ),
         'mgb': account.emperor['Bonuses'][6]['Total Value'],
-        'mgc': ValueToMulti(backup_energy_bonus_value),
-        'mgd': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned']
+        'mgc': 1 + 0.3 * account.sneaking['PristineCharms']['Mystery Fizz']['Obtained'],
+        'mgd': ValueToMulti(backup_energy_bonus_value),
+        'mge': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned']
     }
     account.tesseract['Tachyon Calc']['Total'] = prod(account.tesseract['Tachyon Calc'].values())
 
