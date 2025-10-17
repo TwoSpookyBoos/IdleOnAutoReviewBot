@@ -59,11 +59,11 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     for arcane_cultist in session_data.account.acs:
         if arcane_cultist_index is None:
             arcane_cultist_index = arcane_cultist.character_index
-        if arcane_cultist.current_preset_talents.get(tesseract_talent_index, 0) > tesseract_preset_level:
+        if arcane_cultist.current_preset_talents.get(str(tesseract_talent_index), 0) > tesseract_preset_level:
             arcane_cultist_index = arcane_cultist.character_index
-            tesseract_preset_level = arcane_cultist.current_preset_talents.get(tesseract_talent_index, 0)
-        if arcane_cultist.secondary_preset_talents.get(tesseract_talent_index, 0) > tesseract_preset_level:
-            tesseract_preset_level = arcane_cultist.secondary_preset_talents.get(tesseract_talent_index, 0)
+            tesseract_preset_level = arcane_cultist.current_preset_talents.get(str(tesseract_talent_index), 0)
+        if arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0) > tesseract_preset_level:
+            tesseract_preset_level = arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0)
 
 
     mga_label = f"Tachyon Multi Group A: {tesseract['Tachyon Calc']['mga']:.2f}x"
@@ -90,7 +90,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     currency_advices[mga_label].append(
         Advice(
-            label=f"Tesseract Talent: +{tesseract_talent_bonus_value}% Tachyons",
+            label=f"Tesseract Talent: +{tesseract_talent_bonus_value:.2f}% Tachyons",
             picture_class='tesseract'
         )
     )
