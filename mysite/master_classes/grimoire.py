@@ -95,13 +95,6 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         if db.secondary_preset_talents.get('196', 0) > grimoire_preset_level:
             grimoire_preset_level = db.secondary_preset_talents.get('196', 0)
 
-    grimoire_percent = lavaFunc(
-        funcType=all_talentsDict[196]['funcX'],
-        level=grimoire_preset_level,
-        x1=all_talentsDict[196]['x1'],
-        x2=all_talentsDict[196]['x2'],
-    )
-
     mgb_label = f"Bone Multi Group B: {grimoire['Bone Calc']['mgb']:.3f}x"
     currency_advices[mgb_label] = [
         Advice(
@@ -181,6 +174,15 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         resource=ab40['Material'],
     ))
 
+    lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
+    lab_jewel_active = lab_jewel['Enabled']
+    currency_advices[mge_label].append(Advice(
+        label=f"Lab Jewel 'Deadly Wrath Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}%",
+        picture_class='deadly-wrath-jewel',
+        progression=int(lab_jewel_active),
+        goal=1
+    ))
+
     mgf_label = f"Bone Multi Group F: {grimoire['Bone Calc']['mgf']:.2f}x"
     db_index = None
     tombstone_preset_level = 100
@@ -253,7 +255,11 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
     upgrades_AdviceDict['General Info'] = []
 
     #Upgrades
-    upgrades_AdviceDict['Upgrades'] = [
+    upgrades_AdviceDict['Upgrades'] = [Advice(
+        label=f"Total Grimoire Upgrades: {grimoire['Total Upgrades']:,}",
+        picture_class='grimoire'
+    )]
+    upgrades_AdviceDict['Upgrades'] += [
         Advice(
             label=(
                 f"{upgrade_name}: {upgrade_details['Description']}"
@@ -267,10 +273,6 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
             resource=upgrade_details['Bone Image']
         ) for upgrade_name, upgrade_details in grimoire['Upgrades'].items()
     ]
-    upgrades_AdviceDict['Upgrades'].insert(0, Advice(
-        label=f"Total Grimoire Upgrades: {grimoire['Total Upgrades']:,}",
-        picture_class='grimoire',
-    ))
 
     for subgroup in upgrades_AdviceDict:
         for advice in upgrades_AdviceDict[subgroup]:
