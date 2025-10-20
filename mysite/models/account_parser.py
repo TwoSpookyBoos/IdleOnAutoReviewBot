@@ -11,7 +11,7 @@ from consts.consts_general import (
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
-    compass_titans, compass_path_ordering, compass_medallions, vault_upgrades_list, vault_dont_scale, vault_stack_types, vault_section_indexes
+    compass_titans, compass_path_ordering, compass_medallions, vault_upgrades_list, vault_dont_scale, vault_stack_types, vault_section_indexes, tesseract_upgrades_list, tesseract_tachyon_list
 )
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
@@ -245,6 +245,7 @@ def _parse_character_class_lists(account):
     account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
     account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
     account.sorcs = [toon for toon in account.all_characters if 'Elemental Sorcerer' in toon.all_classes]
+    account.acs = [toon for toon in account.all_characters if 'Arcane Cultist' in toon.all_classes]
 
     account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
     account.sbs = [toon for toon in account.all_characters if 'Siege Breaker' in toon.all_classes]
@@ -589,6 +590,7 @@ def _parse_general_event_points_shop(account):
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
     _parse_master_classes_compass(account)
+    _parse_master_classes_tesseract(account)
 
 def _parse_master_classes_grimoire(account):
     account.grimoire = {
@@ -872,6 +874,50 @@ def _parse_master_classes_exalted_stamps(account):
                 if raw_compass:
                     logger.exception(f"Error parsing Exalted status for stamp {stampType}{stampIndex}: {stampValuesDict['Name']}")
                 account.stamps[stampValuesDict['Name']]['Exalted'] = False
+
+def _parse_master_classes_tesseract(account):
+    account.tesseract = {
+        'Upgrades': {},
+        'Total Upgrades': 0,
+        'Total Tachyons Collected': safer_convert(safer_get(account.raw_optlacc_dict, 394, 0), 0.0),
+        'Tachyon1': safer_convert(safer_get(account.raw_optlacc_dict, 388, 0), 0.0),
+        'Tachyon2': safer_convert(safer_get(account.raw_optlacc_dict, 389, 0), 0.0),
+        'Tachyon3': safer_convert(safer_get(account.raw_optlacc_dict, 390, 0), 0.0),
+        'Tachyon4': safer_convert(safer_get(account.raw_optlacc_dict, 391, 0), 0.0),
+        'Tachyon5': safer_convert(safer_get(account.raw_optlacc_dict, 392, 0), 0.0),
+        'Tachyon6': safer_convert(safer_get(account.raw_optlacc_dict, 393, 0), 0.0),
+        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0)
+    }
+    raw_tesseract = safe_loads(account.raw_data.get('Arcane', []))
+    if not raw_tesseract:
+        logger.warning(f"Tesseract data not present{', as expected' if account.version < 236 else ''}.")
+    for upgrade_index, upgrade_values_list in enumerate(tesseract_upgrades_list):
+        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
+        if clean_name != 'Boundless Energy':
+            try:
+                level = int(raw_tesseract[upgrade_index])
+            except IndexError:
+                level = 0
+            account.tesseract['Upgrades'][clean_name] = {
+                'Level': level,
+                'Index': upgrade_index,
+                'Image': f"tesseract-upgrade-{upgrade_index}",
+                'Cost Base': int(upgrade_values_list[1]),
+                'Cost Increment': float(upgrade_values_list[2]),
+                'Tachyon Name': tesseract_tachyon_list[int(upgrade_values_list[3])],
+                'Tachyon Image': f"tesseract-tachyon-{upgrade_values_list[3]}",
+                'Max Level': int(upgrade_values_list[4]),
+                'Value Per Level': int(upgrade_values_list[5]),
+                'Unlock Requirement': int(upgrade_values_list[6]),
+                # 'Placeholder7': upgrade_values_list[7],
+                # 'Placeholder8': upgrade_values_list[8],
+                'Description': upgrade_values_list[9].replace('_', ' '),
+            }
+
+    # Sum total upgrades
+    account.tesseract['Total Upgrades'] = sum([v['Level'] for v in account.tesseract['Upgrades'].values()])
+    for upgrade_name in account.tesseract['Upgrades']:
+        account.tesseract['Upgrades'][upgrade_name]['Unlocked'] = account.tesseract['Total Upgrades'] >= account.tesseract['Upgrades'][upgrade_name]['Unlock Requirement']
 
 def _parse_w1(account):
     _parse_w1_upgrade_vault(account)

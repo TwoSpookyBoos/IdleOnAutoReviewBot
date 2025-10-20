@@ -1157,16 +1157,17 @@ gem_shop_bundles_dict = {
     'bun_u': 'Ancient Echos Pack',
     'bun_v': 'Deathbringer Pack',
     'bun_w': 'Windwalker Pack',
+    'bun_x': 'Arcane Cultist Pack',
     'bun_y': 'Valenslime Day Pack',
     'bun_z': 'Fallen Spirits Pet Pack',
     'bon_a': 'Storage Ram Pack',
-    # No bon_b, yet as of 2.36.0
+    # No bon_b, yet as of 2.41
     'bon_c': 'Blazing Star Anniversary Pack',
     'bon_d': 'Midnight Tide Anniversary Pack',
     'bon_e': 'Lush Emerald Anniversary Pack',
     'bon_f': 'Eternal Hunter Pack',
     'bon_g': 'Gilded Treasure',
-}  # As of 2.38.0
+}  # As of 2.41
 
 #Guild
 guild_bonuses_dict = {

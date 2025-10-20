@@ -249,6 +249,17 @@ def getCompassCurrenciesAdviceGroup(compass):
         goal=arcade_max_level + 1,
         resource=ab47['Material'],
     ))
+
+    lab_jewel = session_data.account.labJewels['North Winds Jewel']
+    lab_jewel_active = lab_jewel['Enabled']
+    currency_advices[mgf_label].append(Advice(
+        label=f"Lab Jewel 'North Winds Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}%",
+        picture_class='north-winds-jewel',
+        progression=int(lab_jewel_active),
+        goal=1
+    ))
+
+    # Compass Upgrades
     for bonus_name in [
         'De Dust I', 'De Dust II', 'De Dust III', 'De Dust IV', 'De Dust V',
         'Abomination Slayer IX', 'Abomination Slayer XXX', 'Abomination Slayer XXXIV'

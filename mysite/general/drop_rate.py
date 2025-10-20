@@ -694,10 +694,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Map-specific: DR Bonus from Arcane Cultist's Overwhelming Energy Talent
-    # TODO: replace AC Icon with actual Talent Icon when it's available
     drop_rate_aw_advice[special].append(Advice(
         label=f"Map-specific: Drop Rate MULTI from Arcane Cultist's 'Overwhelming Energy' talent. See character-specific sections",
-        picture_class=f"arcane-cultist-icon"
+        picture_class=f"overwhelming-energy"
     ))
 
     # Sneaking - Pristine Charm - Cotton Candy
