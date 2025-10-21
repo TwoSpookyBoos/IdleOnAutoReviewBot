@@ -291,6 +291,7 @@ class Character:
                     self.equipped_lab_chips.append(lab_chips_dict[chipIndex]['Name'])
                 except:
                     continue
+        self.equipped_card_doublers: list[str] = self.get_card_doublers()
 
         self.apoc_dict: dict = {
             name: {
@@ -479,8 +480,8 @@ class Character:
             self.alchemy_job_string = f'UnknownJob{self.alchemy_job}'
             self.alchemy_job_group = 'UnknownJobGroup'
 
-    def has_card_doubler(self):
-        return any(chip in self.equipped_lab_chips for chip in ['Omega Nanochip', 'Omega Motherboard'])
+    def get_card_doublers(self):
+        return [chip for chip in ['Omega Nanochip', 'Omega Motherboard'] if chip in self.equipped_lab_chips]
 
 class WorldName(Enum):
     PINCHY = "Pinchy"
@@ -1423,10 +1424,24 @@ class Card:
         return (self.coefficient * tier_coefficient**2) + 1
 
     def getCurrentValue(self, optional_character: Character=None):
-        return self.level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
+        card_doubler = 1
+        if optional_character and optional_character.equipped_card_doublers and self.codename in optional_character.equipped_cards_codenames:
+            equipped_slot = optional_character.equipped_cards_codenames.index(self.codename)
+            if equipped_slot == 0 and "Omega Nanochip" in optional_character.equipped_card_doublers:
+                card_doubler = 2
+            elif equipped_slot == 7 and "Omega Motherboard" in optional_character.equipped_card_doublers:
+                card_doubler = 2 
+        return self.level * self.value_per_level * card_doubler
 
     def getMaxValue(self, optional_character: Character=None):
-        return cards_max_level * self.value_per_level * (2 if optional_character and optional_character.has_card_doubler() else 1)
+        card_doubler = 1
+        if optional_character and optional_character.equipped_card_doublers and self.codename in optional_character.equipped_cards_codenames:
+            equipped_slot = optional_character.equipped_cards_codenames.index(self.codename)
+            if equipped_slot == 0 and "Omega Nanochip" in optional_character.equipped_card_doublers:
+                card_doubler = 2
+            elif equipped_slot == 7 and "Omega Motherboard" in optional_character.equipped_card_doublers:
+                card_doubler = 2 
+        return cards_max_level * self.value_per_level * card_doubler
 
     def getFormattedXY(self, optional_character: Character=None):
         result = (
