@@ -15,6 +15,7 @@ from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_b
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.progression_tiers import owl_bonuses_of_orion
+from models.execute_function_dependency_tree import execute_function_dependency_tree
 from models.models import Advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
@@ -24,20 +25,147 @@ from utils.all_talentsDict import all_talentsDict
 logger = get_logger(__name__)
 
 def calculate_account(account):
-    _calculate_wave_1(account)
-    _calculate_wave_2(account)
-    _calculate_wave_3(account)
-    _calculate_wave_4(account)
+    calc_args = {
+        _calculate_caverns_gambit: [account],
+        _calculate_caverns_jar_collectibles: [account],
+        _calculate_caverns_majiks: [account],
+        _calculate_caverns_measurements_base: [account],
+        _calculate_caverns_measurements_multis: [account],
+        _calculate_caverns_monument_bonuses: [account],
+        _calculate_caverns_monuments_bravery: [account],
+        _calculate_caverns_monuments_justice: [account],
+        _calculate_caverns_motherlode_layers: [account],
+        _calculate_caverns_studies: [account],
+        _calculate_caverns_the_bell: [account],
+        _calculate_caverns_the_harp: [account],
+        _calculate_caverns_the_well: [account],
+        _calculate_class_unique_kill_stacks: [account],
+        _calculate_general_alerts: [account],
+        _calculate_general_character_bonus_talent_levels: [account],
+        _calculate_general_crystal_spawn_chance: [account],
+        _calculate_general_highest_world_reached: [account],
+        _calculate_general_item_filter: [account],
+        _calculate_master_classes_compass_dust_sources: [account],
+        _calculate_master_classes_compass_upgrades: [account],
+        _calculate_master_classes_grimoire_bone_sources: [account],
+        _calculate_master_classes_grimoire_upgrades: [account],
+        _calculate_master_classes_tesseract_tachyon_sources: [account],
+        _calculate_master_classes_tesseract_upgrades: [account],
+        _calculate_w1_owl_bonuses: [account],
+        _calculate_w1_stamps: [account],
+        _calculate_w1_starsigns: [account],
+        _calculate_w1_statues: [account],
+        _calculate_w1_upgrade_vault: [account],
+        _calculate_w2_arcade: [account],
+        _calculate_w2_ballot: [account],
+        _calculate_w2_cauldrons: [account],
+        _calculate_w2_islands_trash: [account],
+        _calculate_w2_killroy: [account],
+        _calculate_w2_postOffice: [account],
+        _calculate_w2_sigils: [account],
+        _calculate_w2_vials: [account],
+        _calculate_w3_armor_sets: [account],
+        _calculate_w3_building_max_levels: [account],
+        _calculate_w3_collider_atoms: [account],
+        _calculate_w3_collider_base_costs: [account],
+        _calculate_w3_collider_cost_reduction: [account],
+        _calculate_w3_equinox_max_levels: [account],
+        _calculate_w3_library_max_book_levels: [account],
+        _calculate_w3_shrine_advices: [account],
+        _calculate_w3_shrine_values: [account],
+        _calculate_w4_cooking_max_plate_levels: [account],
+        _calculate_w4_jewel_multi: [account],
+        _calculate_w4_lab_bonuses: [account],
+        _calculate_w4_meal_multi: [account],
+        _calculate_w4_tome: [account],
+        _calculate_w4_tome_bonuses: [account],
+        _calculate_w5_account_wide_arctis: [account],
+        _calculate_w5_divinity_offering_costs: [account],
+        _calculate_w6_emperor: [account],
+        _calculate_w6_farming_bean_bonus: [account],
+        _calculate_w6_farming_crop_depot: [account],
+        _calculate_w6_farming_crop_evo: [account],
+        _calculate_w6_farming_crop_speed: [account],
+        _calculate_w6_farming_crop_value: [account],
+        _calculate_w6_farming_land_ranks: [account],
+        _calculate_w6_farming_markets: [account],
+        _calculate_w6_farming_og: [account],
+        _calculate_w6_sneaking_gemstones: [account],
+        _calculate_w6_summoning_doublers: [account],
+        _calculate_w6_summoning_winner_bonuses: [account],
+    }
 
+    calc_dependencies = {
+        _calculate_caverns_gambit: [_calculate_caverns_measurements_base],
+        _calculate_caverns_jar_collectibles: [],
+        _calculate_caverns_majiks: [],
+        _calculate_caverns_measurements_base: [_calculate_caverns_majiks],
+        _calculate_caverns_measurements_multis: [],
+        _calculate_caverns_monument_bonuses: [_calculate_caverns_majiks],
+        _calculate_caverns_monuments_bravery: [_calculate_caverns_measurements_base],
+        _calculate_caverns_monuments_justice: [],
+        _calculate_caverns_motherlode_layers: [],
+        _calculate_caverns_studies: [],
+        _calculate_caverns_the_bell: [],
+        _calculate_caverns_the_harp: [],
+        _calculate_caverns_the_well: [],
+        _calculate_class_unique_kill_stacks: [_calculate_general_character_bonus_talent_levels],
+        _calculate_general_alerts: [],
+        _calculate_general_character_bonus_talent_levels: [_calculate_w3_armor_sets, _calculate_w5_account_wide_arctis, _calculate_w3_library_max_book_levels],
+        _calculate_general_crystal_spawn_chance: [_calculate_w1_stamps],
+        _calculate_general_highest_world_reached: [],
+        _calculate_general_item_filter: [],
+        _calculate_master_classes_compass_dust_sources: [_calculate_master_classes_compass_upgrades],
+        _calculate_master_classes_compass_upgrades: [],
+        _calculate_master_classes_grimoire_bone_sources: [_calculate_master_classes_grimoire_upgrades],
+        _calculate_master_classes_grimoire_upgrades: [],
+        _calculate_master_classes_tesseract_tachyon_sources: [_calculate_master_classes_tesseract_upgrades],
+        _calculate_master_classes_tesseract_upgrades: [],
+        _calculate_w1_owl_bonuses: [],
+        _calculate_w1_stamps: [_calculate_master_classes_compass_upgrades, _calculate_w3_armor_sets],
+        _calculate_w1_starsigns: [],
+        _calculate_w1_statues: [_calculate_w1_upgrade_vault],
+        _calculate_w1_upgrade_vault: [],
+        _calculate_w2_arcade: [],
+        _calculate_w2_ballot: [_calculate_caverns_majiks],
+        _calculate_w2_cauldrons: [],
+        _calculate_w2_islands_trash: [],
+        _calculate_w2_killroy: [],
+        _calculate_w2_postOffice: [],
+        _calculate_w2_sigils: [],
+        _calculate_w2_vials: [_calculate_w1_upgrade_vault],
+        _calculate_w3_armor_sets: [],
+        _calculate_w3_building_max_levels: [],
+        _calculate_w3_collider_atoms: [],
+        _calculate_w3_collider_base_costs: [_calculate_master_classes_compass_upgrades],
+        _calculate_w3_collider_cost_reduction: [_calculate_w1_stamps, _calculate_master_classes_grimoire_upgrades],
+        _calculate_w3_equinox_max_levels: [],
+        _calculate_w3_library_max_book_levels: [_calculate_w6_summoning_winner_bonuses],
+        _calculate_w3_shrine_advices: [],
+        _calculate_w3_shrine_values: [],
+        _calculate_w4_cooking_max_plate_levels: [],
+        _calculate_w4_jewel_multi: [],
+        _calculate_w4_lab_bonuses: [],
+        _calculate_w4_meal_multi: [_calculate_w3_armor_sets],
+        _calculate_w4_tome: [],
+        _calculate_w4_tome_bonuses: [_calculate_w3_armor_sets],
+        _calculate_w5_account_wide_arctis: [],
+        _calculate_w5_divinity_offering_costs: [],
+        _calculate_w6_emperor: [],
+        _calculate_w6_farming_bean_bonus: [],
+        _calculate_w6_farming_crop_depot: [_calculate_master_classes_grimoire_upgrades],
+        _calculate_w6_farming_crop_evo: [_calculate_w2_vials, _calculate_w1_stamps, _calculate_w6_summoning_winner_bonuses, _calculate_w1_starsigns],
+        _calculate_w6_farming_crop_speed: [_calculate_w6_summoning_winner_bonuses, _calculate_w2_vials],
+        _calculate_w6_farming_crop_value: [],
+        _calculate_w6_farming_land_ranks: [_calculate_general_character_bonus_talent_levels],
+        _calculate_w6_farming_markets: [],
+        _calculate_w6_farming_og: [_calculate_w1_starsigns],
+        _calculate_w6_sneaking_gemstones: [_calculate_general_character_bonus_talent_levels],
+        _calculate_w6_summoning_doublers: [_calculate_caverns_gambit],
+        _calculate_w6_summoning_winner_bonuses: [_calculate_w3_armor_sets, _calculate_w6_emperor],
+    }
 
-def _calculate_wave_1(account):
-    # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
-    _calculate_caverns_majiks(account)
-    _calculate_w3_armor_sets(account)
-    _calculate_w2_arcade(account)
-    _calculate_w6_emperor(account)
-    _calculate_w6_summoning_winner_bonuses(account)
-    _calculate_w4_tome(account)
+    execute_function_dependency_tree(calc_args, calc_dependencies)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -378,22 +506,6 @@ def _calculate_w4_tome(account):
     # logger.debug(f"{account.tome['Total Points']} tome points = Top {account.tome['Tome Percent']}%")
 
 
-def _calculate_wave_2(account):
-    _calculate_general(account)
-    _calculate_master_classes(account)
-    _calculate_w1(account)
-    _calculate_w2(account)
-    _calculate_w3(account)
-    _calculate_w4(account)
-    _calculate_w5(account)
-    _calculate_caverns(account)
-    _calculate_w6(account)
-
-def _calculate_general(account):
-    _calculate_general_alerts(account)
-    _calculate_general_item_filter(account)
-    account.highest_world_reached = _calculate_general_highest_world_reached(account)
-
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
         account.alerts_Advices['General'].append(Advice(
@@ -453,38 +565,30 @@ def _calculate_general_highest_world_reached(account):
         or account.achievements['Valley Visitor']['Complete']
         or account.enemy_worlds[6].maps_dict[251].kill_count > 0
     ):
-        return 6
+        highest_world_reached = 6
     elif (
         account.achievements['The Plateauourist']['Complete']
         or account.enemy_worlds[5].maps_dict[201].kill_count > 0
     ):
-        return 5
+        highest_world_reached = 5
     elif (
         account.achievements['Milky Wayfarer']['Complete']
         or account.enemy_worlds[4].maps_dict[151].kill_count > 0
     ):
-        return 4
+        highest_world_reached = 4
     elif (
         account.achievements['Snowy Wonderland']['Complete']
         or account.enemy_worlds[3].maps_dict[101].kill_count > 0
     ):
-        return 3
+        highest_world_reached = 3
     elif (
         account.achievements['Down by the Desert']['Complete']
         or account.enemy_worlds[2].maps_dict[51].kill_count > 0
     ):
-        return 2
+        highest_world_reached = 2
     else:
-        return 1
-
-
-def _calculate_master_classes(account):
-    _calculate_master_classes_grimoire_upgrades(account)
-    # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
-    _calculate_master_classes_compass_upgrades(account)
-    _calculate_master_classes_compass_dust_sources(account)
-    _calculate_master_classes_tesseract_upgrades(account)
-    _calculate_master_classes_tesseract_tachyon_sources(account)
+        highest_world_reached = 1
+    account.highest_world_reached = highest_world_reached
 
 def _calculate_master_classes_grimoire_upgrades(account):
     grimoire_multi = ValueToMulti(
@@ -698,14 +802,6 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
     }
     account.tesseract['Tachyon Calc']['Total'] = prod(account.tesseract['Tachyon Calc'].values())
 
-
-def _calculate_w1(account):
-    _calculate_w1_upgrade_vault(account)
-    _calculate_w1_starsigns(account)
-    # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
-    _calculate_w1_stamps(account)
-    _calculate_w1_owl_bonuses(account)
-
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
         ValueToMulti(
@@ -850,16 +946,6 @@ def _calculate_w1_owl_bonuses(account):
             'Value': safer_convert(bonus_value, 0)
         }
 
-
-def _calculate_w2(account):
-    _calculate_w2_vials(account)
-    _calculate_w2_sigils(account)
-    _calculate_w2_cauldrons(account)
-    _calculate_w2_postOffice(account)
-    _calculate_w2_ballot(account)
-    _calculate_w2_islands_trash(account)
-    _calculate_w2_killroy(account)
-
 def _calculate_w2_vials(account):
     account.alchemy_vials_calcs = {
         'mga': (
@@ -969,14 +1055,6 @@ def _calculate_w2_killroy(account):
                 or account.killroy[upgradeName]['Upgrades'] > 0
             ) and account.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
 
-
-def _calculate_w3(account):
-    _calculate_w3_building_max_levels(account)
-    _calculate_w3_collider_atoms(account)
-    _calculate_w3_collider_base_costs(account)
-    _calculate_w3_collider_cost_reduction(account)
-    _calculate_w3_shrine_values(account)
-    _calculate_w3_shrine_advices(account)
 
 def _update_w3_building_max_levels(account, building_name: str, levels: int, note=''):
     if building_name == 'All Towers':
@@ -1113,13 +1191,6 @@ def _calculate_w3_shrine_advices(account):
         goal=6
     )
 
-
-def _calculate_w4(account):
-    _calculate_w4_cooking_max_plate_levels(account)
-    _calculate_w4_jewel_multi(account)
-    _calculate_w4_meal_multi(account)
-    _calculate_w4_lab_bonuses(account)
-    _calculate_w4_tome_bonuses(account)
 
 def _calculate_w4_cooking_max_plate_levels(account):
     # Sailing Artifact Increases
@@ -1274,9 +1345,8 @@ def _calculate_w4_tome_bonuses(account):
     # logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
 
 
-def _calculate_w5(account):
+def _calculate_w5_account_wide_arctis(account):
     account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
-    _calculate_w5_divinity_offering_costs(account)
 
 def _calculate_w5_divinity_offering_costs(account):
     DivCostAfter3 = safer_get(account.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3)
@@ -1293,19 +1363,6 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
         logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}")
         return 1e100
 
-
-def _calculate_caverns(account):
-    #_calculate_caverns_majiks(account)
-    _calculate_caverns_measurements_base(account)
-    _calculate_caverns_measurements_multis(account)
-    _calculate_caverns_studies(account)
-    _calculate_caverns_jar_collectibles(account)
-    _calculate_caverns_the_well(account)
-    _calculate_caverns_monuments(account)
-    _calculate_caverns_motherlode_layers(account)
-    _calculate_caverns_the_bell(account)
-    _calculate_caverns_the_harp(account)
-    _calculate_caverns_gambit(account)
 
 def _calculate_caverns_measurements_base(account):
     # _customBlock_Holes > "MeasurementBaseBonus"  #Last verified as of 2.30 Companion Trading
@@ -1495,7 +1552,8 @@ def _calculate_caverns_the_well(account):
     )
     account.caverns['Caverns']['The Well']['Buckets'] = safe_loads(account.raw_data.get('Holes', {}))
 
-def _calculate_caverns_monuments(account):
+
+def _calculate_caverns_monument_bonuses(account):
     cosmos_value = (account.caverns['Majiks']['Monumental Vibes']['Value'] - 1) * 100
     for monument_index, monument_name in enumerate(monument_names):
         if monument_index < released_monuments:
@@ -1578,8 +1636,6 @@ def _calculate_caverns_monuments(account):
                 # logger.debug(f"{monument_name} Bonus {bonus_index}: "
                 #              f"Level {account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = "
                 #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
-    _calculate_caverns_monuments_bravery(account)
-    _calculate_caverns_monuments_justice(account)
 
 def _calculate_caverns_motherlode_layers(account):
     collectible_bonus = account.caverns['Collectibles']['Amethyst Heartstone']['Value']
@@ -1819,10 +1875,6 @@ def _calculate_caverns_gambit(account):
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 
-def _calculate_w6(account):
-    # _calculate_w6_farming(account)  # Runs in wave3 due to Land Rank multi from Talents
-    _calculate_w6_summoning(account)
-
 def _calculate_w6_sneaking_gemstones(account):
     #Runs under wave3 since it relies on talent levels
     account.sneaking['Highest Current Generational Gemstones'] = max([
@@ -1841,16 +1893,6 @@ def _calculate_w6_sneaking_gemstones(account):
             except:
                 account.sneaking['Gemstones'][gemstone_name]['BoostedValue'] = account.sneaking['Gemstones'][gemstone_name]['BaseValue']
 
-def _calculate_w6_farming(account):
-    # Runs in wave3 due to Land Rank multi from Talents
-    _calculate_w6_farming_land_ranks(account)
-    _calculate_w6_farming_crop_depot(account)
-    _calculate_w6_farming_markets(account)
-    _calculate_w6_farming_crop_value(account)
-    _calculate_w6_farming_crop_evo(account)
-    _calculate_w6_farming_crop_speed(account)
-    _calculate_w6_farming_bean_bonus(account)
-    _calculate_w6_farming_og(account)
 
 def _calculate_w6_farming_land_ranks(account):
     highest_dank_rank_level = 0
@@ -2116,25 +2158,12 @@ def _calculate_w6_farming_og(account):
             * account.farming['OG']['Pristine Multi']
     )
 
-def _calculate_w6_summoning(account):
-    _calculate_w6_summoning_doublers(account)
-
 def _calculate_w6_summoning_doublers(account):
     account.summoning['Total Doublers Owned'] = (
         account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value']
         + (10 * account.event_points_shop['Bonuses']['Summoning Star']['Owned'])
     )
 
-
-def _calculate_wave_3(account):
-    _calculate_w3_library_max_book_levels(account)
-    _calculate_w3_equinox_max_levels(account)
-    _calculate_general_character_bonus_talent_levels(account)
-    _calculate_general_crystal_spawn_chance(account)
-    _calculate_w6_sneaking_gemstones(account)
-    _calculate_master_classes_grimoire_bone_sources(account)
-    _calculate_class_unique_kill_stacks(account)
-    _calculate_w6_farming(account)
 
 def _calculate_w3_library_max_book_levels(account):
     account.library['StaticSum'] = (
@@ -2373,10 +2402,6 @@ def _calculate_class_unique_kill_stacks(account):
             account.class_kill_talents[talent_name]['Talent Value'] * account.class_kill_talents[talent_name]['Kill Stacks']
         )
         # logger.debug(f"{account.class_kill_talents[talent_name] = }")
-
-def _calculate_wave_4(account):
-    # Mostly stuff that relies on Talent Level calculations that happen in Wave 3
-    _calculate_w1_statues(account)
 
 def _calculate_w1_statues(account):
     voodoo_statufication_multi = [
