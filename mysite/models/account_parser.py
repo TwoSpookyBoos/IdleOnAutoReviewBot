@@ -48,6 +48,7 @@ from consts.consts_w6 import (
     summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
 )
+from models.execute_function_dependency_tree import execute_function_dependency_tree
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -144,21 +145,37 @@ def _all_worn_items(account) -> Assets:
     return Assets(stuff_worn)
 
 def parse_account(account, run_type):
-    _parse_wave_1(account, run_type)
+    parse_args = {
+        _parse_caverns: [account],
+        _parse_characters: [account, run_type],
+        _parse_companions: [account],
+        _parse_general: [account],
+        _parse_master_classes: [account],
+        _parse_switches: [account],
+        _parse_w1: [account],
+        _parse_w2: [account],
+        _parse_w3: [account],
+        _parse_w4: [account],
+        _parse_w5: [account],
+        _parse_w6: [account],
+    }
 
-def _parse_wave_1(account, run_type):
-    _parse_switches(account)
-    _parse_companions(account)
-    _parse_characters(account, run_type)
-    _parse_general(account)
-    _parse_master_classes(account)
-    _parse_w1(account)
-    _parse_w2(account)
-    _parse_w3(account)
-    _parse_w4(account)
-    _parse_w5(account)
-    _parse_caverns(account)
-    _parse_w6(account)
+    parse_dependencies = {
+        _parse_caverns: [_parse_general],
+        _parse_characters: [],
+        _parse_companions: [],
+        _parse_general: [_parse_characters],
+        _parse_master_classes: [_parse_general],
+        _parse_switches: [],
+        _parse_w1: [_parse_general],
+        _parse_w2: [_parse_general],
+        _parse_w3: [_parse_general],
+        _parse_w4: [_parse_characters, _parse_general],
+        _parse_w5: [_parse_characters],
+        _parse_w6: [_parse_general],
+    }
+
+    execute_function_dependency_tree(parse_args, parse_dependencies)
 
 def _parse_switches(account):
     # AutoLoot
