@@ -145,37 +145,8 @@ def _all_worn_items(account) -> Assets:
     return Assets(stuff_worn)
 
 def parse_account(account, run_type):
-    parse_args = {
-        _parse_caverns: [account],
-        _parse_characters: [account, run_type],
-        _parse_companions: [account],
-        _parse_general: [account],
-        _parse_master_classes: [account],
-        _parse_switches: [account],
-        _parse_w1: [account],
-        _parse_w2: [account],
-        _parse_w3: [account],
-        _parse_w4: [account],
-        _parse_w5: [account],
-        _parse_w6: [account],
-    }
-
-    parse_dependencies = {
-        _parse_caverns: [_parse_general],
-        _parse_characters: [],
-        _parse_companions: [],
-        _parse_general: [_parse_characters],
-        _parse_master_classes: [_parse_general],
-        _parse_switches: [],
-        _parse_w1: [_parse_general],
-        _parse_w2: [_parse_general],
-        _parse_w3: [_parse_general],
-        _parse_w4: [_parse_characters, _parse_general],
-        _parse_w5: [_parse_characters],
-        _parse_w6: [_parse_general],
-    }
-
-    execute_function_dependency_tree(parse_args, parse_dependencies)
+    from models.dependencies.parse_dependencies import parse_dependencies, parse_args
+    execute_function_dependency_tree(parse_args(account, run_type), parse_dependencies())
 
 def _parse_switches(account):
     # AutoLoot
