@@ -7,6 +7,7 @@ from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
 from consts.consts_w3 import approx_max_talent_level_non_es
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Card
+from models.models_util import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -155,13 +156,7 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=card_champ_bubble['Level'],
                 goal=3960
             ),
-            Advice(
-                label=f"Guild Bonus- C2 Card Spotter:"
-                      f"<br>+{guild_bonus['Value']:.2f}/{guild_bonus['Max Value']:.2f}%",
-                picture_class=guild_bonus['Image'],
-                progression=guild_bonus['Level'],
-                goal=guild_bonus['Max Level']
-            )
+            get_guild_bonus_advice('C2 Card Spotter')
         ],
         f'Multi Group A - character-specific': [
             gigafrog.getAdvice(),

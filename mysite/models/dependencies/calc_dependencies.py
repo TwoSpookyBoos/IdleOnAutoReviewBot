@@ -19,7 +19,7 @@ from models.account_calcs import _calculate_caverns_gambit, _calculate_w6_summon
     _calculate_caverns_the_well, _calculate_caverns_the_harp, _calculate_caverns_the_bell, _calculate_caverns_studies, \
     _calculate_caverns_motherlode_layers, _calculate_caverns_monuments_justice, _calculate_caverns_monuments_bravery, \
     _calculate_caverns_monument_bonuses, _calculate_caverns_measurements_multis, _calculate_caverns_measurements_base, \
-    _calculate_caverns_majiks, _calculate_caverns_jar_collectibles
+    _calculate_caverns_majiks, _calculate_caverns_jar_collectibles, _calculate_general_guild_bonuses
 from models.models import Account
 
 
@@ -42,6 +42,7 @@ def calc_args(account: Account):
         _calculate_general_alerts: [account],
         _calculate_general_character_bonus_talent_levels: [account],
         _calculate_general_crystal_spawn_chance: [account],
+        _calculate_general_guild_bonuses: [account],
         _calculate_general_highest_world_reached: [account],
         _calculate_general_item_filter: [account],
         _calculate_master_classes_compass_dust_sources: [account],
@@ -114,6 +115,7 @@ def calc_dependencies():
         _calculate_general_alerts: [],
         _calculate_general_character_bonus_talent_levels: [_calculate_w3_armor_sets, _calculate_w5_account_wide_arctis, _calculate_w3_library_max_book_levels],
         _calculate_general_crystal_spawn_chance: [_calculate_w1_stamps],
+        _calculate_general_guild_bonuses: [],
         _calculate_general_highest_world_reached: [],
         _calculate_general_item_filter: [],
         _calculate_master_classes_compass_dust_sources: [_calculate_master_classes_compass_upgrades],

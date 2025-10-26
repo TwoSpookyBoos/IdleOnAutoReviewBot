@@ -9,6 +9,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict
+from models.models_util import get_guild_bonus_advice
 from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
@@ -86,16 +87,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         drop_rate_aw_advice[general].append(chaotic_chizoar_card.getAdvice(optional_ending_note="Increases Clover Shrine effect. See character-specific sections"))
 
     # Guild Bonus - Gold Charm
-    gold_charm_bonus = session_data.account.guild_bonuses['Gold Charm']
-    gold_charm_bonus_value = gold_charm_bonus['Value']
-    drop_rate_aw_advice[general].append(Advice(
-        label=f"Guild Bonus- Gold Charm:"
-              f"<br>+{round(gold_charm_bonus_value, 1):g}/{round(gold_charm_bonus['Max Value'], 1):g}% Drop Rate",
-        picture_class=gold_charm_bonus['Image'],
-        progression=gold_charm_bonus['Level'],
-        goal=gold_charm_bonus['Max Level']
-    ))
-    general_bonus += gold_charm_bonus_value
+    drop_rate_aw_advice[general].append(get_guild_bonus_advice('Gold Charm'))
+    general_bonus += session_data.account.guild_bonuses['Gold Charm']['Value']
 
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below

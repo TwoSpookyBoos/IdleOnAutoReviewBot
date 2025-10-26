@@ -2360,3 +2360,13 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
+
+def _calculate_general_guild_bonuses(account):
+    for bonus_name, bonus in account.guild_bonuses.items():
+        if '{' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
+        if '}' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
+        if ']' in bonus['Description']:
+            if bonus_name == 'Bonus GP for small guilds':
+                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")

@@ -474,7 +474,8 @@ def _parse_general_guild_bonuses(account):
             'Value': lavaFunc(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
             'Max Level': bonus['Max Level'],
             'Max Value': bonus['Max Value'],
-            'Image': bonus['Image']
+            'Image': bonus['Image'],
+            'Description': bonus['Description']
         }
 
 def _parse_general_printer(account):

@@ -73,8 +73,6 @@ def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundR
             result = 1 + (level * x1) / (level + x2)
         case 'bigBase':
             result = x1 + x2 * level
-        case 'special1':
-            result = 100 - (level * x1) / (level + x2)
         case 'pow':
             result = pow(x1, level)
         case _:

@@ -1,4 +1,5 @@
 from consts.consts_autoreview import EmojiType
+from consts.consts_idleon import lavaFunc
 from utils.logging import get_logger
 logger = get_logger(__name__)
 
@@ -1170,25 +1171,25 @@ gem_shop_bundles_dict = {
 }  # As of 2.41
 
 #Guild
+# `GuildBonuses = function ()` - last updated in v2.41
+guild_bonuses_info = ["Guild_Gifts 194 401 +{%_chance_for_an_extra_Guild_Gift_to_be_added_to_your... 700 100 decay 100 0 0 10 40".split(" "), "Stat_Runes 110 395 +{_Total_All_Stats 40 50 decay 50 0 2 20 60".split(" "), "Rucksack 115 329 +{%_Total_Carry_Cap 70 50 decay 50 1 4 20 70".split(" "), "Power_of_Pow 90 265 +{_Weapon_Power 10 50 decay 50 2 5 20 80".split(" "), "REM_Fighting 98 201 +{%_Fight_AFK_gain_rate 10 50 decay 50 3 8 30 90".split(" "), "Make_or_Break 98 137 +{%_Production_Rate_in_Town_Skills 30 50 decay 50 4 10 30 100".split(" "), "Multi_Tool 160 265 +{%_Total_Skill_Efficiency 30 50 decay 50 2 5 20 80".split(" "), "Sleepy_Skiller 167 201 +{%_Skill_AFK_gain_rate 10 50 decay 50 6 8 30 90".split(" "), "Coin_Supercharger 167 137 +{%_Cash_for_each_world_you've_reached 20 20 decay 100 7 5 30 120".split(" "), "Bonus_GP_for_small_guilds 194 335 +}%_GP_earned_if_your_guild_has_]_members_or_less... 200 50 decay 50 0 2 10 10".split(" "), "Gold_Charm 284 395 +{%_Total_Drop_Rate 40 50 decay 50 0 2 20 60".split(" "), "Star_Dazzle 270 329 +{_Star_Talent_Points 120 50 decay 50 10 4 20 70".split(" "), "C2_Card_Spotter 238 265 +{%_Card_Drop_Rate 60 50 decay 50 11 5 20 80".split(" "), "Bestone 232 201 +{%_Stone_Upgrade_Success_chance 16 50 decay 50 12 8 30 90".split(" "), "Skilley_Skillet 232 137 +{%_Skill_EXP_for_all_skills 30 120 decay 200 13 5 40 150".split(" "), "Craps 305 265 +{%_chance_to_get_an_AFK_Reroll 28 50 decay 50 11 5 20 80".split(" "), "Anotha_One 296 201 +{%_chance_for_2x_EXP_when_claiming_AFK 26 50 decay 50 15 8 30 90".split(" "), "Wait_A_Minute 296 137 +{%_Nothing_Yet 1 0 add 0 16 5 20 80".split(" ")]
 guild_bonuses_dict = {
-    'Guild Gifts': {'Image': 'guild-gifts', 'Max Level': 100, 'Max Value': 350, 'funcType': 'decay', 'x1': 700, 'x2': 100},
-    'Stat Runes': {'Image': 'stat-runes', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
-    'Rucksack': {'Image': 'rucksack', 'Max Level': 50, 'Max Value': 35, 'funcType': 'decay', 'x1': 70, 'x2': 50},
-    'Power of Pow': {'Image': 'power-of-pow', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
-    'REM Fighting': {'Image': 'rem-fighting', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
-    'Make or Break': {'Image': 'make-or-break', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
-    'Multi Tool': {'Image': 'multi-tool', 'Max Level': 50, 'Max Value': 15, 'funcType': 'decay', 'x1': 30, 'x2': 50},
-    'Sleepy Skiller': {'Image': 'sleepy-skiller', 'Max Level': 50, 'Max Value': 5, 'funcType': 'decay', 'x1': 10, 'x2': 50},
-    'Coin Supercharger': {'Image': 'coin-supercharger', 'Max Level': 100, 'Max Value': 16.667, 'funcType': 'decay', 'x1': 20, 'x2': 20},
-    'Bonus GP for small guilds': {'Image': 'bonus-gp-for-small-guilds', 'Max Level': 50, 'Max Value': 0, 'funcType': 'special1', 'x1': 200, 'x2': 50},  # This value decreases to a min value of 0
-    'Gold Charm': {'Image': 'gold-charm', 'Max Level': 50, 'Max Value': 20, 'funcType': 'decay', 'x1': 40, 'x2': 50},
-    'Star Dazzle': {'Image': 'star-dazzle', 'Max Level': 50, 'Max Value': 60, 'funcType': 'decay', 'x1': 120, 'x2': 50},
-    'C2 Card Spotter': {'Image': 'c2-card-spotter', 'Max Level': 50, 'Max Value': 30, 'funcType': 'decay', 'x1': 60, 'x2': 50},
-    'Bestone': {'Image': 'bestone', 'Max Level': 50, 'Max Value': 8, 'funcType': 'decay', 'x1': 16, 'x2': 50},
-    'Skilley Skillet': {'Image': 'skilley-skillet', 'Max Level': 200, 'Max Value': 18.75, 'funcType': 'decay', 'x1': 30, 'x2': 120},
-    'Craps': {'Image': 'craps', 'Max Level': 50, 'Max Value': 14, 'funcType': 'decay', 'x1': 28, 'x2': 50},
-    'Anotha One': {'Image': 'anotha-one', 'Max Level': 50, 'Max Value': 13, 'funcType': 'decay', 'x1': 26, 'x2': 50},
-    'Wait A Minute': {'Image': 'wait-a-minute', 'Max Level': 0, 'Max Value': 0, 'funcType': 'add', 'x1': 1, 'x2': 0}
+    bonus[0].replace("_", " "): {
+        'Image': bonus[0].lower().replace("_", "-"),
+        # _: bonus[1],
+        # _: bonus[2],
+        'Description': bonus[3].replace("_", " "),
+        'x1': int(bonus[4]),
+        'x2': int(bonus[5]),
+        'funcType': bonus[6],
+        'Max Level': int(bonus[7]),
+        # _: bonus[8],
+        # _: bonus[9],
+        # _: bonus[10],
+        # _: bonus[11],
+        'Max Value': lavaFunc(bonus[6], int(bonus[7]), int(bonus[4]), int(bonus[5]))
+    }
+    for bonus in guild_bonuses_info
 }
 
 #Family Bonuses
