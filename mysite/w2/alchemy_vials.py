@@ -1,4 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_upgrade_vault_advice
 from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
@@ -155,12 +156,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
             )
         ],
         f"Multi Group A: {session_data.account.alchemy_vials_calcs['mga']:.2f}x": [
-            Advice(
-                label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}: Vial Overtune: +{session_data.account.vault['Upgrades']['Vial Overtune']['Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level']}%",
-                picture_class=session_data.account.vault['Upgrades']['Vial Overtune']['Image'],
-                progression=session_data.account.vault['Upgrades']['Vial Overtune']['Level'],
-                goal=session_data.account.vault['Upgrades']['Vial Overtune']['Max Level']
-            ),
+            get_upgrade_vault_advice('Vial Overtune'),
             Advice(
                 label=f"{{{{ Rift|#rift}}}}: Vial Mastery: +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'] else 0}%",
                 picture_class='vial-mastery',

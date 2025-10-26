@@ -2,8 +2,8 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
-from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
+from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name, vault_stack_types
+from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_w1 import statue_type_list, statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
@@ -17,6 +17,7 @@ from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, kil
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.execute_function_dependency_tree import execute_function_dependency_tree
 from models.models import Advice
+from models.models_util import get_upgrade_vault_advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
@@ -1382,7 +1383,6 @@ def _calculate_caverns_measurements_multis(account):
             account.caverns['Measurements'][measurement_index]['Value'] *= account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']
         except:
             logger.warning(f"Couldn't apply {measurement_details['ScalesWith']} multi to Index{measurement_index}")
-            pass
 
 def _calculate_caverns_studies(account):
     for study_index, study_details in account.caverns['Studies'].items():
@@ -2348,12 +2348,7 @@ def _calculate_w1_statues(account):
             label=f"Level {account.statues['Dragon Warrior Statue']['Level']} Dragon Warrior Statue: {round(dragon_multi, 3):g}x",
             picture_class=account.statues['Dragon Warrior Statue']['Image']
         ),
-        Advice(
-            label=f"{{{{Upgrade Vault |  #upgrade-vault}}}}: Statue Bonanza: {account.vault['Upgrades']['Statue Bonanza']['Description'].replace('<br> <br>', '<br>')}",
-            picture_class=account.vault['Upgrades']['Statue Bonanza']['Image'],
-            progression=account.vault['Upgrades']['Statue Bonanza']['Level'],
-            goal=account.vault['Upgrades']['Statue Bonanza']['Max Level']
-        ),
+        get_upgrade_vault_advice('Statue Bonanza'),
         Advice(
             label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi, 2):g}x"
                   f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi * vault_multi, 2):g}x",

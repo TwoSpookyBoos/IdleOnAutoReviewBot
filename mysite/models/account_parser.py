@@ -6,12 +6,14 @@ from flask import g
 from consts.consts_autoreview import ValueToMulti, items_codes_and_names
 from consts.consts_idleon import lavaFunc, companions_list
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, decode_enemy_name
+    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
+    gem_shop_bundles_dict,
+    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, decode_enemy_name, vault_stack_types,
+    vault_section_indexes, vault_upgrades_list, vault_dont_scale
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
-    compass_titans, compass_path_ordering, compass_medallions, vault_upgrades_list, vault_dont_scale, vault_stack_types, vault_section_indexes, tesseract_upgrades_list, tesseract_tachyon_list
+    compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
@@ -931,7 +933,7 @@ def _parse_w1_upgrade_vault(account):
         clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
         if len(upgrade_values_list) >= 11:
             if upgrade_values_list != '_':
-                secondary_description = f"<br>{upgrade_values_list[10].replace('_', ' ')}"
+                secondary_description = f"{upgrade_values_list[10].replace('_', ' ')}"
             else:
                 secondary_description = ''
         else:
@@ -957,7 +959,7 @@ def _parse_w1_upgrade_vault(account):
                 'Unlock Requirement': int(upgrade_values_list[6]),
                 # 'Placeholder7': upgrade_values_list[7],
                 # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')} {secondary_description}",
                 'Scaling Value': upgrade_index not in vault_dont_scale,
                 'Vault Section': vault_section
             }

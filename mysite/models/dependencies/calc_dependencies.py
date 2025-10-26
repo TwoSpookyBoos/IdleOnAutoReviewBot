@@ -102,7 +102,7 @@ def calc_dependencies():
         _calculate_caverns_jar_collectibles: [],
         _calculate_caverns_majiks: [],
         _calculate_caverns_measurements_base: [_calculate_caverns_majiks],
-        _calculate_caverns_measurements_multis: [],
+        _calculate_caverns_measurements_multis: [_calculate_caverns_measurements_base],
         _calculate_caverns_monument_bonuses: [_calculate_caverns_majiks],
         _calculate_caverns_monuments_bravery: [_calculate_caverns_measurements_base],
         _calculate_caverns_monuments_justice: [],

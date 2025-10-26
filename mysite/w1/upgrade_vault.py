@@ -1,6 +1,7 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import vault_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_upgrade_vault_advice
 from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
@@ -73,19 +74,7 @@ def getVaultUpgradesAdviceGroup():
     upgrades_AdviceDict = {}
 
     #Upgrades
-    upgrades_AdviceDict['Upgrades'] = [
-        Advice(
-            label=(
-                f"{upgrade_name}: {upgrade_details['Description']}"
-                f"<br>Requires {upgrade_details['Unlock Requirement'] - session_data.account.vault['Total Upgrades']} more Upgrades to unlock"
-                if not upgrade_details['Unlocked'] else
-                f"{upgrade_name}: {upgrade_details['Description']}"
-            ),
-            picture_class=upgrade_details['Image'],
-            progression=upgrade_details['Level'],
-            goal=upgrade_details['Max Level'],
-        ) for upgrade_name, upgrade_details in session_data.account.vault['Upgrades'].items()
-    ]
+    upgrades_AdviceDict['Upgrades'] = [get_upgrade_vault_advice(upgrade_name, link_to_section=False) for upgrade_name in session_data.account.vault['Upgrades'].keys()]
     upgrades_AdviceDict['Upgrades'].insert(0, Advice(
         label=f"Total Vault Upgrades: {session_data.account.vault['Total Upgrades']:,}",
         picture_class='upgrade-vault',

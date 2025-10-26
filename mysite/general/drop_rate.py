@@ -9,7 +9,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict
-from models.models_util import get_guild_bonus_advice
+from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice
 from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
@@ -93,28 +93,11 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    vault_mastery_vault_value_max = vault_mastery_vault['Max Value']
     if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
-        drop_rate_aw_advice[general].append(Advice(
-            label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Vault Mastery:"
-                  f"<br>{round(vault_mastery_vault['Total Value'], 1):g}/{round(vault_mastery_vault_value_max, 1):g}x blue highlighted vault bonuses"
-                  f"<br>(increases the value of the Vault upgrade below)",
-            picture_class=vault_mastery_vault['Image'],
-            progression=vault_mastery_vault['Level'],
-            goal=vault_mastery_vault['Max Level']
-        ))
+        drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
     # Upgrade Vault - Drops for Days
-    drops_for_days_vault = session_data.account.vault['Upgrades']['Drops for Days']
-    drops_for_days_vault_value = drops_for_days_vault['Total Value']
-    drops_for_days_vault_level_max = drops_for_days_vault['Max Level']
-    drop_rate_aw_advice[general].append(Advice(
-        label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Drops for Days:"
-              f"<br>+{round(drops_for_days_vault_value, 1):g}/{round(drops_for_days_vault['Max Value'], 1):g}% Drop Rate",
-        picture_class=drops_for_days_vault['Image'],
-        progression=drops_for_days_vault['Level'],
-        goal=drops_for_days_vault_level_max
-    ))
-    general_bonus += drops_for_days_vault_value
+    drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
+    general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
 
     # Companions - Crystal Custard
     has_crystal_custard_companion = session_data.account.companions['Crystal Custard']

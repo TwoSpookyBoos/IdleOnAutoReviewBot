@@ -6,6 +6,7 @@ from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgrou
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
+from models.models_util import get_upgrade_vault_advice
 from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl
@@ -102,13 +103,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     # Upgrade Vault > Beeg Forge
     beeg_forge = session_data.account.vault['Upgrades']['Beeg Forge']
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"{{{{ Vault|#upgrade-vault }}}}: Beeg Forge: {beeg_forge['Description'].split('<')[0]}"
-              f"<br>(Additive with Bribe)",
-        picture_class=beeg_forge['Image'],
-        progression=beeg_forge['Level'],
-        goal=beeg_forge['Max Level']
-    ))
+    cap_Advices['Scaling Sources'].append(get_upgrade_vault_advice("Beeg Forge"))
 
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
