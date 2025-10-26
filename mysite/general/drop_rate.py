@@ -100,7 +100,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    vault_mastery_vault_value_max = ValueToMulti(vault_mastery_vault['Max Level'] * vault_mastery_vault['Value Per Level'])
+    vault_mastery_vault_value_max = vault_mastery_vault['Max Value']
     if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
         drop_rate_aw_advice[general].append(Advice(
             label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Vault Mastery:"
@@ -114,10 +114,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drops_for_days_vault = session_data.account.vault['Upgrades']['Drops for Days']
     drops_for_days_vault_value = drops_for_days_vault['Total Value']
     drops_for_days_vault_level_max = drops_for_days_vault['Max Level']
-    drops_for_days_vault_value_max = vault_mastery_vault_value_max * drops_for_days_vault_level_max * drops_for_days_vault['Value Per Level']
     drop_rate_aw_advice[general].append(Advice(
         label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}- Drops for Days:"
-              f"<br>+{round(drops_for_days_vault_value, 1):g}/{round(drops_for_days_vault_value_max, 1):g}% Drop Rate",
+              f"<br>+{round(drops_for_days_vault_value, 1):g}/{round(drops_for_days_vault['Max Value'], 1):g}% Drop Rate",
         picture_class=drops_for_days_vault['Image'],
         progression=drops_for_days_vault['Level'],
         goal=drops_for_days_vault_level_max

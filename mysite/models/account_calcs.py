@@ -674,24 +674,40 @@ def _calculate_w1_upgrade_vault(account):
             * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
         )
     ]
+    vault_multi_max = [
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery']['Max Level']
+            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
+        ),
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery II']['Max Level']
+            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
+        )
+    ]
     # logger.debug(f"{vault_multi = }")
     for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = (
+        upgrade_scaling_multiplier = vault_multi[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
+        upgrade_scaling_multiplier_max = vault_multi_max[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
+        upgrade_total_value = (
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
-            )
+                * upgrade_scaling_multiplier
+        )
+        upgrade_total_value_max = (
+                account.vault['Upgrades'][upgrade_name]['Max Level']
+                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
+                * upgrade_scaling_multiplier_max
+        )
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = upgrade_total_value
+            account.vault['Upgrades'][upgrade_name]['Max Value'] = upgrade_total_value_max
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.vault['Upgrades'][upgrade_name]['Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
-            )
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(upgrade_total_value)
+            account.vault['Upgrades'][upgrade_name]['Max Value'] = ValueToMulti(upgrade_total_value_max)
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
@@ -709,7 +725,7 @@ def _calculate_w1_upgrade_vault(account):
                     'Target:&', f"Target: {next_stack_target}"
                 )
         account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * upgrade_scaling_multiplier:.2f} per level"
             f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
             f"{upgrade_details['Vault Section']}"
             f")"

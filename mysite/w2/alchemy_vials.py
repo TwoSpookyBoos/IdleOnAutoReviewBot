@@ -140,10 +140,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
     #Player's values
     total = session_data.account.alchemy_vials_calcs['Total Multi']
 
-    max_mga = ValueToMulti(
-        (session_data.account.vault['Upgrades']['Vial Overtune']['Max Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level'])
-        + (2 * max_maxable_vials)
-    )
+    max_mga = session_data.account.vault['Upgrades']['Vial Overtune']['Max Value'] + (0.02 * max_maxable_vials)
     max_mgb = session_data.account.labBonuses['My 1st Chemistry Set']['BaseValue']
     max_total = max_mga * max_mgb
 
