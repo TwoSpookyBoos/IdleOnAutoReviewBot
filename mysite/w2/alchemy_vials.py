@@ -1,11 +1,11 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_upgrade_vault_advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, AdviceType
+from consts.consts_autoreview import break_you_best, build_subgroup_label, AdviceType
 from consts.consts_w2 import max_index_of_vials, max_vial_level, max_maxable_vials, vial_costs
 from consts.progression_tiers import vials_progressionTiers, true_max_tiers
 

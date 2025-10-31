@@ -4,7 +4,7 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import ValueToMulti, items_codes_and_names
-from consts.consts_idleon import lavaFunc, companions_list
+from consts.consts_idleon import lavaFunc, companions_data
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
@@ -169,7 +169,7 @@ def _parse_companions(account):
     account.companions = {}
 
     # Read the player's data to capture all unique Companion IDs
-    simplified_companion_set = set()
+    acquired_companion_ids = set()
     # If the data comes from Toolbox, it'll be a dictionary called companion singular
     raw_companion = account.raw_data.get('companion', None)
     # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
@@ -179,26 +179,30 @@ def _parse_companions(account):
         for companionInfo in raw_companion.get('l', []):
             try:
                 companionID = int(companionInfo.split(',')[0])
-                simplified_companion_set.add(companionID)
+                acquired_companion_ids.add(companionID)
             except:
                 continue
     elif raw_companions is not None:
         account.companions['Companion Data Present'] = True
         for companionID in raw_companions:
-            simplified_companion_set.add(companionID)
+            acquired_companion_ids.add(companionID)
     else:
         account.companions['Companion Data Present'] = False
         logger.debug(f"No companion data present in JSON. Relying only on Switches")
 
     # Match the Companion IDs to their names
-    for c_index, c_name in enumerate(companions_list):
-        account.companions[c_name] = c_index in simplified_companion_set
+    for companion_name, companion_data in companions_data.items():
+        if companion_data['Id'] in acquired_companion_ids:
+            account.companions[companion_name] = companion_data
 
     # Account for the manual entries in the Switches
     try:
-        account.companions['King Doot'] = account.companions['King Doot'] or g.doot
-        account.companions['Rift Slug'] = account.companions['Rift Slug'] or g.riftslug
-        account.companions['Sheepie'] = account.companions['Sheepie'] or g.sheepie
+        if g.doot:
+            account.companions['King Doot'] = companions_data['King Doot']
+        if g.riftslug:
+            account.companions['Rift Slug'] = companions_data['Rift Slug']
+        if g.sheepie:
+            account.companions['Sheepie'] = companions_data['Sheepie']
     except:
         pass
 

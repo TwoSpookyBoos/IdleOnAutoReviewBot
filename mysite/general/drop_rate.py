@@ -10,9 +10,10 @@ from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice
-from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
+from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
 from math import floor, ceil
@@ -95,12 +96,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
     if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
         drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
+
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
     general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
 
     # Companions - Crystal Custard
-    has_crystal_custard_companion = session_data.account.companions['Crystal Custard']
+    has_crystal_custard_companion = has_companion('Crystal Custard')
     crystal_custard_value = 100 if has_crystal_custard_companion else 0
     drop_rate_aw_advice[general].append(Advice(
         label=f"Companions- Crystal Custard:"
@@ -113,7 +115,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     general_bonus += crystal_custard_value
 
     # Companions - Quenchie
-    has_quenchie_companion = session_data.account.companions['Quenchie']
+    has_quenchie_companion = has_companion('Quenchie')
     quenchie_value = 15 if has_quenchie_companion else 0
     drop_rate_aw_advice[general].append(Advice(
         label=f"Companions- Quenchie:"
@@ -230,7 +232,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_2_bonus = 0
 
     # Arcade - Shop Bonuses
-    has_reindeer_companion = session_data.account.companions['Reindeer']
+    has_reindeer_companion = has_companion('Reindeer')
     if not has_reindeer_companion:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"Companions- Reindeer:"
@@ -691,7 +693,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Companions - Mallay
-    has_mallay_companion = session_data.account.companions['Mallay']
+    has_mallay_companion = has_companion('Mallay')
     mallay_multi = 1.3 if has_mallay_companion else 1
     drop_rate_aw_advice[special].append(Advice(
         label=f"Companions- Mallay:"

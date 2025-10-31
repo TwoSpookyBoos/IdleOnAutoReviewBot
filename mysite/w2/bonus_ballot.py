@@ -7,6 +7,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
+from utils.misc.has_companion import has_companion
 
 logger = get_logger(__name__)
 
@@ -83,10 +84,10 @@ def getBallotMultiAdviceGroup():
                 goal=EmojiType.INFINITY.value
             ),
             Advice(
-                label=f"Companions: Mashed Potato: +{5 * session_data.account.companions['Mashed Potato']}/5%"
+                label=f"Companions: Mashed Potato: +{5 * has_companion('Mashed Potato')}/5%"
                       f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
                 picture_class='mashed-potato',
-                progression=int(session_data.account.companions['Mashed Potato']),
+                progression=int(has_companion('Mashed Potato')),
                 goal=1
             )
         ]

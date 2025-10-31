@@ -3,7 +3,7 @@ import copy
 from consts.consts_idleon import lavaFunc
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_upgrade_vault_advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, notateNumber

@@ -1,8 +1,9 @@
 from math import ceil
 
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_convert
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
@@ -133,7 +134,7 @@ def getStylesInfoAdviceGroup(highest_divinity_level: int) -> AdviceGroup:
 
 def getDootChecksAdviceGroups(lowest_divinity_level: int, highest_divinity_level: int):
     doot_Advices = []
-    if not session_data.account.companions['King Doot']:
+    if not has_companion('King Doot'):
         if session_data.account.divinity['Divinities'][2].get('Unlocked', False):
             # If you don't own Doot but do have Arctis unlocked, generate Alert if any char has no divinity link
             for char in session_data.account.all_characters:

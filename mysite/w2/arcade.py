@@ -4,6 +4,7 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
+from utils.misc.has_companion import has_companion
 
 logger = get_logger(__name__)
 
@@ -34,9 +35,9 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
         ) for bonus_name, bonus_details in session_data.account.arcade.items()
     ]
     arcade_Advices['Bonuses'].insert(0, Advice(
-        label=f"Reindeer Companion: {max(1, 2 * session_data.account.companions['Reindeer'])}/2x bonuses{not_present_note}",
+        label=f"Reindeer Companion: {max(1, 2 * has_companion('Reindeer'))}/2x bonuses{not_present_note}",
         picture_class='spirit-reindeer',
-        progression=int(session_data.account.companions['Reindeer']),
+        progression=int(has_companion('Reindeer')),
         goal=1
     ))
 

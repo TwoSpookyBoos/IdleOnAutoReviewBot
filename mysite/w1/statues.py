@@ -2,7 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w1 import statue_type_list, statue_count
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.logging import get_logger
 from flask import g as session_data

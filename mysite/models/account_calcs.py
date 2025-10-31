@@ -20,6 +20,7 @@ from models.models import Advice
 from models.models_util import get_upgrade_vault_advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
 from utils.all_talentsDict import all_talentsDict
 
@@ -36,7 +37,7 @@ def _calculate_caverns_majiks(account):
     }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Name'] == 'Pocket Divinity' and account.companions['King Doot']:
+            if majik_data['Name'] == 'Pocket Divinity' and has_companion('King Doot'):
                 #Replace linked Divinities with 15% all stat
                 account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
                 account.caverns['Majiks'][majik_data['Name']]['Value'] = (
@@ -342,7 +343,7 @@ def _calculate_w2_arcade(account):
     for upgrade_index, upgrade_details in account.arcade.items():
         account.arcade[upgrade_index]['Value'] *= (
             max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
-            * max(1, 2 * account.companions['Reindeer'])
+            * max(1, 2 * has_companion('Reindeer'))
         )
         account.arcade[upgrade_index]['Display'] = (
             f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
@@ -900,7 +901,7 @@ def _calculate_w2_ballot(account):
         + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
-        + (5 * account.companions['Mashed Potato'])
+        + (5 * has_companion('Mashed Potato'))
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
@@ -1224,7 +1225,7 @@ def _calculate_w4_tome_bonuses(account):
 
 
 def _calculate_w5_account_wide_arctis(account):
-    account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
+    account.divinity['AccountWideArctis'] = has_companion('King Doot') or 'Arctis' in account.caverns['PocketDivinityLinks']
 
 def _calculate_w5_divinity_offering_costs(account):
     DivCostAfter3 = safer_get(account.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3)
@@ -2087,11 +2088,11 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'Rift Slug': {
-            'Value': 25 * account.companions['Rift Slug'],
+            'Value': 25 * has_companion('Rift Slug'),
             'Image': 'rift-slug',
             'Label': f"Companion: Rift Slug: "
-                     f"+{25 * account.companions['Rift Slug']}/25",
-            'Progression': int(account.companions['Rift Slug']),
+                     f"+{25 * has_companion('Rift Slug')}/25",
+            'Progression': int(has_companion('Rift Slug')),
             'Goal': 1
         },
         'ES Family': {
