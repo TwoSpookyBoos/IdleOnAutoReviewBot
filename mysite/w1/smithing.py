@@ -72,7 +72,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     #Godshard Ore card
-    cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
+    cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard').getAdvice())
     cap_Advices['Scaling Sources'].append(Advice(
         label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Total Value']:.2f}/57.50%"
               f"<br>Note: Exalting the stamp will take it over the goal listed above",
@@ -109,7 +109,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         for advice in cap_Advices[group_name]:
             mark_advice_completed(advice)
 
-    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
+    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Total Value'])
     groupC = ValueToMulti(bribe_value + beeg_forge['Total Value'])
     groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))
