@@ -458,6 +458,8 @@ cardset_names = [
     "Bosses n Nightmares",
     "Events"
 ]
+
+# `CardStuff` in source. Last updated in v2.41
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -548,7 +550,7 @@ card_raw_data = [
         ["skele", "E12", "15", "+{%_Critical_Chance", "1"],
         ["skele2", "E13", "15", "+{%_Total_Damage", "3"],
         ["Crystal2", "E15", "10", "+{%_EXP_from_monsters", "3"]
-        ],
+    ],
     [
         ["Lustre", "D4", "10", "+{%_Mining_Speed", "5"],
         ["Starfire", "F16", "12", "+{%_Mining_EXP", "8"],
@@ -608,7 +610,7 @@ card_raw_data = [
         ["Crystal3", "G14", "10", "+{px_Line_Width_(Passive)", "2"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"]
-        ],
+    ],
     [
         ["w5a1", "H1", "25", "+{%_Multikill_per_tier", "2"],
         ["w5a2", "H2", "28", "+{%_Defence_from_Equipment", "5"],
@@ -704,7 +706,7 @@ card_raw_data = [
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"]
-        ],
+    ],
     [
         ["ghost", "Y0", "2", "+{%_Monster_EXP_While_Active", "3"],
         ["xmasEvent", "Y1", "1.5", "+{%_Total_Drop_Rate", "3"],
