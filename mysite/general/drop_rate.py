@@ -9,7 +9,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict
-from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice
+from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
@@ -25,10 +25,10 @@ drop_rate_shiny_base = 1
 infinite_star_sign_shiny_base = 2
 
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
-    missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''
-    missing_companion_data = not session_data.account.companions['Companion Data Present']
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
-    missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
+    companion_data_missing = not session_data.account.companions['Companion Data Present']
+    missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!' if companion_data_missing else ''
+    bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if bundle_data_missing else ''
     passive_drop_rate_cards = [
         'Domeo Magmus',
         'Ancient Golem',
@@ -102,29 +102,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
 
     # Companions - Crystal Custard
-    has_crystal_custard_companion = has_companion('Crystal Custard')
-    crystal_custard_value = 100 if has_crystal_custard_companion else 0
-    drop_rate_aw_advice[general].append(Advice(
-        label=f"Companions- Crystal Custard:"
-              f"<br>+{crystal_custard_value}/100% Drop Rate"
-              f"{missing_companion_data_txt}",
-        picture_class='crystal-custard',
-        progression=int(has_crystal_custard_companion) if not missing_companion_data else 'IDK',
-        goal=1
-    ))
+    crystal_custard_value, crystal_custard_advice = get_companion_advice('Crystal Custard')
+    drop_rate_aw_advice[general].append(crystal_custard_advice)
     general_bonus += crystal_custard_value
 
     # Companions - Quenchie
-    has_quenchie_companion = has_companion('Quenchie')
-    quenchie_value = 15 if has_quenchie_companion else 0
-    drop_rate_aw_advice[general].append(Advice(
-        label=f"Companions- Quenchie:"
-              f"<br>+{quenchie_value}/15% Drop Rate"
-              f"{missing_companion_data_txt}",
-        picture_class='quenchie',
-        progression=int(has_quenchie_companion) if not missing_companion_data else 'IDK',
-        goal=1
-    ))
+    quenchie_value, quenchie_advice = get_companion_advice('Quenchie')
+    drop_rate_aw_advice[general].append(quenchie_advice)
     general_bonus += quenchie_value
 
     # Gem Shop - Deathbringer Pack
@@ -135,7 +119,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
               f"<br>+{db_pack_value}/200% Drop Rate"
               f"{missing_bundle_data_txt}",
         picture_class='gem',
-        progression=int(has_db_pack) if not missing_bundle_data else 'IDK',
+        progression=int(has_db_pack) if not bundle_data_missing else 'IDK',
         goal=1
     ))
     general_bonus += db_pack_value
@@ -232,17 +216,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_2_bonus = 0
 
     # Arcade - Shop Bonuses
-    has_reindeer_companion = has_companion('Reindeer')
+    has_reindeer_companion = has_companion('Spirit Reindeer')
     if not has_reindeer_companion:
-        drop_rate_aw_advice[w2].append(Advice(
-            label=f"Companions- Reindeer:"
-                  f"<br>{2 if has_reindeer_companion else 1}/2x Arcade Bonus MULTI"
-                  f"<br>Note: Increases the Arcade Bonus value below"
-                  f"{missing_companion_data_txt}",
-            picture_class='spirit-reindeer',
-            progression=int(has_reindeer_companion) if not missing_companion_data else 'IDK',
-            goal=1
-        ))
+        _, reindeer_advice = get_companion_advice('Spirit Reindeer')
+        drop_rate_aw_advice[w2].append(reindeer_advice)
 
     drop_rate_arcade = session_data.account.arcade[27]
     drop_rate_arcade_value = drop_rate_arcade['Value']
@@ -666,7 +643,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
               f"<br>{island_explorer_multi}/1.2x Drop Rate MULTI"
               f"{missing_bundle_data_txt}",
         picture_class='gem',
-        progression=int(has_island_explorer_pack) if not missing_bundle_data else 'IDK',
+        progression=int(has_island_explorer_pack) if not bundle_data_missing else 'IDK',
         goal=1
     ))
 
@@ -693,16 +670,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Companions - Mallay
-    has_mallay_companion = has_companion('Mallay')
-    mallay_multi = 1.3 if has_mallay_companion else 1
-    drop_rate_aw_advice[special].append(Advice(
-        label=f"Companions- Mallay:"
-              f"<br>{mallay_multi}/1.3x Drop Rate MULTI"
-              f"{missing_companion_data_txt}",
-        picture_class='mallay',
-        progression=int(has_mallay_companion) if not missing_companion_data else 'IDK',
-        goal=1
-    ))
+    mallay_multi, mallay_advice = get_companion_advice('Mallay')
+    drop_rate_aw_advice[special].append(mallay_advice)
 
     # Still need to pop to keep the order, even if we don't change the key/label
     drop_rate_aw_advice[special] = drop_rate_aw_advice.pop(special)

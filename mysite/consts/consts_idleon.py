@@ -267,8 +267,9 @@ companions_info = [
 companions_data = {
     monster_data[companion[0]]['Name']: {
         'Id': index,
+        'Image': '-'.join(monster_data[companion[0]]['Name'].lower().split(' ')),
         'Code': companion[0],
-        'Description': companion[1].replace('_', ' '),
+        'Description': companion[1].replace('_', ' ').replace('{', '+'),
         'Value': float(companion[2]),
         # Placeholder: companion[3],
         # Placeholder: companion[4],

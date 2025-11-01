@@ -194,6 +194,10 @@ def _parse_companions(account):
     for companion_name, companion_data in companions_data.items():
         if companion_data['Id'] in acquired_companion_ids:
             account.companions[companion_name] = companion_data
+            if companion_name == 'Biggole Mole':
+                biggole_mole_max_days = 100
+                biggole_mole_days = min(biggole_mole_max_days, safer_get(account.raw_optlacc_dict, 354, 0))
+                account.companions[companion_name]['Description'] += f" ({biggole_mole_days}/{biggole_mole_max_days} days)"
 
     # Account for the manual entries in the Switches
     try:

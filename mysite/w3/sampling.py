@@ -2,6 +2,7 @@ import math
 from flask import g as session_data
 
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_companion_advice
 from utils.data_formatting import mark_advice_completed, safer_get
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
@@ -385,14 +386,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=supreme_wiring_max_days
     ))
 
-    po_Advices[aw_label].append(Advice(
-        label=f"Companions: Biggole Mole: "
-              f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
-              f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
-        picture_class='biggole-mole',
-        progression=biggole_mole_days,
-        goal=biggole_mole_max_days
-    ))
+    _, biggole_mole_advice = get_companion_advice('Biggole Mole')
+    po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(Advice(
         label=f"{{{{Compass|#the-compass}}}}: {mop['Path Name']}-{mop['Path Ordering']}: Moon of Print: "

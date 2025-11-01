@@ -23,7 +23,7 @@ def parse_dependencies():
     return {
         _parse_caverns: [_parse_general],
         _parse_characters: [],
-        _parse_companions: [],
+        _parse_companions: [_parse_general],
         _parse_general: [_parse_characters],
         _parse_master_classes: [_parse_general],
         _parse_switches: [],
