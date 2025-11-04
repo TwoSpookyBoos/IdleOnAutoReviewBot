@@ -1754,7 +1754,6 @@ def _calculate_caverns_gambit(account):
 
 
 def _calculate_w6_sneaking_gemstones(account):
-    #Runs under wave3 since it relies on talent levels
     account.sneaking['Highest Current Generational Gemstones'] = max([
         (char.total_bonus_talent_levels if char.current_preset_talents.get("432", 0) > 0 else 0) + char.current_preset_talents.get("432", 0)
         for char in account.all_characters if 'Wind Walker' in char.all_classes],
