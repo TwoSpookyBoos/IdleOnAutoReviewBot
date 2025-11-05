@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
 from flask import g as session_data

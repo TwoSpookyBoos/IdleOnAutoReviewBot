@@ -6,11 +6,13 @@ from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
 from consts.consts_w4 import cooking_close_enough
+from models.models_util import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -211,8 +213,8 @@ def getCardsAdviceList() -> list[Advice]:
         "Crystal Spawn Chance": ["Demon Genie", "Poop"],
         "Drop Chance": ["Emperor", "Minichief Spirit", "King Doot", "Mister Brightside", "Crystal Carrot", "Bop Box"],
         "Skilling Goodness": ["Chaotic Troll", "Amarok", "Mama Troll", "Bunny"],
-        "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Fly"],
-        "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
+        "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Flies"],
+        "Solid Passives": ["Godshard", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
     card_advice_limit = 10
@@ -611,12 +613,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
                 completed=box_details['Level'] >= box_details['Max Level']
             ) for box_name, box_details in best_bubo.po_boxes_invested.items() if box_name in po_box_names
         ]
-        bubo_advice[po].insert(0, Advice(
-            label=f"{{{{ Vault|#upgrade-vault }}}}: Daily Mailbox",
-            picture_class=session_data.account.vault['Upgrades']['Daily Mailbox']['Image'],
-            progression=session_data.account.vault['Upgrades']['Daily Mailbox']['Level'],
-            goal=session_data.account.vault['Upgrades']['Daily Mailbox']['Max Level']
-        ))
+        bubo_advice[po].insert(0, get_upgrade_vault_advice('Daily Mailbox'))
 
         #Alchemy and Talents
         bad_talent_numbers = [450, 480, 527]  #Energy Bolt, Crazy Concoctions, Tampered Injection
@@ -630,10 +627,10 @@ def getBuboAdviceGroup() -> AdviceGroup:
             5: "fifth",
             6: "sixth"
         }
-        cookin_roadkill_equipped = session_data.account.companions['Sheepie'] or 'b7' in best_bubo.big_alch_bubbles
+        cookin_roadkill_equipped = has_companion('Sheepie') or 'b7' in best_bubo.big_alch_bubbles
         bubo_advice[alch_talents].append(Advice(
             label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill']['Level']} Cookin Roadkill big bubble equipped "
-                  f"{' (Thanks Sheepie!)' if session_data.account.companions['Sheepie'] else ''}"
+                  f"{' (Thanks Sheepie!)' if has_companion('Sheepie') else ''}"
                   f"<br>See {{{{ Bubbles|#bubbles}}}} for recommended levels",
             picture_class='cookin-roadkill',
             progression=int(cookin_roadkill_equipped),

@@ -2,7 +2,8 @@ import copy
 
 from consts.consts_idleon import lavaFunc
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from models.models_util import get_upgrade_vault_advice
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, notateNumber
@@ -697,12 +698,7 @@ def getPetDamageAdviceGroup():
                 progression=pet_damage_arcade_bonus['Level'],
                 goal=arcade_max_level
             ),
-            Advice(
-                label=f'{{{{ Vault Upgrade|#upgrade-vault}}}} - Pet Punchies: +{pet_punchies_vault_upgrade_bonus:.2f}%',
-                picture_class=pet_punchies_vault_upgrade['Image'],
-                progression=pet_punchies_vault_upgrade['Level'],
-                goal=pet_punchies_vault_upgrade['Max Level']
-            )
+            get_upgrade_vault_advice('Pet Punchies')
         ]
     }
     for subgroup in pet_damage_advices:

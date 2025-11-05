@@ -5,7 +5,7 @@ from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from utils.text_formatting import pl

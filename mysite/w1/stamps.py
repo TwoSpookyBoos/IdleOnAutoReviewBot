@@ -1,6 +1,7 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from models.models_util import get_guild_bonus_advice
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -112,12 +113,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
         goal=1
     ))
-    capacity_Advices['Account Wide'].append(Advice(
-        label='Guild Bonus: Rucksack',
-        picture_class='rucksack',
-        progression=f"{session_data.account.guild_bonuses['Rucksack']['Level'] if session_data.account.guild_bonuses['Rucksack']['Level'] > 0 else 'IDK'}",
-        goal=50
-    ))
+    capacity_Advices['Account Wide'].append(get_guild_bonus_advice('Rucksack'))
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     capacity_Advices['Account Wide'].append(Advice(

@@ -7,7 +7,7 @@ from consts.consts_w4 import cooking_close_enough
 from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
 
 def getBubbleExclusions():

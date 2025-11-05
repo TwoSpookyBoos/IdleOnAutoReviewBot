@@ -6,7 +6,8 @@ from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgrou
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from models.models_util import get_upgrade_vault_advice
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -71,7 +72,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     #Godshard Ore card
-    cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
+    cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard').getAdvice())
     cap_Advices['Scaling Sources'].append(Advice(
         label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Total Value']:.2f}/57.50%"
               f"<br>Note: Exalting the stamp will take it over the goal listed above",
@@ -102,19 +103,13 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     # Upgrade Vault > Beeg Forge
     beeg_forge = session_data.account.vault['Upgrades']['Beeg Forge']
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"{{{{ Vault|#upgrade-vault }}}}: Beeg Forge: {beeg_forge['Description'].split('<')[0]}"
-              f"<br>(Additive with Bribe)",
-        picture_class=beeg_forge['Image'],
-        progression=beeg_forge['Level'],
-        goal=beeg_forge['Max Level']
-    ))
+    cap_Advices['Scaling Sources'].append(get_upgrade_vault_advice("Beeg Forge"))
 
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
             mark_advice_completed(advice)
 
-    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
+    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Total Value'])
     groupC = ValueToMulti(bribe_value + beeg_forge['Total Value'])
     groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))

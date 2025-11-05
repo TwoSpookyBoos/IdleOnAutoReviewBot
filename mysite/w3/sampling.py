@@ -2,7 +2,9 @@ import math
 from flask import g as session_data
 
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_companion_advice
 from utils.data_formatting import mark_advice_completed, safer_get
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
@@ -253,7 +255,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     biggole_mole_max_days = 100
     biggole_mole_days = min(biggole_mole_max_days, safer_get(session_data.account.raw_optlacc_dict, 354, 0))
-    biggole_mole_value = biggole_mole_days * 1 * session_data.account.companions['Biggole Mole']
+    biggole_mole_value = biggole_mole_days * 1 * has_companion('Biggole Mole')
     biggole_mole_multi = ValueToMulti(biggole_mole_value)
 
     mop = session_data.account.compass['Upgrades']['Moon of Print']
@@ -307,10 +309,10 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][11]['Value'])
     ballot_multi_active = max(1, ballot_multi * ballot_active)
 
-    lab_multi_aw = 2 if session_data.account.companions['King Doot'] else 1
+    lab_multi_aw = 2 if has_companion('King Doot') else 1
     lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
 
-    harriep_multi_aw = 3 if session_data.account.companions['King Doot'] else 1
+    harriep_multi_aw = 3 if has_companion('King Doot') else 1
     harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
 
     aw_multi = (
@@ -327,21 +329,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     }
 
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
-    po_Advices[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
-        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '2x if connected to Lab/Arctis'}",
+    po_Advices[f"{cs_label if not has_companion('King Doot') else aw_label}"].append(Advice(
+        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if has_companion('King Doot') else '2x if connected to Lab/Arctis'}",
         picture_class='wired-in',
-        progression=lab_multi_aw if session_data.account.companions['King Doot'] else '',
+        progression=lab_multi_aw if has_companion('King Doot') else '',
         goal=2,
         unit='x',
-        completed=session_data.account.companions['King Doot']
+        completed=has_companion('King Doot')
     ))
-    po_Advices[f"{cs_label if not session_data.account.companions['King Doot'] else aw_label}"].append(Advice(
-        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.companions['King Doot'] else '3x if linked'}",
+    po_Advices[f"{cs_label if not has_companion('King Doot') else aw_label}"].append(Advice(
+        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if has_companion('King Doot') else '3x if linked'}",
         picture_class='harriep',
-        progression=harriep_multi_aw if session_data.account.companions['King Doot'] else '',
+        progression=harriep_multi_aw if has_companion('King Doot') else '',
         goal=3,
         unit='x',
-        completed=session_data.account.companions['King Doot']
+        completed=has_companion('King Doot')
     ))
 
     # Account Wide
@@ -384,14 +386,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=supreme_wiring_max_days
     ))
 
-    po_Advices[aw_label].append(Advice(
-        label=f"Companions: Biggole Mole: "
-              f"<br>{biggole_mole_multi:.2f}x ({biggole_mole_days}/{biggole_mole_max_days} days)"
-              f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
-        picture_class='biggole-mole',
-        progression=biggole_mole_days,
-        goal=biggole_mole_max_days
-    ))
+    _, biggole_mole_advice = get_companion_advice('Biggole Mole')
+    po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(Advice(
         label=f"{{{{Compass|#the-compass}}}}: {mop['Path Name']}-{mop['Path Ordering']}: Moon of Print: "
@@ -467,7 +463,7 @@ def getProgressionTiersAdviceGroup():
         #    Check if player's best sample of each material is less than tierRequirement
         #        Add failed requirements to failed_materials_dict
         for materialName, materialNumber in tierRequirements['Materials'].items():
-            finalMaterialNumber = materialNumber if session_data.account.companions['King Doot'] and tier_number >= 3 else materialNumber * tierRequirements[
+            finalMaterialNumber = materialNumber if has_companion('King Doot') and tier_number >= 3 else materialNumber * tierRequirements[
                 'NonDootDiscount']
             # logger.debug(f"Comparing {float(max(all_samples.get(materialName, [0])))} to {finalMaterialNumber}")
             try:
