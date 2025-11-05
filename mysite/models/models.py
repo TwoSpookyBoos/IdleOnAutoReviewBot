@@ -1423,25 +1423,19 @@ class Card:
 
         return (self.coefficient * tier_coefficient**2) + 1
 
-    def getCurrentValue(self, optional_character: Character=None):
+    def getCardDoublerMultiplier(self, optional_character: Character=None):
         card_doubler = 1
         if optional_character and optional_character.equipped_card_doublers and self.codename in optional_character.equipped_cards_codenames:
             equipped_slot = optional_character.equipped_cards_codenames.index(self.codename)
-            if equipped_slot == 0 and "Omega Nanochip" in optional_character.equipped_card_doublers:
+            if (equipped_slot == 0 and "Omega Nanochip" in optional_character.equipped_card_doublers) or (equipped_slot == 7 and "Omega Motherboard" in optional_character.equipped_card_doublers):
                 card_doubler = 2
-            elif equipped_slot == 7 and "Omega Motherboard" in optional_character.equipped_card_doublers:
-                card_doubler = 2 
-        return self.level * self.value_per_level * card_doubler
+        return card_doubler
+
+    def getCurrentValue(self, optional_character: Character=None):
+        return self.level * self.value_per_level * self.getCardDoublerMultiplier(optional_character)
 
     def getMaxValue(self, optional_character: Character=None):
-        card_doubler = 1
-        if optional_character and optional_character.equipped_card_doublers and self.codename in optional_character.equipped_cards_codenames:
-            equipped_slot = optional_character.equipped_cards_codenames.index(self.codename)
-            if equipped_slot == 0 and "Omega Nanochip" in optional_character.equipped_card_doublers:
-                card_doubler = 2
-            elif equipped_slot == 7 and "Omega Motherboard" in optional_character.equipped_card_doublers:
-                card_doubler = 2 
-        return cards_max_level * self.value_per_level * card_doubler
+        return cards_max_level * self.value_per_level * self.getCardDoublerMultiplier(optional_character)
 
     def getFormattedXY(self, optional_character: Character=None):
         result = (
