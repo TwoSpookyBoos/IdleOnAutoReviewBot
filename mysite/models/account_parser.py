@@ -50,7 +50,6 @@ from consts.consts_w6 import (
     summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
 )
-from models.execute_function_dependency_tree import execute_function_dependency_tree
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -147,8 +146,21 @@ def _all_worn_items(account) -> Assets:
     return Assets(stuff_worn)
 
 def parse_account(account, run_type):
-    from models.dependencies.parse_dependencies import parse_dependencies, parse_args
-    execute_function_dependency_tree(parse_args(account, run_type), parse_dependencies())
+    _parse_wave_1(account, run_type)
+
+def _parse_wave_1(account, run_type):
+    _parse_switches(account)
+    _parse_companions(account)
+    _parse_characters(account, run_type)
+    _parse_general(account)
+    _parse_master_classes(account)
+    _parse_w1(account)
+    _parse_w2(account)
+    _parse_w3(account)
+    _parse_w4(account)
+    _parse_w5(account)
+    _parse_caverns(account)
+    _parse_w6(account)
 
 def _parse_switches(account):
     # AutoLoot
