@@ -2,8 +2,9 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name, vault_stack_types
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
+from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import statue_type_list, statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never

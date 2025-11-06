@@ -213,8 +213,8 @@ def getCardsAdviceList() -> list[Advice]:
         "Crystal Spawn Chance": ["Demon Genie", "Poop"],
         "Drop Chance": ["Emperor", "Minichief Spirit", "King Doot", "Mister Brightside", "Crystal Carrot", "Bop Box"],
         "Skilling Goodness": ["Chaotic Troll", "Amarok", "Mama Troll", "Bunny"],
-        "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Flies"],
-        "Solid Passives": ["Godshard", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
+        "Combat Gains": ["Chaotic Amarok", "Boop", "Woodlin Spirit", "Suggma", "Clammie", "Demented Spiritlord", "Moonmoon", "Fly"],
+        "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
     card_advice_limit = 10
