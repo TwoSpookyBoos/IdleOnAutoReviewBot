@@ -1,7 +1,5 @@
 from collections import defaultdict
-
 from flask import g as session_data
-
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
@@ -12,15 +10,29 @@ from models.models import AdviceGroup, Advice, AdviceSection
 from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
+from utils.logging import get_logger
 
+logger = get_logger(__name__)
+
+chilled_yarn_multi = [1, 2, 3, 4, 5]
+
+def get_max_chilled_yarn_multi():
+    return max(chilled_yarn_multi)
+
+def get_chilled_yarn_multi(artifact_level: int) -> int:
+    # TODO: Ideally, sailing['Artifacts'] would know its own value and not need calculation here
+    try:
+        return chilled_yarn_multi[artifact_level]
+    except:
+        logger.error(f"Failed to calculate Chilled Yarn level of {artifact_level}. Returning max value of {max(chilled_yarn_multi)}")
+        return max(chilled_yarn_multi)
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group A = several
     peapod_values = [0, 25, 50, 100]
-    chilled_yarn_multi = [1, 2, 3, 4, 5]
     player_peapod_value = (
-        peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
-        * chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]
+            peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
+            * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
     )
     willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
 
@@ -108,14 +120,14 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     ))
     speed_Advice[mga_label].append(Advice(
         label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
-              f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * chilled_yarn_multi[-1]}%",
+              f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * get_max_chilled_yarn_multi()}%",
         picture_class='pea-pod',
         progression=session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'],
         goal=max_sigil_level
     ))
     speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Artifact|#sailing}}}}: Chilled Yarn: {chilled_yarn_multi[session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']]}"
-              f"/{chilled_yarn_multi[-1]}x"
+        label=f"{{{{ Artifact|#sailing}}}}: Chilled Yarn: {get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])}"
+              f"/{get_max_chilled_yarn_multi()}x"
               f"<br>(Already applied to Pea Pod Sigil above)",
         picture_class='chilled-yarn',
         progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
