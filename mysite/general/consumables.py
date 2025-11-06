@@ -2,6 +2,7 @@ from enum import IntEnum
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import inventory_bags_dict, storage_chests_dict, current_max_usable_inventory_slots
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
+from models.models_util import get_upgrade_vault_advice
 from utils.data_formatting import safe_loads, mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -457,13 +458,8 @@ def parseStorageChests():
                     ))
         elif source == 'Vault':
             for upgrade_name, upgrade_slots in details.items():
-                if session_data.account.vault['Upgrades'][upgrade_name]['Level'] < upgrade_slots:
-                    advices['Other Bonuses'].append(Advice(
-                        label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}: {upgrade_name}: {upgrade_slots} total slots",
-                        picture_class=session_data.account.vault['Upgrades'][upgrade_name]['Image'],
-                        progression=session_data.account.vault['Upgrades'][upgrade_name]['Level'],
-                        goal=session_data.account.vault['Upgrades'][upgrade_name]['Max Level']
-                    ))
+                if session_data.account.vault['Upgrades'][upgrade_name]['Total Value'] < session_data.account.vault['Upgrades'][upgrade_name]['Max Value']:
+                    advices['Other Bonuses'].append(get_upgrade_vault_advice(upgrade_name))
         elif source == 'Construction Buildings':
             for building_name, building_slots in details.items():
                 if session_data.account.construction_buildings[building_name]['Level'] < session_data.account.construction_buildings[building_name]['MaxLevel']:

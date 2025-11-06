@@ -1,6 +1,7 @@
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_companion_advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -21,10 +22,8 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
         ) for currency_name, currency_amount in session_data.account.arcade_currency.items()
     ]
 
-    comp_present = session_data.account.companions['Companion Data Present']
-    not_present_note = '<br>Note: Could be inaccurate: Companion data not found!' if not comp_present else ''
-
-    arcade_Advices['Bonuses'] = [
+    _, reindeer_advice = get_companion_advice('Spirit Reindeer')
+    arcade_Advices['Bonuses'] = [reindeer_advice] + [
         Advice(
             label=f"Bonus {bonus_name}: {bonus_details['Display']}",
             picture_class=bonus_details['Image'],
@@ -33,12 +32,6 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
             resource=bonus_details['Material'],
         ) for bonus_name, bonus_details in session_data.account.arcade.items()
     ]
-    arcade_Advices['Bonuses'].insert(0, Advice(
-        label=f"Reindeer Companion: {max(1, 2 * session_data.account.companions['Reindeer'])}/2x bonuses{not_present_note}",
-        picture_class='spirit-reindeer',
-        progression=int(session_data.account.companions['Reindeer']),
-        goal=1
-    ))
 
     for subgroup in arcade_Advices:
         for advice in arcade_Advices[subgroup]:

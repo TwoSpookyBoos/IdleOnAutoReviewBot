@@ -4,15 +4,18 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import ValueToMulti, items_codes_and_names
-from consts.consts_idleon import lavaFunc, companions_list
+from consts.consts_idleon import lavaFunc, companions_data
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict, gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, decode_enemy_name
+    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
+    gem_shop_bundles_dict,
+    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, vault_stack_types,
+    vault_section_indexes, vault_upgrades_list, vault_dont_scale
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
-    compass_titans, compass_path_ordering, compass_medallions, vault_upgrades_list, vault_dont_scale, vault_stack_types, vault_section_indexes, tesseract_upgrades_list, tesseract_tachyon_list
+    compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
+from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
 )
@@ -72,9 +75,9 @@ def _make_cards(account):
             if card_info[0] == 'Blank':
                 continue  #Skip the blank placeholders
             # ["mushG", "A0", "5", "+{_Base_HP", "12"],
-            enemy_decoded_name = decode_enemy_name(card_info[0])
+            enemy_decoded_name = decode_enemy_name(card_info[0], card=True)
             if enemy_decoded_name.startswith('Unknown'):
-                unknown_cards.append(card_info[0])
+                unknown_cards.append(card_info)
             parsed_card_data[enemy_decoded_name] = {
                 'Card Name': card_info[0],
                 'Enemy Name': enemy_decoded_name,
@@ -83,6 +86,9 @@ def _make_cards(account):
                 'Value per Level': safer_convert(card_info[4], 0.0),
                 'Set Name': cardset_name
             }
+
+    if unknown_cards:
+        logger.error(f"Unknown Card name(s) found: {unknown_cards}")
 
     cards = [
         Card(
@@ -98,8 +104,11 @@ def _make_cards(account):
 
     for character in g.account.all_characters:
         for equipped_card_codename in character.equipped_cards_codenames:
-            equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
-            character.equipped_cards.append(equipped_card)
+            try:
+                equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
+                character.equipped_cards.append(equipped_card)
+            except:
+                logger.warning(f"Unknown equipped_card_codename: {equipped_card_codename}. Skipping")
     # cards = [
     #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
     #     for cardset, cards in card_data.items()
@@ -109,8 +118,6 @@ def _make_cards(account):
     # unknown_cards = [
     #     codename for codename in card_counts if not any(codename in items for items in card_data.values())
     # ]
-    if unknown_cards:
-        logger.warning(f"Unknown Card name(s) found: {unknown_cards}")
 
     return cards
 
@@ -148,9 +155,9 @@ def parse_account(account, run_type):
 
 def _parse_wave_1(account, run_type):
     _parse_switches(account)
-    _parse_companions(account)
     _parse_characters(account, run_type)
     _parse_general(account)
+    _parse_companions(account)
     _parse_master_classes(account)
     _parse_w1(account)
     _parse_w2(account)
@@ -179,7 +186,7 @@ def _parse_companions(account):
     account.companions = {}
 
     # Read the player's data to capture all unique Companion IDs
-    simplified_companion_set = set()
+    acquired_companion_ids = set()
     # If the data comes from Toolbox, it'll be a dictionary called companion singular
     raw_companion = account.raw_data.get('companion', None)
     # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
@@ -189,26 +196,34 @@ def _parse_companions(account):
         for companionInfo in raw_companion.get('l', []):
             try:
                 companionID = int(companionInfo.split(',')[0])
-                simplified_companion_set.add(companionID)
+                acquired_companion_ids.add(companionID)
             except:
                 continue
     elif raw_companions is not None:
         account.companions['Companion Data Present'] = True
         for companionID in raw_companions:
-            simplified_companion_set.add(companionID)
+            acquired_companion_ids.add(companionID)
     else:
         account.companions['Companion Data Present'] = False
         logger.debug(f"No companion data present in JSON. Relying only on Switches")
 
     # Match the Companion IDs to their names
-    for c_index, c_name in enumerate(companions_list):
-        account.companions[c_name] = c_index in simplified_companion_set
+    for companion_name, companion_data in companions_data.items():
+        if companion_data['Id'] in acquired_companion_ids:
+            account.companions[companion_name] = companion_data
+            if companion_name == 'Biggole Mole':
+                biggole_mole_max_days = 100
+                biggole_mole_days = min(biggole_mole_max_days, safer_get(account.raw_optlacc_dict, 354, 0))
+                account.companions[companion_name]['Description'] += f" ({biggole_mole_days}/{biggole_mole_max_days} days)"
 
     # Account for the manual entries in the Switches
     try:
-        account.companions['King Doot'] = account.companions['King Doot'] or g.doot
-        account.companions['Rift Slug'] = account.companions['Rift Slug'] or g.riftslug
-        account.companions['Sheepie'] = account.companions['Sheepie'] or g.sheepie
+        if g.doot:
+            account.companions['King Doot'] = companions_data['King Doot']
+        if g.riftslug:
+            account.companions['Rift Slug'] = companions_data['Rift Slug']
+        if g.sheepie:
+            account.companions['Sheepie'] = companions_data['Sheepie']
     except:
         pass
 
@@ -486,7 +501,8 @@ def _parse_general_guild_bonuses(account):
             'Value': lavaFunc(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
             'Max Level': bonus['Max Level'],
             'Max Value': bonus['Max Value'],
-            'Image': bonus['Image']
+            'Image': bonus['Image'],
+            'Description': bonus['Description']
         }
 
 def _parse_general_printer(account):
@@ -847,7 +863,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                 'Image': known_extras[raw_enemy_name][1],
             }
         else:
-            decoded_name = decode_enemy_name(raw_enemy_name)
+            decoded_name = decode_enemy_name(raw_enemy_name, card=True)
             account.compass['Medallions'][raw_enemy_name] = {
                 'Obtained': raw_enemy_name in raw_medallions,
                 'Enemy Name': decoded_name,
@@ -942,7 +958,7 @@ def _parse_w1_upgrade_vault(account):
         clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
         if len(upgrade_values_list) >= 11:
             if upgrade_values_list != '_':
-                secondary_description = f"<br>{upgrade_values_list[10].replace('_', ' ')}"
+                secondary_description = f"{upgrade_values_list[10].replace('_', ' ')}"
             else:
                 secondary_description = ''
         else:
@@ -968,7 +984,7 @@ def _parse_w1_upgrade_vault(account):
                 'Unlock Requirement': int(upgrade_values_list[6]),
                 # 'Placeholder7': upgrade_values_list[7],
                 # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
+                'Description': f"{upgrade_values_list[9].replace('_', ' ')} {secondary_description}",
                 'Scaling Value': upgrade_index not in vault_dont_scale,
                 'Vault Section': vault_section
             }
@@ -1131,8 +1147,11 @@ def _parse_w1_statues(account):
         try:
             char_statues = safe_loads(account.raw_data.get(f"StatueLevels_{char.character_index}"))
             for statueIndex, statueDetails in enumerate(char_statues):
-                if statueDetails[0] > statue_levels[statueIndex]:
-                    statue_levels[statueIndex] = statueDetails[0]
+                try:
+                    if statueDetails[0] > statue_levels[statueIndex]:
+                        statue_levels[statueIndex] = statueDetails[0]
+                except IndexError:
+                    logger.warning(f"statue_levels list does not contain index {statueIndex}, meaning consts_w1.statues_dict is missing a statue!")
         except Exception as e:
             logger.warning(f"Per-Character statue level Parse error for Character{char.character_index}: {e}. Skipping them.")
             continue

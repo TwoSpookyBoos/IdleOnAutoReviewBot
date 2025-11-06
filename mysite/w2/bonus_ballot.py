@@ -4,6 +4,7 @@ import time
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_companion_advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -50,6 +51,7 @@ def getBallotMultiAdviceGroup():
     voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
+    _, mashed_potato_advice = get_companion_advice('Mashed Potato')
     multis_advice = {
         f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
             Advice(
@@ -82,13 +84,7 @@ def getBallotMultiAdviceGroup():
                 progression=session_data.account.summoning['Battles']['Endless'],
                 goal=EmojiType.INFINITY.value
             ),
-            Advice(
-                label=f"Companions: Mashed Potato: +{5 * session_data.account.companions['Mashed Potato']}/5%"
-                      f"{'<br>Note: Could be inaccurate: Companion data not found!' if not session_data.account.companions['Companion Data Present'] else ''}",
-                picture_class='mashed-potato',
-                progression=int(session_data.account.companions['Mashed Potato']),
-                goal=1
-            )
+            mashed_potato_advice
         ]
     }
 

@@ -7,6 +7,7 @@ dependencies = [
     "babel==2.17.0",
     "coloredlogs==15.0.1",
     "flask==3.1.1",
+    "json5==0.12.1",
     "libsass==0.23.0",
     "pytest==8.3.5",
     "pyyaml==6.0.2",

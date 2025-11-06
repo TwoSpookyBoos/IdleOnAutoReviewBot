@@ -11,7 +11,7 @@ from consts.consts_w1 import stamp_maxes
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
 from models.models import Character
-from utils.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
+from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.data_formatting import mark_advice_completed
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
