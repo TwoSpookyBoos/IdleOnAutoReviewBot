@@ -150,9 +150,9 @@ def parse_account(account, run_type):
 
 def _parse_wave_1(account, run_type):
     _parse_switches(account)
-    _parse_companions(account)
     _parse_characters(account, run_type)
     _parse_general(account)
+    _parse_companions(account)
     _parse_master_classes(account)
     _parse_w1(account)
     _parse_w2(account)

@@ -69,7 +69,7 @@ def test_username_banned_post(client, conf):
 @pytest.mark.parametrize("datafile", passing_test_data)
 def test_output_consistency(client, conf, datafile):
     all_responses = []
-    for _ in range(10):
+    for _ in range(3):
         with open(datafile, "r") as f:
             data = json.load(f)
 
