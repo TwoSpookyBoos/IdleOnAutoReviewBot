@@ -2,8 +2,9 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, decode_enemy_name
-from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order, vault_stack_types
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types
+from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
+from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import statue_type_list, statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
@@ -16,8 +17,10 @@ from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, build
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.models import Advice
+from models.models_util import get_upgrade_vault_advice
 from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
 from utils.logging import get_logger
+from utils.misc.has_companion import has_companion
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
 from utils.all_talentsDict import all_talentsDict
 
@@ -46,7 +49,7 @@ def _calculate_caverns_majiks(account):
     }
     for majik_type, majiks in caverns_conjuror_majiks.items():
         for majik_index, majik_data in enumerate(majiks):
-            if majik_data['Name'] == 'Pocket Divinity' and account.companions['King Doot']:
+            if majik_data['Name'] == 'Pocket Divinity' and has_companion('King Doot'):
                 #Replace linked Divinities with 15% all stat
                 account.caverns['Majiks'][majik_data['Name']]['Description'] = alt_pocket_div['Description']
                 account.caverns['Majiks'][majik_data['Name']]['Value'] = (
@@ -352,7 +355,7 @@ def _calculate_w2_arcade(account):
     for upgrade_index, upgrade_details in account.arcade.items():
         account.arcade[upgrade_index]['Value'] *= (
             max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
-            * max(1, 2 * account.companions['Reindeer'])
+            * max(1, 2 * has_companion('Spirit Reindeer'))
         )
         account.arcade[upgrade_index]['Display'] = (
             f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
@@ -393,6 +396,7 @@ def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
     account.highest_world_reached = _calculate_general_highest_world_reached(account)
+    _calculate_general_guild_bonuses(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -717,24 +721,40 @@ def _calculate_w1_upgrade_vault(account):
             * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
         )
     ]
+    vault_multi_max = [
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery']['Max Level']
+            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
+        ),
+        ValueToMulti(
+            account.vault['Upgrades']['Vault Mastery II']['Max Level']
+            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
+        )
+    ]
     # logger.debug(f"{vault_multi = }")
     for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = (
+        upgrade_scaling_multiplier = vault_multi[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
+        upgrade_scaling_multiplier_max = vault_multi_max[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
+        upgrade_total_value = (
                 account.vault['Upgrades'][upgrade_name]['Level']
                 * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
-            )
+                * upgrade_scaling_multiplier
+        )
+        upgrade_total_value_max = (
+                account.vault['Upgrades'][upgrade_name]['Max Level']
+                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
+                * upgrade_scaling_multiplier_max
+        )
+        # Update description with total value, stack counts, and scaling info
+        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = upgrade_total_value
+            account.vault['Upgrades'][upgrade_name]['Max Value'] = upgrade_total_value_max
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
         if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.vault['Upgrades'][upgrade_name]['Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1)
-            )
+            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(upgrade_total_value)
+            account.vault['Upgrades'][upgrade_name]['Max Value'] = ValueToMulti(upgrade_total_value_max)
             account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                 '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
             )
@@ -752,7 +772,7 @@ def _calculate_w1_upgrade_vault(account):
                     'Target:&', f"Target: {next_stack_target}"
                 )
         account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * (vault_multi[upgrade_details['Vault Section']-1] if upgrade_details['Scaling Value'] else 1):.2f} per level"
+            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * upgrade_scaling_multiplier:.2f} per level"
             f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
             f"{upgrade_details['Vault Section']}"
             f")"
@@ -936,7 +956,7 @@ def _calculate_w2_ballot(account):
         + account.summoning['Endless Bonuses']['% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
-        + (5 * account.companions['Mashed Potato'])
+        + (5 * has_companion('Mashed Potato'))
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
@@ -1275,7 +1295,7 @@ def _calculate_w4_tome_bonuses(account):
 
 
 def _calculate_w5(account):
-    account.divinity['AccountWideArctis'] = account.companions['King Doot'] or 'Arctis' in account.caverns['PocketDivinityLinks']
+    account.divinity['AccountWideArctis'] = has_companion('King Doot') or 'Arctis' in account.caverns['PocketDivinityLinks']
     _calculate_w5_divinity_offering_costs(account)
 
 def _calculate_w5_divinity_offering_costs(account):
@@ -1448,7 +1468,6 @@ def _calculate_caverns_measurements_multis(account):
             account.caverns['Measurements'][measurement_index]['Value'] *= account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']
         except:
             logger.warning(f"Couldn't apply {measurement_details['ScalesWith']} multi to Index{measurement_index}")
-            pass
 
 def _calculate_caverns_studies(account):
     for study_index, study_details in account.caverns['Studies'].items():
@@ -2181,11 +2200,11 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'Rift Slug': {
-            'Value': 25 * account.companions['Rift Slug'],
+            'Value': 25 * has_companion('Rift Slug'),
             'Image': 'rift-slug',
             'Label': f"Companion: Rift Slug: "
-                     f"+{25 * account.companions['Rift Slug']}/25",
-            'Progression': int(account.companions['Rift Slug']),
+                     f"+{25 * has_companion('Rift Slug')}/25",
+            'Progression': int(has_companion('Rift Slug')),
             'Goal': 1
         },
         'ES Family': {
@@ -2446,15 +2465,20 @@ def _calculate_w1_statues(account):
             label=f"Level {account.statues['Dragon Warrior Statue']['Level']} Dragon Warrior Statue: {round(dragon_multi, 3):g}x",
             picture_class=account.statues['Dragon Warrior Statue']['Image']
         ),
-        Advice(
-            label=f"{{{{Upgrade Vault |  #upgrade-vault}}}}: Statue Bonanza: {account.vault['Upgrades']['Statue Bonanza']['Description'].replace('<br> <br>', '<br>')}",
-            picture_class=account.vault['Upgrades']['Statue Bonanza']['Image'],
-            progression=account.vault['Upgrades']['Statue Bonanza']['Level'],
-            goal=account.vault['Upgrades']['Statue Bonanza']['Max Level']
-        ),
+        get_upgrade_vault_advice('Statue Bonanza'),
         Advice(
             label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi, 2):g}x"
                   f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi * vault_multi, 2):g}x",
             picture_class='town-marble'
         )
     ]
+
+def _calculate_general_guild_bonuses(account):
+    for bonus_name, bonus in account.guild_bonuses.items():
+        if '{' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
+        if '}' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
+        if ']' in bonus['Description']:
+            if bonus_name == 'Bonus GP for small guilds':
+                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")

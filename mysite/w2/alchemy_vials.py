@@ -1,10 +1,11 @@
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from models.models_util import get_upgrade_vault_advice
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, AdviceType
+from consts.consts_autoreview import break_you_best, build_subgroup_label, AdviceType
 from consts.consts_w2 import max_index_of_vials, max_vial_level, max_maxable_vials, vial_costs
 from consts.progression_tiers import vials_progressionTiers, true_max_tiers
 
@@ -140,10 +141,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
     #Player's values
     total = session_data.account.alchemy_vials_calcs['Total Multi']
 
-    max_mga = ValueToMulti(
-        (session_data.account.vault['Upgrades']['Vial Overtune']['Max Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level'])
-        + (2 * max_maxable_vials)
-    )
+    max_mga = session_data.account.vault['Upgrades']['Vial Overtune']['Max Value'] + (0.02 * max_maxable_vials)
     max_mgb = session_data.account.labBonuses['My 1st Chemistry Set']['BaseValue']
     max_total = max_mga * max_mgb
 
@@ -158,12 +156,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
             )
         ],
         f"Multi Group A: {session_data.account.alchemy_vials_calcs['mga']:.2f}x": [
-            Advice(
-                label=f"{{{{ Upgrade Vault|#upgrade-vault }}}}: Vial Overtune: +{session_data.account.vault['Upgrades']['Vial Overtune']['Level'] * session_data.account.vault['Upgrades']['Vial Overtune']['Value Per Level']}%",
-                picture_class=session_data.account.vault['Upgrades']['Vial Overtune']['Image'],
-                progression=session_data.account.vault['Upgrades']['Vial Overtune']['Level'],
-                goal=session_data.account.vault['Upgrades']['Vial Overtune']['Max Level']
-            ),
+            get_upgrade_vault_advice('Vial Overtune'),
             Advice(
                 label=f"{{{{ Rift|#rift}}}}: Vial Mastery: +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'] else 0}%",
                 picture_class='vial-mastery',
