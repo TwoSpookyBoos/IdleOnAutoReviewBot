@@ -74,7 +74,7 @@ def _make_cards(account):
             # ["mushG", "A0", "5", "+{_Base_HP", "12"],
             enemy_decoded_name = decode_enemy_name(card_info[0])
             if enemy_decoded_name.startswith('Unknown'):
-                unknown_cards.append(card_info[0])
+                unknown_cards.append(card_info)
             parsed_card_data[enemy_decoded_name] = {
                 'Card Name': card_info[0],
                 'Enemy Name': enemy_decoded_name,
@@ -83,6 +83,9 @@ def _make_cards(account):
                 'Value per Level': safer_convert(card_info[4], 0.0),
                 'Set Name': cardset_name
             }
+
+    if unknown_cards:
+        logger.error(f"Unknown Card name(s) found: {unknown_cards}")
 
     cards = [
         Card(
@@ -98,8 +101,11 @@ def _make_cards(account):
 
     for character in g.account.all_characters:
         for equipped_card_codename in character.equipped_cards_codenames:
-            equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
-            character.equipped_cards.append(equipped_card)
+            try:
+                equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
+                character.equipped_cards.append(equipped_card)
+            except:
+                logger.warning(f"Unknown equipped_card_codename: {equipped_card_codename}. Skipping")
     # cards = [
     #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
     #     for cardset, cards in card_data.items()
@@ -109,8 +115,6 @@ def _make_cards(account):
     # unknown_cards = [
     #     codename for codename in card_counts if not any(codename in items for items in card_data.values())
     # ]
-    if unknown_cards:
-        logger.warning(f"Unknown Card name(s) found: {unknown_cards}")
 
     return cards
 
@@ -1131,8 +1135,11 @@ def _parse_w1_statues(account):
         try:
             char_statues = safe_loads(account.raw_data.get(f"StatueLevels_{char.character_index}"))
             for statueIndex, statueDetails in enumerate(char_statues):
-                if statueDetails[0] > statue_levels[statueIndex]:
-                    statue_levels[statueIndex] = statueDetails[0]
+                try:
+                    if statueDetails[0] > statue_levels[statueIndex]:
+                        statue_levels[statueIndex] = statueDetails[0]
+                except IndexError:
+                    logger.warning(f"statue_levels list does not contain index {statueIndex}, meaning consts_w1.statues_dict is missing a statue!")
         except Exception as e:
             logger.warning(f"Per-Character statue level Parse error for Character{char.character_index}: {e}. Skipping them.")
             continue
