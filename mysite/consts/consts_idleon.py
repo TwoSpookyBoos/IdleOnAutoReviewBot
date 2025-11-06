@@ -270,7 +270,7 @@ companions_data = {
         'Image': '-'.join(monster_data[companion[0]]['Name'].lower().split(' ')),
         'Code': companion[0],
         'Description': companion[1].replace('_', ' ').replace('{', '+'),
-        'Value': float(companion[2]),
+        'Value': float(companion[2]) + (1 * companion[2].startswith('.')),
         # Placeholder: companion[3],
         # Placeholder: companion[4],
         # Placeholder: companion[5],

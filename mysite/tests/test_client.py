@@ -65,3 +65,16 @@ def test_username_banned_post(client, conf):
     data = dict(player=bannedAccountsList[0])
     response = client.post("/results", data=json.dumps(data), follow_redirects=True)
     assert UsernameBanned.msg_base in response.text
+
+@pytest.mark.parametrize("datafile", passing_test_data)
+def test_output_consistency(client, conf, datafile):
+    all_responses = []
+    for _ in range(3):
+        with open(datafile, "r") as f:
+            data = json.load(f)
+
+        response = client.post("/results", data=json.dumps({'player': json.dumps(data)}), headers=conf.headers)
+        execute_test_checks(response.data)
+        assert response.status_code == 200 and len(response.data) > 0
+        all_responses.append(response.get_data(as_text=True))
+    assert len(set(all_responses)) == 1

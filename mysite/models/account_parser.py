@@ -8,13 +8,14 @@ from consts.consts_idleon import lavaFunc, companions_data
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, decode_enemy_name, vault_stack_types,
+    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, vault_stack_types,
     vault_section_indexes, vault_upgrades_list, vault_dont_scale
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
     compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
+from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
 )
@@ -50,7 +51,6 @@ from consts.consts_w6 import (
     summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
 )
-from models.execute_function_dependency_tree import execute_function_dependency_tree
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -75,7 +75,7 @@ def _make_cards(account):
             if card_info[0] == 'Blank':
                 continue  #Skip the blank placeholders
             # ["mushG", "A0", "5", "+{_Base_HP", "12"],
-            enemy_decoded_name = decode_enemy_name(card_info[0])
+            enemy_decoded_name = decode_enemy_name(card_info[0], card=True)
             if enemy_decoded_name.startswith('Unknown'):
                 unknown_cards.append(card_info[0])
             parsed_card_data[enemy_decoded_name] = {
@@ -147,8 +147,21 @@ def _all_worn_items(account) -> Assets:
     return Assets(stuff_worn)
 
 def parse_account(account, run_type):
-    from models.dependencies.parse_dependencies import parse_dependencies, parse_args
-    execute_function_dependency_tree(parse_args(account, run_type), parse_dependencies())
+    _parse_wave_1(account, run_type)
+
+def _parse_wave_1(account, run_type):
+    _parse_switches(account)
+    _parse_characters(account, run_type)
+    _parse_general(account)
+    _parse_companions(account)
+    _parse_master_classes(account)
+    _parse_w1(account)
+    _parse_w2(account)
+    _parse_w3(account)
+    _parse_w4(account)
+    _parse_w5(account)
+    _parse_caverns(account)
+    _parse_w6(account)
 
 def _parse_switches(account):
     # AutoLoot
@@ -846,7 +859,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                 'Image': known_extras[raw_enemy_name][1],
             }
         else:
-            decoded_name = decode_enemy_name(raw_enemy_name)
+            decoded_name = decode_enemy_name(raw_enemy_name, card=True)
             account.compass['Medallions'][raw_enemy_name] = {
                 'Obtained': raw_enemy_name in raw_medallions,
                 'Enemy Name': decoded_name,
