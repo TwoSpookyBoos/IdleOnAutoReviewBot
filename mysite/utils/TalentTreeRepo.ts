@@ -65,7 +65,7 @@ export const initTalentTreeRepo = () => {
                     "Sharpened Axe": <TalentModel>{
                         "name": "Sharpened Axe",
                         "description": "Increases Base Weapon Power by {. This increases damage!!",
-                        "x1": 0.25,
+                        "x1": 0.4,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -77,7 +77,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Fist Of Rage": <TalentModel>{
                         "name": "Fist Of Rage",
-                        "description": "Increases your Base STR by { (STR boosts Max HP and Crit Damage)",
+                        "description": "Increases your Base STR by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -90,7 +90,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Quickness Boots": <TalentModel>{
                         "name": "Quickness Boots",
-                        "description": "Increases your Base AGI by { (AGI boosts Movement Speed and Crit Chance)",
+                        "description": "Increases your Base AGI by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -103,7 +103,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Book Of The Wise": <TalentModel>{
                         "name": "Book Of The Wise",
-                        "description": "Increases your Base WIS by { (WIS boosts Mana and Boss Damage)",
+                        "description": "Increases your Base WIS by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -116,7 +116,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Lucky Clover": <TalentModel>{
                         "name": "Lucky Clover",
-                        "description": "Increases your Base LUK by { (LUK boosts drop rate, EXP Gain, and other RNG)",
+                        "description": "Increases your Base LUK by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -130,7 +130,7 @@ export const initTalentTreeRepo = () => {
                     "Gilded Sword": <TalentModel>{
                         "name": "Gilded Sword",
                         "description": "Boosts Damage dealt to all monsters by {%",
-                        "x1": 1,
+                        "x1": 1.5,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -970,7 +970,7 @@ export const initTalentTreeRepo = () => {
                     "Sharpened Axe": <TalentModel>{
                         "name": "Sharpened Axe",
                         "description": "Increases Base Weapon Power by {. This increases damage!!",
-                        "x1": 0.25,
+                        "x1": 0.4,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -982,7 +982,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Fist Of Rage": <TalentModel>{
                         "name": "Fist Of Rage",
-                        "description": "Increases your Base STR by { (STR boosts Max HP and Crit Damage)",
+                        "description": "Increases your Base STR by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -995,7 +995,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Quickness Boots": <TalentModel>{
                         "name": "Quickness Boots",
-                        "description": "Increases your Base AGI by { (AGI boosts Movement Speed and Crit Chance)",
+                        "description": "Increases your Base AGI by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -1008,7 +1008,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Book Of The Wise": <TalentModel>{
                         "name": "Book Of The Wise",
-                        "description": "Increases your Base WIS by { (WIS boosts Mana and Boss Damage)",
+                        "description": "Increases your Base WIS by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -1021,7 +1021,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Lucky Clover": <TalentModel>{
                         "name": "Lucky Clover",
-                        "description": "Increases your Base LUK by { (LUK boosts drop rate, EXP Gain, and other RNG)",
+                        "description": "Increases your Base LUK by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -1035,7 +1035,7 @@ export const initTalentTreeRepo = () => {
                     "Gilded Sword": <TalentModel>{
                         "name": "Gilded Sword",
                         "description": "Boosts Damage dealt to all monsters by {%",
-                        "x1": 1,
+                        "x1": 1.5,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -2206,7 +2206,7 @@ export const initTalentTreeRepo = () => {
                             "K": 1,
                             "D": 1,
                             "s": 1,
-                            "cooldown": 150,
+                            "cooldown": 160,
                             "castTime": 0.5,
                             "manaCost": 15,
                             "inputReq": 0,
@@ -2654,7 +2654,7 @@ export const initTalentTreeRepo = () => {
                     "Sharpened Axe": <TalentModel>{
                         "name": "Sharpened Axe",
                         "description": "Increases Base Weapon Power by {. This increases damage!!",
-                        "x1": 0.25,
+                        "x1": 0.4,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -2666,7 +2666,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Fist Of Rage": <TalentModel>{
                         "name": "Fist Of Rage",
-                        "description": "Increases your Base STR by { (STR boosts Max HP and Crit Damage)",
+                        "description": "Increases your Base STR by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -2679,7 +2679,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Quickness Boots": <TalentModel>{
                         "name": "Quickness Boots",
-                        "description": "Increases your Base AGI by { (AGI boosts Movement Speed and Crit Chance)",
+                        "description": "Increases your Base AGI by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -2692,7 +2692,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Book Of The Wise": <TalentModel>{
                         "name": "Book Of The Wise",
-                        "description": "Increases your Base WIS by { (WIS boosts Mana and Boss Damage)",
+                        "description": "Increases your Base WIS by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -2705,7 +2705,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Lucky Clover": <TalentModel>{
                         "name": "Lucky Clover",
-                        "description": "Increases your Base LUK by { (LUK boosts drop rate, EXP Gain, and other RNG)",
+                        "description": "Increases your Base LUK by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -2719,7 +2719,7 @@ export const initTalentTreeRepo = () => {
                     "Gilded Sword": <TalentModel>{
                         "name": "Gilded Sword",
                         "description": "Boosts Damage dealt to all monsters by {%",
-                        "x1": 1,
+                        "x1": 1.5,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -2901,9 +2901,9 @@ export const initTalentTreeRepo = () => {
                     },
                     "Veins Of The Infernal": <TalentModel>{
                         "name": "Veins Of The Infernal",
-                        "description": "Increases Damage Dealt by {% every 10 Smithing Levels",
-                        "x1": 50,
-                        "x2": 60,
+                        "description": "Increases Damage Dealt by {% every 10 Smithing Levels (Capped at Smithing Lv 100)",
+                        "x1": 35,
+                        "x2": 50,
                         "funcX": "decay",
                         "y1": 0,
                         "y2": 0,
@@ -3136,9 +3136,9 @@ export const initTalentTreeRepo = () => {
                     },
                     "Speedna": <TalentModel>{
                         "name": "Speedna",
-                        "description": "+{% Damage for every 15% movement spd you have above 100%",
-                        "x1": 60,
-                        "x2": 77,
+                        "description": "+{% Damage for every 15% movement spd you have above 100% (Capped at 1000% Spd)",
+                        "x1": 45,
+                        "x2": 60,
                         "funcX": "decay",
                         "y1": 0,
                         "y2": 0,
@@ -4335,7 +4335,7 @@ export const initTalentTreeRepo = () => {
                     "Sharpened Axe": <TalentModel>{
                         "name": "Sharpened Axe",
                         "description": "Increases Base Weapon Power by {. This increases damage!!",
-                        "x1": 0.25,
+                        "x1": 0.4,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -4347,7 +4347,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Fist Of Rage": <TalentModel>{
                         "name": "Fist Of Rage",
-                        "description": "Increases your Base STR by { (STR boosts Max HP and Crit Damage)",
+                        "description": "Increases your Base STR by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -4360,7 +4360,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Quickness Boots": <TalentModel>{
                         "name": "Quickness Boots",
-                        "description": "Increases your Base AGI by { (AGI boosts Movement Speed and Crit Chance)",
+                        "description": "Increases your Base AGI by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -4373,7 +4373,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Book Of The Wise": <TalentModel>{
                         "name": "Book Of The Wise",
-                        "description": "Increases your Base WIS by { (WIS boosts Mana and Boss Damage)",
+                        "description": "Increases your Base WIS by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -4386,7 +4386,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Lucky Clover": <TalentModel>{
                         "name": "Lucky Clover",
-                        "description": "Increases your Base LUK by { (LUK boosts drop rate, EXP Gain, and other RNG)",
+                        "description": "Increases your Base LUK by {",
                         "x1": 1,
                         "x2": 0,
                         "funcX": "add",
@@ -4400,7 +4400,7 @@ export const initTalentTreeRepo = () => {
                     "Gilded Sword": <TalentModel>{
                         "name": "Gilded Sword",
                         "description": "Boosts Damage dealt to all monsters by {%",
-                        "x1": 1,
+                        "x1": 1.5,
                         "x2": 0,
                         "funcX": "add",
                         "y1": 0,
@@ -6301,7 +6301,7 @@ export const initTalentTreeRepo = () => {
                     },
                     "Supersource": <TalentModel>{
                         "name": "Supersource",
-                        "description": "+{ Base Efficiency for all Skills. Mining, Choppin, Fishing, everything!",
+                        "description": "+{ Base Efficiency for Mining, Choppin, Fishing, and Catching!",
                         "x1": 250,
                         "x2": 100,
                         "funcX": "decay",
@@ -6443,6 +6443,32 @@ export const initTalentTreeRepo = () => {
                         "funcY": "txt",
                         "lvlUpText": "+{% Crit Chance",
                         "skillIndex": 645,
+                        "activeData": undefined
+                    },
+                    "Ancient Multitool": <TalentModel>{
+                        "name": "Ancient Multitool",
+                        "description": "+{% Efficiency for all Skills",
+                        "x1": 50,
+                        "x2": 100,
+                        "funcX": "decay",
+                        "y1": 0,
+                        "y2": 0,
+                        "funcY": "txt",
+                        "lvlUpText": "+{% Efficiency",
+                        "skillIndex": 646,
+                        "activeData": undefined
+                    },
+                    "Statue Metallurgy": <TalentModel>{
+                        "name": "Statue Metallurgy",
+                        "description": "Monsters have a +{% chance of dropping twice as many Statues as normal",
+                        "x1": 15,
+                        "x2": 100,
+                        "funcX": "decay",
+                        "y1": 0,
+                        "y2": 0,
+                        "funcY": "txt",
+                        "lvlUpText": "+{% 2X Statue Chance",
+                        "skillIndex": 647,
                         "activeData": undefined
                     },
                     "Toilet Paper Postage": <TalentModel>{

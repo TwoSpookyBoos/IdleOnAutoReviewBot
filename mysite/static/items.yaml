@@ -9,6 +9,7 @@ Starfire: Starfire Ore
 Dreadlo: Dreadlo Ore
 Marble: Marble Ore
 Godshard: Godshard Ore
+Prehistrium: Prehistrium Ore
 Motherlode: Motherlode Ore
 CopperBar: Copper Bar
 IronBar: Iron Bar
@@ -20,6 +21,7 @@ LustreBar: Lustre Bar
 StarfireBar: Starfire Bar
 DreadloBar: Dreadlo Bar
 GodshardBar: Godshard Bar
+PrehistriumBar: Prehistrium Bar
 MarbleBar: Marble Bar
 OilBarrel1: Crude Oil
 OilBarrel2: Toxic Sludge
@@ -44,6 +46,7 @@ Tree10: Dandielogs
 Tree11: Willow Logs
 Tree12: Bamboo Logs
 Tree13: Effervescent Logs
+Tree14: Seaweed Logs
 MotherlodeTREE: Everlog
 Leaf1: Grass Leaf
 Leaf2: Twisty Leaf
@@ -80,6 +83,7 @@ Bug11: Dream Particulate
 Bug12: Ladybug
 Bug13: Firefly
 Bug14: Fractal Fly
+Bug15: Litterbug
 Critter1: Froge
 Critter1A: Poison Froge
 Critter2: Crabbo
@@ -109,6 +113,11 @@ Soul4: Frigid Soul
 Soul5: Squishy Soul
 Soul6: Oozie Soul
 Soul7: Breezy Soul
+Soul8: Deepsea Soul
+Spelunking0: Chapter One 'The Fear Within'
+Spelunking1: Chapter Two 'Decay Surrounds'
+Spelunking2: Chapter Three 'This is Gospel'
+Spelunking3: Chapter Four 'No Escape'
 EquipmentHats1: Farmer Brim
 TestObj15: Slime Cap
 EquipmentHatsBeg1: Ice Cream Sunday
@@ -203,6 +212,7 @@ EquipmentSword6: Magma Maul
 EquipmentSword7: Skull Lance
 EquipmentSword8: Elegant Spear
 EquipmentSword9: Massive Godbreaker
+EquipmentSword10: Sabertoothed Gorehacker
 TestObj4: Frozen Impaler
 TestObj5: Blood Screamer
 TestObj8: Flaming Katana
@@ -223,6 +233,7 @@ EquipmentBows11: Sediment Core Grunkler
 EquipmentBows12: Spine Tingler Sniper
 EquipmentBows13: Pristine Longbow
 EquipmentBows14: Doublestring Godshooter
+EquipmentBows15: Raptor Shardslinger
 EquipmentWands1: Gnarled Wand
 EquipmentWands2: Quarterstaff
 EquipmentWands5: Starlight
@@ -235,6 +246,7 @@ EquipmentWands10: Cattle Core Soothsayer Staff
 EquipmentWands11: Staff of the Undead Plague
 EquipmentWands12: Sparky Marble Staff
 EquipmentWands13: Magnifique Godcaster
+EquipmentWands14: Beastly Orblauncher
 EquipmentWands4: Microphone
 EquipmentShirts1: Orange Tee
 EquipmentShirts17: MCR Tshirt
@@ -275,6 +287,8 @@ EquipmentShirts36: Serrated Chest of the Divine
 EquipmentShirts37: Marbiglass Tunic
 EquipmentShirts38: Robe of the Gods
 EquipmentShirts39: Emperor Sokutai Ho
+EquipmentShirts40: Mining Overalls
+EquipmentShirts41: Prehistoric Parka
 EquipmentPants1: Torn Jeans
 EquipmentPants2: Copper Platelegs
 EquipmentPants3: Iron Platelegs
@@ -305,6 +319,7 @@ EquipmentPants27: Spiked Leggings of the Divine
 EquipmentPants29: Marbiglass Legplates
 EquipmentPants30: Tatters of the Gods
 EquipmentPants31: Emperor Zubon
+EquipmentPants32: Prehistoric Pantaloons
 EquipmentShoes1: Copper Boots
 EquipmentShoes9: Flip Flops
 EquipmentShoes10: Flap Flops
@@ -345,6 +360,7 @@ EquipmentShoes36: Devious Slippers of the Divine
 EquipmentShoes37: Marbiglass Soles
 EquipmentShoes38: Drip of the Gods
 EquipmentShoes40: Emperor Geta
+EquipmentShoes41: Perhistoric Bracers
 EquipmentPendant1: Mint Icey
 EquipmentPendant2: Strawbu Icey
 EquipmentPendant3: Rok Road Icey
@@ -378,6 +394,9 @@ EquipmentPendant30: The Divine Scarf
 EquipmentPendant31: Deathbloom Flower Pendant
 EquipmentPendant32: Slimy Necklace
 EquipmentPendant33: Emerald Bling Pendant
+EquipmentPendant34: Charred Pendant
+EquipmentPendant35: Bramble of the Emperor
+EquipmentPendant36: Butterfly Pendant
 EquipmentRings1: Gold Ring
 EquipmentRings2: Copper Band
 EquipmentRings3: Steel Band
@@ -417,6 +436,7 @@ EquipmentRings34: Magma Killer Ring
 EquipmentRings35: Zero Point Stopwatch
 EquipmentRings36: Demented Emperor Opal
 EquipmentRings37: Spirit Killer Ring
+EquipmentRings38: Starstrut Ring
 EquipmentRingsChat1: Love Ring
 EquipmentRingsChat2: Leafy Ring
 EquipmentRingsChat3: Wealth Ring
@@ -451,6 +471,7 @@ EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
 EquipmentGown3: Evergreen Robe
 EquipmentGown4: Silkshard Robe
+EquipmentGown5: Corsair Uniform
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -493,6 +514,8 @@ StampA39: Stat Wallstreet Stamp
 StampA40: Void Sword Stamp
 StampA41: Void Axe Stamp
 StampA42: Captalist Stats Stamp
+StampA43: Splosion Stamp
+StampA44: Gud EXP Stamp
 StampB1: Pickaxe Stamp
 StampB2: Hatchet Stamp
 StampB3: Anvil Zoomer Stamp
@@ -547,6 +570,9 @@ StampB51: Summoner Stone Stamp
 StampB52: White Essence Stamp
 StampB53: Triad Essence Stamp
 StampB54: Dark Triad Essence Stamp
+StampB55: Amber Stamp
+StampB56: Little Rock Stamp
+StampB57: Hardhat Stamp
 StampC1: Questin Stamp
 StampC2: Mason Jar Stamp
 StampC3: Crystallin
@@ -572,6 +598,8 @@ StampC22: Refinery Stamp
 StampC23: Atomic Stamp
 StampC24: Cavern Resource Stamp
 StampC25: Study Hall Stamp
+StampC26: Kruker Stamp
+StampC27: Corale Stamp
 StoneWe: Easter Weapon Stone
 StoneWeb: Summer Weapon Stone
 StoneW1: Weapon Upgrade Stone I
@@ -583,6 +611,7 @@ StoneW4: Weapon Upgrade Stone IV
 StoneW5: Weapon Upgrade Stone V
 StoneW7: Weapon Upgrade Stone SK
 StoneW8: Weapon Upgrade Stone VI
+StoneW9: Weapon Upgrade Stone VII
 StoneAe: Easter Armor Stone
 StoneAeB: Summer Armor Stone
 StoneA1: Armor Upgrade Stone I
@@ -595,6 +624,7 @@ StoneA4: Armor Upgrade Stone IV
 StoneA5: Armor Upgrade Stone V
 StoneA6: Armor Upgrade Stone SK
 StoneA7: Armor Upgrade Stone VI
+StoneA8: Armor Upgrade Sonte VII
 StoneTe: Easter Tool Upgrade Stone
 StoneT1: Tool Upgrade Stone I
 StoneT1e: Giftmas Tool Upgrade Stone
@@ -605,6 +635,7 @@ StoneT4: Tool Upgrade Stone IV
 StoneT5: Tool Upgrade Stone V
 StoneT6: Tool Upgrade Stone SK
 StoneT7: Tool Upgrade Stone VI
+StoneT8: Tool Upgrade Stone VII
 StoneHelm1: Helmet Upgrade Stone I
 StoneHelm6: Warped Helmet Upgrade Stone
 StoneHelm1b: Giftmas Helmet Upgrade Stone
@@ -662,6 +693,7 @@ InvBag111: Peeper Pouch
 InvBag112: 4th Anniversary Bag
 InvBag113: Treasure Totebag
 InvBag114: Rucksack Of Riches
+InvBag115: Loot Luggage
 InvStorage1: Storage Chest 1
 InvStorage2: Storage Chest 2
 InvStorage3: Storage Chest 3
@@ -1135,6 +1167,21 @@ SpiC2: Eviscerated Chunk
 SpiD1: Royal Yolk
 SpiD2: Royal Fabric
 SpiD3: Royal Headpiece
+w7A1: Equinox Flesh
+w7A2: Doodlefins
+w7A3: Earl Tail
+w7A4: Cracked Shell
+w7A5: Scaled Fragment
+w7A6: Clammy Chunk
+w7A7: Plastic Litter
+w7A8: Pufferflesh
+w7A9: Demonflesh
+w7A10: Fishfork
+w7A11: Crabclaw
+w7A12: Guardian Mace
+Coral1: Vibrant Coral
+Coral2: Glowing Coral
+Coral3: Neon Coral
 GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
@@ -1258,6 +1305,7 @@ MaxCapBagMi8: Volumetric Mining Pouch
 MaxCapBagMi9: Colossal Mining Pouch
 MaxCapBagMi10: Gargantuan Mining Pouch
 MaxCapBagMi11: Herculean Mining Pouch
+MaxCapBagMi12: Enormous Mining Pouch
 MaxCapBagT1: Miniature Choppin Pouch
 MaxCapBag7: Cramped Choppin Pouch
 MaxCapBag9: Small Choppin Pouch
@@ -1270,6 +1318,7 @@ MaxCapBagT8: Volumetric Chopping Pouch
 MaxCapBagT9: Colossal Chopping Pouch
 MaxCapBagT10: Gargantuan Chopping Pouch
 MaxCapBagT11: Herculean Chopping Pouch
+MaxCapBagT12: Enormous Chopping Pouch
 MaxCapBag6: Miniscule Food Pouch
 MaxCapBag8: Cramped Food Pouch
 MaxCapBag10: Small Food Pouch
@@ -1306,6 +1355,7 @@ MaxCapBagFi8: Volumetric Fish Pouch
 MaxCapBagFi9: Colossal Fish Pouch
 MaxCapBagFi10: Gargantuan Fish Pouch
 MaxCapBagFi11: Herculean Fish Pouch
+MaxCapBagFi12: Enormous Fish Pouch
 MaxCapBagB0: Miniature Bug Pouch
 MaxCapBagB1: Cramped Bug Pouch
 MaxCapBagB2: Small Bug Pouch
@@ -1329,6 +1379,7 @@ MaxCapBagTr7: Volumetric Critta Pouch
 MaxCapBagTr8: Colossal Critta Pouch
 MaxCapBagTr9: Gargantuan Critta Pouch
 MaxCapBagTr10: Herculean Critta Pouch
+MaxCapBagTr11: Enormous Critta Pouch
 MaxCapBagS0: Cramped Soul Pouch
 MaxCapBagS1: Small Soul Pouch
 MaxCapBagS2: Average Soul Pouch
@@ -1368,6 +1419,7 @@ SmithingRecipes3: Apprentice Recipe
 SmithingRecipes4: Journeyman Recipe
 SmithingRecipes5: Adept Recipe
 SmithingRecipes6: Master Recipe
+SmithingRecipes7: Virtuoso Recipe
 Liquid1: Water Droplets
 Liquid2: Liquid Nitrogen
 Liquid3: Trench Seawater
@@ -1420,6 +1472,44 @@ EquipmentNametag18: 4th Anniversary Idleon Nametag
 EquipmentNametag19: Aethermoon Nametag
 EquipmentNametag20: Deadbones Nametag
 EquipmentNametag21: Treasure Nametag
+EquipmentNametag22: Tome Apprentice Nametag
+EquipmentNametag23: Tome Journeyman Nametag
+EquipmentNametag24: Tome Expert Nametag
+EquipmentNametag25: Tome Elite Nametag
+EquipmentNametag26: Tome Pro Nametag
+EquipmentNametag27: Tome Master Nametag
+EquipmentNametag28: Tome Legend Nametag
+EquipmentNametag29: Reliquarium Nametag
+EquipmentNametagReplica0: Replica Nametag
+EquipmentNametagReplica1: Riftwalker Nametag
+EquipmentNametagReplica2: Lava's Awesome Nametag
+EquipmentNametagReplica3: Balling Nametag
+EquipmentNametagReplica4: Vman Nametag
+EquipmentNametagReplica5: Spring Flowers Nametag
+EquipmentNametagReplica6: Trash Tuna Nametag
+EquipmentNametagReplica7: Island Adventurer Nametag
+EquipmentNametagReplica8: Summer Shovel Nametag
+EquipmentNametagReplica9: Falloween Nametag
+EquipmentNametagReplica10: 3rd Anniversary IdleOn Nametag
+EquipmentNametagReplica11: Nightshade Nametag
+EquipmentNametagReplica12: Megafeather Nametag
+EquipmentNametagReplica13: Timeless Nametag
+EquipmentNametagReplica14: Snowflake Nametag
+EquipmentNametagReplica15: Frostyman Nametag
+EquipmentNametagReplica16: Lovely Day Nametag
+EquipmentNametagReplica17: Spectacular 4th Year Nametag
+EquipmentNametagReplica18: 4th Anniversary Idleon Nametag
+EquipmentNametagReplica19: Aethermoon Nametag
+EquipmentNametagReplica20: Deadbones Nametag
+EquipmentNametagReplica21: Treasure Nametag
+EquipmentNametagReplica22: Tome Apprentice Nametag
+EquipmentNametagReplica23: Tome Journeyman Nametag
+EquipmentNametagReplica24: Tome Expert Nametag
+EquipmentNametagReplica25: Tome Elite Nametag
+EquipmentNametagReplica26: Tome Pro Nametag
+EquipmentNametagReplica27: Tome Master Nametag
+EquipmentNametagReplica28: Tome Legend Nametag
+EquipmentNametagReplica29: Reliquarium Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1473,6 +1563,34 @@ Trophy20: Luckier Lad
 Trophy21: Baller
 Trophy22: Gladiator
 Trophy23: Heroic Spirit
+Trophy24: Nine Dart Finish
+Trophy25: Luckiest Lad
+TrophyReplica0: Replica Trophy
+TrophyReplica1: King of Food
+TrophyReplica2: Lucky Lad
+TrophyReplica3: Club Member
+TrophyReplica4: I Made This Game
+TrophyReplica5: Dice Dynamo
+TrophyReplica6: Blunder Hero
+TrophyReplica7: Original Gamer
+TrophyReplica8: Trailblazer
+TrophyReplica9: Ultra Unboxer
+TrophyReplica10: Critter Baron
+TrophyReplica11: YumYum Sheriff
+TrophyReplica12: Megalodon
+TrophyReplica13: Club Maestro
+TrophyReplica14: Beach Bro
+TrophyReplica15: Frost Prince
+TrophyReplica16: Idle Skiller
+TrophyReplica17: One of the Divine
+TrophyReplica18: Master of Nothing
+TrophyReplica19: Nebula Royal
+TrophyReplica20: Luckier Lad
+TrophyReplica21: Baller
+TrophyReplica22: Gladiator
+TrophyReplica23: Heroic Spirit
+TrophyReplica24: Nine Dart Finish
+TrophyReplica25: Luckiest Lad
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
@@ -1485,6 +1603,7 @@ EquipmentTools12: Starfire Pickaxe
 EquipmentTools9: Dreadlo Pickolo
 EquipmentTools14: Marbiglass Pickaxe
 EquipmentTools15: Destroyer of the Mollo Gomme
+EquipmentTools16: Prehistoric Pickaxe
 EquipmentTools10: Poopy Pickaxe
 EquipmentTools13: Skewered Snek
 EquipmentToolsHatchet0: Old Hatchet
@@ -1499,6 +1618,7 @@ EquipmentToolsHatchet6: Lustre Logger
 EquipmentToolsHatchet8: Starfire Hatchet
 EquipmentToolsHatchet9: Dreadlo Hatchet
 EquipmentToolsHatchet12: Marbiglass Hatchet
+EquipmentToolsHatchet13: Prehistoric Choppah
 EquipmentToolsHatchet10: Annihilator of the Yggdrasil
 EquipmentToolsHatchet11: Grumbie the Hatchet Hammer
 FishingRod1: Wood Fishing Rod
@@ -1513,6 +1633,7 @@ FishingRod9: Starfire Rod
 FishingRod10: Dreadlo Rod
 FishingRod11: Marbiglass Rod
 FishingRod12: Angler of the Iliunne
+FishingRod13: Prehistoric Rod
 CatchingNet1: Bug Net
 CatchingNet2: Copper Netted Net
 CatchingNet3: Reinforced Net
@@ -1525,6 +1646,7 @@ CatchingNet9: Starfire Trim Netting
 CatchingNet10: Dreadlo Matted Netting
 CatchingNet11: Marbiglass Netting
 CatchingNet12: Wrangler of the Qoxzul
+CatchingNet13: Wrangler of the Qoxzul
 TrapBoxSet1: Cardboard Traps
 TrapBoxSet2: Silkskin Traps
 TrapBoxSet3: Wooden Traps
@@ -1535,6 +1657,7 @@ TrapBoxSet7: Royal Traps
 TrapBoxSet8: Egalitarian Traps
 TrapBoxSet9: Forbidden Traps
 TrapBoxSet10: Containment of the Zrgyios
+TrapBoxSet11: Prehistoric Traps
 WorshipSkull1: Wax Skull
 WorshipSkull2: Ceramic Skull
 WorshipSkull3: Horned Skull
@@ -1546,6 +1669,7 @@ WorshipSkull8: Slush Skull
 WorshipSkull9: Dreadnaught Skull
 WorshipSkull10: Cultist Skull
 WorshipSkull11: Crystal Skull of Esquire Vnoze
+WorshipSkull12: Crystal Skull of Esquire Vnoze
 DNAgun0: Sappy DNA Splicer
 DNAgun1: Bolstered DNA Splicer
 DNAgun2: Double Barreled DNA Splicer
@@ -1566,6 +1690,8 @@ FoodHealth14: Lemon Slice
 FoodHealth15: Grilled Cheese Nomwich
 FoodHealth16: Raw Nigiri
 FoodHealth17: Dumpling
+FoodHealth18: Saltwater Taffy
+FoodHealth19: Sugar Cookie
 FoodHealth5: Cranberry Jam
 FoodHealth8: Crabby Cake Supreme
 FoodEvent8: Milk Choco
@@ -1625,6 +1751,7 @@ FoodG10: Golden Hampter Gummy Candy
 FoodG11: Golden Nigiri
 FoodG12: Golden Dumpling
 FoodG13: Golden Cake
+FoodG14: Golden Saltwater Taffy
 ButterBar: Butter Bar
 rtt0: Bottled Town Teleport
 ResetFrag: Talent Point Reset Fragment
@@ -1654,6 +1781,7 @@ Crystal2: Glacier Quartz
 Crystal3: Galaxial Amethyst
 Crystal4: Magma Geode
 Crystal5: Spirit Diamond
+Crystal6: Gem to W7
 PeanutS: Stone Peanut
 Quest3: Ketchup Bottle
 Quest4: Mustard Bottle
@@ -1747,8 +1875,16 @@ Quest96: Aethermoon
 Quest97: Charred Bone
 Quest98: Charred Fragment
 Quest99: Prisma Bubble
-Quest100: Aether Fragment
+Quest100: Aether Fragment # for the Wind Walker
 Quest101: Arcane Rock
+Quest102: Spirit Offering
+CaveGoldPiece: Strange Gold Piece
+Quest103: Fishbowl
+Quest104: Darts
+Quest105: Unstable Reliquarium
+Quest106: Urie's Special Childhood Rock
+Quest107: Aether Fragment # for the Arcane Cultist
+Quest108: Stamina Battery
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -1785,6 +1921,8 @@ EquipmentStatues27: Stealth Statue
 EquipmentStatues28: Essence Statue
 EquipmentStatues29: Villager Statue
 EquipmentStatues30: Dragon Warrior Statue
+EquipmentStatues31: Spelunky Statue
+EquipmentStatues32: Coral Statue
 PureWater: Distilled Water
 PureWater2: Dense Water
 Island0: Garbage
@@ -2016,6 +2154,7 @@ EquipmentHats116: Goldberry
 EquipmentHats117: Orange Beanie
 EquipmentHats118: Windwalker Hood
 EquipmentHats122: Arcanist Crown
+EquipmentHats123: Prehistoric Battlehair
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card

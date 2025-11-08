@@ -427,20 +427,21 @@ max_card_stars = 5
 key_cards = 'Cards0'
 cards_max_level = 6
 
-#Source: `IDforCardSETbonus`
+#Source: `IDforCardSETbonus`. Last updated in v2.43 Nov 6
 cardset_identifiers = [
     "{%_EXP_if_below_Lv_50",
     "{%_All_Food_Effect",
     "{%_Skill_Efficiency",
     "{%_Skill_EXP_Gain",
     "{%_DEF_and_ACC",
+    "{%_Dmg,_Drop,_and_EXP",
+    "{%_Drop_Rate",
     "{%_Skill_AFK_Gain_Rate",
+    "{%_more_Dungeon_Credits",
     "{%_Crit_Chance",
     "{%_Fight_AFK_Gain_Rate",
     "{%_Multikill_Per_Tier",
-    "{%_more_Dungeon_Credits",
-    "{%_Dmg,_Drop,_and_EXP",
-    "{%_Drop_Rate",
+    "{%_Class_Exp_(Multi)",
 ]
 
 cardset_names = [
@@ -449,16 +450,17 @@ cardset_names = [
     "Easy Resources",
     "Medium Resources",
     "Frostbite Tundra",
+    "Bosses n Nightmares",
+    "Events",
     "Hard Resources",
+    "Dungeons",
     "Hyperion Nebula",
     "Smolderin' Plateau",
     "Spirited Valley",
-    "Dungeons",
-    "Bosses n Nightmares",
-    "Events"
+    "Shimmerfin Deep"
 ]
 
-# `CardStuff` in source. Last updated in v2.41
+# `CardStuff` in source. Last updated in v2.43  Nov 6
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -518,18 +520,34 @@ card_raw_data = [
         ["Plat", "D2", "10", "+{%_Mining_Away_Gains", "2"],
         ["Dementia", "D1", "10", "+{%_Mining_Speed", "4"],
         ["Void", "D3", "10", "+{%_Total_Mining_Efficiency", "6"],
+        ["Lustre", "D4", "10", "+{%_Mining_Speed", "5"],
         ["ForgeB", "D16", "10", "+{%_Smithing_EXP_(Passive)", "7"],
         ["PalmTree", "D7", "10", "+{%_Choppin_Away_Gains", "2"],
         ["ToiletTree", "D5", "10", "+{%_Choppin_Speed", "4"],
         ["StumpTree", "D6", "10", "+{%_Total_Accuracy", "3"],
+        ["SaharanFoal", "D8", "10", "+{%_Choppin_Away_Gains", "2.5"],
+        ["Tree7", "F2", "10", "+{%_Choppin_Speed", "6"],
+        ["AlienTree", "F13", "10", "+{%_Total_Choppin_Efficiency", "8"],
+        ["Tree8", "F12", "10", "+{%_Choppin_Speed", "7"],
         ["Fish4", "D11", "10", "+{%_Fishing_Away_Gains", "2"],
+        ["Fish5", "F20", "8", "+{%_Total_Fishing_Efficiency", "8"],
+        ["Fish6", "F21", "10", "+{%_Fishing_Speed", "4"],
+        ["Fish7", "F22", "10", "+{%_Fishing_EXP", "10"],
+        ["Fish8", "F23", "10", "+{%_Fishing_Away_Gains", "3"],
         ["Bug3", "D10", "10", "+{%_Catching_EXP", "5"],
         ["Bug4", "D9", "10", "+{%_Catching_Away_Gains", "2"],
+        ["Bug5", "F8", "10", "+{%_Total_Catching_Efficiency", "7"],
+        ["Bug6", "F9", "10", "+{%_Catching_Away_Gains", "2.5"],
+        ["Bug7", "F14", "10", "+{%_Total_Catching_Efficiency", "8"],
         ["SoulCard1", "D17", "3", "+{%_Defence_from_Equipment", "3"],
         ["SoulCard2", "D18", "3", "+{_Starting_Pts_in_Worship", "4"],
+        ["SoulCard3", "F3", "3", "+{_Starting_Pts_in_Worship", "6"],
+        ["SoulCard4", "F10", "4", "+{%_Max_Charge", "7"],
         ["CritterCard1", "D19", "4", "+{%_Shiny_Critter_Chance", "3"],
         ["CritterCard2", "D20", "4", "+{%_Trapping_Efficiency", "5"],
         ["CritterCard3", "D21", "4", "+{%_Trapping_EXP", "5"],
+        ["CritterCard4", "F4", "4", "+{%_Shiny_Critter_Chance", "5"],
+        ["CritterCard5", "F5", "4", "+{%_EXP_from_monsters", "1.25"],
         ["Blank", "A0", "10", "+{%", "3"]
     ],
     [
@@ -551,46 +569,46 @@ card_raw_data = [
         ["Crystal2", "E15", "10", "+{%_EXP_from_monsters", "3"]
     ],
     [
-        ["Lustre", "D4", "10", "+{%_Mining_Speed", "5"],
         ["Starfire", "F16", "12", "+{%_Mining_EXP", "8"],
         ["Dreadlo", "F29", "15", "+{%_Mining_Away_Gains", "3"],
         ["Godshard", "F39", "400", "+{%_Forge_Cap_and_SPD_(Passive)", "30"],
-        ["SaharanFoal", "D8", "10", "+{%_Choppin_Away_Gains", "2.5"],
-        ["Tree7", "F2", "10", "+{%_Choppin_Speed", "6"],
-        ["AlienTree", "F13", "10", "+{%_Total_Choppin_Efficiency", "8"],
-        ["Tree8", "F12", "10", "+{%_Choppin_Speed", "7"],
+        ["Prehistrium", "F44", "5000", "+{%_Mining_Away_Gains", "5"],
         ["Tree9", "F24", "12", "+{%_Choppin_Away_Gains", "3"],
         ["Tree10", "F25", "15", "+{%_Choppin_Speed", "8"],
         ["Tree12", "F34", "15", "+{%_Total_Choppin_Efficiency", "10"],
         ["Tree13", "F35", "15", "+{%_Choppin_Away_Gains", "4"],
-        ["Fish5", "F20", "8", "+{%_Total_Fishing_Efficiency", "8"],
-        ["Fish6", "F21", "10", "+{%_Fishing_Speed", "4"],
-        ["Fish7", "F22", "10", "+{%_Fishing_EXP", "10"],
-        ["Fish8", "F23", "10", "+{%_Fishing_Away_Gains", "3"],
-        ["Bug5", "F8", "10", "+{%_Total_Catching_Efficiency", "7"],
-        ["Bug6", "F9", "10", "+{%_Catching_Away_Gains", "2.5"],
-        ["Bug7", "F14", "10", "+{%_Total_Catching_Efficiency", "8"],
+        ["Tree14", "F40", "1000", "+{%_Choppin_Away_Gains", "5"],
+        ["Fish9", "F30", "15", "+{%_Fishing_EXP", "15"],
+        ["Fish10", "F31", "18", "+{%_Total_Fishing_Efficiency", "12"],
+        ["Fish11", "F32", "24", "+{%_Fishing_Away_Gains", "3.5"],
+        ["Fish12", "F33", "30", "+{%_Fishing_Speed", "7"],
         ["Bug8", "F15", "10", "+{%_Catching_Speed", "4"],
         ["Bug9", "F26", "12", "+{%_Total_Catching_Efficiency", "10"],
         ["Bug10", "F27", "15", "+{%_Catching_Away_Gains", "3"],
         ["Bug12", "F37", "15", "+{%_Total_Catching_Efficiency", "5"],
         ["Bug13", "F38", "15", "+{%_Catching_Speed", "5"],
-        ["CritterCard4", "F4", "4", "+{%_Shiny_Critter_Chance", "5"],
-        ["CritterCard5", "F5", "4", "+{%_EXP_from_monsters", "1.25"],
+        ["Bug14", "F46", "1000", "+{%_Total_Catching_Efficiency", "8"],
         ["CritterCard6", "F6", "5", "+{%_Shiny_Critter_Chance", "6"],
         ["CritterCard7", "F7", "6", "+{%_Skill_AFK_gain_rate", "1"],
         ["CritterCard8", "F17", "7", "+{%_Trapping_Efficiency", "7"],
         ["CritterCard9", "F18", "9", "+{%_Trapping_EXP", "8"],
         ["CritterCard10", "F19", "12", "+{%_Shiny_Critter_Chance", "8"],
-        ["SoulCard3", "F3", "3", "+{_Starting_Pts_in_Worship", "6"],
-        ["SoulCard4", "F10", "4", "+{%_Max_Charge", "7"],
+        ["CritterCard11", "F47", "50", "+{%_Shiny_Critter_Chance", "15"],
         ["SoulCard5", "F11", "5", "+{%_Charge_Rate", "5"],
         ["SoulCard6", "F28", "7", "+{%_Max_Charge", "10"],
         ["SoulCard7", "F36", "7", "+{%_Charge_Rate", "7"],
-        ["Fish9", "F30", "15", "+{%_Fishing_EXP", "15"],
-        ["Fish10", "F31", "18", "+{%_Total_Fishing_Efficiency", "12"],
-        ["Fish11", "F32", "24", "+{%_Fishing_Away_Gains", "3.5"],
-        ["Fish12", "F33", "30", "+{%_Fishing_Speed", "7"]
+        ["SoulCard8", "F45", "250", "+{_Starting_Pts_in_Worship", "50"],
+        ["SpelunkingCard0", "F41", "100", "+{%_Spelunking_EXP", "4"],
+        ["SpelunkingCard1", "F42", "300", "+{%_Spelunking_Efficiency", "8"],
+        ["SpelunkingCard2", "F43", "3000", "+{%_Spelunking_AFK_Gain", "2"],
+        ["SpelunkingCard3", "F48", "50000", "+{%_Spelunking_EXP", "8"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"],
+        ["Blank", "A0", "10", "+{%", "3"]
     ],
     [
         ["mushP", "G1", "15", "+{%_Money_from_Monsters", "8"],
@@ -644,6 +662,24 @@ card_raw_data = [
         ["w6d2", "I13", "1300", "+{%_Total_Drop_Rate", "8"],
         ["w6d3", "I14", "2500", "+{%_All_AFK_Gains(Passive)", "1.5"],
         ["Crystal5", "I15", "5000", "+{%_Sneaking_Stealth_(Passive)", "4"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+    ],
+    [
+        ["w7a1", "J1", "5000", "+{%_Spelunking_Efficiency", "7"],
+        ["w7a2", "J2", "7000", "+{%_Total_Damage_Multi", "3"],
+        ["w7a3", "J3", "8500", "+{%_Class_EXP_Multi", "3"],
+        ["w7a4", "J4", "11000", "+{%_Spelunking_AFK_Gain", "3"],
+        ["w7a5", "J5", "15000", "+{%_Spelunk_POW_(Passive)", "4"],
+        ["w7a6", "J6", "25000", "+{%_Spelunking_EXP", "3"],
+        ["w7a7", "J7", "35000", "+{%_Spelunk_Amber_(Passive)", "5"],
+        ["w7a8", "J8", "65000", "+{%_Class_EXP_Multi", "3"],
+        ["w7a9", "J9", "100000", "+{%_Daily_Coral_(Passive)", "2"],
+        ["w7a10", "J10", "150000", "+{%_Stamina_Regen_(Passive)", "2"],
+        ["w7a11", "J11", "250000", "+{%_Gallery_Bonus_(Passive)", "1"],
+        ["w7a12", "J12", "400000", "+{%_Drop_Rate_Multi", "1"],
+        ["Crystal6", "J99", "2500000", "+{%_Damage_Multi_(Passive)", "1.5"],
+        ["Blank", "A0", "2500", "+{%_Base_HP", "1.5"],
+        ["Blank", "A0", "5000", "+{%_Base_HP", "4"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"]
     ],
     [
@@ -903,8 +939,10 @@ gem_shop_optlacc_dict = {
     'Exalted Stamps': [366, EmojiType.INFINITY.value],
     'Lifetime Tickets': [382, EmojiType.INFINITY.value]
 }
+
+# Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
+# Last updated in 2.43 Nov 6
 gem_shop_bundles_dict = {
-    # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
     'bun_c': 'Starter Pack',
@@ -932,16 +970,19 @@ gem_shop_bundles_dict = {
     'bun_y': 'Valenslime Day Pack',
     'bun_z': 'Fallen Spirits Pet Pack',
     'bon_a': 'Storage Ram Pack',
-    # No bon_b, yet as of 2.41
+    # No bon_b yet
     'bon_c': 'Blazing Star Anniversary Pack',
     'bon_d': 'Midnight Tide Anniversary Pack',
     'bon_e': 'Lush Emerald Anniversary Pack',
     'bon_f': 'Eternal Hunter Pack',
     'bon_g': 'Gilded Treasure',
-}  # As of 2.41
+    'bon_h': "Lil' Squirrel Pack",
+    'bon_i': 'Ocean Raider Pack',
+    'bon_j': 'Piggy Pal',
+}
 
 #Guild
-# `GuildBonuses = function ()` - last updated in v2.41
+# `GuildBonuses = function ()` in source. Last updated in v2.43 Nov 6
 guild_bonuses_info = ["Guild_Gifts 194 401 +{%_chance_for_an_extra_Guild_Gift_to_be_added_to_your... 700 100 decay 100 0 0 10 40".split(" "), "Stat_Runes 110 395 +{_Total_All_Stats 40 50 decay 50 0 2 20 60".split(" "), "Rucksack 115 329 +{%_Total_Carry_Cap 70 50 decay 50 1 4 20 70".split(" "), "Power_of_Pow 90 265 +{_Weapon_Power 10 50 decay 50 2 5 20 80".split(" "), "REM_Fighting 98 201 +{%_Fight_AFK_gain_rate 10 50 decay 50 3 8 30 90".split(" "), "Make_or_Break 98 137 +{%_Production_Rate_in_Town_Skills 30 50 decay 50 4 10 30 100".split(" "), "Multi_Tool 160 265 +{%_Total_Skill_Efficiency 30 50 decay 50 2 5 20 80".split(" "), "Sleepy_Skiller 167 201 +{%_Skill_AFK_gain_rate 10 50 decay 50 6 8 30 90".split(" "), "Coin_Supercharger 167 137 +{%_Cash_for_each_world_you've_reached 20 20 decay 100 7 5 30 120".split(" "), "Bonus_GP_for_small_guilds 194 335 +}%_GP_earned_if_your_guild_has_]_members_or_less... 200 50 decay 50 0 2 10 10".split(" "), "Gold_Charm 284 395 +{%_Total_Drop_Rate 40 50 decay 50 0 2 20 60".split(" "), "Star_Dazzle 270 329 +{_Star_Talent_Points 120 50 decay 50 10 4 20 70".split(" "), "C2_Card_Spotter 238 265 +{%_Card_Drop_Rate 60 50 decay 50 11 5 20 80".split(" "), "Bestone 232 201 +{%_Stone_Upgrade_Success_chance 16 50 decay 50 12 8 30 90".split(" "), "Skilley_Skillet 232 137 +{%_Skill_EXP_for_all_skills 30 120 decay 200 13 5 40 150".split(" "), "Craps 305 265 +{%_chance_to_get_an_AFK_Reroll 28 50 decay 50 11 5 20 80".split(" "), "Anotha_One 296 201 +{%_chance_for_2x_EXP_when_claiming_AFK 26 50 decay 50 15 8 30 90".split(" "), "Wait_A_Minute 296 137 +{%_Nothing_Yet 1 0 add 0 16 5 20 80".split(" ")]
 guild_bonuses_dict = {
     bonus[0].replace("_", " "): {
@@ -1013,12 +1054,12 @@ def getNextESFamilyBreakpoint(currentLevel: int) -> int:
         return esFamilyBonusBreakpointsList[-1]
 
 
-#achievementsList last pulled from code in 2.08. Search for: RegAchieves = function ()
-#Replace: "], ["  with:  "],\n["  before pasting in
+# `RegAchieves` in source. Last updated in v2.43 Nov 6
 achievement_categories = [
     'EZ Access',  #'Free Teleports',
     'Monster Respawn', 'Recipes', 'Dungeon RNG Items', 'Other Nice Rewards']
-achievementsList = [
+# TODO: compact this into one line eventually to reduce clutter.
+achievements_list = [
     ["Learn_2_Forge", "1", "Get_the_mining_certificate_from_Glumlee.", "*STEAM_EXCLUSIVE_&*10_gems_&*1hr_time_candy", "0"],
     ["Another_Me!", "1", "Create_a_2nd_character._Trust_me,_you_wanna_do_this_ASAP.", "*STEAM_EXCLUSIVE_&*8_gems", "0"],
     ["Sleepy_Gamer", "1", "Claim_100+_hours_of_AFK_rewards.", "*STEAM_EXCLUSIVE_&*5_gems_&*1hr_time_candy", "0"],
@@ -1067,7 +1108,7 @@ achievementsList = [
     ["Million_Null_'n_Void", "1", "Have_a_stack_of_exactly_1,000,000_Void_Ore_in_your_Storage_Chest.", "*Deep_Mining_Teleport", "0"],
     ["Lucky_7s", "1", "SECRET_ACHIEVEMENT_------------------------_Punch_a_monster,_win_the_Jackpot!_Well,_hypothetically...", "*{1%_Arcade_balls/hr_&*15_Gems_&*7_'1hr_time_candy'", "0"],
     ["What_a_View!", "1", "SECRET_ACHIEVEMENT_------------------------_Climb_the_2nd_tallest_tree_in_all_of_Blunder_Hills,_and_say_'Great_view,_1_star'", "*{1%_Arcade_balls/hr", "0"],
-    ["Cavernous_Nook", "1", "-", "*Knowledge_of_the_&Cavern_Secret_Location", "0"],
+    ["Cavernous_Nook", "1", "SECRET_ACHIEVEMENT_------------------------_Find_the_SECRET_mining_area!", "*Nothing!", "0"],
     ["Seriousleaf-ast!", "1", "SECRET_ACHIEVEMENT_------------------------_Score_a_point_in_the_Choppin'_Minigame_while_the_leaf_is_zooming_at_hyperspeed", "*{1%_Arcade_balls/hr", "0"],
     ["Peanut_Pioneer", "1", "SECRET_ACHIEVEMENT_------------------------_Talk_to_the_jungle_bush,_join_the_club...", "*STEAM_EXCLUSIVE_&*25_gems_&*2_'2hr_time_candy'", "0"],
     ["Meel_Time!", "1", "SECRET_ACHIEVEMENT_------------------------_Shake_it!_To_the_left,_to_the_left!_Oh_yea!!!", "*STEAM_EXCLUSIVE_&*25_gems", "0"],
@@ -1161,7 +1202,7 @@ achievementsList = [
     ["FILLERZZZ_ACH", "20", "-", "*STEAM_EXCLUSIVE_&*30_gems_&*Item3", "0"],
     ["Snowy_Wonderland", "1", "Reach_World_3,_the_coolest_world_in_the_game!", "*STEAM_EXCLUSIVE_&*25_gems", "0"],
     ["Veteran_Gamer", "1", "Reach_level_80_on_any_character._I'm_glad_you're_enjoying_the_game,_hope_you_get_to_Lv._100!", "*STEAM_EXCLUSIVE_&*20_gems", "0"],
-    ["A_Family_of_Me!", "1", "Create_your_8th_character,_who_will_never_get_the_love_you_gave_to_your_earlier_characters_when_making_new_ones_was_still_special.", "*STEAM_EXCLUSIVE_&*25_gems", "0"],
+    ["A_Family_of_Me!", "1", "Create_your_8th_character,_who_will_never_get_the_love_you_gave_to_your_earlier_characters_when_making_new_ones_was_still_special.", "*STEAM_EXCLUSIVE_&*20_gems", "0"],
     ["Croakin'_Froge", "1", "Have_a_stack_of_exactly_250_Doge_-I_mean_froge-_critters_in_your_Storage_Chest.", "*RNG_item_unlock", "0"],
     ["Sad_Souls", "1", "Have_a_stack_of_exactly_1,000_Forest_Souls_in_your_Storage_Chest.", "*{1%_Arcade_balls/hr", "0"],
     ["Checkout_Takeout", "1000", "Checkout_a_total_of_1000_talent_books_from_the_Talent_Book_Library", "*{5_Book_Max_LV_&*{30%_Library_charge_&rate", "0"],
@@ -1175,8 +1216,8 @@ achievementsList = [
     ["Cog_in_the_System", "1", "Have_20_Grey_Cogs_placed_on_the_board_at_once._Not_sure_why_this_is_an_achievement,_cogs_are_boring.", "*{5%_Build_Speed_&in_Construction", "0"],
     ["I_Create...", "1", "Upgrade_buildings_in_construction_a_total_of_50_times._Any_buildings,_utilities,_wizards,_shrines,_they_all_count!", "*{1%_Arcade_balls/hr", "0"],
     ["I_Sawed...", "1", "Upgrade_buildings_in_construction_a_total_of_250_times.", "*RNG_item_unlock", "0"],
-    ["Hairy_Ice_Comb", "3000", "Manually_loot_1000_floof_poofs,_melty_cubes,_and_moustache_comb_stacks_--_AFK_claiming_doesn't_count.", "*Frosty_Peaks_BG_&for_Title_Screen", "0"],
-    ["Giant_Slayer", "25", "Defeat_5_Giant_Mobs_of_each_type;_Bloque,_Mamooth,_Snowman,_Penguin,_Thermister._Do_it_in_that_monster_order.", "*Tundra_Outback_BG_&for_Title_Screen", "0"],
+    ["Hairy_Ice_Comb", "3000", "Manually_loot_1000_floof_poofs,_then_1000_melty_cubes,_then_1000_moustache_combs._So_3000_in_total!", "*Frosty_Peaks_BG_&for_Title_Screen", "0"],
+    ["Giant_Slayer", "25", "Defeat_5_Giant_Mobs_of_each_type;_Bloque,_Mamooth,_Snowman,_Penguin,_then_Thermister,_IN_THAT_ORDER._So_25_in_total!.", "*Tundra_Outback_BG_&for_Title_Screen", "0"],
     ["Saharan_Skull", "1", "Get_a_Golden_Skull_or_higher_on_every_YumYum_Desert_monster_in_the_Deathnote.", "*{1%_Printer_Sample_&Rate", "0"],
     ["Fat_Souls", "1", "Have_a_stack_of_exactly_10,000_Dune_Souls_in_your_Storage_Chest.", "*Start_with_{15_&more_points_in_Worship_&Tower_Defence", "0"],
     ["Borrowed_Pens", "1", "Remember_all_those_pens_you_lent_out_in_school_and_never_got_back?_You've_got_13_seconds_to_vent_your_anger_on_every_penguin_mob!", "*{3%_Arcade_balls/hr", "0"],
@@ -1255,7 +1296,7 @@ achievementsList = [
     ["Best_Plate", "1", "Upgrade_a_meal_at_the_Dinner_Menu_to_the_point_where_it_gets_a_void_pearl_plate!", "-10%_lower_cost_&to_upgrade_meals_&at_the_Dinner_Table", "0"],
     ["Space_Party!!!", "1", "Dance_with_at_least_5_other_people_while_you're_all_in_World_4_town!", "*{2%_Arcade_balls/hr", "0"],
     ["Zero_G_Scorin'", "1", "Get_a_Score_of_10,000,000_or_more_in_the_Astro_Colosseum", "{5%_Cash_from_&Monsters", "0"],
-    ["Hibernating_Gamer", "1", "Glaim_111,000_hours_of_AFK_time._Jeez,_thats_like_an_entire_year_of_all_characters_idling_to_the_max.", "*STEAM_EXCLUSIVE_&*100_gems_&*1_'72hr_time_candy'", "0"],
+    ["Hibernating_Gamer", "1", "Claim_111,000_hours_of_AFK_time._Jeez,_thats_like_an_entire_year_of_all_characters_idling_to_the_max.", "*STEAM_EXCLUSIVE_&*100_gems_&*1_'72hr_time_candy'", "0"],
     ["Mutant_Massacrer", "1", "Defeat_both_Mutant_Minibosses,_the_W3_Slush_and_W4_Mush._You_must_defeat_Slush_before_Mush,_in_that_order.", "*STEAM_EXCLUSIVE_&*RNG_item_unlock_&*Some_Gems_and_Candy", "0"],
     ["Soda_Poisoning", "1", "Beat_wave_50_of_Clash_of_Cans_with_3_Poisonic_Elders_at_Lv_5_or_higher._Also,_you_can't_sell_towers.", "*Starfield_Belt_BG_&for_Title_Screen", "0"],
     ["The_True_King", "1000000", "Reach_a_total_of_1_million_Orb_Kills.", "{10_Tab_4_Talent_Pts", "0"],
@@ -1330,7 +1371,7 @@ achievementsList = [
     ["Lavathian_Skulls", "1", "Get_a_Lava_Skull_or_higher_on_every_Smolderin'_Plateau_monster_in_the_Deathnote._Yea,_the_100M_Kill_Skull._This_is_gonna_take_a_while.", "{2%_Faster_Monster_&Respawn_Time_for_&All_World_5_mobs", "0"],
     ["Seaworthy_Captain", "1", "Level_up_a_Sailing_Captain_to_Lv_15._Few_captains_in_the_universe_can_rival_their_ability_to_plunder!", "{1%_ALL_STAT_for_&all_characters", "0"],
     ["Grand_Captain", "1", "Level_up_a_Sailing_Captain_to_Lv_10._They_shall_sail_the_seas_with_confidence!", "{20%_Captain_EXP_&for_sailing", "0"],
-    ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
+    ["Hug_from_Timmy", "1", "SECRET_ACHIEVEMENT_------------------------_The_lil'_fella_REALLY_likes_icecream!", "{10%_Monument_AFK", "0"],
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
     ["FILLERZZZ_ACH", "20", "-", "*FILLERZ_&*FILLERZ_&*FILLERZ", "0"],
@@ -1389,11 +1430,11 @@ achievementsList = [
     ["Top_Floor_Sneaking", "1", "Reach_what_seems_like_the_top_Floor_of_Sneaking_with_the_Eldar_Kingulyte_guest.", "*1.07x_Jade_Gain", "0"],
     ["Untying_Extraordinaire", "1", "Untie_6_other_Ninja_Twins.", "*1.05x_Stealth_for_&all_Ninja_Twins", "0"],
     ["Lucky_Stealy", "1", "Successfully_find_6_items_in_a_row,_in_a_single_AFK_claim_within_Sneaking.", "*1.05x_Jade_Gain", "0"],
-    ["Yellow_Belt", "1", "Find_a_论50_Yellow_Belt_Sneaking_Charm._Yes,_exactly_论50.", "{10%_Sneaking_EXP_gain", "0"],
+    ["Yellow_Belt", "1", "Find_a_\u8bba50_Yellow_Belt_Sneaking_Charm._Yes,_exactly_\u8bba50.", "{10%_Sneaking_EXP_gain", "0"],
     ["Straw_Hat_Stacking", "1", "SECRET_ACHIEVEMENT_------------------------_It's_a_shame_you_can't_wear_them_all_at_once...", "*1.01x_DMG_Multiplier_&for_all_characters", "0"],
     ["Best_Bloomie", "1", "Get_a_Bloomy_Summoning_Familiar.", "*1.05x_All_Essence_&Gain", "0"],
     ["Regalis_My_Beloved", "1", "Get_a_Regalis_Summoning_Familiar.", "*1.01x_larger_Winners_&Bonuses_from_Summoning", "0"],
-    ["This,_is,_Summoning!", "1", "Survive_for_200_seconds_in_the_Endless_Summoning_Mode,_which_isn't_out_yet.", "*1.05x_All_Essence_&Gain", "0"],
+    ["This,_is,_Summoning!", "1", "Survive_for_5_minutes_in_The_King's_Gambit._Find_this_feature_in_Cavern_14_of_the_Hole_in_world_5.", "*1.05x_All_Essence_&Gain", "0"],
     ["Summoning_CM", "1", "Get_10_Career_Wins_within_Summoning", "{3%_Damage_for_all_&characters", "0"],
     ["Summoning_IM", "1", "Get_25_Career_Wins_within_Summoning", "{20%_Money_for_all_&characters", "0"],
     ["Summoning_GM", "1", "Get_58_Career_Wins_within_Summoning", "{6%_Drop_Chance_&for_all_characters", "0"],
@@ -1600,9 +1641,9 @@ equipment_by_bonus_dict = {
     }
 }
 
-# `UpgradeVault`
-vault_upgrades_list = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_\u88fd_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 36 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_\u88fd 25 1.15 0 200 1 54 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 65 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_\u88fd 60 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 83 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 85 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 87 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_\u88fd 150 7.5 0 5 10 100 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_town!".split(" "), "Mining_Payday$_\u88fd 200 1.28 0 40 2 115 0 0 +{%_Coins_(Total:+^%)_per_POW_10_ores_mined. Go_make_a_2nd_player_to_go_mining_for_you!".split(" "), "Baby_on_Board_\u88fd 250 1.08 0 50 2 130 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 175 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_\u88fd 300 4.50 0 10 5 190 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_\u88fd 1000 6 0 5 1 220 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 275 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Carry_Capacity_\u88fd 650 1.35 0 100 5 300 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Drops_for_Days 700 1.17 0 50 1 345 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_\u88fd 800 1.25 0 100 2 350 0 0 +{%_Dog Happiness".split(" "), "Slice_N_Dice_\u88fd 900 1.10 0 100 2 370 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_\u88fd 400 1.10 0 100 5 410 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 460 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 520 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_\u88fd 1300 1.15 0 100 5 580 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 630 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 690 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_\u88fd 1800 1.13 0 50 1 750 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 830 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 910 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 960 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_\u88fd 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_\u88fd 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_\u88fd 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_\u88fd 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_\u88fd 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_\u88fd 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_\u88fd 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_\u88fd 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_\u88fd 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_\u88fd 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
-# `"VaultUpgBonus" == d` in `_customBlock_Summoning`
+# `UpgradeVault`. Last updated in v2.43 Nov 6
+vault_upgrades_list = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_\u88fd_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 49 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_\u88fd 25 1.15 0 200 1 69 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 80 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_\u88fd 90 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 95 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 97 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 99 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_\u88fd 170 7.5 0 5 10 120 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_Codex".split(" "), "Mining_Payday$_\u88fd 200 1.28 0 40 2 170 0 0 Boosts_Coins_based_on_total_ores_mined_(Total:+^%) Make_a_2nd_player_to_do_the_mining_for_you!".split(" "), "Baby_on_Board_\u88fd 250 1.08 0 50 2 210 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 240 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_\u88fd 300 4.50 0 10 5 280 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_\u88fd 1000 6 0 5 1 330 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 370 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Carry_Capacity_\u88fd 650 1.35 0 100 5 410 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Drops_for_Days 700 1.17 0 50 1 450 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_\u88fd 800 1.25 0 100 2 480 0 0 +{%_Dog Happiness".split(" "), "Slice_N_Dice_\u88fd 900 1.10 0 100 2 550 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_\u88fd 400 1.10 0 100 5 600 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 630 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 680 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_\u88fd 1300 1.15 0 100 5 750 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 810 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 860 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_\u88fd 1800 1.13 0 50 1 900 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 930 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 950 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 980 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_\u88fd 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_\u88fd 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_\u88fd 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_\u88fd 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_\u88fd 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_\u88fd 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_\u88fd 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_\u88fd 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_\u88fd 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_\u88fd 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
+# `"VaultUpgBonus" == d` in `_customBlock_Summoning`. Last updated in v2.43 Nov 6
 vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 999]
 vault_stack_types = ['Knockout']
 vault_section_indexes = [32, 61]  #Vault Mastery and Vault Mastery II's indexes
