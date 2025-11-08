@@ -1,3 +1,7 @@
+import re
+
+from utils.text_formatting import numeralList, numberToLetter
+
 artifact_tiers = ['Base', 'Ancient', 'Eldritch', 'Sovereign']
 max_sailing_artifact_level = len(artifact_tiers)
 
@@ -238,35 +242,36 @@ divinity_arctis_breakpoints = {
     20: {332: 6731, 333: 5817, 334: 5123, 335: 4579, 336: 4141, 337: 3780, 338: 3478}
 }
 
-#From code, GamingUpg = function (). Last updated 2.11 Kangaroo
-gaming_superbits_dict = {
-    #
-    0: {'Name': 'Bits per Achievement', 'BonusText': "x1.03 Bits per Achievement you've unlocked", 'Cost': 1e9, 'CodeString': '_'},
-    1: {'Name': 'Plant Evo', 'BonusText': '+1 Max Evolution for all plants. This is 20x rarer than normal evolutions', 'Cost': 30e9, 'CodeString': 'a'},
-    2: {'Name': 'Obol Stat Booster', 'BonusText': 'All obols give +40% more STR/AGI/WIS/LUK than what they say they do!', 'Cost': 0, 'CodeString': 'b'},
-    3: {'Name': 'MSA Sailing', 'BonusText': 'MSA now gives +1% bonus Sailing Speed per 10 total Waves', 'Cost': 0, 'CodeString': 'c'},
-    4: {'Name': 'Moar Bubbles', 'BonusText': '+20% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'd'},
-    5: {'Name': 'Plant Evo II', 'BonusText': '+1 Max Evolution for all plants. This one is 5000x rarer than normal', 'Cost': 0, 'CodeString': 'e'},
-    6: {'Name': 'Worship Totem HP', 'BonusText': '+5 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'f'},
-    7: {'Name': 'MSA Totalizer', 'BonusText': 'Unlock the Totalizer for the Miniature Soul Apparatus (MSA) in World 3', 'Cost': 0, 'CodeString': 'g'},
-    8: {'Name': 'Shrine Speed', 'BonusText': 'All shrines level up +50% faster than normal', 'Cost': 0, 'CodeString': 'h'},
-    9: {'Name': 'No more Praying', 'BonusText': 'If no Prayers equipped, get 1/5th bonus of all prayers, and no curses', 'Cost': 0, 'CodeString': 'i'},
-    10: {'Name': 'Double EXP', 'BonusText': '+15% chance for Double Exp whenever claiming AFK gains', 'Cost': 0, 'CodeString': 'j'},
-    11: {'Name': 'MSA Class EXP', 'BonusText': 'MSA now gives +1% bonus Class EXP per 10 total Waves', 'Cost': 0, 'CodeString': 'k'},
-    12: {'Name': 'Library Checkouts', 'BonusText': '+1% faster Library Checkout Speed per Gaming Lv.', 'Cost': 0, 'CodeString': 'l'},
-    13: {'Name': 'MSA Mealing', 'BonusText': 'MSA now gives +10% bonus Meal Cooking speed per 10 total Waves', 'Cost': 0, 'CodeString': 'm'},
-    14: {'Name': 'Spice is Nice', 'BonusText': 'All spice claimed, either manually or automatically, is worth 1.5x more.', 'Cost': 0, 'CodeString': 'n'},
-    15: {'Name': 'Worship Totem HPr', 'BonusText': '+10 Max HP for Worship Totem during Tower Defence summon battle', 'Cost': 0, 'CodeString': 'o'},
-    16: {'Name': 'MSA Skill EXP', 'BonusText': 'MSA now gives +1% bonus Skill Exp per 10 total Waves', 'Cost': 0, 'CodeString': 'p'},
-    17: {'Name': 'Spice is Nicer', 'BonusText': 'All spice claimed, either manually or automatically, is worth 2x more.', 'Cost': 0, 'CodeString': 'q'},
-    18: {'Name': 'Plant Evo III', 'BonusText': '+1 Max Evolution for all plants. This one is 250x rarer than normal', 'Cost': 0, 'CodeString': 'r'},
-    19: {'Name': 'Noobie Gains', 'BonusText': 'Your lowest Leveled character gets 1.5x Class EXP', 'Cost': 0, 'CodeString': 's'},
-    20: {'Name': 'MSA Big Bits', 'BonusText': 'MSA now gives +50% Bits for Gaming per 10 total Waves', 'Cost': 0, 'CodeString': 't'},
-    21: {'Name': 'Atom Redux', 'BonusText': 'All atom upgrading is now 10% cheaper', 'Cost': 0, 'CodeString': 'u'},
-    22: {'Name': 'Even Moar Bubbles', 'BonusText': '+30% chance for +1 more bubble boosted by No Bubble Left Behind', 'Cost': 0, 'CodeString': 'v'},
-    23: {'Name': 'Isotope Discovery', 'BonusText': 'All atoms now have +10 Max LV', 'Cost': 0, 'CodeString': 'w'},
-}
-snail_max_rank = 25
+def _parse_gaming_superbits(raw_game_data):
+    name_counts = {}
+
+    gaming_superbits_dict = {}
+    for idx, (bonus_text, base, exp, name) in enumerate(raw_game_data):
+        name = name.replace("_", " ").replace("|", " ")
+        bonus_text = (re.sub("_+Total_Bonus.*$", "", bonus_text, flags=re.IGNORECASE)
+                      .replace("\u20a3", " Bits")
+                      .replace("_", " ")
+                      .replace("(}).", "")
+                      .strip())
+        cost = int(base) * 10 ** int(exp)
+
+        name_num = name_counts.get(name, 0) + 1
+        name_counts[name] = name_num
+        if name_num > 1:
+            name += " " + numeralList[name_num-1]
+
+        gaming_superbits_dict[idx] = {
+            "Name": name,
+            "BonusText": bonus_text,
+            "Cost": cost,
+            "CodeString": numberToLetter(idx)
+        }
+
+    return gaming_superbits_dict
+
+# `GamingUpg = function()` in source. Last updated in v2.43 Nov 6 (World 7)
+gaming_superbits_dict = _parse_gaming_superbits([["x1.03\u20a3_per_Achievement_you've_unlocked_(}).___Total_bonus:_x{\u20a3","1","9","Bits_Per|Achievement"],["+1_Max_Evolution_for_all_plants._This_is_20x_rarer_than_normal_evolutions","3","10","Plant|evo"],["All_obols_give_+40%_more_STR/AGI/WIS/LUK_than_what_they_say_they_do!","2","12","obol_stat|booster"],["MSA_now_gives_+1%_bonus_Sailing_Speed_per_10_total_Waves","5","16","MSA|Sailing"],["+20%_chance_for_+1_more_bubble_boosted_by_No_Bubble_Left_Behind","1","22","Moar|Bubbles"],["+1_Max_Evolution_for_all_plants._This_one_is_5000x_rarer_than_normal","3","44","Plant|evo"],["+5_Max_HP_for_Worship_Totem_during_Tower_Defence_summon_battle","2","11","Worship|Totem_HP"],["Unlock_the_Totalizer_for_the_Miniature_Soul_Apparatus_(MSA)_in_World_3","5","13","MSA|Totalizer"],["All_shrines_level_up_+50%_faster_than_normal","5","14","Shrine|Speed"],["If_no_Prayers_equipped,_get_1/5th_bonus_of_all_prayers,_and_no_curses","3","17","No_more|Praying"],["+15%_chance_for_Double_Exp_whenever_claiming_AFK_gains","2","23","Double|Exp"],["MSA_now_gives_+1%_bonus_Class_EXP_per_10_total_Waves","4","38","MSA|Class_EXP"],["+1%_Library_Checkout_Speed_per_Gaming_Lv.___Total_Bonus:_+{%_Spd","4","19","Library|Checkouts"],["MSA_now_gives_+10%_bonus_Meal_Cooking_speed_per_10_total_Waves","2","20","MSA|Mealing"],["All_spice_claimed,_either_manually_or_automatically,_is_worth_1.5x_more.","4","25","Spice|Is_Nice"],["+10_Max_HP_for_Worship_Totem_during_Tower_Defence_summon_battle","4","31","Worship|Totem_HPr"],["MSA_now_gives_+1%_bonus_Skill_Exp_per_10_total_Waves","4","41","MSA|Skill_EXP"],["All_spice_claimed,_either_manually_or_automatically,_is_worth_2x_more.","5","47","Spice|Is_Nicer"],["+1_Max_Evolution_for_all_plants._This_one_is_250x_rarer_than_normal","2","27","Plant|evo"],["Your_lowest_Leveled_character_gets_1.5x_Class_EXP","4","29","Noobie|Gains"],["MSA_now_gives_+50%_Bits_for_Gaming_per_10_total_Waves","5","33","MSA|Big_Bits"],["All_atom_upgrading_is_now_10%_cheaper","2","36","Atom|Redux"],["+30%_chance_for_+1_more_bubble_boosted_by_No_Bubble_Left_Behind","4","45","Even_Moar|Bubbles"],["All_atoms_now_have_+10_Max_LV","2","50","Isotope|Discovery"],["1.01x_Class_EXP_per_Spelunk_Discovery.___________Total_Bonus:_{x_EXP","5","51","Classy|Discoveries"],["Adds_a_new_bonus_to_The_Slab:_+%_Total_Spelunking_POW","2","53","Slabby|Spelunking"],["1.02x_Artifact_chance_per_Spelunk_Discovery.__________Total_Bonus:_{x","6","55","Artifacto|Discoveries"],["MSA_now_gives_+1%_Spelunking_POW_per_10_total_Waves","6","58","MSA|Spelunking"],["+20%_Palette_Luck_per_Snail_LV_over_25.________Total_Bonus:_+{%_Luck","6","65","Lucky|Snail"],["The_Immortal_Snail_now_has_+10_Max_LV","5","71","Snail|Genesis"],["The_Immortal_Snail_now_has_+5_Max_LV","3","52","Snail|Omega"],["Monument_reward_multi_increases_normally_for_+10_more_days","9","54","Monument|Infimulti"],["1.05x_Collectible_chance_per_Spelunk_Discovery._______Total_Bonus:_{x","8","57","Jar_Jar|Collectible"],["Collect_Ultimate_Cogs_while_there_are_5+_left_to_get_a_Jewel_Cog_(1/day)","2","59","Jewel|Cogs"],["Adds_a_new_bonus_to_slab_when_W7_Skill_2_comes_out","3","67","Slabby|Something"],["+10_Max_LV_for_Equinox_upgrades","4","73","Equinox|Unending"],["Can_use_Spelunking_tools_you_don't_have_enough_stamina_for","6","58","Any_tool|Any_time"],["The_Squirrel_now_has_a_new_3rd_upgrade_to_spend_acorns_on","7","61","Squirrel|Triad"],["+1%_Palette_Luck_per_Total_Colour_LVs.__________Total_Bonus:_+{%_Luck","6","64","Colourful|Luck"],["If_no_Prayers_equipped,_get_2/5th_bonus_of_all_prayers,_and_no_curses","2","69","Prayers|Begone"],["The_Immortal_Snail_now_has_+10_Max_LV","5","70","Snail|Zenith"],["Adds_a_new_bonus_to_slab_when_W7_Skill_3_comes_out","7","76","Slabby|Something"],["+1_Palette_Colour_Slot,_and_2x_total_Palette_Luck!","3","60","Bigger|Palette"],["Bolaia_studies_ALSO_adjacent_caverns,_not_just_the_selected_one!","6","63","Peripheral|Vision"],["MSA_will_give_a_bonus_for_W7_skill_2_when_released...","1","68","MSA|Something"],["+3%_Palette_Luck_per_Gaming_LV_over_200._______Total_Bonus:_+{%_Luck","3","72","Gamer|Luck"],["MSA_will_give_a_bonus_for_W7_skill_3_when_released...","6","74","MSA|Something"],["+1_LV_for_all_Talents_per_100_Class_LV_over_500.______Total_Bonus:_+{_LV","8","78","Timmy|Talented"]])
+snail_max_rank = 25 # TODO: Remove as this is not constant
 
 
 def getDivinityNameFromIndex(inputValue: int) -> str:
