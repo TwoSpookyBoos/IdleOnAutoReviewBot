@@ -397,6 +397,9 @@ forge_upgrades_dict = {
         "MaxPurchases": 60
     }
 }
+
+
+# TODO: most of this can probably be generated from source. `StatueInfo` in source but `Farmer` + `Target` are AutoReview-specific, so those need to be done manually. Target should probably just be renamed to `Image`
 statues_dict = {
     0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
     1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
@@ -427,12 +430,15 @@ statues_dict = {
     26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
     28: {"Name": "Villager Statue", "ItemName": "EquipmentStatues29", "Effect": "% Villager EXP", "BaseValue": 0.3, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"},
-    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0.2, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"}
+    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0.2, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"},
+    30: {"Name": "Spelunky Statue", "ItemName": "EquipmentStatues31", "Effect": "% Spelunk EXP", "BaseValue": 0.2, "Farmer": "W7 Crystals with DK", "Target": ""},
+    31: {"Name": "Coral Statue", "ItemName": "EquipmentStatues32", "Effect": "% Daily Coral", "BaseValue": 0.02, "Farmer": "W7 Crystals with DK", "Target": ""}
 }
 statue_type_list = ['Normal', 'Gold', 'Onyx']
 statue_count = len(statues_dict.keys())
 event_points_shop_dict = {
-    # Found near end of NinjaInfo function in the source code
+    # Found near end of `NinjaInfo` in source. Last updated in v2.41
+    # TODO: this should be generated directly from the pasted source. Source does not directly include `Code` though. Maybe that's stored elsewhere?
     'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4', 'Image': 'event-shop-0'},
     'Stamp Stack': {'Cost': 30, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
     'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day', 'Image': 'event-shop-2'},
