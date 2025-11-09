@@ -1,7 +1,7 @@
 from flask import g as session_data
 
 from consts.consts_autoreview import build_subgroup_label, break_you_best
-from consts.consts_w2 import min_NBLB, max_NBLB, atrisk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
+from consts.consts_w2 import min_NBLB, max_NBLB, at_risk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
     bubble_cauldron_color_list, nblb_skippable, nblb_max_index
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w6 import max_farming_crops
@@ -69,7 +69,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                 or todays_lowest >= low_skip
                 or todays_highest >= high_skip
             ):
-                if bubbleName in atrisk_basic_bubbles:
+                if bubbleName in at_risk_basic_bubbles:
                     if bubbleValuesDict['Level'] <= todays_highest:
                         subgroupName = standard_today
                     else:

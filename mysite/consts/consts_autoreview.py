@@ -175,6 +175,7 @@ versions_patches = {
     265: "v2.36 Charred Bones",
     267: "v2.37 Emperor Boss",
     # TODO: some are missing here
+    279: "v2.41 Summoning Bosses",
     297: "v2.43 World 7"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
