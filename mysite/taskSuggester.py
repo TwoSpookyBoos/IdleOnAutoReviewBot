@@ -146,6 +146,7 @@ def main(inputData, source_string, runType="web"):
             beanstalk.getBeanstalkAdviceSection(),
             emperor.getEmperorAdviceSection()
         ],
+        sections_7 := []
     ]
 
     #Sort sections into rated and unrated, as well as checking for completeness
@@ -232,6 +233,7 @@ def main(inputData, source_string, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner=["w5banner.png", "w5bannertext.png"]),
         AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, banner=["cavernsbanner.png", "cavernsbannertext.png"]),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner=["w6banner.png", "w6bannertext.png"]),
+        AdviceWorld(name=WorldName.SHIMMERFIN_DEEP, sections=sections_7, banner=["w7banner.png", "w7bannertext.png"]),
     ]
 
     for world in reviews:

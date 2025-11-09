@@ -503,6 +503,7 @@ class WorldName(Enum):
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
     SPIRITED_VALLEY = "Spirited Valley"
     THE_CAVERNS_BELOW = "The Caverns Below"
+    SHIMMERFIN_DEEP = "Shimmerfin Deep"
 
 class AdviceBase:
     """
