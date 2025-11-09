@@ -345,6 +345,8 @@ $world-monsters: (
     coralcave-crab: img('data/2CardsJ11.png'),
     coralcave-guardian: img('data/2CardsJ12.png'),
     crystal-cuttlefish: img('data/2CardsJ99.png'),
+
+    big-fish: img('data/W7_fish.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);
