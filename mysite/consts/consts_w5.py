@@ -1,6 +1,10 @@
 artifact_tiers = ['Base', 'Ancient', 'Eldritch', 'Sovereign']
 max_sailing_artifact_level = len(artifact_tiers)
-max_sailing_chests = 45  # Last verified as of v2.10
+
+# `_customBlock_Sailing -> "MaxChests"` in source. Last updated in v2.43
+# Seems to be clamped to 34 by `Math.min`
+max_sailing_chests = 34
+
 sailing_artifacts_list = [
     'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic',
     'Genie Lamp', 'Silver Ankh', 'Emerald Relic', 'Fun Hippoete', 'Arrowhead',

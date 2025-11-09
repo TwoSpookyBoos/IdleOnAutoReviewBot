@@ -346,8 +346,12 @@ def getCharacterDetails(inputJSON, runType):
         secondary_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadoutpre_{character_index}', []))
         equipped_cards_codenames[character_index] = [codename for codename in safe_loads(inputJSON.get(f'CardEquip_{character_index}', [])) if codename != 'B']
         try:
-            equipped_carset_identifier = list(safe_loads(inputJSON.get(f'CSetEq_{character_index}', {})).keys())[0]
-            equipped_cardset[character_index] = cardset_names[cardset_identifiers.index(equipped_carset_identifier)]
+            equipped_cardset_identifier = list(safe_loads(inputJSON.get(f'CSetEq_{character_index}', {})).keys())[0]
+            if equipped_cardset_identifier in cardset_identifiers:
+                equipped_cardset[character_index] = cardset_names[cardset_identifiers.index(equipped_cardset_identifier)]
+            else:
+                logger.warning(f'Found unknown cardset "{equipped_cardset_identifier}"')
+                equipped_cardset[character_index] = ""
         except IndexError:
             equipped_cardset[character_index] = ""
         equipped_star_signs[character_index] = [int(star_sign_id) for star_sign_id in inputJSON.get(f'PVtStarSign_{character_index}','_,')[:-1].split(',') if star_sign_id != '_']

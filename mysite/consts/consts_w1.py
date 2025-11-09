@@ -6,12 +6,16 @@ bribes_dict = {
     "Trash Island": ["The Art of the Bail", "Random Garbage", "Godlier Creation", "Fishermaster", "Muscles on Muscles", "Bottle Service", "Star Scraper"],
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
-unpurchasable_bribes = ["The Art of the Flail"]  # These bribes are in the game, but cannot be purchased as of v2.10
+
+# See the end of `BribeDescriptions` in source. Last updated in v2.43 Nov 6
+unpurchasable_bribes = ["The Art of the Flail"]
 stamp_types = ['Combat', 'Skill', 'Misc']
+
+# Last updated in v2.10
 unavailable_stamps_list = [
     'Shiny Crab Stamp', 'Gear Stamp', 'SpoOoky Stamp', 'Prayday Stamp',  #Skill
     'Talent I Stamp', 'Talent V Stamp',  #Misc
-]  # Last verified as of v2.10
+]
 stamp_maxes = {
     #Combat
     "Sword Stamp": 205,

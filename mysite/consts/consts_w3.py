@@ -194,12 +194,15 @@ totems_list = [
     "Breezy Battle"
 ]
 
+# TODO: W7 has added more sources
 max_static_book_levels = 140
 max_scaling_book_levels = 30
 max_summoning_book_levels = 31
 max_overall_book_levels = 100 + max_static_book_levels + max_scaling_book_levels + max_summoning_book_levels
-hardcap_symbols = 300  # Last verified as of v2.37 Emperor
-hardcap_enhancement_eclipse = 250  # Lava might add more in the future, but there are no bonuses above 250 in v2.10
+hardcap_symbols = (max_overall_book_levels // 20) * 20
+
+# see `TalentEnhDisp` in source (Amount of bonuses * 25). Last updated in v2.43 Nov 6
+hardcap_enhancement_eclipse = 10 * 25
 library_subgroup_tiers = [
     'Account Wide Priorities', 'Skilling - High Priority', 'Skilling - Medium Priority', 'Skilling - Low Priority', 'Skilling - Lowest Priority',
     'Combat - High Priority', 'Combat - Medium Priority', 'Combat - Low Priority', 'ALL Unmaxed Talents', 'VIP'

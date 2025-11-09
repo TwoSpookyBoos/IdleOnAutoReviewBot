@@ -218,7 +218,7 @@ for entry_index, entry in enumerate(caverns_measurer_measurements):
         ]
 
 caverns_measurement_percent_goals = {
-    # Formula comes from `MeasurementBaseBonus` in source. Last checked in v2.43 Nov 6
+    # Formula comes from `MeasurementBaseBonus` in source. Last updated in v2.43 Nov 6
     # =CosmosMulti * ScalingValue * (Level / (100 + Level))
     # Numbers calculated by Xythium https://docs.google.com/spreadsheets/d/1krMdc1cGhKLBVv7XFEBU4BUbatyLHggEwp7XN5a6gAc/edit?usp=sharing
     12: '10%', 25: '20%', 43: '30%', 67: '40%', 100: '50%', 150: '60%',
@@ -324,8 +324,10 @@ harp_notes = [
 ]
 max_harp_notes = len(harp_notes)
 
-#Taken from "LampBonuses" == e inside _customBlock_Holes function
-#(a.engine.getGameAttribute("DNSM").h.HoleozDT = "25,10,8;15,40,10;20,35,12;1,1,1;2,2,2" last verified as of v2.23
+# 'Bonus per Level' for the three stats boosted by 'World X Stuff' wishes.
+# Pad with empty rows to ensure that the index matches the world (i.e. the list at index 4 are the values for "World 4 Stuff")
+#`HoleozDT = "25,10,8;15,40,10;20,35,12;1,1,1;2,2,2"` in source. Last updated in v2.43 Nov 6
+# TODO: consider turning this into a dict where the keys are 'World X Stuff' for the existing wishes
 lamp_world_wish_values = [
     [0, 0, 0],
     [0, 0, 0],
@@ -484,7 +486,7 @@ def getBellExpRequired(bell_index, current_uses: int):
 
 
 def getBellImprovementBonus(i_index, i_level, schematic_stacks=0, schematic_owned=False):
-    # `BellMethodsQTY` in source. Last checked in v2.43 Nov 6
+    # `BellMethodsQTY` in source. Last updated in v2.43 Nov 6
     # Yes, HolesInfo[61] only applies AFTER the schematic is purchased. Probably a bug in game but must be replicated here for accuracy.
     result = (
         2 * i_level * max(1, pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))

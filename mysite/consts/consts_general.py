@@ -1037,7 +1037,7 @@ family_bonuses_dict = {
     #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
 }
 esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049, 3210, 6681, 1272447]
-arbitrary_es_family_goal = esFamilyBonusBreakpointsList[13]  #719 fairly feasible in v2.12, 885 feels too tough atm
+arbitrary_es_family_goal = esFamilyBonusBreakpointsList[14]  #885 fairly feasible, 1118 feels too tough atm. Last updated in v2.36 Nov 9
 def getNextESFamilyBreakpoint(currentLevel: int) -> int:
     result = -1
     for requirement in esFamilyBonusBreakpointsList:

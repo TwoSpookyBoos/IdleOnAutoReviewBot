@@ -1,12 +1,18 @@
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName
 
-max_index_of_vials = 75  # Last verified as of v2.29
-max_vial_level = 13  # Last verified as of 2.29
-max_maxable_vials = 69
+# len of `AlchemyVialItems` in source. Last updated in v2.41
+max_index_of_vials = len("Copper OakTree Grasslands1 CraftMat1 CopperBar Grasslands3 Jungle2 CraftMat5 JungleTree IronBar Forest1 ToiletTree Gold Forest3 Fish1 Sewers2 Bug1 DesertA2 Plat Fish2 BobJoePickle SnowA1 Soul1 Critter2 Void Refinery1 Bug5 SaharanFoal Critter1A SnowB2 Soul2 Critter4 SnowB3 Refinery2 SnowB5 Soul4 SnowC1 Critter7 SnowC4 Refinery5 Critter9 BallJoePickle GalaxyA1 GalaxyA3 Fish6 Soul5 GalaxyB3 Critter10 GalaxyB4 GalaxyC1b Fish8 GalaxyC4 LavaA1 Tree9 LavaA5b DreadloBar Bug10 LavaB3 Soul6 LavaC2 Marble Tree11 Fish13 Bug11 SpiA2 Bug12 Fish12 SpiB1 Bug13 GodshardBar Soul7 SpiC2 Tree13 SpiD3 Critter11".split(" "))
+
+vials_considered_unmaxable = ['Poison Froge', 'Purple Salt', 'Pearler Shell', 'Hampter', 'BobJoePickle', 'BallJoePickle']
+max_maxable_vials = max_index_of_vials - len(vials_considered_unmaxable)
+
+# based on `AlchemyVialQTYreq` in source (though we don't actually copy that array because it's weirdly formatted and has more entries than possible levels). Last updated in v2.43 Nov 6
+# Set the first element (Level 0) to 1 so we can set it as a `goal` in Advices
 vial_costs = [1, 100, 1000, 2500, 10e3, 50e3, 100e3, 500e3, 1e6, 5e6, 25e6, 100e6, 1e9]
-max_implemented_bubble_index = 29  # Last verified as of v2.29
-max_sigil_level = 3  # Last verified as of v2.29
+
+max_vial_level = len(vial_costs)
+
 min_NBLB = 2
 max_NBLB = 1500
 nblb_max_index = 24
@@ -108,6 +114,10 @@ critter_vials_list = [
     getReadableVialNames(47),  #Blobfish
     getReadableVialNames(74),  #Tuttle
 ]
+
+max_sigil_level = 3
+# `SigilDesc` in source. Last updated in [TODO]
+# TODO: parse this from source. Then update `max_sigil_level` so it's not a magic number but based on this dict
 sigils_dict = {
     "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000], 'Values': [0, 10, 20, 40]},
     "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000], 'Values': [0, 10, 20, 40]},
@@ -137,6 +147,9 @@ sigils_dict = {
 bubble_cauldron_color_list = ['Orange', 'Green', 'Purple', 'Yellow']
 alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
 alchemy_jobs_list = bubble_cauldron_color_list + alchemy_liquids_list + [k for k in sigils_dict.keys()]
+
+max_implemented_bubble_index = 29  # Last updated in v2.29
+# TODO: parse this from source (do not include placeholders). Adjust max_implemented_bubble_index so it's not a magic number but based on this dict.
 bubbles_dict = {
     0: {
         0: {'Name': 'Roid Ragin', 'Material': 'OakTree', 'x1': 1, 'x2': 0, 'funcType': 'add'},
@@ -314,7 +327,7 @@ def getReadableBubbleNames(inputNumber, color):
         return f"Unknown {color} Bubble {inputNumber}"
 
 
-atrisk_basic_bubbles = [
+at_risk_basic_bubbles = [
     "Roid Ragin",
     "Hearty Diggy",
     "Wyoming Blood",
