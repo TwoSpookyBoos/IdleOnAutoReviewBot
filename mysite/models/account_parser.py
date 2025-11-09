@@ -2377,9 +2377,9 @@ def _parse_w5_gaming(account):
             account.gaming['SuperBitsString'] = ''
             account.gaming['Envelopes'] = 0
 
-    for index, valuesDict in gaming_superbits_dict.items():
+    for name, valuesDict in gaming_superbits_dict.items():
         try:
-            account.gaming['SuperBits'][valuesDict['Name']] = {
+            account.gaming['SuperBits'][name] = {
                 'Unlocked': valuesDict['CodeString'] in account.gaming['SuperBitsString'],
                 'BonusText': valuesDict['BonusText']
             }

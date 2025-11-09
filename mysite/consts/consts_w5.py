@@ -260,8 +260,7 @@ def _parse_gaming_superbits(raw_game_data):
         if name_num > 1:
             name += " " + numeralList[name_num-1]
 
-        gaming_superbits_dict[idx] = {
-            "Name": name,
+        gaming_superbits_dict[name] = {
             "BonusText": bonus_text,
             "Cost": cost,
             "CodeString": numberToLetter(idx)
