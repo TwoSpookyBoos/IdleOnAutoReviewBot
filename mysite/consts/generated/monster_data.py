@@ -632,6 +632,9 @@ monster_data = {
     "anni4Event1": {
         "Name": "IdleOn 4th Anniversary"
     },
+    "cropfallEvent1": {
+        "Name": "Bort The Cornhusk"
+    },
     "Blank0ramaFiller": {
         "Name": "Nightmare Amarok"
     },
@@ -1088,5 +1091,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "b9abf0385bb09f90cfb69f25cb19534ab863d3b2106ac751c9063975f7615f29"
+    "_hash": "e7e03d02af061a4f03ab869aa81c83ea159ed9c4c2324b93d13ab88ca4dc6ed3"
 }
