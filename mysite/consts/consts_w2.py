@@ -16,7 +16,7 @@ vials_dict = {
     }
     for index, (name, x1, x2, funcType, pos4, material, liquid, pos7, pos8, description, pos10, codename) in enumerate(alchemy_description[4])
 }
-max_index_of_vials = len("Copper OakTree Grasslands1 CraftMat1 CopperBar Grasslands3 Jungle2 CraftMat5 JungleTree IronBar Forest1 ToiletTree Gold Forest3 Fish1 Sewers2 Bug1 DesertA2 Plat Fish2 BobJoePickle SnowA1 Soul1 Critter2 Void Refinery1 Bug5 SaharanFoal Critter1A SnowB2 Soul2 Critter4 SnowB3 Refinery2 SnowB5 Soul4 SnowC1 Critter7 SnowC4 Refinery5 Critter9 BallJoePickle GalaxyA1 GalaxyA3 Fish6 Soul5 GalaxyB3 Critter10 GalaxyB4 GalaxyC1b Fish8 GalaxyC4 LavaA1 Tree9 LavaA5b DreadloBar Bug10 LavaB3 Soul6 LavaC2 Marble Tree11 Fish13 Bug11 SpiA2 Bug12 Fish12 SpiB1 Bug13 GodshardBar Soul7 SpiC2 Tree13 SpiD3 Critter11 Spelunking0 Tree14 w7A3 Prehistrium Soul8 Spelunking2 w7A5 Bug15 w7A12".split(" "))
+max_index_of_vials = len(vials_dict)
 vials_considered_unmaxable = ['Poison Froge', 'Purple Salt', 'Pearler Shell', 'Hampter', 'BobJoePickle', 'BallJoePickle']
 max_maxable_vials = max_index_of_vials - len(vials_considered_unmaxable)
 
