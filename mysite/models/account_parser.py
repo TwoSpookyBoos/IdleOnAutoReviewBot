@@ -8,7 +8,7 @@ from consts.consts_idleon import lavaFunc, companions_data
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievementsList, allMeritsDict, vault_stack_types,
+    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
     vault_section_indexes, vault_upgrades_list, vault_dont_scale
 )
 from consts.consts_master_classes import (
@@ -455,13 +455,13 @@ def _parse_dungeon_upgrades(account):
 def _parse_general_achievements(account):
     account.achievements = {}
     raw_reg_achieves = safe_loads(account.raw_data.get('AchieveReg', []))
-    if len(raw_reg_achieves) < len(achievementsList):
-        logger.warning(f"Achievements list shorter than expected by {len(achievementsList) - len(raw_reg_achieves)}. "
+    if len(raw_reg_achieves) < len(achievements_list):
+        logger.warning(f"Achievements list shorter than expected by {len(achievements_list) - len(raw_reg_achieves)}. "
                        f"Likely old data. Defaulting them all to Incomplete.")
-        while len(raw_reg_achieves) < len(achievementsList):
+        while len(raw_reg_achieves) < len(achievements_list):
             raw_reg_achieves.append(0)
 
-    for achieveIndex, achieveData in enumerate(achievementsList):
+    for achieveIndex, achieveData in enumerate(achievements_list):
         ach_name = achieveData[0].replace('_', ' ')
         try:
             if ach_name != "FILLERZZZ ACH":
@@ -1137,8 +1137,8 @@ def _parse_w1_statues(account):
     account.maxed_statues = 0
     # "StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
     raw_statue_type_list = safe_loads(account.raw_data.get("StuG", []))
-    if not raw_statue_type_list:
-        raw_statue_type_list = [0] * statue_count
+    if len(raw_statue_type_list) != statue_count:
+        raw_statue_type_list += [0] * (statue_count - len(raw_statue_type_list))
     account.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statue_type_list.index("Onyx")
     statue_levels = [0] * statue_count
 
@@ -3658,8 +3658,11 @@ def _parse_w6_summoning(account):
     raw_kr_best = safe_loads(account.raw_data.get('KRbest', {}))
     if raw_kr_best:
         for colorIndex in range(len(summoning_match_colors)):
-            wins = safer_get(raw_kr_best, f'SummzTrz{colorIndex}', 0)
             color = summoning_match_colors[colorIndex]
+            # TODO: remove this if/continue once the Teal Summoning Stone exists
+            if color == "Teal":
+                continue
+            wins = safer_get(raw_kr_best, f'SummzTrz{colorIndex}', 0)
             account.summoning['Summoning Stones'][color] = {
                 'Wins': wins,
                 'Location': summoning_stone_locations[colorIndex],

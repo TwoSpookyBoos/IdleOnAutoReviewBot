@@ -814,9 +814,9 @@ def _calculate_w1_starsigns(account):
 
 
 def _calculate_w1_stamps(account):
-    # `"StampDoubler" == d` in source
+    # `"StampDoubler" == d` in source. Last Updated in v2.43 Nov 6
     account.exalted_stamp_multi = ValueToMulti(
-        100  #base
+        100 #base
         + (
             account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level']
             * account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']
@@ -825,6 +825,10 @@ def _calculate_w1_stamps(account):
         + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
         + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
         + (20 * account.event_points_shop['Bonuses']['Extra Exaltedness']['Owned'])
+        # TODO: + Gaming Palette Bonus
+        # TODO: + Exotic Market Bonus
+        # TODO: + Spelunk Bonus
+        # TODO: + Legend Talent Bonus
     )
 
     for stamp_name, stamp_values in account.stamps.items():
