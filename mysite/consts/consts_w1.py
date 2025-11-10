@@ -185,6 +185,8 @@ stamps_dict = {
         39: {'Name': "Void Sword Stamp", 'funcType': 'add', 'x1': 12, 'x2': 0, 'Material': 'rice-cake'},
         40: {'Name': "Void Axe Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 200, 'Material': 'bamboo-logs'},
         41: {'Name': "Captalist Stats Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 100, 'Material': 'firefly'},
+        42: {'Name': "Splosion Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 200, 'Material': 'earl-tail'},
+        43: {'Name': "Gud EXP Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 200, 'Material': 'earl-tail'},
     },
     "Skill": {
         0: {'Name': "Pickaxe Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
@@ -241,6 +243,9 @@ stamps_dict = {
         51: {'Name': "White Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'ladybug'},
         52: {'Name': "Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'caulifish'},
         53: {'Name': "Dark Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'effervescent logs'},
+        54: {'Name': "Amber Stamp", 'funcType': 'decay', 'x1': 30, 'x2': 150, 'Material': 'spelunking-chapter-2'},
+        55: {'Name': "Little Rock Stamp", 'funcType': 'decay', 'x1': 200, 'x2': 220, 'Material': 'spelunking-chapter-1'},
+        56: {'Name': "Hardhat Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150, 'Material': 'spelunking-chapter-3'},
     },
     "Misc": {
         0: {'Name': "Questin Stamp", 'funcType': 'decay', 'x1': 70, 'x2': 50, 'Material': 'slime-sludge'},
@@ -267,7 +272,9 @@ stamps_dict = {
         21: {'Name': "Refinery Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cheesy-crumbs'},
         22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
         23: {'Name': 'Cavern Resource Stamp', 'funcType': 'decay', 'x1': 100, 'x2': 250, 'Material': 'cooking-ladle'},
-        24: {'Name': 'Study Hall Stamp', 'funcType': 'decay', 'x1': 30, 'x2': 160, 'Material': 'villager-statue'}
+        24: {'Name': 'Study Hall Stamp', 'funcType': 'decay', 'x1': 30, 'x2': 160, 'Material': 'villager-statue'},
+        25: {'Name': 'Kruker Stamp', 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'equinox-flesh'},
+        26: {'Name': 'Corale Stamp', 'funcType': 'decay', 'x1': 10, 'x2': 150, 'Material': 'demonflesh'},
     }
 }
 capacity_stamps = ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]

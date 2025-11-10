@@ -1557,7 +1557,7 @@ $capacity-bags: (
     colossal-critta-pouch: img('wiki/Colossal_Critta_Pouch.png'),
     gargantuan-critta-pouch: img('wiki/Gargantuan_Critta_Pouch.png'),
     herculean-critta-pouch: img('wiki/Herculean_Critta_Pouch.png'),
-    enormous-critta-pouch: img('wiki/MaxCapBagTr11.png'),
+    enormous-critta-pouch: img('data/MaxCapBagTr11.png'),
 
     // Soul Pouches
     small-soul-pouch: img('wiki/Small_Soul_Pouch.png'),
@@ -1769,6 +1769,8 @@ $stamps: (
     void-sword-stamp: img('data/StampA40.png'),
     void-axe-stamp: img('data/StampA41.png'),
     captalist-stats-stamp: img('data/StampA42.png'),
+    splosion-stamp: img('data/StampA43.png'),
+    gud-exp-stamp: img('data/StampA44.png'),
     // Skilling
     pickaxe-stamp: img('data/StampB1.png'),
     hatchet-stamp: img('data/StampB2.png'),
@@ -1824,6 +1826,9 @@ $stamps: (
     white-essence-stamp: img('data/StampB52.png'),
     triad-essence-stamp: img('data/StampB53.png'),
     dark-triad-essence-stamp: img('data/StampB54.png'),
+    amber-stamp: img('data/StampB55.png'),
+    little-rock-stamp: img('data/StampB56.png'),
+    hardhat-stamp: img('data/StampB57.png'),
     // Misc
     questin-stamp: img('data/StampC1.png'),
     mason-jar-stamp: img('data/StampC2.png'),
@@ -1850,6 +1855,8 @@ $stamps: (
     atomic-stamp: img('data/StampC23.png'),
     cavern-resource-stamp: img('data/StampC24.png'),
     study-hall-stamp: img('data/StampC25.png'),
+    krunker-stamp: img('data/StampC26'),
+    corale-stamp: img('data/StampC27'),
 );
 
 $misc: (
