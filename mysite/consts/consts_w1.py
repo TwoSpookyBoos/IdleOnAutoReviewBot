@@ -1,3 +1,6 @@
+from consts.consts_idleon import NinjaInfo
+from utils.text_formatting import numberToLetter
+
 bribes_dict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
     "W2": ["Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal"],
@@ -440,29 +443,15 @@ statues_dict = {
 }
 statue_type_list = ['Normal', 'Gold', 'Onyx']
 statue_count = len(statues_dict.keys())
+
+# Found near end of `NinjaInfo` in source. Last updated in v2.43 Nov10
+NinjaInfo_event_shop = NinjaInfo[39]
 event_points_shop_dict = {
-    # Found near end of `NinjaInfo` in source. Last updated in v2.41
-    # TODO: this should be generated directly from the pasted source. `Code` is the index of the item ran through `numberToLetter` (Golden Tome -> 0 -> "_"; Stamp Stack -> 1 -> "a", etc.)
-    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4', 'Image': 'event-shop-0'},
-    'Stamp Stack': {'Cost': 30, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
-    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day', 'Image': 'event-shop-2'},
-    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3', 'Image': 'event-shop-3'},
-    'Supreme Wiring': {'Cost': 45, 'Code': 'd', 'Description': '+2% Printer Output per day, taking new sample resets this', 'Image': 'event-shop-4'},
-    'Sleepy Joe Armstrong': {'Cost': 25, 'Code': 'e', 'Description': '+20% AFK Gains for all things IdleOn related', 'Image': 'event-shop-5'},
-    'Village Encouragement': {'Cost': 30, 'Code': 'f', 'Description': 'All Villagers in World 5 Camp get 1.25x EXP Gain', 'Image': 'event-shop-6'},
-    'Gilded Vote Button': {'Cost': 35, 'Code': 'g', 'Description': 'Get +17% higher Ballot Bonus Multi from Voting', 'Image': 'event-shop-7'},
-    'Extra Page 1': {'Cost': 20, 'Code': 'h', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-8'},
-    'Coin Stacking': {'Cost': 15, 'Code': 'i', 'Description': 'Get 1.5x multiplier to all coins', 'Image': 'event-shop-9'},
-    'Storage Chest': {'Cost': 15, 'Code': 'j', 'Description': 'Get +12 storage slots', 'Image': 'event-shop-10'},
-    'Storage Vault': {'Cost': 32, 'Code': 'k', 'Description': 'Get +16 storage slots', 'Image': 'event-shop-11'},
-    'Secret Pouch': {'Cost': 27, 'Code': 'l', 'Description': 'Get +3 Inventory slots', 'Image': 'event-shop-12'},
-    'Ribbon Connoisseur': {'Cost': 35, 'Code': 'm', 'Description': 'Get +3 daily Ribbons', 'Image': 'event-shop-13'},
-    'Golden Square': {'Cost': 23, 'Code': 'n', 'Description': 'Get +1 Trimmed Constrution slot', 'Image': 'event-shop-14'},
-    'Summoning Star': {'Cost': 30, 'Code': 'o', 'Description': 'Get +10 Summoning Doublers', 'Image': 'event-shop-15'},
-    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': 'Get +13% higher Ballot Bonus Multi from Voting', 'Image': 'event-shop-16'},
-    'Extra Page 2': {'Cost': 22, 'Code': 'q', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-17'},
-    'Extra Exaltedness': {'Cost': 35, 'Code': 'r', 'Description': 'Get +1 Exalted Stamp use, and +20% Exalt Bonus.', 'Image': 'event-shop-18'},
-    'Smiley Statue': {'Cost': 30, 'Code': 's', 'Description': 'All statues give 1.30x higher bonuses', 'Image': 'event-shop-19'},
-    'Government Subsidy': {'Cost': 17, 'Code': 't', 'Description': 'Get 1.60x more coins from defeating monsters', 'Image': 'event-shop-20'},
-    'Automated Mail': {'Cost': 15, 'Code': 'u', 'Description': 'Get +5 Boxes at the Post Office every day', 'Image': 'event-shop-21'},
+    NinjaInfo_event_shop[index].split('@')[0].replace('_', ' ').strip(): {
+        'Cost': NinjaInfo_event_shop[index+1],
+        'Code': numberToLetter(int(index/2)),
+        'Image': f'event-shop-{int(index/2)}',
+        'Description': NinjaInfo_event_shop[index].split('@')[1].replace('_', ' ').strip()
+    }
+    for index in range(0, len(NinjaInfo_event_shop), 2)
 }
