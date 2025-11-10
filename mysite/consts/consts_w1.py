@@ -273,7 +273,7 @@ stamps_dict = {
         22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
         23: {'Name': 'Cavern Resource Stamp', 'funcType': 'decay', 'x1': 100, 'x2': 250, 'Material': 'cooking-ladle'},
         24: {'Name': 'Study Hall Stamp', 'funcType': 'decay', 'x1': 30, 'x2': 160, 'Material': 'villager-statue'},
-        25: {'Name': 'Krunker Stamp', 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'equinox-flesh'},
+        25: {'Name': 'Kruker Stamp', 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'equinox-flesh'},
         26: {'Name': 'Corale Stamp', 'funcType': 'decay', 'x1': 10, 'x2': 150, 'Material': 'demonflesh'},
     }
 }
