@@ -54,6 +54,7 @@ from consts.consts_w6 import (
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName, numberToLetter
 
 logger = get_logger(__name__)
@@ -1015,28 +1016,32 @@ def _parse_w1_upgrade_vault(account):
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
-    account.star_sign_extras = {"UnlockedSigns": 0}
-    raw_star_signs = safe_loads(account.raw_data.get("StarSg", {}))
+    account.star_sign_extras = {}
+    raw_star_signs = safe_loads(account.raw_data.get('StarSg', {}))
     for signIndex, signValuesDict in starsigns_dict.items():
-        account.star_signs[signValuesDict['Name']] = {
-            'Index': signIndex,
-            'Passive': signValuesDict['Passive'],
-            '1_Value': signValuesDict.get('1_Value', 0),
-            '1_Stat': signValuesDict.get('1_Stat', ''),
-            '2_Value': signValuesDict.get('2_Value', 0),
-            '2_Stat': signValuesDict.get('2_Stat', ''),
-            '3_Value': signValuesDict.get('3_Value', 0),
-            '3_Stat': signValuesDict.get('3_Stat', ''),
-        }
         try:
-            # Some StarSigns are saved as strings "1" to mean unlocked.
-            # The names in the JSON also have underscores instead of spaces
-            account.star_signs[signValuesDict['Name']]['Unlocked'] = safer_get(raw_star_signs, signValuesDict['Name'].replace(" ", "_"), 0) > 0
-            if account.star_signs[signValuesDict['Name']]['Unlocked']:
-                account.star_sign_extras['UnlockedSigns'] += 1
+            account.star_signs[signValuesDict['Name']] = {
+                'Index': signIndex,
+                'Passive': signValuesDict['Passive'],
+                'Unlocked': parse_number(safer_get(raw_star_signs, signValuesDict['Name'].replace(' ', '_'), 0)) > 0
+                # Some StarSigns are saved as strings "1", some are int 1 to mean unlocked.
+                # 'Bonus1': signValuesDict.get('Bonus1', 0),
+                # 'Bonus2': signValuesDict.get('Bonus2', 0),
+                # 'Bonus3': signValuesDict.get('Bonus3', 0),
+            }
         except Exception as e:
             logger.warning(f"Star Sign Parse error at signIndex {signIndex}: {e}. Defaulting to Locked")
-            account.star_signs[signValuesDict['Name']]['Unlocked'] = False
+            account.star_signs[signValuesDict['Name']] = {
+                'Index': signIndex,
+                'Passive': signValuesDict['Passive'],
+                'Unlocked': False,
+                # 'Bonus1': signValuesDict.get('Bonus1', 0),
+                # 'Bonus2': signValuesDict.get('Bonus2', 0),
+                # 'Bonus3': signValuesDict.get('Bonus3', 0),
+            }
+
+    account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
+
 
 def _parse_w1_forge(account):
     account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
