@@ -1349,6 +1349,7 @@ MaxCapBagF8: Volumetric Food Pouch
 MaxCapBagF9: Colossal Food Pouch
 MaxCapBagF10: Gargantuan Food Pouch
 MaxCapBagF11: Herculean Food Pouch
+MaxCapBagF12: Enormous Food Pouch
 MaxCapBagM1: Mini Materials Pouch
 MaxCapBagM2: Cramped Material Pouch
 MaxCapBagM3: Small Material Pouch
@@ -1361,6 +1362,7 @@ MaxCapBagM9: Volumetric Matty Pouch
 MaxCapBagM10: Colossal Matty Pouch
 MaxCapBagM11: Gargantuan Matty Pouch
 MaxCapBagM12: Herculean Matty Pouch
+MaxCapBagM13: Enormous Matty Pouch
 MaxCapBagFi0: Miniature Fish Pouch
 MaxCapBagFi1: Cramped Fish Pouch
 MaxCapBagFi2: Small Fish Pouch
@@ -1386,6 +1388,7 @@ MaxCapBagB8: Volumetric Bug Pouch
 MaxCapBagB9: Colossal Bug Pouch
 MaxCapBagB10: Gargantuan Bug Pouch
 MaxCapBagB11: Herculean Bug Pouch
+MaxCapBagB12: Enormous Bug Pouch
 MaxCapBagTr0: Cramped Critter Pouch
 MaxCapBagTr1: Small Critter Pouch
 MaxCapBagTr2: Average Critter Pouch
@@ -1409,6 +1412,7 @@ MaxCapBagS7: Volumetric Soul Pouch
 MaxCapBagS8: Colossal Soul Pouch
 MaxCapBagS9: Gargantuan Soul Pouch
 MaxCapBagS10: Herculean Soul Pouch
+MaxCapBagS11: Enormous Soul Pouch
 Key1: Forest Villa Key
 Key2: Efaunt's Tomb Key
 Key3: Chizoar's Cavern Key
