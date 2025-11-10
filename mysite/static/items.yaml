@@ -114,6 +114,24 @@ Soul5: Squishy Soul
 Soul6: Oozie Soul
 Soul7: Breezy Soul
 Soul8: Deepsea Soul
+W6item0: Jade Coin
+W6item1: Strawberry
+W6item2: Broccoli
+W6item3: Daisy
+W6item4: Sushi Crop 11
+W6item5: Mushie Crop 15
+W6item6: White Essence
+W6item7: Green Essence
+W6item8: Yellow Essence
+W6item9: Blue Essence
+W6item10: Purple Essence
+# W6item11: Red Essence
+# W6item12: Cyan Essence
+# W6item13: Teal Essence
+W7item0: W7item0  # TODO: Find real name
+W7item1: W7item1  # TODO: Find real name
+W7item2: W7item2  # TODO: Find real name
+W7item3: W7item3  # TODO: Find real name
 Spelunking0: Chapter One 'The Fear Within'
 Spelunking1: Chapter Two 'Decay Surrounds'
 Spelunking2: Chapter Three 'This is Gospel'
@@ -1331,6 +1349,7 @@ MaxCapBagF8: Volumetric Food Pouch
 MaxCapBagF9: Colossal Food Pouch
 MaxCapBagF10: Gargantuan Food Pouch
 MaxCapBagF11: Herculean Food Pouch
+MaxCapBagF12: Enormous Food Pouch
 MaxCapBagM1: Mini Materials Pouch
 MaxCapBagM2: Cramped Material Pouch
 MaxCapBagM3: Small Material Pouch
@@ -1343,6 +1362,7 @@ MaxCapBagM9: Volumetric Matty Pouch
 MaxCapBagM10: Colossal Matty Pouch
 MaxCapBagM11: Gargantuan Matty Pouch
 MaxCapBagM12: Herculean Matty Pouch
+MaxCapBagM13: Enormous Matty Pouch
 MaxCapBagFi0: Miniature Fish Pouch
 MaxCapBagFi1: Cramped Fish Pouch
 MaxCapBagFi2: Small Fish Pouch
@@ -1368,6 +1388,7 @@ MaxCapBagB8: Volumetric Bug Pouch
 MaxCapBagB9: Colossal Bug Pouch
 MaxCapBagB10: Gargantuan Bug Pouch
 MaxCapBagB11: Herculean Bug Pouch
+MaxCapBagB12: Enormous Bug Pouch
 MaxCapBagTr0: Cramped Critter Pouch
 MaxCapBagTr1: Small Critter Pouch
 MaxCapBagTr2: Average Critter Pouch
@@ -1391,6 +1412,7 @@ MaxCapBagS7: Volumetric Soul Pouch
 MaxCapBagS8: Colossal Soul Pouch
 MaxCapBagS9: Gargantuan Soul Pouch
 MaxCapBagS10: Herculean Soul Pouch
+MaxCapBagS11: Enormous Soul Pouch
 Key1: Forest Villa Key
 Key2: Efaunt's Tomb Key
 Key3: Chizoar's Cavern Key
@@ -1883,8 +1905,9 @@ Quest103: Fishbowl
 Quest104: Darts
 Quest105: Unstable Reliquarium
 Quest106: Urie's Special Childhood Rock
-Quest107: Aether Fragment # for the Arcane Cultist
+Quest107: Arcane Fragment # for the Arcane Cultist
 Quest108: Stamina Battery
+Quest109: Cropfall Basket
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -2100,6 +2123,7 @@ GemP44: Equinox Pingy
 GemP45: Lifetime Tickets
 GemP46: Single Entry
 GemP36: Funny 2hr Fishy
+GemP37: Funny 2hr Feather
 EquipmentHats31: Smitty's Bubble Blowing Hat
 EquipmentHats32: Bandit Bob Mask
 EquipmentHats33: Paper Bag

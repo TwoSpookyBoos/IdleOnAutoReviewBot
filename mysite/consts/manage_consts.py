@@ -105,7 +105,7 @@ def finalize_w2_vials():
             f"manage_consts.finalize_w2_vials [ERROR] "
             f"Max number of Maxable Vials not in sync between "
             f"variable {max_maxable_vials} and "
-            f"tier {vials_progressionTiers[-1][2]}"
+            f"tier {vials_progressionTiers[true_max_tiers['Vials']]['Maxed']}"
         )
         consts_w2.max_maxable_vials = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])
         vials_progressionTiers[true_max_tiers['Vials']]['Maxed'] = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])

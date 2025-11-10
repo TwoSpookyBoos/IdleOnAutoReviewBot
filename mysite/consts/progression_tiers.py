@@ -841,7 +841,7 @@ vials_progressionTiers = {
     11: {
         'Unlocked': 70,
         'Maxed': 4,
-        'Recommended': ['Copper Corona (Copper Ore)', 'Sippy Splinter (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'],
+        'Recommended': ['Copper Corona (Copper Ore)', 'Sippy Splinters (Oak Logs)', 'Jungle Juice (Jungle Logs)', 'Tea With Pea (Potty Rolls)'],
         'Notes': "This is the first half of W6, excluding the Arcade Pickle. "
     },
     12: {

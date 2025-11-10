@@ -21,7 +21,7 @@ from consts.consts_w1 import (
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
-    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames
+    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, bubble_cauldron_color_list
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -1326,25 +1326,36 @@ def _parse_w2_bubbles(account):
     for cauldronIndex in bubbles_dict:
         for bubbleIndex in bubbles_dict[cauldronIndex]:
             if bubbleIndex <= max_implemented_bubble_index:  #Don't waste time calculating unimplemented bubbles
+                if bubbles_dict[cauldronIndex][bubbleIndex]['Name'] == 'Essence Boost':
+                    #Orange, Green, and Purple all have identical names
+                    unique_name = f"{bubbles_dict[cauldronIndex][bubbleIndex]['Name']}-{bubble_cauldron_color_list[cauldronIndex]}"
+                elif bubbles_dict[cauldronIndex][bubbleIndex]['Name'].endswith(' Ii'):
+                    #Endgame Eff Ii -> Endgame Eff II
+                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name'].replace(' Ii', ' II')
+                elif bubbles_dict[cauldronIndex][bubbleIndex]['Name'].endswith(' Iii'):
+                    # Endgame Eff Iii -> Endgame Eff III
+                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name'].replace(' Iii', ' III')
+                else:
+                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name']
                 try:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        "CauldronIndex": cauldronIndex,
-                        "BubbleIndex": bubbleIndex,
-                        "Level": all_raw_bubbles[cauldronIndex][bubbleIndex],
-                        "BaseValue": lavaFunc(
-                            bubbles_dict[cauldronIndex][bubbleIndex]["funcType"],
+                    account.alchemy_bubbles[unique_name] = {
+                        'CauldronIndex': cauldronIndex,
+                        'BubbleIndex': bubbleIndex,
+                        'Level': all_raw_bubbles[cauldronIndex][bubbleIndex],
+                        'BaseValue': lavaFunc(
+                            bubbles_dict[cauldronIndex][bubbleIndex]['funcType'],
                             all_raw_bubbles[cauldronIndex][bubbleIndex],
-                            bubbles_dict[cauldronIndex][bubbleIndex]["x1"],
-                            bubbles_dict[cauldronIndex][bubbleIndex]["x2"]),
-                        "Material": getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
+                            bubbles_dict[cauldronIndex][bubbleIndex]['x1'],
+                            bubbles_dict[cauldronIndex][bubbleIndex]['x2']),
+                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
                 except:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        "CauldronIndex": cauldronIndex,
-                        "BubbleIndex": bubbleIndex,
-                        "Level": 0,
-                        "BaseValue": 0.0,
-                        "Material": getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
+                    account.alchemy_bubbles[unique_name] = {
+                        'CauldronIndex': cauldronIndex,
+                        'BubbleIndex': bubbleIndex,
+                        'Level': 0,
+                        'BaseValue': 0.0,
+                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
 
 def _parse_w2_p2w(account):
