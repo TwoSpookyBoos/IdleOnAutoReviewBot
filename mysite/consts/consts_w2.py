@@ -115,35 +115,25 @@ critter_vials_list = [
     getReadableVialNames(74),  #Tuttle
 ]
 
-max_sigil_level = 3
-# `SigilDesc` in source. Last updated in [TODO]
-# TODO: parse this from source. Then update `max_sigil_level` so it's not a magic number but based on this dict
-sigils_dict = {
-    "Big Muscle":       {"Index": 0,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2, 100, 50000], 'Values': [0, 10, 20, 40]},
-    "Pumped Kicks":     {"Index": 2,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3, 150, 60000], 'Values': [0, 10, 20, 40]},
-    "Odd Litearture":   {"Index": 4,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [5, 200, 70000], 'Values': [0, 10, 20, 40]},
-    "Good Fortune":     {"Index": 6,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8, 300, 90000], 'Values': [0, 10, 20, 40]},
-    "Plunging Sword":   {"Index": 8,  "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [15, 700, 100000], 'Values': [0, 75, 225, 1000]},
-    "Wizardly Hat":     {"Index": 10, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [24, 1250, 130000], 'Values': [0, 10, 20, 30]},
-    "Envelope Pile":    {"Index": 12, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [60, 2500, 160000], 'Values': [0, 10, 25, 40]},
-    "Shiny Beacon":     {"Index": 14, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [120, 4000, 200000], 'Values': [0, 2, 2, 5]},
-    "Metal Exterior":   {"Index": 16, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [250, 7000, 240000], 'Values': [0, 6, 12, 20]},
-    "Two Starz":        {"Index": 18, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [500, 10000, 280000], 'Values': [0, 10, 25, 45]},
-    "Pipe Gauge":       {"Index": 20, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [700, 12000, 320000], 'Values': [0, 10, 20, 30]},
-    "Trove":            {"Index": 22, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [1300, 14000, 400000], 'Values': [0, 10, 20, 30]},
-    "Pea Pod":          {"Index": 24, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [2100, 15000, 420000], 'Values': [0, 25, 50, 100]},
-    "Tuft Of Hair":     {"Index": 26, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [3000, 25000, 450000], 'Values': [0, 3, 6, 10]},
-    "Emoji Veggie":     {"Index": 28, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [4500, 33000, 480000], 'Values': [0, 10, 25, 40]},
-    "VIP Parchment":    {"Index": 30, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [6300, 42000, 520000], 'Values': [0, 10, 25, 50]},
-    "Dream Catcher":    {"Index": 32, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [7000, 50000, 560000], 'Values': [0, 1, 2, 4]},
-    "Duster Studs":     {"Index": 34, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [8000, 60000, 600000], 'Values': [0, 3, 7, 15]},
-    "Garlic Glove":     {"Index": 36, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [9000, 70000, 650000], 'Values': [0, 15, 25, 60]},
-    "Lab Tesstube":     {"Index": 38, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [12000, 80000, 700000], 'Values': [0, 8, 20, 35]},
-    "Peculiar Vial":    {"Index": 40, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [17000, 120000, 750000], 'Values': [0, 15, 25, 35]},
-    "Loot Pile":        {"Index": 42, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [23000, 160000, 900000], 'Values': [0, 10, 20, 30]},
-    "Div Spiral":       {"Index": 44, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [26000, 200000, 1200000], 'Values': [0, 10, 30, 50]},
-    "Cool Coin":        {"Index": 46, "PlayerHours": 0, "Level": 0, "PrechargeLevel": 0, "Requirements": [30000, 250000, 2000000], 'Values': [0, 10, 30, 100]},
+# `SigilDesc` in source. Last updated in v2.43 Nov 9
+sigils_data = ["BIG_MUSCLE 2 100 10 20 filler Boosts_base_STR_by_+{ 50000 40 250000 100".split(" "), "PUMPED_KICKS 3 150 10 20 filler Boosts_base_AGI_by_+{ 60000 40 300000 100".split(" "), "ODD_LITEARTURE 5 200 10 20 filler Boosts_base_WIS_by_+{ 70000 40 400000 100".split(" "), "GOOD_FORTUNE 8 300 10 20 filler Boosts_base_LUK_by_+{ 90000 40 500000 100".split(" "), "PLUNGING_SWORD 15 700 75 225 filler Boosts_base_damage_by_+{ 100000 1000 600000 5000".split(" "), "WIZARDLY_HAT 24 1250 10 20 filler Boosts_Mana_Regeneration_by_+{%_both_inside_and_outside_of_dungeon 130000 30 700000 50".split(" "), "ENVELOPE_PILE 60 2500 12 25 filler Decreases_the_cost_of_upgrading_stamp_MAX_LEVELS_by_-{% 160000 40 1000000 65".split(" "), "SHINY_BEACON 120 4000 1 2 filler The_first_{_monster_kills_every_day_will_spawn_a_Crystal_Mob 200000 5 1400000 10".split(" "), "METAL_EXTERIOR 250 7000 6 12 filler Boosts_defence_by_nothing._Also_gives_+{%_Class_EXP 240000 20 1700000 50".split(" "), "TWO_STARZ 500 10000 10 25 filler Gives_+{_Star_Talent_points_to_spend_as_you_wish 280000 45 2200000 100".split(" "), "PIPE_GAUGE 700 12000 10 20 filler Increases_the_speed_of_refinery_cycles_by_+{% 320000 30 2600000 60".split(" "), "TROVE 1300 14000 10 20 filler Boosts_drop_rate_by_+{% 400000 30 3000000 100".split(" "), "PEA_POD 2100 15000 25 50 filler All_sigils_charge_{%_faster_than_normal 420000 100 3500000 450".split(" "), "TUFT_OF_HAIR 3000 25000 3 6 filler Boosts_movement_speed_by_+{%_if_under_175% 450000 10 4300000 15".split(" "), "EMOJI_VEGGIE 4500 33000 10 25 filler Boosts_the_bonus_of_all_golden_food_by_+{% 480000 40 5500000 60".split(" "), "VIP_PARCHMENT 6300 42000 10 25 filler Boosts_VIP_Membership_in_the_library_by_+{% 520000 50 6700000 100".split(" "), "DREAM_CATCHER 7000 50000 1 2 filler Boosts_all_Skill_AFK_gain_rates_by_+{% 560000 4 8200000 10".split(" "), "DUSTER_STUDS 8000 60000 3 7 filler Boosts_weapon_power_by_+{ 600000 15 10000000 25".split(" "), "GARLIC_GLOVE 9000 70000 15 35 filler Decreases_the_cost_of_all_kitchen_upgrades_by_-{% 650000 60 12000000 90".split(" "), "LAB_TESSTUBE 12000 80000 8 20 filler Boosts_Lab_EXP_gain_by_+{% 700000 35 14000000 70".split(" "), "PECULIAR_VIAL 17000 120000 15 25 filler Boosts_the_regeneration_rate_of_all_alchemy_liquids_by_+{% 750000 35 15000000 50".split(" "), "LOOT_PILE 23000 160000 10 20 filler All_sailing_treasure_chests_give_+{%_more_treasure! 900000 30 16000000 60".split(" "), "DIV_SPIRAL 26000 200000 10 30 filler Boosts_Divinity_EXP_gain_by_+{% 1200000 50 17000000 100".split(" "), "COOL_COIN 30000 250000 20 50 filler Boosts_Jade_Coin_gain_in_Sneaking_by_+{% 2000000 100 20000000 250".split(" ")]
+sigil_name_overrides = {
+    "VIP_PARCHMENT": "VIP Parchment" # .title() turns it to "Vip", but it's an acronym so we keep it uppercase
 }
+sigils_dict = {
+    sigil_name_overrides.get(name, name.replace("_", " ").title()): {
+        "Index": index * 2, # this is later used to parse player hours and player level from `raw_p2w_list`
+        "PlayerHours": 0,
+        "Level": 0,
+        "PrechargeLevel": 0,
+        "Requirements": [int(req1), int(req2), int(req3), int(req4)],
+        "Values": [0, int(bon1), int(bon2), int(bon3), int(bon4)],
+        "Description": description.replace("_", " ")
+    }
+    for index, (name, req1, req2, bon1, bon2, _, description, req3, bon3, req4, bon4) in enumerate(sigils_data)
+}
+max_sigil_level = len(list(sigils_dict.values())[0]['Values']) - 1
+
 bubble_cauldron_color_list = ['Orange', 'Green', 'Purple', 'Yellow']
 alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
 alchemy_jobs_list = bubble_cauldron_color_list + alchemy_liquids_list + [k for k in sigils_dict.keys()]
