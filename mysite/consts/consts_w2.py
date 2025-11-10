@@ -73,10 +73,27 @@ nblb_skippable = [
     'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
     'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
+bubble_name_overrides = {
+    0: {
+        'ESSENCE_BOOST': 'Essence Boost-Orange'
+    },
+    1: {
+        'BUG]': 'Bug^2',
+        'ESSENCE_BOOST': 'Essence Boost-Green',
+        'ENDGAME_EFF_II': 'Endgame Eff II',
+    },
+    2: {
+        'ESSENCE_BOOST': 'Essence Boost-Purple',
+        'ENDGAME_EFF_III': 'Endgame Eff III',
+    },
+    3: {
+        'ESSENCE_BOOST': 'Essence Boost-Yellow'
+    }
+}
 bubbles_dict = {
     cauldron_index: {
         index: {
-            'Name': name.replace('_', ' ').replace(']', '^2').title(),
+            'Name': bubble_name_overrides[cauldron_index].get(name, name.replace('_', ' ').title()),
             'Material': material,
             'x1': parse_number(x1),
             'x2': parse_number(x2),

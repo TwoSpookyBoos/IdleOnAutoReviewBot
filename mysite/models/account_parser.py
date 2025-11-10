@@ -1326,19 +1326,8 @@ def _parse_w2_bubbles(account):
     for cauldronIndex in bubbles_dict:
         for bubbleIndex in bubbles_dict[cauldronIndex]:
             if bubbleIndex <= max_implemented_bubble_index:  #Don't waste time calculating unimplemented bubbles
-                if bubbles_dict[cauldronIndex][bubbleIndex]['Name'] == 'Essence Boost':
-                    #Orange, Green, and Purple all have identical names
-                    unique_name = f"{bubbles_dict[cauldronIndex][bubbleIndex]['Name']}-{bubble_cauldron_color_list[cauldronIndex]}"
-                elif bubbles_dict[cauldronIndex][bubbleIndex]['Name'].endswith(' Ii'):
-                    #Endgame Eff Ii -> Endgame Eff II
-                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name'].replace(' Ii', ' II')
-                elif bubbles_dict[cauldronIndex][bubbleIndex]['Name'].endswith(' Iii'):
-                    # Endgame Eff Iii -> Endgame Eff III
-                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name'].replace(' Iii', ' III')
-                else:
-                    unique_name = bubbles_dict[cauldronIndex][bubbleIndex]['Name']
                 try:
-                    account.alchemy_bubbles[unique_name] = {
+                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
                         'CauldronIndex': cauldronIndex,
                         'BubbleIndex': bubbleIndex,
                         'Level': all_raw_bubbles[cauldronIndex][bubbleIndex],
@@ -1350,7 +1339,7 @@ def _parse_w2_bubbles(account):
                         'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
                 except:
-                    account.alchemy_bubbles[unique_name] = {
+                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
                         'CauldronIndex': cauldronIndex,
                         'BubbleIndex': bubbleIndex,
                         'Level': 0,
