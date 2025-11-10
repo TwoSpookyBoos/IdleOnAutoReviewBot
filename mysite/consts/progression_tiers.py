@@ -597,9 +597,9 @@ statues_progressionTiers = {
     11: {
         "MinStatueTypeNumber": 2,
         "MinStatueType": "Onyx",
-        'SpecificTypes': ['Villager Statue', 'Dragon Warrior Statue'],
+        'SpecificTypes': ['Villager Statue', 'Dragon Statue'],
         'SpecificLevels': {
-            'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280, 'Villager Statue': 100, 'Dragon Warrior Statue': 150,
+            'Mining Statue': 280, 'Feasty Statue': 280, 'Lumberbob Statue': 280, 'Villager Statue': 100, 'Dragon Statue': 150,
         },
     },
 }

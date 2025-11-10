@@ -1167,7 +1167,7 @@ def _parse_w1_statues(account):
                 'BaseValue': statueDetails['BaseValue'],
                 'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
                 'Farmer': statueDetails['Farmer'],
-                'Target': statueDetails['Target'],
+                'Resource': statueDetails['Resource'],
             }
         except Exception as e:
             logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
@@ -1180,7 +1180,7 @@ def _parse_w1_statues(account):
                 'BaseValue': statueDetails['BaseValue'],
                 'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statues()
                 'Farmer': statueDetails['Farmer'],
-                'Target': statueDetails['Target'],
+                'Resource': statueDetails['Resource'],
             }
         account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
         if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statue_type_list) - 1:
