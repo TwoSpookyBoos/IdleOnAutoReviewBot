@@ -2421,20 +2421,20 @@ def _calculate_w1_statues(account):
 
     event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
 
-    # The value of Dragon Warrior is used to increase other statues so must be calculated first
-    account.statues['Dragon Warrior Statue']['Value'] = (
-        account.statues['Dragon Warrior Statue']['BaseValue']
-        * account.statues['Dragon Warrior Statue']['Level']
-        * (onyx_multi if statue_type_list.index(account.statues['Dragon Warrior Statue']['Type']) >= onyx_index else 1)
-        * (vault_multi if 'Dragon Warrior Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
+    # The value of Dragon Statue is used to increase other statues so must be calculated first
+    account.statues['Dragon Statue']['Value'] = (
+        account.statues['Dragon Statue']['BaseValue']
+        * account.statues['Dragon Statue']['Level']
+        * (onyx_multi if statue_type_list.index(account.statues['Dragon Statue']['Type']) >= onyx_index else 1)
+        * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
         * voodoo_statufication_multi
         * event_shop_multi
     )
-    dragon_multi = ValueToMulti(account.statues['Dragon Warrior Statue']['Value'])
+    dragon_multi = ValueToMulti(account.statues['Dragon Statue']['Value'])
     # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }, {event_shop_multi = }")
 
     for statue_name, statue_details in account.statues.items():
-        if statue_name != 'Dragon Warrior Statue':
+        if statue_name != 'Dragon Statue':
             account.statues[statue_name]['Value'] = (
                 account.statues[statue_name]['BaseValue']
                 * account.statues[statue_name]['Level']
@@ -2466,8 +2466,8 @@ def _calculate_w1_statues(account):
             goal=1
         ),
         Advice(
-            label=f"Level {account.statues['Dragon Warrior Statue']['Level']} Dragon Warrior Statue: {round(dragon_multi, 3):g}x",
-            picture_class=account.statues['Dragon Warrior Statue']['Image']
+            label=f"Level {account.statues['Dragon Statue']['Level']} Dragon Statue: {round(dragon_multi, 3):g}x",
+            picture_class=account.statues['Dragon Statue']['Image']
         ),
         get_upgrade_vault_advice('Statue Bonanza'),
         Advice(

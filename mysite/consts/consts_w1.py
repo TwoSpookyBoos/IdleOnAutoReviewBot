@@ -1,5 +1,6 @@
 from consts.consts_idleon import NinjaInfo
 from utils.text_formatting import numberToLetter
+from utils.number_formatting import parse_number
 
 bribes_dict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
@@ -406,40 +407,52 @@ forge_upgrades_dict = {
 }
 
 
-# TODO: most of this can probably be generated from source. `StatueInfo` in source but `Farmer` + `Target` are AutoReview-specific, so those need to be done manually. Add `Image` field, generated via the `Name`. `Target` should be renamed to `Resource` to match the field name in `Advice`
+# `StatueInfo` in source. Last updated in v2.43 Nov 10
+StatueInfo = [["POWER", "@BASE_DAMAGE", "30", "3"], ["SPEED", "%@MOVE_SPEED", "65", "0.1"], ["MINING", "@MINING_POWER", "280", "0.3"], ["FEASTY", "%@FOOD_EFFECT", "320", "1"], ["HEALTH", "@BASE_HEALTH", "0", "3"], ["KACHOW", "%@CRIT_DAMAGE", "-15", "0.4"], ["LUMBERBOB", "@CHOPPIN_POWER", "90", "0.3"], ["THICC_SKIN", "@BASE_DEFENCE", "210", "1"], ["OCEANMAN", "@FISHING_POWER", "115", "0.3"], ["OL_RELIABLE", "@CATCHIN_POWER", "45", "0.3"], ["EXP", "%@CLASS_EXP", "0", "0.1"], ["ANVIL", "%@PRODUCT_SPD", "165", "0.5"], ["CAULDRON", "%@ALCHEMY_EXP", "280", "0.5"], ["BEHOLDER", "%@CRIT_CHANCE", "300", "0.2"], ["BULLSEYE", "%@ACCURACY", "110", "0.8"], ["BOX", "@TRAPPIN_POWER", "180", "0.3"], ["TWOSOUL", "@WORSHIP_POWER", "260", "0.3"], ["EHEXPEE", "%@SKILL_EXP", "69", "0.1"], ["SEESAW", "%@CONS_EXP", "13", "0.5"], ["PECUNIA", "%@COINS", "50", "1"], ["MUTTON", "%@COOKING_EXP", "0", "0.3"], ["EGG", "%@BREEDING_EXP", "25", "0.4"], ["BATTLEAXE", "%@DAMAGE", "300", "0.2"], ["SPIRAL", "%@DIVINITY_EXP", "70", "1"], ["BOAT", "%@SAILING_SPD", "210", "0.5"], ["COMPOST", "%@FARMING_EXP", "75", "0.4"], ["STEALTH", "%@STEALTH", "185", "0.3"], ["ESSENCE", "%@WHITE_ESS", "160", "0.6"], ["VILLAGER", "%@VILLAGER_EXP", "120", "0.3"], ["DRAGON", "%@STATUES_BONUS", "270", "0.2"], ["SPELUNKY", "%@SPELUNK_EXP", "43", "0.2"], ["CORAL", "%@DAILY_CORAL", "181", "0.02"]]
+statue_farming = {
+    0:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    1:  {"Farmer": "W1-W3 Crystals with DK", "Resource": "w1-w3-crystals"},
+    2:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    3:  {"Farmer": "W1-W3 Crystals with DK", "Resource": "w1-w3-crystals"},
+    4:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    5:  {"Farmer": "Monolith Quest on All characters", "Resource": "monolith"},
+    6:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    7:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    8:  {"Farmer": "AFK or Candy with Vman at W2 Bugs", "Resource": "fly-nest"},
+    9:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    10: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    11: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    12: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    13: {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    14: {"Farmer": "Active ES at Wood Mushroom or Candy at Nutto", "Resource": "wood-mushroom"},
+    15: {"Farmer": "Candy or Active ES at Penguins", "Resource": "penguin"},
+    16: {"Farmer": "Candy or Active ES at Quenchies", "Resource": "quenchie"},
+    17: {"Farmer": "Crystals with DK at Bloodbones", "Resource": "bloodbone"},
+    18: {"Farmer": "Candy or Active ES at Cryosnakes", "Resource": "cryosnake"},
+    19: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    20: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    21: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    22: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    23: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    24: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    25: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    26: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    27: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    28: {"Farmer": "AFK {{Cavern 9|#villagers}}", "Resource": "gloomie-mushroom"},
+    29: {"Farmer": "AFK {{Cavern 15|#villagers}}", "Resource": "ancient-golem"},
+    30: {"Farmer": "W7 Crystals with DK", "Resource": ""},
+    31: {"Farmer": "W7 Crystals with DK", "Resource": ""}
+}
 statues_dict = {
-    0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
-    2:  {"Name": "Mining Statue", "ItemName": "EquipmentStatues3", "Effect": "Mining Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    3:  {"Name": "Feasty Statue", "ItemName": "EquipmentStatues4", "Effect": "% Food Effect", "BaseValue": 1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
-    4:  {"Name": "Health Statue", "ItemName": "EquipmentStatues5", "Effect": "Base Health", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    5:  {"Name": "Kachow Statue", "ItemName": "EquipmentStatues6", "Effect": "% Crit Damage", "BaseValue": 0.4, "Farmer": "Monolith Quest on All characters", "Target": "monolith"},
-    6:  {"Name": "Lumberbob Statue", "ItemName": "EquipmentStatues7", "Effect": "Choppin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    7:  {"Name": "Thicc Skin Statue", "ItemName": "EquipmentStatues8", "Effect": "Base Defence", "BaseValue": 1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    8:  {"Name": "Oceanman Statue", "ItemName": "EquipmentStatues9", "Effect": "Fishing Power", "BaseValue": 0.3, "Farmer": "AFK or Candy with Vman at W2 Bugs", "Target": "fly-nest"},
-    9:  {"Name": "Ol Reliable Statue", "ItemName": "EquipmentStatues10", "Effect": "Catchin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    10: {"Name": "Exp Book Statue", "ItemName": "EquipmentStatues11", "Effect": "% Class EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    11: {"Name": "Anvil Statue", "ItemName": "EquipmentStatues12", "Effect": "% Product SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    12: {"Name": "Cauldron Statue", "ItemName": "EquipmentStatues13", "Effect": "% Alchemy EXP", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    13: {"Name": "Beholder Statue", "ItemName": "EquipmentStatues14", "Effect": "% Crit Chance", "BaseValue": 0.2, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    14: {"Name": "Bullseye Statue", "ItemName": "EquipmentStatues15", "Effect": "% Accuracy", "BaseValue": 0.8, "Farmer": "Active ES at Wood Mushroom or Candy at Nutto", "Target": "wood-mushroom"},
-    15: {"Name": "Box Statue", "ItemName": "EquipmentStatues16", "Effect": "Trappin Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Penguins", "Target": "penguin"},
-    16: {"Name": "Twosoul Statue", "ItemName": "EquipmentStatues17", "Effect": "Worship Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Quenchies", "Target": "quenchie"},
-    17: {"Name": "EhExPee Statue", "ItemName": "EquipmentStatues18", "Effect": "% Skill EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Bloodbones", "Target": "bloodbone"},
-    18: {"Name": "Seesaw Statue", "ItemName": "EquipmentStatues19", "Effect": "% Cons EXP", "BaseValue": 0.5, "Farmer": "Candy or Active ES at Cryosnakes", "Target": "cryosnake"},
-    19: {"Name": "Pecunia Statue", "ItemName": "EquipmentStatues20", "Effect": "% Coins", "BaseValue": 1, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    20: {"Name": "Mutton Statue", "ItemName": "EquipmentStatues21", "Effect": "% Cooking EXP", "BaseValue": 0.3, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    21: {"Name": "Egg Statue", "ItemName": "EquipmentStatues22", "Effect": "% Breeding EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    22: {"Name": "Battleaxe Statue", "ItemName": "EquipmentStatues23", "Effect": "% Damage", "BaseValue": 0.2, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    23: {"Name": "Spiral Statue", "ItemName": "EquipmentStatues24", "Effect": "% Divinity EXP", "BaseValue": 1, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    24: {"Name": "Boat Statue", "ItemName": "EquipmentStatues25", "Effect": "% Sailing SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    25: {"Name": "Compost Statue", "ItemName": "EquipmentStatues26", "Effect": "% Farming EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    28: {"Name": "Villager Statue", "ItemName": "EquipmentStatues29", "Effect": "% Villager EXP", "BaseValue": 0.3, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"},
-    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0.2, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"},
-    30: {"Name": "Spelunky Statue", "ItemName": "EquipmentStatues31", "Effect": "% Spelunk EXP", "BaseValue": 0.2, "Farmer": "W7 Crystals with DK", "Target": ""},
-    31: {"Name": "Coral Statue", "ItemName": "EquipmentStatues32", "Effect": "% Daily Coral", "BaseValue": 0.02, "Farmer": "W7 Crystals with DK", "Target": ""}
+    index: {
+        'Name': f"{name.replace('_', ' ').title()} Statue",
+        'ItemName': f"EquipmentStatues{index+1}",
+        'Effect': effect.replace('@', ' ').replace('_', ' ').strip().title(),
+        'BaseValue': parse_number(basevalue),
+        'Farmer': statue_farming.get(index, {}).get('Farmer', ''),
+        'Resource': statue_farming.get(index, {}).get('Resource', ''),
+    }
+    for index, (name, effect, pos2, basevalue) in enumerate(StatueInfo)
 }
 statue_type_list = ['Normal', 'Gold', 'Onyx']
 statue_count = len(statues_dict.keys())
