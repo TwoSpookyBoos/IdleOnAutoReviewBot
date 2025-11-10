@@ -111,13 +111,14 @@ $resources: (
     tuttle: map-get($world-contents, tuttle),
     tottoise: img('Tottoise.png'),
     // Souls
-    forest-soul: img('wiki/Forest_Soul.png'),
-    dune-soul: img('wiki/Dune_Soul.png'),
-    rooted-soul: img('wiki/Rooted_Soul.png'),
-    frigid-soul: img('wiki/Frigid_Soul.png'),
-    squishy-soul: img('wiki/Squishy_Soul.png'),
-    oozie-soul: img('wiki/Oozie_Soul.png'),
-    breezy-soul: img('wiki/Breezy_Soul.png'),
+    forest-soul: img('data/Soul1.png'),
+    dune-soul: img('data/Soul2.png'),
+    rooted-soul: img('data/Soul3.png'),
+    frigid-soul: img('data/Soul4.png'),
+    squishy-soul: img('data/Soul5.png'),
+    oozie-soul: img('data/Soul6.png'),
+    breezy-soul: img('data/Soul7.png'),
+    deepsea-soul: img('data/Soul8.png'),
     // Salts
     redox-salts: img('wiki/Redox_Salts.png'),
     explosive-salts: img('wiki/Explosive_Salts.png'),
@@ -1102,6 +1103,7 @@ $consumables: (
     crop-transfer-ticket: img('wiki/Crop_Transfer_Ticket.png'),
     blinding-lantern: img('wiki/Blinding_Lantern.png'),
     funny-2hr-fishy: img('data/GemP36.png'),
+    funny-2hr-feather: img('data/GemP37.png'),
 
     // Time Candies
     x1-hr-time-candy: img('data/Timecandy1.png'),
@@ -1125,6 +1127,7 @@ $consumables: (
     charred-bone: img('data/Quest97.png'),
     charred-fragment: img('data/Quest98.png'),
     arcane-rock: img('data/Quest101.png'),
+    arcane-fragment: img('data/Quest107.png'),
 );
 
 $quest-items: (
@@ -1914,6 +1917,14 @@ $misc: (
     basketball: img('wiki/Basketball.png'),
     secret-map: img('wiki/Secret_Map.png'),
     temple-torch: img('data/Quest94.png'),
+    prisma-bubble: img('data/Quest99.png'),
+    spirit-offering: img('data/Quest102.png'),
+    fishbowl: img('data/Quest103.png'),
+    darts: img('data/Quest104.png'),
+    unstable-reliquarium: img('data/Quest105.png'),
+    urie-s-special-childhood-rock: img('data/Quest106.png'),
+    stamina-battery: img('data/Quest108.png'),
+    cropfall-basket: img('data/Quest109.png'),
 );
 
 $all-slab: map-merge($resources, $monster-drops);

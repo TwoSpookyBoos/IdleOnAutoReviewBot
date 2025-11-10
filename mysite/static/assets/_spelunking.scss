@@ -1,0 +1,17 @@
+$spelunking-chapters: (
+    spelunking-chapter-1: img('data/Spelunking0.png'),
+    spelunking-chapter-2: img('data/Spelunking1.png'),
+    spelunking-chapter-3: img('data/Spelunking2.png'),
+    spelunking-chapter-4: img('data/Spelunking3.png'),
+);
+
+$spelunking-caverns: (
+
+);
+
+$spelunking-resources: (
+    rockenstone: img('data/W7item0_x1.png'),  //TODO: Probably a sprite sheet to cut
+);
+
+$all-spelunking: map-merge($spelunking-chapters, $spelunking-caverns);
+$all-spelunking: map-merge($all-spelunking, $spelunking-resources);
