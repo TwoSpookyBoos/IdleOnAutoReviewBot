@@ -75,6 +75,7 @@ nblb_skippable = [
 ]
 bubble_name_overrides = {
     0: {
+        'FMJ': 'FMJ',
         'ESSENCE_BOOST': 'Essence Boost-Orange'
     },
     1: {
@@ -119,7 +120,7 @@ at_risk_basic_bubbles = [
     "Wyoming Blood",
     "Sploosh Sploosh",
     "Stronk Tools",
-    "Fmj",
+    "FMJ",
     "Swift Steppin",
     "Hammer Hammer",
     "Lil Big Damage",
