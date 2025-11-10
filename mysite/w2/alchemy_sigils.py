@@ -3,7 +3,7 @@ from flask import g as session_data
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
-from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level
+from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, sigils_dict
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
@@ -29,7 +29,7 @@ def get_chilled_yarn_multi(artifact_level: int) -> int:
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group A = several
-    peapod_values = [0, 25, 50, 100]
+    peapod_values = sigils_dict['Pea Pod']['Values']
     player_peapod_value = (
             peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
             * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
