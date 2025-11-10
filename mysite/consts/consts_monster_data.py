@@ -1,3 +1,8 @@
+import hashlib
+import json
+import os.path
+from pathlib import Path
+from consts.generated.monster_data import monster_data
 from utils.logging import get_logger
 import re
 import json5
@@ -23,8 +28,15 @@ def extract_monsters(script: str):
         monsters.append((key, {"Name": name}))
     return monsters
 
-
-monster_data = {key: data for key, data in extract_monsters(script_monster_definitions)}
+monster_data_hash = hashlib.sha256(script_monster_definitions.encode()).hexdigest()
+generated_monster_data_hash = monster_data.get('_hash', None)
+if monster_data_hash != generated_monster_data_hash:
+    new_monster_data = {key: data for key, data in extract_monsters(script_monster_definitions)}
+    new_monster_data['_hash'] = monster_data_hash
+    with open(os.path.join(Path(__file__).parent, 'generated/monster_data.py'), 'w') as monster_data_file:
+        monster_data_file.write('monster_data = ')
+        monster_data_file.write(json.dumps(new_monster_data, indent=4))
+        monster_data_file.write("\n")
 
 # Resource cards and their sources (Trees, Ore veins, Bug nests, etc.) share the same code, so we have to differentiate between resource and source when decoding
 card_name_overrides = {
@@ -63,10 +75,10 @@ card_name_overrides = {
     'Ghost': 'Ghost (Event)'
 }
 
-def decode_enemy_name(coded_name: str, card: bool = False) -> str:
+def decode_monster_name(coded_name: str, card: bool = False) -> str:
     decoded_name = monster_data.get(coded_name, {'Name': f"Unknown-{coded_name}"})['Name']
     if decoded_name.startswith('Unknown'):
-        logger.warning(f"Unknown enemy code name: {coded_name}")
+        logger.warning(f"Unknown monster code name: {coded_name}")
     if card:
         return card_name_overrides.get(decoded_name, decoded_name)
     return decoded_name

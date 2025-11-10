@@ -4,8 +4,9 @@ from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, Mult
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_monster_data import decode_enemy_name
-from consts.consts_w1 import statue_type_dict, statues_dict, get_statue_type_index_from_name
+from consts.consts_w1 import get_statue_type_index_from_name
+from consts.consts_monster_data import decode_monster_name
+from consts.consts_w1 import statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
@@ -610,9 +611,9 @@ def _calculate_master_classes_grimoire_upgrades(account):
                     next_stack_target = "All done!"
                 else:
                     try:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
                     except:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
                 account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
                     'Target:$', f"Target: {next_stack_target}"
                 )
@@ -852,9 +853,9 @@ def _calculate_w1_upgrade_vault(account):
                     next_stack_target = "All done!"
                 else:
                     try:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
                     except:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
                 account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                     'Target:&', f"Target: {next_stack_target}"
                 )
