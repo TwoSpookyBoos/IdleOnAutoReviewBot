@@ -285,7 +285,7 @@ def getSigilsProgressionTiersAdviceGroup():
     return sigils_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getAlchemySigilsAdviceSection() -> AdviceSection:
-    highest_lab_level = max(session_data.account.all_skills['Lab'])
+    highest_lab_level = max(session_data.account.all_skills['Laboratory'])
     if highest_lab_level < 1:
         sigils_AdviceSection = AdviceSection(
             name='Sigils',

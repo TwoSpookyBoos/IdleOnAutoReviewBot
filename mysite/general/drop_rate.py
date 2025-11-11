@@ -166,7 +166,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     golden_sixes_buffs = []
     has_certified_stamp_book = session_data.account.labBonuses['Certified Stamp Book']['Enabled']
     if not has_certified_stamp_book:
-        golden_sixes_buffs.append('Lab')
+        golden_sixes_buffs.append('Laboratory')
         drop_rate_aw_advice[w1].append(Advice(
             label=f"{{{{ Lab Nodes|#lab }}}}- Certified Stamp Book:"
                   "<br>x2 Non-Misc Stamp Bonuses"

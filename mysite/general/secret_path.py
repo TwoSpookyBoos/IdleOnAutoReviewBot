@@ -8,7 +8,7 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-right_hand_skills = ['Mining', 'Choppin', 'Fishing', 'Catching', 'Trapping', 'Worship']
+right_hand_skills = ['Mining', 'Chopping', 'Fishing', 'Catching', 'Trapping', 'Worship']
 
 def getRightHandsAdviceGroups(true_max):
     catchup_advices = []
@@ -332,8 +332,8 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                     ))
                 if jman.choppin_level < 33:
                     secretClass_AdviceDict['UnlockNextClass'].append(Advice(
-                        label=f"Level {jman.character_name}'s Choppin",
-                        picture_class='choppin',
+                        label=f"Level {jman.character_name}'s Chopping",
+                        picture_class='chopping',
                         progression=jman.choppin_level,
                         goal=33
                     ))

@@ -11,16 +11,16 @@ classes_dict = {index:name.replace('_', ' ').title() for index, name in enumerat
 skill_index_list = ['Combat'] + [name.replace('_', ' ').replace('BUG ', '').title() for name in ClassNames[42:]]
 empty_skill_list = [0] * len(skill_index_list)
 balloonable_skills_list = [
-    "Mining", "Smithing", "Choppin",
+    "Mining", "Smithing", "Chopping",
     "Fishing", "Alchemy", "Catching",
     "Trapping", "Worship",
-    "Cooking",  #"Lab" isn't balloonable, oddly enough. You can pearl it though
+    "Cooking",  #"Laboratory" isn't balloonable, oddly enough. You can pearl it though
 ]
 pearlable_skills_list = [
-    "Mining", "Smithing", "Choppin",
+    "Mining", "Smithing", "Chopping",
     "Fishing", "Alchemy", "Catching",
     "Trapping", "Worship",
-    "Cooking", "Lab",
+    "Cooking", "Laboratory",
 ]
 
 

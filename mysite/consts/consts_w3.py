@@ -220,7 +220,7 @@ skill_talentsDict = {
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
 
     # Wisdom Skills
-    "Choppin": {
+    "Chopping": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Tab 2"},
             445: {"Name": "Smart Efficiency", "Tab": "Tab 1"},
@@ -257,7 +257,7 @@ skill_talentsDict = {
             493: {"Name": "Sharing Some Smarts", "Tab": "Tab 3"},  # Account-wide EXP bumped to Low
         },
     },
-    "Lab": {
+    "Laboratory": {
         "Low": {
             538: {"Name": "Upload Squared", "Tab": "Tab 4"},
             537: {"Name": "Essence Transferral", "Tab": "Tab 4"},

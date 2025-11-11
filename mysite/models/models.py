@@ -101,7 +101,7 @@ def getSpecializedSkills(classes_list):
     elif "Archer" in classes_list:
         specializedSkillsList.append("Smithing")
     elif "Mage" in classes_list:
-        specializedSkillsList.append("Choppin")
+        specializedSkillsList.append("Chopping")
 
     if "Barbarian" in classes_list:
         specializedSkillsList.append("Fishing")
@@ -127,7 +127,7 @@ def getSpecializedSkills(classes_list):
     elif 'Elemental Sorcerer' in classes_list:
         specializedSkillsList.append('Divinity')
     elif 'Bubonic Conjuror' in classes_list:
-        specializedSkillsList.append('Lab')
+        specializedSkillsList.append('Laboratory')
 
     if 'Death Bringer' in classes_list:
         specializedSkillsList.append('Farming')
@@ -205,7 +205,7 @@ class Character:
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
         self.smithing_level: int = all_skill_levels["Smithing"]
-        self.choppin_level: int = all_skill_levels["Choppin"]
+        self.choppin_level: int = all_skill_levels["Chopping"]
         self.fishing_level: int = all_skill_levels["Fishing"]
         self.alchemy_level: int = all_skill_levels["Alchemy"]
         self.catching_level: int = all_skill_levels["Catching"]
@@ -214,7 +214,7 @@ class Character:
         self.worship_level: int = all_skill_levels["Worship"]
         self.cooking_level: int = all_skill_levels["Cooking"]
         self.breeding_level: int = all_skill_levels["Breeding"]
-        self.lab_level: int = all_skill_levels["Lab"]
+        self.lab_level: int = all_skill_levels["Laboratory"]
         self.sailing_level: int = all_skill_levels["Sailing"]
         self.divinity_level: int = all_skill_levels["Divinity"]
         self.gaming_level: int = all_skill_levels["Gaming"]

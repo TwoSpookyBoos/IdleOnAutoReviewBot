@@ -163,7 +163,7 @@ def getMotherlodeAdviceGroup():
 
     cavern_name = caverns_cavern_names[12]
     resource_type = 'Logs'
-    resource_skill = 'Choppin'
+    resource_skill = 'Chopping'
     cavern = session_data.account.caverns['Caverns'][cavern_name]
 # Cavern Stats
     cavern_advice[c_stats].append(Advice(
