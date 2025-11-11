@@ -1416,6 +1416,7 @@ class Card:
         """
         if self.name == "Chaotiz Chizoar":
             tier_coefficient = safer_math_pow(star + 1 + floor(star/3), 2)
+            # `_customBlock_RunCodeOfTypeXforThingY , CardLv==e` in source. Last updated in v2.43 Nov 11
             # The formula in the code includes `*1.5` at the end. That's the base value
             # for Chaotic Chizoar which is accounted for outside of this formula. Adding it here will give bad answers.
         else:
