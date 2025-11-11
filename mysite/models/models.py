@@ -20,7 +20,7 @@ from consts.consts_w3 import (
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
 from models.custom_exceptions import VeryOldDataException
-from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert, safer_math_pow
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -1405,23 +1405,21 @@ class Card:
 
     def getCardsForStar(self, star):
         """
-        0 stars always requires 1 card
-        1 star is set per enemy
-        2 stars = 3x additional what 1star took, for a total of 1+3 = 4x (2^2)
-        3 stars = 5x additional what 1star took, for a total of 4+5 = 9x (3^2)
-        4 stars = 16x additional what 1star took, for a total of 9+16 = 25x (5^2)
-        5 stars = 459x additional what 1star took, for a total of 25+459 = 484x (22^2)
-        6 stars = x additional what 1star took, for a total of 484+  #TODO
+        0 stars always requires 1 card.
+        1 star is set per enemy.
+        2 stars = 3x additional what 1star took, for a total of 1+3 = 4x (2^2).
+        3 stars = 5x additional what 1star took, for a total of 4+5 = 9x (3^2).
+        4 stars = 16x additional what 1star took, for a total of 9+16 = 25x (5^2).
+        5 stars = 459x additional what 1star took, for a total of 25+459 = 484x (22^2).
+        6 stars = 14,670x additional what 1star took, for a total of 484+14,670 = 15,129x  (123^2).
+        7 stars = 496x additional what 1star took, for a total of 15,129+496 = 15,625x (125^2).
         """
-
-        tier_coefficient = {
-            # cchiz is ... special? ... who knows why...
-            5: 22 if self.name != "Chaotic Chizoar" else 6,
-            4: 5,
-            3: 3,
-            2: 2,
-            1: 1,
-        }.get(star, 0)
+        if self.name == "Chaotiz Chizoar":
+            tier_coefficient = safer_math_pow(star + 1 + floor(star/3), 2)
+            # The formula in the code includes `*1.5` at the end. That's the base value
+            # for Chaotic Chizoar which is accounted for outside of this formula. Adding it here will give bad answers.
+        else:
+            tier_coefficient = safer_math_pow(star + 1 + (floor(star/3) + (16 * floor(star/4) + 100 * floor(star/5))), 2)
 
         return (self.coefficient * tier_coefficient**2) + 1
 
