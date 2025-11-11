@@ -7,9 +7,11 @@ from pathlib import Path
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
+import consts.consts_monster_data
+import consts.consts_item_data
+
 import consts.consts_autoreview
 import consts.consts_idleon
-import consts.consts_monster_data
 import consts.consts_general
 import consts.consts_w1
 import consts.consts_w2
