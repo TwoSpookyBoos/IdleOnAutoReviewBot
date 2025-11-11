@@ -331,6 +331,21 @@ $world-monsters: (
     samurai-guardian: img('wiki/Samurai_Guardian_Idle.gif'),
     crystal-candalight: img('wiki/Crystal_Candalight_Idle.gif'),
     the-emperor: img('data/Boss6.png'),
+// W7
+//TODO: Get W7 Enemy images
+    equinox-broadbass: img('data/2CardsJ1.png'),
+    doodlefish: img('data/2CardsJ2.png'),
+    eamsy-earl: img('data/2CardsJ3.png'),
+    shellslug: img('data/2CardsJ4.png'),
+    balloonfish: img('data/2CardsJ5.png'),
+    noble-clam: img('data/2CardsJ6.png'),
+    litterfish: img('data/2CardsJ7.png'),
+    pufferblob: img('data/2CardsJ8.png'),
+    demonblub: img('data/2CardsJ9.png'),
+    spearfish: img('data/2CardsJ10.png'),
+    coralcave-crab: img('data/2CardsJ11.png'),
+    coralcave-guardian: img('data/2CardsJ12.png'),
+    crystal-cuttlefish: img('data/2CardsJ99.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);

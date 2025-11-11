@@ -1,6 +1,7 @@
 from collections import defaultdict
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti
+from consts.consts_general import star_tiers
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
@@ -14,7 +15,6 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
 def getUnlockableAdviceGroup(cards, groups):
     unlockable = [card for card in cards if card.star == -1]

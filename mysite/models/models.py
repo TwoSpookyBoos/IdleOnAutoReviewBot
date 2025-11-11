@@ -11,7 +11,7 @@ from config import app
 from consts.consts_autoreview import ignorable_labels
 from consts.consts_idleon import lavaFunc, expected_talents_dict
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
-    greenstack_item_difficulty_groups
+    greenstack_item_difficulty_groups, current_world
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
@@ -21,6 +21,7 @@ from consts.consts_w3 import (
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
 from models.custom_exceptions import VeryOldDataException
 from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
+from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -295,7 +296,7 @@ class Character:
 
         self.apoc_dict: dict = {
             name: {
-                **{f"Basic W{i} Enemies": list() for i in range(1, 7)},
+                **{f"Basic W{i} Enemies": list() for i in range(1, current_world+1)},
                 "Easy Extras": [],
                 "Medium Extras": [],
                 "Difficult Extras": [],
@@ -370,15 +371,15 @@ class Character:
                 for killIndex, killCount in enumerate(self.kill_dict[mapIndex]):
                     if not isinstance(killCount, float) or not isinstance(killCount, int):
                         try:
-                            self.kill_dict[mapIndex][killIndex] = float(killCount)
+                            self.kill_dict[mapIndex][killIndex] = parse_number(killCount)
                         except:
                             self.kill_dict[mapIndex][killIndex] = 0
             else:
                 #Sometimes users have just raw strings, floats, or ints that aren't in a list
-                # Try to put them into a list AND convert to float at the same time
+                # Try to put them into a list AND convert to float/int at the same time
                 #  else default to a list containing zeroes as some maps have multiple portals
                 try:
-                    self.kill_dict[mapIndex] = [float(self.kill_dict[mapIndex])]
+                    self.kill_dict[mapIndex] = [parse_number(self.kill_dict[mapIndex])]
                 except:
                     self.kill_dict[mapIndex] = [0, 0, 0]
 
@@ -1406,10 +1407,11 @@ class Card:
         """
         0 stars always requires 1 card
         1 star is set per enemy
-        2 stars = 3x additional what 1star took, for a total of 4x (2^2)
+        2 stars = 3x additional what 1star took, for a total of 1+3 = 4x (2^2)
         3 stars = 5x additional what 1star took, for a total of 4+5 = 9x (3^2)
         4 stars = 16x additional what 1star took, for a total of 9+16 = 25x (5^2)
-        5 stars = 459 additional what 1star took, for a total of 25+459 = 484x (22^2)
+        5 stars = 459x additional what 1star took, for a total of 25+459 = 484x (22^2)
+        6 stars = x additional what 1star took, for a total of 484+  #TODO
         """
 
         tier_coefficient = {
@@ -1579,7 +1581,7 @@ def buildMaps() -> dict[int, dict]:
         4: {},
         5: {},
         6: {},
-        #7: {},
+        7: {},
         #8: {}
     }
     rawMaps = getJSONDataFromFile(os.path.join(app.static_folder, 'enemy-maps.json'))
