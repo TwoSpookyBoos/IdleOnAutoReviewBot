@@ -3004,13 +3004,12 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
     except:
         account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] = 1 * account.caverns['Caverns'][cavern_name]['Unlocked']
-    for wish_index, wish_list in enumerate(lamp_wishes):
+    for wish_index, wish_dict in enumerate(lamp_wishes):
         account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index] = {
-            'Name': wish_list[0],
-            'BaseCost': wish_list[1],
-            'CostIncreaser': wish_list[2],
-            'Idk3': wish_list[3],
-            'Description': wish_list[4],
+            'Name': wish_dict['Name'],
+            'BaseCost': wish_dict['BaseCost'],
+            'CostIncreaser': wish_dict['CostIncreaser'],
+            'Description': f"{wish_dict['Description']}{'. Cost does not increase.' if wish_dict['DoesCostIncrease'] is False else ''}",
             'Image': f'lamp-wish-{wish_index}',
             'BonusList': []
         }
@@ -3019,7 +3018,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
                     account.caverns['Villagers']['Polonai']['Level'] >= 7
                     and account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] > wish_index
                 )
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = raw_caverns_list[21][wish_index]
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = parse_number(raw_caverns_list[21][wish_index])
         except:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = False
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = 0
@@ -3028,21 +3027,21 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
 
         #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
-        if wish_list[0].startswith('World '):
-            world_number = safer_convert(wish_list[0].split('World ')[1][0], 0)
+        if wish_dict['Name'].startswith('World '):
+            world_number = safer_convert(wish_dict['Name'].split('World ')[1][0], 0)
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
                 v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
-                for v in lamp_world_wish_values[world_number]
+                for v in lamp_world_wish_values.get(world_number, [0]*3)
             ]
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '@', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
+                    '{', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '#', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
+                    '}', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '$', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
+                    '~', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'

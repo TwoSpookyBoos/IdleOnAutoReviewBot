@@ -1,6 +1,8 @@
 import math
 from consts.consts_autoreview import ValueToMulti
+from utils.data_formatting import safer_convert
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
 
 logger = get_logger(__name__)
 
@@ -325,44 +327,40 @@ harp_notes = [
 max_harp_notes = len(harp_notes)
 
 # 'Bonus per Level' for the three stats boosted by 'World X Stuff' wishes.
-# Pad with empty rows to ensure that the index matches the world (i.e. the list at index 4 are the values for "World 4 Stuff")
-#`HoleozDT = "25,10,8;15,40,10;20,35,12;1,1,1;2,2,2"` in source. Last updated in v2.43 Nov 6
-# TODO: consider turning this into a dict where the keys are 'World X Stuff' for the existing wishes
-lamp_world_wish_values = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-    [25, 10, 8],
-    [15, 40, 10],
-    [20, 35, 12],
-    [1, 1, 1],
-    [2, 2, 2]
-]
-# `LampWishes = function ()` in source , slightly cleaned up. Last updated in v2.41
-# TODO: consider just generating directly from source to avoid manual cleanup. Haven't looked at what the manual changes here are yet.
+#`HoleozDT = "25,10,8;15,40,10;20,35,12;5,1,1;2,2,2"` in source. Last updated in v2.43 Nov 6
+lamp_world_wish_values = {
+    4: [25, 10, 8],
+    5: [15, 40, 10],
+    6: [20, 35, 12],
+    7: [5, 1, 1],
+    8: [2, 2, 2]
+}
+# `LampWishes = function ()` in source. Last updated in v2.43 Nov 12
+LampWishes = [["More_Wishes", "1", "3", "1", "Your_wish_is_my_command..._wait_stop_no_you_can't_just_wish_for_more_wishes!!"], ["Another_Try", "6", "0", "0", "That_sounds_like_a_fair_request,_what_exactly_would_you_like_another_try_at?_@_|"], ["1000000_Opals", "2", "2", "1", "A_million_opals??!?_M'lord_please,_lets_be_reasonable_here!_I_can_give_to_you_but_one_opal..."], ["Bring_Them_Back", "2", "0", "0", "I'm_sorry,_I_can't_do_this..._it_wouldn't_be_right._@_But_I_can_grant_12_hours_of_respect,_to_whom_should_it_go?_@_|"], ["World_4_Stuff", "1", ".2", "1", "Uhh,_sure,_how_about_these_bonuses:_@_+{%_Cooking_Speed_@_+}%_Shiny_Pet_LV_Up_&_Breedability_Rate_@_+~%_Lab_EXP_gain"], ["A_Moderate_Discount", "2", ".5", "1", "A..._discount?_Just_a_discount?_Thats_uh,_yea,_that_is_certainly_doable_m'lord._@_I_can_grant_an_additional_15%_discount_on_the_next_Engineer_Schematic_creation!"], ["World_5_Things", "1", ".2", "1", "Wow_very_specific!_How_about:_@_+{%_Sailing_Loot_Value_@_+}%_Bits_gain_@_+~%_Divinity_Pts_gain"], ["Infinite_Resources", "1", ".05", "1", "Infinite_isn't_a_number,_it's_more_of_a_concept..._Instead,_I'll_grant_a_#x_bonus_to_Well_and_Harp_resource_gain!_Oh,_and_$x_for_Jar_Rupie_gain!"], ["World_6_Majigers", "1", ".2", "1", "Yes_yes_majigers,_how_about_things_like:_@_+{%_Next_Crop_chance_@_+}%_Stealth_for_Ninja_twins_@_+~%_All_Essence_gain"], ["Knowledge_of_Future", "999", "999", "1", "If_I_told_you_what_the_future_was,_it_wouldn't_really_be_the_future_anymore_would_it_m'lord?_No,_you'll_have_to_wait_for_the_future_to_be_the_now."], ["World_7_Watsinames", "3", ".5", "1", "Hmm..._I_suspect_you're_wanting_things_like_+{%_total_Spelunking_Amber,_and_maybe_a_little_bit_for_the_future_skills...?_Granted!"], ["World_8_Stuff", "999", "999", "1", "Oh_please,_World_8?_Is_this_'World_8'_in_the_room_with_us_right_now?_M'lord,_you_waste_both_our_time!"]]
+lamp_wishes_description_overrides = {
+    # Replace flavor text to shorten/clarify the descriptions
+    'More_Wishes': 'Unlock the next Wish Type',
+    'Another_Try': 'Reset investments for Opals, Conjuror PTS, Jar Collectible Enhancements, or Summoning Doublers',
+    '1000000_Opals': '+1 Opal',
+    'Bring_Them_Back': '+12 AFK Hours to any unlocked Monument',
+    'World_4_Stuff': '+{% Cooking Speed, +}% Shiny Pet LV Up & Breedability Rate, +~% Lab EXP gain',
+    'A_Moderate_Discount': '15% discount on the next Engineer Schematic creation',
+    'World_5_Things': '+{% Sailing Loot Value, +}% Bits gain, +~% Divinity Pts gain',
+    'Infinite_Resources': 'Well, Harp, and Jar cavern resource gain',
+    'World_6_Majigers': '+{% Next Crop chance, +}% Stealth for Ninja twins, +~% All Essence gain',
+    # 'Knowledge_of_Future' intentionally left out for when he implements it in the future
+    'World_7_Watsinames': LampWishes[10][4].split('_like_')[1].replace('_', ' ')
+    # 'World_8_Stuff' intentionally left out for when he implements it in the future
+}
 lamp_wishes = [
-    ["More Wishes", 1, 3, 1, "Unlock the next Wish Type"],
-    ["Another Try", 6, 0, 0, "Reset Opals or Majik investments. Cost does not increase."],
-    ["1000000 Opals", 2, 2, 1, "+1 Opal"],
-    ["Bring Them Back", 2, 0, 0, "+12 AFK Hours to any unlocked Monument Cost does not increase."],
-    ["World 4 Stuff", 1, .2, 1,
-     f"+@% Cooking Speed, "
-     f"+#% Shiny Pet LV Up & Breedability Rate, "
-     f"+$% Lab EXP gain"],
-    ["A Moderate Discount", 2, .5, 1, "15% discount on the next Engineer Schematic creation"],
-    ["World 5 Things", 1, .2, 1,
-     f"+@% Sailing Loot Value, "
-     f"+#% Bits gain, "
-     f"+$% Divinity Pts gain"],
-    ["Infinite Resources", 1, .05, 1, "Well, Harp, and Jar resource gain"],
-    ["World 6 Majigers", 1, .2, 1,
-     f"+@% Next Crop chance, "
-     f"+#% Stealth for Ninja twins, "
-     f"+$% All Essence gain"],
-    ["Knowledge of Future", 999, 999, 1, "Not implemented"],
-    ["World 7 Stuff", 999, 999, 1, "Not implemented"],
-    ["World 8 Stuff", 999, 999, 1, "Not implemented"]
+    {
+        'Name': entry[0].replace('_', ' '),
+        'BaseCost': parse_number(entry[1]),
+        'CostIncreaser': parse_number(entry[2]),
+        'DoesCostIncrease': safer_convert(parse_number(entry[3]), True),
+        'Description': lamp_wishes_description_overrides.get(entry[0], entry[4].replace('_', ' '))
+    }
+    for entry in LampWishes
 ]
 caverns_jar_collectibles = [entry.split('|') for entry in HolesInfo[67]]
 caverns_jar_collectibles_count = len(caverns_jar_collectibles)
@@ -514,7 +512,7 @@ def getWishCost(wish_index, wish_level):
         case 2:  #Opal
             result = math.floor(1 + (2 * wish_level) + pow(wish_level, 1.7))
         case _:  #Everything else
-            result = math.floor(lamp_wishes[wish_index][1] + (wish_level * lamp_wishes[wish_index][2]))
+            result = math.floor(lamp_wishes[wish_index]['BaseCost'] + (wish_level * lamp_wishes[wish_index]['CostIncreaser']))
     return result
 
 
