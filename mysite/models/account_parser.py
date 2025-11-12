@@ -21,7 +21,7 @@ from consts.consts_w1 import (
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
-    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, bubble_cauldron_color_list
+    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -46,14 +46,14 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict,
+    jade_emporium, gfood_codes, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_match_colors,
     summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
     emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order
+    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
@@ -3347,22 +3347,22 @@ def _parse_w6_sneaking(account):
 
 def _parse_w6_pristine_charms(account, raw_ninja_list):
     raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-    for pristineCharmIndex, pristineCharmDict in enumerate(pristine_charms_list):
+    for index, (pristine_charm_name, pristine_charm_data) in enumerate(pristine_charms_dict.items()):
         try:
-            account.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
-                'Obtained': bool(raw_pristine_charms_list[pristineCharmIndex]),
-                'Image': pristineCharmDict['Image'],
-                'Bonus': pristineCharmDict['Bonus'],
+            account.sneaking["PristineCharms"][pristine_charm_name] = {
+                'Obtained': bool(raw_pristine_charms_list[index]),
+                'Image': pristine_charm_data['Image'],
+                'Bonus': pristine_charm_data['Bonus'],
             }
         except:
-            account.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
+            account.sneaking["PristineCharms"][pristine_charm_name] = {
                 'Obtained': False,
-                'Image': pristineCharmDict['Image'],
-                'Bonus': pristineCharmDict['Bonus'],
+                'Image': pristine_charm_data['Image'],
+                'Bonus': pristine_charm_data['Bonus'],
             }
 
 def _parse_w6_gemstones(account):
-    for gemstone_name, gemstone_values in sneaking_gemstones_all_values.items():
+    for gemstone_name, gemstone_values in sneaking_gemstones_dict.items():
         level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
         account.sneaking['Gemstones'][gemstone_name] = {
             'Level': level,

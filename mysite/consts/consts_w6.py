@@ -1,9 +1,11 @@
 import math
+import re
 from decimal import Decimal
 
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_idleon import lavaFunc, NinjaInfo
+from consts.consts_idleon import lavaFunc, NinjaInfo, RANDOlist
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
 from utils.text_formatting import numberToLetter
 
 logger = get_logger(__name__)
@@ -11,7 +13,6 @@ logger = get_logger(__name__)
 # `JadeUpg` in source. Last updated in v2.44 Nov 10
 jade_upg = ["Quick_Ref_Access 500 1 0 filler filler Adds_the_Sneaking_skill_to_your_QuickRef_menu!_Manage_your_Ninja_Twins_from_anywhere!".split(" "), "Gold_Food_Beanstalk 500 1 1 filler filler Grows_a_giant_beanstalk_behind_the_ninja_castle!_Drop_a_stack_of_10,000_Gold_Food_to_add_it_with_the_beanstalk_and_permanently_gain_its_bonus!".split(" "), "Supersized_Gold_Beanstacking 500 1 2 filler filler You_can_now_drop_a_stack_of_100,000_Gold_Food_to_supersize_it!_This_will_obviously_give_a_bigger_bonus,_and_will_even_enlargen_the_food_on_the_stalk!".split(" "), "Charmed,_I'm_Sure 500 1 3 filler filler All_your_Ninja_Twins_can_now_equip_two_of_the_same_charm_at_once!".split(" "), "Mob_Cosplay_Craze 500 1 4 filler filler Certain_monsters_in_World_6_will_now_have_a_rare_chance_to_drop_Ninja_Hats,_but_only_the_ones_you've_found_already_from_the_Ninja_Castle!".split(" "), "Level_Exemption 500 1 5 filler filler Completely_and_utterly_removes_the_UNDER-LEVELED_bonus_reduction_of_all_stamps_in_your_collection,_now_and_forever._Amen.".split(" "), "Gaming_to_the_MAX 500 1 6 filler filler All_plant_types_in_Gaming_have_+1_Max_Evolution,_but_this_one_is_50,000x_rarer_than_normal_and_will_make_you_wonder_if_evolution_is_even_real_(it_is)".split(" "), "Revenge_of_the_Pickle 500 1 7 filler filler Adds_a_new_boss_page_to_the_left_of_World_1_in_Deathnote._Each_BoneJoePickle_in_your_inventory_counts_as_+1_Boss_Deathnote_Kill!".split(" "), "The_Artifact_Matrix 500 1 8 filler filler Extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_Artifact_Find_Chance!".split(" "), "The_Slab_Matrix 500 1 9 filler filler Further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_all_bonuses_from_the_Slab!".split(" "), "The_Spirit_Matrix 500 1 10 filler filler Even_further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_W6_Skill_exp_gain!".split(" "), "The_Crop_Matrix 500 1 11 filler filler Yet_again_even_further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_Crop_Depot!".split(" "), "MSA_Expander_I 500 1 12 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_Farming_EXP!".split(" "), "MSA_Expander_II 500 1 13 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_Jade_Coin_Gain!".split(" "), "MSA_Expander_III 500 1 14 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_All_Essence_Gain!".split(" "), "Deal_Sweetening 500 1 15 filler filler Earn_+25%_more_Magic_Beans_from_the_mysterious_Legumulyte_bean_merchant_found_in_the_Troll_Broodnest_map.".split(" "), "No_Meal_Left_Behind 500 1 16 filler filler Every_24_hours,_your_lowest_level_Meal_gets_+1_Lv._This_only_works_on_Meals_Lv_2_or_higher,_and_doesn't_trigger_on_days_you_don't_play.".split(" "), "Jade_Coin_Magnetism 500 1 17 filler filler Adds_a_new_bonus_of_+5%_Jade_Coin_Gain_per_10_items_found_after_1000_items,_as_shown_at_The_Slab_in_World_5.".split(" "), "Essence_Confetti 500 1 18 filler filler Adds_a_new_bonus_of_+3%_All_Essence_Gain_per_10_items_found_after_1000_items,_as_shown_at_The_Slab_in_World_5.".split(" "), "Shrine_Collective_Bargaining_Agreement 500 1 19 filler filler Shrines_no_longer_lose_EXP_when_moved_around,_so_you_can_finally_bring_those_baddies_out_of_retirement!".split(" "), "Papa_Blob's_Quality_Guarantee 500 1 20 filler filler Increases_the_Max_Level_of_all_cooking_meals_by_+10._Better_meals,_better_levels,_Papa_Blob's.".split(" "), "Chef_Geustloaf's_Cutting_Edge_Philosophy 500 1 21 filler filler Increases_the_Max_Level_of_all_cooking_meals_by_+10_again!_But_oh_hoho,_you_sir_are_no_Chef_Geustloaf!_Good_luck_cooking_to_these_LVs!".split(" "), "Crop_Depot_Scientist 500 1 22 filler filler Employs_a_friendly_scientist_blobulyte_to_keep_a_Data_Sheet_of_all_the_crops_you've_ever_found!".split(" "), "Science_Environmentally_Sourced_Pencil 500 1 23 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+15%_Cash_from_Mobs'_per_crop_found!".split(" "), "Science_Pen 500 1 24 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'1.02x_Plant_Evolution_Chance_in_Gaming_(multiplicative)'_per_Crop!".split(" "), "Science_Marker 500 1 25 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+8%_Jade_Coin_Gain'_per_Crop!".split(" "), "Science_Featherpen 500 1 26 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'1.10x_Cooking_Speed_(multiplicative)'_per_Crop!".split(" "), "Reinforced_Science_Pencil 500 1 27 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+20%_Total_Damage'_per_Crop!".split(" "), "Science_Crayon 500 1 28 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+7%_Shiny_Pet_Lv_Up_Rate_and_Pet_Breeding_Rate'_per_Crop!".split(" "), "Science_Paintbrush 500 1 29 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+0.1_Base_Critter_caught_in_Trapping'_per_Crop!".split(" "), "New_Critter 500 1 30 filler filler Unlocks_a_new_critter_type_to_capture!_These_have_their_own_very_special_vial_in_Alchemy.".split(" "), "Ionized_Sigils 500 1 31 filler filler Sigils_can_now_be_upgraded_a_3rd_time._Push_past_lame_ol'_yellow,_and_further_increasing_those_sigil_boosts!".split(" "), "The_Endercaptain 500 1 32 filler filler Adds_the_Endercaptain_to_Recruitment_pool._They're_very_rare,_and_have_a_hidden_account-wide_+25%_Loot_Multi_and_Artifact_Find.".split(" "), "True_Godly_Blessings 500 1 33 filler filler All_Divinity_Gods_give_1.05x_higher_Blessing_bonus_per_God_Rank._Whats_a_Blessing_bonus?_Select_a_god,_it's_the_one_on_the_bottom,_go_look.".split(" "), "Brighter_Lighthouse_Bulb 500 1 34 filler filler You_can_now_find_3_additional_Artifacts_from_The_Edge_island.".split(" "), "Sovereign_Artifacts 500 1 35 filler filler You_can_now_find_Sovereign_Artifacts_from_sailing,_but_only_if_you've_found_the_Eldritch_form_first.".split(" "), "New_Bribes 500 1 36 filler filler Mr._Pigibank_is_up_to_no_good_once_again,_and_he's_looking_to_get_some_funding_from_his_favorite_patron..._you._Well,_your_wallet_specifically.".split(" "), "Laboratory_Bling 500 1 37 filler filler Adds_3_new_Jewels_to_unlock_at_the_Jewel_Spinner_in_W4_Town._Or,_get_one_for_free_every_700_total_Lab_LV_as_shown_in_Rift_Skill_Mastery.".split(" "), "Science_Highlighter 500 1 38 filler filler Adds_a_new_bonus_type_to_your_crop_scientist!_Specifically_'+1%_Drop_Rate'_per_Crop_after_100!_So_having_105_crops_would_only_give_+5%".split(" "), "Emperor_Season_Pass 500 1 39 filler filler There_is_now_a_50%_chance_to_get_+2_visits_to_the_Emperor_every_day,_and_your_maximum_visits_goes_up_from_6_to_11".split(" "), "Science_Fancy_Pen 500 1 40 filler filler Adds_the_'Spelunky'_bonus_to_your_scientist,_which_boosts_both_POW_and_Amber_gain_by_5%_per_Crop_after_200!_So_having_210_crops_only_gives_+50%".split(" "), "Palette_Slot 500 1 41 filler filler Unlocks_+1_Palette_Slot_in_Gaming!_This_would_be_kinda_pointless_on_it's_own..._so_it_comes_with_+100%_Palette_Luck!".split(" "), "Another_Gallery_Podium 500 1 42 filler filler Pardon_my_interruption_sir,_but_I_must_urge_you_to_buy_this_upgrade..._another_podium_slot_for_your_Gallery_would_be_most_becoming_indeed!".split(" "), "Coral_Conservationism 500 1 43 filler filler Boosts_daily_coral_gain_at_the_Coral_Reef_in_World_7_in_Shimmerfin_Deep_Town_in_the_game_IdleOn_on_the_Left_side_of_the_map_by_+20%".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet,_so_you_cant_buy_it!_Please_come_back_in_a_few_updates,_since_this_isn't_out_yet!".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet,_so_you_cant_buy_it!_Please_come_back_in_a_few_updates,_I_made_myself_clear_before!".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet._'nuff_said.".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" ")]
 jade_emporium_order = [int(index) for index in NinjaInfo[24]]
-pass
 jade_emporium = {
     int(index) : {
         'Name': name.replace('_', ' '),
@@ -87,103 +88,47 @@ gfood_data = {
     }
 }
 
-# TODO: parse from source (part of `NjEQ`)
-pristine_charms_list: list = [
-    {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
-    {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},
-    {'Name': 'Glowing Veil', 'Image': 'glowing-veil', 'Bonus': '1.40x Artifact Find Chance'},
-    {'Name': 'Cotton Candy', 'Image': 'cotton-candy-charm', 'Bonus': '1.15x Drop Rate'},
-    {'Name': 'Sugar Bomb', 'Image': 'sugar-bomb', 'Bonus': '+20% STR'},
-    {'Name': 'Gumm Eye', 'Image': 'gumm-eye', 'Bonus': '+20% LUK'},
-    {'Name': 'Bubblegum Law', 'Image': 'bubblegum-law', 'Bonus': '1.25x Kill per Kill'},
-    {'Name': 'Sour Wowzer', 'Image': 'sour-wowzer', 'Bonus': '+50% Sneaking EXP gain'},
-    {'Name': 'Crystal Comb', 'Image': 'crystal-comb', 'Bonus': '1.30x Bigger Summoning Winner Bonuses'},
-    {'Name': 'Rock Candy', 'Image': 'rock-candy', 'Bonus': '+50% Farming EXP gain'},
-    {'Name': 'Lollipop Law', 'Image': 'lollipop-law', 'Bonus': '+20% WIS'},
-    {'Name': 'Taffy Disc', 'Image': 'taffy-disc', 'Bonus': '1.50x Higher Overgrowth Chance'},
-    {'Name': 'Stick of Chew', 'Image': 'stick-of-chew', 'Bonus': '1.30x All Essence Generation'},
-    {'Name': 'Treat Sack', 'Image': 'treat-sack', 'Bonus': '1.40x Jade Coin gain'},
-    {'Name': 'Gumm Stick', 'Image': 'gumm-stick', 'Bonus': '+50% Golden Food bonus'},
-    {'Name': 'Lolly Flower', 'Image': 'lolly-flower', 'Bonus': '+25% Printer Output'},
-    {'Name': 'Gumball Necklace', 'Image': 'gumball-necklace', 'Bonus': '1.40x Money from Monsters'},
-    {'Name': 'Liqorice Rolle', 'Image': 'liqorice-rolle', 'Bonus': '1.25x Bigger Bonuses of Non Misc Stamps'},
-    {'Name': 'Glimmerchain', 'Image': 'glimmerchain', 'Bonus': '1.30x Extra Death Bringer Bones'},
-    {'Name': 'Twinkle Taffy', 'Image': 'twinkle-taffy', 'Bonus': '1.30x Extra Wind Walker Dust'},
-    {'Name': 'Jellypick', 'Image': 'jellypick', 'Bonus': '+20% Exalted Stamp bonus'},
-    {'Name': 'Candy Cache', 'Image': 'candy-cache', 'Bonus': '1.40x Villager EXP'},
-    {'Name': 'Mystery Fizz', 'Image': 'mystery-fizz', 'Bonus': '1.30x Extra Arcane Cultist Tachyons'}
-]
-sneaking_gemstones_all_values = {
-    #NjGem0 = "4 130 Aquamarine 40 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 10000".split(" ")
-    #Gem Index = digit at NjGem, 0 in this example
-    #[2] = name
-    #[3] = Base Value
-    #[5] = Max Value
-    #Add [3] and [5] for Max Value
-    'Aquamarine': {
-        'Stat': 'Stealth',
-        'Base Value': 40,
-        'Scaling Value': 10000,
-        'Max Value': 10040,
-        'Gem Index': 0,
-        'OptlAcc Index': 233+0
-    },
-    'Malachite': {
-        'Stat': 'Jade',
-        'Base Value': 15,
-        'Scaling Value': 5000,
-        'Max Value': 5015,
-        'Gem Index': 1,
-        'OptlAcc Index': 233+1
-    },
-    'Garnet': {
-        'Stat': 'Door Damage',
-        'Base Value': 12,
-        'Scaling Value': 2500,
-        'Max Value': 2512,
-        'Gem Index': 2,
-        'OptlAcc Index': 233+2
-    },
-    'Starite': {
-        'Stat': 'Gold Charm Bonus',
-        'Base Value': 5,
-        'Scaling Value': 200,
-        'Max Value': 205,
-        'Gem Index': 3,
-        'OptlAcc Index': 233+3
-    },
-    'Topaz': {
-        'Stat': 'Sneak EXP',
-        'Base Value': 10,
-        'Scaling Value': 1000,
-        'Max Value': 1010,
-        'Gem Index': 4,
-        'OptlAcc Index': 233+4
-    },
-    'Moissanite': {
-        'Stat': 'Gemstone Bonuses',
-        'Base Value': 3,
-        'Scaling Value': 300,
-        'Max Value': 303,
-        'Gem Index': 5,
-        'OptlAcc Index': 233+5
-    },
-    'Emerald': {
-        'Stat': 'Cheaper Upgrades',
-        'Base Value': 1,
-        'Scaling Value': 2500,
-        'Max Value': 2501,
-        'Gem Index': 6,
-        'OptlAcc Index': 233+6
-    },
-    'Firefrost': {
-        'Stat': 'Max Charm levels',
-        'Base Value': 1,
-        'Scaling Value': 30,
-        'Max Value': 31,
-        'Gem Index': 7,
-        'OptlAcc Index': 233+7
-    },
+# `NjEQ` in source. Last updated in v2.44 Nov 10
+# Copy the contents of the return statement, excluding the actual `return`
+NjEQ = """((e.h.NjItem0 = ["0", "0", "Straw_Hat", "A_basic_hat_made_of_straw_held_together_by_string!", "filler"]),(e.h.NjItem1 = ["0", "1", "Wig_Bandana", "Really_makes_you_FEEL_like_you_have_cool_ninja_hair!", "filler"]),(e.h.NjItem2 = ["0", "2", "Funky_Hat", "Woah_what_the_heck_is_this?_What_does_this_have_to_do_with_ninjas?", "filler"]),(e.h.NjItem3 = ["0", "3", "Reinforced_Headband", "The_metal_plate_protects_against_downward_strikes_from_opponents!", "filler"]),(e.h.NjItem4 = ["0", "4", "Shogun_Helmet", "Symbolizes_the_leader_of_feudalism_itself!", "filler"]),(e.h.NjItem5 = ["0", "5", "Gilded_Headband", "It's_like_the_other_headband,_but_recoloured_to_save_time...", "filler"]),(e.h.NjItem6 = ["0", "6", "Bamboo_Hat", "Shaved_bamboo_held_together_by_a_collective_desire_to_be_a_hat!", "filler"]),(e.h.NjItem7 = ["0", "7", "Festive_Beast_Mask", "Calm_down_it's_not_real,_everyone_knows_masks_aren't_real!", "filler"]),(e.h.NjItem8 = ["0", "8", "Heiress_Headdress", "It's_blue,_it's_ugly,_and_it_doesn't_deserve_a_full_descri", "filler"]),(e.h.NjItem9 = ["0", "9", "Spirited_Mane", "Elicits_a_sense_of_awe_in_all_who_gaze_upon_it.", "filler"]),(e.h.NjItem10 = ["0", "10", "Fiery_Mane", "Elicits_a_sense_of_awe_in_all_who_gaze_upon_it,_but_like,_red.", "filler"]),(e.h.NjItem11 = ["0", "11", "Guardian_Mane", "Really_makes_you_FEEL_like_you_have_endgame_monster_hair!", "filler"]),(e.h.NjItem12 = ["0", "12", "Fanned_Blossomage", "Bowing_to_someone_with_this_on_will_really_blow_them_away!", "filler"]),(e.h.NjItem13 = ["0", "13", "Dainty_Brim", "Fancy_a_spot_of_tea_daaahling?_Be_a_dear_and_pass_the_crumpets!", "filler"]),(e.h.NjItem14 = ["0", "14", "Charcoal_Hat", "A_basic_hat_made_of_straw,_with_some_charcoal_tossed_in.", "filler"]),(e.h.Blank = ["0", "0", "Nothing", "0", "0"]),(e.h.NjWep0 = ["1", "1", "Wood_Nunchaku", "10", "0"]),(e.h.NjWep5 = ["1", "1", "Bamboo_Nunchaku", "23", "1"]),(e.h.NjWep6 = ["1", "1", "Charcoal_Nunchaku", "45", "2"]),(e.h.NjWep7 = ["1", "1", "Ignited_Nunchaku", "80", "3"]),(e.h.NjWep8 = ["1", "1", "Spiral_Nunchaku", "110", "4"]),(e.h.NjWep1 = ["1", "2", "Basic_Kunai", "5", "0"]),(e.h.NjWep2 = ["1", "2", "Jagged_Kunai", "9", "0"]),(e.h.NjWep3 = ["1", "2", "Serrated_Kunai", "16", "0"]),(e.h.NjWep4 = ["1", "2", "Damascus_Kunai", "28", "0"]),(e.h.NjGl0 = ["1", "0", "Leather_Gloves", "5", "0"]),(e.h.NjGl1 = ["1", "0", "Chainmail_Gloves", "7", "0"]),(e.h.NjGl2 = ["1", "0", "Thundergloves", "10", "0"]),(e.h.NjTr0 = "2 0 Ninja_Log 8 If_detected,_+{%_chance_to_not_be_knocked_out 13".split(" ")),(e.h.NjTr1 = "2 1 Taunting_Mark 10 If_another_ninja_on_this_floor_is_detected,_you_are_instead_(if_youre_not_already_KO'd)_Also,_-{%_KO_time 40".split(" ")),(e.h.NjTr2 = "2 2 Yellow_Belt 5 Performs_actions_+{%_faster._If_there_are_no_other_ninjas_on_floor,_this_bonus_is_doubled 30".split(" ")),(e.h.NjTr3 = "2 3 Strange_Comb 5 Gives_all_EXP_earned_to_ninja_with_highest_Sneak_LV._Also,_+{%_Sneaking_EXP 50".split(" ")),(e.h.NjTr4 = "2 4 Silk_Veil 20 Gives_you_}x_Total_Stealth 1000".split(" ")),(e.h.NjTr5 = "2 5 Meteorite 15 Boosts_Item_Find_Chance_by_+{%,_but_you_gain_no_Sneaking_Exp 50".split(" ")),(e.h.NjTr6 = "2 6 Shiny_Smoke 20 Find_+{%_more_Jade_coins._If_you_have_0%_Detection_Rate,_this_bonus_is_doubled 200".split(" ")),(e.h.NjTr7 = "2 7 Scroll_of_Power 30 +{%_Sneaking_EXP,_Jade_Coins,_and_Total_Stealth._Can_only_be_equipped_by_one_ninja_at_a_time 300".split(" ")),(e.h.NjTr8 = "2 8 Smoke_Bomb 15 All_other_Ninjas_on_same_floor_get_+{%_Stealth 400".split(" ")),(e.h.NjTr9 = "2 9 Gold_Coin 5 If_in_Inventory,_all_ninjas_find_}x_Jade_Coins._Doesn't_stack_with_other_Gold_Coins 100".split(" ")),(e.h.NjTr10 = "2 10 Gold_Eye 3 If_in_Inventory,_all_ninjas_get_+{%_Sneaking_EXP._Doesn't_stack_with_other_Gold_Eyes 200".split(" ")),(e.h.NjTr11 = "2 11 Gold_Coupon 3 If_in_Inventory,_all_Ninja_Knowledge_is_{%_cheaper._Doesn't_stack_with_other_Gold_Coupons 60".split(" ")),(e.h.NjTr12 = "2 12 Gold_Scroll 3 If_in_Inventory,_most_charms_give_}x_higher_bonus_than_displayed._Doesn't_stack_with_other_Gold_Scrolls 125".split(" ")),(e.h.NjTr13 = "2 13 Blue_Belt 10 Gives_+{%_Sneaking_EXP._If_there_are_no_other_ninjas_on_floor,_this_bonus_is_tripled 200".split(" ")),(e.h.NjTr14 = "2 14 Green_Belt 10 Find_+{%_more_Jade_Coins._If_there_are_no_other_ninjas_on_floor,_this_bonus_is_tripled. 200".split(" ")),(e.h.NjTr15 = "2 15 Goodie_Bag 25 Find_+{%_more_Jade_Coins. 250".split(" ")),(e.h.NjTr16 = "2 16 Lotus_Flower 25 All_other_Ninjas_on_same_floor_get_+{%_Stealth 700".split(" ")),(e.h.NjTr17 = "2 17 Rosaries 35 Gives_you_}x_Total_Stealth 1700".split(" ")),(e.h.NjTr18 = "2 18 Gold_Dagger 5 If_in_Inventory,_all_ninjas_get_+{%_Nunchaku_Damage._Doesn't_stack_with_other_Gold_Daggers 200".split(" ")),(e.h.NjTr19 = "2 19 Black_Belt 20 +{%_Sneaking_EXP_and_Jade_coins._If_there_are_no_other_ninjas_on_floor,_this_bonus_is_tripled. 400".split(" ")),(e.h.NjTr20 = "2 20 Gold_Beads 25 If_in_Inventory,_all_ninjas_get_+{%_Total_Stealth._Doesn't_stack_with_other_Gold_Beads 500".split(" ")),(e.h.NjTr21 = "2 21 Gold_Star 2 If_in_Inventory,_charms_found_have_a_+{_higher_Max_LV._Doesn't_stack_with_other_Gold_Stars 25".split(" ")),(e.h.NjTr22 = "2 22 Gold_Sai 4 If_in_Inventory,_all_ninjas_get_+{%_Nunchaku_Dmg_Per_10_Sneak_LV._Doesn't_stack_with_other_Gold_Sais 25".split(" ")),(e.h.NjTr23 = "2 23 Gold_Envelope 5 If_in_Inventory,_all_ninjas_find_+{%_Jade_Per_10_Sneak_LV._Doesn't_stack_with_other_Gold_Envelope 50".split(" ")),(e.h.NjTr24 = "2 24 Gold_Q_Mark 3 If_in_Inventory,_all_ninjas_perform_actions_+{%_faster._Doesn't_stack_with_other_Gold_Q_Marks 30".split(" ")),(e.h.NjGem0 = "4 130 Aquamarine 40 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 10000".split(" ")),(e.h.NjGem1 = "4 70 Malachite 15 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 5000".split(" ")),(e.h.NjGem2 = "4 285 Garnet 12 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 2500".split(" ")),(e.h.NjGem3 = "4 0 Starite 5 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 200".split(" ")),(e.h.NjGem4 = "4 -35 Topaz 10 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 1000".split(" ")),(e.h.NjGem5 = "4 230 Moissanite 3 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 300".split(" ")),(e.h.NjGem6 = "4 70 Emerald 1 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 2500".split(" ")),(e.h.NjGem7 = "4 290 Firefrost 1 Hold_down_to_add_this_Gemstone_to_your_collection._View_collection_and_bonuses_in_Ninja_Knowledge. 30".split(" ")),(e.h.NjSym0 = "5 4 Lesser_Symbol 1 Hold_down_for_a_{_chance_to_boost_this_slot_to_Lv_}._Charms_here_will_then_give_a_$x_higher_bonus! 1".split(" ")),(e.h.NjSym1 = "5 4 Modest_Symbol 5 Hold_down_for_a_{_chance_to_boost_this_slot_to_Lv_}._Charms_here_will_then_give_a_$x_higher_bonus! 1".split(" ")),(e.h.NjSym2 = "5 4 Grand_Symbol 20 Hold_down_for_a_{_chance_to_boost_this_slot_to_Lv_}._Charms_here_will_then_give_a_$x_higher_bonus! 1".split(" ")),(e.h.NjTrP0 = "3 0 Sparkle_Log 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Total_DMG".split(" ")),(e.h.NjTrP1 = "3 1 Fruit_Rolle 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_AGI".split(" ")),(e.h.NjTrP2 = "3 2 Glowing_Veil 40 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Artifact_Find_Chance".split(" ")),(e.h.NjTrP3 = "3 3 Cotton_Candy 15 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Drop_Rate".split(" ")),(e.h.NjTrP4 = "3 4 Sugar_Bomb 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_STR".split(" ")),(e.h.NjTrP5 = "3 5 Gumm_Eye 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_LUK".split(" ")),(e.h.NjTrP6 = "3 6 Bubblegum_Law 25 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Kill_per_Kill".split(" ")),(e.h.NjTrP7 = "3 7 Sour_Wowzer 50 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_Sneaking_EXP_gain".split(" ")),(e.h.NjTrP8 = "3 8 Crystal_Comb 30 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Bigger_Summoning_Winner_Bonuses".split(" ")),(e.h.NjTrP9 = "3 9 Rock_Candy 50 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_Farming_EXP_gain".split(" ")),(e.h.NjTrP10 = "3 10 Lollipop_Law 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_WIS".split(" ")),(e.h.NjTrP11 = "3 11 Taffy_Disc 50 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Higher_Overgrowth_Chance".split(" ")),(e.h.NjTrP12 = "3 12 Stick_of_Chew 30 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_All_Essence_Generation".split(" ")),(e.h.NjTrP13 = "3 13 Treat_Sack 40 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Jade_Coin_gain".split(" ")),(e.h.NjTrP14 = "3 14 Gumm_Stick 50 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_Golden_Food_bonus".split(" ")),(e.h.NjTrP15 = "3 15 Lolly_Flower 25 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_Printer_Output".split(" ")),(e.h.NjTrP16 = "3 16 Gumball_Necklace 40 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Money_from_Monsters".split(" ")),(e.h.NjTrP17 = "3 17 Liqorice_Rolle 25 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Bigger_Bonuses_of_Non_Misc_Stamps".split(" ")),(e.h.NjTrP18 = "3 18 Glimmerchain 30 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Extra_Deathbringer_Bones".split(" ")),(e.h.NjTrP19 = "3 19 Twinkle_Taffy 30 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Extra_Windwalker_Dust".split(" ")),(e.h.NjTrP20 = "3 20 Jellypick 20 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. +{%_Stamp_Doubler_Bonus".split(" ")),(e.h.NjTrP21 = "3 21 Candy_Cache 40 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Villager_EXP".split(" ")),(e.h.NjTrP22 = "3 22 Mystery_Fizz 30 Hold_down_to_add_this_Pristine_Charm_to_your_collection_in_the_Lobby._Click_it_there_to_see_its_bonus. }x_Extra_Arcane_Cultist_Tachyons".split(" ")),e)"""
+
+# split `NjEQ` into individual statements like `"e.h.NjItem0 = ["0", "0", "Straw_Hat", "A_basic_hat_made_of_straw_held_together_by_string!", "filler"]"`
+pattern = re.compile(r'e\.h\.[A-Za-z0-9_]+\s*=\s*(?:\[.*?]|".*?\.split\(" "\))', re.DOTALL)
+
+NjEQ_items = pattern.findall(NjEQ)
+
+NjEQ_items_dict: dict[str, list[str | int | float]] = {}
+for item in NjEQ_items:
+    key, values = next(re.finditer(r'([a-zA-z\d]+) = (\[[^]]+]|"[^"]+"\.split\(" "\))', item)).groups()  # splits the individual `NjEQ` statements
+    values = eval(values) # `eval` is nasty but should be safe because the contents of `NjEQ` are not arbitrary
+    assert isinstance(values, list)
+    NjEQ_items_dict[key] = values
+
+
+NjEQ_pristine_charms = {key: values for key, values in NjEQ_items_dict.items() if 'NjTrP' in key}
+pristine_charm_images_override = {
+    'Cotton_Candy': 'cotton-candy-charm' # we have to deduplicate from the `Cotton Candy` meal
+}
+pristine_charms_dict: dict = {
+    name.replace('_', ' '): {
+        'Image': pristine_charm_images_override.get(name, name.lower().replace('_', '-')),
+        'Bonus': (bonus.replace('{', value) if '{' in bonus else bonus.replace('}', f'1.{value}')).replace('_', ' ')
+    }
+    for _, _, name, value, _, bonus in NjEQ_pristine_charms.values()
+}
+
+NjEQ_gemstones = {key: values for key, values in NjEQ_items_dict.items() if 'NjGem' in key}
+gemstones_bonuses = RANDOlist[102]
+sneaking_gemstones_dict = {
+    name: {
+        'Stat': gemstones_bonuses[index].replace('_', ' ').replace('@ ', '').replace('{}%', '').replace('+}%', '').replace('{}', '').replace('$%', '').strip(),
+        'Base Value': parse_number(base_value, None),
+        'Scaling Value': parse_number(scaling_value, None),
+        'Max Value': parse_number(base_value + scaling_value, None),
+        'Gem Index': index,
+        'OptlAcc Index': 233 + index
+    }
+    for index, (_, _, name, base_value, _, scaling_value) in enumerate(NjEQ_gemstones.values())
 }
 
 def getMoissaniteValue(moissaniteLevel: int):
@@ -191,8 +136,8 @@ def getMoissaniteValue(moissaniteLevel: int):
     try:
         if moissaniteLevel > 0:
             value = (
-                    sneaking_gemstones_all_values['Moissanite']['Base Value']
-                    + (sneaking_gemstones_all_values['Moissanite']['Scaling Value'] * (moissaniteLevel / (moissaniteLevel + 1000)))
+                    sneaking_gemstones_dict['Moissanite']['Base Value']
+                    + (sneaking_gemstones_dict['Moissanite']['Scaling Value'] * (moissaniteLevel / (moissaniteLevel + 1000)))
             )
         return value
     except:
@@ -212,10 +157,10 @@ def getGemstoneBoostedValue(gemstone_value: float, moissanite_value: float, tale
 def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
     value = 0
     if gemstoneLevel > 0:
-        if gemstoneName in sneaking_gemstones_all_values:
+        if gemstoneName in sneaking_gemstones_dict:
             value = (
-                    sneaking_gemstones_all_values[gemstoneName]['Base Value']
-                    + (sneaking_gemstones_all_values[gemstoneName]['Scaling Value'] * (gemstoneLevel / (gemstoneLevel + 1000)))
+                    sneaking_gemstones_dict[gemstoneName]['Base Value']
+                    + (sneaking_gemstones_dict[gemstoneName]['Scaling Value'] * (gemstoneLevel / (gemstoneLevel + 1000)))
             )
         else:
             logger.warning(f"Unrecognized gemstoneName: '{gemstoneName}'. Returning default 0 value")
@@ -224,7 +169,7 @@ def getGemstoneBaseValue(gemstoneName: str, gemstoneLevel: int):
 
 def getGemstonePercent(gemstone_name: str, gemstone_value: float):
     try:
-        return 100 * (gemstone_value / sneaking_gemstones_all_values[gemstone_name]['Max Value'])
+        return 100 * (gemstone_value / sneaking_gemstones_dict[gemstone_name]['Max Value'])
     except Exception as reason:
         logger.exception(f"Could not find max value for Gemstone {gemstone_name} given value {gemstone_value} because: {reason}")
     pass
