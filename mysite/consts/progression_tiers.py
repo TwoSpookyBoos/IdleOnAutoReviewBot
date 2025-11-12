@@ -2160,7 +2160,7 @@ true_max_tiers = {
     # General
     'Achievements': max(achievements_progressionTiers.keys()),
     'Active': 0,
-    'Cards': 72,  #12 sets * 6 stars
+    'Cards': 91,  #13 sets * 7 stars
     'Combat Levels': combatLevels_progressionTiers[-1][0],
     'Consumables': 0,
     'Drop Rate': 0,

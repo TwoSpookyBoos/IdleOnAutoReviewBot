@@ -1,5 +1,5 @@
 $blunder-hills: (
-    locked-card: img('cards/Locked_Card .png'),
+    locked-card: img('cards/Locked_Card.png'),
 	blunder-hills: img('data/CardSet0.png'),
 	green-mushroom-card: img('data/2CardsA0.png'),
 	red-mushroom-card: img('data/2CardsA1.png'),
@@ -49,6 +49,9 @@ $easy-resources: (
 	jellyfish-card: img('data/2CardsC10.png'),
 	fly-card: img('data/2CardsC11.png'),
 	butterfly-card: img('data/2CardsC12.png'),
+	copper-bar-card: img('data/2CardsC13.png'),
+	iron-bar-card: img('data/2CardsC14.png'),
+	gold-bar-card: img('data/2CardsC15.png'),
 	fire-forge-card: img('data/2CardsC16.png'),
 );
 $medium-resources: (
@@ -56,18 +59,41 @@ $medium-resources: (
 	dementia-ore-card: img('data/2CardsD1.png'),
 	platinum-ore-card: img('data/2CardsD2.png'),
 	void-ore-card: img('data/2CardsD3.png'),
+	lustre-ore-card: img('data/2CardsD4.png'),
 	potty-rolls-card: img('data/2CardsD5.png'),
 	veiny-logs-card: img('data/2CardsD6.png'),
 	tropilogs-card: img('data/2CardsD7.png'),
+	tundra-logs-card: img('data/2CardsD8.png'),
 	fruitfly-card: img('data/2CardsD9.png'),
 	sentient-cereal-card: img('data/2CardsD10.png'),
 	bloach-card: img('data/2CardsD11.png'),
+	platinum-bar-card: img('data/2CardsD12.png'),
+	dementia-bar-card: img('data/2CardsD13.png'),
+	void-bar-card: img('data/2CardsD14.png'),
+	lustre-bar-card: img('data/2CardsD15.png'),
 	cinder-forge-card: img('data/2CardsD16.png'),
 	forest-soul-card: img('data/2CardsD17.png'),
 	dune-soul-card: img('data/2CardsD18.png'),
 	froge-card: img('data/2CardsD19.png'),
 	crabbo-card: img('data/2CardsD20.png'),
-	scorpie-card: img('data/2CardsD21.png')
+	scorpie-card: img('data/2CardsD21.png'),
+	//During W7 launch, many cards moved from Hard Resources to Medium and are still labeled F
+	//lustre-ore-card: img('data/2CardsF1.png'),  //Lustre Ore is duplicated in D15 and F1
+	wispy-lumber-card: img('data/2CardsF2.png'),
+	rooted-soul-card: img('data/2CardsF3.png'),
+	mousey-card: img('data/2CardsF4.png'),
+	owlio-card: img('data/2CardsF5.png'),
+	mosquisnow-card: img('data/2CardsF8.png'),
+	flycicle-card: img('data/2CardsF9.png'),
+	frigid-soul-card: img('data/2CardsF10.png'),
+	squishy-soul-card: img('data/2CardsF11.png'),
+	cubed-logs-card: img('data/2CardsF12.png'),
+	alien-hive-chunk-card: img('data/2CardsF13.png'),
+	worker-bee-card: img('data/2CardsF14.png'),
+	skelefish-card: img('data/2CardsF20.png'),
+	sand-shark-card: img('data/2CardsF21.png'),
+	manta-ray-card: img('data/2CardsF22.png'),
+	kraken-card: img('data/2CardsF23.png'),
 );
 $frostbite-tundra: (
 	frostbite-tundra: img('data/CardSet4.png'),
@@ -90,30 +116,13 @@ $frostbite-tundra: (
 );
 $hard-resources: (
 	hard-resources: img('data/CardSet5.png'),
-	tundra-logs-card: img('data/2CardsD8.png'),
-	lustre-ore-card: img('data/2CardsF1.png'),
-	wispy-lumber-card: img('data/2CardsF2.png'),
-	rooted-soul-card: img('data/2CardsF3.png'),
-	mousey-card: img('data/2CardsF4.png'),
-	owlio-card: img('data/2CardsF5.png'),
 	pingy-card: img('data/2CardsF6.png'),
 	bunny-card: img('data/2CardsF7.png'),
-	mosquisnow-card: img('data/2CardsF8.png'),
-	flycicle-card: img('data/2CardsF9.png'),
-	frigid-soul-card: img('data/2CardsF10.png'),
-	squishy-soul-card: img('data/2CardsF11.png'),
-	cubed-logs-card: img('data/2CardsF12.png'),
-	alien-hive-chunk-card: img('data/2CardsF13.png'),
-	worker-bee-card: img('data/2CardsF14.png'),
 	fairy-card: img('data/2CardsF15.png'),
 	starfire-ore-card: img('data/2CardsF16.png'),
 	dung-beat-card: img('data/2CardsF17.png'),
 	honker-card: img('data/2CardsF18.png'),
 	blobfish-card: img('data/2CardsF19.png'),
-	skelefish-card: img('data/2CardsF20.png'),
-	sand-shark-card: img('data/2CardsF21.png'),
-	manta-ray-card: img('data/2CardsF22.png'),
-	kraken-card: img('data/2CardsF23.png'),
 	maple-logs-card: img('data/2CardsF24.png'),
 	dandielogs-card: img('data/2CardsF25.png'),
 	scarab-card: img('data/2CardsF26.png'),
@@ -130,6 +139,15 @@ $hard-resources: (
 	ladybug-card: img('data/2CardsF37.png'),
 	firefly-card: img('data/2CardsF38.png'),
 	godshard-ore-card: img('data/2CardsF39.png'),
+	ancient-seaweed-card: img('data/2CardsF40.png'),
+	fearful-tunnel-card: img('data/2CardsF41.png'),
+	decaying-crevasse-card: img('data/2CardsF42.png'),
+	buried-church-card: img('data/2CardsF43.png'),
+	prehistrium-ore-card: img('data/2CardsF44.png'),
+	deepsea-soul-card: img('data/2CardsF45.png'),
+	litterbug-card: img('data/2CardsF46.png'),
+	tuttle-card: img('data/2CardsF47.png'),
+	one-way-opening-card: img('data/2CardsF48.png'),
 );
 $hyperion-nebula: (
 	hyperion-nebula: img('data/CardSet6.png'),
@@ -168,7 +186,7 @@ $smolderin-plateau: (
 	ancient-golem-card: img('data/2CardsH16.png')
 );
 $spirited-valley: (
-	spirited-valley: img("data/CardSet9.png"),
+	spirited-valley: img('data/CardSet9.png'),
 	sprout-spirit-card: img('data/2CardsI1.png'),
 	ricecake-card: img('data/2CardsI2.png'),
 	river-spirit-card: img('data/2CardsI3.png'),
@@ -184,6 +202,22 @@ $spirited-valley: (
 	minichief-spirit-card: img('data/2CardsI13.png'),
 	samurai-guardian-card: img('data/2CardsI14.png'),
 	crystal-candalight-card: img('data/2CardsI15.png')
+);
+$shimmerfin-deep: (
+    shimmerfin-deep: img('data/CardSet10.png'),
+    equinox-broadbass-card: img('data/2CardsJ1.png'),
+    doodlefish-card: img('data/2CardsJ2.png'),
+    eamsy-earl-card: img('data/2CardsJ3.png'),
+    shellslug-card: img('data/2CardsJ4.png'),
+    balloonfish-card: img('data/2CardsJ5.png'),
+    noble-clam-card: img('data/2CardsJ6.png'),
+    litterfish-card: img('data/2CardsJ7.png'),
+    pufferblob-card: img('data/2CardsJ8.png'),
+    demonblub-card: img('data/2CardsJ9.png'),
+    spearfish-card: img('data/2CardsJ10.png'),
+    coralcave-crab-card: img('data/2CardsJ11.png'),
+    coralcave-guardian-card: img('data/2CardsJ12.png'),
+    crystal-cuttlefish-card: img('data/2CardsJ99.png'),
 );
 $dungeons: (
 	dungeons: img("data/CardSet7.png"),
@@ -264,6 +298,7 @@ $events: (
 	spring-splendor-card: img('data/2CardsY17.png'),
 	falloween-pumpkin-card: img('data/2CardsY18.png'),
 	idleon-4th-anniversary-card: img('data/2CardsY19.png'),
+	cornfall-card: img('data/2CardsY20.png'),
 );
 
 $all-cards: map-merge($blunder-hills, $easy-resources);
@@ -275,6 +310,7 @@ $all-cards: map-merge($all-cards, $hard-resources);
 $all-cards: map-merge($all-cards, $hyperion-nebula);
 $all-cards: map-merge($all-cards, $smolderin-plateau);
 $all-cards: map-merge($all-cards, $spirited-valley);
+$all-cards: map-merge($all-cards, $shimmerfin-deep);
 $all-cards: map-merge($all-cards, $dungeons);
 $all-cards: map-merge($all-cards, $bosses-n-nightmares);
 $all-cards: map-merge($all-cards, $events);

@@ -300,7 +300,7 @@ def getTalentExclusions() -> list:
     talentExclusions = []
 
     #If over 2100 lab, you have all jewels from Jade Emporium and lab levels no longer matter
-    if sum(session_data.account.all_skills['Lab']) > 2100:
+    if sum(session_data.account.all_skills['Laboratory']) > 2100:
         talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
         # 538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},

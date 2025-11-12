@@ -220,7 +220,7 @@ skill_talentsDict = {
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
 
     # Wisdom Skills
-    "Choppin": {
+    "Chopping": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Tab 2"},
             445: {"Name": "Smart Efficiency", "Tab": "Tab 1"},
@@ -257,7 +257,7 @@ skill_talentsDict = {
             493: {"Name": "Sharing Some Smarts", "Tab": "Tab 3"},  # Account-wide EXP bumped to Low
         },
     },
-    "Lab": {
+    "Laboratory": {
         "Low": {
             538: {"Name": "Upload Squared", "Tab": "Tab 4"},
             537: {"Name": "Essence Transferral", "Tab": "Tab 4"},
@@ -915,7 +915,8 @@ apocable_map_index_dict = {
     3: [101, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 116, 117],
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
     5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
-    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264]
+    6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264],
+    7: [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312]
 }
 dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
 dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])

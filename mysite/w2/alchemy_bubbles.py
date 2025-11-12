@@ -54,7 +54,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     basic_prestring = ''
     lithium_prestring = ''
     basic_poststring = ''
-    if sorted_bubbles_basic and max(session_data.account.all_skills['Lab'], default=0) > 1:
+    if sorted_bubbles_basic and max(session_data.account.all_skills['Laboratory'], default=0) > 1:
         try:
             todays_lowest = sorted_bubbles_basic[0][1]['Level']
             todays_highest = sorted_bubbles_basic[nblbCount - 1][1]['Level']
@@ -116,7 +116,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if min_NBLB <= v['Level'] < max_NBLB and 15 <= v['BubbleIndex'] <= 24]
     #lithium_prestring = ''
     lithium_poststring = ''
-    if sorted_bubbles_lithium and max(session_data.account.all_skills['Lab'], default=0) > 1:
+    if sorted_bubbles_lithium and max(session_data.account.all_skills['Laboratory'], default=0) > 1:
         try:
             todays_lowest_lithium = sorted_bubbles_lithium[0][1]['Level']
             todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1]['Level']

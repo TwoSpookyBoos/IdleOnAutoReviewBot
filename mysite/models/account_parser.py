@@ -54,6 +54,7 @@ from consts.consts_w6 import (
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName, numberToLetter
 
 logger = get_logger(__name__)
@@ -81,9 +82,9 @@ def _make_cards(account):
             parsed_card_data[enemy_decoded_name] = {
                 'Card Name': card_info[0],
                 'Enemy Name': enemy_decoded_name,
-                'Cards For 1star': safer_convert(card_info[2], 1.0),
+                'Cards For 1star': parse_number(card_info[2], 1.0),
                 'Description': card_info[3].replace('_', ' '),
-                'Value per Level': safer_convert(card_info[4], 0.0),
+                'Value per Level': parse_number(card_info[4], 0.0),
                 'Set Name': cardset_name
             }
 
@@ -1015,28 +1016,32 @@ def _parse_w1_upgrade_vault(account):
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
-    account.star_sign_extras = {"UnlockedSigns": 0}
-    raw_star_signs = safe_loads(account.raw_data.get("StarSg", {}))
+    account.star_sign_extras = {}
+    raw_star_signs = safe_loads(account.raw_data.get('StarSg', {}))
     for signIndex, signValuesDict in starsigns_dict.items():
-        account.star_signs[signValuesDict['Name']] = {
-            'Index': signIndex,
-            'Passive': signValuesDict['Passive'],
-            '1_Value': signValuesDict.get('1_Value', 0),
-            '1_Stat': signValuesDict.get('1_Stat', ''),
-            '2_Value': signValuesDict.get('2_Value', 0),
-            '2_Stat': signValuesDict.get('2_Stat', ''),
-            '3_Value': signValuesDict.get('3_Value', 0),
-            '3_Stat': signValuesDict.get('3_Stat', ''),
-        }
         try:
-            # Some StarSigns are saved as strings "1" to mean unlocked.
-            # The names in the JSON also have underscores instead of spaces
-            account.star_signs[signValuesDict['Name']]['Unlocked'] = safer_get(raw_star_signs, signValuesDict['Name'].replace(" ", "_"), 0) > 0
-            if account.star_signs[signValuesDict['Name']]['Unlocked']:
-                account.star_sign_extras['UnlockedSigns'] += 1
+            account.star_signs[signValuesDict['Name']] = {
+                'Index': signIndex,
+                'Passive': signValuesDict['Passive'],
+                'Unlocked': parse_number(safer_get(raw_star_signs, signValuesDict['Name'].replace(' ', '_'), 0)) > 0
+                # Some StarSigns are saved as strings "1", some are int 1 to mean unlocked.
+                # 'Bonus1': signValuesDict.get('Bonus1', 0),
+                # 'Bonus2': signValuesDict.get('Bonus2', 0),
+                # 'Bonus3': signValuesDict.get('Bonus3', 0),
+            }
         except Exception as e:
             logger.warning(f"Star Sign Parse error at signIndex {signIndex}: {e}. Defaulting to Locked")
-            account.star_signs[signValuesDict['Name']]['Unlocked'] = False
+            account.star_signs[signValuesDict['Name']] = {
+                'Index': signIndex,
+                'Passive': signValuesDict['Passive'],
+                'Unlocked': False,
+                # 'Bonus1': signValuesDict.get('Bonus1', 0),
+                # 'Bonus2': signValuesDict.get('Bonus2', 0),
+                # 'Bonus3': signValuesDict.get('Bonus3', 0),
+            }
+
+    account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
+
 
 def _parse_w1_forge(account):
     account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
@@ -1714,9 +1719,12 @@ def _parse_w3_deathnote_kills(account):
                 else:
                     # This condition can be hit when reviewing data from before a World release
                     # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
+                    # If you get this right after a new world, check that the new world and map indexes are added in consts_w3.apocable_map_index_dict
+                    logger.debug(f"barbCharacterIndex {barbCharacterIndex} not in account.enemy_maps[{worldIndex}][{enemy_map}].zow_dict")
                     for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
                         account.all_characters[barbCharacterIndex].addUnmetApoc(
-                            apoc_names_list[apoc_index], account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
+                            apoc_names_list[apoc_index],
+                            account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
                             [
                                 account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
                                 apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
@@ -2452,7 +2460,7 @@ def _parse_w5_sailing(account):
         for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
             try:
                 account.sailing['Artifacts'][artifactValuesDict['Name']] = {
-                    'Level': raw_sailing_list[3][artifactIndex]
+                    'Level': parse_number(raw_sailing_list[3][artifactIndex], 0)
                 }
             except:
                 account.sailing['Artifacts'][artifactValuesDict['Name']] = {

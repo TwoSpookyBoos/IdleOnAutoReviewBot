@@ -11,7 +11,7 @@ from config import app
 from consts.consts_autoreview import ignorable_labels
 from consts.consts_idleon import lavaFunc, expected_talents_dict
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
-    greenstack_item_difficulty_groups
+    greenstack_item_difficulty_groups, current_world
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
@@ -20,7 +20,8 @@ from consts.consts_w3 import (
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
 from models.custom_exceptions import VeryOldDataException
-from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert, safer_math_pow
+from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
 
@@ -101,7 +102,7 @@ def getSpecializedSkills(classes_list):
     elif "Archer" in classes_list:
         specializedSkillsList.append("Smithing")
     elif "Mage" in classes_list:
-        specializedSkillsList.append("Choppin")
+        specializedSkillsList.append("Chopping")
 
     if "Barbarian" in classes_list:
         specializedSkillsList.append("Fishing")
@@ -127,7 +128,7 @@ def getSpecializedSkills(classes_list):
     elif 'Elemental Sorcerer' in classes_list:
         specializedSkillsList.append('Divinity')
     elif 'Bubonic Conjuror' in classes_list:
-        specializedSkillsList.append('Lab')
+        specializedSkillsList.append('Laboratory')
 
     if 'Death Bringer' in classes_list:
         specializedSkillsList.append('Farming')
@@ -205,7 +206,7 @@ class Character:
         self.combat_level: int = all_skill_levels["Combat"]
         self.mining_level: int = all_skill_levels["Mining"]
         self.smithing_level: int = all_skill_levels["Smithing"]
-        self.choppin_level: int = all_skill_levels["Choppin"]
+        self.choppin_level: int = all_skill_levels["Chopping"]
         self.fishing_level: int = all_skill_levels["Fishing"]
         self.alchemy_level: int = all_skill_levels["Alchemy"]
         self.catching_level: int = all_skill_levels["Catching"]
@@ -214,7 +215,7 @@ class Character:
         self.worship_level: int = all_skill_levels["Worship"]
         self.cooking_level: int = all_skill_levels["Cooking"]
         self.breeding_level: int = all_skill_levels["Breeding"]
-        self.lab_level: int = all_skill_levels["Lab"]
+        self.lab_level: int = all_skill_levels["Laboratory"]
         self.sailing_level: int = all_skill_levels["Sailing"]
         self.divinity_level: int = all_skill_levels["Divinity"]
         self.gaming_level: int = all_skill_levels["Gaming"]
@@ -295,7 +296,7 @@ class Character:
 
         self.apoc_dict: dict = {
             name: {
-                **{f"Basic W{i} Enemies": list() for i in range(1, 7)},
+                **{f"Basic W{i} Enemies": list() for i in range(1, current_world+1)},
                 "Easy Extras": [],
                 "Medium Extras": [],
                 "Difficult Extras": [],
@@ -370,15 +371,15 @@ class Character:
                 for killIndex, killCount in enumerate(self.kill_dict[mapIndex]):
                     if not isinstance(killCount, float) or not isinstance(killCount, int):
                         try:
-                            self.kill_dict[mapIndex][killIndex] = float(killCount)
+                            self.kill_dict[mapIndex][killIndex] = parse_number(killCount)
                         except:
                             self.kill_dict[mapIndex][killIndex] = 0
             else:
                 #Sometimes users have just raw strings, floats, or ints that aren't in a list
-                # Try to put them into a list AND convert to float at the same time
+                # Try to put them into a list AND convert to float/int at the same time
                 #  else default to a list containing zeroes as some maps have multiple portals
                 try:
-                    self.kill_dict[mapIndex] = [float(self.kill_dict[mapIndex])]
+                    self.kill_dict[mapIndex] = [parse_number(self.kill_dict[mapIndex])]
                 except:
                     self.kill_dict[mapIndex] = [0, 0, 0]
 
@@ -1404,24 +1405,26 @@ class Card:
 
     def getCardsForStar(self, star):
         """
-        0 stars always requires 1 card
-        1 star is set per enemy
-        2 stars = 3x additional what 1star took, for a total of 4x (2^2)
-        3 stars = 5x additional what 1star took, for a total of 4+5 = 9x (3^2)
-        4 stars = 16x additional what 1star took, for a total of 9+16 = 25x (5^2)
-        5 stars = 459 additional what 1star took, for a total of 25+459 = 484x (22^2)
+        0 stars always requires 1 card.
+        1 star is set per enemy.
+        2 stars = 3x additional what 1star took, for a total of 1+3 = 4x (2^2).
+        3 stars = 5x additional what 1star took, for a total of 4+5 = 9x (3^2).
+        4 stars = 16x additional what 1star took, for a total of 9+16 = 25x (5^2).
+        5 stars = 459x additional what 1star took, for a total of 25+459 = 484x (22^2).
+        6 stars = 14,670x additional what 1star took, for a total of 484+14,670 = 15,129x  (123^2).
+        7 stars = 496x additional what 1star took, for a total of 15,129+496 = 15,625x (125^2).
         """
-
-        tier_coefficient = {
-            # cchiz is ... special? ... who knows why...
-            5: 22 if self.name != "Chaotic Chizoar" else 6,
-            4: 5,
-            3: 3,
-            2: 2,
-            1: 1,
-        }.get(star, 0)
-
-        return (self.coefficient * tier_coefficient**2) + 1
+        previous_star = star - 1
+        if self.name == 'Chaotic Chizoar':
+            tier_coefficient = previous_star + 1 + floor(previous_star/3)
+            # `_customBlock_RunCodeOfTypeXforThingY , CardLv==e` in source. Last updated in v2.43 Nov 11
+            # The formula in the code includes `*1.5` at the end. That's the self.coefficient for Chaotic Chizoar
+            # which is accounted for below in the total_cards_needed. Adding it again here will give bad answers.
+        else:
+            tier_coefficient = previous_star + 1 + (floor(previous_star/3) + (16 * floor(previous_star/4) + 100 * floor(previous_star/5)))
+        total_cards_needed = (self.coefficient * tier_coefficient**2) + 1
+        # print(f"{star} star {self.name} needs {total_cards_needed:,} cards [({self.coefficient} * {tier_coefficient}^2) + 1]")
+        return total_cards_needed
 
     def getCardDoublerMultiplier(self, optional_character: Character=None):
         card_doubler = 1
@@ -1551,7 +1554,7 @@ class EnemyMap:
         try:
             self.kill_count += abs(float(additionalKills) - self.portal_requirement)
         except Exception as reason:
-            print(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
+            print(f"models.EnemyMap.addRawKLA()~ Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
             #logger.warning(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
 
     def generateDNSkull(self):
@@ -1579,7 +1582,7 @@ def buildMaps() -> dict[int, dict]:
         4: {},
         5: {},
         6: {},
-        #7: {},
+        7: {},
         #8: {}
     }
     rawMaps = getJSONDataFromFile(os.path.join(app.static_folder, 'enemy-maps.json'))
