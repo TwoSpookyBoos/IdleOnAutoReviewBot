@@ -1,6 +1,6 @@
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
-from consts.consts_w5 import snail_max_rank
+from consts.consts_w5 import snail_max_possible_rank
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
@@ -93,7 +93,7 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
 
     #Sodium lower than Snail // 5
-    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_rank:
+    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_possible_rank:
         if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
             settings_advice['Alerts'].append(
                 Advice(
@@ -312,4 +312,3 @@ def getColliderAdviceSection() -> AdviceSection:
         groups=collider_AdviceGroupDict.values()
     )
     return collider_AdviceSection
-    
