@@ -1552,7 +1552,7 @@ class EnemyMap:
         try:
             self.kill_count += abs(float(additionalKills) - self.portal_requirement)
         except Exception as reason:
-            print(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
+            print(f"models.EnemyMap.addRawKLA()~ Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
             #logger.warning(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
 
     def generateDNSkull(self):

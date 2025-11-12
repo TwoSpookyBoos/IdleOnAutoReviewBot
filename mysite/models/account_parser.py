@@ -1719,9 +1719,12 @@ def _parse_w3_deathnote_kills(account):
                 else:
                     # This condition can be hit when reviewing data from before a World release
                     # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
+                    # If you get this right after a new world, check that the new world and map indexes are added in consts_w3.apocable_map_index_dict
+                    logger.debug(f"barbCharacterIndex {barbCharacterIndex} not in account.enemy_maps[{worldIndex}][{enemy_map}].zow_dict")
                     for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
                         account.all_characters[barbCharacterIndex].addUnmetApoc(
-                            apoc_names_list[apoc_index], account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
+                            apoc_names_list[apoc_index],
+                            account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
                             [
                                 account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
                                 apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
