@@ -82,9 +82,9 @@ def _make_cards(account):
             parsed_card_data[enemy_decoded_name] = {
                 'Card Name': card_info[0],
                 'Enemy Name': enemy_decoded_name,
-                'Cards For 1star': safer_convert(card_info[2], 1.0),
+                'Cards For 1star': parse_number(card_info[2], 1.0),
                 'Description': card_info[3].replace('_', ' '),
-                'Value per Level': safer_convert(card_info[4], 0.0),
+                'Value per Level': parse_number(card_info[4], 0.0),
                 'Set Name': cardset_name
             }
 

@@ -1414,15 +1414,17 @@ class Card:
         6 stars = 14,670x additional what 1star took, for a total of 484+14,670 = 15,129x  (123^2).
         7 stars = 496x additional what 1star took, for a total of 15,129+496 = 15,625x (125^2).
         """
-        if self.name == "Chaotiz Chizoar":
-            tier_coefficient = safer_math_pow(star + 1 + floor(star/3), 2)
+        previous_star = star - 1
+        if self.name == 'Chaotic Chizoar':
+            tier_coefficient = previous_star + 1 + floor(previous_star/3)
             # `_customBlock_RunCodeOfTypeXforThingY , CardLv==e` in source. Last updated in v2.43 Nov 11
-            # The formula in the code includes `*1.5` at the end. That's the base value
-            # for Chaotic Chizoar which is accounted for outside of this formula. Adding it here will give bad answers.
+            # The formula in the code includes `*1.5` at the end. That's the self.coefficient for Chaotic Chizoar
+            # which is accounted for below in the total_cards_needed. Adding it again here will give bad answers.
         else:
-            tier_coefficient = safer_math_pow(star + 1 + (floor(star/3) + (16 * floor(star/4) + 100 * floor(star/5))), 2)
-
-        return (self.coefficient * tier_coefficient**2) + 1
+            tier_coefficient = previous_star + 1 + (floor(previous_star/3) + (16 * floor(previous_star/4) + 100 * floor(previous_star/5)))
+        total_cards_needed = (self.coefficient * tier_coefficient**2) + 1
+        # print(f"{star} star {self.name} needs {total_cards_needed:,} cards [({self.coefficient} * {tier_coefficient}^2) + 1]")
+        return total_cards_needed
 
     def getCardDoublerMultiplier(self, optional_character: Character=None):
         card_doubler = 1
