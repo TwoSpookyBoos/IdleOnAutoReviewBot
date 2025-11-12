@@ -1621,7 +1621,7 @@ class Account:
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
-        if self.version < 191:  # 190.5 was the Falloween event before W6 released
+        if self.version < 297:  # 297.x was the W7 release patch
             raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {
