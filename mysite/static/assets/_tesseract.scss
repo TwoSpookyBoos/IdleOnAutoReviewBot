@@ -100,6 +100,8 @@ $tesseract-etc: (
     arcane-crystal-5:       img('data/ArcCry_5.png'),
     arcane-crystal-5a:      img('data/ArcCrya5.png'),
     arcane-crystal-5b:      img('data/ArcCryb5.png'),
+
+    the-tesseract: img('customized/Tesseract.gif'),
 );
 
 $all-tesseract: map-merge($tesseract-upgrades, $tesseract-tachyons);
