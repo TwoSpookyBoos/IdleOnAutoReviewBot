@@ -2457,7 +2457,7 @@ def _parse_w5_sailing(account):
         for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
             try:
                 account.sailing['Artifacts'][artifactValuesDict['Name']] = {
-                    'Level': raw_sailing_list[3][artifactIndex]
+                    'Level': parse_number(raw_sailing_list[3][artifactIndex], 0)
                 }
             except:
                 account.sailing['Artifacts'][artifactValuesDict['Name']] = {
