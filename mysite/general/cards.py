@@ -1,6 +1,7 @@
 from collections import defaultdict
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti
+from consts.consts_general import star_tiers
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
@@ -14,7 +15,6 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-star_tiers = ["Unlock", "Bronze", "Silver", "Gold", "Platinum", "Ruby"]
 
 def getUnlockableAdviceGroup(cards, groups):
     unlockable = [card for card in cards if card.star == -1]
@@ -247,13 +247,17 @@ def getCardsAdviceSection() -> AdviceSection:
         for name, cards in cardsets.items()
     }
 
-    max_card_stars = 5 if session_data.account.rift['RubyCards'] else 4
+    player_max_card_stars = (
+        4
+        + (1 * session_data.account.rift['RubyCards'])
+        + (1 * True)  # TODO: Replace True with Majestic Cards unlocked check
+    )
 
     groups = list()
 
     getUnlockableAdviceGroup(cards, groups)
     getCardDropChanceAdviceGroup(groups)
-    cardset_rank_total = getCardsetAdviceGroups(cardsets, max_card_stars, groups)
+    cardset_rank_total = getCardsetAdviceGroups(cardsets, player_max_card_stars, groups)
 
     note = (
         ''
@@ -266,7 +270,7 @@ def getCardsAdviceSection() -> AdviceSection:
     for group in [g for g in groups if g][3:]:
         group.hide = True
 
-    max_tier = len(cardsets) * (max_card_stars + 1)
+    max_tier = len(cardsets) * (player_max_card_stars + 1)
     true_max = true_max_tiers['Cards']
     curr_tier = cardset_rank_total
     overall_SectionTier = 0

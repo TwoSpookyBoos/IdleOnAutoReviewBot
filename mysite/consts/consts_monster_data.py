@@ -23,6 +23,7 @@ def extract_monsters(script: str):
         monsters.append((key, {"Name": name}))
     return monsters
 
+
 monster_data = {key: data for key, data in extract_monsters(script_monster_definitions)}
 
 # Resource cards and their sources (Trees, Ore veins, Bug nests, etc.) share the same code, so we have to differentiate between resource and source when decoding
@@ -47,6 +48,7 @@ card_name_overrides = {
     'Starfire': 'Starfire Ore',
     'Dreadlo': 'Dreadlo Ore',
     'Godshard': 'Godshard Ore',
+    'Prehistrium': 'Prehistrium Ore',
     'Saharan Foal': 'Tundra Logs',
     'Wispy Tree': 'Wispy Lumber',
     'Alien Tree': 'Alien Hive Chunk',
@@ -57,6 +59,7 @@ card_name_overrides = {
     'Effervescent Eucalyptus': 'Effervescent Logs',
     'Shark': 'Sand Shark',
     'Bumble Bee': 'Worker Bee',
+    'Fractalfly': 'Litterbug',  #TODO: This is a bug in IdleOn source code. The image is Litterbug, but the enemy is listed as Fractalfly
     'Ghost': 'Ghost (Event)'
 }
 
@@ -67,4 +70,3 @@ def decode_enemy_name(coded_name: str, card: bool = False) -> str:
     if card:
         return card_name_overrides.get(decoded_name, decoded_name)
     return decoded_name
-pass

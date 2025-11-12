@@ -41,6 +41,9 @@ $bubbles: (
     tome-strength: img('data/aUpgradesO27.png'),
     essence-boost-orange: img('data/aUpgradesO28.png'),
     crop-chapter: img('data/aUpgradesO29.png'),
+    double-pagey: img('data/aUpgradesO30.png'),
+    dmg-of-the-sun: img('data/aUpgradesO31.png'),
+    bone-bubble: img('data/aUpgradesO32.png'),
 
     // Quicc Cauldron
     swift-steppin: img('data/aUpgradesG0.png'),
@@ -73,6 +76,9 @@ $bubbles: (
     endgame-eff-ii: img('data/aUpgradesG27.png'),
     tome-agility: img('data/aUpgradesG28.png'),
     stealth-chapter: img('data/aUpgradesG29.png'),
+    spapunkie: img('data/aUpgradesG30.png'),
+    dmg-of-the-moon: img('data/aUpgradesG31.png'),
+    dust-bubble: img('data/aUpgradesG32.png'),
 
     // High-IQ Cauldron
     stable-jenius: img('data/aUpgradesP0.png'),
@@ -105,6 +111,9 @@ $bubbles: (
     essence-boost-purple: img('data/aUpgradesP27.png'),
     tome-wisdom: img('data/aUpgradesP28.png'),
     essence-chapter: img('data/aUpgradesP29.png'),
+    deep-depth: img('data/aUpgradesP30.png'),
+    dmg-of-the-soul: img('data/aUpgradesP31.png'),
+    tachyon-bubble: img('data/aUpgradesP32.png'),
 
     // Kazam Cauldron
     lotto-skills: img('data/aUpgradesY0.png'),
@@ -137,6 +146,9 @@ $bubbles: (
     hinge-buster: img('data/aUpgradesY27.png'),
     ninja-looter: img('data/aUpgradesY28.png'),
     lo-cost-mo-jade: img('data/aUpgradesY29.png'),
+    faster-nrg: img('data/aUpgradesY29.png'),
+    kattle-da-goat: img('data/aUpgradesY29.png'),
+    codfrey-rulz-ok: img('data/aUpgradesY29.png'),
 );
 
 $vials: (
@@ -282,6 +294,28 @@ $sigils: (
     cool-coin-3: img('customized/Cool_Coin_Alchemy_Sigil-3.png'),
 );
 
+$misc: (
+    //When Lava adds a non-item resource as a requirement for a Bubble or Vial,
+    //this little map is what handles that "conversion" so to speak. You'll find these codenames
+    //in consts_w2.alchemy_description
+    w6item0: img('data/W6item0_x1.png'),
+    w6item1: img('data/W6item1_x1.png'),
+    w6item2: img('data/W6item2_x1.png'),
+    w6item3: img('data/W6item3_x1.png'),
+    w6item4: img('data/W6item4_x1.png'),
+    w6item5: img('data/W6item5_x1.png'),
+    w6item6: img('data/W6item6_x1.png'),
+    w6item7: img('data/W6item7_x1.png'),
+    w6item8: img('data/W6item8_x1.png'),
+    w6item9: img('data/W6item9_x1.png'),
+    w6item10: img('data/W6item10_x1.png'),
+    w7item0: img('data/W7item0_x1.png'),
+    w7item1: img('data/W7item1_x1.png'),
+    w7item2: img('data/W7item2_x1.png'),
+    w7item3: img('data/W7item3_x1.png'),
+);
+
 $all-alchemy: map-merge($bubbles, $vials);
 $all-alchemy: map-merge($all-alchemy, $p2w);
 $all-alchemy: map-merge($all-alchemy, $sigils);
+$all-alchemy: map-merge($all-alchemy, $misc);

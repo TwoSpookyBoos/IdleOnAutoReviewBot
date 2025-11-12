@@ -77,6 +77,8 @@ def finalize_w1_stamps():
                     tiered_stamps.add(required_stamp)
     for stamp_type in stamps_dict:
         for stamp in stamps_dict[stamp_type].values():
+            if stamp['Name'] not in stamp_maxes and stamp['Name'] not in unavailable_stamps_list:
+                print(f"manage_consts.finalize_w1_stamps [WARNING] No entry in stamp_maxes for: {stamp['Name']}")
             if stamp['Name'] not in unavailable_stamps_list and stamp['Name'] not in capacity_stamps:
                 if stamp['Name'] in tiered_stamps:
                     ordered_tiers_stamps.append(stamp['Name'])
@@ -84,14 +86,14 @@ def finalize_w1_stamps():
                     remaining_stamps.append(stamp['Name'])
 
     # In the 2nd to last tier, set every previously required stamp to its max from stamp_maxes
-    stamps_progressionTiers[max(stamps_progressionTiers) - 1]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in ordered_tiers_stamps}
+    stamps_progressionTiers[max(stamps_progressionTiers) - 1]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in ordered_tiers_stamps}
     print(
         f"manage_consts.finalize_w1_stamps [DEBUG] "
         f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 1}"
     )
 
     # In the last tier, set every stamp not covered by the previous 2 to its max from stamp_maxes
-    stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes[stamp] for stamp in remaining_stamps}
+    stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in remaining_stamps}
     print(
         f"manage_consts.finalize_w1_stamps [DEBUG] "
         f"Successfully updated Stamp Tier {max(stamps_progressionTiers)}"
@@ -105,7 +107,7 @@ def finalize_w2_vials():
             f"manage_consts.finalize_w2_vials [ERROR] "
             f"Max number of Maxable Vials not in sync between "
             f"variable {max_maxable_vials} and "
-            f"tier {vials_progressionTiers[-1][2]}"
+            f"tier {vials_progressionTiers[true_max_tiers['Vials']]['Maxed']}"
         )
         consts_w2.max_maxable_vials = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])
         vials_progressionTiers[true_max_tiers['Vials']]['Maxed'] = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])

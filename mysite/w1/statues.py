@@ -119,7 +119,7 @@ def getCurrentLevelsAdviceGroup() -> AdviceGroup:
                 picture_class=details['Image'],
                 progression=details['Level'],
                 goal=EmojiType.INFINITY.value,
-                resource=details['Target']
+                resource=details['Resource']
             ) for name, details in session_data.account.statues.items()
         ]
     }
@@ -153,7 +153,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         for statue_name, statue_details in session_data.account.statues.items():
             # Trying to futureproof new tiers - If at least Gold, but not the max tier
             farm_details = f": {statue_details['Farmer']}" if 0 <= statue_details['TypeNumber'] < len(statue_type_list) else ''
-            farm_resource = statue_details['Target'] if 0 <= statue_details['TypeNumber'] < len(statue_type_list) else ''
+            farm_resource = statue_details['Resource'] if 0 <= statue_details['TypeNumber'] < len(statue_type_list) else ''
             if statue_name in requirements.get('SpecificLevels', {}):
                 if statue_details['Level'] < requirements['SpecificLevels'][statue_name]:
                     add_subgroup_if_available_slot(statues_AdviceDict['Tiers'], subgroup_label)

@@ -118,6 +118,11 @@ $id-map: map-merge($id-map, $all-sneaking);
 $id-map: map-merge($id-map, $all-farming);
 $id-map: map-merge($id-map, $all-summoning);
 
+//W7
+@import "spelunking";
+
+$id-map: map-merge($id-map, $all-spelunking);
+
 
 @each $class, $link in $id-map {
 	.#{$class}:not(.lazy)::before, .resource-#{$class}:not(.lazy) {

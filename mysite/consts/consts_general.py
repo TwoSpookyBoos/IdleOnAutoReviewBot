@@ -4,7 +4,7 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-current_world = 6
+current_world = 7
 max_characters = 10
 
 # Greenstacks
@@ -423,26 +423,15 @@ for item_name in gstackable_codenames_expected:
 #     print(f"Reminder: Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
 
 #Cards
-max_card_stars = 5
+max_card_stars = 6
 key_cards = 'Cards0'
-cards_max_level = 6
+cards_max_level = 7
+star_tiers = ['Unlock', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Ruby', 'Majestic']
 
-#Source: `IDforCardSETbonus`. Last updated in v2.43 Nov 6
-cardset_identifiers = [
-    "{%_EXP_if_below_Lv_50",
-    "{%_All_Food_Effect",
-    "{%_Skill_Efficiency",
-    "{%_Skill_EXP_Gain",
-    "{%_DEF_and_ACC",
-    "{%_Dmg,_Drop,_and_EXP",
-    "{%_Drop_Rate",
-    "{%_Skill_AFK_Gain_Rate",
-    "{%_more_Dungeon_Credits",
-    "{%_Crit_Chance",
-    "{%_Fight_AFK_Gain_Rate",
-    "{%_Multikill_Per_Tier",
-    "{%_Class_Exp_(Multi)",
-]
+#Source: `CardSets`. Last updated in v2.43 Nov 10
+#Please note: `IDforCardSETbonus` has the same set bonus info, but is in a different order than CardStuff. Don't use that.
+CardSets = [["{%_EXP_if_below_Lv_50", "8", "CardSet0.png"], ["{%_All_Food_Effect", "10", "CardSet1.png"], ["{%_Skill_Efficiency", "8", "CardSet2.png"], ["{%_Skill_EXP_Gain", "5", "CardSet3.png"], ["{%_DEF_and_ACC", "5", "CardSet4.png"], ["{%_Skill_AFK_Gain_Rate", "2", "CardSet5.png"], ["{%_Crit_Chance", "6", "CardSet6.png"], ["{%_Fight_AFK_Gain_Rate", "2", "CardSet8.png"], ["{%_Multikill_Per_Tier", "6", "CardSet9.png"], ["{%_Class_Exp_(Multi)", "10", "CardSet10.png"], ["{%_more_Dungeon_Credits", "5", "CardSet7.png"], ["{%_Dmg,_Drop,_and_EXP", "6", "CardSet26.png"], ["{%_Drop_Rate", "7", "CardSet25.png"], ["_", "7", "Blank.png"], ["_", "7", "Blank.png"]]
+cardset_identifiers = [set_details[0] for set_details in CardSets]
 
 cardset_names = [
     "Blunder Hills",
@@ -450,17 +439,17 @@ cardset_names = [
     "Easy Resources",
     "Medium Resources",
     "Frostbite Tundra",
-    "Bosses n Nightmares",
-    "Events",
     "Hard Resources",
-    "Dungeons",
     "Hyperion Nebula",
     "Smolderin' Plateau",
     "Spirited Valley",
-    "Shimmerfin Deep"
+    "Shimmerfin Deep",
+    "Dungeons",
+    "Bosses n Nightmares",
+    "Events",
 ]
 
-# `CardStuff` in source. Last updated in v2.43  Nov 6
+# `CardStuff` in source. Last updated in v2.43  Nov 10
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -763,7 +752,7 @@ card_raw_data = [
         ["springEvent2", "Y17", "1", "+{%_All_Skill_EXP_(Passive)", "2"],
         ["fallEvent1", "Y18", "3", "+{_Star_Talent_Pts_(Passive)", "4"],
         ["anni4Event1", "Y19", "4", "+{%_Drop_Rate_(Passive)", "2"],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["cropfallEvent1", "Y20", "6", "+{%_Gold_Food_Effect_(Passive)", "4"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"]

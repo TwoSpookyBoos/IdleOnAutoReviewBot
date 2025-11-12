@@ -90,6 +90,19 @@
     ["Dozey Dogpark", 261, "Skydoggie Spirit", 70000000, "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Skydoggie-Spirit"],
     ["Yolkrock Basin", 262, "Royal Egg", 100000000, "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Royal-Egg"],
     ["Chieftain Stairway", 263, "Minichief Spirit", 150000000, "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Minichief-Spirit"],
-    ["Emperor's Castle Doorstep", 264, "Samurai Guardian", 100, "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Samurai-Guardian"]
+    ["Emperor's Castle Doorstep", 264, "Samurai Guardian", 100, "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Basic W6 Enemies", "Samurai-Guardian"],
+
+    ["Refraction Bend", 301, "Equinox Broadbass", 100000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Equinox-Broadbass"],
+    ["Doodle Reef", 302, "Doodlefish", 250000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Doodlefish"],
+    ["Seaweed Street", 303, "Eamsy Earl", 10000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Eamsy-Earl"],
+    ["Barnacle Curb", 304, "Shellslug", 5000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Shellslug"],
+    ["Balloon Bay", 305, "Balloonfish", 20000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Balloonfish"],
+    ["The Clamworks", 306, "Noble Clam", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Noble-Clam"],
+    ["Plastic Basin", 307, "Litterfish", 250000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Litterfish"],
+    ["Puffpuff Overpass", 308, "Pufferblob", 60000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Pufferblob"],
+    ["Pinpoint Summit", 309, "Spearfish", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Spearfish"],
+    ["Middle of Nowhere", 310, "Demonblub", 500000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Demonblub"],
+    ["Coralcave Outskirts", 311, "Coralcave Crab", 1000000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Coralcave-Crab"],
+    ["Coralcave Perimeter", 312, "Coralcave Guardian", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Coralcave-Guardian"]
   ]
 }

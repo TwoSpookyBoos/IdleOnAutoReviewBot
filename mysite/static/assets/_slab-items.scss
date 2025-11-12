@@ -111,13 +111,14 @@ $resources: (
     tuttle: map-get($world-contents, tuttle),
     tottoise: img('Tottoise.png'),
     // Souls
-    forest-soul: img('wiki/Forest_Soul.png'),
-    dune-soul: img('wiki/Dune_Soul.png'),
-    rooted-soul: img('wiki/Rooted_Soul.png'),
-    frigid-soul: img('wiki/Frigid_Soul.png'),
-    squishy-soul: img('wiki/Squishy_Soul.png'),
-    oozie-soul: img('wiki/Oozie_Soul.png'),
-    breezy-soul: img('wiki/Breezy_Soul.png'),
+    forest-soul: img('data/Soul1.png'),
+    dune-soul: img('data/Soul2.png'),
+    rooted-soul: img('data/Soul3.png'),
+    frigid-soul: img('data/Soul4.png'),
+    squishy-soul: img('data/Soul5.png'),
+    oozie-soul: img('data/Soul6.png'),
+    breezy-soul: img('data/Soul7.png'),
+    deepsea-soul: img('data/Soul8.png'),
     // Salts
     redox-salts: img('wiki/Redox_Salts.png'),
     explosive-salts: img('wiki/Explosive_Salts.png'),
@@ -1102,6 +1103,7 @@ $consumables: (
     crop-transfer-ticket: img('wiki/Crop_Transfer_Ticket.png'),
     blinding-lantern: img('wiki/Blinding_Lantern.png'),
     funny-2hr-fishy: img('data/GemP36.png'),
+    funny-2hr-feather: img('data/GemP37.png'),
 
     // Time Candies
     x1-hr-time-candy: img('data/Timecandy1.png'),
@@ -1125,6 +1127,7 @@ $consumables: (
     charred-bone: img('data/Quest97.png'),
     charred-fragment: img('data/Quest98.png'),
     arcane-rock: img('data/Quest101.png'),
+    arcane-fragment: img('data/Quest107.png'),
 );
 
 $quest-items: (
@@ -1469,6 +1472,7 @@ $capacity-bags: (
     colossal-mining-pouch: img('wiki/Colossal_Mining_Pouch.png'),
     gargantuan-mining-pouch: img('wiki/Gargantuan_Mining_Pouch.png'),
     herculean-mining-pouch: img('wiki/Herculean_Mining_Pouch.png'),
+    enormous-mining-pouch: img('data/MaxCapBagMi12.png'),
 
     // Choppin Pouches
     miniature-choppin-pouch: img('wiki/Miniature_Choppin_Pouch.png'),
@@ -1483,6 +1487,7 @@ $capacity-bags: (
     colossal-chopping-pouch: img('wiki/Colossal_Chopping_Pouch.png'),
     gargantuan-chopping-pouch: img('wiki/Gargantuan_Chopping_Pouch.png'),
     herculean-chopping-pouch: img('wiki/Herculean_Chopping_Pouch.png'),
+    enormous-chopping-pouch: img('data/MaxCapBagT12.png'),
 
     // Food Pouches
     miniscule-food-pouch: img('wiki/Miniscule_Food_Pouch.png'),
@@ -1497,6 +1502,7 @@ $capacity-bags: (
     colossal-food-pouch: img('wiki/Colossal_Food_Pouch.png'),
     gargantuan-food-pouch: img('wiki/Gargantuan_Food_Pouch.png'),
     herculean-food-pouch: img('wiki/Herculean_Food_Pouch.png'),
+    enormous-food-pouch: img('data/MaxCapBagF12.png'),
 
     // Material Pouches
     mini-materials-pouch: img('wiki/Mini_Materials_Pouch.png'),
@@ -1511,6 +1517,7 @@ $capacity-bags: (
     colossal-matty-pouch: img('wiki/Colossal_Matty_Pouch.png'),
     gargantuan-matty-pouch: img('wiki/Gargantuan_Matty_Pouch.png'),
     herculean-matty-pouch: img('wiki/Herculean_Matty_Pouch.png'),
+    enormous-matty-pouch: img('data/MaxCapBagM13.png'),
 
     // Fish Pouches
     cramped-fish-pouch: img('wiki/Cramped_Fish_Pouch.png'),
@@ -1524,6 +1531,7 @@ $capacity-bags: (
     colossal-fish-pouch: img('wiki/Colossal_Fish_Pouch.png'),
     gargantuan-fish-pouch: img('wiki/Gargantuan_Fish_Pouch.png'),
     herculean-fish-pouch: img('wiki/Herculean_Fish_Pouch.png'),
+    enormous-fish-pouch: img('data/MaxCapBagFi12.png'),
 
     // Bug Pouches
     cramped-bug-pouch: img('wiki/Cramped_Bug_Pouch.png'),
@@ -1537,6 +1545,7 @@ $capacity-bags: (
     colossal-bug-pouch: img('wiki/Colossal_Bug_Pouch.png'),
     gargantuan-bug-pouch: img('wiki/Gargantuan_Bug_Pouch.png'),
     herculean-bug-pouch: img('wiki/Herculean_Bug_Pouch.png'),
+    enormous-bug-pouch: img('data/MaxCapBagB12.png'),
 
     // Critter Pouches
     small-critter-pouch: img('wiki/Small_Critter_Pouch.png'),
@@ -1548,6 +1557,7 @@ $capacity-bags: (
     colossal-critta-pouch: img('wiki/Colossal_Critta_Pouch.png'),
     gargantuan-critta-pouch: img('wiki/Gargantuan_Critta_Pouch.png'),
     herculean-critta-pouch: img('wiki/Herculean_Critta_Pouch.png'),
+    enormous-critta-pouch: img('data/MaxCapBagTr11.png'),
 
     // Soul Pouches
     small-soul-pouch: img('wiki/Small_Soul_Pouch.png'),
@@ -1559,6 +1569,7 @@ $capacity-bags: (
     colossal-soul-pouch: img('wiki/Colossal_Soul_Pouch.png'),
     gargantuan-soul-pouch: img('wiki/Gargantuan_Soul_Pouch.png'),
     herculean-soul-pouch: img('wiki/Herculean_Soul_Pouch.png'),
+    enormous-soul-pouch: img('data/MaxCapBagS11.png'),
 );
 
 $obols: (
@@ -1758,6 +1769,8 @@ $stamps: (
     void-sword-stamp: img('data/StampA40.png'),
     void-axe-stamp: img('data/StampA41.png'),
     captalist-stats-stamp: img('data/StampA42.png'),
+    splosion-stamp: img('data/StampA43.png'),
+    gud-exp-stamp: img('data/StampA44.png'),
     // Skilling
     pickaxe-stamp: img('data/StampB1.png'),
     hatchet-stamp: img('data/StampB2.png'),
@@ -1813,6 +1826,9 @@ $stamps: (
     white-essence-stamp: img('data/StampB52.png'),
     triad-essence-stamp: img('data/StampB53.png'),
     dark-triad-essence-stamp: img('data/StampB54.png'),
+    amber-stamp: img('data/StampB55.png'),
+    little-rock-stamp: img('data/StampB56.png'),
+    hardhat-stamp: img('data/StampB57.png'),
     // Misc
     questin-stamp: img('data/StampC1.png'),
     mason-jar-stamp: img('data/StampC2.png'),
@@ -1839,6 +1855,8 @@ $stamps: (
     atomic-stamp: img('data/StampC23.png'),
     cavern-resource-stamp: img('data/StampC24.png'),
     study-hall-stamp: img('data/StampC25.png'),
+    krunker-stamp: img('data/StampC26'),
+    corale-stamp: img('data/StampC27'),
 );
 
 $misc: (
@@ -1914,6 +1932,14 @@ $misc: (
     basketball: img('wiki/Basketball.png'),
     secret-map: img('wiki/Secret_Map.png'),
     temple-torch: img('data/Quest94.png'),
+    prisma-bubble: img('data/Quest99.png'),
+    spirit-offering: img('data/Quest102.png'),
+    fishbowl: img('data/Quest103.png'),
+    darts: img('data/Quest104.png'),
+    unstable-reliquarium: img('data/Quest105.png'),
+    urie-s-special-childhood-rock: img('data/Quest106.png'),
+    stamina-battery: img('data/Quest108.png'),
+    cropfall-basket: img('data/Quest109.png'),
 );
 
 $all-slab: map-merge($resources, $monster-drops);

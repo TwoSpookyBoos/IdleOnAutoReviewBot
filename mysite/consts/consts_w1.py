@@ -1,3 +1,7 @@
+from consts.consts_idleon import NinjaInfo
+from utils.text_formatting import numberToLetter
+from utils.number_formatting import parse_number
+
 bribes_dict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
     "W2": ["Overstock Regulations", "Double EXP Scheme", "Tagged Indicators", "Fossil Fuel Legislation", "Five Aces in the Deck", "Fake Teleport Tickets", "The Art of the Steal"],
@@ -181,6 +185,8 @@ stamps_dict = {
         39: {'Name': "Void Sword Stamp", 'funcType': 'add', 'x1': 12, 'x2': 0, 'Material': 'rice-cake'},
         40: {'Name': "Void Axe Stamp", 'funcType': 'decay', 'x1': 35, 'x2': 200, 'Material': 'bamboo-logs'},
         41: {'Name': "Captalist Stats Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 100, 'Material': 'firefly'},
+        42: {'Name': "Splosion Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 200, 'Material': 'earl-tail'},
+        43: {'Name': "Gud EXP Stamp", 'funcType': 'decay', 'x1': 5, 'x2': 200, 'Material': 'earl-tail'},
     },
     "Skill": {
         0: {'Name': "Pickaxe Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'oak-logs'},
@@ -237,6 +243,9 @@ stamps_dict = {
         51: {'Name': "White Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'ladybug'},
         52: {'Name': "Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'caulifish'},
         53: {'Name': "Dark Triad Essence Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'effervescent logs'},
+        54: {'Name': "Amber Stamp", 'funcType': 'decay', 'x1': 30, 'x2': 150, 'Material': 'spelunking-chapter-2'},
+        55: {'Name': "Little Rock Stamp", 'funcType': 'decay', 'x1': 200, 'x2': 220, 'Material': 'spelunking-chapter-1'},
+        56: {'Name': "Hardhat Stamp", 'funcType': 'decay', 'x1': 50, 'x2': 150, 'Material': 'spelunking-chapter-3'},
     },
     "Misc": {
         0: {'Name': "Questin Stamp", 'funcType': 'decay', 'x1': 70, 'x2': 50, 'Material': 'slime-sludge'},
@@ -263,7 +272,9 @@ stamps_dict = {
         21: {'Name': "Refinery Stamp", 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'cheesy-crumbs'},
         22: {'Name': "Atomic Stamp", 'funcType': 'decay', 'x1': 20, 'x2': 80, 'Material': 'bamboo'},
         23: {'Name': 'Cavern Resource Stamp', 'funcType': 'decay', 'x1': 100, 'x2': 250, 'Material': 'cooking-ladle'},
-        24: {'Name': 'Study Hall Stamp', 'funcType': 'decay', 'x1': 30, 'x2': 160, 'Material': 'villager-statue'}
+        24: {'Name': 'Study Hall Stamp', 'funcType': 'decay', 'x1': 30, 'x2': 160, 'Material': 'villager-statue'},
+        25: {'Name': 'Kruker Stamp', 'funcType': 'add', 'x1': 1, 'x2': 0, 'Material': 'equinox-flesh'},
+        26: {'Name': 'Corale Stamp', 'funcType': 'decay', 'x1': 10, 'x2': 150, 'Material': 'demonflesh'},
     }
 }
 capacity_stamps = ["Mason Jar Stamp", "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp", "Matty Bag Stamp", "Bag o Heads Stamp", "Bugsack Stamp"]
@@ -273,102 +284,24 @@ stamps_exalt_recommendations = [
     'Refinery Stamp', 'Bugsack Stamp', 'Bag o Heads Stamp', "Lil' Mining Baggy Stamp", "Choppin' Bag Stamp",
     'Card Stamp', 'Divine Stamp', 'Golden Apple Stamp', 'Vendor Stamp', 'Study Hall Stamp', 'Cavern Resource Stamp',
 ]
+
+# Passive Starsigns do not consume an Infinite Star Sign point and are the 3 big signs you can't align to.
+# Last updated in v2.43 Nov 10
+passive_starsigns = ['Chronus_Cosmos', 'Hydron_Cosmos', 'Seraph_Cosmos']
+
+# `StarSigns` in source. Last updated in v2.43 Nov 10
+StarSigns = [["The_Buff_Guy", "+1%_Total_Damage", "+3_STR", "_"], ["Flexo_Bendo", "+2%_Movement_Speed", "+3_AGI", "_"], ["The_Book_Worm", "+1%_Class_EXP_Gain", "+3_WIS", "_"], ["The_Fuzzy_Dice", "+3_Talent_Points", "+3_LUK", "_"], ["Dwarfo_Beardus", "+5%_Mining_Efficency", "+20%_Multi-Ore_Chance", "_"], ["Hipster_Logger", "+5%_Chop_Efficiency", "+20%_Multi-Log_Chance", "_"], ["Pie_Seas", "+5%_Fishin_Efficency", "+20%_Multi-Fish_Odds", "_"], ["Shoe_Fly", "+5%_Catch_Efficiency", "+20%_Multi-Bug_Chance", "_"], ["Blue_Hedgehog", "+4%_Movement_Speed", "+0.0001%_Ring_Drop", "_"], ["Gum_Drop", "+15%_to_get_a_Time", "Candy_when_claiming", "8+_Hour_AFK_gains"], ["Activelius", "+15%_Class_EXP_when", "fighting_actively", "_"], ["Pack_Mule", "+10%_Carry_Cap", "_", "_"], ["Ned_Kelly", "+6%_Defence", "+2_Weapon_Power", "_"], ["Robinhood", "+4%_Accuracy", "+2%_Movement_Speed", "+1_Cant_Trade_GME"], ["Pirate_Booty", "+5%_Drop_Rate", "_", "_"], ["Muscle_Man", "+8_STR", "_", "_"], ["Fast_Frog", "+8_AGI", "_", "_"], ["Smart_Stooge", "+8_WIS", "_", "_"], ["Lucky_Larry", "+8_LUK", "_", "_"], ["Silly_Snoozer", "+2%_Fight_AFK_Gain", "_", "_"], ["The_Big_Comatose", "+2%_Skill_AFK_Gain", "_", "_"], ["Miniature_Game", "+30%_minigame_reward", "_", "_"], ["Mount_Eaterest", "+10%_chance_to_not", "consume_food", "+15%_All_Food_Effect"], ["Bob_Build_Guy", "+10%_Speed_in_Town", "Skills", "_"], ["The_Big_Brain", "+3%_Class_EXP_gain", "_", "_"], ["The_OG_Skiller", "+5%_Carry_Cap", "+1%_Skill_AFK_gain", "+2%_All_Skill_Prowess"], ["Grim_Reaper", "+2%_Mob_Respawn_rate", "_", "_"], ["The_Fallen_Titan", "+3%_Boss_Damage", "+4%_Crit_Chance", "_"], ["The_Forsaken", "-80%_Total_HP", "-50%_Defence", "+6%_Fight_AFK_Gain"], ["Mr_No_Sleep", "-6%_AFK_Gain", "+30%_Carry_Cap", "_"], ["Sir_Savvy", "+3%_Skill_EXP_gain", "_", "_"], ["All_Rounder", "+4_All_Stats", "_", "_"], ["Fatty_Doodoo", "-3%_Movement_Speed", "+5%_Defence", "+2%_Total_Damage"], ["Chronus_Cosmos", "All_characters_can", "now_align_with_2", "Star_Signs_at_once"], ["All_Rounderi", "+1%_All_Stat", "i.e._STR/AGI/WIS/LUK", "_"], ["Centaurii", "+10%_Accuracy", "_", "_"], ["Murmollio", "+10%_Defence", "_", "_"], ["Strandissi", "+3%_STR", "_", "_"], ["Agitagi", "+3%_AGI", "_", "_"], ["Wispommo", "+3%_WIS", "_", "_"], ["Lukiris", "+3%_LUK", "_", "_"], ["Pokaminni", "+15%_Card_Drop", "(Outside_of_Dungeons)", "_"], ["Gor_Bowzor", "+12%_Boss_Damage", "_", "_"], ["Hydron_Cosmos", "All_characters_can", "now_align_with_3", "Star_Signs_at_once"], ["Trapezoidburg", "+20%_Critters/Trap", "+10%_Trap_Efficiency", "_"], ["Sawsaw_Salala", "+25%_Construct_Exp", "_", "_"], ["Preys_Bea", "+15%_Worship_Efficiency", "+15%_Worship_EXP", "_"], ["Cullingo", "+15%_Total_Multikill", "_", "_"], ["Gum_Drop_Major", "+40%_to_get_a_Time", "Candy_when_claiming", "40+_Hour_AFK_gains"], ["Grim_Reaper_Major", "+4%_Mob_Respawn_rate", "(If_Lv&60)", "_"], ["Sir_Savvy_Major", "+6%_Skill_EXP_gain", "(If_Lv&70)", "_"], ["The_Bulwark", "+20%_Total_Damage", "-12%_Movement_Speed", "_"], ["Big_Brain_Major", "+6%_Class_EXP_gain", "(If_Lv&80)", "_"], ["The_Fiesty", "+6%_Total_Damage", "_", "_"], ["The_Overachiever", "+15%_Total_Damage", "-7%_Fight_AFK_Gain", "_"], ["Comatose_Major", "+4%_Skill_AFK_Gain", "(If_Lv&90)", "_"], ["S._Snoozer_Major", "+4%_Fight_AFK_Gain", "(If_Lv&100)", "_"], ["Breedabilli", "+35%_Breedable_Spd", "+15%_Shiny_Pet_LV_spd", "_"], ["Gordonius_Major", "+15%_Cooking_SPD", "(Multiplicative!)", "_"], ["Power_Bowower", "+30%_Pet_DMG_for", "Breeding_Skill", "_"], ["Scienscion", "+20%_Lab_EXP_Gain", "_", "_"], ["Artifosho", "+15%_Artifact_Find", "Chance", "(Multiplicative)"], ["Divividov", "+30%_Divinity_EXP", "_", "_"], ["C._Shanti_Minor", "+20%_Sailing_SPD", "_", "_"], ["Muscle_Magnus", "+50_STR", "_", "_"], ["Cropiovo_Minor", "+3%_Crop_Evo", "chance_per_Farming_LV", "_"], ["Fabarmi", "+20%_Farming_EXP", "_", "_"], ["O.G._Signalais", "+15%_OG_Chance", "_", "_"], ["Lightspeed_Frog", "+50_AGI", "_", "_"], ["Beanbie_Major", "+20%_Golden_Food", "bonuses", "_"], ["Damarian_Major", "+25%_Total_Damage", "_", "_"], ["Lotto_Larrinald", "+50_LUK", "_", "_"], ["Intellostooge", "+50_WIS", "_", "_"], ["S._Tealio", "+12%_Ninja_Twin", "Stealth", "_"], ["Sneekee_E._X.", "+15%_Sneaking_EXP", "_", "_"], ["Jadaciussi", "+10%_Jade_Gain", "(Multiplicative!)", "_"], ["Druipi_Major", "+12%_Drop_Rarity", "_", "_"], ["Sumo_Magno", "+20%_Summoning_EXP", "_", "_"], ["Killian_Maximus", "+3%_Multikill_Per_Tier", "_", "_"], ["Seraph_Cosmos", "All_characters_now_get", "1.10x_Star_Sign_bonuses", "per_20_Summoning_LV"], ["Glimmer_of_Beyond", "This_star_sign_is", "unreachable_for_now...", "_"], ["Fillerz48", "_", "_", "_"], ["Fillerz49", "_", "_", "_"], ["Fillerz50", "_", "_", "_"], ["Fillerz51", "_", "_", "_"], ["Fillerz52", "_", "_", "_"], ["Fillerz53", "_", "_", "_"], ["Fillerz54", "_", "_", "_"], ["Fillerz55", "_", "_", "_"], ["Fillerz56", "_", "_", "_"], ["Fillerz57", "_", "_", "_"], ["Fillerz58", "_", "_", "_"], ["Fillerz59", "_", "_", "_"], ["Fillerz32", "_", "_", "_"]]
 starsigns_dict = {
-    1: {'Name': "The Buff Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    2: {'Name': "Flexo Bendo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    3: {'Name': "The Book Worm", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    4: {'Name': "The Fuzzy Dice", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    5: {'Name': "Dwarfo Beardus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    6: {'Name': "Hipster Logger", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    7: {'Name': "Pie Seas", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    8: {'Name': "Shoe Fly", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    9: {'Name': "Blue Hedgehog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    10: {'Name': "Gum Drop", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    11: {'Name': "Activelius", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    12: {'Name': "Pack Mule", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    13: {'Name': "Ned Kelly", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    14: {'Name': "Robinhood", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    15: {'Name': "Pirate Booty", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    16: {'Name': "Muscle Man", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    17: {'Name': "Fast Frog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    18: {'Name': "Smart Stooge", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    19: {'Name': "Lucky Larry", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    20: {'Name': "Silly Snoozer", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    21: {'Name': "The Big Comatose", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    22: {'Name': "Miniature Game", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    23: {'Name': "Mount Eaterest", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    24: {'Name': "Bob Build Guy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    25: {'Name': "The Big Brain", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    26: {'Name': "The OG Skiller", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    27: {'Name': "Grim Reaper", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    28: {'Name': "The Fallen Titan", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    29: {'Name': "The Forsaken", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    30: {'Name': "Mr No Sleep", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    31: {'Name': "Sir Savvy", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    32: {'Name': "All Rounder", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    33: {'Name': "Fatty Doodoo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    34: {'Name': "Chronus Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    35: {'Name': "All Rounderi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    36: {'Name': "Centaurii", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    37: {'Name': "Murmollio", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    38: {'Name': "Strandissi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    39: {'Name': "Agitagi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    40: {'Name': "Wispommo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    41: {'Name': "Lukiris", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    42: {'Name': "Pokaminni", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    43: {'Name': "Gor Bowzor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    44: {'Name': "Hydron Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    45: {'Name': "Trapezoidburg", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    46: {'Name': "Sawsaw Salala", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    47: {'Name': "Preys Bea", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    48: {'Name': "Cullingo", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    49: {'Name': "Gum Drop Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    50: {'Name': "Grim Reaper Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    51: {'Name': "Sir Savvy Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    52: {'Name': "The Bulwark", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    53: {'Name': "Big Brain Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    54: {'Name': "The Fiesty", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    55: {'Name': "The Overachiever", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    56: {'Name': "Comatose Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    57: {'Name': "S. Snoozer Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    58: {'Name': "Breedabilli", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    59: {'Name': "Gordonius Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    60: {'Name': "Power Bowower", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    61: {'Name': "Scienscion", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    62: {'Name': "Artifosho", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    63: {'Name': "Divividov", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    64: {'Name': "C. Shanti Minor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    65: {'Name': "Muscle Magnus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    66: {'Name': "Cropiovo Minor", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    67: {'Name': "Fabarmi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    68: {'Name': "O.G. Signalais", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    69: {'Name': "Lightspeed Frog", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    70: {'Name': "Beanbie Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    71: {'Name': "Damarian Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    72: {'Name': "Lotto Larrinald", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    73: {'Name': "Intellostooge", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    74: {'Name': "S. Tealio", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    75: {'Name': "Sneekee E. X.", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    76: {'Name': "Jadaciussi", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    77: {'Name': "Druipi Major", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    78: {'Name': "Sumo Magno", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    79: {'Name': "Killian Maximus", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    80: {'Name': "Seraph Cosmos", 'Passive': True, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    81: {'Name': "Glimmer of Beyond", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    82: {'Name': "Fillerz48", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    83: {'Name': "Fillerz49", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    84: {'Name': "Fillerz50", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    85: {'Name': "Fillerz51", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    86: {'Name': "Fillerz52", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    87: {'Name': "Fillerz53", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    88: {'Name': "Fillerz54", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    89: {'Name': "Fillerz55", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    90: {'Name': "Fillerz56", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    91: {'Name': "Fillerz57", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    92: {'Name': "Fillerz58", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    93: {'Name': "Fillerz59", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
-    94: {'Name': "Fillerz32", 'Passive': False, '1_Value': 0, '1_Stat': '', '2_Value': 0, '2_Stat': '', '3_Value': 0, '3_Stat': ''},
+    index: {
+        'Name': name.replace('_', ' '),
+        'Passive': name in passive_starsigns,
+        'Bonus1': bonus1.replace('_', ' '),
+        'Bonus2': bonus2.replace('_', ' '),
+        'Bonus3': bonus3.replace('_', ' '),
+    }
+    for index, (name, bonus1, bonus2, bonus3) in enumerate(StarSigns) if not name.startswith("Fillerz")
 }
+
 forge_upgrades_dict = {
     0: {
         "UpgradeName": "New Forge Slot",
@@ -403,66 +336,64 @@ forge_upgrades_dict = {
 }
 
 
-# TODO: most of this can probably be generated from source. `StatueInfo` in source but `Farmer` + `Target` are AutoReview-specific, so those need to be done manually. Add `Image` field, generated via the `Name`. `Target` should be renamed to `Resource` to match the field name in `Advice`
+# `StatueInfo` in source. Last updated in v2.43 Nov 10
+StatueInfo = [["POWER", "@BASE_DAMAGE", "30", "3"], ["SPEED", "%@MOVE_SPEED", "65", "0.1"], ["MINING", "@MINING_POWER", "280", "0.3"], ["FEASTY", "%@FOOD_EFFECT", "320", "1"], ["HEALTH", "@BASE_HEALTH", "0", "3"], ["KACHOW", "%@CRIT_DAMAGE", "-15", "0.4"], ["LUMBERBOB", "@CHOPPIN_POWER", "90", "0.3"], ["THICC_SKIN", "@BASE_DEFENCE", "210", "1"], ["OCEANMAN", "@FISHING_POWER", "115", "0.3"], ["OL_RELIABLE", "@CATCHIN_POWER", "45", "0.3"], ["EXP", "%@CLASS_EXP", "0", "0.1"], ["ANVIL", "%@PRODUCT_SPD", "165", "0.5"], ["CAULDRON", "%@ALCHEMY_EXP", "280", "0.5"], ["BEHOLDER", "%@CRIT_CHANCE", "300", "0.2"], ["BULLSEYE", "%@ACCURACY", "110", "0.8"], ["BOX", "@TRAPPIN_POWER", "180", "0.3"], ["TWOSOUL", "@WORSHIP_POWER", "260", "0.3"], ["EHEXPEE", "%@SKILL_EXP", "69", "0.1"], ["SEESAW", "%@CONS_EXP", "13", "0.5"], ["PECUNIA", "%@COINS", "50", "1"], ["MUTTON", "%@COOKING_EXP", "0", "0.3"], ["EGG", "%@BREEDING_EXP", "25", "0.4"], ["BATTLEAXE", "%@DAMAGE", "300", "0.2"], ["SPIRAL", "%@DIVINITY_EXP", "70", "1"], ["BOAT", "%@SAILING_SPD", "210", "0.5"], ["COMPOST", "%@FARMING_EXP", "75", "0.4"], ["STEALTH", "%@STEALTH", "185", "0.3"], ["ESSENCE", "%@WHITE_ESS", "160", "0.6"], ["VILLAGER", "%@VILLAGER_EXP", "120", "0.3"], ["DRAGON", "%@STATUES_BONUS", "270", "0.2"], ["SPELUNKY", "%@SPELUNK_EXP", "43", "0.2"], ["CORAL", "%@DAILY_CORAL", "181", "0.02"]]
+statue_farming = {
+    0:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    1:  {"Farmer": "W1-W3 Crystals with DK", "Resource": "w1-w3-crystals"},
+    2:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    3:  {"Farmer": "W1-W3 Crystals with DK", "Resource": "w1-w3-crystals"},
+    4:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    5:  {"Farmer": "Monolith Quest on All characters", "Resource": "monolith"},
+    6:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    7:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    8:  {"Farmer": "AFK or Candy with Vman at W2 Bugs", "Resource": "fly-nest"},
+    9:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    10: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    11: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    12: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
+    13: {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
+    14: {"Farmer": "Active ES at Wood Mushroom or Candy at Nutto", "Resource": "wood-mushroom"},
+    15: {"Farmer": "Candy or Active ES at Penguins", "Resource": "penguin"},
+    16: {"Farmer": "Candy or Active ES at Quenchies", "Resource": "quenchie"},
+    17: {"Farmer": "Crystals with DK at Bloodbones", "Resource": "bloodbone"},
+    18: {"Farmer": "Candy or Active ES at Cryosnakes", "Resource": "cryosnake"},
+    19: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    20: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    21: {"Farmer": "Crystals with DK at Clammies", "Resource": "clammie"},
+    22: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    23: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    24: {"Farmer": "Crystals with DK at Tremor Wurms", "Resource": "tremor-wurm"},
+    25: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    26: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    27: {"Farmer": "Crystals with DK at Minichiefs", "Resource": "minichief-spirit"},
+    28: {"Farmer": "AFK {{Cavern 9|#villagers}}", "Resource": "gloomie-mushroom"},
+    29: {"Farmer": "AFK {{Cavern 15|#villagers}}", "Resource": "ancient-golem"},
+    30: {"Farmer": "W7 Crystals with DK", "Resource": ""},
+    31: {"Farmer": "W7 Crystals with DK", "Resource": ""}
+}
 statues_dict = {
-    0:  {"Name": "Power Statue", "ItemName": "EquipmentStatues1", "Effect": "Base Damage", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    1:  {"Name": "Speed Statue", "ItemName": "EquipmentStatues2", "Effect": "% Move Speed", "BaseValue": 0.1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
-    2:  {"Name": "Mining Statue", "ItemName": "EquipmentStatues3", "Effect": "Mining Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    3:  {"Name": "Feasty Statue", "ItemName": "EquipmentStatues4", "Effect": "% Food Effect", "BaseValue": 1, "Farmer": "W1-W3 Crystals with DK", "Target": "w1-w3-crystals"},
-    4:  {"Name": "Health Statue", "ItemName": "EquipmentStatues5", "Effect": "Base Health", "BaseValue": 3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    5:  {"Name": "Kachow Statue", "ItemName": "EquipmentStatues6", "Effect": "% Crit Damage", "BaseValue": 0.4, "Farmer": "Monolith Quest on All characters", "Target": "monolith"},
-    6:  {"Name": "Lumberbob Statue", "ItemName": "EquipmentStatues7", "Effect": "Choppin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    7:  {"Name": "Thicc Skin Statue", "ItemName": "EquipmentStatues8", "Effect": "Base Defence", "BaseValue": 1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    8:  {"Name": "Oceanman Statue", "ItemName": "EquipmentStatues9", "Effect": "Fishing Power", "BaseValue": 0.3, "Farmer": "AFK or Candy with Vman at W2 Bugs", "Target": "fly-nest"},
-    9:  {"Name": "Ol Reliable Statue", "ItemName": "EquipmentStatues10", "Effect": "Catchin Power", "BaseValue": 0.3, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    10: {"Name": "Exp Book Statue", "ItemName": "EquipmentStatues11", "Effect": "% Class EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    11: {"Name": "Anvil Statue", "ItemName": "EquipmentStatues12", "Effect": "% Product SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    12: {"Name": "Cauldron Statue", "ItemName": "EquipmentStatues13", "Effect": "% Alchemy EXP", "BaseValue": 0.5, "Farmer": "Crystals with DK at Sandy Pot or Tyson", "Target": "crystal-crabal"},
-    13: {"Name": "Beholder Statue", "ItemName": "EquipmentStatues14", "Effect": "% Crit Chance", "BaseValue": 0.2, "Farmer": "Crystals with DK at Beans", "Target": "bored-bean"},
-    14: {"Name": "Bullseye Statue", "ItemName": "EquipmentStatues15", "Effect": "% Accuracy", "BaseValue": 0.8, "Farmer": "Active ES at Wood Mushroom or Candy at Nutto", "Target": "wood-mushroom"},
-    15: {"Name": "Box Statue", "ItemName": "EquipmentStatues16", "Effect": "Trappin Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Penguins", "Target": "penguin"},
-    16: {"Name": "Twosoul Statue", "ItemName": "EquipmentStatues17", "Effect": "Worship Power", "BaseValue": 0.3, "Farmer": "Candy or Active ES at Quenchies", "Target": "quenchie"},
-    17: {"Name": "EhExPee Statue", "ItemName": "EquipmentStatues18", "Effect": "% Skill EXP", "BaseValue": 0.1, "Farmer": "Crystals with DK at Bloodbones", "Target": "bloodbone"},
-    18: {"Name": "Seesaw Statue", "ItemName": "EquipmentStatues19", "Effect": "% Cons EXP", "BaseValue": 0.5, "Farmer": "Candy or Active ES at Cryosnakes", "Target": "cryosnake"},
-    19: {"Name": "Pecunia Statue", "ItemName": "EquipmentStatues20", "Effect": "% Coins", "BaseValue": 1, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    20: {"Name": "Mutton Statue", "ItemName": "EquipmentStatues21", "Effect": "% Cooking EXP", "BaseValue": 0.3, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    21: {"Name": "Egg Statue", "ItemName": "EquipmentStatues22", "Effect": "% Breeding EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Clammies", "Target": "clammie"},
-    22: {"Name": "Battleaxe Statue", "ItemName": "EquipmentStatues23", "Effect": "% Damage", "BaseValue": 0.2, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    23: {"Name": "Spiral Statue", "ItemName": "EquipmentStatues24", "Effect": "% Divinity EXP", "BaseValue": 1, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    24: {"Name": "Boat Statue", "ItemName": "EquipmentStatues25", "Effect": "% Sailing SPD", "BaseValue": 0.5, "Farmer": "Crystals with DK at Tremor Wurms", "Target": "tremor-wurm"},
-    25: {"Name": "Compost Statue", "ItemName": "EquipmentStatues26", "Effect": "% Farming EXP", "BaseValue": 0.4, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    26: {"Name": "Stealth Statue", "ItemName": "EquipmentStatues27", "Effect": "% Stealth", "BaseValue": 0.3, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    27: {"Name": "Essence Statue", "ItemName": "EquipmentStatues28", "Effect": "% White ESS", "BaseValue": 0.6, "Farmer": "Crystals with DK at Minichiefs", "Target": "minichief-spirit"},
-    28: {"Name": "Villager Statue", "ItemName": "EquipmentStatues29", "Effect": "% Villager EXP", "BaseValue": 0.3, "Farmer": "AFK {{Cavern 9|#villagers}}", "Target": "gloomie-mushroom"},
-    29: {"Name": "Dragon Warrior Statue", "ItemName": "EquipmentStatues30", "Effect": "% Statues Bonus", "BaseValue": 0.2, "Farmer": "AFK {{Cavern 15|#villagers}}", "Target": "ancient-golem"},
-    30: {"Name": "Spelunky Statue", "ItemName": "EquipmentStatues31", "Effect": "% Spelunk EXP", "BaseValue": 0.2, "Farmer": "W7 Crystals with DK", "Target": ""},
-    31: {"Name": "Coral Statue", "ItemName": "EquipmentStatues32", "Effect": "% Daily Coral", "BaseValue": 0.02, "Farmer": "W7 Crystals with DK", "Target": ""}
+    index: {
+        'Name': f"{name.replace('_', ' ').title()} Statue",
+        'ItemName': f"EquipmentStatues{index+1}",
+        'Effect': effect.replace('@', ' ').replace('_', ' ').strip().title(),
+        'BaseValue': parse_number(basevalue),
+        'Farmer': statue_farming.get(index, {}).get('Farmer', ''),
+        'Resource': statue_farming.get(index, {}).get('Resource', ''),
+    }
+    for index, (name, effect, pos2, basevalue) in enumerate(StatueInfo)
 }
 statue_type_list = ['Normal', 'Gold', 'Onyx']
 statue_count = len(statues_dict.keys())
+
+# Found near end of `NinjaInfo` in source. Last updated in v2.43 Nov10
+NinjaInfo_event_shop = NinjaInfo[39]
 event_points_shop_dict = {
-    # Found near end of `NinjaInfo` in source. Last updated in v2.41
-    # TODO: this should be generated directly from the pasted source. `Code` is the index of the item ran through `numberToLetter` (Golden Tome -> 0 -> "_"; Stamp Stack -> 1 -> "a", etc.)
-    'Golden Tome': {'Cost': 25, 'Code': '_', 'Description': 'Adds a new DMG Multi bonus type to the Tome in World 4', 'Image': 'event-shop-0'},
-    'Stamp Stack': {'Cost': 30, 'Code': 'a', 'Description': 'Get +3 Stamp LVs every day for a random Stamp', 'Image': 'event-shop-1'},
-    'Bubble Broth': {'Cost': 15, 'Code': 'b', 'Description': 'Get +5 LVs for a random Alchemy Bubble every day', 'Image': 'event-shop-2'},
-    'Equinox Enhancement': {'Cost': 15, 'Code': 'c', 'Description': 'Get 1.5x faster Bar fill Rate in Equinox Valley in World 3', 'Image': 'event-shop-3'},
-    'Supreme Wiring': {'Cost': 45, 'Code': 'd', 'Description': '+2% Printer Output per day, taking new sample resets this', 'Image': 'event-shop-4'},
-    'Sleepy Joe Armstrong': {'Cost': 25, 'Code': 'e', 'Description': '+20% AFK Gains for all things IdleOn related', 'Image': 'event-shop-5'},
-    'Village Encouragement': {'Cost': 30, 'Code': 'f', 'Description': 'All Villagers in World 5 Camp get 1.25x EXP Gain', 'Image': 'event-shop-6'},
-    'Gilded Vote Button': {'Cost': 35, 'Code': 'g', 'Description': 'Get +17% higher Ballot Bonus Multi from Voting', 'Image': 'event-shop-7'},
-    'Extra Page 1': {'Cost': 20, 'Code': 'h', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-8'},
-    'Coin Stacking': {'Cost': 15, 'Code': 'i', 'Description': 'Get 1.5x multiplier to all coins', 'Image': 'event-shop-9'},
-    'Storage Chest': {'Cost': 15, 'Code': 'j', 'Description': 'Get +12 storage slots', 'Image': 'event-shop-10'},
-    'Storage Vault': {'Cost': 32, 'Code': 'k', 'Description': 'Get +16 storage slots', 'Image': 'event-shop-11'},
-    'Secret Pouch': {'Cost': 27, 'Code': 'l', 'Description': 'Get +3 Inventory slots', 'Image': 'event-shop-12'},
-    'Ribbon Connoisseur': {'Cost': 35, 'Code': 'm', 'Description': 'Get +3 daily Ribbons', 'Image': 'event-shop-13'},
-    'Golden Square': {'Cost': 23, 'Code': 'n', 'Description': 'Get +1 Trimmed Constrution slot', 'Image': 'event-shop-14'},
-    'Summoning Star': {'Cost': 30, 'Code': 'o', 'Description': 'Get +10 Summoning Doublers', 'Image': 'event-shop-15'},
-    'Royal Vote Button': {'Cost': 25, 'Code': 'p', 'Description': 'Get +13% higher Ballot Bonus Multi from Voting', 'Image': 'event-shop-16'},
-    'Extra Page 2': {'Cost': 22, 'Code': 'q', 'Description': 'Get +1 more Filter page', 'Image': 'event-shop-17'},
-    'Extra Exaltedness': {'Cost': 35, 'Code': 'r', 'Description': 'Get +1 Exalted Stamp use, and +20% Exalt Bonus.', 'Image': 'event-shop-18'},
-    'Smiley Statue': {'Cost': 30, 'Code': 's', 'Description': 'All statues give 1.30x higher bonuses', 'Image': 'event-shop-19'},
-    'Government Subsidy': {'Cost': 17, 'Code': 't', 'Description': 'Get 1.60x more coins from defeating monsters', 'Image': 'event-shop-20'},
-    'Automated Mail': {'Cost': 15, 'Code': 'u', 'Description': 'Get +5 Boxes at the Post Office every day', 'Image': 'event-shop-21'},
+    NinjaInfo_event_shop[index].split('@')[0].replace('_', ' ').strip(): {
+        'Cost': NinjaInfo_event_shop[index+1],
+        'Code': numberToLetter(int(index/2)),
+        'Image': f'event-shop-{int(index/2)}',
+        'Description': NinjaInfo_event_shop[index].split('@')[1].replace('_', ' ').strip()
+    }
+    for index in range(0, len(NinjaInfo_event_shop), 2)
 }

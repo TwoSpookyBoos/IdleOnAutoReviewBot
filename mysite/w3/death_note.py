@@ -29,7 +29,7 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
             "World 4": [],
             "World 5": [],
             "World 6": [],
-            #"World 7": [],
+            "World 7": [],
             #"World 8": [],
         }
         for enemy in char.apoc_dict[apoc_name][difficulty_name]:
@@ -57,6 +57,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
         'W4': [],
         'W5': [],
         'W6': [],
+        'W7': [],
         'ZOW': {},
         'CHOW': {},
         'MEOW': {},
@@ -69,6 +70,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
         'W4': '',
         'W5': '',
         'W6': '',
+        'W7': '',
     }
     optional_tiers = 2
     true_max = true_max_tiers['Death Note']
