@@ -2,214 +2,25 @@ import math
 from decimal import Decimal
 
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_idleon import lavaFunc
+from consts.consts_idleon import lavaFunc, NinjaInfo
 from utils.logging import get_logger
+from utils.text_formatting import numberToLetter
 
 logger = get_logger(__name__)
 
-jade_emporium = [
-    {
-        "Name": "Quick Ref Access",
-        "Bonus": "Adds the Sneaking skill to your QuickRef menu! Manage your Ninja Twins from anywhere!",
-        "CodeString": "_"
-    },
-    {
-        "Name": "MSA Expander I",
-        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Farming EXP!",
-        "CodeString": "l"
-    },
-    {
-        "Name": "Level Exemption",
-        "Bonus": "Completely and utterly removes the UNDER-LEVELED bonus reduction of all stamps in your collection, now and forever. Amen.",
-        "CodeString": "e"
-    },
-    {
-        "Name": "The Artifact Matrix",
-        "Bonus": "Extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Artifact Find Chance!",
-        "CodeString": "h"
-    },
-    {
-        "Name": "Crop Depot Scientist",
-        "Bonus": "Employs a friendly scientist blobulyte to keep a Data Sheet of all the crops you've ever found!",
-        "CodeString": "v"
-    },
-    {
-        "Name": "Reinforced Science Pencil",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+20% Total Damage' per Crop!",
-        "CodeString": "A"
-    },
-    {
-        "Name": "Essence Confetti",
-        "Bonus": "Adds a new bonus of +3% All Essence Gain per 10 items found after 1000 items, as shown at The Slab in World 5.",
-        "CodeString": "r"
-    },
-    {
-        "Name": "Gold Food Beanstalk",
-        "Bonus": "Grows a giant beanstalk behind the ninja castle! Drop a stack of 10,000 Gold Food to add it with the beanstalk and permanently gain its bonus!",
-        "CodeString": "a"
-    },
-    {
-        "Name": "Jade Coin Magnetism",
-        "Bonus": "Adds a new bonus of +5% Jade Coin Gain per 10 items found after 1000 items, as shown at The Slab in World 5.",
-        "CodeString": "q"
-    },
-    {
-        "Name": "Science Pen",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.02x Plant Evolution Chance in Gaming (multiplicative)' per Crop!",
-        "CodeString": "x"
-    },
-    {
-        "Name": "Shrine Collective Bargaining Agreement",
-        "Bonus": "Shrines no longer lose EXP when moved around, so you can finally bring those baddies out of retirement!",
-        "CodeString": "s"
-    },
-    {
-        "Name": "Science Marker",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+8% Jade Coin Gain' per Crop!",
-        "CodeString": "y"
-    },
-    {
-        "Name": "MSA Expander II",
-        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically Jade Coin Gain!",
-        "CodeString": "m"
-    },
-    {
-        "Name": "No Meal Left Behind",
-        "Bonus": "Every 24 hours, your lowest level Meal gets +1 Lv. This only works on Meals Lv 5 or higher, and doesn't trigger on days you don't play.",
-        "CodeString": "p"
-    },
-    {
-        "Name": "Science Featherpen",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '1.10x Cooking Speed (multiplicative)' per Crop!",
-        "CodeString": "z"
-    },
-    {
-        "Name": "Revenge of the Pickle",
-        "Bonus": "Adds a new boss page to the left of World 1 in Deathnote. Each BoneJoePickle in your inventory counts as +1 Boss Deathnote Kill!",
-        "CodeString": "g"
-    },
-    {
-        "Name": "The Slab Matrix",
-        "Bonus": "Further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to all bonuses from the Slab!",
-        "CodeString": "i"
-    },
-    {
-        "Name": "Science Environmentally Sourced Pencil",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+15% Cash from Mobs' per crop found!",
-        "CodeString": "w"
-    },
-    {
-        "Name": "MSA Expander III",
-        "Bonus": "Adds a new bonus type to the Miniature Soul Apparatus in World 3, specifically All Essence Gain!",
-        "CodeString": "n"
-    },
-    {
-        "Name": "Papa Blob's Quality Guarantee",
-        "Bonus": "Increases the Max Level of all cooking meals by +10. Better meals, better levels, Papa Blob's.",
-        "CodeString": "t"
-    },
-    {
-        "Name": "Science Crayon",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+7% Shiny Pet Lv Up Rate and Pet Breeding Rate' per Crop!",
-        "CodeString": "B"
-    },
-    {
-        "Name": "Supersized Gold Beanstacking",
-        "Bonus": "You can now drop a stack of 100,000 Gold Food to supersize it! This will obviously give a bigger bonus, and will even enlargen the food on the stalk!",
-        "CodeString": "b"
-    },
-    {
-        "Name": "Charmed, I'm Sure",
-        "Bonus": "All your Ninja Twins can now equip two of the same charm at once!",
-        "CodeString": "c"
-    },
-    {
-        "Name": "Deal Sweetening",
-        "Bonus": "Earn +25% more Magic Beans from the mysterious Legumulyte bean merchant found in the Troll Broodnest map.",
-        "CodeString": "o"
-    },
-    {
-        "Name": "The Spirit Matrix",
-        "Bonus": "Even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to W6 Skill exp gain!",
-        "CodeString": "j"
-    },
-    {
-        "Name": "The Crop Matrix",
-        "Bonus": "Yet again even further extends the Laboratory Event Horizon, adding another bonus to connect to! In particular, a boost to Crop Depot!",
-        "CodeString": "k"
-    },
-    {
-        "Name": "Gaming to the MAX",
-        "Bonus": "All plant types in Gaming have +1 Max Evolution, but this one is 50,000x rarer than normal and will make you wonder if evolution is even real (it is)",
-        "CodeString": "f"
-    },
-    {
-        "Name": "Chef Geustloaf's Cutting Edge Philosophy",
-        "Bonus": "Increases the Max Level of all cooking meals by +10 again! But oh hoho, you sir are no Chef Geustloaf! Good luck cooking to these LVs!",
-        "CodeString": "u"
-    },
-    {
-        "Name": "Sovereign Artifacts",
-        "Bonus": "You can now find Sovereign Artifacts from sailing, but only if you've found the Eldritch form first.",
-        "CodeString": "I"
-    },
-    {
-        "Name": "New Critter",
-        "Bonus": "Unlocks a new critter type to capture! These have their own very special vial in Alchemy.",
-        "CodeString": "D"
-    },
-    {
-        "Name": "Brighter Lighthouse Bulb",
-        "Bonus": "You can now find 3 additional Artifacts from The Edge island.",
-        "CodeString": "H"
-    },
-    {
-        "Name": "Laboratory Bling",
-        "Bonus": "Adds 3 new Jewels to unlock at the Jewel Spinner in W4 Town. Or, get one for free every 700 total Lab LV as shown in Rift Skill Mastery.",
-        "CodeString": "K"
-    },
-    {
-        "Name": "Science Paintbrush",
-        "Bonus": "Adds a new bonus type to your crop scientist's Data Sheet! Specifically '+0.1 Base Critter caught in Trapping' per Crop!",
-        "CodeString": "C"
-    },
-    {
-        "Name": "Ionized Sigils",
-        "Bonus": "Sigils can now be upgraded a 3rd time. Push past lame ol' yellow, and further increasing those sigil boosts!",
-        "CodeString": "E"
-    },
-    {
-        "Name": "The Endercaptain",
-        "Bonus": "Adds the Endercaptain to Recruitment pool. They're very rare, and have a hidden account-wide +25% Loot Multi and Artifact Find.",
-        "CodeString": "F"
-    },
-    {
-        "Name": "Mob Cosplay Craze",
-        "Bonus": "Certain monsters in World 6 will now have a rare chance to drop Ninja Hats, but only the ones you've found already from the Ninja Castle!",
-        "CodeString": "d"
-    },
-    {
-        "Name": "New Bribes",
-        "Bonus": "Mr. Pigibank is up to no good once again, and he's looking to get some funding from his favorite patron... you. Well, your wallet specifically.",
-        "CodeString": "J"
-    },
-    {
-        "Name": "True Godly Blessings",
-        "Bonus": "All Divinity Gods give 1.05x higher Blessing bonus per God Rank. Whats a Blessing bonus? Select a god, it's the one on the bottom, go look.",
-        "CodeString": "G"
-    },
-    {
-        "Name": "Science Highlighter",
-        "Bonus": "Adds a new bonus type to your crop scientist! Specifically '+1% Drop Rate' per Crop after 100! So having 105 crops would only give +5%",
-        "CodeString": "L"
-    },
-    {
-        "Name": "Emperor Season Pass",
-        "Bonus": "There is now a 50% chance to get +2 visits to the Emperor every day, and your maximum visits goes up from 6 to 11",
-        "CodeString": "M"
-    },
+# `JadeUpg` in source. Last updated in v2.44 Nov 10
+jade_upg = ["Quick_Ref_Access 500 1 0 filler filler Adds_the_Sneaking_skill_to_your_QuickRef_menu!_Manage_your_Ninja_Twins_from_anywhere!".split(" "), "Gold_Food_Beanstalk 500 1 1 filler filler Grows_a_giant_beanstalk_behind_the_ninja_castle!_Drop_a_stack_of_10,000_Gold_Food_to_add_it_with_the_beanstalk_and_permanently_gain_its_bonus!".split(" "), "Supersized_Gold_Beanstacking 500 1 2 filler filler You_can_now_drop_a_stack_of_100,000_Gold_Food_to_supersize_it!_This_will_obviously_give_a_bigger_bonus,_and_will_even_enlargen_the_food_on_the_stalk!".split(" "), "Charmed,_I'm_Sure 500 1 3 filler filler All_your_Ninja_Twins_can_now_equip_two_of_the_same_charm_at_once!".split(" "), "Mob_Cosplay_Craze 500 1 4 filler filler Certain_monsters_in_World_6_will_now_have_a_rare_chance_to_drop_Ninja_Hats,_but_only_the_ones_you've_found_already_from_the_Ninja_Castle!".split(" "), "Level_Exemption 500 1 5 filler filler Completely_and_utterly_removes_the_UNDER-LEVELED_bonus_reduction_of_all_stamps_in_your_collection,_now_and_forever._Amen.".split(" "), "Gaming_to_the_MAX 500 1 6 filler filler All_plant_types_in_Gaming_have_+1_Max_Evolution,_but_this_one_is_50,000x_rarer_than_normal_and_will_make_you_wonder_if_evolution_is_even_real_(it_is)".split(" "), "Revenge_of_the_Pickle 500 1 7 filler filler Adds_a_new_boss_page_to_the_left_of_World_1_in_Deathnote._Each_BoneJoePickle_in_your_inventory_counts_as_+1_Boss_Deathnote_Kill!".split(" "), "The_Artifact_Matrix 500 1 8 filler filler Extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_Artifact_Find_Chance!".split(" "), "The_Slab_Matrix 500 1 9 filler filler Further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_all_bonuses_from_the_Slab!".split(" "), "The_Spirit_Matrix 500 1 10 filler filler Even_further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_W6_Skill_exp_gain!".split(" "), "The_Crop_Matrix 500 1 11 filler filler Yet_again_even_further_extends_the_Laboratory_Event_Horizon,_adding_another_bonus_to_connect_to!_In_particular,_a_boost_to_Crop_Depot!".split(" "), "MSA_Expander_I 500 1 12 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_Farming_EXP!".split(" "), "MSA_Expander_II 500 1 13 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_Jade_Coin_Gain!".split(" "), "MSA_Expander_III 500 1 14 filler filler Adds_a_new_bonus_type_to_the_Miniature_Soul_Apparatus_in_World_3,_specifically_All_Essence_Gain!".split(" "), "Deal_Sweetening 500 1 15 filler filler Earn_+25%_more_Magic_Beans_from_the_mysterious_Legumulyte_bean_merchant_found_in_the_Troll_Broodnest_map.".split(" "), "No_Meal_Left_Behind 500 1 16 filler filler Every_24_hours,_your_lowest_level_Meal_gets_+1_Lv._This_only_works_on_Meals_Lv_2_or_higher,_and_doesn't_trigger_on_days_you_don't_play.".split(" "), "Jade_Coin_Magnetism 500 1 17 filler filler Adds_a_new_bonus_of_+5%_Jade_Coin_Gain_per_10_items_found_after_1000_items,_as_shown_at_The_Slab_in_World_5.".split(" "), "Essence_Confetti 500 1 18 filler filler Adds_a_new_bonus_of_+3%_All_Essence_Gain_per_10_items_found_after_1000_items,_as_shown_at_The_Slab_in_World_5.".split(" "), "Shrine_Collective_Bargaining_Agreement 500 1 19 filler filler Shrines_no_longer_lose_EXP_when_moved_around,_so_you_can_finally_bring_those_baddies_out_of_retirement!".split(" "), "Papa_Blob's_Quality_Guarantee 500 1 20 filler filler Increases_the_Max_Level_of_all_cooking_meals_by_+10._Better_meals,_better_levels,_Papa_Blob's.".split(" "), "Chef_Geustloaf's_Cutting_Edge_Philosophy 500 1 21 filler filler Increases_the_Max_Level_of_all_cooking_meals_by_+10_again!_But_oh_hoho,_you_sir_are_no_Chef_Geustloaf!_Good_luck_cooking_to_these_LVs!".split(" "), "Crop_Depot_Scientist 500 1 22 filler filler Employs_a_friendly_scientist_blobulyte_to_keep_a_Data_Sheet_of_all_the_crops_you've_ever_found!".split(" "), "Science_Environmentally_Sourced_Pencil 500 1 23 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+15%_Cash_from_Mobs'_per_crop_found!".split(" "), "Science_Pen 500 1 24 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'1.02x_Plant_Evolution_Chance_in_Gaming_(multiplicative)'_per_Crop!".split(" "), "Science_Marker 500 1 25 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+8%_Jade_Coin_Gain'_per_Crop!".split(" "), "Science_Featherpen 500 1 26 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'1.10x_Cooking_Speed_(multiplicative)'_per_Crop!".split(" "), "Reinforced_Science_Pencil 500 1 27 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+20%_Total_Damage'_per_Crop!".split(" "), "Science_Crayon 500 1 28 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+7%_Shiny_Pet_Lv_Up_Rate_and_Pet_Breeding_Rate'_per_Crop!".split(" "), "Science_Paintbrush 500 1 29 filler filler Adds_a_new_bonus_type_to_your_crop_scientist's_Data_Sheet!_Specifically_'+0.1_Base_Critter_caught_in_Trapping'_per_Crop!".split(" "), "New_Critter 500 1 30 filler filler Unlocks_a_new_critter_type_to_capture!_These_have_their_own_very_special_vial_in_Alchemy.".split(" "), "Ionized_Sigils 500 1 31 filler filler Sigils_can_now_be_upgraded_a_3rd_time._Push_past_lame_ol'_yellow,_and_further_increasing_those_sigil_boosts!".split(" "), "The_Endercaptain 500 1 32 filler filler Adds_the_Endercaptain_to_Recruitment_pool._They're_very_rare,_and_have_a_hidden_account-wide_+25%_Loot_Multi_and_Artifact_Find.".split(" "), "True_Godly_Blessings 500 1 33 filler filler All_Divinity_Gods_give_1.05x_higher_Blessing_bonus_per_God_Rank._Whats_a_Blessing_bonus?_Select_a_god,_it's_the_one_on_the_bottom,_go_look.".split(" "), "Brighter_Lighthouse_Bulb 500 1 34 filler filler You_can_now_find_3_additional_Artifacts_from_The_Edge_island.".split(" "), "Sovereign_Artifacts 500 1 35 filler filler You_can_now_find_Sovereign_Artifacts_from_sailing,_but_only_if_you've_found_the_Eldritch_form_first.".split(" "), "New_Bribes 500 1 36 filler filler Mr._Pigibank_is_up_to_no_good_once_again,_and_he's_looking_to_get_some_funding_from_his_favorite_patron..._you._Well,_your_wallet_specifically.".split(" "), "Laboratory_Bling 500 1 37 filler filler Adds_3_new_Jewels_to_unlock_at_the_Jewel_Spinner_in_W4_Town._Or,_get_one_for_free_every_700_total_Lab_LV_as_shown_in_Rift_Skill_Mastery.".split(" "), "Science_Highlighter 500 1 38 filler filler Adds_a_new_bonus_type_to_your_crop_scientist!_Specifically_'+1%_Drop_Rate'_per_Crop_after_100!_So_having_105_crops_would_only_give_+5%".split(" "), "Emperor_Season_Pass 500 1 39 filler filler There_is_now_a_50%_chance_to_get_+2_visits_to_the_Emperor_every_day,_and_your_maximum_visits_goes_up_from_6_to_11".split(" "), "Science_Fancy_Pen 500 1 40 filler filler Adds_the_'Spelunky'_bonus_to_your_scientist,_which_boosts_both_POW_and_Amber_gain_by_5%_per_Crop_after_200!_So_having_210_crops_only_gives_+50%".split(" "), "Palette_Slot 500 1 41 filler filler Unlocks_+1_Palette_Slot_in_Gaming!_This_would_be_kinda_pointless_on_it's_own..._so_it_comes_with_+100%_Palette_Luck!".split(" "), "Another_Gallery_Podium 500 1 42 filler filler Pardon_my_interruption_sir,_but_I_must_urge_you_to_buy_this_upgrade..._another_podium_slot_for_your_Gallery_would_be_most_becoming_indeed!".split(" "), "Coral_Conservationism 500 1 43 filler filler Boosts_daily_coral_gain_at_the_Coral_Reef_in_World_7_in_Shimmerfin_Deep_Town_in_the_game_IdleOn_on_the_Left_side_of_the_map_by_+20%".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet,_so_you_cant_buy_it!_Please_come_back_in_a_few_updates,_since_this_isn't_out_yet!".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet,_so_you_cant_buy_it!_Please_come_back_in_a_few_updates,_I_made_myself_clear_before!".split(" "), "UNDER_CONSTRUCTION 500 1 44 filler filler This_bonus_isn't_out_yet._'nuff_said.".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" "), "IDK_YET 500 1 39 filler filler Idk_yet".split(" ")]
+jade_emporium_order = [int(index) for index in NinjaInfo[24]]
+pass
+jade_emporium = {
+    int(index) : {
+        'Name': name.replace('_', ' '),
+        'Bonus': bonus.replace('_', ' '),
+        'CodeString': numberToLetter(int(index))
+    }
+    for name, _, _, index, _, _, bonus in jade_upg if name not in ['UNDER_CONSTRUCTION', 'IDK_YET']
+}
 
-]
 gfood_codes = ["PeanutG", "ButterBar", *[f"FoodG{i}" for i in range(1, 14)]]
 BEANSTACK_GOAL = 10**4
 SUPER_BEANSTACK_GOAL = 10**5
@@ -276,6 +87,7 @@ gfood_data = {
     }
 }
 
+# TODO: parse from source (part of `NjEQ`)
 pristine_charms_list: list = [
     {'Name': 'Sparkle Log', 'Image': 'sparkle-log', 'Bonus': '1.20x Total DMG'},
     {'Name': 'Fruit Rolle', 'Image': 'fruit-rolle', 'Bonus': '+20% AGI'},

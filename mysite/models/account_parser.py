@@ -46,10 +46,14 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
-    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
-    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
+    jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict,
+    market_upgrade_details,
+    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
+    max_summoning_upgrades, summoning_match_colors,
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
+    emperor_bonus_images, summoning_stone_locations,
+    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
+    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order
 )
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
@@ -3378,12 +3382,13 @@ def _parse_w6_jade_emporium(account, raw_ninja_list):
         raw_emporium_purchases = list(raw_ninja_list[102][9])
     except:
         raw_emporium_purchases = [""]
-    for upgradeIndex, upgradeDict in enumerate(jade_emporium):
+    for index in jade_emporium_order:
         try:
-            account.sneaking['JadeEmporium'][upgradeDict['Name']] = {
-                'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
-                'Bonus': upgradeDict['Bonus'],
-                'Image': upgradeDict['Name']
+            upgrade = jade_emporium[index]
+            account.sneaking['JadeEmporium'][upgrade['Name']] = {
+                'Obtained': upgrade['CodeString'] in raw_emporium_purchases,
+                'Bonus': upgrade['Bonus'],
+                'Image': upgrade['Name']
             }
         except:
             continue
