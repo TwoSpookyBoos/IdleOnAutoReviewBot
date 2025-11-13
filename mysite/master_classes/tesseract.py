@@ -39,6 +39,28 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         label=f"Total Tachyons Collected: {notateNumber('Basic', tesseract['Total Tachyons Collected'], 3)}",
         picture_class='tachion-truth'
     ))
+    if not tesseract["Arcane Rock Enabled"]:
+        currency_advices["Currencies"].append(
+            Advice(
+                label="Arcane Rock Enabled! Collect 1 per full AFK hour while fighting on a Arcane Cultist. Maximize your /hr display "
+                "within AFK Info screen before consuming!",
+                picture_class="arcane-rock",
+                progression=1,
+                goal=1,
+            )
+        )
+    else:
+        currency_advices["Currencies"].append(
+            Advice(
+                label="Fight with Arcane Form enabled to collect 1,000 Arcane Fragments, then use the stack. "
+                "This enables AFK Fighting on Arcane Cultists to produce 1 Arcane Rock per hour!",
+                picture_class="arcane-fragment",
+                progression=min(
+                    1000, session_data.account.all_assets.get("Quest107").amount
+                ),
+                goal=1000,
+            )
+        )
     currency_advices['Currencies'] += [
         Advice(
             label=f"{tachyon_name}: {notateNumber('Basic', tesseract[f'Tachyon{tachyon_index}'], 3)}",
