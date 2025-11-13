@@ -122,9 +122,9 @@ gemstones_bonuses = RANDOlist[102]
 sneaking_gemstones_dict = {
     name: {
         'Stat': gemstones_bonuses[index].replace('_', ' ').replace('@ ', '').replace('{}%', '').replace('+}%', '').replace('{}', '').replace('$%', '').strip(),
-        'Base Value': parse_number(base_value, None),
-        'Scaling Value': parse_number(scaling_value, None),
-        'Max Value': parse_number(base_value + scaling_value, None),
+        'Base Value': parse_number(base_value, 0),
+        'Scaling Value': parse_number(scaling_value, 0),
+        'Max Value': parse_number(base_value + scaling_value, 0),
         'Gem Index': index,
         'OptlAcc Index': 233 + index
     }
