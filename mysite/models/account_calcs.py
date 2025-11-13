@@ -492,7 +492,7 @@ def _calculate_general_guild_bonuses(account):
                 bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")
 
 def _calculate_general_storage_slots(account):
-    #Dependencies: _calculate_w3_building_max_levels
+    #Dependencies: none
     account.storage['Other Storage'] = {
         'Event Shop': {
             'Storage Chest': 12,
