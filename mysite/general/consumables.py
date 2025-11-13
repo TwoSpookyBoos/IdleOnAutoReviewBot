@@ -12,7 +12,7 @@ from flask import g as session_data
 logger = get_logger(__name__)
 
 
-def getCandyHourSections():
+def get_candy_hour_advicesections():
     bank: Assets = session_data.account.stored_assets
 
     # Standard Time Candies: 1hr - 72hr
@@ -138,7 +138,7 @@ def get_inventory_advicegroup() -> AdviceGroup:
     inventorySlots_AdviceGroup.remove_empty_subgroups()
     return inventorySlots_AdviceGroup
 
-def parseStorageChests():
+def get_storage_advicegroup() -> AdviceGroup:
     advices = {
         'Other Bonuses': [],
         'Usable Chests': []
@@ -195,10 +195,10 @@ def parseStorageChests():
     return group
 
 
-def getConsumablesAdviceSections():
-    sections_candy = getCandyHourSections()
+def get_consumables_advicesections():
+    sections_candy = get_candy_hour_advicesections()
     group_bags = get_inventory_advicegroup()
-    group_chests = parseStorageChests()
+    group_chests = get_storage_advicegroup()
 
     groups = [group for group in [group_bags, group_chests] if group]
 
