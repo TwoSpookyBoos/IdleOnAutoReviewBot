@@ -481,6 +481,30 @@ def _calculate_general_highest_world_reached(account):
     else:
         return 1
 
+def _calculate_general_guild_bonuses(account):
+    for bonus_name, bonus in account.guild_bonuses.items():
+        if '{' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
+        if '}' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
+        if ']' in bonus['Description']:
+            if bonus_name == 'Bonus GP for small guilds':
+                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")
+
+def _calculate_general_storage_slots(account):
+    #Dependencies: _calculate_w3_building_max_levels
+    account.storage['Other Storage'] = {
+        'Event Shop': {
+            'Storage Chest': 12,
+            'Storage Vault': 16
+        },
+        'Vault': {
+            'Storage Slots': account.vault['Upgrades']['Storage Slots']['Max Level']
+        },
+        'Construction Buildings': {
+            'Chest Space': 2 * (account.construction_buildings['Chest Space']['MaxLevel'] - 1)
+        },
+    }
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire_upgrades(account)
@@ -2476,13 +2500,3 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
-
-def _calculate_general_guild_bonuses(account):
-    for bonus_name, bonus in account.guild_bonuses.items():
-        if '{' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
-        if '}' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
-        if ']' in bonus['Description']:
-            if bonus_name == 'Bonus GP for small guilds':
-                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")

@@ -759,7 +759,8 @@ card_raw_data = [
     ]
 ]
 
-#Inventory, Storage, Consumables
+#Inventory bags and bonuses
+# Unknown source. This dict has been backwards engineered from JSON data
 inventory_bags_dict = {
     0:1,
     1:1,
@@ -789,8 +790,58 @@ inventory_bags_dict = {
     111:3,
     112:8,
     113:1,
-    114:1
+    114:1,
+    115:1,
 }
+inventory_accountwide_bags = ['4th Anniversary Bag']
+inventory_other_sources_dict = {
+    'Default': {
+        'Description': 'Base',
+        'Max Slots': 16,
+        'Image': 'ui-inventory-bag-0'
+    },
+    'Autoloot': {
+        'Description': 'Autoloot Bundle',
+        'Max Slots': 5,
+        'Image': 'cash'
+    },
+    'Secret Pouch': {
+        'Description': f"{{{{ Event Shop|#event-shop }}}}: Secret Pouch",
+        'Max Slots': 3,
+        'Image': 'event-shop-12'
+    },
+    # The 4th anniversary bag is funky. If you claim it on Character1 but don't log into EVERY other character once, they wouldn't be
+    # marked as owning it in the JSON. The alternative here is moving it to Account Wide and checking if it is present on ANY character
+    # so all characters get proper credit for it.
+    'Fourth Anni': {
+        'Description': '4th Anniversary Bag (Limited Availability)',
+        'Max Slots': 8,
+        'Image': 'x4th-anniversary-bag'
+    },
+    'bon_f': {
+        'Description': 'Eternal Hunter Bundle',
+        'Max Slots': 8,
+        'Image': 'eternal-hunter-bag'
+    },
+}
+
+# Last updated in v2.43 Nov 12
+inventory_slots_max_usable = (
+        sum(inventory_bags_dict.values())
+        + inventory_other_sources_dict['Default']['Max Slots']
+        + inventory_other_sources_dict['Autoloot']['Max Slots']
+        + inventory_other_sources_dict['bon_f']['Max Slots']
+        + inventory_other_sources_dict['Secret Pouch']['Max Slots']
+        + inventory_other_sources_dict['Fourth Anni']['Max Slots']
+)
+inventory_slots_max_usable_without_bundles = (
+        inventory_slots_max_usable
+        - inventory_other_sources_dict['Autoloot']['Max Slots']
+        - inventory_other_sources_dict['bon_f']['Max Slots']
+)
+
+# Storage chests and bonuses
+# Unknown source. This dict has been backwards engineered from JSON data
 storage_chests_dict = {
     0:3,
     1:3,
@@ -820,6 +871,8 @@ storage_chests_dict = {
     25:9,
     26:9,
     27:10,
+    28:5,
+    29:6,
     30:9,
     31:9,
     32:9,
@@ -841,7 +894,6 @@ storage_chests_dict = {
     106:16,
     107:16
 }
-current_max_usable_inventory_slots = 104  #As of v2.36 Charred Bones
 
 #Gem Shop
 gem_shop_dict = {

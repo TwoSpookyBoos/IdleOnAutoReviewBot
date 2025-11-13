@@ -20,7 +20,7 @@ from consts.consts_w3 import (
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict
 from models.custom_exceptions import VeryOldDataException
-from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert, safer_math_pow
+from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -194,6 +194,7 @@ class Character:
         self.specialized_skills: list[str] = getSpecializedSkills(self.all_classes)
         self.expected_talents: list[int] = getExpectedTalents(self.all_classes)
         self.inventory_bags: dict = inventory_bags
+        self.inventory_slots: int = 0
         self.kill_dict: dict = kill_dict
         self.fixKillDict()
         self.big_alch_bubbles: list[str] = big_alch_bubbles
@@ -1633,4 +1634,16 @@ class Account:
             'World 5': [],
             'The Caverns Below': [],
             'World 6': []
+        }
+        #General
+        self.inventory = {
+            'Characters Missing Bags': {},
+            'Account Wide Inventory': {},
+            'Account Wide Inventory Slots Owned': 0,
+            'Account Wide Inventory Slots Max': 0,
+        }
+        self.storage = {
+            'Used Chests': [],
+            'Missing Chests': [],
+            'Other Storage': {}
         }

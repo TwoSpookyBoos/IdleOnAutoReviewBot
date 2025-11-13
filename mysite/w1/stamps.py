@@ -5,7 +5,7 @@ from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
-from consts.consts_general import current_max_usable_inventory_slots
+from consts.consts_general import inventory_slots_max_usable
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w2 import max_vial_level, max_sigil_level
@@ -158,7 +158,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=max_overall_book_levels
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"{current_max_usable_inventory_slots} available {{{{ Inventory Slots|#storage }}}}",
+        label=f"{inventory_slots_max_usable} available {{{{ Inventory Slots|#storage }}}}",
         picture_class='storage'
     ))
     capacity_Advices['Character Specific'].append(Advice(
