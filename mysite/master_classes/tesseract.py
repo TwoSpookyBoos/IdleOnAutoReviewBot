@@ -39,7 +39,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         label=f"Total Tachyons Collected: {notateNumber('Basic', tesseract['Total Tachyons Collected'], 3)}",
         picture_class='tachion-truth'
     ))
-    if not tesseract["Arcane Rock Enabled"]:
+    if tesseract["Arcane Rocks Enabled"]:
         currency_advices["Currencies"].append(
             Advice(
                 label="Arcane Rock Enabled! Collect 1 per full AFK hour while fighting on a Arcane Cultist. Maximize your /hr display "
