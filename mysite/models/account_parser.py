@@ -686,7 +686,7 @@ def _parse_general_inventory_characters(account):
                 character.inventory_slots += inventory_bags_dict.get(int(bag), 0)
 
 def _parse_general_storage_slots(account):
-    #Dependencies:
+    #Dependencies: None
     raw_used_chests = safe_loads(account.raw_data.get('InvStorageUsed', []))
     # Sanity check for any unknown chests present in the JSON
     unknown_chests_in_json = [f"{key}:{value}" for key, value in raw_used_chests.items() if int(key) not in storage_chests_dict.keys()]

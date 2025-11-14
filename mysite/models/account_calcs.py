@@ -500,7 +500,9 @@ def _calculate_general_storage_slots(account):
         'Storage Vault': 16
     }
     vault_bonuses = ['Storage Slots']
-    construction_buildings = ['Chest Space']
+    construction_buildings = {
+        'Chest Space': 2
+    }
     # TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
     gem_shop_purchases = {
         'Storage Chest Space': {
@@ -530,14 +532,14 @@ def _calculate_general_storage_slots(account):
             'Owned Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Level'],
             'Max Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Max Level'],
         }
-    for name in construction_buildings:
+    for name, slots_per_level in construction_buildings.items():
         account.storage['Other Storage'][name] = {
             'Source': 'Construction Building',
-            'Label': f"{{{{ Construction Building|#buildings }}}}: {name}: {2 * (account.construction_buildings['Chest Space']['Level'] - 1)} total slots",
-            'Owned Slots': 2 * (account.construction_buildings['Chest Space']['Level'] - 1),
-            'Max Slots': 2 * (account.construction_buildings['Chest Space']['MaxLevel'] - 1),
-            'Progression': account.construction_buildings['Chest Space']['Level'],
-            'Goal': account.construction_buildings['Chest Space']['MaxLevel'],
+            'Label': f"{{{{ Construction Building|#buildings }}}}: {name}: {slots_per_level * (account.construction_buildings[name]['Level'] - 1)} total slots",
+            'Owned Slots': slots_per_level * (account.construction_buildings[name]['Level'] - 1),
+            'Max Slots': slots_per_level * (account.construction_buildings[name]['MaxLevel'] - 1),
+            'Progression': account.construction_buildings[name]['Level'],
+            'Goal': account.construction_buildings[name]['MaxLevel'],
             'Image': account.construction_buildings[name]['Image'],
 
         }
