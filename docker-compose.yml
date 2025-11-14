@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: iarb_container
+    container_name: iarb
     ports:
-      - "8080:5000"
-    volumes:
-      - ./mysite:/usr/src/app
+      - "5000:5000"
