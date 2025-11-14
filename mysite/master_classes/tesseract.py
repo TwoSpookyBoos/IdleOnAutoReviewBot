@@ -42,7 +42,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     if tesseract["Arcane Rocks Enabled"]:
         currency_advices["Currencies"].append(
             Advice(
-                label="Arcane Rock Enabled! Collect 1 per full AFK hour while fighting on a Arcane Cultist. Maximize your /hr display "
+                label="Arcane Rocks Enabled! Collect 1 per full AFK hour while fighting on an Arcane Cultist. Maximize your /hr display "
                 "within AFK Info screen before consuming!",
                 picture_class="arcane-rock",
                 progression=1,
