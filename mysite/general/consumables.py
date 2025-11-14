@@ -151,18 +151,18 @@ def get_storage_advicegroup() -> AdviceGroup:
     }
 
     for name, details in storage['Other Storage'].items():
-        #if details['Owned Slots'] < details['Max Slots']:
-        if details['Source'] == 'Vault':
-            advices[ob_label].append(get_upgrade_vault_advice(name))
-        else:
-            #Expected: Event Shop, Construction Building, Gem Shop
-            advices[ob_label].append(Advice(
-                label=details['Label'],
-                picture_class=details['Image'],
-                progression=details['Progression'],
-                goal=details['Goal'],
-                resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
-            ))
+        if details['Owned Slots'] < details['Max Slots']:
+            if details['Source'] == 'Vault':
+                advices[ob_label].append(get_upgrade_vault_advice(name))
+            else:
+                #Expected: Event Shop, Construction Building, Gem Shop
+                advices[ob_label].append(Advice(
+                    label=details['Label'],
+                    picture_class=details['Image'],
+                    progression=details['Progression'],
+                    goal=details['Goal'],
+                    resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
+                ))
 
     advices[chests_label] = [
             Advice(
