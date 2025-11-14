@@ -2,7 +2,7 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import statue_type_list, statues_dict
@@ -397,6 +397,7 @@ def _calculate_general(account):
     _calculate_general_item_filter(account)
     account.highest_world_reached = _calculate_general_highest_world_reached(account)
     _calculate_general_guild_bonuses(account)
+    _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -493,18 +494,78 @@ def _calculate_general_guild_bonuses(account):
 
 def _calculate_general_storage_slots(account):
     #Dependencies: none
-    account.storage['Other Storage'] = {
-        'Event Shop': {
-            'Storage Chest': 12,
-            'Storage Vault': 16
-        },
-        'Vault': {
-            'Storage Slots': account.vault['Upgrades']['Storage Slots']['Max Level']
-        },
-        'Construction Buildings': {
-            'Chest Space': 2 * (account.construction_buildings['Chest Space']['MaxLevel'] - 1)
-        },
+    #Event Shop bonuses only have a description in the source
+    event_shop_bonuses = {
+        'Storage Chest': 12,
+        'Storage Vault': 16
     }
+    vault_bonuses = ['Storage Slots']
+    construction_buildings = ['Chest Space']
+    # TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
+    gem_shop_purchases = {
+        'Storage Chest Space': {
+            'Slots': 9,
+            'Max Purchases': 12
+        },
+        'More Storage Space': {
+            'Slots': 9,
+            'Max Purchases': 10
+        }
+    }
+    for name, slots in event_shop_bonuses.items():
+        account.storage['Other Storage'][name] = {
+            'Source': 'Event Shop',
+            'Label': f"{{{{ Event Shop|#event-shop }}}}: {name}: {slots} slots",
+            'Owned Slots': slots * account.event_points_shop['Bonuses'][name]['Owned'],
+            'Max Slots': slots,
+            'Progression': int(account.event_points_shop['Bonuses'][name]['Owned']),
+            'Goal': 1,
+            'Image': account.event_points_shop['Bonuses'][name]['Image'],
+            'Resource': 'event-point'
+        }
+    for name in vault_bonuses:
+        account.storage['Other Storage'][name] = {
+            'Source': 'Vault',
+            # Vault bonus Advice is standardized in get_upgrade_vault_advice. Extra entries not needed here.
+            'Owned Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Level'],
+            'Max Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Max Level'],
+        }
+    for name in construction_buildings:
+        account.storage['Other Storage'][name] = {
+            'Source': 'Construction Building',
+            'Label': f"{{{{ Construction Building|#buildings }}}}: {name}: {2 * (account.construction_buildings['Chest Space']['Level'] - 1)} total slots",
+            'Owned Slots': 2 * (account.construction_buildings['Chest Space']['Level'] - 1),
+            'Max Slots': 2 * (account.construction_buildings['Chest Space']['MaxLevel'] - 1),
+            'Progression': account.construction_buildings['Chest Space']['Level'],
+            'Goal': account.construction_buildings['Chest Space']['MaxLevel'],
+            'Image': account.construction_buildings[name]['Image'],
+
+        }
+    for name, details in gem_shop_purchases.items():
+        account.storage['Other Storage'][name] = {
+            'Source': 'Gem Shop',
+            'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({get_gem_shop_bonus_section_name(name)}): "
+                     f"{details['Slots'] * account.gemshop[name]}/{details['Slots'] * details['Max Purchases']} total slots",
+            'Owned Slots': details['Slots'] * account.gemshop[name],
+            'Max Slots': details['Slots'] * details['Max Purchases'],
+            'Progression': account.gemshop[name],
+            'Goal': details['Max Purchases'],
+            'Image': name,
+            'Resource': 'gem'
+        }
+
+    #Calculate total storage slots
+    account.storage['Other Slots Owned'] = sum([details['Owned Slots'] for details in account.storage['Other Storage'].values()])
+    account.storage['Total Slots Owned'] = sum([
+        account.storage['Used Chest Slots'],
+        account.storage['Other Slots Owned']
+    ])
+    account.storage['Other Slots Max'] = sum([details['Max Slots'] for details in account.storage['Other Storage'].values()])
+    account.storage['Total Slots Max'] = sum([
+        storage_chests_item_slots_max,
+        account.storage['Other Slots Max']
+    ])
+
 
 def _calculate_master_classes(account):
     _calculate_master_classes_grimoire_upgrades(account)

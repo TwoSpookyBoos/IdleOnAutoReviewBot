@@ -894,8 +894,12 @@ storage_chests_dict = {
     106:16,
     107:16
 }
+storage_chests_item_slots_max = (
+    sum(storage_chests_dict.values())
+)
 
 #Gem Shop
+# TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
 gem_shop_dict = {
     # Inventory and Storage
     'Item Backpack Space': 55,
@@ -980,6 +984,42 @@ gem_shop_optlacc_dict = {
     'Exalted Stamps': [366, EmojiType.INFINITY.value],
     'Lifetime Tickets': [382, EmojiType.INFINITY.value]
 }
+
+def get_gem_shop_bonus_section_name(bonus_name: str) -> str:
+    match bonus_name:
+        case 'Item Backpack Space' | 'Storage Chest Space' | 'Carry Capacity' | 'Food Slot' | 'More Storage Space' | 'Card Presets':
+            return "Inventory and Storage"
+
+        case 'Daily Teleports' | 'Daily Minigame Plays':
+            return "Dailies N' Resets"
+
+        case 'Extra Card Slot':
+            return "Cards"
+
+        case 'Weekly Dungeon Boosters':
+            return "Goods & Services"
+
+        case 'Infinity Hammer' | 'Brimstone Forge Slot' | 'Ivory Bubble Cauldrons' | 'Bleach Liquid Cauldrons' | 'Obol Storage Space' | 'Sigil Supercharge':
+            return "W1&2"
+
+        case 'Crystal 3d Printer' | 'More Sample Spaces' | 'Burning Bad Books' | 'Prayer Slots' | 'Zen Cogs' | 'Cog Inventory Space' | 'Tower Building Slots' | 'Fluorescent Flaggies':
+            return "W3"
+
+        case 'Royal Egg Cap' | 'Richelin Kitchen' | 'Souped Up Tube' | 'Pet Storage' | 'Fenceyard Space':
+            return "W4"
+
+        case 'Chest Sluggo' | 'Divinity Sparkie' | 'Golden Sprinkler' | 'Lava Sprouts':
+            return "W5"
+
+        case 'Plot of Land' | 'Pristine Charm' | 'Shroom Familiar' | 'Sand of Time' | 'Instagrow Generator' | 'Life Refill' | 'Compost Bag' | 'Summoner Stone':
+            return "W6"
+
+        case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
+            return "Limited Shop"
+        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
+            return "Oddities"
+        case _:
+            return "UnknownShop"
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
 # Last updated in 2.43 Nov 6

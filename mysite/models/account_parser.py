@@ -684,15 +684,16 @@ def _parse_general_inventory_characters(account):
 
 def _parse_general_storage_slots(account):
     #Dependencies:
-    account.storage['Used Chests'] = safe_loads(account.raw_data.get('InvStorageUsed', []))
-    account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in account.storage['Used Chests'].keys()]
-
+    raw_used_chests = safe_loads(account.raw_data.get('InvStorageUsed', []))
     # Sanity check for any unknown chests present in the JSON
-    unknown_chests_in_json = [f"{key}:{value}" for key, value in account.storage['Used Chests'].items() if int(key) not in storage_chests_dict.keys()]
+    unknown_chests_in_json = [f"{key}:{value}" for key, value in raw_used_chests.items() if int(key) not in storage_chests_dict.keys()]
     if len(unknown_chests_in_json) > 0:
         logger.warning(f"Unknown Storage Chest found in JSON: {unknown_chests_in_json}. Get these added to consts_general.storage_chests_dict")
 
-
+    account.storage['Used Chests'] = [chest for chest in StorageChest if str(chest.value) in raw_used_chests.keys()]
+    account.storage['Used Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Used Chests']])
+    account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in raw_used_chests.keys()]
+    account.storage['Missing Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Missing Chests']])
 
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)

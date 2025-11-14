@@ -1644,6 +1644,12 @@ class Account:
         }
         self.storage = {
             'Used Chests': [],
+            'Used Chests Slots': 0,
             'Missing Chests': [],
-            'Other Storage': {}
+            'Missing Chests Slots': 0,
+            'Other Storage': {},
+            'Other Slots Owned': 0,
+            'Other Slots Max': 0,
+            'Total Slots Owned': 0,
+            'Total Slots Max': 0
         }

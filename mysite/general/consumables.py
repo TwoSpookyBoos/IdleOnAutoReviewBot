@@ -1,6 +1,6 @@
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import inventory_bags_dict, storage_chests_dict, inventory_slots_max_usable, inventory_accountwide_bags, \
-    inventory_slots_max_usable_without_bundles
+    inventory_slots_max_usable_without_bundles, storage_chests_item_slots_max
 from models.general.models_consumables import StorageChest
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from models.models_util import get_upgrade_vault_advice
@@ -139,40 +139,32 @@ def get_inventory_advicegroup() -> AdviceGroup:
     return inventorySlots_AdviceGroup
 
 def get_storage_advicegroup() -> AdviceGroup:
-    advices = {
-        'Other Bonuses': [],
-        'Usable Chests': []
-    }
-
     storage = session_data.account.storage
 
-    for source, details in storage['Other Storage'].items():
-        if source == 'Event Shop':
-            for bonus_name, bonus_slots in details.items():
-                if not session_data.account.event_points_shop['Bonuses'][bonus_name]['Owned']:
-                    advices['Other Bonuses'].append(Advice(
-                        label=f"{{{{ Event Shop|#event-shop }}}}: {bonus_name}: {bonus_slots} slots",
-                        picture_class=session_data.account.event_points_shop['Bonuses'][bonus_name]['Image'],
-                        progression=0,
-                        goal=1
-                    ))
-        elif source == 'Vault':
-            for upgrade_name, upgrade_slots in details.items():
-                if session_data.account.vault['Upgrades'][upgrade_name]['Total Value'] < session_data.account.vault['Upgrades'][upgrade_name]['Max Value']:
-                    advices['Other Bonuses'].append(get_upgrade_vault_advice(upgrade_name))
-        elif source == 'Construction Buildings':
-            for building_name, building_slots in details.items():
-                if session_data.account.construction_buildings[building_name]['Level'] < session_data.account.construction_buildings[building_name]['MaxLevel']:
-                    advices['Other Bonuses'].append(Advice(
-                        label=f"{{{{ Construction Building|#buildings }}}}: {building_name}: {building_slots} total slots",
-                        picture_class=session_data.account.construction_buildings[building_name]['Image'],
-                        progression=session_data.account.construction_buildings[building_name]['Level'],
-                        goal=session_data.account.construction_buildings[building_name]['MaxLevel']
-                    ))
+    ob_label = f"Other Bonuses: {storage['Other Slots Owned']}/{storage['Other Slots Max']} slots"
+    chests_label = f"Store Chests: {storage['Used Chest Slots']}/{storage_chests_item_slots_max} slots"
+    advices = {
+        ob_label: [],
+        chests_label: []
+    }
 
-    advices['Usable Chests'] = [
+    for name, details in storage['Other Storage'].items():
+        #if details['Owned Slots'] < details['Max Slots']:
+        if details['Source'] == 'Vault':
+            advices[ob_label].append(get_upgrade_vault_advice(name))
+        else:
+            #Expected: Event Shop, Construction Building, Gem Shop
+            advices[ob_label].append(Advice(
+                label=details['Label'],
+                picture_class=details['Image'],
+                progression=details['Progression'],
+                goal=details['Goal'],
+                resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
+            ))
+
+    advices[chests_label] = [
             Advice(
-                label=f"{chest.pretty_name}: {storage_chests_dict[chest.value]} slots ({chest.type})",
+                label=f"{chest.pretty_name}: {storage_chests_dict.get(chest.value, 0)} slots ({chest.type})",
                 picture_class=chest.pretty_name,
                 progression=0,
                 goal=1,
@@ -180,12 +172,13 @@ def get_storage_advicegroup() -> AdviceGroup:
             ) for chest in storage['Missing Chests']
         ]
 
+    total_remaining_slots = max(0, storage['Total Slots Max'] - storage['Total Slots Owned'])
     group = AdviceGroup(
         tier='',
         pre_string=(
-            f"Collect {len(storage['Missing Chests'])} more storage chest{pl(storage['Missing Chests'])} for your bank"
+            f"Collect {total_remaining_slots} more storage slot{pl(total_remaining_slots)} for your bank"
             if advices else
-            f"You've collected all current Storage Chests!{break_you_best}"
+            f"You've collected all current storage slots!{break_you_best}"
         ),
         advices=advices,
         informational=True
