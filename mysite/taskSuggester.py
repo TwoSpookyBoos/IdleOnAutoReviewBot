@@ -78,7 +78,7 @@ def main(inputData, source_string, runType="web"):
             active.getActiveAdviceSection(),
             drop_rate.get_drop_rate_advice_section(),
             achievements.getAchievementsAdviceSection(),
-            *(consumables.getConsumablesAdviceSections()),
+            *(consumables.get_consumables_advicesections()),
             gem_shop.getGemShopAdviceSection(),
             *(greenstacks.getGStackAdviceSections()),
             cards.getCardsAdviceSection(),

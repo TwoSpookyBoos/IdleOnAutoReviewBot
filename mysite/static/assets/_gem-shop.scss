@@ -1,19 +1,22 @@
 @import "sailing";
 
+$cosmic-storage-chest: img('data/InvStorage99.png');
+$storage-chest-90: img('wiki/Storage_Chest_90.png');
+
 $gem-shop: (
     gem-shop: img('Gem_Shop.png'),
     // Additional Aliases
-    storage: img('wiki/Cosmic_Storage_Chest.png'),
-    more-storage-space: img('wiki/Cosmic_Storage_Chest.png'),
-    storage-chest-space: img('wiki/Cosmic_Storage_Chest.png'),
+    storage: $cosmic-storage-chest,
+    storage-chest-space: $storage-chest-90,
+    more-storage-space: $cosmic-storage-chest,
 
     // Normal Gem Shop stuff
-    inventory-bag-u: img('wiki/Inventory_Bag_U.png'),
-    storage-chest-90: img('wiki/Storage_Chest_90.png'),
+    inventory-bag-u: img('data/InvBag21.png'),
+    storage-chest-90: $storage-chest-90,
     carry-capacity: img('wiki/Carry_Capacity.png'),
     food-slot: img('wiki/Food_Slot.png'),
 
-    cosmic-storage-chest: img('wiki/Cosmic_Storage_Chest.png'),
+    cosmic-storage-chest: $cosmic-storage-chest,
     card-presets: img('wiki/Card_Presets.png'),
     daily-teleports: img('wiki/Daily_Teleports.png'),
     daily-minigame-plays: img('wiki/Daily_Minigame_Plays.png'),

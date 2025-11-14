@@ -9,7 +9,7 @@ from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, vault_upgrades_list, vault_dont_scale
+    vault_section_indexes, vault_upgrades_list, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
@@ -55,6 +55,7 @@ from consts.consts_w6 import (
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
     summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
+from models.general.models_consumables import Bag, StorageChest
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -301,6 +302,22 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
+    _parse_general_inventory_slots_account_wide(account)
+    _parse_general_inventory_characters(account)
+    _parse_general_storage_slots(account)
+
+def _parse_class_unique_kill_stacks(account):
+    account.class_kill_talents = {
+        'Archlord of the Pirates': {
+            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
+        },
+        'King of the Remembered': {
+            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
+        },
+        'Wormhole Emperor': {
+            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
+        }
+    }
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
@@ -372,19 +389,6 @@ def _parse_general_npc_tokens(account):
             account.npc_tokens[tokenName] = 0
     # for tokenName, tokenCount in account.npc_tokens.items():
     #     account.all_assets.get(tokenName).add(tokenCount)
-
-def _parse_class_unique_kill_stacks(account):
-    account.class_kill_talents = {
-        'Archlord of the Pirates': {
-            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
-        },
-        'King of the Remembered': {
-            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
-        },
-        'Wormhole Emperor': {
-            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
-        }
-    }
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -607,6 +611,96 @@ def _parse_general_event_points_shop(account):
                 'Description': bonusDetails['Description'],
                 'Image': bonusDetails['Image']
             }
+
+def _parse_general_inventory_slots_account_wide(account):
+    #Dependencies: _parse_switches, _parse_characters, _parse_general_gem_shop_bundles, _parse_general_event_points_shop
+    #Create dictionary for Account Wide Inventory sources
+    fourth_anni_bag_owned = any([char.character_name for char in account.all_characters if '112' in char.inventory_bags])
+    account.inventory['Account Wide Inventory'] = {
+        'Default': {
+            'Description': inventory_other_sources_dict['Default']['Description'],
+            'Max Slots': inventory_other_sources_dict['Default']['Max Slots'],
+            'Owned': True,
+            'Owned Slots': inventory_other_sources_dict['Default']['Max Slots'],
+            'Image': inventory_other_sources_dict['Default']['Image']
+        },
+        'Autoloot': {
+            'Description': inventory_other_sources_dict['Autoloot']['Description'],
+            'Max Slots': inventory_other_sources_dict['Autoloot']['Max Slots'],
+            'Owned': account.autoloot,
+            'Owned Slots': inventory_other_sources_dict['Autoloot']['Max Slots'] * account.autoloot,
+            'Image': inventory_other_sources_dict['Autoloot']['Image'],
+            'Resource': inventory_other_sources_dict['Autoloot']['Resource']
+        },
+        'Secret Pouch': {
+            'Description': inventory_other_sources_dict['Secret Pouch']['Description'],
+            'Max Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'],
+            'Owned': account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+            'Owned Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'] * account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+            'Image': inventory_other_sources_dict['Secret Pouch']['Image'],
+            'Resource': inventory_other_sources_dict['Secret Pouch']['Resource']
+        },
+        'Fourth Anni': {
+            'Description': inventory_other_sources_dict['Fourth Anni']['Description'],
+            'Max Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'],
+            'Owned': fourth_anni_bag_owned,
+            'Owned Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'] * fourth_anni_bag_owned,
+            'Image': inventory_other_sources_dict['Fourth Anni']['Image']
+        },
+        'bon_f': {
+            'Description': inventory_other_sources_dict['bon_f']['Description'],
+            'Max Slots': inventory_other_sources_dict['bon_f']['Max Slots'],
+            'Owned': account.gemshop['Bundles']['bon_f']['Owned'],
+            'Owned Slots': inventory_other_sources_dict['bon_f']['Max Slots'] * account.gemshop['Bundles']['bon_f']['Owned'],
+            'Image': inventory_other_sources_dict['bon_f']['Image'],
+            'Resource': inventory_other_sources_dict['bon_f']['Resource']
+        },
+    }
+    account.inventory['Account Wide Inventory Slots Owned'] = sum([source['Owned Slots'] for source in account.inventory['Account Wide Inventory'].values()])
+    account.inventory['Account Wide Inventory Slots Max'] = sum([source['Max Slots'] for source in account.inventory['Account Wide Inventory'].values()])
+
+def _parse_general_inventory_characters(account):
+    #Dependencies: _parse_general_inventory_slots_account_wide
+    # Sanity check for any unknown bags present in the JSON
+    unknown_bags_in_json = set()
+    for character in account.all_characters:
+        for bag in character.inventory_bags:
+            if int(bag) not in inventory_bags_dict:
+                unknown_bags_in_json.add(f"{bag}: {character.inventory_bags[bag]}")
+    if len(unknown_bags_in_json) > 0:
+        logger.warning(f"Unknown Inventory Bags found in JSON: {unknown_bags_in_json}. Get these added to consts_general.inventory_bags_dict")
+
+    for character in account.all_characters:
+        account.inventory['Characters Missing Bags'][character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
+        character.inventory_slots = account.inventory['Account Wide Inventory Slots Owned']
+        for bag in character.inventory_bags:
+            if int(bag) == 112:
+                continue  #4th anniversary bag accounted for in account wide inventory
+            if isinstance(character.inventory_bags[bag], int | float | str):
+                try:
+                    character.inventory_slots += parse_number(character.inventory_bags[bag])
+                except:
+                    logger.exception(f"Could not increase character {character.character_index}'s bagslots by {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}")
+            else:
+                logger.warning(f"Funky bag value found in {character.character_index}'s bagsDict for bag {bag}: {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}. Searching for expected value.")
+                if int(bag) in inventory_bags_dict:
+                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict.get(int(bag), 0)}. All is well :)")
+                else:
+                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
+                character.inventory_slots += inventory_bags_dict.get(int(bag), 0)
+
+def _parse_general_storage_slots(account):
+    #Dependencies: None
+    raw_used_chests = safe_loads(account.raw_data.get('InvStorageUsed', []))
+    # Sanity check for any unknown chests present in the JSON
+    unknown_chests_in_json = [f"{key}:{value}" for key, value in raw_used_chests.items() if int(key) not in storage_chests_dict.keys()]
+    if len(unknown_chests_in_json) > 0:
+        logger.warning(f"Unknown Storage Chest found in JSON: {unknown_chests_in_json}. Get these added to consts_general.storage_chests_dict")
+
+    account.storage['Used Chests'] = [chest for chest in StorageChest if str(chest.value) in raw_used_chests.keys()]
+    account.storage['Used Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Used Chests']])
+    account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in raw_used_chests.keys()]
+    account.storage['Missing Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Missing Chests']])
 
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
@@ -3008,13 +3102,12 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
     except:
         account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] = 1 * account.caverns['Caverns'][cavern_name]['Unlocked']
-    for wish_index, wish_list in enumerate(lamp_wishes):
+    for wish_index, wish_dict in enumerate(lamp_wishes):
         account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index] = {
-            'Name': wish_list[0],
-            'BaseCost': wish_list[1],
-            'CostIncreaser': wish_list[2],
-            'Idk3': wish_list[3],
-            'Description': wish_list[4],
+            'Name': wish_dict['Name'],
+            'BaseCost': wish_dict['BaseCost'],
+            'CostIncreaser': wish_dict['CostIncreaser'],
+            'Description': f"{wish_dict['Description']}{'. Cost does not increase.' if wish_dict['DoesCostIncrease'] is False else ''}",
             'Image': f'lamp-wish-{wish_index}',
             'BonusList': []
         }
@@ -3023,7 +3116,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
                     account.caverns['Villagers']['Polonai']['Level'] >= 7
                     and account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] > wish_index
                 )
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = raw_caverns_list[21][wish_index]
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = parse_number(raw_caverns_list[21][wish_index])
         except:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = False
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = 0
@@ -3032,21 +3125,21 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
 
         #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
-        if wish_list[0].startswith('World '):
-            world_number = safer_convert(wish_list[0].split('World ')[1][0], 0)
+        if wish_dict['Name'].startswith('World '):
+            world_number = safer_convert(wish_dict['Name'].split('World ')[1][0], 0)
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
                 v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
-                for v in lamp_world_wish_values[world_number]
+                for v in lamp_world_wish_values.get(world_number, [0]*3)
             ]
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '@', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
+                    '{', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '#', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
+                    '}', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '$', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
+                    '~', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'
