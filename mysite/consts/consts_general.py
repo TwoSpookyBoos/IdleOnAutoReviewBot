@@ -803,12 +803,14 @@ inventory_other_sources_dict = {
     'Autoloot': {
         'Description': 'Autoloot Bundle',
         'Max Slots': 5,
-        'Image': 'cash'
+        'Image': 'cash',
+        'Resource': 'cash'
     },
     'Secret Pouch': {
         'Description': f"{{{{ Event Shop|#event-shop }}}}: Secret Pouch",
         'Max Slots': 3,
-        'Image': 'event-shop-12'
+        'Image': 'event-shop-12',
+        'Resource': 'event-point'
     },
     # The 4th anniversary bag is funky. If you claim it on Character1 but don't log into EVERY other character once, they wouldn't be
     # marked as owning it in the JSON. The alternative here is moving it to Account Wide and checking if it is present on ANY character
@@ -821,7 +823,8 @@ inventory_other_sources_dict = {
     'bon_f': {
         'Description': 'Eternal Hunter Bundle',
         'Max Slots': 8,
-        'Image': 'eternal-hunter-bag'
+        'Image': 'eternal-hunter-bag',
+        'Resource': 'cash'
     },
 }
 

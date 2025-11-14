@@ -93,7 +93,8 @@ def get_inventory_advicegroup() -> AdviceGroup:
                   f"{entry['Owned Slots']}/{entry['Max Slots']} slots",
             picture_class=entry['Image'],
             progression=int(entry['Owned']),
-            goal=1
+            goal=1,
+            resource=entry.get('Resource', '')
         )
         for entry in awi.values()
     ]
@@ -121,7 +122,8 @@ def get_inventory_advicegroup() -> AdviceGroup:
                     picture_class=bag.pretty_name,
                     progression=0,
                     goal=1,
-                    completed=False
+                    completed=False,
+                    resource='coins' if bag.type == 'Vendor' else 'smithing' if bag.type == 'Crafted' else ''
                 ) for bag in inventory['Characters Missing Bags'][character.character_index] if bag.pretty_name not in inventory_accountwide_bags
             ]
 
@@ -168,7 +170,8 @@ def get_storage_advicegroup() -> AdviceGroup:
                 picture_class=chest.pretty_name,
                 progression=0,
                 goal=1,
-                completed=False
+                completed=False,
+                resource='coins' if chest.type == 'Vendor' else ''
             ) for chest in storage['Missing Chests']
         ]
 

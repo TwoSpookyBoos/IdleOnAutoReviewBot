@@ -625,14 +625,16 @@ def _parse_general_inventory_slots_account_wide(account):
             'Max Slots': inventory_other_sources_dict['Autoloot']['Max Slots'],
             'Owned': account.autoloot,
             'Owned Slots': inventory_other_sources_dict['Autoloot']['Max Slots'] * account.autoloot,
-            'Image': inventory_other_sources_dict['Autoloot']['Image']
+            'Image': inventory_other_sources_dict['Autoloot']['Image'],
+            'Resource': inventory_other_sources_dict['Autoloot']['Resource']
         },
         'Secret Pouch': {
             'Description': inventory_other_sources_dict['Secret Pouch']['Description'],
             'Max Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'],
             'Owned': account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
             'Owned Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'] * account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
-            'Image': inventory_other_sources_dict['Secret Pouch']['Image']
+            'Image': inventory_other_sources_dict['Secret Pouch']['Image'],
+            'Resource': inventory_other_sources_dict['Secret Pouch']['Resource']
         },
         'Fourth Anni': {
             'Description': inventory_other_sources_dict['Fourth Anni']['Description'],
@@ -646,7 +648,8 @@ def _parse_general_inventory_slots_account_wide(account):
             'Max Slots': inventory_other_sources_dict['bon_f']['Max Slots'],
             'Owned': account.gemshop['Bundles']['bon_f']['Owned'],
             'Owned Slots': inventory_other_sources_dict['bon_f']['Max Slots'] * account.gemshop['Bundles']['bon_f']['Owned'],
-            'Image': inventory_other_sources_dict['bon_f']['Image']
+            'Image': inventory_other_sources_dict['bon_f']['Image'],
+            'Resource': inventory_other_sources_dict['bon_f']['Resource']
         },
     }
     account.inventory['Account Wide Inventory Slots Owned'] = sum([source['Owned Slots'] for source in account.inventory['Account Wide Inventory'].values()])
