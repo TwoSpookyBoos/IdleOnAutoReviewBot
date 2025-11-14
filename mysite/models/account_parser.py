@@ -1001,7 +1001,8 @@ def _parse_master_classes_tesseract(account):
         'Tachyon4': safer_convert(safer_get(account.raw_optlacc_dict, 391, 0), 0.0),
         'Tachyon5': safer_convert(safer_get(account.raw_optlacc_dict, 392, 0), 0.0),
         'Tachyon6': safer_convert(safer_get(account.raw_optlacc_dict, 393, 0), 0.0),
-        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0)
+        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0),
+        'Arcane Rocks Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 452, False), False)
     }
     raw_tesseract = safe_loads(account.raw_data.get('Arcane', []))
     if not raw_tesseract:

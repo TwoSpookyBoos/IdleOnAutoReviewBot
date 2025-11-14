@@ -1,0 +1,8 @@
+services:
+  iarb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iarb
+    ports:
+      - "5000:5000"

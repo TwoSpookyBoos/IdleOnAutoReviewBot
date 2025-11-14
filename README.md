@@ -69,8 +69,15 @@ Build and run the container, which mounts the local code.
 Flask will auto-update files that are changed, so you shouldn't need to rebuild unless requirements change.
 ``` bash
 docker build . -t idleon-auto-review-bot:latest
-docker run --rm -d --name iarb -p 5000:5000 -v mysite:/usr/src/app idleon-auto-review-bot:1.0.3
+docker run --rm -d --name iarb -p 5000:5000 idleon-auto-review-bot:latest
 ```
+
+Alternatively, use `docker compose` to build and start the container immediately.
+
+```bash
+docker compose up
+```
+
 To tail the webserver logs use
 ``` bash
 docker logs -f iarb
