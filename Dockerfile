@@ -6,6 +6,8 @@ COPY mysite/requirements /tmp/requirements
 
 RUN pip install --no-cache-dir -r /tmp/requirements/dev.txt
 
+COPY mysite/ ./
+
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=flask_app:app
 ENV FLASK_ENV=development
