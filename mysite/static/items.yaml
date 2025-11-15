@@ -1708,27 +1708,27 @@ DNAgun1: Bolstered DNA Splicer
 DNAgun2: Double Barreled DNA Splicer
 DNAgun3: Ergonomic DNA Splicer
 FoodHealth1: Nomwich
-FoodHealth3: Hot Dog
 FoodHealth2: Cheezy Pizza
-Peanut: Peanut
+FoodHealth3: Hot Dog
 FoodHealth4: Saucy Weiner
+FoodHealth5: Cranberry Jam
 FoodHealth6: Kebab Sticks
 FoodHealth7: Meat Pie
-FoodHealth10: Mountain Bread
+FoodHealth8: Crabby Cake Supreme  # Unreleased
 FoodHealth9: Yeti Ham
+FoodHealth10: Mountain Bread
 FoodHealth11: Sheepie Dairy
-FoodHealth13: Cupcake
 FoodHealth12: Spicy Space Ribs
+FoodHealth13: Cupcake
 FoodHealth14: Lemon Slice
 FoodHealth15: Grilled Cheese Nomwich
 FoodHealth16: Raw Nigiri
 FoodHealth17: Dumpling
 FoodHealth18: Saltwater Taffy
 FoodHealth19: Sugar Cookie
-FoodHealth5: Cranberry Jam
-FoodHealth8: Crabby Cake Supreme
-FoodEvent8: Milk Choco
 Meatloaf: Magic Meatloaf
+Peanut: Peanut
+FoodEvent8: Milk Choco
 FoodPotOr1: Small Strength Potion
 FoodPotOr2: Average Strength Potion
 FoodPotOr3: Decent Strength Potion
