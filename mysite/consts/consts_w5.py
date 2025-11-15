@@ -1,6 +1,6 @@
 import re
 
-from utils.text_formatting import numeralList, numberToLetter
+from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral, getItemCodeName
 
 artifact_tiers = ['Base', 'Ancient', 'Eldritch', 'Sovereign']
 max_sailing_artifact_level = len(artifact_tiers)
@@ -258,7 +258,7 @@ def _parse_gaming_superbits(raw_game_data):
         name_num = name_counts.get(name, 0) + 1
         name_counts[name] = name_num
         if name_num > 1:
-            name += " " + numeralList[name_num-1]
+            name += " " + numeral_list[name_num - 1]
 
         gaming_superbits_dict[name] = {
             "BonusText": bonus_text,
@@ -319,79 +319,96 @@ dungeon_jewelry_list = [
     "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", "DungEquipmentPendant4",  #WW unlocked legendary pendant
     "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",  #"Filler"
 ]  #This list was pulled from the items.yaml file
+
+#`QuestsToRECLAIM = function` in source. Last updated in v2.43 Nov 15
+# This only provides the codename of the quest. The rest was put together by hand by Trialpears + Scoli
+QuestsToRECLAIM = "Scripticus2 Glumlee3 Promotheus2 Stiltzcho3 Goldric5 Bandit_Bob3 Shuvelle4 Yondergreen4 Bill_Brr4 Promotheus4 Rocklyte3 Cactolyte4 Nebulyte4 Monolith2 Rocklyte1 Sussy_Gene1 Sussy_Gene2 Sussy_Gene3 Scripticus8 Sad_Urie1".split(" ")
 reclaimable_quest_items = {
     "CraftMat2": {
         "ItemName": "Crimson String",
         "QuestGiver": "Scripticus",
         "QuestName": "Hardcore Gamer Status, Here I Come!",
-        "QuestNameCoded": "Scripticus2"
+        "QuestNameCoded": QuestsToRECLAIM[0]  #'Scripticus2'
     },
     "EquipmentTools1": {
         "ItemName": "Junk Pickaxe",
         "QuestGiver": "Glumlee",
         "QuestName": "Literally Burning Your Money",
-        "QuestNameCoded": "Glumlee3"
+        "QuestNameCoded": QuestsToRECLAIM[1]  #'Glumlee3'
     },
-    "InvBag4": {
-        "ItemName": "Inventory Bag D",
+    'Quest5': {
+        "ItemName": "Class Certificate",
         "QuestGiver": "Promotheus",
-        "QuestName": "The Witcher, But Not Really",
-        "QuestNameCoded": "Promotheus4"
+        "QuestName": "Three Right Answers",
+        "QuestNameCoded": QuestsToRECLAIM[2]  #'Promotheus2'
     },
     "Quest6": {
         "ItemName": "Scouting Report",
         "QuestGiver": "Stiltzcho",
         "QuestName": "Investigator By Day, Prankster By Night",
-        "QuestNameCoded": "Stiltzcho3"
-    },
-    "Quest20": {
-        "ItemName": "Signed Arrest Warrant",
-        "QuestGiver": "Bandit Bob",
-        "QuestName": "Bringing Bob's Boxes",
-        "QuestNameCoded": "Bandit_Bob3"
+        "QuestNameCoded": QuestsToRECLAIM[3]  #'Stiltzcho3'
     },
     "Quest27": {
         "ItemName": "Bag o' Nuts",
         "QuestGiver": "Goldric",
         "QuestName": "Dress To Impress",
-        "QuestNameCoded": "Goldric5"
+        "QuestNameCoded": QuestsToRECLAIM[4]  #'Goldric5'
     },
-    "Trophy13": {
-        "ItemName": "Club Maestro",
-        "QuestGiver": "Cactolyte",
-        "QuestName": "Maestro! The Stro! Mman!",
-        "QuestNameCoded": "Cactolyte4"
+    "Quest20": {
+        "ItemName": "Signed Arrest Warrant",
+        "QuestGiver": "Bandit Bob",
+        "QuestName": "Bringing Bob's Boxes",
+        "QuestNameCoded": QuestsToRECLAIM[5]  #'Bandit_Bob3'
     },
     "Quest59": {
         "ItemName": "Shuvelle's Vote",
         "QuestGiver": "Shuvelle",
         "QuestName": "Mayoral Movie Taste",
-        "QuestNameCoded": "Shuvelle4"
+        "QuestNameCoded": QuestsToRECLAIM[6]  #'Shuvelle4'
     },
     "Quest60": {
         "ItemName": "Yondergreens Vote",
         "QuestGiver": "Yondergreen",
         "QuestName": "Legislative Action",
-        "QuestNameCoded": "Yondergreen4"
+        "QuestNameCoded": QuestsToRECLAIM[7]  #'Yondergreen4'
     },
     "Quest61": {
         "ItemName": "Bill Brr's Vote",
         "QuestGiver": "Bill Brr",
         "QuestName": "Coin Shenanigans",
-        "QuestNameCoded": "Bill_Brr4"
+        "QuestNameCoded": QuestsToRECLAIM[8]  #'Bill_Brr4'
     },
-    "SmithingHammerChisel3": {
-        "ItemName": "Onyx Tools",
-        "QuestGiver": "Monolith",
-        "QuestName": "Onyx Statue Crafting",
-        "QuestNameCoded": "Monolith2"
+    "InvBag4": {
+        "ItemName": "Inventory Bag D",
+        "QuestGiver": "Promotheus",
+        "QuestName": "The Witcher, But Not Really",
+        "QuestNameCoded": QuestsToRECLAIM[9]  #'Promotheus4'
+    },
+    #TODO: QuestsToRECLAIM[10] #'Rocklyte3'
+    "Trophy13": {
+        "ItemName": "Club Maestro",
+        "QuestGiver": "Cactolyte",
+        "QuestName": "Maestro! The Stro! Mman!",
+        "QuestNameCoded": QuestsToRECLAIM[11]  #'Cactolyte4'
     },
     "EquipmentNametag4": {
         "ItemName": "Vman Nametag",
         "QuestGiver": "Nebulyte",
         "QuestName": "VMAN ACHIEVED!",
-        "QuestNameCoded": "Nebulyte4"
-    }
+        "QuestNameCoded": QuestsToRECLAIM[12]  #'Nebulyte4'
+    },
+    "SmithingHammerChisel3": {
+        "ItemName": "Onyx Tools",
+        "QuestGiver": "Monolith",
+        "QuestName": "Onyx Statue Crafting",
+        "QuestNameCoded": QuestsToRECLAIM[13]  #'Monolith2'
+    },
+    #TODO: QuestsToRECLAIM[14] #'Rocklyte1'
+    #TODO: QuestsToRECLAIM[15] #'Sussy_Gene1'
+    #TODO: QuestsToRECLAIM[16] #'Sussy_Gene2'
+    #TODO: QuestsToRECLAIM[17] #'Sussy_Gene3'
+    #TODO: QuestsToRECLAIM[18] #'Scripticus8'
+    #TODO: QuestsToRECLAIM[19] #'Sad_Urie1'
 }
 slab_quest_rewards_all_chars = {
     'EquipmentPants16': {
@@ -446,7 +463,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Crimson String",
         "QuestGiver": "Scripticus",
         "QuestName": "Hardcore Gamer Status, Here I Come!",
-        "QuestNameCoded": "Scripticus2"
+        "QuestNameCoded": QuestsToRECLAIM[0]  #'Scripticus2'
     },
     'EquipmentHats7': {
         "ItemName": "Red Headband",
@@ -578,7 +595,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Class Certificate",
         "QuestGiver": "Promotheus",
         "QuestName": "Three Right Answers",
-        "QuestNameCoded": "Promotheus2"
+        "QuestNameCoded": QuestsToRECLAIM[2]
     },
     'EquipmentHats29': {
         "ItemName": "Slovakian Scare",
@@ -789,7 +806,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Signed Arrest Warrant",
         "QuestGiver": "Bandit_Bob",
         "QuestName": "Bringing Bob's Boxes",
-        "QuestNameCoded": "Bandit_Bob3"
+        "QuestNameCoded": QuestsToRECLAIM[5]  #'Bandit_Bob3'
     },
     'NPCtoken16': {
         "ItemName": "Bandit Bob Token",
@@ -819,7 +836,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Bag o Nuts",
         "QuestGiver": "Goldric",
         "QuestName": "Dress to Impress",
-        "QuestNameCoded": "Goldric5"
+        "QuestNameCoded": QuestsToRECLAIM[4]  #'Goldric5'
     },
     'NPCtoken21': {
         "ItemName": "Goldric Token",
@@ -1029,7 +1046,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Bill Brr's Vote",
         "QuestGiver": "Bill_Brr",
         "QuestName": "Coin Shenanigans",
-        "QuestNameCoded": "Bill_Brr4"
+        "QuestNameCoded": QuestsToRECLAIM[8]  #'Bill_Brr4'
     },
     'NPCtoken37': {
         "ItemName": "Bill Brr Token",
@@ -1065,7 +1082,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Yondergreens Vote",
         "QuestGiver": "Yondergreen",
         "QuestName": "Legislative Action",
-        "QuestNameCoded": "Yondergreen4"
+        "QuestNameCoded": QuestsToRECLAIM[7]  #'Yondergreen4'
     },
     'NPCtoken36': {
         "ItemName": "Yondergreen Token",
@@ -1073,12 +1090,11 @@ slab_quest_rewards_all_chars = {
         "QuestName": "Ad Solidarity Contract",
         "QuestNameCoded": "Yondergreen7"
     },
-
     'Quest59': {
         "ItemName": "Shuvelle's Vote",
         "QuestGiver": "Shuvelle",
         "QuestName": "Mayoral Movie Taste",
-        "QuestNameCoded": "Shuvelle4"
+        "QuestNameCoded": QuestsToRECLAIM[6]  #'Shuvelle4'
     },
     'NPCtoken35': {
         "ItemName": "Shuvelle Token",
@@ -1240,7 +1256,7 @@ slab_quest_rewards_all_chars = {
         "ItemName": "Onyx Tools",
         "QuestGiver": "Monolith",
         "QuestName": "Onyx Statue Crafting",
-        "QuestNameCoded": "Monolith2"
+        "QuestNameCoded": QuestsToRECLAIM[13]  #'Monolith2'
     },
     'Weight14': {
         "ItemName": "Fat Albert",
@@ -1368,13 +1384,13 @@ slab_quest_rewards_once = {
         "ItemName": "Club Maestro",
         "QuestGiver": "Cactolyte",
         "QuestName": "Maestro! The Stro! Mman!",
-        "QuestNameCoded": "Cactolyte4"
+        "QuestNameCoded": QuestsToRECLAIM[11]  #'Cactolyte4'
     },
     'EquipmentNametag4': {
         "ItemName": "Vman Nametag",
         "QuestGiver": "Nebulyte",
         "QuestName": "VMAN ACHIEVED!",
-        "QuestNameCoded": "Nebulyte4"
+        "QuestNameCoded": QuestsToRECLAIM[12]  #'Nebulyte4'
     },
 }
 npc_tokens = [
@@ -1385,118 +1401,93 @@ npc_tokens = [
     'NPCtoken32', 'NPCtoken31', 'NPCtoken34', 'NPCtoken35', 'NPCtoken36', 'NPCtoken38',
     'NPCtoken33', 'NPCtoken37'
 ]
+
 #`ShopNames = function` in source. Last updated in v2.43 Nov 15
 ShopNames = ["FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 Quest104 rtt0 ResetFrag".split(" "), "FoodHealth3 FoodHealth2 FoodHealth5 FoodPotOr2 FoodPotYe1 StoneA2 StampA12 EquipmentPendant12 Quest37 InvBag105 InvStorage8 InvStorage12 rtt0 ResetFrag".split(" "), "FoodHealth6 FoodHealth7 FoodHealth4 Quest19 BobJoePickle StoneW2 StoneA2 StoneT2 FoodPotOr2 FoodPotGr2 FoodPotRe2 InvBag106 InvStorage9 InvStorage10 InvStorage13 InvStorage15 SmithingHammerChisel2 StampC11 rtt0 ResetFrag Quest87".split(" "), "Line1 Weight1 Line5 Weight5 Weight10 Line10 Weight11 StoneT1 StoneT2 StampB8 StampA15 NPCtoken27 ResetFrag".split(" "), "FoodHealth10 FoodHealth9 FoodHealth11 TrapBoxSet1 WorshipSkull1 StoneW3 StoneA3 StoneT3 FoodPotOr3 FoodPotGr3 FoodPotRe3 InvBag107 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 rtt0 ResetFrag Quest57 Quest67 Whetstone".split(" "), "Quest65 Quest66 FoodHealth13 FoodHealth12 DNAgun0 StoneW4 StoneA4 StoneT4 FoodPotOr4 FoodPotGr4 FoodPotRe4 FoodPotYe4 InvBag108 StampB41 StampB38 StampC12 Quest83".split(" "), "FoodHealth14 FoodHealth15 OilBarrel6 StoneW5 StoneA5 StoneT5 StampC22 InvBag113 Quest84".split(" "), "BoneJoePickle Quest80 FoodHealth16 FoodHealth17 OilBarrel7 StoneW8 StoneA7 StoneT7 StampC10 InvBag114 InvStorage26 InvStorage27 InvStorage28".split(" "), "TrophyReplica0 EquipmentNametagReplica0 FoodHealth18 FoodHealth19 Quest103 StoneW9 StoneA8 StoneT8 StampC26 InvBag115 InvStorage29 InvStorage30 Quest105".split(" ")]
-vendor_items = {
-    'W1 Town': ShopNames[0],
-    'Tiki Shop': ShopNames[1],
-    'W2 Town': ShopNames[2],
-    'Faraway Piers': ShopNames[3],
-    'W3 Town': ShopNames[4],
-    'W4 Town': ShopNames[5],
-    'W5 Town': ShopNames[6],
-    'W6 Town': ShopNames[7],
-    'W7 Town': ShopNames[8]
+vendor_names = ['W1 Town', 'Tiki Shop', 'W2 Town', 'Faraway Piers', 'W3 Town', 'W4 Town', 'W5 Town', 'W6 Town', 'W7 Town']
+vendor_items = dict(zip(vendor_names, ShopNames))
+vendor_unlock_item = {
+    # vendor_names[0] unlocked by default
+    # vendor_names[1] unlocked by default
+    vendor_names[2]: 'Crystal1',
+    vendor_names[3]: 'Crystal1',
+    vendor_names[4]: 'Crystal2',
+    vendor_names[5]: 'Crystal3',
+    vendor_names[6]: 'Crystal4',
+    vendor_names[7]: 'Crystal5',
+    vendor_names[8]: 'Crystal6',
 }
-vendors = {
-    'W2 Town': 'Crystal1',
-    'Faraway Piers': 'Crystal1',
-    'W3 Town': 'Crystal2',
-    'W4 Town': 'Crystal3',
-    'W5 Town': 'Crystal4',
-    'W6 Town': 'Crystal5',
-    'W7 Town': 'Crystal6',
-}
-
+#`ItemToCraftNAME = function` in source. Last updated in v2.43 Nov 15
+ItemToCraftNAME = ["EquipmentPunching1 TestObj1 EquipmentBows1 EquipmentWands1 EquipmentHats1 EquipmentShirts1 EquipmentPants1 EquipmentShoes9 EquipmentTools2 MaxCapBag1 EquipmentToolsHatchet3 MaxCapBag7 EquipmentHats15 EquipmentPunching2 MaxCapBag8 MaxCapBagM2 EquipmentHats17 EquipmentShirts11 EquipmentPants2 EquipmentShoes1 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 TestObj7 EquipmentBows3 EquipmentWands2 EquipmentRings2 EquipmentTools3 MaxCapBag2 EquipmentToolsHatchet1 MaxCapBag9 EquipmentHats18 EquipmentShirts12 EquipmentPants3 EquipmentSmithingTabs2 EquipmentShirts2 EquipmentPendant10 EquipmentShoes15 EquipmentRings3 EquipmentHats8 FoodMining1 FoodChoppin1 EquipmentShoes7 EquipmentShirts10 EquipmentShirts20 OilBarrel5 EquipmentRings14 EquipmentPants15 EquipmentPants18 Peanut PeanutG InvBag102 EquipmentShirts25 EquipmentShirts24 EquipmentShirts3 BadgeG1 BadgeG2 BadgeG3 EquipmentHats67 NPCtoken1 NPCtoken2 NPCtoken3 EquipmentRings26 EquipmentHats22 EquipmentShirts18 EquipmentPants17 EquipmentShoes20 EquipmentPants22 EquipmentPants23 EquipmentPendant34 EquipmentPendant17 FishingRod2 MaxCapBagFi1 CatchingNet2 MaxCapBagB1 FishingRod3 MaxCapBagFi2 CatchingNet3 MaxCapBagB2 TrapBoxSet2 MaxCapBagTr1 WorshipSkull2 MaxCapBagS1".split(" "), "EquipmentHats28 EquipmentShirts13 EquipmentPants4 EquipmentShoes3 EquipmentPunching3 TestObj3 EquipmentBows5 EquipmentWands5 EquipmentTools5 MaxCapBag3 EquipmentToolsHatchet2 MaxCapBagT3 FishingRod4 MaxCapBagFi3 CatchingNet4 MaxCapBagB3 EquipmentRings11 EquipmentPendant16 MaxCapBagF3 MaxCapBagM4 EquipmentHats19 EquipmentShirts14 EquipmentPants5 EquipmentShoes4 EquipmentPendant26 EquipmentSword1 EquipmentBows6 EquipmentWands6 EquipmentTools6 MaxCapBag4 EquipmentToolsHatchet4 MaxCapBagT4 FishingRod5 MaxCapBagFi4 CatchingNet5 MaxCapBagB4 MaxCapBagF4 MaxCapBagM5 EquipmentShoes14 EquipmentSmithingTabs3 Quest13 Quest35 Bullet BulletB EquipmentHats64 TestObj13 EquipmentHats41 EquipmentHats26 EquipmentShirts40 EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShoes16 EquipmentShoes18 EquipmentShoes19 EquipmentShoes17 FoodFish1 FoodCatch1 Quest36 InvBag103 EquipmentHats52 EquipmentShirts26 EquipmentPants20 EquipmentShoes21 EquipmentRings16 EquipmentRings27 EquipmentPendant27 EquipmentPendant36 TrapBoxSet3 MaxCapBagTr3 WorshipSkull3 MaxCapBagS3 BadgeD1 BadgeD2 BadgeD3 ResetCompletedS NPCtoken28 NPCtoken29 NPCtoken30 EquipmentRings38".split(" "), "EquipmentHats53 EquipmentShirts15 EquipmentPants6 EquipmentShoes5 EquipmentPunching4 EquipmentSword2 EquipmentBows7 EquipmentWands3 EquipmentTools7 MaxCapBag5 EquipmentToolsHatchet5 MaxCapBagT5 FishingRod6 MaxCapBagFi5 CatchingNet6 MaxCapBagB5 TrapBoxSet4 MaxCapBagTr4 WorshipSkull4 MaxCapBagS4 EquipmentRings28 EquipmentRings29 MaxCapBagF5 MaxCapBagM6 EquipmentHats54 EquipmentShirts27 EquipmentPants21 EquipmentShoes22 EquipmentPunching5 EquipmentSword3 EquipmentBows8 EquipmentWands7 EquipmentTools11 MaxCapBagMi6 EquipmentToolsHatchet7 MaxCapBagT6 FishingRod7 MaxCapBagFi6 CatchingNet7 MaxCapBagB6 TrapBoxSet5 MaxCapBagTr5 WorshipSkull5 MaxCapBagS5 MaxCapBagF6 MaxCapBagM7 Trophy20 EquipmentSmithingTabs4 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 FoodTrapping1 FoodWorship1 InvBag109 EquipmentHats66 BadgeI1 BadgeI2 BadgeI3 Quest68 NPCtoken39 NPCtoken40 NPCtoken41 EquipmentPendant25 EquipmentHats68 EquipmentShirts6 EquipmentPants9 EquipmentShoes23".split(" "), "EquipmentHats70 EquipmentShirts32 EquipmentPants24 EquipmentShoes24 EquipmentPunching6 EquipmentSword4 EquipmentBows9 EquipmentWands8 EquipmentTools8 MaxCapBagMi7 EquipmentToolsHatchet6 MaxCapBagT7 FishingRod8 MaxCapBagFi7 CatchingNet8 MaxCapBagB7 TrapBoxSet6 MaxCapBagTr6 WorshipSkull6 MaxCapBagS6 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes31 EquipmentShoes33 MaxCapBagF7 MaxCapBagM8 EquipmentHats71 EquipmentShirts33 EquipmentPants25 EquipmentShoes25 EquipmentPunching7 EquipmentSword5 EquipmentBows10 EquipmentWands9 EquipmentTools12 MaxCapBagMi8 EquipmentToolsHatchet8 MaxCapBagT8 FishingRod9 MaxCapBagFi8 CatchingNet9 MaxCapBagB8 TrapBoxSet7 MaxCapBagTr7 WorshipSkull7 MaxCapBagS7 MaxCapBagF8 MaxCapBagM9 EquipmentRings30 EquipmentSmithingTabs5 InvBag111 DNAgun1 DNAgun2 DNAgun3 Timecandy2 Timecandy3 Timecandy4 Timecandy5 EquipmentHats74 EquipmentShirts34 EquipmentPants8 EquipmentShoes34".split(" "), "EquipmentHats77 EquipmentShirts35 EquipmentPants26 EquipmentShoes35 EquipmentPunching8 EquipmentSword6 EquipmentBows11 EquipmentWands10 EquipmentTools9 MaxCapBagMi9 EquipmentToolsHatchet9 MaxCapBagT9 FishingRod10 MaxCapBagFi9 CatchingNet10 MaxCapBagB9 TrapBoxSet8 MaxCapBagTr8 WorshipSkull9 MaxCapBagS8 MaxCapBagF9 MaxCapBagM10 Bullet3 EquipmentSmithingTabs6 EquipmentHats83 EquipmentShirts36 EquipmentPants27 EquipmentShoes36 EquipmentPunching9 EquipmentSword7 EquipmentBows12 EquipmentWands11 EquipmentPendant30 EquipmentHats107 EquipmentShoes39 EquipmentRings35".split(" "), "EquipmentHats105 EquipmentShirts37 EquipmentPants29 EquipmentShoes37 EquipmentPunching10 EquipmentSword8 EquipmentBows13 EquipmentWands12 EquipmentTools14 MaxCapBagMi10 EquipmentToolsHatchet12 MaxCapBagT10 FishingRod11 MaxCapBagFi10 CatchingNet11 MaxCapBagB10 TrapBoxSet9 MaxCapBagTr9 WorshipSkull10 MaxCapBagS9 MaxCapBagF10 MaxCapBagM11 EquipmentRings36 EquipmentPendant35 EquipmentHats106 EquipmentShirts38 EquipmentPants30 EquipmentShoes38 EquipmentPunching11 EquipmentSword9 EquipmentBows14 EquipmentWands13 EquipmentTools15 MaxCapBagMi11 EquipmentToolsHatchet10 MaxCapBagT11 FishingRod12 MaxCapBagFi11 CatchingNet12 MaxCapBagB11 TrapBoxSet10 MaxCapBagTr10 WorshipSkull11 MaxCapBagS10 MaxCapBagF11 MaxCapBagM12 FoodG13 EquipmentSmithingTabs7 EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40".split(" "), "EquipmentHats123 EquipmentShirts41 EquipmentPants32 EquipmentShoes41 EquipmentPunching12 EquipmentSword10 EquipmentBows15 EquipmentWands14 EquipmentTools16 MaxCapBagMi12 EquipmentToolsHatchet13 MaxCapBagT12 FishingRod13 MaxCapBagFi12 CatchingNet13 MaxCapBagB12 TrapBoxSet11 MaxCapBagTr11 WorshipSkull12 MaxCapBagS11 MaxCapBagF12 MaxCapBagM13 EquipmentRings36 EquipmentPendant35".split(" ")]
 anvil_items = {
-    "Anvil Tab I": "EquipmentPunching1 TestObj1 EquipmentBows1 EquipmentWands1 EquipmentHats1 EquipmentShirts1 EquipmentPants1 EquipmentShoes9 EquipmentTools2 MaxCapBag1 EquipmentToolsHatchet3 MaxCapBag7 EquipmentHats15 EquipmentPunching2 MaxCapBag8 MaxCapBagM2 EquipmentHats17 EquipmentShirts11 EquipmentPants2 EquipmentShoes1 EquipmentHats20 EquipmentHats3 EquipmentHats16 EquipmentHats21 TestObj7 EquipmentBows3 EquipmentWands2 EquipmentRings2 EquipmentTools3 MaxCapBag2 EquipmentToolsHatchet1 MaxCapBag9 EquipmentHats18 EquipmentShirts12 EquipmentPants3 EquipmentSmithingTabs2 EquipmentShirts2 EquipmentPendant10 EquipmentShoes15 EquipmentRings3 EquipmentHats8 FoodMining1 FoodChoppin1 EquipmentShoes7 EquipmentShirts10 EquipmentShirts20 OilBarrel5 EquipmentRings14 EquipmentPants15 EquipmentPants18 Peanut PeanutG InvBag102 EquipmentShirts25 EquipmentShirts24 EquipmentShirts3 BadgeG1 BadgeG2 BadgeG3 EquipmentHats67 NPCtoken1 NPCtoken2 NPCtoken3 EquipmentRings26 EquipmentHats22 EquipmentShirts18 EquipmentPants17 EquipmentShoes20 EquipmentPants22 EquipmentPants23 FillerMaterial EquipmentPendant17 FishingRod2 MaxCapBagFi1 CatchingNet2 MaxCapBagB1 FishingRod3 MaxCapBagFi2 CatchingNet3 MaxCapBagB2 TrapBoxSet2 MaxCapBagTr1 WorshipSkull2 MaxCapBagS1".split(" "),
-    "Anvil Tab II": "EquipmentHats28 EquipmentShirts13 EquipmentPants4 EquipmentShoes3 EquipmentPunching3 TestObj3 EquipmentBows5 EquipmentWands5 EquipmentTools5 MaxCapBag3 EquipmentToolsHatchet2 MaxCapBagT3 FishingRod4 MaxCapBagFi3 CatchingNet4 MaxCapBagB3 EquipmentRings11 EquipmentPendant16 MaxCapBagF3 MaxCapBagM4 EquipmentHats19 EquipmentShirts14 EquipmentPants5 EquipmentShoes4 EquipmentPendant26 EquipmentSword1 EquipmentBows6 EquipmentWands6 EquipmentTools6 MaxCapBag4 EquipmentToolsHatchet4 MaxCapBagT4 FishingRod5 MaxCapBagFi4 CatchingNet5 MaxCapBagB4 MaxCapBagF4 MaxCapBagM5 FillerMaterial EquipmentSmithingTabs3 Quest13 Quest35 Bullet BulletB EquipmentHats64 TestObj13 EquipmentHats41 EquipmentHats26 FillerMaterial EquipmentShirts5 EquipmentShirts23 EquipmentShirts22 EquipmentShoes16 EquipmentShoes18 EquipmentShoes19 EquipmentShoes17 FoodFish1 FoodCatch1 Quest36 InvBag103 EquipmentHats52 EquipmentShirts26 EquipmentPants20 EquipmentShoes21 EquipmentRings16 EquipmentRings27 EquipmentPendant27 FillerMaterial TrapBoxSet3 MaxCapBagTr3 WorshipSkull3 MaxCapBagS3 BadgeD1 BadgeD2 BadgeD3 ResetCompletedS NPCtoken28 NPCtoken29 NPCtoken30 FillerMaterial".split(" "),
-    "Anvil Tab III": "EquipmentHats53 EquipmentShirts15 EquipmentPants6 EquipmentShoes5 EquipmentPunching4 EquipmentSword2 EquipmentBows7 EquipmentWands3 EquipmentTools7 MaxCapBag5 EquipmentToolsHatchet5 MaxCapBagT5 FishingRod6 MaxCapBagFi5 CatchingNet6 MaxCapBagB5 TrapBoxSet4 MaxCapBagTr4 WorshipSkull4 MaxCapBagS4 EquipmentRings28 EquipmentRings29 MaxCapBagF5 MaxCapBagM6 EquipmentHats54 EquipmentShirts27 EquipmentPants21 EquipmentShoes22 EquipmentPunching5 EquipmentSword3 EquipmentBows8 EquipmentWands7 EquipmentTools11 MaxCapBagMi6 EquipmentToolsHatchet7 MaxCapBagT6 FishingRod7 MaxCapBagFi6 CatchingNet7 MaxCapBagB6 TrapBoxSet5 MaxCapBagTr5 WorshipSkull5 MaxCapBagS5 MaxCapBagF6 MaxCapBagM7 Trophy20 EquipmentSmithingTabs4 EquipmentHats61 EquipmentHats58 EquipmentHats59 EquipmentHats60 EquipmentShirts31 EquipmentShirts28 EquipmentShirts29 EquipmentShirts30 FoodTrapping1 FoodWorship1 InvBag109 EquipmentHats66 BadgeI1 BadgeI2 BadgeI3 Quest68 NPCtoken39 NPCtoken40 NPCtoken41 EquipmentPendant25 EquipmentHats68 EquipmentShirts6 EquipmentPants9 EquipmentShoes23".split(" "),
-    "Anvil Tab IV": "EquipmentHats70 EquipmentShirts32 EquipmentPants24 EquipmentShoes24 EquipmentPunching6 EquipmentSword4 EquipmentBows9 EquipmentWands8 EquipmentTools8 MaxCapBagMi7 EquipmentToolsHatchet6 MaxCapBagT7 FishingRod8 MaxCapBagFi7 CatchingNet8 MaxCapBagB7 TrapBoxSet6 MaxCapBagTr6 WorshipSkull6 MaxCapBagS6 EquipmentShoes26 EquipmentShoes27 EquipmentShoes28 EquipmentShoes29 EquipmentShoes31 EquipmentShoes33 MaxCapBagF7 MaxCapBagM8 EquipmentHats71 EquipmentShirts33 EquipmentPants25 EquipmentShoes25 EquipmentPunching7 EquipmentSword5 EquipmentBows10 EquipmentWands9 EquipmentTools12 MaxCapBagMi8 EquipmentToolsHatchet8 MaxCapBagT8 FishingRod9 MaxCapBagFi8 CatchingNet9 MaxCapBagB8 TrapBoxSet7 MaxCapBagTr7 WorshipSkull7 MaxCapBagS7 MaxCapBagF8 MaxCapBagM9 FillerMaterial EquipmentSmithingTabs5 InvBag111 DNAgun1 DNAgun2 DNAgun3 EquipmentRings30 FillerMaterial FillerMaterial FillerMaterial EquipmentHats74 EquipmentShirts34 EquipmentPants8 EquipmentShoes34".split(" "),
-    "Anvil Tab V": "EquipmentHats77 EquipmentShirts35 EquipmentPants26 EquipmentShoes35 EquipmentPunching8 EquipmentSword6 EquipmentBows11 EquipmentWands10 EquipmentTools9 MaxCapBagMi9 EquipmentToolsHatchet9 MaxCapBagT9 FishingRod10 MaxCapBagFi9 CatchingNet10 MaxCapBagB9 TrapBoxSet8 MaxCapBagTr8 WorshipSkull9 MaxCapBagS8 MaxCapBagF9 MaxCapBagM10 Bullet3 EquipmentSmithingTabs6 EquipmentHats83 EquipmentShirts36 EquipmentPants27 EquipmentShoes36 EquipmentPunching9 EquipmentSword7 EquipmentBows12 EquipmentWands11 EquipmentPendant30 EquipmentHats107 EquipmentShoes39 EquipmentRings35".split(" "),
-    "Anvil Tab VI": "EquipmentHats105 EquipmentShirts37 EquipmentPants29 EquipmentShoes37 EquipmentPunching10 EquipmentSword8 EquipmentBows13 EquipmentWands12 EquipmentTools14 MaxCapBagMi10 EquipmentToolsHatchet12 MaxCapBagT10 FishingRod11 MaxCapBagFi10 CatchingNet11 MaxCapBagB10 TrapBoxSet9 MaxCapBagTr9 WorshipSkull10 MaxCapBagS9 MaxCapBagF10 MaxCapBagM11 EquipmentRings36 FillerMaterial EquipmentHats106 EquipmentShirts38 EquipmentPants30 EquipmentShoes38 EquipmentPunching11 EquipmentSword9 EquipmentBows14 EquipmentWands13 EquipmentTools15 MaxCapBagMi11 EquipmentToolsHatchet10 MaxCapBagT11 FishingRod12 MaxCapBagFi11 CatchingNet12 MaxCapBagB11 TrapBoxSet10 MaxCapBagTr10 WorshipSkull11 MaxCapBagS10 MaxCapBagF11 MaxCapBagM12 FoodG13 EquipmentSmithingTabs7".split(" ")
-}  #anvil_items last pulled from code in 2.12. Search for: ItemToCraftNAME = function ()
+    f'Anvil Tab {number_to_numeral(index+1)}': sublist
+    for index, sublist in enumerate(ItemToCraftNAME)
+}
 anvil_tabs = {
-    "Anvil Tab II": "EquipmentSmithingTabs2",
-    "Anvil Tab III": "EquipmentSmithingTabs3",
-    "Anvil Tab IV": "EquipmentSmithingTabs4",
-    "Anvil Tab V":"EquipmentSmithingTabs5",
-    "Anvil Tab VI": "EquipmentSmithingTabs6",
-    #"Anvil Tab VII": "EquipmentSmithingTabs7",
+    key: f'EquipmentSmithingTabs{index+1}'
+    for index, key in enumerate(anvil_items.keys())
+    if key not in ['Anvil Tab I']
 }
 
-def find_vendor_name(item_codename):
+def get_vendor_name(item_codename):
     for vendor_name, sold_items in vendor_items.items():
         if item_codename in sold_items:
             return vendor_name
+    return 'UnknownVendor'
 
 
+# This was hand gathered from https://idleon.wiki/wiki/Smithing/Anvil_Tab_6 and looking at the Recipe From list.
+# Anything not listed as "Start" goes into the list
+# Alternatively, you can look in `AnvilRecipeHints` to find something like "Found_from_xyz_monster_rare_drop"
+# and match that index to ItemToCraftNAME
 filter_recipes = {
-    "Lucky Lad": ["Luckier Lad"],
-    "Beginner Recipe": [
-        "Copper Band", "Iron Boots", "Steel Band", "Goo Galoshes", "Fur Shirt", "Dooble Goopi", "Bleached Designer Wode Patch Pants",
-        "Serrated Rex Ring", "Fishing Overalls", "Bandito Pantaloon",
-        "Blue Tee", "Peanut", "Golden Peanut",  #IDK about including these. They're technically from quests, but maybe they count too? :shrug:
-    ],
-    "Novice Recipe": [
-        "Defenders Dignity", "Strung Bludgeon", "Polished Bludgeon", "Googley Eyes", "Dootjat Eye", "Protectors Pride", "Skullfish Pendant",
-        "Star Talent Reset Potion"
-    ],
-    "Apprentice Recipe": [
-        "Midnight Stopwatch", "Dawn Stopwatch",
-    ],
-    "Journeyman Recipe": [
-        "Bolstered DNA Splicer", "Double Barreled DNA Splicer", "Ergonomic DNA Splicer",
-    ],
-    "Adept Recipe": [
-        "Magma Core Headdress", "Magma Core Wavemaille", "Magma Core Battleskirt", "Magma Core Lavarunners",
-        "Molten Core Knucklers", "Magma Maul", "Sediment Core Grunkler", "Cattle Core Soothsayer Staff",
-        "Colossal Food Pouch", "Colossal Matty Pouch", "Coldseeker Bullet",
-        "Shiny Bored Beanie", "Divvy Slippers", "Zero Point Stopwatch"
-    ],
-    "Master Recipe": [
-        "Pentastud Slapper", "Elegant Spear", "Pristine Longbow", "Sparky Marble Staff", "Demented Emperor Opal",
-        "Crown of the Gods", "Robe of the Gods", "Tatters of the Gods", "Drip of the Gods",
-        "Mittens of the Gods", "Massive Godbreaker", "Doublestring Godshooter", "Magnifique Godcaster", "Golden Cake"
-    ],
+    'Trophy2': ['Trophy20'],
+    'SmithingRecipes1': ['EquipmentRings2', 'EquipmentShoes15', 'EquipmentRings3', 'EquipmentShoes7', 'EquipmentShirts10', 'EquipmentRings14', 'EquipmentPants15', 'EquipmentRings26', 'EquipmentPants22', 'EquipmentPants23', 'EquipmentShirts2', 'Peanut', 'PeanutG'],
+    'SmithingRecipes2': ['EquipmentRings11', 'EquipmentPendant16', 'EquipmentPendant26', 'Quest35', 'Quest36', 'EquipmentRings27', 'EquipmentPendant27', 'ResetCompletedS'],
+    'SmithingRecipes3': ['EquipmentRings28', 'EquipmentRings29'],
+    'SmithingRecipes4': ['DNAgun1', 'DNAgun2', 'DNAgun3'],
+    'SmithingRecipes5': ['EquipmentHats77', 'EquipmentShirts35', 'EquipmentPants26', 'EquipmentShoes35', 'EquipmentPunching8', 'EquipmentSword6', 'EquipmentBows11', 'EquipmentWands10', 'MaxCapBagF9', 'MaxCapBagM10', 'Bullet3', 'EquipmentHats107', 'EquipmentShoes39', 'EquipmentRings35'],
+    'SmithingRecipes6': ['EquipmentPunching10', 'EquipmentSword8', 'EquipmentBows13', 'EquipmentWands12', 'EquipmentRings36', 'EquipmentHats106', 'EquipmentShirts38', 'EquipmentPants30', 'EquipmentShoes38', 'EquipmentPunching11', 'EquipmentSword9', 'EquipmentBows14', 'EquipmentWands13', 'FoodG13'],
+    'SmithingRecipes7': ['EquipmentHats123', 'EquipmentShirts41', 'EquipmentPants32', 'EquipmentShoes41', 'EquipmentPunching12', 'EquipmentSword10', 'EquipmentBows15', 'EquipmentWands14']
 }
 filter_never = [
     #Statues
-    "Power Statue", "Speed Statue", "Mining Statue", "Feasty Statue", "Health Statue", "Kachow Statue", "Lumberbob Statue",
-    "Thicc Skin Statue", "Oceanman Statue", "Ol Reliable Statue", "Exp Book Statue", "Anvil Statue", "Cauldron Statue", "Beholder Statue", "Bullseye Statue",
-    "Box Statue", "Twosoul Statue", "EhExPee Statue", "Seesaw Statue",
-    "Pecunia Statue", "Mutton Statue", "Egg Statue",
-    "Battleaxe Statue", "Spiral Statue", "Boat Statue",
-    "Compost Statue", "Stealth Statue", "Essence Statue",
+    'EquipmentStatues1', 'EquipmentStatues2', 'EquipmentStatues3', 'EquipmentStatues4', 'EquipmentStatues5', 'EquipmentStatues6', 'EquipmentStatues7',
+    'EquipmentStatues8', 'EquipmentStatues9', 'EquipmentStatues10', 'EquipmentStatues11', 'EquipmentStatues12', 'EquipmentStatues13', 'EquipmentStatues14', 'EquipmentStatues15',
+    'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues18', 'EquipmentStatues19',
+    'EquipmentStatues20', 'EquipmentStatues21', 'EquipmentStatues22',
+    'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25',
+    'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28',
+    'EquipmentStatues29', 'EquipmentStatues30',
+    'EquipmentStatues31', 'EquipmentStatues32',
     #Golden Foods
-    "Golden Jam", "Golden Kebabs", "Golden Meat Pie", "Golden Nomwich", "Golden Ham", "Golden Bread", "Golden Ribs", "Golden Cheese",
-    "Golden Grilled Cheese Nomwich", "Golden Hampter Gummy Candy", "Golden Nigiri", "Golden Dumpling", "Golden Cake", "Gold Food Coupon",
+    'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'Gfoodcoupon',
     #Choppin Efficiency talent
-    "Grass Leaf",
+    'Leaf1',
     #Consumables
-    "Gem", "Gem Envelope", "Small Experience Balloon", "Medium Experience Balloon", "Large Experience Balloon",
-    "1 HR Time Candy", "2 HR Time Candy", "4 HR Time Candy", "12 HR Time Candy", "24 HR Time Candy", "72 HR Time Candy",
-    "Steamy Time Candy", "Spooky Time Candy", "Cosmic Time Candy",
-    "Forest Villa Key", "Efaunt's Tomb Key", "Chizoar's Cavern Key", "Troll's Enclave Key", "Kruk's Volcano Key",
-    "Silver Pen", "Pet Egg", "Cooking Ladle",
-    "Candy Canes", "Aqua Pearl", "Mistleberries",
-    "Dungeon Credits", "Dungeon Credits Flurbo Edition",
+    'PremiumGem', 'Quest71', 'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',
+    'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9', 'Timecandy10',
+    'Key1', 'Key2', 'Key3', 'Key4', 'Key5',
+    'SilverPen', 'PetEgg', 'Ladle',
+    'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
+    'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',
+    'DungCredits1', 'DungCredits2',
     #W1 Rares
-    "Golden Plop", "Woodular Circle", "Red Frisbee",
+    'Sewers1b', 'TreeInterior1b', 'Quest15',
     #W2 Rares
-    "Glass Shard", "Nuget Cake", "Ghost", "Midnight Cookie",
+    'DesertA1b', 'DesertA3b', 'DesertC2b', 'MidnightCookie',
     #W3 Rares
-    "Ice Age 3", "Black Lense",
+    'SnowB2a', 'SnowC4a',
     #W4 Rares
-    "Lost Batteries", "Pearler Shell",
+    'GalaxyA2b', 'GalaxyC1b',
     #W5 Rares
-    "Royal Suggma Urn", "Hampter", "OJ Juice", "Magma Obol of Big Time Domeo",
+    'LavaA1b', 'LavaA5b', 'LavaB3b', 'ObolLava',
     #W6 Rares
-    "Stacked Rice Cake", "Dark Lantern",
-    #Event Lootboxes
-    "Event Point",
-    "Summer Cooler", "Beach Oyster", "Golden Oyster",
-    "Choco Box", "Lovey Dovey Letter",
-    "Egg Capsule", "Gummy Bunny", "Goldegg Capsule",
-    "Phone Box", "Spring Baggie", "Anniversary Box", "Falloween Treat", "2021 Giftmas Box",
+    'SpiA2b', 'SpiB2b',
+    #Event Lootboxes and Drops
+    'Quest89',
+    'Quest49', 'Quest50', 'Quest88',
+    'Quest40', 'Quest39',
+    'Quest42', 'Quest43', 'Quest44',
+    'Quest70', 'Quest75', 'Quest85', 'Quest79', 'Quest64'
 ]

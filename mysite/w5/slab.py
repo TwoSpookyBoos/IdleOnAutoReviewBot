@@ -9,7 +9,7 @@ from consts.consts_autoreview import (
 from consts.consts_general import max_characters
 from consts.consts_w5 import slab_list, dungeon_drops_list, max_dungeon_weapons_available, dungeon_weapons_list, \
     max_dungeon_armors_available, dungeon_armors_list, max_dungeon_jewelry_available, dungeon_jewelry_list, reclaimable_quest_items, slab_quest_rewards_all_chars, \
-    slab_quest_rewards_once, vendor_items, vendors, anvil_items, anvil_tabs
+    slab_quest_rewards_once, vendor_items, vendor_unlock_item, anvil_items, anvil_tabs
 
 logger = get_logger(__name__)
 
@@ -172,24 +172,24 @@ def getSlabProgressionTierAdviceGroups():
                 continue
 
     # Replace any locked Vendors with unlock note
-    for vendor_name in vendors:
-        if vendors[vendor_name] not in session_data.account.registered_slab:
-            slab_AdviceDict["Vendors"][vendor_name] = [
+    for vendor_name, required_item in vendor_unlock_item.items():
+        if required_item not in session_data.account.registered_slab:
+            slab_AdviceDict['Vendors'][vendor_name] = [
                 Advice(
                     label=f"{vendor_name} purchases hidden until Boss Crystal registered in The Slab",
-                    picture_class=getItemDisplayName(vendors[vendor_name]),
+                    picture_class=getItemDisplayName(required_item),
                     progression=0,
                     goal=1
                 )
             ]
 
     # Replace any locked Anvil Tabs with unlock note
-    for subgroup in anvil_tabs:
-        if anvil_tabs[subgroup] not in session_data.account.registered_slab:
-            slab_AdviceDict["Anvil"][subgroup] = [
+    for display_name, code_name in anvil_tabs.items():
+        if code_name not in session_data.account.registered_slab:
+            slab_AdviceDict['Anvil'][display_name] = [
                 Advice(
-                    label=f"{subgroup} craftables hidden until tab registered in The Slab",
-                    picture_class=subgroup,
+                    label=f"{display_name} craftables hidden until Tab registered in The Slab",
+                    picture_class=display_name,
                     progression=0,
                     goal=1
                 )
