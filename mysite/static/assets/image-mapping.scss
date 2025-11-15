@@ -120,8 +120,12 @@ $id-map: map-merge($id-map, $all-summoning);
 
 //W7
 @import "spelunking";
+@import "clam";
+@import "coral";
 
 $id-map: map-merge($id-map, $all-spelunking);
+$id-map: map-merge($id-map, $all-clam);
+$id-map: map-merge($id-map, $all-coral);
 
 
 @each $class, $link in $id-map {

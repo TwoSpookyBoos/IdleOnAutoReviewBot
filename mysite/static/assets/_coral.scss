@@ -1,0 +1,12 @@
+$coral-resources: (
+    coral:              img('data/Coral0.png'),
+    vibrant-coral:      img('data/Coral1.png'),
+    glowing-coral:      img('data/Coral2.png'),
+    neon-coral:         img('data/Coral3.png'),
+);
+
+$coral-misc: (
+
+);
+
+$all-coral: map-merge($coral-resources, $coral-misc);

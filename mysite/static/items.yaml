@@ -741,6 +741,8 @@ InvStorage25: Storage Chest 25
 InvStorage26: Storage Chest 26
 InvStorage27: Storage Chest 27
 InvStorage28: Storage Chest 28
+InvStorage29: Storage Chest 29
+InvStorage30: Storage Chest 30
 InvStorage31: Storage Chest 90
 InvStorage32: Storage Chest 91
 InvStorage33: Storage Chest 92
@@ -1198,9 +1200,16 @@ w7A9: Demonflesh
 w7A10: Fishfork
 w7A11: Crabclaw
 w7A12: Guardian Mace
+ClamPearl0: Clam Pearl
+ClamPearl1: Pure Pearl
 Coral1: Vibrant Coral
 Coral2: Glowing Coral
 Coral3: Neon Coral
+Coral4: Coral4
+Coral5: Coral5
+Coral6: Coral6
+Coral7: Coral7
+Coral8: Coral8
 GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
