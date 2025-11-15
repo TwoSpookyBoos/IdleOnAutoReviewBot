@@ -309,15 +309,15 @@ dungeon_weapons_list = [
 ]
 max_dungeon_armors_available = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeon_armors_list = [
-    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3",  #"DungEquipmentHats4",
-    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3",  #"DungEquipmentShirt4",
-    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3",  #"DungEquipmentPants4",
-    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3",  #"DungEquipmentShoes4",
+    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", "DungEquipmentHats4",  #DB unlocked Legendary hat
+    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", "DungEquipmentShirt4",  #AC unlocked Legendary shirt
+    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3",  #"DungEquipmentPants4",  #Royal Guardian
+    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3",  #"DungEquipmentShoes4",  #"Filler"
 ]  #This list was pulled from the items.yaml file
 max_dungeon_jewelry_available = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
 dungeon_jewelry_list = [
-    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3",  #"DungEquipmentPendant4",
-    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",
+    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", "DungEquipmentPendant4",  #WW unlocked legendary pendant
+    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",  #"Filler"
 ]  #This list was pulled from the items.yaml file
 reclaimable_quest_items = {
     "CraftMat2": {
