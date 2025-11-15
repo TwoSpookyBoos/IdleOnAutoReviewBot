@@ -1385,24 +1385,27 @@ npc_tokens = [
     'NPCtoken32', 'NPCtoken31', 'NPCtoken34', 'NPCtoken35', 'NPCtoken36', 'NPCtoken38',
     'NPCtoken33', 'NPCtoken37'
 ]
-ShopNames = ["FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 rtt0 ResetFrag".split(" "), "FoodHealth3 FoodHealth2 FoodHealth5 FoodPotOr2 FoodPotYe1 StoneA2 StampA12 EquipmentPendant12 Quest37 InvBag105 InvStorage8 InvStorage12 rtt0 ResetFrag".split(" "), "FoodHealth6 FoodHealth7 FoodHealth4 Quest19 BobJoePickle StoneW2 StoneA2 StoneT2 FoodPotOr2 FoodPotGr2 FoodPotRe2 InvBag106 InvStorage9 InvStorage10 InvStorage13 InvStorage15 SmithingHammerChisel2 StampC11 rtt0 ResetFrag Quest87".split(" "), "Line1 Weight1 Line5 Weight5 Weight10 Line10 Weight11 StoneT1 StoneT2 StampB8 StampA15 NPCtoken27 ResetFrag".split(" "), "FoodHealth10 FoodHealth9 FoodHealth11 TrapBoxSet1 WorshipSkull1 StoneW3 StoneA3 StoneT3 FoodPotOr3 FoodPotGr3 FoodPotRe3 InvBag107 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 rtt0 ResetFrag Quest57 Quest67 Whetstone".split(" "), "Quest65 Quest66 FoodHealth13 FoodHealth12 DNAgun0 StoneW4 StoneA4 StoneT4 FoodPotOr4 FoodPotGr4 FoodPotRe4 FoodPotYe4 InvBag108 StampB41 StampB38 StampC12 Quest83".split(" "), "FoodHealth14 FoodHealth15 OilBarrel6 StoneW5 StoneA5 StoneT5 StampC22 InvBag113 Quest84".split(" "), "BoneJoePickle Quest80 FoodHealth16 FoodHealth17 OilBarrel7 StoneW8 StoneA7 StoneT7 StampC10 InvBag114 InvStorage26 InvStorage27 InvStorage28".split(" ")]
+#`ShopNames = function` in source. Last updated in v2.43 Nov 15
+ShopNames = ["FoodHealth1 FoodHealth3 FoodHealth2 CraftMat3 FoodPotMana1 FoodPotOr1 FoodPotRe1 FoodPotGr1 OilBarrel1 StoneW1 StoneA1 StoneT1 EquipmentRings7 EquipmentStatues1 SmithingHammerChisel StampA5 StampA6 StampA3 InvBag104 InvStorage2 InvStorage6 InvStorage7 Quest86 Quest104 rtt0 ResetFrag".split(" "), "FoodHealth3 FoodHealth2 FoodHealth5 FoodPotOr2 FoodPotYe1 StoneA2 StampA12 EquipmentPendant12 Quest37 InvBag105 InvStorage8 InvStorage12 rtt0 ResetFrag".split(" "), "FoodHealth6 FoodHealth7 FoodHealth4 Quest19 BobJoePickle StoneW2 StoneA2 StoneT2 FoodPotOr2 FoodPotGr2 FoodPotRe2 InvBag106 InvStorage9 InvStorage10 InvStorage13 InvStorage15 SmithingHammerChisel2 StampC11 rtt0 ResetFrag Quest87".split(" "), "Line1 Weight1 Line5 Weight5 Weight10 Line10 Weight11 StoneT1 StoneT2 StampB8 StampA15 NPCtoken27 ResetFrag".split(" "), "FoodHealth10 FoodHealth9 FoodHealth11 TrapBoxSet1 WorshipSkull1 StoneW3 StoneA3 StoneT3 FoodPotOr3 FoodPotGr3 FoodPotRe3 InvBag107 InvStorage16 InvStorage17 InvStorage18 InvStorage19 InvStorage20 InvStorage21 rtt0 ResetFrag Quest57 Quest67 Whetstone".split(" "), "Quest65 Quest66 FoodHealth13 FoodHealth12 DNAgun0 StoneW4 StoneA4 StoneT4 FoodPotOr4 FoodPotGr4 FoodPotRe4 FoodPotYe4 InvBag108 StampB41 StampB38 StampC12 Quest83".split(" "), "FoodHealth14 FoodHealth15 OilBarrel6 StoneW5 StoneA5 StoneT5 StampC22 InvBag113 Quest84".split(" "), "BoneJoePickle Quest80 FoodHealth16 FoodHealth17 OilBarrel7 StoneW8 StoneA7 StoneT7 StampC10 InvBag114 InvStorage26 InvStorage27 InvStorage28".split(" "), "TrophyReplica0 EquipmentNametagReplica0 FoodHealth18 FoodHealth19 Quest103 StoneW9 StoneA8 StoneT8 StampC26 InvBag115 InvStorage29 InvStorage30 Quest105".split(" ")]
 vendor_items = {
-    "W1 Town": ShopNames[0],
-    "Tiki Shop": ShopNames[1],
-    "W2 Town": ShopNames[2],
-    "Faraway Piers": ShopNames[3],
-    "W3 Town": ShopNames[4],
-    "W4 Town": ShopNames[5],
-    "W5 Town": ShopNames[6],
-    "W6 Town": ShopNames[7]
-}  #vendor_items last pulled from code in 2.35. Search for: ShopNames = function ()
+    'W1 Town': ShopNames[0],
+    'Tiki Shop': ShopNames[1],
+    'W2 Town': ShopNames[2],
+    'Faraway Piers': ShopNames[3],
+    'W3 Town': ShopNames[4],
+    'W4 Town': ShopNames[5],
+    'W5 Town': ShopNames[6],
+    'W6 Town': ShopNames[7],
+    'W7 Town': ShopNames[8]
+}
 vendors = {
-    "W2 Town": "Crystal1",
-    "Faraway Piers": "Crystal1",
-    "W3 Town": "Crystal2",
-    "W4 Town": "Crystal3",
-    "W5 Town": "Crystal4",
-    "W6 Town": "Crystal5"
+    'W2 Town': 'Crystal1',
+    'Faraway Piers': 'Crystal1',
+    'W3 Town': 'Crystal2',
+    'W4 Town': 'Crystal3',
+    'W5 Town': 'Crystal4',
+    'W6 Town': 'Crystal5',
+    'W7 Town': 'Crystal6',
 }
 
 anvil_items = {
