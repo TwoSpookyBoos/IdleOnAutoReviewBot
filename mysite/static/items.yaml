@@ -1728,7 +1728,14 @@ FoodHealth18: Saltwater Taffy
 FoodHealth19: Sugar Cookie
 Meatloaf: Magic Meatloaf
 Peanut: Peanut
-FoodEvent8: Milk Choco
+FoodPotGr1: Small Speed Potion
+FoodPotGr2: Average Speed Potion
+FoodPotGr3: Decent Speed Potion
+FoodPotGr4: Potent Speed Potion
+FoodPotMana1: Small Mana Potion
+FoodPotMana2: Average Mana Potion
+FoodPotMana3: Decent Mana Potion
+FoodPotMana4: Potent Mana Potion
 FoodPotOr1: Small Strength Potion
 FoodPotOr2: Average Strength Potion
 FoodPotOr3: Decent Strength Potion
@@ -1737,39 +1744,35 @@ FoodPotRe1: Small Life Potion
 FoodPotRe2: Average Life Potion
 FoodPotRe3: Decent Life Potion
 FoodPotRe4: Potent Life Potion
-FoodPotGr1: Small Speed Potion
-FoodPotGr2: Average Speed Potion
-FoodPotGr3: Decent Speed Potion
-FoodPotGr4: Potent Speed Potion
-FoodEvent7: Minto Choco
-FoodPotMana1: Small Mana Potion
-FoodPotMana2: Average Mana Potion
-FoodPotMana3: Decent Mana Potion
-FoodPotMana4: Potent Mana Potion
 FoodPotYe1: Small EXP Potion
 FoodPotYe2: Average EXP Potion
 FoodPotYe3: Decent EXP Potion
 FoodPotYe4: Potent EXP Potion
 FoodPotYe5: Quotient EXP Potion
-FoodEvent6: Lemony Choco
-Pearl3: Shiny Pearl
 FoodMining1: Icing Ironbite
-FoodEvent1: Giftybread Man
-Pearl2: Stained Pearl
 FoodChoppin1: Saucy Logfries
-FoodEvent2: Chogg Nog
 FoodFish1: Slurpin Herm
-FoodEvent3: Candy Canes
-Pearl1: Aqua Pearl
 FoodCatch1: Buttered Toasted Butter
-FoodEvent4: Mistleberries
 FoodTrapping1: Critter Numnums
 FoodWorship1: Soulble Gum
+FoodEvent1: Giftybread Man
+FoodEvent2: Chogg Nog
+FoodEvent3: Candy Canes
+FoodEvent4: Mistleberries
+FoodEvent5: Cherry Choco
+FoodEvent6: Lemony Choco
+FoodEvent7: Minto Choco
+FoodEvent8: Milk Choco
+Pearl1: Aqua Pearl
+Pearl2: Stained Pearl
+Pearl3: Shiny Pearl
+Pearl4: Black Pearl
+Pearl5: Holy Pearl
+Pearl6: Divinity Pearl
 Bullet: Bullet
 BulletB: FMJ Bullet
 Bullet3: Coldseeker Bullet
 MidnightCookie: Midnight Cookie
-FoodEvent5: Cherry Choco
 PeanutG: Golden Peanut
 FoodG1: Golden Jam
 FoodG2: Golden Kebabs
@@ -1858,9 +1861,6 @@ Quest50: Beach Oyster
 Quest51: Skull Coin
 Quest52: Coin
 PalmTreeD: Palm Tree Log
-Pearl4: Black Pearl
-Pearl5: Holy Pearl
-Pearl6: Divinity Pearl
 Quest53: Meat Cube
 Quest54: Sand Pile
 Quest55: Buried Treasure
