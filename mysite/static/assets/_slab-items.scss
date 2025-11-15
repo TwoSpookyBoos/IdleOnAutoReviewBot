@@ -393,18 +393,20 @@ $equipment-weapons: (
     tempest-bow-of-grass: map-get($compass-equipment, tempest-bow-of-grass),
 
     // Wands
-    gnarled-wand: img('wiki/Gnarled_Wand.png'),
-    quarterstaff: img('wiki/Quarterstaff.png'),
-    starlight: img('wiki/Starlight.png'),
-    crows-nest: img('wiki/Crows_Nest.png'),
-    spriggly-storm: img('wiki/Spriggly_Storm.png'),
-    grey-gatsby: img('wiki/Grey_Gatsby.png'),
-    skullslip-hallow: img('wiki/Skullslip_Hallow.png'),
-    diabolical-opticule: img('wiki/Diabolical_Opticule.png'),
-    cattle-core-soothsayer-staff: img('wiki/Cattle_Core_Soothsayer_Staff.png'),
-    staff-of-the-undead-plague: img('wiki/Staff_of_the_Undead_Plague.png'),
-    sparky-marble-staff: img('wiki/Sparky_Marble_Staff.png'),
-    magnifique-godcaster: img('wiki/Magnifique_Godcaster.png'),
+    gnarled-wand:                   img('data/EquipmentWands1.png'),
+    quarterstaff:                   img('data/EquipmentWands2.png'),
+    spriggly-storm:                 img('data/EquipmentWands3.png'),
+                                    //EquipmentWands4 is unused, not a typo
+    starlight:                      img('data/EquipmentWands5.png'),
+    crows-nest:                     img('data/EquipmentWands6.png'),
+    grey-gatsby:                    img('data/EquipmentWands7.png'),
+    skullslip-hallow:               img('data/EquipmentWands8.png'),
+    diabolical-opticule:            img('data/EquipmentWands9.png'),
+    cattle-core-soothsayer-staff:   img('data/EquipmentWands10.png'),
+    staff-of-the-undead-plague:     img('data/EquipmentWands11.png'),
+    sparky-marble-staff:            img('data/EquipmentWands12.png'),
+    magnifique-godcaster:           img('data/EquipmentWands13.png'),
+    beastly-orblauncher:            img('data/EquipmentWands14.png'),
 
     // Arcanist Wands
     arcanist-staff: map-get($tesseract-equipment, arcanist-staff),
