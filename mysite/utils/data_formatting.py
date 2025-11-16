@@ -17,6 +17,7 @@ from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDa
 
 from .logging import get_logger
 from config import app
+from .number_formatting import parse_number
 from .text_formatting import InputType
 
 logger = get_logger(__name__)
@@ -399,7 +400,7 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
         if characterIndex not in allSkillsDict:
             allSkillsDict[characterIndex] = {}
         try:
-            characterSkillList = inputJSON[f'Lv0_{characterIndex}']
+            characterSkillList = [parse_number(skill_level) for skill_level in inputJSON[f'Lv0_{characterIndex}']]
         except:
             characterSkillList = empty_skill_list
             logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all 0s for levels")
