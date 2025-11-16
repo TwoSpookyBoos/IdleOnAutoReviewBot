@@ -185,12 +185,12 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                         ))
                     if (
                         session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_onyx_stack_size
-                        and get_statue_type_index_from_name('Gold') <= statue_details['Type'] < get_statue_type_index_from_name('Onyx')
+                        and get_statue_type_index_from_name('Gold') <= statue_details['TypeNumber'] < get_statue_type_index_from_name('Onyx')
                     ):
                         depositable_onyx_statues += 1
                     if (
                         session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_zenith_stack_size
-                        and get_statue_type_index_from_name('Onyx') <= statue_details['Type'] < get_statue_type_index_from_name('Zenith')
+                        and get_statue_type_index_from_name('Onyx') <= statue_details['TypeNumber'] < get_statue_type_index_from_name('Zenith')
                     ):
                         depositable_onyx_statues += 1
 
