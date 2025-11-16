@@ -2,10 +2,10 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_enemy_name
-from consts.consts_w1 import statue_type_list, statues_dict
+from consts.consts_w1 import statue_type_dict, statues_dict, get_statue_type_index_from_name
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
@@ -397,6 +397,7 @@ def _calculate_general(account):
     _calculate_general_item_filter(account)
     account.highest_world_reached = _calculate_general_highest_world_reached(account)
     _calculate_general_guild_bonuses(account)
+    _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
     if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
@@ -480,6 +481,92 @@ def _calculate_general_highest_world_reached(account):
         return 2
     else:
         return 1
+
+def _calculate_general_guild_bonuses(account):
+    for bonus_name, bonus in account.guild_bonuses.items():
+        if '{' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
+        if '}' in bonus['Description']:
+            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
+        if ']' in bonus['Description']:
+            if bonus_name == 'Bonus GP for small guilds':
+                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")
+
+def _calculate_general_storage_slots(account):
+    #Dependencies: none
+    #Event Shop bonuses only have a description in the source
+    event_shop_bonuses = {
+        'Storage Chest': 12,
+        'Storage Vault': 16
+    }
+    vault_bonuses = ['Storage Slots']
+    construction_buildings = {
+        'Chest Space': 2
+    }
+    # TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
+    gem_shop_purchases = {
+        'Storage Chest Space': {
+            'Slots': 9,
+            'Max Purchases': 12
+        },
+        'More Storage Space': {
+            'Slots': 9,
+            'Max Purchases': 10
+        }
+    }
+    for name, slots in event_shop_bonuses.items():
+        account.storage['Other Storage'][name] = {
+            'Source': 'Event Shop',
+            'Label': f"{{{{ Event Shop|#event-shop }}}}: {name}: {slots} slots",
+            'Owned Slots': slots * account.event_points_shop['Bonuses'][name]['Owned'],
+            'Max Slots': slots,
+            'Progression': int(account.event_points_shop['Bonuses'][name]['Owned']),
+            'Goal': 1,
+            'Image': account.event_points_shop['Bonuses'][name]['Image'],
+            'Resource': 'event-point'
+        }
+    for name in vault_bonuses:
+        account.storage['Other Storage'][name] = {
+            'Source': 'Vault',
+            # Vault bonus Advice is standardized in get_upgrade_vault_advice. Extra entries not needed here.
+            'Owned Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Level'],
+            'Max Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Max Level'],
+        }
+    for name, slots_per_level in construction_buildings.items():
+        account.storage['Other Storage'][name] = {
+            'Source': 'Construction Building',
+            'Label': f"{{{{ Construction Building|#buildings }}}}: {name}: {slots_per_level * (account.construction_buildings[name]['Level'] - 1)} total slots",
+            'Owned Slots': slots_per_level * (account.construction_buildings[name]['Level'] - 1),
+            'Max Slots': slots_per_level * (account.construction_buildings[name]['MaxLevel'] - 1),
+            'Progression': account.construction_buildings[name]['Level'],
+            'Goal': account.construction_buildings[name]['MaxLevel'],
+            'Image': account.construction_buildings[name]['Image'],
+
+        }
+    for name, details in gem_shop_purchases.items():
+        account.storage['Other Storage'][name] = {
+            'Source': 'Gem Shop',
+            'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({get_gem_shop_bonus_section_name(name)}): "
+                     f"{details['Slots'] * account.gemshop[name]}/{details['Slots'] * details['Max Purchases']} total slots",
+            'Owned Slots': details['Slots'] * account.gemshop[name],
+            'Max Slots': details['Slots'] * details['Max Purchases'],
+            'Progression': account.gemshop[name],
+            'Goal': details['Max Purchases'],
+            'Image': name,
+            'Resource': 'gem'
+        }
+
+    #Calculate total storage slots
+    account.storage['Other Slots Owned'] = sum([details['Owned Slots'] for details in account.storage['Other Storage'].values()])
+    account.storage['Total Slots Owned'] = sum([
+        account.storage['Used Chest Slots'],
+        account.storage['Other Slots Owned']
+    ])
+    account.storage['Other Slots Max'] = sum([details['Max Slots'] for details in account.storage['Other Storage'].values()])
+    account.storage['Total Slots Max'] = sum([
+        storage_chests_item_slots_max,
+        account.storage['Other Slots Max']
+    ])
 
 
 def _calculate_master_classes(account):
@@ -2417,7 +2504,7 @@ def _calculate_w1_statues(account):
     vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
 
     onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
-    onyx_index = statue_type_list.index('Onyx')
+    onyx_typenumber = get_statue_type_index_from_name('Onyx')
 
     event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
 
@@ -2425,7 +2512,7 @@ def _calculate_w1_statues(account):
     account.statues['Dragon Statue']['Value'] = (
         account.statues['Dragon Statue']['BaseValue']
         * account.statues['Dragon Statue']['Level']
-        * (onyx_multi if statue_type_list.index(account.statues['Dragon Statue']['Type']) >= onyx_index else 1)
+        * (onyx_multi if account.statues['Dragon Statue']['TypeNumber'] >= onyx_typenumber else 1)
         * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
         * voodoo_statufication_multi
         * event_shop_multi
@@ -2438,7 +2525,7 @@ def _calculate_w1_statues(account):
             account.statues[statue_name]['Value'] = (
                 account.statues[statue_name]['BaseValue']
                 * account.statues[statue_name]['Level']
-                * (onyx_multi if statue_type_list.index(statue_details['Type']) >= onyx_index else 1)
+                * (onyx_multi if statue_details['TypeNumber'] >= onyx_typenumber else 1)
                 * (vault_multi if statue_name in vault_statues else 1)
                 * voodoo_statufication_multi
                 * dragon_multi
@@ -2476,13 +2563,3 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
-
-def _calculate_general_guild_bonuses(account):
-    for bonus_name, bonus in account.guild_bonuses.items():
-        if '{' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
-        if '}' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
-        if ']' in bonus['Description']:
-            if bonus_name == 'Bonus GP for small guilds':
-                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")

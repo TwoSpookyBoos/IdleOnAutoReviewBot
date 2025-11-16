@@ -2,7 +2,7 @@ from models.models import Advice, AdviceGroup, AdviceSection
 from utils.data_formatting import safe_loads, safer_get, safer_convert, mark_advice_completed
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
-from consts.consts_general import current_world, max_characters, gem_shop_optlacc_dict
+from consts.consts_general import current_world, max_characters, gem_shop_optlacc_dict, get_gem_shop_bonus_section_name
 from consts.consts_w6 import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
 from consts.consts_w4 import cooking_close_enough, breeding_total_pets
@@ -172,42 +172,6 @@ def getGemShopExclusions():
 
     return s_through_d, practical
 
-def getBonusSectionName(bonusName):
-    match bonusName:
-        case 'Item Backpack Space' | 'Storage Chest Space' | 'Carry Capacity' | 'Food Slot' | 'More Storage Space' | 'Card Presets':
-            return "Inventory and Storage"
-
-        case 'Daily Teleports' | 'Daily Minigame Plays':
-            return "Dailies N' Resets"
-
-        case 'Extra Card Slot':
-            return "Cards"
-
-        case 'Weekly Dungeon Boosters':
-            return "Goods & Services"
-
-        case 'Infinity Hammer' | 'Brimstone Forge Slot' | 'Ivory Bubble Cauldrons' | 'Bleach Liquid Cauldrons' | 'Obol Storage Space' | 'Sigil Supercharge':
-            return "W1&2"
-
-        case 'Crystal 3d Printer' | 'More Sample Spaces' | 'Burning Bad Books' | 'Prayer Slots' | 'Zen Cogs' | 'Cog Inventory Space' | 'Tower Building Slots' | 'Fluorescent Flaggies':
-            return "W3"
-
-        case 'Royal Egg Cap' | 'Richelin Kitchen' | 'Souped Up Tube' | 'Pet Storage' | 'Fenceyard Space':
-            return "W4"
-
-        case 'Chest Sluggo' | 'Divinity Sparkie' | 'Golden Sprinkler' | 'Lava Sprouts':
-            return "W5"
-
-        case 'Plot of Land' | 'Pristine Charm' | 'Shroom Familiar' | 'Sand of Time' | 'Instagrow Generator' | 'Life Refill' | 'Compost Bag' | 'Summoner Stone':
-            return "W6"
-
-        case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
-            return "Limited Shop"
-        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
-            return "Oddities"
-        case _:
-            return "UnknownShop"
-
 def getGemShopAdviceSection() -> AdviceSection:
     boughtItems = session_data.account.gemshop
     ss_through_d_exclusions, practical_max_exclusions = getGemShopExclusions()
@@ -231,7 +195,7 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in ss_through_d_exclusions
@@ -250,7 +214,7 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in practical_max_exclusions
@@ -267,7 +231,7 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({getBonusSectionName(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!

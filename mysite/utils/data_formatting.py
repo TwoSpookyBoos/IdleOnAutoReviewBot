@@ -354,7 +354,7 @@ def getCharacterDetails(inputJSON, runType):
                 equipped_cardset[character_index] = ""
         except IndexError:
             equipped_cardset[character_index] = ""
-        equipped_star_signs[character_index] = [int(star_sign_id) for star_sign_id in inputJSON.get(f'PVtStarSign_{character_index}','_,')[:-1].split(',') if star_sign_id != '_']
+        equipped_star_signs[character_index] = [int(star_sign_id) for star_sign_id in inputJSON.get(f'PVtStarSign_{character_index}','_,')[:-1].split(',') if star_sign_id not in ['_', '']]
         main_stats_array = safe_loads(inputJSON.get(f'PVStatList_{character_index}', [0, 0, 0, 0]))
         main_stats[character_index] = {'STR': main_stats_array[0], 'AGI': main_stats_array[1], 'WIS': main_stats_array[2], 'LUK': main_stats_array[3]}
 

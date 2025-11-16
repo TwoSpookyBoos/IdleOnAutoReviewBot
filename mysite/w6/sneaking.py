@@ -1,6 +1,7 @@
 from consts.consts_idleon import lavaFunc
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -55,23 +56,25 @@ def getSneakingProgressionTiersAdviceGroups():
 
     # Assess Jade Emporium
     for purchaseName, purchaseDict in session_data.account.sneaking["JadeEmporium"].items():
-        if not purchaseDict['Obtained']:
-            sneaking_AdviceDict['JadeEmporium'].append(Advice(
-                label=purchaseName,
-                picture_class=purchaseName,
-                progression=0,
-                goal=1
-            ))
+        sneaking_AdviceDict['JadeEmporium'].append(Advice(
+            label=purchaseName,
+            picture_class=purchaseName,
+            progression=int(purchaseDict['Obtained']),
+            goal=1
+        ))
 
     # Assess Pristine Charms
     for pristineCharmName, pristineCharmDict in session_data.account.sneaking["PristineCharms"].items():
-        if not pristineCharmDict['Obtained']:
-            sneaking_AdviceDict['PristineCharms'].append(Advice(
-                label=f"{pristineCharmName}: {pristineCharmDict['Bonus']}",
-                picture_class=f"{pristineCharmDict['Image']}",
-                progression=0,
-                goal=1
-            ))
+        sneaking_AdviceDict['PristineCharms'].append(Advice(
+            label=f"{pristineCharmName}: {pristineCharmDict['Bonus']}",
+            picture_class=f"{pristineCharmDict['Image']}",
+            progression=int(pristineCharmDict['Obtained']),
+            goal=1
+        ))
+
+    for category in sneaking_AdviceDict:
+        for advice in sneaking_AdviceDict[category]:
+            mark_advice_completed(advice)
 
     # Generate AdviceGroups
     sneaking_AdviceGroups['Gemstones'] = AdviceGroup(

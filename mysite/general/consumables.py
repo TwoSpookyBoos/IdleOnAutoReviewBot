@@ -1,6 +1,7 @@
-from enum import IntEnum
 from consts.consts_autoreview import break_you_best
-from consts.consts_general import inventory_bags_dict, storage_chests_dict, current_max_usable_inventory_slots
+from consts.consts_general import inventory_bags_dict, storage_chests_dict, inventory_slots_max_usable, inventory_accountwide_bags, \
+    inventory_slots_max_usable_without_bundles, storage_chests_item_slots_max
+from models.general.models_consumables import StorageChest
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from models.models_util import get_upgrade_vault_advice
 from utils.data_formatting import safe_loads, mark_advice_completed
@@ -11,219 +12,7 @@ from flask import g as session_data
 logger = get_logger(__name__)
 
 
-class StorageItemMixin:
-    @classmethod
-    def is_from_quest(cls, chest):
-        return chest in cls.from_quest()
-
-    @classmethod
-    def is_dropped(cls, chest):
-        return chest in cls.dropped()
-
-    @classmethod
-    def is_from_gem_shop(cls, chest):
-        return chest in cls.from_gem_shop()
-
-    @classmethod
-    def is_from_vendor_shop(cls, chest):
-        return chest in cls.from_vendor_shop()
-
-    @classmethod
-    def is_limited(cls, chest):
-        return chest in cls.limited()
-
-    @classmethod
-    def is_crafted(cls, chest):
-        return chest in cls.crafted()
-
-    @property
-    def type(self):
-        if self.__class__.is_from_quest(self):
-            return "Quest"
-        if self.__class__.is_dropped(self):
-            return "Dropped"
-        if self.__class__.is_from_vendor_shop(self):
-            return "Vendor"
-        if self.__class__.is_from_gem_shop(self):
-            return "Gem Shop"
-        if self.__class__.is_crafted(self):
-            return "Crafted"
-        if self.__class__.is_limited(self):
-            return "Limited Availability"
-
-        return f"Unknown {self.__class__.__name__} {self.value}"
-
-    @property
-    def pretty_name(self):
-        return self.name.replace("_", " ").title()
-
-class StorageChest(StorageItemMixin, IntEnum):
-    STORAGE_CHEST_1 = 0
-    STORAGE_CHEST_2 = 1
-    STORAGE_CHEST_3 = 2
-    STORAGE_CHEST_4 = 3
-    STORAGE_CHEST_5 = 4
-    STORAGE_CHEST_6 = 5
-    STORAGE_CHEST_7 = 6
-    STORAGE_CHEST_8 = 7
-    STORAGE_CHEST_9 = 8
-    STORAGE_CHEST_10 = 9
-    STORAGE_CHEST_11 = 10
-    STORAGE_CHEST_12 = 11
-    STORAGE_CHEST_13 = 12
-    STORAGE_CHEST_14 = 14
-    STORAGE_CHEST_15 = 13
-    STORAGE_CHEST_16 = 15
-    STORAGE_CHEST_17 = 16
-    STORAGE_CHEST_18 = 17
-    STORAGE_CHEST_19 = 18
-    STORAGE_CHEST_20 = 19
-    STORAGE_CHEST_21 = 20
-    STORAGE_CHEST_22 = 21
-    STORAGE_CHEST_23 = 22
-    STORAGE_CHEST_24 = 23
-    STORAGE_CHEST_25 = 24
-    STORAGE_CHEST_26 = 25
-    STORAGE_CHEST_27 = 26
-    STORAGE_CHEST_28 = 27
-    STORAGE_CHEST_90 = 30
-    STORAGE_CHEST_91 = 31
-    STORAGE_CHEST_92 = 32
-    STORAGE_CHEST_93 = 33
-    STORAGE_CHEST_94 = 34
-    STORAGE_CHEST_95 = 35
-    STORAGE_CHEST_96 = 36
-    STORAGE_CHEST_97 = 37
-    STORAGE_CHEST_98 = 38
-    STORAGE_CHEST_99 = 39
-    STORAGE_CHEST_99B = 40
-    STORAGE_CHEST_99C = 41
-    DANK_PAYPAY_CHEST = 100
-    GELATINOUS_CHEST = 101
-    CHEESY_CHEST = 102
-    WOODLIN_CHEST = 103
-    NINJA_CHEST = 104
-    HOLIDAY_CHEST = 105
-    VALENSLIME_CHEST = 106
-    BURIED_TREASURE_CHEST = 107
-
-    @classmethod
-    def dropped(cls):
-        return (
-            cls.STORAGE_CHEST_14, cls.STORAGE_CHEST_22, cls.STORAGE_CHEST_23,
-            cls.STORAGE_CHEST_24, cls.STORAGE_CHEST_25,
-            cls.DANK_PAYPAY_CHEST, cls.GELATINOUS_CHEST, cls.CHEESY_CHEST,
-            cls.WOODLIN_CHEST
-        )
-
-    @classmethod
-    def from_vendor_shop(cls):
-        return (
-            cls.STORAGE_CHEST_2, cls.STORAGE_CHEST_6, cls.STORAGE_CHEST_7,
-            cls.STORAGE_CHEST_8, cls.STORAGE_CHEST_9, cls.STORAGE_CHEST_10,
-            cls.STORAGE_CHEST_12, cls.STORAGE_CHEST_13, cls.STORAGE_CHEST_15,
-            cls.STORAGE_CHEST_16, cls.STORAGE_CHEST_17, cls.STORAGE_CHEST_18,
-            cls.STORAGE_CHEST_19, cls.STORAGE_CHEST_20, cls.STORAGE_CHEST_21,
-            cls.STORAGE_CHEST_26, cls.STORAGE_CHEST_27, cls.STORAGE_CHEST_28,
-        )
-
-    @classmethod
-    def from_gem_shop(cls):
-        return (
-            cls.STORAGE_CHEST_90, cls.STORAGE_CHEST_91, cls.STORAGE_CHEST_92,
-            cls.STORAGE_CHEST_93, cls.STORAGE_CHEST_94, cls.STORAGE_CHEST_95,
-            cls.STORAGE_CHEST_96, cls.STORAGE_CHEST_97, cls.STORAGE_CHEST_98,
-            cls.STORAGE_CHEST_99, cls.STORAGE_CHEST_99B, cls.STORAGE_CHEST_99C,
-        )
-
-    @classmethod
-    def from_quest(cls):
-        return (
-            cls.STORAGE_CHEST_1, cls.STORAGE_CHEST_3, cls.STORAGE_CHEST_4,
-            cls.STORAGE_CHEST_5, cls.STORAGE_CHEST_11, cls.NINJA_CHEST
-        )
-
-    @classmethod
-    def limited(cls):
-        return (
-            cls.HOLIDAY_CHEST, cls.VALENSLIME_CHEST, cls.BURIED_TREASURE_CHEST
-        )
-
-    @classmethod
-    def crafted(cls):
-        return tuple()
-
-class Bag(StorageItemMixin, IntEnum):
-    INVENTORY_BAG_A = 0
-    INVENTORY_BAG_B = 1
-    INVENTORY_BAG_C = 2
-    INVENTORY_BAG_D = 3
-    INVENTORY_BAG_E = 4
-    INVENTORY_BAG_F = 5
-    INVENTORY_BAG_G = 6
-    INVENTORY_BAG_H = 7
-    INVENTORY_BAG_U = 20
-    INVENTORY_BAG_V = 21
-    INVENTORY_BAG_W = 22
-    INVENTORY_BAG_X = 23
-    INVENTORY_BAG_Y = 24
-    INVENTORY_BAG_Z = 25
-    SNAKESKINVENTORY_BAG = 100
-    TOTALLY_NORMAL_AND_NOT_FAKE_BAG = 101
-    BLUNDERBAG = 102
-    SANDY_SATCHEL = 103
-    BUMMO_BAG = 104
-    CAPITALIST_CASE = 105
-    WEALTHY_WALLET = 106
-    PROSPEROUS_POUCH = 107
-    SACK_OF_SUCCESS = 108
-    SHIVERING_SACK = 109
-    MAMOOTH_HIDE_BAG = 110
-    PEEPER_POUCH = 111
-    FOURTH_ANNIVERSARY_BAG = 112
-    TREASURE_TOTEBAG = 113
-    RUCKSACK_OF_RICHES = 114
-
-    @classmethod
-    def dropped(cls):
-        return (
-            cls.SNAKESKINVENTORY_BAG, cls.TOTALLY_NORMAL_AND_NOT_FAKE_BAG,
-            cls.INVENTORY_BAG_G, cls.MAMOOTH_HIDE_BAG
-        )
-
-    @classmethod
-    def from_vendor_shop(cls):
-        return (
-            cls.BUMMO_BAG, cls.CAPITALIST_CASE, cls.WEALTHY_WALLET,
-            cls.PROSPEROUS_POUCH, cls.SACK_OF_SUCCESS, cls.TREASURE_TOTEBAG,
-            cls.RUCKSACK_OF_RICHES
-        )
-
-    @classmethod
-    def from_gem_shop(cls):
-        return (
-            cls.INVENTORY_BAG_U, cls.INVENTORY_BAG_V, cls.INVENTORY_BAG_W,
-            cls.INVENTORY_BAG_X, cls.INVENTORY_BAG_Y, cls.INVENTORY_BAG_Z
-        )
-
-    @classmethod
-    def from_quest(cls):
-        return (
-            cls.INVENTORY_BAG_A, cls.INVENTORY_BAG_B, cls.INVENTORY_BAG_C,
-            cls.INVENTORY_BAG_D, cls.INVENTORY_BAG_E, cls.INVENTORY_BAG_F,
-            cls.INVENTORY_BAG_H
-        )
-
-    @classmethod
-    def crafted(cls):
-        return cls.BLUNDERBAG, cls.SANDY_SATCHEL, cls.SHIVERING_SACK, cls.PEEPER_POUCH
-
-    @classmethod
-    def limited(cls):
-        return cls.FOURTH_ANNIVERSARY_BAG,
-
-
-def getCandyHourSections():
+def get_candy_hour_advicesections():
     bank: Assets = session_data.account.stored_assets
 
     # Standard Time Candies: 1hr - 72hr
@@ -288,129 +77,55 @@ def getCandyHourSections():
     return section_regular, section_variable
 
 
-def getBagType(inputBagNumber):
-    return getStorageItemType(inputBagNumber, Bag)
-
-
-def getChestType(inputChestNumber):
-    return getStorageItemType(inputChestNumber, StorageChest)
-
-
-def getStorageItemType(storageItemIndex, cls):
-    try:
-        bag = cls(int(storageItemIndex))
-    except ValueError as e:
-        logger.exception(f"failed to parse {cls.__name__} '{storageItemIndex = }'", exc_info=e)
-        return f"Unknown Bag '{storageItemIndex}'"
-
-    return bag.type
-
-def parseInventoryBagSlots() -> AdviceGroup:
+def get_inventory_advicegroup() -> AdviceGroup:
     inventorySlots_AdviceDict = {}
-    currentMaxInventorySlots = 96  #As of v2.35 4th Anniversary
-    currentMaxWithoutAutoloot = currentMaxInventorySlots - 5
-    defaultInventorySlots = 16  # Characters have 16 inventory slots by default
-    account_wide_inventory_bags = ['4th Anniversary Bag']
-    character_bag_dict = {}
-    character_missing_bags_dict = {}
-    character_bag_slots_dict = {}
-    characters_with_max_bag_slots = []
     characters_missing_usable_bag_slots = []
 
-    fourth_anni_bag_owned = any([char.character_name for char in session_data.account.all_characters if '112' in char.inventory_bags])
-    bon_f_owned = session_data.account.gemshop['Bundles']['bon_f']['Owned']
-    aw_total = (
-        defaultInventorySlots
-        + (5 * session_data.account.autoloot)
-        + (3 * session_data.account.event_points_shop['Bonuses']['Secret Pouch']['Owned'])
-        + (8 * fourth_anni_bag_owned)
-        + (8 * bon_f_owned)
-    )
-    aw_max = defaultInventorySlots + 5 + 3 + 8 + 8
-    aw_label = f"Account Wide: {aw_total}/{aw_max} Inventory Slots for all characters"
+    inventory = session_data.account.inventory
+    aw_owned = inventory['Account Wide Inventory Slots Owned']
+    aw_max = inventory['Account Wide Inventory Slots Max']
+    awi = inventory['Account Wide Inventory']
+    aw_label = f"Account Wide: {aw_owned}/{aw_max} Inventory Slots for all characters"
+
     inventorySlots_AdviceDict[aw_label] = [
         Advice(
-            label=f"Base: 16 slots",
-            picture_class='ui-inventory-bag-0',
-            progression=1,
-            goal=1
-        ),
-        Advice(
-            label=f"Autoloot Bundle: 5 slots",
-            picture_class='cash',
-            progression=int(session_data.account.autoloot),
-            goal=1
-        ),
-        Advice(
-            label=f"{{{{ Event Shop|#event-shop }}}}: Secret Pouch: 3 slots",
-            picture_class='event-shop-12',
-            progression=int(session_data.account.event_points_shop['Bonuses']['Secret Pouch']['Owned']),
-            goal=1
-        ),
-        Advice(
-            label=f"4th Anniversary Bag: 8 slots (Limited Availability)",
-            picture_class='x4th-anniversary-bag',
-            progression=int(fourth_anni_bag_owned),
-            goal=1
-        ),
-        Advice(
-            label=f"Eternal Hunter Bundle: 8 slots"
-                  f"{'<br>Note: Could be inaccurate: Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''}",
-            picture_class='eternal-hunter-bag',
-            progression=int(bon_f_owned),
-            goal=1
+            label=f"{entry['Description']}: "
+                  f"{entry['Owned Slots']}/{entry['Max Slots']} slots",
+            picture_class=entry['Image'],
+            progression=int(entry['Owned']),
+            goal=1,
+            resource=entry.get('Resource', '')
         )
+        for entry in awi.values()
     ]
 
     for character in session_data.account.all_characters:
-        character_bag_dict[character.character_index] = character.inventory_bags
-        character_missing_bags_dict[character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
-
-    for character_index, bag_dict in character_bag_dict.items():
-        sum_slots = aw_total
-        for bag in bag_dict:
-            if bag in ['112', 112]:
-                # The 4th anniversary bag is funky. If you claim it on Character1 but don't log into EVERY other character once, they wouldn't be
-                # marked as owning it in the JSON. The alternative here is moving it to Account Wide and checking if it is present on ANY character,
-                # instead of each individual character.
-                continue
-            if isinstance(bag_dict[bag], int | float | str):
-                try:
-                    sum_slots += int(bag_dict[bag])
-                except:
-                    logger.exception(f"Could not increase character {character_index}'s bagslots by {type(bag_dict[bag])} {bag_dict[bag]}")
-            else:
-                logger.warning(f"Funky bag value found in {character_index}'s bagsDict for bag {bag}: {type(bag_dict[bag])} {bag_dict[bag]}. Searching for expected value.")
-                if int(bag) in inventory_bags_dict:
-                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict.get(int(bag), 0)}. All is well :)")
-                else:
-                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
-                sum_slots += inventory_bags_dict.get(int(bag), 0)
-        character_bag_slots_dict[character_index] = sum_slots
-        if sum_slots >= current_max_usable_inventory_slots:
-            characters_with_max_bag_slots.append(character_index)
-        elif sum_slots == currentMaxWithoutAutoloot and session_data.account.autoloot == False:
-            characters_with_max_bag_slots.append(character_index)
+        if (
+            character.inventory_slots >= inventory_slots_max_usable
+            or
+            (
+                character.inventory_slots == inventory_slots_max_usable_without_bundles
+                and awi['Autoloot']['Owned'] is False
+                and awi['bon_f']['Owned'] is False
+            )
+        ):
+            continue
         else:
-            characters_missing_usable_bag_slots.append(character_index)
-    # logger.info(f"character_bag_dict: {character_bag_dict}")
-    # logger.info(f"characters_missing_usable_bag_slots: {characters_missing_usable_bag_slots}")
-    for character_index in characters_missing_usable_bag_slots:
-        subgroupName = (
-            f"{session_data.account.all_characters[character_index].character_name}"
-            f" the {session_data.account.all_characters[character_index].class_name}: "
-            f"{min(current_max_usable_inventory_slots, character_bag_slots_dict[character_index])}"
-            f"/{current_max_usable_inventory_slots} usable Inventory slots"
-        )
-        inventorySlots_AdviceDict[subgroupName] = [
-            Advice(
-                label=f"{bag.pretty_name}: {inventory_bags_dict[bag.value]} slots ({bag.type})",
-                picture_class=bag.pretty_name,
-                progression=0,
-                goal=1,
-                completed=False
-            ) for bag in character_missing_bags_dict[character_index] if bag.pretty_name not in account_wide_inventory_bags
-        ]
+            subgroupName = (
+                f"{character.character_name} the {character.class_name}: "
+                f"{min(inventory_slots_max_usable, character.inventory_slots)}"
+                f"/{inventory_slots_max_usable} usable Inventory slots"
+            )
+            inventorySlots_AdviceDict[subgroupName] = [
+                Advice(
+                    label=f"{bag.pretty_name}: {inventory_bags_dict[bag.value]} slots ({bag.type})",
+                    picture_class=bag.pretty_name,
+                    progression=0,
+                    goal=1,
+                    completed=False,
+                    resource='coins' if bag.type == 'Vendor' else 'smithing' if bag.type == 'Crafted' else ''
+                ) for bag in inventory['Characters Missing Bags'][character.character_index] if bag.pretty_name not in inventory_accountwide_bags
+            ]
 
     for subgroupName in inventorySlots_AdviceDict:
         for advice in inventorySlots_AdviceDict[subgroupName]:
@@ -425,65 +140,48 @@ def parseInventoryBagSlots() -> AdviceGroup:
     inventorySlots_AdviceGroup.remove_empty_subgroups()
     return inventorySlots_AdviceGroup
 
-def parseStorageChests():
-    usedStorageChests = safe_loads(session_data.account.raw_data.get('InvStorageUsed', []))
-    missing_chests = [chest for chest in StorageChest if str(chest.value) not in usedStorageChests.keys()]
-    other_storage = {
-        'Event Shop': {
-            'Storage Chest': 12,
-            'Storage Vault': 16
-        },
-        'Vault': {
-            'Storage Slots': session_data.account.vault['Upgrades']['Storage Slots']['Max Level']
-        },
-        'Construction Buildings': {
-            'Chest Space': 2 * (session_data.account.construction_buildings['Chest Space']['MaxLevel'] - 1)
-        },
-    }
+def get_storage_advicegroup() -> AdviceGroup:
+    storage = session_data.account.storage
 
+    ob_label = f"Other Bonuses: {storage['Other Slots Owned']}/{storage['Other Slots Max']} slots"
+    chests_label = f"Store Chests: {storage['Used Chest Slots']}/{storage_chests_item_slots_max} slots"
     advices = {
-        'Other Bonuses': [],
-        'Usable Chests': []
+        ob_label: [],
+        chests_label: []
     }
 
-    for source, details in other_storage.items():
-        if source == 'Event Shop':
-            for bonus_name, bonus_slots in details.items():
-                if not session_data.account.event_points_shop['Bonuses'][bonus_name]['Owned']:
-                    advices['Other Bonuses'].append(Advice(
-                        label=f"{{{{ Event Shop|#event-shop }}}}: {bonus_name}: {bonus_slots} slots",
-                        picture_class=session_data.account.event_points_shop['Bonuses'][bonus_name]['Image'],
-                        progression=0,
-                        goal=1
-                    ))
-        elif source == 'Vault':
-            for upgrade_name, upgrade_slots in details.items():
-                if session_data.account.vault['Upgrades'][upgrade_name]['Total Value'] < session_data.account.vault['Upgrades'][upgrade_name]['Max Value']:
-                    advices['Other Bonuses'].append(get_upgrade_vault_advice(upgrade_name))
-        elif source == 'Construction Buildings':
-            for building_name, building_slots in details.items():
-                if session_data.account.construction_buildings[building_name]['Level'] < session_data.account.construction_buildings[building_name]['MaxLevel']:
-                    advices['Other Bonuses'].append(Advice(
-                        label=f"{{{{ Construction Building|#buildings }}}}: {building_name}: {building_slots} total slots",
-                        picture_class=session_data.account.construction_buildings[building_name]['Image'],
-                        progression=session_data.account.construction_buildings[building_name]['Level'],
-                        goal=session_data.account.construction_buildings[building_name]['MaxLevel']
-                    ))
+    for name, details in storage['Other Storage'].items():
+        if details['Owned Slots'] < details['Max Slots']:
+            if details['Source'] == 'Vault':
+                advices[ob_label].append(get_upgrade_vault_advice(name))
+            else:
+                #Expected: Event Shop, Construction Building, Gem Shop
+                advices[ob_label].append(Advice(
+                    label=details['Label'],
+                    picture_class=details['Image'],
+                    progression=details['Progression'],
+                    goal=details['Goal'],
+                    resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
+                ))
 
-    advices['Usable Chests'] = [
+    advices[chests_label] = [
             Advice(
-                label=f"{chest.pretty_name}: {storage_chests_dict[chest.value]} slots ({chest.type})",
+                label=f"{chest.pretty_name}: {storage_chests_dict.get(chest.value, 0)} slots ({chest.type})",
                 picture_class=chest.pretty_name,
-                completed=False
-            ) for chest in missing_chests
+                progression=0,
+                goal=1,
+                completed=False,
+                resource='coins' if chest.type == 'Vendor' else ''
+            ) for chest in storage['Missing Chests']
         ]
 
+    total_remaining_slots = max(0, storage['Total Slots Max'] - storage['Total Slots Owned'])
     group = AdviceGroup(
         tier='',
         pre_string=(
-            f"Collect {len(missing_chests)} more storage chest{pl(missing_chests)} for your bank"
+            f"Collect {total_remaining_slots} more storage slot{pl(total_remaining_slots)} for your bank"
             if advices else
-            f"You've collected all current Storage Chests!{break_you_best}"
+            f"You've collected all current storage slots!{break_you_best}"
         ),
         advices=advices,
         informational=True
@@ -493,10 +191,10 @@ def parseStorageChests():
     return group
 
 
-def getConsumablesAdviceSections():
-    sections_candy = getCandyHourSections()
-    group_bags = parseInventoryBagSlots()
-    group_chests = parseStorageChests()
+def get_consumables_advicesections():
+    sections_candy = get_candy_hour_advicesections()
+    group_bags = get_inventory_advicegroup()
+    group_chests = get_storage_advicegroup()
 
     groups = [group for group in [group_bags, group_chests] if group]
 

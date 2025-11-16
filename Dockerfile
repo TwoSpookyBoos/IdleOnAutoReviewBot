@@ -1,9 +1,12 @@
-FROM python:3.11
+FROM python:3.10.5
 
 WORKDIR /usr/src/app
 
 COPY mysite/requirements /tmp/requirements
+
 RUN pip install --no-cache-dir -r /tmp/requirements/dev.txt
+
+COPY mysite/ ./
 
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=flask_app:app

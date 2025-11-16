@@ -9,7 +9,7 @@ from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, vault_upgrades_list, vault_dont_scale
+    vault_section_indexes, vault_upgrades_list, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
@@ -17,11 +17,12 @@ from consts.consts_master_classes import (
 )
 from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import (
-    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
+    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict, statue_count, event_points_shop_dict,
+    statue_type_count, get_statue_type_index_from_name
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
-    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, bubble_cauldron_color_list
+    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -46,11 +47,16 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, gfood_codes, pristine_charms_list, sneaking_gemstones_all_values, max_farming_crops, landrank_dict, market_upgrade_details,
-    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades, max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon, emperor_bonus_images, summoning_stone_locations,
-    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp, summoning_stone_boss_base_damage, summoning_stone_fight_codenames
+    jade_emporium, gfood_codes, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
+    market_upgrade_details,
+    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
+    max_summoning_upgrades, summoning_match_colors,
+    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
+    emperor_bonus_images, summoning_stone_locations,
+    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
+    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
+from models.general.models_consumables import Bag, StorageChest
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -297,6 +303,22 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_npc_tokens(account)
+    _parse_general_inventory_slots_account_wide(account)
+    _parse_general_inventory_characters(account)
+    _parse_general_storage_slots(account)
+
+def _parse_class_unique_kill_stacks(account):
+    account.class_kill_talents = {
+        'Archlord of the Pirates': {
+            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
+        },
+        'King of the Remembered': {
+            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
+        },
+        'Wormhole Emperor': {
+            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
+        }
+    }
 
 def _parse_general_gem_shop(account):
     account.gemshop = {}
@@ -368,19 +390,6 @@ def _parse_general_npc_tokens(account):
             account.npc_tokens[tokenName] = 0
     # for tokenName, tokenCount in account.npc_tokens.items():
     #     account.all_assets.get(tokenName).add(tokenCount)
-
-def _parse_class_unique_kill_stacks(account):
-    account.class_kill_talents = {
-        'Archlord of the Pirates': {
-            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
-        },
-        'King of the Remembered': {
-            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
-        },
-        'Wormhole Emperor': {
-            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
-        }
-    }
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -603,6 +612,96 @@ def _parse_general_event_points_shop(account):
                 'Description': bonusDetails['Description'],
                 'Image': bonusDetails['Image']
             }
+
+def _parse_general_inventory_slots_account_wide(account):
+    #Dependencies: _parse_switches, _parse_characters, _parse_general_gem_shop_bundles, _parse_general_event_points_shop
+    #Create dictionary for Account Wide Inventory sources
+    fourth_anni_bag_owned = any([char.character_name for char in account.all_characters if '112' in char.inventory_bags])
+    account.inventory['Account Wide Inventory'] = {
+        'Default': {
+            'Description': inventory_other_sources_dict['Default']['Description'],
+            'Max Slots': inventory_other_sources_dict['Default']['Max Slots'],
+            'Owned': True,
+            'Owned Slots': inventory_other_sources_dict['Default']['Max Slots'],
+            'Image': inventory_other_sources_dict['Default']['Image']
+        },
+        'Autoloot': {
+            'Description': inventory_other_sources_dict['Autoloot']['Description'],
+            'Max Slots': inventory_other_sources_dict['Autoloot']['Max Slots'],
+            'Owned': account.autoloot,
+            'Owned Slots': inventory_other_sources_dict['Autoloot']['Max Slots'] * account.autoloot,
+            'Image': inventory_other_sources_dict['Autoloot']['Image'],
+            'Resource': inventory_other_sources_dict['Autoloot']['Resource']
+        },
+        'Secret Pouch': {
+            'Description': inventory_other_sources_dict['Secret Pouch']['Description'],
+            'Max Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'],
+            'Owned': account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+            'Owned Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'] * account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+            'Image': inventory_other_sources_dict['Secret Pouch']['Image'],
+            'Resource': inventory_other_sources_dict['Secret Pouch']['Resource']
+        },
+        'Fourth Anni': {
+            'Description': inventory_other_sources_dict['Fourth Anni']['Description'],
+            'Max Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'],
+            'Owned': fourth_anni_bag_owned,
+            'Owned Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'] * fourth_anni_bag_owned,
+            'Image': inventory_other_sources_dict['Fourth Anni']['Image']
+        },
+        'bon_f': {
+            'Description': inventory_other_sources_dict['bon_f']['Description'],
+            'Max Slots': inventory_other_sources_dict['bon_f']['Max Slots'],
+            'Owned': account.gemshop['Bundles']['bon_f']['Owned'],
+            'Owned Slots': inventory_other_sources_dict['bon_f']['Max Slots'] * account.gemshop['Bundles']['bon_f']['Owned'],
+            'Image': inventory_other_sources_dict['bon_f']['Image'],
+            'Resource': inventory_other_sources_dict['bon_f']['Resource']
+        },
+    }
+    account.inventory['Account Wide Inventory Slots Owned'] = sum([source['Owned Slots'] for source in account.inventory['Account Wide Inventory'].values()])
+    account.inventory['Account Wide Inventory Slots Max'] = sum([source['Max Slots'] for source in account.inventory['Account Wide Inventory'].values()])
+
+def _parse_general_inventory_characters(account):
+    #Dependencies: _parse_general_inventory_slots_account_wide
+    # Sanity check for any unknown bags present in the JSON
+    unknown_bags_in_json = set()
+    for character in account.all_characters:
+        for bag in character.inventory_bags:
+            if int(bag) not in inventory_bags_dict:
+                unknown_bags_in_json.add(f"{bag}: {character.inventory_bags[bag]}")
+    if len(unknown_bags_in_json) > 0:
+        logger.warning(f"Unknown Inventory Bags found in JSON: {unknown_bags_in_json}. Get these added to consts_general.inventory_bags_dict")
+
+    for character in account.all_characters:
+        account.inventory['Characters Missing Bags'][character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
+        character.inventory_slots = account.inventory['Account Wide Inventory Slots Owned']
+        for bag in character.inventory_bags:
+            if int(bag) == 112:
+                continue  #4th anniversary bag accounted for in account wide inventory
+            if isinstance(character.inventory_bags[bag], int | float | str):
+                try:
+                    character.inventory_slots += parse_number(character.inventory_bags[bag])
+                except:
+                    logger.exception(f"Could not increase character {character.character_index}'s bagslots by {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}")
+            else:
+                logger.warning(f"Funky bag value found in {character.character_index}'s bagsDict for bag {bag}: {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}. Searching for expected value.")
+                if int(bag) in inventory_bags_dict:
+                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict.get(int(bag), 0)}. All is well :)")
+                else:
+                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
+                character.inventory_slots += inventory_bags_dict.get(int(bag), 0)
+
+def _parse_general_storage_slots(account):
+    #Dependencies: None
+    raw_used_chests = safe_loads(account.raw_data.get('InvStorageUsed', []))
+    # Sanity check for any unknown chests present in the JSON
+    unknown_chests_in_json = [f"{key}:{value}" for key, value in raw_used_chests.items() if int(key) not in storage_chests_dict.keys()]
+    if len(unknown_chests_in_json) > 0:
+        logger.warning(f"Unknown Storage Chest found in JSON: {unknown_chests_in_json}. Get these added to consts_general.storage_chests_dict")
+
+    account.storage['Used Chests'] = [chest for chest in StorageChest if str(chest.value) in raw_used_chests.keys()]
+    account.storage['Used Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Used Chests']])
+    account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in raw_used_chests.keys()]
+    account.storage['Missing Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Missing Chests']])
 
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
@@ -903,7 +1002,8 @@ def _parse_master_classes_tesseract(account):
         'Tachyon4': safer_convert(safer_get(account.raw_optlacc_dict, 391, 0), 0.0),
         'Tachyon5': safer_convert(safer_get(account.raw_optlacc_dict, 392, 0), 0.0),
         'Tachyon6': safer_convert(safer_get(account.raw_optlacc_dict, 393, 0), 0.0),
-        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0)
+        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0),
+        'Arcane Rocks Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 452, False), False)
     }
     raw_tesseract = safe_loads(account.raw_data.get('Arcane', []))
     if not raw_tesseract:
@@ -1144,7 +1244,14 @@ def _parse_w1_statues(account):
     raw_statue_type_list = safe_loads(account.raw_data.get("StuG", []))
     if len(raw_statue_type_list) != statue_count:
         raw_statue_type_list += [0] * (statue_count - len(raw_statue_type_list))
-    account.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statue_type_list.index("Onyx")
+    account.onyx_statues_unlocked = (
+            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Onyx')
+            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 2
+    )
+    account.zenith_statues_unlocked = (
+            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Zenith')
+            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 3
+    )
     statue_levels = [0] * statue_count
 
     # Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
@@ -1165,8 +1272,8 @@ def _parse_w1_statues(account):
         try:
             account.statues[statueDetails['Name']] = {
                 'Level': statue_levels[statueIndex],
-                'Type': statue_type_list[raw_statue_type_list[statueIndex]],  # Description: Normal, Gold, Onyx
-                'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-2
+                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
+                'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-3
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
@@ -1178,8 +1285,8 @@ def _parse_w1_statues(account):
             logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
             account.statues[statueDetails['Name']] = {
                 'Level': 0,
-                'Type': statue_type_list[raw_statue_type_list[statueIndex]],
-                'TypeNumber': raw_statue_type_list[0],
+                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
+                'TypeNumber': 0,
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
@@ -1188,7 +1295,7 @@ def _parse_w1_statues(account):
                 'Resource': statueDetails['Resource'],
             }
         account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
-        if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statue_type_list) - 1:
+        if account.statues[statueDetails['Name']]['TypeNumber'] >= statue_type_count:
             account.maxed_statues += 1
 
 
@@ -3004,13 +3111,12 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
     except:
         account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] = 1 * account.caverns['Caverns'][cavern_name]['Unlocked']
-    for wish_index, wish_list in enumerate(lamp_wishes):
+    for wish_index, wish_dict in enumerate(lamp_wishes):
         account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index] = {
-            'Name': wish_list[0],
-            'BaseCost': wish_list[1],
-            'CostIncreaser': wish_list[2],
-            'Idk3': wish_list[3],
-            'Description': wish_list[4],
+            'Name': wish_dict['Name'],
+            'BaseCost': wish_dict['BaseCost'],
+            'CostIncreaser': wish_dict['CostIncreaser'],
+            'Description': f"{wish_dict['Description']}{'. Cost does not increase.' if wish_dict['DoesCostIncrease'] is False else ''}",
             'Image': f'lamp-wish-{wish_index}',
             'BonusList': []
         }
@@ -3019,7 +3125,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
                     account.caverns['Villagers']['Polonai']['Level'] >= 7
                     and account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] > wish_index
                 )
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = raw_caverns_list[21][wish_index]
+            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = parse_number(raw_caverns_list[21][wish_index])
         except:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = False
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = 0
@@ -3028,21 +3134,21 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         )
 
         #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
-        if wish_list[0].startswith('World '):
-            world_number = safer_convert(wish_list[0].split('World ')[1][0], 0)
+        if wish_dict['Name'].startswith('World '):
+            world_number = safer_convert(wish_dict['Name'].split('World ')[1][0], 0)
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
                 v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
-                for v in lamp_world_wish_values[world_number]
+                for v in lamp_world_wish_values.get(world_number, [0]*3)
             ]
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '@', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
+                    '{', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '#', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
+                    '}', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '$', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
+                    '~', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_the_hive(account, raw_caverns_list):
     cavern_name = 'The Hive'
@@ -3343,22 +3449,22 @@ def _parse_w6_sneaking(account):
 
 def _parse_w6_pristine_charms(account, raw_ninja_list):
     raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-    for pristineCharmIndex, pristineCharmDict in enumerate(pristine_charms_list):
+    for index, (pristine_charm_name, pristine_charm_data) in enumerate(pristine_charms_dict.items()):
         try:
-            account.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
-                'Obtained': bool(raw_pristine_charms_list[pristineCharmIndex]),
-                'Image': pristineCharmDict['Image'],
-                'Bonus': pristineCharmDict['Bonus'],
+            account.sneaking["PristineCharms"][pristine_charm_name] = {
+                'Obtained': bool(raw_pristine_charms_list[index]),
+                'Image': pristine_charm_data['Image'],
+                'Bonus': pristine_charm_data['Bonus'],
             }
         except:
-            account.sneaking["PristineCharms"][pristineCharmDict['Name']] = {
+            account.sneaking["PristineCharms"][pristine_charm_name] = {
                 'Obtained': False,
-                'Image': pristineCharmDict['Image'],
-                'Bonus': pristineCharmDict['Bonus'],
+                'Image': pristine_charm_data['Image'],
+                'Bonus': pristine_charm_data['Bonus'],
             }
 
 def _parse_w6_gemstones(account):
-    for gemstone_name, gemstone_values in sneaking_gemstones_all_values.items():
+    for gemstone_name, gemstone_values in sneaking_gemstones_dict.items():
         level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
         account.sneaking['Gemstones'][gemstone_name] = {
             'Level': level,
@@ -3378,12 +3484,13 @@ def _parse_w6_jade_emporium(account, raw_ninja_list):
         raw_emporium_purchases = list(raw_ninja_list[102][9])
     except:
         raw_emporium_purchases = [""]
-    for upgradeIndex, upgradeDict in enumerate(jade_emporium):
+    for index in jade_emporium_order:
         try:
-            account.sneaking['JadeEmporium'][upgradeDict['Name']] = {
-                'Obtained': upgradeDict['CodeString'] in raw_emporium_purchases,
-                'Bonus': upgradeDict['Bonus'],
-                'Image': upgradeDict['Name']
+            upgrade = jade_emporium[index]
+            account.sneaking['JadeEmporium'][upgrade['Name']] = {
+                'Obtained': upgrade['CodeString'] in raw_emporium_purchases,
+                'Bonus': upgrade['Bonus'],
+                'Image': upgrade['Name']
             }
         except:
             continue
