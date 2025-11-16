@@ -8,7 +8,7 @@ from consts.consts_autoreview import (
 )
 from consts.consts_general import max_characters
 from consts.consts_w5 import slab_list, dungeon_drops_list, max_dungeon_weapons_available, dungeon_weapons_list, \
-    max_dungeon_armors_available, dungeon_armors_list, max_dungeon_jewelry_available, dungeon_jewelry_list, reclaimable_quest_items, slab_quest_rewards_all_chars, \
+    max_dungeon_armors_available, dungeon_armors_dict, max_dungeon_jewelry_available, dungeon_jewelry_dict, reclaimable_quest_items, slab_quest_rewards_all_chars, \
     slab_quest_rewards_once, vendor_items, vendor_unlock_item, anvil_items, anvil_tabs
 
 logger = get_logger(__name__)
@@ -34,75 +34,75 @@ def getSlabProgressionTierAdviceGroups():
     tier_Slab = 0
 
     # Assess Tiers
-    for itemName in slab_list:
-        item_display_name = getItemDisplayName(itemName)
-        if itemName not in session_data.account.registered_slab:
+    for item_codename in slab_list:
+        item_displayname = getItemDisplayName(item_codename)
+        if item_codename not in session_data.account.registered_slab:
             # If the item is an Asset, meaning in storage, character inventory, or worn by a character
-            if session_data.account.stored_assets.get(itemName).amount > 0:
+            if session_data.account.stored_assets.get(item_codename).amount > 0:
                 sources = ", ".join([
                     char.character_name for char in session_data.account.all_characters
-                    if item_display_name in char.equipment.inventory
+                    if item_displayname in char.equipment.inventory
                 ])
                 sources = 'In Storage' if not sources else f"Inventory of {sources}"
                 slab_AdviceDict['Storage'].append(Advice(
-                    label=f"{item_display_name} ({sources})",
-                    picture_class=item_display_name,
+                    label=f"{item_displayname} ({sources})",
+                    picture_class=item_displayname,
                     progression=0,
                     goal=1
                 ))
                 continue
-            elif session_data.account.worn_assets.get(itemName).amount > 0:
+            elif session_data.account.worn_assets.get(item_codename).amount > 0:
                 sources = ", ".join([
                     char.character_name for char in session_data.account.all_characters
-                    if item_display_name in char.equipment.equips
-                    or item_display_name in char.equipment.tools
+                    if item_displayname in char.equipment.equips
+                    or item_displayname in char.equipment.tools
                 ])
                 slab_AdviceDict['Storage'].append(Advice(
-                    label=f"{item_display_name} (Equipped by {sources})",
-                    picture_class=item_display_name,
+                    label=f"{item_displayname} (Equipped by {sources})",
+                    picture_class=item_displayname,
                     progression=0,
                     goal=1
                 ))
                 continue
-            elif session_data.account.npc_tokens.get(itemName, 0) > 0:
+            elif session_data.account.npc_tokens.get(item_codename, 0) > 0:
                 slab_AdviceDict['Storage'].append(Advice(
-                    label=f"{item_display_name} (Retrieve from NPC Tokens)",
-                    picture_class=item_display_name,
+                    label=f"{item_displayname} (Retrieve from NPC Tokens)",
+                    picture_class=item_displayname,
                     progression=0,
                     goal=1
                 ))
                 continue
             # If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
-            if itemName in reclaimable_quest_items.keys():
-                if session_data.account.compiled_quests.get(reclaimable_quest_items[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
+            if item_codename in reclaimable_quest_items.keys():
+                if session_data.account.compiled_quests.get(reclaimable_quest_items[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
                     slab_AdviceDict['Reclaims'].append(Advice(
-                        label=f"{item_display_name} ({reclaimable_quest_items[itemName]['QuestGiver'].replace('_', ' ')}: {reclaimable_quest_items[itemName]['QuestName']})",
-                        picture_class=item_display_name,
-                        resource=reclaimable_quest_items[itemName]['QuestGiver'].replace('_', '-'),
+                        label=f"{item_displayname} ({reclaimable_quest_items[item_codename]['QuestGiver'].replace('_', ' ')}: {reclaimable_quest_items[item_codename]['QuestName']})",
+                        picture_class=item_displayname,
+                        resource=reclaimable_quest_items[item_codename]['QuestGiver'].replace('_', '-'),
                         progression=0,
                         goal=1
                     ))
                 continue
             # If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
-            if itemName in slab_quest_rewards_all_chars.keys():
-                # logger.debug(f"{itemName} quest {slab_QuestRewards[itemName]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{max_characters}")
-                if session_data.account.compiled_quests.get(slab_quest_rewards_all_chars[itemName]['QuestNameCoded'], {}).get('CompletedCount',
+            if item_codename in slab_quest_rewards_all_chars.keys():
+                # logger.debug(f"{item_codename} quest {slab_QuestRewards[item_codename]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{max_characters}")
+                if session_data.account.compiled_quests.get(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded'], {}).get('CompletedCount',
                                                                                                                               0) < max_characters:
                     slab_AdviceDict["Quests"].append(Advice(
-                        label=f"{item_display_name} ({slab_quest_rewards_all_chars[itemName]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_all_chars[itemName]['QuestName']})",
-                        picture_class=item_display_name,
-                        resource=slab_quest_rewards_all_chars[itemName]['QuestGiver'].replace('_', '-'),
+                        label=f"{item_displayname} ({slab_quest_rewards_all_chars[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_all_chars[item_codename]['QuestName']})",
+                        picture_class=item_displayname,
+                        resource=slab_quest_rewards_all_chars[item_codename]['QuestGiver'].replace('_', '-'),
                         progression=0,
                         goal=1
                     ))
                 continue
             # If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
-            if itemName in slab_quest_rewards_once.keys():
-                if session_data.account.compiled_quests.get(slab_quest_rewards_once[itemName]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
+            if item_codename in slab_quest_rewards_once.keys():
+                if session_data.account.compiled_quests.get(slab_quest_rewards_once[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
                     slab_AdviceDict["Quests"].append(Advice(
-                        label=f"{item_display_name} ({slab_quest_rewards_once[itemName]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_once[itemName]['QuestName']})",
-                        picture_class=item_display_name,
-                        resource=slab_quest_rewards_once[itemName]['QuestGiver'].replace('_', '-'),
+                        label=f"{item_displayname} ({slab_quest_rewards_once[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_once[item_codename]['QuestName']})",
+                        picture_class=item_displayname,
+                        resource=slab_quest_rewards_once[item_codename]['QuestGiver'].replace('_', '-'),
                         progression=0,
                         goal=1
                     ))
@@ -112,10 +112,10 @@ def getSlabProgressionTierAdviceGroups():
                 # If I search for the item first, these can appear out of order
                 if vendor not in slab_AdviceDict["Vendors"]:
                     slab_AdviceDict["Vendors"][vendor] = []
-                if itemName in vendorList:
+                if item_codename in vendorList:
                     slab_AdviceDict["Vendors"][vendor].append(Advice(
-                        label=getItemDisplayName(itemName),
-                        picture_class=item_display_name,
+                        label=item_displayname,
+                        picture_class=item_displayname,
                         progression=0,
                         goal=1
                     ))
@@ -125,51 +125,64 @@ def getSlabProgressionTierAdviceGroups():
                 # If I search for the item first, these can appear out of order
                 if anvilTab not in slab_AdviceDict["Anvil"]:
                     slab_AdviceDict["Anvil"][anvilTab] = []
-                if itemName in anvilTabList:
+                if item_codename in anvilTabList:
                     slab_AdviceDict["Anvil"][anvilTab].append(Advice(
-                        label=getItemDisplayName(itemName),
-                        picture_class=item_display_name,
+                        label=item_displayname,
+                        picture_class=item_displayname,
                         progression=0,
                         goal=1
                     ))
                     break
             # If the item is a unique Dungeon Drop:
-            if itemName in dungeon_drops_list:
+            if item_codename in dungeon_drops_list:
                 slab_AdviceDict["Dungeon"]["Drops"].append(Advice(
-                    label=getItemDisplayName(itemName),
-                    picture_class=item_display_name,
+                    label=item_displayname,
+                    picture_class=item_displayname,
                     progression=0,
                     goal=1
                 ))
                 continue
             # If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
-            if itemName in dungeon_weapons_list and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= max_dungeon_weapons_available:
+            if item_codename in dungeon_weapons_list and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= max_dungeon_weapons_available:
                 slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
-                    label=getItemDisplayName(itemName),
-                    picture_class=item_display_name,
+                    label=item_displayname,
+                    picture_class=item_displayname,
                     progression=0,
                     goal=1
                 ))
                 continue
-            # If the item is a Dungeon Armor AND the player has purchased all MaxArmor
-            if itemName in dungeon_armors_list and session_data.account.dungeon_upgrades.get("MaxArmor", [0])[0] >= max_dungeon_armors_available:
-                slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
-                    label=getItemDisplayName(itemName),
-                    picture_class=item_display_name,
-                    progression=0,
-                    goal=1
-                ))
-                continue
-                # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
+            # If the item is a Dungeon Armor AND the player has unlocked the relevant armor tier
+            for equipment_type_index, equipment_list in dungeon_armors_dict.items():
+                try:
+                    if (
+                        item_codename in equipment_list
+                        and session_data.account.dungeon_upgrades['MaxArmor'][equipment_type_index] >= max_dungeon_armors_available[equipment_type_index]
+                    ):
+                        slab_AdviceDict['Dungeon']['Armor'].append(Advice(
+                            label=item_displayname,
+                            picture_class=item_displayname,
+                            progression=0,
+                            goal=1
+                        ))
+                        continue
+                except:
+                    logger.exception(f"Failed to verify if {item_codename} missing from slab is a type of unlocked Dungeon Armor")
             # If the item is a Dungeon Jewelry AND the player has purchased all MaxJewelry
-            if itemName in dungeon_jewelry_list and session_data.account.dungeon_upgrades.get("MaxJewelry", [0])[0] >= max_dungeon_jewelry_available:
-                slab_AdviceDict["Dungeon"]["Armor"].append(Advice(
-                    label=getItemDisplayName(itemName),
-                    picture_class=item_display_name,
-                    progression=0,
-                    goal=1
-                ))
-                continue
+            for jewelry_type_index, jewelry_list in dungeon_jewelry_dict.items():
+                try:
+                    if (
+                        item_codename in jewelry_list
+                        and session_data.account.dungeon_upgrades['MaxJewelry'][jewelry_type_index] >= max_dungeon_jewelry_available[jewelry_type_index]
+                    ):
+                        slab_AdviceDict['Dungeon']['Armor'].append(Advice(
+                            label=item_displayname,
+                            picture_class=item_displayname,
+                            progression=0,
+                            goal=1
+                        ))
+                        continue
+                except:
+                    logger.exception(f"Failed to verify if {item_codename} missing from slab is a type of unlocked Dungeon Jewelry")
 
     # Replace any locked Vendors with unlock note
     for vendor_name, required_item in vendor_unlock_item.items():

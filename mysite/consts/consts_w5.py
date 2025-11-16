@@ -301,24 +301,27 @@ dungeon_drops_list = [
     "FoodHealth1d", "FoodHealth2d", "FoodHealth3d"
 ]
 max_dungeon_weapons_available = 23  #This is the value saved in the JSON, 0-23 = 24 total. Last verified in 2.12
+# Dungeon Weapons, Armors, and Jewelry created by copying item codenames from the Slab and removing those unobtainable
 dungeon_weapons_list = [
     "DungWeaponPunchA1", "DungWeaponPunchA2", "DungWeaponPunchA3", "DungWeaponPunchA4", "DungWeaponPunchA5", "DungWeaponPunchB1", "DungWeaponPunchB2", "DungWeaponPunchB3", "DungWeaponPunchB4", "DungWeaponPunchB5", "DungWeaponPunchC1", "DungWeaponPunchC2", "DungWeaponPunchC3", "DungWeaponPunchC4", "DungWeaponPunchC5", "DungWeaponPunchD1", "DungWeaponPunchD2", "DungWeaponPunchD3", "DungWeaponPunchD4", "DungWeaponPunchD5", "DungWeaponPunchE1", "DungWeaponPunchE2", "DungWeaponPunchE3", "DungWeaponPunchE4",  #"DungWeaponPunchE5", "DungWeaponPunchF1", "DungWeaponPunchF2", "DungWeaponPunchF3", "DungWeaponPunchF4", "DungWeaponPunchF5",
     "DungWeaponSwordA1", "DungWeaponSwordA2", "DungWeaponSwordA3", "DungWeaponSwordA4", "DungWeaponSwordA5", "DungWeaponSwordB1", "DungWeaponSwordB2", "DungWeaponSwordB3", "DungWeaponSwordB4", "DungWeaponSwordB5", "DungWeaponSwordC1", "DungWeaponSwordC2", "DungWeaponSwordC3", "DungWeaponSwordC4", "DungWeaponSwordC5", "DungWeaponSwordD1", "DungWeaponSwordD2", "DungWeaponSwordD3", "DungWeaponSwordD4", "DungWeaponSwordD5", "DungWeaponSwordE1", "DungWeaponSwordE2", "DungWeaponSwordE3", "DungWeaponSwordE4",  #"DungWeaponSwordE5", "DungWeaponSwordF1", "DungWeaponSwordF2", "DungWeaponSwordF3", "DungWeaponSwordF4", "DungWeaponSwordF5",
     "DungWeaponBowA1", "DungWeaponBowA2", "DungWeaponBowA3", "DungWeaponBowA4", "DungWeaponBowA5", "DungWeaponBowB1", "DungWeaponBowB2", "DungWeaponBowB3", "DungWeaponBowB4", "DungWeaponBowB5", "DungWeaponBowC1", "DungWeaponBowC2", "DungWeaponBowC3", "DungWeaponBowC4", "DungWeaponBowC5", "DungWeaponBowD1", "DungWeaponBowD2", "DungWeaponBowD3", "DungWeaponBowD4", "DungWeaponBowD5", "DungWeaponBowE1", "DungWeaponBowE2", "DungWeaponBowE3", "DungWeaponBowE4",  #"DungWeaponBowE5", "DungWeaponBowF1", "DungWeaponBowF2", "DungWeaponBowF3", "DungWeaponBowF4", "DungWeaponBowF5",
     "DungWeaponWandA1", "DungWeaponWandA2", "DungWeaponWandA3", "DungWeaponWandA4", "DungWeaponWandA5", "DungWeaponWandB1", "DungWeaponWandB2", "DungWeaponWandB3", "DungWeaponWandB4", "DungWeaponWandB5", "DungWeaponWandC1", "DungWeaponWandC2", "DungWeaponWandC3", "DungWeaponWandC4", "DungWeaponWandC5", "DungWeaponWandD1", "DungWeaponWandD2", "DungWeaponWandD3", "DungWeaponWandD4", "DungWeaponWandD5", "DungWeaponWandE1", "DungWeaponWandE2", "DungWeaponWandE3", "DungWeaponWandE4",  #"DungWeaponWandE5", "DungWeaponWandF1", "DungWeaponWandF2", "DungWeaponWandF3", "DungWeaponWandF4", #"DungWeaponWandF5",
 ]
-max_dungeon_armors_available = 3  #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
-dungeon_armors_list = [
-    "DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", "DungEquipmentHats4",  #DB unlocked Legendary hat
-    "DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", "DungEquipmentShirt4",  #AC unlocked Legendary shirt
-    "DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3",  #"DungEquipmentPants4",  #Royal Guardian
-    "DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3",  #"DungEquipmentShoes4",  #"Filler"
-]  #This list was pulled from the items.yaml file
-max_dungeon_jewelry_available = 3   #This is the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
-dungeon_jewelry_list = [
-    "DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", "DungEquipmentPendant4",  #WW unlocked legendary pendant
-    "DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3",  #"DungEquipmentRings4",  #"Filler"
-]  #This list was pulled from the items.yaml file
+dungeon_armors_dict = {
+    0: ["DungEquipmentHats0", "DungEquipmentHats1", "DungEquipmentHats2", "DungEquipmentHats3", "DungEquipmentHats4"],  #DB unlocked Legendary hat
+    1: ["DungEquipmentShirt0", "DungEquipmentShirt1", "DungEquipmentShirt2", "DungEquipmentShirt3", "DungEquipmentShirt4"],  #AC unlocked Legendary shirt
+    2: ["DungEquipmentPants0", "DungEquipmentPants1", "DungEquipmentPants2", "DungEquipmentPants3"],  #"DungEquipmentPants4",  #Royal Guardian
+    3: ["DungEquipmentShoes0", "DungEquipmentShoes1", "DungEquipmentShoes2", "DungEquipmentShoes3"],  #"DungEquipmentShoes4",  #"Filler"
+}
+#This is to match the value saved in the JSON, 0-4 = 5 total. Last verified in v2.45 Nov 16
+max_dungeon_armors_available = [len(value) for value in dungeon_armors_dict.values()]
+dungeon_jewelry_dict = {
+    0: ["DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", "DungEquipmentPendant4"],  #WW unlocked legendary pendant
+    1: ["DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3"],  #"DungEquipmentRings4",  #"Filler"
+}
+#This is to match the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
+max_dungeon_jewelry_available = [len(value) for value in dungeon_jewelry_dict.values()]
 
 #`QuestsToRECLAIM = function` in source. Last updated in v2.43 Nov 15
 # This only provides the codename of the quest. The rest was put together by hand by Trialpears + Scoli
