@@ -320,7 +320,7 @@ dungeon_jewelry_dict = {
     0: ["DungEquipmentPendant0", "DungEquipmentPendant1", "DungEquipmentPendant2", "DungEquipmentPendant3", "DungEquipmentPendant4"],  #WW unlocked legendary pendant
     1: ["DungEquipmentRings0", "DungEquipmentRings1", "DungEquipmentRings2", "DungEquipmentRings3"],  #"DungEquipmentRings4",  #"Filler"
 }
-#This is to match the value saved in the JSON, 0-3 = 4 total. Last verified in 2.12
+#This is to match the value saved in the JSON, 0-4 = 5 total. Last verified in v2.45 Nov 16
 max_dungeon_jewelry_available = [len(value) for value in dungeon_jewelry_dict.values()]
 
 #`QuestsToRECLAIM = function` in source. Last updated in v2.43 Nov 15
