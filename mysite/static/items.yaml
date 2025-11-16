@@ -218,6 +218,7 @@ EquipmentPunching8: Molten Core Knucklers
 EquipmentPunching9: Crackled Skull Destroyer
 EquipmentPunching10: Pentastud Slapper
 EquipmentPunching11: Mittens of the Gods
+EquipmentPunching12: Talon of the Hawk
 TestObj1: Wooden Spear
 TestObj7: Steel Axe
 TestObj3: Royal Bayonet
@@ -681,6 +682,7 @@ Timecandy6: 72 HR Time Candy
 Timecandy7: Steamy Time Candy
 Timecandy8: Spooky Time Candy
 Timecandy9: Cosmic Time Candy
+Timecandy10: Spirit Time Candy
 InvBag1: Inventory Bag A
 InvBag2: Inventory Bag B
 InvBag3: Inventory Bag C
@@ -740,6 +742,8 @@ InvStorage25: Storage Chest 25
 InvStorage26: Storage Chest 26
 InvStorage27: Storage Chest 27
 InvStorage28: Storage Chest 28
+InvStorage29: Storage Chest 29
+InvStorage30: Storage Chest 30
 InvStorage31: Storage Chest 90
 InvStorage32: Storage Chest 91
 InvStorage33: Storage Chest 92
@@ -1197,9 +1201,16 @@ w7A9: Demonflesh
 w7A10: Fishfork
 w7A11: Crabclaw
 w7A12: Guardian Mace
+ClamPearl0: Clam Pearl
+ClamPearl1: Pure Pearl
 Coral1: Vibrant Coral
 Coral2: Glowing Coral
 Coral3: Neon Coral
+Coral4: Coral4
+Coral5: Coral5
+Coral6: Coral6
+Coral7: Coral7
+Coral8: Coral8
 GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
@@ -1697,27 +1708,34 @@ DNAgun1: Bolstered DNA Splicer
 DNAgun2: Double Barreled DNA Splicer
 DNAgun3: Ergonomic DNA Splicer
 FoodHealth1: Nomwich
-FoodHealth3: Hot Dog
 FoodHealth2: Cheezy Pizza
-Peanut: Peanut
+FoodHealth3: Hot Dog
 FoodHealth4: Saucy Weiner
+FoodHealth5: Cranberry Jam
 FoodHealth6: Kebab Sticks
 FoodHealth7: Meat Pie
-FoodHealth10: Mountain Bread
+FoodHealth8: Crabby Cake Supreme  # Unreleased
 FoodHealth9: Yeti Ham
+FoodHealth10: Mountain Bread
 FoodHealth11: Sheepie Dairy
-FoodHealth13: Cupcake
 FoodHealth12: Spicy Space Ribs
+FoodHealth13: Cupcake
 FoodHealth14: Lemon Slice
 FoodHealth15: Grilled Cheese Nomwich
 FoodHealth16: Raw Nigiri
 FoodHealth17: Dumpling
 FoodHealth18: Saltwater Taffy
 FoodHealth19: Sugar Cookie
-FoodHealth5: Cranberry Jam
-FoodHealth8: Crabby Cake Supreme
-FoodEvent8: Milk Choco
 Meatloaf: Magic Meatloaf
+Peanut: Peanut
+FoodPotGr1: Small Speed Potion
+FoodPotGr2: Average Speed Potion
+FoodPotGr3: Decent Speed Potion
+FoodPotGr4: Potent Speed Potion
+FoodPotMana1: Small Mana Potion
+FoodPotMana2: Average Mana Potion
+FoodPotMana3: Decent Mana Potion
+FoodPotMana4: Potent Mana Potion
 FoodPotOr1: Small Strength Potion
 FoodPotOr2: Average Strength Potion
 FoodPotOr3: Decent Strength Potion
@@ -1726,39 +1744,35 @@ FoodPotRe1: Small Life Potion
 FoodPotRe2: Average Life Potion
 FoodPotRe3: Decent Life Potion
 FoodPotRe4: Potent Life Potion
-FoodPotGr1: Small Speed Potion
-FoodPotGr2: Average Speed Potion
-FoodPotGr3: Decent Speed Potion
-FoodPotGr4: Potent Speed Potion
-FoodEvent7: Minto Choco
-FoodPotMana1: Small Mana Potion
-FoodPotMana2: Average Mana Potion
-FoodPotMana3: Decent Mana Potion
-FoodPotMana4: Potent Mana Potion
 FoodPotYe1: Small EXP Potion
 FoodPotYe2: Average EXP Potion
 FoodPotYe3: Decent EXP Potion
 FoodPotYe4: Potent EXP Potion
 FoodPotYe5: Quotient EXP Potion
-FoodEvent6: Lemony Choco
-Pearl3: Shiny Pearl
 FoodMining1: Icing Ironbite
-FoodEvent1: Giftybread Man
-Pearl2: Stained Pearl
 FoodChoppin1: Saucy Logfries
-FoodEvent2: Chogg Nog
 FoodFish1: Slurpin Herm
-FoodEvent3: Candy Canes
-Pearl1: Aqua Pearl
 FoodCatch1: Buttered Toasted Butter
-FoodEvent4: Mistleberries
 FoodTrapping1: Critter Numnums
 FoodWorship1: Soulble Gum
+FoodEvent1: Giftybread Man
+FoodEvent2: Chogg Nog
+FoodEvent3: Candy Canes
+FoodEvent4: Mistleberries
+FoodEvent5: Cherry Choco
+FoodEvent6: Lemony Choco
+FoodEvent7: Minto Choco
+FoodEvent8: Milk Choco
+Pearl1: Aqua Pearl
+Pearl2: Stained Pearl
+Pearl3: Shiny Pearl
+Pearl4: Black Pearl
+Pearl5: Holy Pearl
+Pearl6: Divinity Pearl
 Bullet: Bullet
 BulletB: FMJ Bullet
 Bullet3: Coldseeker Bullet
 MidnightCookie: Midnight Cookie
-FoodEvent5: Cherry Choco
 PeanutG: Golden Peanut
 FoodG1: Golden Jam
 FoodG2: Golden Kebabs
@@ -1774,6 +1788,7 @@ FoodG11: Golden Nigiri
 FoodG12: Golden Dumpling
 FoodG13: Golden Cake
 FoodG14: Golden Saltwater Taffy
+FoodG15: Golden Sugar Cookie
 ButterBar: Butter Bar
 rtt0: Bottled Town Teleport
 ResetFrag: Talent Point Reset Fragment
@@ -1847,9 +1862,6 @@ Quest50: Beach Oyster
 Quest51: Skull Coin
 Quest52: Coin
 PalmTreeD: Palm Tree Log
-Pearl4: Black Pearl
-Pearl5: Holy Pearl
-Pearl6: Divinity Pearl
 Quest53: Meat Cube
 Quest54: Sand Pile
 Quest55: Buried Treasure

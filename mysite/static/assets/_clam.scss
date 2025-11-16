@@ -1,0 +1,10 @@
+$clam-resources: (
+    clam-pearl: img('data/ClamPearl0.png'),
+    pure-pearl: img('data/ClamPearl1.png'),
+);
+
+$clam-misc: (
+
+);
+
+$all-clam: map-merge($clam-resources, $clam-misc);

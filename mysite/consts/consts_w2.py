@@ -379,15 +379,8 @@ ballot_dict = {
     34: {'BaseValue': 52, 'Description': "Increases cash earned from monsters by +{%", 'Image': "ballot-34"},
 }
 fishing_toolkit_dict = {
-    "Lures": [
-        'Fly', 'Wormie Weight', 'Iron Hook', 'Basic Bobber', 'Dualhook Prongs', 'Pound of Steel', 'Pound of Feathers',
-        'Massless Unit for Physics Questions', 'Literal Elephant', 'Valve Patented Circle Thingies', 'Dynamite', 'Not Dynamite',
-        'Triple Threat', 'Crash Box', 'Fat Albert',
-    ],
-    "Lines": [
-        'Fishing Twine', 'Copper Twine', 'Silver Twine', 'Gold Twine', 'Platinum Twine', 'Leafy Vines', 'Fun Flags', 'Electrical Wiring',
-        'Wiener Links', 'Zeus Gon Fishin', 'Needledrop', 'Scripticus Spoons', 'Its a Boy Celebration', 'Its a Girl Celebration', 'Its Alright Celebration'
-    ],
+    'Lures': [f"Weight{i}" for i in range(1, 15)],
+    'Lines': [f"Line{i}" for i in range(1, 15)]
 }
 obols_dict = {
     #Drop Rate
