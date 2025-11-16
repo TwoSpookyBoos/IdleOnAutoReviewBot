@@ -1696,9 +1696,9 @@ def _parse_w3_refinery(account):
     for saltColor, saltDetails in refinery_dict.items():
         try:
             account.refinery[saltColor] = {
-                'Rank': raw_refinery_list[saltDetails[0]][1],
-                'Running': raw_refinery_list[saltDetails[0]][3],
-                'AutoRefine': raw_refinery_list[saltDetails[0]][4],
+                'Rank': parse_number(raw_refinery_list[saltDetails[0]][1]),
+                'Running': parse_number(raw_refinery_list[saltDetails[0]][3]),
+                'AutoRefine': parse_number(raw_refinery_list[saltDetails[0]][4]),
                 'Image': saltDetails[1],
                 'CyclesPerSynthCycle': saltDetails[2],
                 'PreviousSaltConsumption': saltDetails[3],
