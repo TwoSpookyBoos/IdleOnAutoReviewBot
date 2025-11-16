@@ -117,8 +117,8 @@ def _get_item_name(_dict, name):
         try:
             return _dict[name]
         except KeyError:
-            #logger.debug(f"Unknown item: '{name}'")
-            #log_unknown_item(name)
+            logger.debug(f"Unknown item: '{name}'")
+            log_unknown_item(name)
             return f"Unknown-'{name}'"
     else:
         #Don't need a logger message if the unknown item is an empty string
