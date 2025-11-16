@@ -217,7 +217,7 @@ def _parse_companions(account):
     # Match the Companion IDs to their names
     for companion_name, companion_data in companions_data.items():
         if companion_data['Id'] in acquired_companion_ids:
-            account.companions[companion_name] = companion_data
+            account.companions[companion_name] = copy.deepcopy(companion_data)
             if companion_name == 'Biggole Mole':
                 biggole_mole_max_days = 100
                 biggole_mole_days = min(biggole_mole_max_days, safer_get(account.raw_optlacc_dict, 354, 0))
