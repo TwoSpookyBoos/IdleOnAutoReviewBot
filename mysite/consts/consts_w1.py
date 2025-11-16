@@ -347,7 +347,7 @@ statue_farming = {
     5:  {"Farmer": "Monolith Quest on All characters", "Resource": "monolith"},
     6:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
     7:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
-    8:  {"Farmer": "AFK or Candy with Vman at W2 Bugs", "Resource": "fly-nest"},
+    8:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},  #v2.45 moved statues from Skilling nodes to Crystals
     9:  {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
     10: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
     11: {"Farmer": "Crystals with DK at Sandy Pot or Tyson", "Resource": "crystal-crabal"},
@@ -383,8 +383,16 @@ statues_dict = {
     }
     for index, (name, effect, pos2, basevalue) in enumerate(StatueInfo)
 }
-statue_type_list = ['Normal', 'Gold', 'Onyx']
+statue_type_dict = {0: 'Normal', 1: 'Gold', 2: 'Onyx', 3: 'Zenith'}
+statue_type_count = sum([isinstance(k, int) for k in statue_type_dict.keys()])
 statue_count = len(statues_dict.keys())
+statue_onyx_stack_size = 20000
+statue_zenith_stack_size = 1000000
+
+def get_statue_type_index_from_name(statue_type_name: str) -> int:
+    statue_type_index = next((k for k, v in statue_type_dict.items() if v == statue_type_name), 0)
+    return statue_type_index
+
 
 # Found near end of `NinjaInfo` in source. Last updated in v2.43 Nov10
 NinjaInfo_event_shop = NinjaInfo[39]
