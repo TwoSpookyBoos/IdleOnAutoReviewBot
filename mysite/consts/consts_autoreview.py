@@ -177,7 +177,8 @@ versions_patches = {
     # TODO: some are missing here
     279: "v2.41 Summoning Bosses",
     297: "v2.43 World 7",
-    299: "v2.44 Cropfall Event"
+    299: "v2.44 Cropfall Event",
+    301: "v2.45 Zenith Statues"
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 

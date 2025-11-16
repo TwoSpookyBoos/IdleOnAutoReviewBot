@@ -8,6 +8,7 @@ import consts.generated
 def generate_data_dict(dumped_source_data: str, extractor_function: Callable[[str], dict], target_name: str, target_dict: dict):
     """
     Generate a static data dict in consts.generated from idleon source data.
+    We use the sha256 hash of the dumped string to determine whether the file needs to be regenerated
     """
     dump_hash = hashlib.sha256(dumped_source_data.encode()).hexdigest()
     target_hash = target_dict.get('_hash', None)
