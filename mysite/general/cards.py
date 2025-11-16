@@ -250,7 +250,7 @@ def getCardsAdviceSection() -> AdviceSection:
     player_max_card_stars = (
         4
         + (1 * session_data.account.rift['RubyCards'])
-        + (1 * True)  # TODO: Replace True with Majestic Cards unlocked check
+        + (1 * True)  # TODO: Replace True with Majestic Cards unlocked check after Spelunking is implemented
     )
 
     groups = list()

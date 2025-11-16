@@ -15,7 +15,7 @@ from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
     compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
-from consts.consts_monster_data import decode_enemy_name
+from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict, statue_count, event_points_shop_dict,
     statue_type_count, get_statue_type_index_from_name
@@ -82,7 +82,7 @@ def _make_cards(account):
             if card_info[0] == 'Blank':
                 continue  #Skip the blank placeholders
             # ["mushG", "A0", "5", "+{_Base_HP", "12"],
-            enemy_decoded_name = decode_enemy_name(card_info[0], card=True)
+            enemy_decoded_name = decode_monster_name(card_info[0], card=True)
             if enemy_decoded_name.startswith('Unknown'):
                 unknown_cards.append(card_info)
             parsed_card_data[enemy_decoded_name] = {
@@ -963,7 +963,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                 'Image': known_extras[raw_enemy_name][1],
             }
         else:
-            decoded_name = decode_enemy_name(raw_enemy_name, card=True)
+            decoded_name = decode_monster_name(raw_enemy_name, card=True)
             account.compass['Medallions'][raw_enemy_name] = {
                 'Obtained': raw_enemy_name in raw_medallions,
                 'Enemy Name': decoded_name,

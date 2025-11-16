@@ -1415,6 +1415,8 @@ class Card:
         6 stars = 14,670x additional what 1star took, for a total of 484+14,670 = 15,129x  (123^2).
         7 stars = 496x additional what 1star took, for a total of 15,129+496 = 15,625x (125^2).
         """
+        if star == 0:
+            return 1
         previous_star = star - 1
         if self.name == 'Chaotic Chizoar':
             tier_coefficient = previous_star + 1 + floor(previous_star/3)
