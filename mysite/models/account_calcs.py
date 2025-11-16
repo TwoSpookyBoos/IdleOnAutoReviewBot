@@ -5,7 +5,7 @@ from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_enemy_name
-from consts.consts_w1 import statue_type_list, statues_dict
+from consts.consts_w1 import statue_type_dict, statues_dict, get_statue_type_index_from_name
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
@@ -2504,7 +2504,7 @@ def _calculate_w1_statues(account):
     vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
 
     onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
-    onyx_index = statue_type_list.index('Onyx')
+    onyx_typenumber = get_statue_type_index_from_name('Onyx')
 
     event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
 
@@ -2512,7 +2512,7 @@ def _calculate_w1_statues(account):
     account.statues['Dragon Statue']['Value'] = (
         account.statues['Dragon Statue']['BaseValue']
         * account.statues['Dragon Statue']['Level']
-        * (onyx_multi if statue_type_list.index(account.statues['Dragon Statue']['Type']) >= onyx_index else 1)
+        * (onyx_multi if account.statues['Dragon Statue']['TypeNumber'] >= onyx_typenumber else 1)
         * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
         * voodoo_statufication_multi
         * event_shop_multi
@@ -2525,7 +2525,7 @@ def _calculate_w1_statues(account):
             account.statues[statue_name]['Value'] = (
                 account.statues[statue_name]['BaseValue']
                 * account.statues[statue_name]['Level']
-                * (onyx_multi if statue_type_list.index(statue_details['Type']) >= onyx_index else 1)
+                * (onyx_multi if statue_details['TypeNumber'] >= onyx_typenumber else 1)
                 * (vault_multi if statue_name in vault_statues else 1)
                 * voodoo_statufication_multi
                 * dragon_multi

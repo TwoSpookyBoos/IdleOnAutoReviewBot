@@ -17,7 +17,8 @@ from consts.consts_master_classes import (
 )
 from consts.consts_monster_data import decode_enemy_name
 from consts.consts_w1 import (
-    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_list, statue_count, event_points_shop_dict
+    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict, statue_count, event_points_shop_dict,
+    statue_type_count, get_statue_type_index_from_name
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
@@ -1243,7 +1244,14 @@ def _parse_w1_statues(account):
     raw_statue_type_list = safe_loads(account.raw_data.get("StuG", []))
     if len(raw_statue_type_list) != statue_count:
         raw_statue_type_list += [0] * (statue_count - len(raw_statue_type_list))
-    account.onyx_statues_unlocked = max(raw_statue_type_list, default=0) >= statue_type_list.index("Onyx")
+    account.onyx_statues_unlocked = (
+            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Onyx')
+            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 2
+    )
+    account.zenith_statues_unlocked = (
+            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Zenith')
+            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 3
+    )
     statue_levels = [0] * statue_count
 
     # Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
@@ -1264,8 +1272,8 @@ def _parse_w1_statues(account):
         try:
             account.statues[statueDetails['Name']] = {
                 'Level': statue_levels[statueIndex],
-                'Type': statue_type_list[raw_statue_type_list[statueIndex]],  # Description: Normal, Gold, Onyx
-                'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-2
+                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
+                'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-3
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
@@ -1277,8 +1285,8 @@ def _parse_w1_statues(account):
             logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
             account.statues[statueDetails['Name']] = {
                 'Level': 0,
-                'Type': statue_type_list[raw_statue_type_list[statueIndex]],
-                'TypeNumber': raw_statue_type_list[0],
+                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
+                'TypeNumber': 0,
                 'ItemName': statueDetails['ItemName'],
                 'Effect': statueDetails['Effect'],
                 'BaseValue': statueDetails['BaseValue'],
@@ -1287,7 +1295,7 @@ def _parse_w1_statues(account):
                 'Resource': statueDetails['Resource'],
             }
         account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
-        if account.statues[statueDetails['Name']]['TypeNumber'] >= len(statue_type_list) - 1:
+        if account.statues[statueDetails['Name']]['TypeNumber'] >= statue_type_count:
             account.maxed_statues += 1
 
 

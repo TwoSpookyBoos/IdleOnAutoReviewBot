@@ -99,9 +99,45 @@ $onyx-statues: (
     onyx-essence-statue:        img('data/StatueO28.png'),
     onyx-villager-statue:       img('data/StatueO29.png'),
     onyx-dragon-statue:         img('data/StatueO30.png'),
-    onyx-spelunky-statue:       img('data/StatueG31.png'),
-    onyx-coral-statue:          img('data/StatueG32.png'),
+    onyx-spelunky-statue:       img('data/StatueO31.png'),
+    onyx-coral-statue:          img('data/StatueO32.png'),
+);
+
+$zenith-statues: (
+    zenith-power-statue:        img('data/StatueZ1.png'),
+    zenith-speed-statue:        img('data/StatueZ2.png'),
+    zenith-mining-statue:       img('data/StatueZ3.png'),
+    zenith-feasty-statue:       img('data/StatueZ4.png'),
+    zenith-health-statue:       img('data/StatueZ5.png'),
+    zenith-kachow-statue:       img('data/StatueZ6.png'),
+    zenith-lumberbob-statue:    img('data/StatueZ7.png'),
+    zenith-thicc-skin-statue:   img('data/StatueZ8.png'),
+    zenith-oceanman-statue:     img('data/StatueZ9.png'),
+    zenith-ol-reliable-statue:  img('data/StatueZ10.png'),
+    zenith-exp-statue:          img('data/StatueZ11.png'),
+    zenith-anvil-statue:        img('data/StatueZ12.png'),
+    zenith-cauldron-statue:     img('data/StatueZ13.png'),
+    zenith-beholder-statue:     img('data/StatueZ14.png'),
+    zenith-bullseye-statue:     img('data/StatueZ15.png'),
+    zenith-box-statue:          img('data/StatueZ16.png'),
+    zenith-twosoul-statue:      img('data/StatueZ17.png'),
+    zenith-ehexpee-statue:      img('data/StatueZ18.png'),
+    zenith-seesaw-statue:       img('data/StatueZ19.png'),
+    zenith-pecunia-statue:      img('data/StatueZ20.png'),
+    zenith-mutton-statue:       img('data/StatueZ21.png'),
+    zenith-egg-statue:          img('data/StatueZ22.png'),
+    zenith-battleaxe-statue:    img('data/StatueZ23.png'),
+    zenith-spiral-statue:       img('data/StatueZ24.png'),
+    zenith-boat-statue:         img('data/StatueZ25.png'),
+    zenith-compost-statue:      img('data/StatueZ26.png'),
+    zenith-stealth-statue:      img('data/StatueZ27.png'),
+    zenith-essence-statue:      img('data/StatueZ28.png'),
+    zenith-villager-statue:     img('data/StatueZ29.png'),
+    zenith-dragon-statue:       img('data/StatueZ30.png'),
+    zenith-spelunky-statue:     img('data/StatueZ31.png'),
+    zenith-coral-statue:        img('data/StatueZ32.png'),
 );
 
 $all-statues: map-merge($normal-statues, $gold-statues);
 $all-statues: map-merge($all-statues, $onyx-statues);
+$all-statues: map-merge($all-statues, $zenith-statues);

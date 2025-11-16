@@ -1,6 +1,6 @@
 from models.models import Advice, AdviceGroup, AdviceSection
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
-from consts.consts_w1 import statue_type_list, statue_count
+from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.data_formatting import mark_advice_completed, safer_get
@@ -114,7 +114,7 @@ def getCurrentLevelsAdviceGroup() -> AdviceGroup:
         'Effect bonuses': session_data.account.statue_effect_advice,
         'Statue Effects': [
             Advice(
-                label=f"Level {details['Level']} {name}:"
+                label=f"Level {details['Level']} {details['Type']} {name}:"
                       f"<br> +{round(details['Value'], 2):,g}{' ' if not details['Effect'].startswith('%') else ''}{details['Effect']}",
                 picture_class=details['Image'],
                 progression=details['Level'],
@@ -145,15 +145,16 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     true_max = true_max_tiers['Statues']
     max_tier = true_max - info_tiers
     tier_Statues = 0
-    depositable_statues = 0
+    depositable_onyx_statues = 0
+    depositable_zenith_statues = 0
 
     # Assess Tiers
     for tier_number, requirements in statues_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         for statue_name, statue_details in session_data.account.statues.items():
             # Trying to futureproof new tiers - If at least Gold, but not the max tier
-            farm_details = f": {statue_details['Farmer']}" if 0 <= statue_details['TypeNumber'] < len(statue_type_list) else ''
-            farm_resource = statue_details['Resource'] if 0 <= statue_details['TypeNumber'] < len(statue_type_list) else ''
+            farm_details = f": {statue_details['Farmer']}" if 0 <= statue_details['TypeNumber'] < len(statue_type_dict) else ''
+            farm_resource = statue_details['Resource'] if 0 <= statue_details['TypeNumber'] < len(statue_type_dict) else ''
             if statue_name in requirements.get('SpecificLevels', {}):
                 if statue_details['Level'] < requirements['SpecificLevels'][statue_name]:
                     add_subgroup_if_available_slot(statues_AdviceDict['Tiers'], subgroup_label)
@@ -176,20 +177,36 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                             picture_class=statue_details['Image'],
                             progression=statue_details['TypeNumber'] if statue_details['TypeNumber'] < 1 else session_data.account.stored_assets.get(
                                 statue_details['ItemName']).amount,
-                            goal=20000 if requirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' else requirements.get(
-                                'MinStatueTypeNumber', 0),
+                            goal=(
+                                statue_onyx_stack_size if requirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx'
+                                else statue_zenith_stack_size if requirements.get('MinStatueType', 'UnknownStatueType') == 'Zenith'
+                                else requirements.get('MinStatueTypeNumber', 0)),
                             resource="coins" if requirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farm_resource
                         ))
-                    if session_data.account.stored_assets.get(statue_details['ItemName']).amount >= 20000 and statue_details['Type'] != statue_type_list[-1]:
-                        depositable_statues += 1
+                    if (
+                        session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_onyx_stack_size
+                        and get_statue_type_index_from_name('Gold') <= statue_details['Type'] < get_statue_type_index_from_name('Onyx')
+                    ):
+                        depositable_onyx_statues += 1
+                    if (
+                        session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_zenith_stack_size
+                        and get_statue_type_index_from_name('Onyx') <= statue_details['Type'] < get_statue_type_index_from_name('Zenith')
+                    ):
+                        depositable_onyx_statues += 1
+
         if subgroup_label not in statues_AdviceDict['Tiers'] and tier_Statues == tier_number - 1:
             tier_Statues = tier_number
 
     # Generate Alerts
-    if depositable_statues > 0 and session_data.account.onyx_statues_unlocked:
+    if depositable_onyx_statues > 0 and session_data.account.onyx_statues_unlocked:
         session_data.account.alerts_Advices['World 1'].append(Advice(
-            label=f"You can upgrade {depositable_statues} {{{{ Statue{pl(depositable_statues)}|#statues }}}} to {statue_type_list[-1]}!",
-            picture_class="town-marble"
+            label=f"You can upgrade {depositable_onyx_statues} {{{{ Statue{pl(depositable_onyx_statues)}|#statues }}}} to Onyx in W1 Town!",
+            picture_class='onyx-tools'
+        ))
+    if depositable_zenith_statues > 0 and session_data.account.zenith_statues_unlocked:
+        session_data.account.alerts_Advices['World 1'].append(Advice(
+            label=f"You can upgrade {depositable_zenith_statues} {{{{ Statue{pl(depositable_zenith_statues)}|#statues }}}} to Zenith in W1 Town!",
+            picture_class='zenith-tools'
         ))
 
     tiers_ag = AdviceGroup(
