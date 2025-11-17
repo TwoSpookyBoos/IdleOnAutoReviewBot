@@ -2,8 +2,6 @@
 @import "caverns";
 @import "world-contents";
 @import "gem-shop";
-@import "compass";
-@import "tesseract";
 
 $resources: (
     // Ores
@@ -406,11 +404,11 @@ $equipment-weapons: (
     raptor-shardslinger:        img('data/EquipmentBows15.png'),
     
     // Tempest Bows
-    tempest-bow-of-dust: map-get($compass-equipment, tempest-bow-of-dust),
-    tempest-bow-of-ice: map-get($compass-equipment, tempest-bow-of-ice),
-    tempest-bow-of-fire: map-get($compass-equipment, tempest-bow-of-fire),
-    tempest-bow-of-wind: map-get($compass-equipment, tempest-bow-of-wind),
-    tempest-bow-of-grass: map-get($compass-equipment, tempest-bow-of-grass),
+    tempest-bow-of-dust:        img('data/EquipmentBowsTempest0.png'),
+    tempest-bow-of-ice:         img('data/EquipmentBowsTempest1.png'),
+    tempest-bow-of-fire:        img('data/EquipmentBowsTempest2.png'),
+    tempest-bow-of-wind:        img('data/EquipmentBowsTempest3.png'),
+    tempest-bow-of-grass:       img('data/EquipmentBowsTempest4.png'),
 
     // Wands
     gnarled-wand:                   img('data/EquipmentWands1.png'),
@@ -429,7 +427,7 @@ $equipment-weapons: (
     beastly-orblauncher:            img('data/EquipmentWands14.png'),
 
     // Arcanist Wands
-    arcanist-staff: map-get($tesseract-equipment, arcanist-staff),
+    arcanist-staff: img('data/EquipmentWandsArc0.png'),
 );
 
 $equipment-hats: (
@@ -725,64 +723,76 @@ $equipment-jewelry: (
     butterfly-pendant:          img('data/EquipmentPendant36.png'),
 
     // Rings
-    copper-band: img('wiki/Copper_Band.png'),
-    steel-band: img('wiki/Steel_Band.png'),
-    death-wish: img('wiki/Death_Wish.png'),
-    pugilist-demise: img('wiki/Pugilist_Demise.png'),
-    defenders-dignity: img('wiki/Defenders_Dignity.png'),
-    frisbee-ring: img('wiki/Frisbee_Ring.png'),
-    silver-stopwatch: img('wiki/Silver_Stopwatch.png'),
-    dooble-goopi: img('wiki/Dooble_Goopi.png'),
-    sanic-ring: img('wiki/Sanic_Ring.png'),
-    efaunt-trunculus: img('wiki/Efaunt_Trunculus.png'),
-    elf-twist-ring: img('wiki/Elf_Twist_Ring.png'),
-    rex-ring: img('wiki/Rex_Ring.png'),
-    bejeweled-ring: img('wiki/Bejeweled_Ring.png'),
-    shallow-watering: img('wiki/Shallow_Watering.png'),
-    oceanic-ring: img('wiki/Oceanic_Ring.png'),
-    deepwater-trench-ring: img('wiki/Deepwater_Trench_Ring.png'),
-    tenacity-ring: img('wiki/Tenacity_Ring.png'),
-    the-emperors-opal: img('wiki/The_Emperor%27s_Opal.png'),
-    demented-emperor-opal: img('wiki/Demented_Emperor_Opal.png'),
-    neutron-ice-ring: img('wiki/Neutron_Ice_Ring.png'),
-    lab-ring: img('wiki/Lab_Rang.png'),
-    chef-ring: img('wiki/Chef_Ring.png'),
-    serrated-rex-ring: img('wiki/Serrated_Rex_Ring.png'),
-    protectors-pride: img('wiki/Protectors_Pride.png'),
-    midnight-stopwatch: img('wiki/Midnight_Stopwatch.png'),
-    dawn-stopwatch: img('wiki/Dawn_Stopwatch.png'),
-    souped-lab-ring: img('wiki/Souped_Lab_Ring.png'),
-    dune-killer-ring: img('wiki/Dune_Killer_Ring.png'),
-    tundra-killer-ring: img('wiki/Tundra_Killer_Ring.png'),
-    nebula-killer-ring: img('wiki/Nebula_Killer_Ring.png'),
-    magma-killer-ring: img('wiki/Magma_Killer_Ring.png'),
-    spirit-killer-ring: img('data/EquipmentRings37.png'),
-    meteorite-ring: img('wiki/Meteorite_Ring.png'),
-    zero-point-stopwatch: img('wiki/Zero_Point_Stopwatch.png'),
+    gold-ring:                  img('data/EquipmentRings1.png'),
+    copper-band:                img('data/EquipmentRings2.png'),
+    steel-band:                 img('data/EquipmentRings3.png'),
+    molden-crust:               img('data/EquipmentRings4.png'),
+    toxic-bubbles-band:         img('data/EquipmentRings5.png'),
+    death-wish:                 img('data/EquipmentRings6.png'),
+    pugilist-demise:            img('data/EquipmentRings7.png'),
+    the-used-bandaid:           img('data/EquipmentRings8.png'),
+    chat-ring:                  img('data/EquipmentRings9.png'),
+    spikeweed-ring:             img('data/EquipmentRings10.png'),
+    defenders-dignity:          img('data/EquipmentRings11.png'),
+    frisbee-ring:               img('data/EquipmentRings12.png'),
+    silver-stopwatch:           img('data/EquipmentRings13.png'),
+    dooble-goopi:               img('data/EquipmentRings14.png'),
+    sanic-ring:                 img('data/EquipmentRings15.png'),
+    efaunt-trunculus:           img('data/EquipmentRings16.png'),
+                                //EquipmentRings17 is unused, not a typo
+    the-emperor-s-opal:         img('data/EquipmentRings18.png'),
+    bejeweled-ring:             img('data/EquipmentRings19.png'),
+    rex-ring:                   img('data/EquipmentRings20.png'),
+    elf-twist-ring:             img('data/EquipmentRings21.png'),
+    tenacity-ring:              img('data/EquipmentRings22.png'),
+    neutron-ice-ring:           img('data/EquipmentRings23.png'),
+    lab-ring:                   img('data/EquipmentRings24.png'),
+    chef-ring:                  img('data/EquipmentRings25.png'),
+    serrated-rex-ring:          img('data/EquipmentRings26.png'),
+    protectors-pride:           img('data/EquipmentRings27.png'),
+    midnight-stopwatch:         img('data/EquipmentRings28.png'),
+    dawn-stopwatch:             img('data/EquipmentRings29.png'),
+    souped-lab-ring:            img('data/EquipmentRings30.png'),
+    tundra-killer-ring:         img('data/EquipmentRings31.png'),
+    nebula-killer-ring:         img('data/EquipmentRings32.png'),
+    dune-killer-ring:           img('data/EquipmentRings33.png'),
+    magma-killer-ring:          img('data/EquipmentRings34.png'),
+    zero-point-stopwatch:       img('data/EquipmentRings35.png'),
+    demented-emperor-opal:      img('data/EquipmentRings36.png'),
+    spirit-killer-ring:         img('data/EquipmentRings37.png'),
+    starstrut-ring:             img('data/EquipmentRings38.png'),
 
     //Chat Rings
-    wealth-ring: img('wiki/Wealth_Ring.png'),
-    equinox-ring: img('wiki/Equinox_Ring.png'),
-    honk-ring: img('wiki/HONK_Ring.png'),
-    cthulus-ring: img('wiki/Cthulu%27s_Ring.png'),
-    love-ring: img('wiki/Love_Ring.png'),
-    leafy-ring: img('wiki/Leafy_Ring.png'),
-    bubble-ring: img('wiki/Bubble_Ring.png'),
-    bob-ring: img('wiki/Bob_Ring.png'),
+    love-ring:                  img('data/EquipmentRingsChat1.png'),
+    leafy-ring:                 img('data/EquipmentRingsChat2.png'),
+    wealth-ring:                img('data/EquipmentRingsChat3.png'),
+    bob-ring:                   img('data/EquipmentRingsChat4.png'),
+    bubble-ring:                img('data/EquipmentRingsChat5.png'),
+    cthulu-s-ring:              img('data/EquipmentRingsChat6.png'),
+                                //EquipmentRingsChat7 is unused, not a typo
+    lava-sez-buy-more-gems:     img('data/EquipmentRingsChat8.png'),
+    honk-ring:                  img('data/EquipmentRingsChat9.png'),
+    meteorite-ring:             img('data/EquipmentRingsChat10.png'),
+    equinox-ring:               img('data/EquipmentRingsChat11.png'),
+
+    //Fishing Rings
+    shallow-watering:           img('data/EquipmentRingsFishing1.png'),
+    oceanic-ring:               img('data/EquipmentRingsFishing2.png'),
+    deepwater-trench-ring:      img('data/EquipmentRingsFishing3.png'),
     
     //Tempest Rings
-    tempest-ring-of-leef: map-get($compass-equipment, tempest-ring-of-leef),
-    tempest-ring-of-ice: map-get($compass-equipment, tempest-ring-of-ice),
-    tempest-ring-of-lava: map-get($compass-equipment, tempest-ring-of-lava),
-    tempest-ring-of-carbon: map-get($compass-equipment, tempest-ring-of-carbon),
-    tempest-ring-of-power: map-get($compass-equipment, tempest-ring-of-power),
-    tempest-ring-of-defense: map-get($compass-equipment, tempest-ring-of-defense),
-    tempest-ring-of-gold: map-get($compass-equipment, tempest-ring-of-gold),
-    tempest-ring-of-death: map-get($compass-equipment, tempest-ring-of-death),
-    tempest-ring-of-punchies: map-get($compass-equipment, tempest-ring-of-punchies),
+    tempest-ring-of-leef:       img('data/EquipmentRingsTempest0.png'),
+    tempest-ring-of-ice:        img('data/EquipmentRingsTempest1.png'),
+    tempest-ring-of-lava:       img('data/EquipmentRingsTempest2.png'),
+    tempest-ring-of-carbon:     img('data/EquipmentRingsTempest3.png'),
+    tempest-ring-of-power:      img('data/EquipmentRingsTempest4.png'),
+    tempest-ring-of-defense:    img('data/EquipmentRingsTempest5.png'),
+    tempest-ring-of-gold:       img('data/EquipmentRingsTempest6.png'),
+    tempest-ring-of-death:      img('data/EquipmentRingsTempest7.png'),
+    tempest-ring-of-punchies:   img('data/EquipmentRingsTempest8.png'),
 
     // Arcanist Rings
-    arcanist-cultist-ring: map-get($tesseract-equipment, arcanist-cultist-ring)
+    arcanist-cultist-ring:      img('data/EquipmentRingsArc0.png'),
 );
 
 $equipment-capes: (
@@ -1150,12 +1160,12 @@ $equipment-stones: (
     premium-wis-stone: map-get($gem-shop, premium-wis-stone),
 
     // Tempest
-    tempest-bow-stone-60-pct: map-get($compass-equipment, tempest-bow-stone-60-pct),
-    tempest-bow-stone-30-pct: map-get($compass-equipment, tempest-bow-stone-30-pct),
-    tempest-bow-stone-10-pct: map-get($compass-equipment, tempest-bow-stone-10-pct),
-    tempest-ring-stone-60-pct: map-get($compass-equipment, tempest-ring-stone-60-pct),
-    tempest-ring-stone-30-pct: map-get($compass-equipment, tempest-ring-stone-30-pct),
-    tempest-ring-stone-10-pct: map-get($compass-equipment, tempest-ring-stone-10-pct),
+    tempest-bow-stone-60-pct:   img('data/StoneTempestB0.png'),
+    tempest-bow-stone-30-pct:   img('data/StoneTempestB1.png'),
+    tempest-bow-stone-10-pct:   img('data/StoneTempestB2.png'),
+    tempest-ring-stone-60-pct:  img('data/StoneTempestR0.png'),
+    tempest-ring-stone-30-pct:  img('data/StoneTempestR1.png'),
+    tempest-ring-stone-10-pct:  img('data/StoneTempestR2.png'),
 );
 
 $consumables: (

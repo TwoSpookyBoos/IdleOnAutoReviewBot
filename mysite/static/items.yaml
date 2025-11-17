@@ -492,19 +492,17 @@ EquipmentRings8: The Used Bandaid
 EquipmentRings9: Chat Ring
 EquipmentRings10: Spikeweed Ring
 EquipmentRings11: Defenders Dignity
-EquipmentRingsFishing1: Shallow Watering
-EquipmentRingsFishing2: Oceanic Ring
-EquipmentRingsFishing3: Deepwater Trench Ring
 EquipmentRings12: Frisbee Ring
 EquipmentRings13: Silver Stopwatch
 EquipmentRings14: Dooble Goopi
 EquipmentRings15: Sanic Ring
 EquipmentRings16: Efaunt Trunculus
-EquipmentRings21: Elf Twist Ring
-EquipmentRings20: Rex Ring
-EquipmentRings19: Bejeweled Ring
-EquipmentRings22: Tenacity Ring
+#EquipmentRings17 has an image, but no item definition
 EquipmentRings18: The Emperor's Opal
+EquipmentRings19: Bejeweled Ring
+EquipmentRings20: Rex Ring
+EquipmentRings21: Elf Twist Ring
+EquipmentRings22: Tenacity Ring
 EquipmentRings23: Neutron Ice Ring
 EquipmentRings24: Lab Ring
 EquipmentRings25: Chef Ring
@@ -527,10 +525,14 @@ EquipmentRingsChat3: Wealth Ring
 EquipmentRingsChat4: Bob Ring
 EquipmentRingsChat5: Bubble Ring
 EquipmentRingsChat6: Cthulu's Ring
+#EquipmentRings7 has a blank image, but no item definition
 EquipmentRingsChat8: Lava Sez Buy More Gems
 EquipmentRingsChat9: HONK Ring
 EquipmentRingsChat10: Meteorite Ring
 EquipmentRingsChat11: Equinox Ring
+EquipmentRingsFishing1: Shallow Watering
+EquipmentRingsFishing2: Oceanic Ring
+EquipmentRingsFishing3: Deepwater Trench Ring
 EquipmentCape0: Angel Wings
 EquipmentCape1: Lava Wings
 EquipmentCape2: Easter Egg Backpack

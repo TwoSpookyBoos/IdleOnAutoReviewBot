@@ -240,29 +240,6 @@ $compass-dusts: (
     novadust:       img('data/Dust4_x1.png'),
 );
 
-$compass-equipment: (
-    tempest-bow-of-dust:        img('data/EquipmentBowsTempest0.png'),
-    tempest-bow-of-ice:         img('data/EquipmentBowsTempest1.png'),
-    tempest-bow-of-fire:        img('data/EquipmentBowsTempest2.png'),
-    tempest-bow-of-wind:        img('data/EquipmentBowsTempest3.png'),
-    tempest-bow-of-grass:       img('data/EquipmentBowsTempest4.png'),
-    tempest-ring-of-leef:       img('data/EquipmentRingsTempest0.png'),
-    tempest-ring-of-ice:        img('data/EquipmentRingsTempest1.png'),
-    tempest-ring-of-lava:       img('data/EquipmentRingsTempest2.png'),
-    tempest-ring-of-carbon:     img('data/EquipmentRingsTempest3.png'),
-    tempest-ring-of-power:      img('data/EquipmentRingsTempest4.png'),
-    tempest-ring-of-defense:    img('data/EquipmentRingsTempest5.png'),
-    tempest-ring-of-gold:       img('data/EquipmentRingsTempest6.png'),
-    tempest-ring-of-death:      img('data/EquipmentRingsTempest7.png'),
-    tempest-ring-of-punchies:   img('data/EquipmentRingsTempest8.png'),
-    tempest-bow-stone-60-pct:   img('data/StoneTempestB0.png'),
-    tempest-bow-stone-30-pct:   img('data/StoneTempestB1.png'),
-    tempest-bow-stone-10-pct:   img('data/StoneTempestB2.png'),
-    tempest-ring-stone-60-pct:  img('data/StoneTempestR0.png'),
-    tempest-ring-stone-30-pct:  img('data/StoneTempestR1.png'),
-    tempest-ring-stone-10-pct:  img('data/StoneTempestR2.png')
-);
-
 $compass-etc: (
     wind-walker-medallion: img('data/WWcoin.png'),
     the-compass: img('customized/Compass_NoBG.png'), //Provided by Trialpears
@@ -272,5 +249,4 @@ $compass-etc: (
 
 $all-compass: map-merge($compass-upgrades, $compass-abominations);
 $all-compass: map-merge($all-compass, $compass-dusts);
-$all-compass: map-merge($all-compass, $compass-equipment);
 $all-compass: map-merge($all-compass, $compass-etc);
