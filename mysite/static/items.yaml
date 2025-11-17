@@ -283,8 +283,16 @@ EquipmentPunching10: Pentastud Slapper
 EquipmentPunching11: Mittens of the Gods
 EquipmentPunching12: Talon of the Hawk
 TestObj1: Wooden Spear
-TestObj7: Steel Axe
+TestObj2: Steel Spear
 TestObj3: Royal Bayonet
+TestObj4: Frozen Impaler
+TestObj5: Blood Screamer
+#TestObj6 has an image, but no item definition
+TestObj7: Steel Axe
+TestObj8: Flaming Katana
+TestObj9: Emerald Eizon
+TestObj10: Stalagmite
+EquipmentWeapons1: Iron Sword
 EquipmentSword1: Enforced Slasher
 EquipmentSword2: The Ice Breaker
 EquipmentSword3: Deuscythe
@@ -295,14 +303,8 @@ EquipmentSword7: Skull Lance
 EquipmentSword8: Elegant Spear
 EquipmentSword9: Massive Godbreaker
 EquipmentSword10: Sabertoothed Gorehacker
-TestObj4: Frozen Impaler
-TestObj5: Blood Screamer
-TestObj8: Flaming Katana
-TestObj9: Emerald Eizon
-TestObj10: Stalagmite
-EquipmentWeapons1: Iron Sword
-TestObj2: Steel Spear
 EquipmentBows1: Wooden Bow
+#EquipmentBows2 has an image, but no item definition
 EquipmentBows3: Birch Longbow
 EquipmentBows4: Carrot Launcher
 EquipmentBows5: Spiked Menace
@@ -318,9 +320,10 @@ EquipmentBows14: Doublestring Godshooter
 EquipmentBows15: Raptor Shardslinger
 EquipmentWands1: Gnarled Wand
 EquipmentWands2: Quarterstaff
+EquipmentWands3: Spriggly Storm
+EquipmentWands4: Microphone
 EquipmentWands5: Starlight
 EquipmentWands6: Crows Nest
-EquipmentWands3: Spriggly Storm
 EquipmentWands7: Grey Gatsby
 EquipmentWands8: Skullslip Hallow
 EquipmentWands9: Diabolical Opticule
@@ -329,7 +332,6 @@ EquipmentWands11: Staff of the Undead Plague
 EquipmentWands12: Sparky Marble Staff
 EquipmentWands13: Magnifique Godcaster
 EquipmentWands14: Beastly Orblauncher
-EquipmentWands4: Microphone
 EquipmentShirts1: Orange Tee
 EquipmentShirts2: Blue Tee
 EquipmentShirts3: Black Tee

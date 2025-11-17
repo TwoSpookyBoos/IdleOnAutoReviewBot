@@ -367,8 +367,16 @@ $equipment-weapons: (
 
     // Spears
     wooden-spear:               img('data/TestObj1.png'),
-    steel-axe:                  img('data/TestObj7.png'),
+    steel-spear:                img('data/TestObj2.png'),
     royal-bayonet:              img('data/TestObj3.png'),
+    frozen-impaler:             img('data/TestObj4.png'),
+    blood-screamer:             img('data/TestObj5.png'),
+                                //TestObj6 is unused, not a typo
+    steel-axe:                  img('data/TestObj7.png'),
+    flaming-katana:             img('data/TestObj8.png'),
+    emerald-eizon:              img('data/TestObj9.png'),
+    stalagmite:                 img('data/TestObj10.png'),
+    iron-sword:                 img('data/EquipmentWeapons1.png'),
     enforced-slasher:           img('data/EquipmentSword1.png'),
     the-ice-breaker:            img('data/EquipmentSword2.png'),
     deuscythe:                  img('data/EquipmentSword3.png'),
@@ -408,7 +416,7 @@ $equipment-weapons: (
     gnarled-wand:                   img('data/EquipmentWands1.png'),
     quarterstaff:                   img('data/EquipmentWands2.png'),
     spriggly-storm:                 img('data/EquipmentWands3.png'),
-                                    //EquipmentWands4 is unused, not a typo
+    microphone:                     img('data/EquipmentWands4.png'),
     starlight:                      img('data/EquipmentWands5.png'),
     crows-nest:                     img('data/EquipmentWands6.png'),
     grey-gatsby:                    img('data/EquipmentWands7.png'),
