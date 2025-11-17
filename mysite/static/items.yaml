@@ -1691,33 +1691,34 @@ TrophyReplica25: Luckiest Lad
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
+#EquipmentTools4 has an image, but no item definition
 EquipmentTools5: Gold Pickaxe
 EquipmentTools6: Platinum Pickaxe
 EquipmentTools7: Dementia Pickaxe
-EquipmentTools11: Void Imperium Pik
 EquipmentTools8: Lustre Pickaxe
-EquipmentTools12: Starfire Pickaxe
 EquipmentTools9: Dreadlo Pickolo
+EquipmentTools10: Poopy Pickaxe
+EquipmentTools11: Void Imperium Pik
+EquipmentTools12: Starfire Pickaxe
+EquipmentTools13: Skewered Snek
 EquipmentTools14: Marbiglass Pickaxe
 EquipmentTools15: Destroyer of the Mollo Gomme
 EquipmentTools16: Prehistoric Pickaxe
-EquipmentTools10: Poopy Pickaxe
-EquipmentTools13: Skewered Snek
 EquipmentToolsHatchet0: Old Hatchet
-EquipmentToolsHatchet3: Copper Chopper
 EquipmentToolsHatchet1: Iron Hatchet
-EquipmentToolsHatchet2b: Stinky Axe
 EquipmentToolsHatchet2: Golden Axe
+EquipmentToolsHatchet2b: Stinky Axe
+EquipmentToolsHatchet3: Copper Chopper
 EquipmentToolsHatchet4: Plat Hatchet
 EquipmentToolsHatchet5: Dementia Dicer
-EquipmentToolsHatchet7: Void Imperium Axe
 EquipmentToolsHatchet6: Lustre Logger
+EquipmentToolsHatchet7: Void Imperium Axe
 EquipmentToolsHatchet8: Starfire Hatchet
 EquipmentToolsHatchet9: Dreadlo Hatchet
-EquipmentToolsHatchet12: Marbiglass Hatchet
-EquipmentToolsHatchet13: Prehistoric Choppah
 EquipmentToolsHatchet10: Annihilator of the Yggdrasil
 EquipmentToolsHatchet11: Grumbie the Hatchet Hammer
+EquipmentToolsHatchet12: Marbiglass Hatchet
+EquipmentToolsHatchet13: Prehistoric Choppah
 FishingRod1: Wood Fishing Rod
 FishingRod2: Copper Fish Rod
 FishingRod3: Iron Fishing Rod
@@ -1743,7 +1744,7 @@ CatchingNet9: Starfire Trim Netting
 CatchingNet10: Dreadlo Matted Netting
 CatchingNet11: Marbiglass Netting
 CatchingNet12: Wrangler of the Qoxzul
-CatchingNet13: Wrangler of the Qoxzul
+CatchingNet13: Prehistoric Net
 TrapBoxSet1: Cardboard Traps
 TrapBoxSet2: Silkskin Traps
 TrapBoxSet3: Wooden Traps
