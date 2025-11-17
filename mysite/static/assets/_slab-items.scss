@@ -895,18 +895,19 @@ $equipment-trophies: (
 );
 
 $equipment-nametags: (
-    // Nametags
-    riftwalker-nametag: img('wiki/Riftwalker_Nametag.png'),
-    vman-nametag: img('wiki/Vman_Nametag.png'),
-    spring-flowers-nametag: img('wiki/Spring_Flowers_Nametag.png'),
-    trash-tuna-nametag: img('wiki/Trash_Tuna_Nametag.png'),
-    island-adventurer-nametag: img('wiki/Island_Adventurer_Nametag.png'),
-    summer-shovel-nametag: img('wiki/Summer_Shovel_Nametag.png'),
-    falloween-nametag: img('wiki/Falloween_Nametag.png'),
-    balling-nametag: img('wiki/Balling_Nametag.png'),
-    x3rd-anniversary-idleon-nametag: img('wiki/3rd_Anniversary_IdleOn_Nametag.png'),
-    nightshade-nametag: img('wiki/Nightshade_Nametag.png'),
-    timeless-nametag: img('wiki/Timeless_Nametag.png'),
+    riftwalker-nametag: img('data/EquipmentNametag1.png'),
+    lava-s-awesome-nametag: img('data/EquipmentNametag2.png'),
+    balling-nametag: img('data/EquipmentNametag3.png'),
+    vman-nametag: img('data/EquipmentNametag4.png'),
+    spring-flowers-nametag: img('data/EquipmentNametag5.png'),
+    trash-tuna-nametag: img('data/EquipmentNametag6b.png'),
+    island-adventurer-nametag: img('data/EquipmentNametag7.png'),
+    summer-shovel-nametag: img('data/EquipmentNametag8.png'),
+    falloween-nametag: img('data/EquipmentNametag9.png'),
+    x3rd-anniversary-idleon-nametag: img('data/EquipmentNametag10.png'),
+    nightshade-nametag: img('data/EquipmentNametag11.png'),
+    megafeather-nametag: img('data/EquipmentNametag12.png'),
+    timeless-nametag: img('data/EquipmentNametag13.png'),
     snowflake-nametag: img('data/EquipmentNametag14.png'),
     frostyman-nametag: img('data/EquipmentNametag15.png'),
     lovely-day-nametag: img('data/EquipmentNametag16.png'),
@@ -915,6 +916,18 @@ $equipment-nametags: (
     aethermoon-nametag: img('data/EquipmentNametag19.png'),
     deadbones-nametag: img('data/EquipmentNametag20.png'),
     treasure-nametag: img('data/EquipmentNametag21.png'),
+    tome-apprentice-nametag: img('data/EquipmentNametag22.png'),
+    tome-journeyman-nametag: img('data/EquipmentNametag23.png'),
+    tome-expert-nametag: img('data/EquipmentNametag24.png'),
+    tome-elite-nametag: img('data/EquipmentNametag25.png'),
+    tome-pro-nametag: img('data/EquipmentNametag26.png'),
+    tome-master-nametag: img('data/EquipmentNametag27.png'),
+    tome-legend-nametag: img('data/EquipmentNametag28.png'),
+    reliquarium-nametag: img('data/EquipmentNametag29.png'),
+    cropfall-nametag: img('data/EquipmentNametag30.png'),
+
+    //Replicas with different names only.
+    replica-nametag: img('data/EquipmentNametagReplica0.png'),
 );
 
 $equipment-tools: (
