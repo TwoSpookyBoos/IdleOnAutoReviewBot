@@ -863,6 +863,7 @@ $equipment-keychains: (
 );
 
 $equipment-trophies: (
+    //Originals
     king-of-food:       img('data/Trophy1.png'),
     lucky-lad:          img('data/Trophy2.png'),
     club-member:        img('data/Trophy3.png'),
@@ -886,6 +887,11 @@ $equipment-trophies: (
     baller:             img('data/Trophy21.png'),
     gladiator:          img('data/Trophy22.png'),
     heroic-spirit:      img('data/Trophy23.png'),
+    nine-dart-finish:   img('data/Trophy24.png'),
+    luckiest-lad:       img('data/Trophy25.png'),
+
+    //Replicas with different names only.
+    replica-trophy: img('data/TrophyReplica0.png'),
 );
 
 $equipment-nametags: (
