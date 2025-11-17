@@ -136,11 +136,16 @@ Spelunking0: Chapter One 'The Fear Within'
 Spelunking1: Chapter Two 'Decay Surrounds'
 Spelunking2: Chapter Three 'This is Gospel'
 Spelunking3: Chapter Four 'No Escape'
-EquipmentHats1: Farmer Brim
-TestObj15: Slime Cap
-EquipmentHatsBeg1: Ice Cream Sunday
+
+
+
 EquipmentHats61: Mark of Member
-EquipmentHats15: Leather Cap
+
+EquipmentHats1: Farmer Brim
+EquipmentHats2: Royal Turban
+EquipmentHats3: Thief Hood
+EquipmentHats4: Stump Prop
+EquipmentHats4Choppin: Stump Prop
 EquipmentHats5: White Headband
 EquipmentHats6: Green Headband
 EquipmentHats7: Red Headband
@@ -151,62 +156,120 @@ EquipmentHats11: Grey Beret
 EquipmentHats12: Traffic Cone
 EquipmentHats13: Propeller Cap
 EquipmentHats14: Baseball Hat
-TestObj14: Trojan Helmet
-TestObj16: Demon Horns
-EquipmentHats4Choppin: Stump Prop
+EquipmentHats15: Leather Cap
+EquipmentHats16: Top Hat
 EquipmentHats17: Copper Helmet
 EquipmentHats18: Iron Helmet
-EquipmentHats28: Gold Helmet
-EquipmentHats22: Amarok Helmet
 EquipmentHats19: Platinum Helmet
-EquipmentHats53: Dementia Helmet
-EquipmentHats52: Efaunt Helmet
-EquipmentHats54: Void Imperium Helmet
-EquipmentHats68: Chizoar Helmet
-EquipmentHats70: Lustre Veil
-EquipmentHats71: Diabolical Headcase
-EquipmentHats74: Thin Veil of The Troll
-EquipmentHats77: Magma Core Headdress
-EquipmentHats83: Skulled Helmet of the Divine
-EquipmentHats105: Marbiglass Headdress
-EquipmentHats106: Crown of the Gods
-EquipmentHats119: Emperor Kabuto
-EquipmentHats107: Shiny Bored Beanie
-EquipmentHats84: The Crow Perch
+EquipmentHats20: Militia Helm
 EquipmentHats21: Birthday Hat
+EquipmentHats22: Amarok Helmet
 EquipmentHats23: Farmer Brimer
 EquipmentHats24: Farmer Brimest
 EquipmentHats25: Bored Beanie
-EquipmentHats2: Royal Turban
+EquipmentHats26: Witch Hat
 EquipmentHats27: Paper Boat
+EquipmentHats28: Gold Helmet
 EquipmentHats29: Alien Headband
 EquipmentHats30: Cowbo Galloneer
+EquipmentHats31: Smitty's Bubble Blowing Hat
+EquipmentHats32: Bandit Bob Mask
+EquipmentHats33: Paper Bag
+EquipmentHats34: Parasite
+EquipmentHats35: Diamond Horns
+EquipmentHats36: Halloween Pumpkin
+EquipmentHats37: Hotdog Hero
+EquipmentHats38: Invisible Hat
 EquipmentHats39: Grandma Disguise
+EquipmentHats40: Pardoned Turkey
+EquipmentHats41: Sleek Coif
 EquipmentHats42: Santa Hat
+EquipmentHats43: Snowman
 EquipmentHats44: Jar
+EquipmentHats45: Giftmas Tree
+EquipmentHats46: Strawbiggy
+EquipmentHats47: Pop Cat
+EquipmentHats48: Dairy Dunk
+EquipmentHats49: The Classic
+EquipmentHats50: Green Beanie
 EquipmentHats51: Big Pretty Bow
+EquipmentHats52: Efaunt Helmet
+EquipmentHats53: Dementia Helmet
+EquipmentHats54: Void Imperium Helmet
 EquipmentHats55: Steam Cap
-EquipmentHats108: 3rd Anniversary Ice Cream Topper
 EquipmentHats56: Bunny Ears
+EquipmentHats57: Big Bunny
+EquipmentHats58: Murmillo Helm
+EquipmentHats59: Conquistador Plume
+EquipmentHats60: Adornment of the High Priest
+
+EquipmentHats62: Fluffy Ramsy
 EquipmentHats63: Summer Shell
 EquipmentHats64: Nuget Cake Fedora
+EquipmentHats65: The Red Boaty
 EquipmentHats66: Honker Hat
 EquipmentHats67: Acorn Topper
+EquipmentHats68: Chizoar Helmet
+EquipmentHats69: Giftmas Snoozy Cap
+EquipmentHats70: Lustre Veil
+EquipmentHats71: Diabolical Headcase
 EquipmentHats72: Nondescript Game Show Host Hair
 EquipmentHats73: Real Civil Engineer Helmet
+EquipmentHats74: Thin Veil of The Troll
 EquipmentHats75: Apple Launch Hat
 EquipmentHats76: Funny Hat
+EquipmentHats77: Magma Core Headdress
 EquipmentHats78: Meteorhead
 EquipmentHats79: Ice Guard Helmet
-EquipmentHats20: Militia Helm
+EquipmentHats80: Corgi Topper
+EquipmentHats81: Siege Captain Cap
+EquipmentHats82: Ele Sorcerer Pointed Hat
+EquipmentHats83: Skulled Helmet of the Divine
+EquipmentHats84: The Crow Perch
+EquipmentHats85: Bedsheet with Holes
+EquipmentHats86: Carrotman Mask
+EquipmentHats87: Glublin Mask
+EquipmentHats88: Bloque Mask
+EquipmentHats89: Borzoi Topper
+EquipmentHats90: Straw Hat
+EquipmentHats91: Wig Bandana
+EquipmentHats92: Funky Hat
+EquipmentHats93: Reinforced Headband
+EquipmentHats94: Shogun Helmet
+EquipmentHats95: Gilded Headband
+EquipmentHats96: Bamboo Hat
+EquipmentHats97: Festive Beast Mask
+EquipmentHats98: Heiress Headdress
+EquipmentHats99: Spirited Mane
+EquipmentHats100: Fiery Mane
+EquipmentHats101: Guardian Mane
+EquipmentHats102: Fanned Blossomage
+EquipmentHats103: Dainty Brim
+EquipmentHats104: Charcoal Hat
+EquipmentHats105: Marbiglass Headdress
+EquipmentHats106: Crown of the Gods
+EquipmentHats107: Shiny Bored Beanie
+EquipmentHats108: 3rd Anniversary Ice Cream Topper
+EquipmentHats109: Husky Hat
+EquipmentHats110: Yellow Beanie
+EquipmentHats111: Epic Santa Hat
+EquipmentHats112: Deathbringer Hood of Death
+EquipmentHats113: Pink Beanie
+EquipmentHats114: True Crown
+EquipmentHats115: Celebration Mane
+EquipmentHats116: Goldberry
+EquipmentHats117: Orange Beanie
+EquipmentHats118: Windwalker Hood
+EquipmentHats119: Emperor Kabuto
+EquipmentHats120: Umbrella Brim
+EquipmentHats121: Bloo Creamer
+EquipmentHats122: Arcanist Crown
+EquipmentHats123: Prehistoric Battlehair
+EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
-EquipmentHats58: Murmillo Helm
-EquipmentHats3: Thief Hood
-EquipmentHats41: Sleek Coif
-EquipmentHats59: Conquistador Plume
-EquipmentHats16: Top Hat
-EquipmentHats26: Witch Hat
-EquipmentHats60: Adornment of the High Priest
+TestObj14: Trojan Helmet
+TestObj15: Slime Cap
+TestObj16: Demon Horns
 EquipmentPunching1: Boxing Gloves
 EquipmentPunching2: The Stingers
 EquipmentPunching3: Bandage Wraps
@@ -2137,61 +2200,7 @@ GemP45: Lifetime Tickets
 GemP46: Single Entry
 GemP36: Funny 2hr Fishy
 GemP37: Funny 2hr Feather
-EquipmentHats31: Smitty's Bubble Blowing Hat
-EquipmentHats32: Bandit Bob Mask
-EquipmentHats33: Paper Bag
-EquipmentHats34: Parasite
-EquipmentHats35: Diamon Horns
-EquipmentHats36: Halloween Pumpkin
-EquipmentHats40: Pardoned Turkey
-EquipmentHats37: Hotdog Hero
-EquipmentHats38: Invisible Hat
-EquipmentHats46: Strawbiggy
-EquipmentHats47: Pop Cat
-EquipmentHats48: Dairy Dunk
-EquipmentHats49: The Classic
-EquipmentHats50: Green Beanie
-EquipmentHats43: Snowman
-EquipmentHats45: Giftmas Tree
-EquipmentHats57: Big Bunny
-EquipmentHats62: Fluffy Ramsy
-EquipmentHats65: The Red Boaty
-EquipmentHats69: Giftmas Snoozy Cap
-EquipmentHats80: Corgi Topper
-EquipmentHats81: Siege Captain Cap
-EquipmentHats82: Ele Sorcerer Pointed Hat
-EquipmentHats85: Bedsheet with Holes
-EquipmentHats86: Carrotman Mask
-EquipmentHats87: Glublin Mask
-EquipmentHats88: Bloque Mask
-EquipmentHats89: Borzoi Topper
-EquipmentHats90: Straw Hat
-EquipmentHats91: Wig Bandana
-EquipmentHats92: Funky Hat
-EquipmentHats93: Reinforced Headband
-EquipmentHats94: Shogun Helmet
-EquipmentHats95: Gilded Headband
-EquipmentHats96: Bamboo Hat
-EquipmentHats97: Festive Beast Mask
-EquipmentHats98: Heiress Headdress
-EquipmentHats99: Spirited Mane
-EquipmentHats100: Fiery Mane
-EquipmentHats101: Guardian Mane
-EquipmentHats102: Fanned Blossomage
-EquipmentHats103: Dainty Brim
-EquipmentHats104: Charcoal Hat
-EquipmentHats109: Husky Hat
-EquipmentHats110: Yellow Beanie
-EquipmentHats111: Epic Santa Hat
-EquipmentHats112: Deathbringer Hood of Death
-EquipmentHats113: Pink Beanie
-EquipmentHats114: True Crown
-EquipmentHats115: Celebration Mane
-EquipmentHats116: Goldberry
-EquipmentHats117: Orange Beanie
-EquipmentHats118: Windwalker Hood
-EquipmentHats122: Arcanist Crown
-EquipmentHats123: Prehistoric Battlehair
+
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2476,8 +2485,6 @@ StoneTempestR2: Tempest Ring Stone 10 PCT
 WWcoin: Wind Walker Medallion
 EquipmentWandsArc0: Arcanist Staff
 EquipmentRingsArc0: Cultist Ring
-EquipmentHats120: Umbrella Brim
-EquipmentHats121: Bloo Creamer
 InvStorageZ: Buried Treasure Chest
 GemP6: Ivory Bubble Cauldrons
 GemQ17: 4 Star Cardifier

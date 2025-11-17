@@ -1,29 +1,11 @@
-$detection: (
+$sneaking-detection: (
 	detection-high: img('wiki/Sneaking_Detection_High.png'),
 	detection-mid: img('wiki/Sneaking_Detection_Mid.png'),
 	detection-low: img('wiki/Sneaking_Detection_Low.png'),
 	detection-lowest: img('wiki/Sneaking_Detection_Lowest.png'),
 );
 
-$hats: (
-	straw-hat: img('wiki/Straw_Hat.png'),
-	wig-bandana: img('wiki/Wig_Bandana.png'),
-	funky-hat: img('wiki/Funky_Hat.png'),
-	reinforced-headband: img('wiki/Reinforced_Headband.png'),
-	shogun-helmet: img('wiki/Shogun_Helmet.png'),
-	gilded-headband: img('wiki/Gilded_Headband.png'),
-	bamboo-hat: img('wiki/Bamboo_Hat.png'),
-	festive-beast-mask: img('wiki/Festive_Beast_Mask.png'),
-	heiress-headdress: img('wiki/Heiress_Headdress.png'),
-	spirited-mane: img('wiki/Spirited_Mane.png'),
-	fiery-mane: img('wiki/Fiery_Mane.png'),
-	guardian-mane: img('wiki/Guardian_Mane.png'),
-	fanned-blossomage: img('wiki/Fanned_Blossomage.png'),
-	dainty-brim: img('wiki/Dainty_Brim.png'),
-	charcoal-hat: img('wiki/Charcoal_Hat.png'),
-);
-
-$knowledge: (
+$sneaking-knowledge: (
 	way-of-stealth: img('wiki/Way_of_Stealth.png'),
 	looting-ambition: img('wiki/Looting_Ambition.png'),
 	nunchaku-grip: img('wiki/Nunchaku_Grip.png'),
@@ -41,7 +23,7 @@ $knowledge: (
 	gemstone-pilfer: img('wiki/Gemstone_Pilfer.png'),
 );
 
-$emporium: (
+$sneaking-emporium: (
     /* Not in in-game order but source order. Just to make image maintenance easier */
 	quick-ref-access: img('data/NjJupg0.png'),
 	gold-food-beanstalk: img('data/NjJupg1.png'),
@@ -89,7 +71,7 @@ $emporium: (
     coral-conservationism: img('data/NjJupg43.png')
 );
 
-$weapons: (
+$sneaking-weapons: (
 	wood-nunchaku: img('wiki/Wood_Nunchaku.png'),
 	bamboo-nunchaku: img('wiki/Bamboo_Nunchaku.png'),
 	charcoal-nunchaku: img('wiki/Charcoal_Nunchaku.png'),
@@ -104,7 +86,7 @@ $weapons: (
 	thundergloves: img('wiki/Thundergloves.png'),
 );
 
-$charms: (
+$sneaking-charms: (
 	sneaking-ninja-log: img('data/NjTr0.png'),
 	sneaking-taunting-mark: img('data/NjTr1.png'),
 	sneaking-yellow-belt: img('data/NjTr2.png'),
@@ -132,7 +114,7 @@ $charms: (
 	sneaking-gold-q-mark: img('data/NjTr24.png'),
 );
 
-$pristine-charms: (
+$sneaking-pristine-charms: (
     sparkle-log:        img('data/NjTrP0.png'),
 	fruit-rolle:        img('data/NjTrP1.png'),
 	glowing-veil:       img('data/NjTrP2.png'),
@@ -158,7 +140,7 @@ $pristine-charms: (
     mystery-fizz:       img('data/NjTrP22.png')
 );
 
-$gemstones: (
+$sneaking-gemstones: (
     aquamarine: img('data/NjGem0.png'),
     malachite:  img('data/NjGem1.png'),
     garnet:     img('data/NjGem2.png'),
@@ -169,15 +151,14 @@ $gemstones: (
     firefrost:  img('data/NjGem7.png'),
 );
 
-$etc: (
+$sneaking-etc: (
     jade-coin: img('wiki/Jade_Coin.png')
 );
 
-$all-sneaking: map-merge($detection, $hats);
-$all-sneaking: map-merge($all-sneaking, $knowledge);
-$all-sneaking: map-merge($all-sneaking, $emporium);
-$all-sneaking: map-merge($all-sneaking, $weapons);
-$all-sneaking: map-merge($all-sneaking, $charms);
-$all-sneaking: map-merge($all-sneaking, $pristine-charms);
-$all-sneaking: map-merge($all-sneaking, $gemstones);
-$all-sneaking: map-merge($all-sneaking, $etc);
+$all-sneaking: map-merge($sneaking-detection, $sneaking-knowledge);
+$all-sneaking: map-merge($all-sneaking, $sneaking-emporium);
+$all-sneaking: map-merge($all-sneaking, $sneaking-weapons);
+$all-sneaking: map-merge($all-sneaking, $sneaking-charms);
+$all-sneaking: map-merge($all-sneaking, $sneaking-pristine-charms);
+$all-sneaking: map-merge($all-sneaking, $sneaking-gemstones);
+$all-sneaking: map-merge($all-sneaking, $sneaking-etc);
