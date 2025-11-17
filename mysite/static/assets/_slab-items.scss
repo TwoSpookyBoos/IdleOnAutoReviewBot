@@ -599,32 +599,38 @@ $equipment-shirts: (
     prehistoric-parka:              img('data/EquipmentShirts41.png'),
 );
 
-$equipment-legs: (
-    torn-jeans: img('wiki/Torn_Jeans.png'),
-    copper-platelegs: img('wiki/Copper_Platelegs.png'),
-    iron-platelegs: img('wiki/Iron_Platelegs.png'),
-    gold-platelegs: img('wiki/Gold_Platelegs.png'),
-    amarok-hinds: img('wiki/Amarok_Hinds.png'),
-    platinum-shins: img('wiki/Platinum_Shins.png'),
-    dementia-shins: img('wiki/Dementia_Shins.png'),
-    efaunt-hipilium: img('wiki/Efaunt_Hipilium.png'),
-    void-imperium-shardshins: img('wiki/Void_Imperium_Shardshins.png'),
-    give-up-on-life-pants: img('wiki/Give_Up_On_Life_Pants.png'),
-    bleached-designer-wode-patch-pants: img('wiki/Bleached_Designer_Wode_Patch_Pants.png'),
-    adam-s-leaf: img('wiki/Adam%27s_Leaf.png'),
-    dirty-coal-miner-baggy-soot-pants: img('wiki/Dirty_Coal_Miner_Baggy_Soot_Pants.png'),
-    trimmed-rune-platelegs: img('wiki/Trimmed_Rune_Platelegs.png'),
-    fishing-overalls: img('wiki/Fishing_Overalls.png'),
-    bandito-pantaloon: img('wiki/Bandito_Pantaloon.png'),
-    chizoar-scaled-leggings: img('wiki/Chizoar_Scaled_Leggings.png'),
-    lustre-scales: img('wiki/Lustre_Scales.png'),
-    diabolical-trimed-leg-guards: img('wiki/Diabolical_Trimed_Leg_Guards.png'),
-    twisted-scales: img('wiki/Twisted_Scales.png'),
-    magma-core-battleskirt: img('wiki/Magma_Core_Battleskirt.png'),
-    spiked-leggings-of-the-divine: img('wiki/Spiked_Leggings_of_the_Divine.png'),
-    marbiglass-legplates: img('wiki/Marbiglass_Legplates.png'),
-    tatters-of-the-gods: img('wiki/Tatters_of_the_Gods.png'),
-    emperor-zubon: img('data/EquipmentPants31.png'),
+$equipment-pants: (
+    torn-jeans:                         img('data/EquipmentPants1.png'),
+    copper-platelegs:                   img('data/EquipmentPants2.png'),
+    iron-platelegs:                     img('data/EquipmentPants3.png'),
+    gold-platelegs:                     img('data/EquipmentPants4.png'),
+    platinum-shins:                     img('data/EquipmentPants5.png'),
+    dementia-shins:                     img('data/EquipmentPants6.png'),
+    gilded-pilates:                     img('data/EquipmentPants7.png'),
+    twisted-scales:                     img('data/EquipmentPants8.png'),
+    chizoar-scaled-leggings:            img('data/EquipmentPants9.png'),
+    give-up-on-life-pants:              img('data/EquipmentPants10.png'),
+    yellow-belt-ninja-pants:            img('data/EquipmentPants11.png'),
+    merchantile-pants:                  img('data/EquipmentPants12.png'),
+    ancient-leggings:                   img('data/EquipmentPants13.png'),
+    forensic-leggings:                  img('data/EquipmentPants14.png'),
+    bleached-designer-wode-patch-pants: img('data/EquipmentPants15.png'),
+    adam-s-leaf:                        img('data/EquipmentPants16.png'),
+    amarok-hinds:                       img('data/EquipmentPants17.png'),
+    dirty-coal-miner-baggy-soot-pants:  img('data/EquipmentPants18.png'),
+    trimmed-rune-platelegs:             img('data/EquipmentPants19.png'),
+    efaunt-hipilium:                    img('data/EquipmentPants20.png'),
+    void-imperium-shardshins:           img('data/EquipmentPants21.png'),
+    fishing-overalls:                   img('data/EquipmentPants22.png'),
+    bandito-pantaloon:                  img('data/EquipmentPants23.png'),
+    lustre-scales:                      img('data/EquipmentPants24.png'),
+    diabolical-trimed-leg-guards:       img('data/EquipmentPants25.png'),
+    magma-core-battleskirt:             img('data/EquipmentPants26.png'),
+    spiked-leggings-of-the-divine:      img('data/EquipmentPants27.png'),
+    marbiglass-legplates:               img('data/EquipmentPants29.png'),
+    tatters-of-the-gods:                img('data/EquipmentPants30.png'),
+    emperor-zubon:                      img('data/EquipmentPants31.png'),
+    prehistoric-pantaloons:             img('data/EquipmentPants32.png'),
 );
 
 $equipment-boots: (
@@ -2003,7 +2009,7 @@ $all-slab: map-merge($all-slab, $statues);
 $all-slab: map-merge($all-slab, $equipment-weapons);
 $all-slab: map-merge($all-slab, $equipment-hats);
 $all-slab: map-merge($all-slab, $equipment-shirts);
-$all-slab: map-merge($all-slab, $equipment-legs);
+$all-slab: map-merge($all-slab, $equipment-pants);
 $all-slab: map-merge($all-slab, $equipment-boots);
 $all-slab: map-merge($all-slab, $equipment-jewelry);
 $all-slab: map-merge($all-slab, $equipment-capes);
