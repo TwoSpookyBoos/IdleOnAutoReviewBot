@@ -1,4 +1,47 @@
+$statue-items: (
+    //This is for the actual items that drop.
+    //They're not always the same name as the buff of the statue, annoyingly
+    //This name matches the name from items.yaml / item_data.py
+    power-statue:           img('data/EquipmentStatues1.png'),
+    speed-statue:           img('data/EquipmentStatues2.png'),
+    mining-statue:          img('data/EquipmentStatues3.png'),
+    feasty-statue:          img('data/EquipmentStatues4.png'),
+    health-statue:          img('data/EquipmentStatues5.png'),
+    kachow-statue:          img('data/EquipmentStatues6.png'),
+    lumberbob-statue:       img('data/EquipmentStatues7.png'),
+    thicc-skin-statue:      img('data/EquipmentStatues8.png'),
+    oceanman-statue:        img('data/EquipmentStatues9.png'),
+    ol-reliable-statue:     img('data/EquipmentStatues10.png'),
+    exp-book-statue:        img('data/EquipmentStatues11.png'),
+    anvil-statue:           img('data/EquipmentStatues12.png'),
+    cauldron-statue:        img('data/EquipmentStatues13.png'),
+    beholder-statue:        img('data/EquipmentStatues14.png'),
+    bullseye-statue:        img('data/EquipmentStatues15.png'),
+    box-statue:             img('data/EquipmentStatues16.png'),
+    twosoul-statue:         img('data/EquipmentStatues17.png'),
+    ehexpee-statue:         img('data/EquipmentStatues18.png'),
+    seesaw-statue:          img('data/EquipmentStatues19.png'),
+    pecunia-statue:         img('data/EquipmentStatues20.png'),
+    mutton-statue:          img('data/EquipmentStatues21.png'),
+    egg-statue:             img('data/EquipmentStatues22.png'),
+    battleaxe-statue:       img('data/EquipmentStatues23.png'),
+    spiral-statue:          img('data/EquipmentStatues24.png'),
+    boat-statue:            img('data/EquipmentStatues25.png'),
+    compost-statue:         img('data/EquipmentStatues26.png'),
+    stealth-statue:         img('data/EquipmentStatues27.png'),
+    essence-statue:         img('data/EquipmentStatues28.png'),
+    villager-statue:        img('data/EquipmentStatues29.png'),
+    dragon-warrior-statue:  img('data/EquipmentStatues30.png'),
+    dragon-warrior-statue:  img('data/EquipmentStatues30.png'),
+    dragon-warrior-statue:  img('data/EquipmentStatues30.png'),
+    spelunky-statue:        img('data/EquipmentStatues31.png'),
+    reef-coral-statue:      img('data/EquipmentStatues32.png'),
+);
+
 $normal-statues: (
+    //This is for the different tiers/colors of the Statue in the UI
+    //They're not always the same name as the item of the statue, annoyingly
+    //This name matches the name from consts_w1.StatueInfo
     normal-power-statue:        img('data/Statue1.png'),
     normal-speed-statue:        img('data/Statue2.png'),
     normal-mining-statue:       img('data/Statue3.png'),
@@ -138,6 +181,7 @@ $zenith-statues: (
     zenith-coral-statue:        img('data/StatueZ32.png'),
 );
 
-$all-statues: map-merge($normal-statues, $gold-statues);
+$all-statues: map-merge($statue-items, $normal-statues);
+$all-statues: map-merge($all-statues, $gold-statues);
 $all-statues: map-merge($all-statues, $onyx-statues);
 $all-statues: map-merge($all-statues, $zenith-statues);
