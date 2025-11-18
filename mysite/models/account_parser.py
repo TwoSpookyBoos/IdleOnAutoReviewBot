@@ -705,6 +705,7 @@ def _parse_general_storage_slots(account):
     account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in raw_used_chests.keys()]
     account.storage['Missing Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Missing Chests']])
 
+
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
     _parse_master_classes_compass(account)
@@ -1038,6 +1039,7 @@ def _parse_master_classes_tesseract(account):
     for upgrade_name in account.tesseract['Upgrades']:
         account.tesseract['Upgrades'][upgrade_name]['Unlocked'] = account.tesseract['Total Upgrades'] >= account.tesseract['Upgrades'][upgrade_name]['Unlock Requirement']
 
+
 def _parse_w1(account):
     _parse_w1_upgrade_vault(account)
     _parse_w1_starsigns(account)
@@ -1143,7 +1145,6 @@ def _parse_w1_starsigns(account):
             }
 
     account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
-
 
 def _parse_w1_forge(account):
     account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
@@ -1678,6 +1679,7 @@ def _parse_w2_killroy_skull_shop(account):
 def _parse_w2_weekly_boss(account):
     account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)
 
+
 def _parse_w3(account):
     _parse_w3_refinery(account)
     _parse_w3_buildings(account)
@@ -2100,6 +2102,7 @@ def _parse_w3_worship(account):
                     'Waves': 0
                 }
 
+
 def _parse_w4(account):
     _parse_w4_cooking(account)
     _parse_w4_lab(account)
@@ -2192,7 +2195,6 @@ def _parse_w4_tome(account):
         },
         'Tome Percent': 100
     }
-
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
