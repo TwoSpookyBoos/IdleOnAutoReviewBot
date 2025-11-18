@@ -1818,7 +1818,8 @@ def _parse_w3_deathnote_kills(account):
                                     # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
                                     min(99, floor(round((kill_count / apoc_amount) * 100))),  # percent toward Apoc stack
                                     account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                    worldIndex
+                                    worldIndex,
+                                    account.enemy_maps[worldIndex][enemy_map].monster_name
                                 ]
                             )
                         else:
@@ -1837,7 +1838,8 @@ def _parse_w3_deathnote_kills(account):
                                 apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
                                 0,  # percent toward zow/chow/meow
                                 account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                worldIndex
+                                worldIndex,
+                                account.enemy_maps[worldIndex][enemy_map].monster_name
                             ]
                         )
         # Sort them
