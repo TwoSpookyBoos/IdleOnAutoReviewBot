@@ -2584,4 +2584,4 @@ def _calculate_advice_for_money(account):
             bonus_details["Effect"] = bonus_details["Effect"].replace("{", f"{bonus_details["Value"]:.2f}")
         elif "}" in bonus_details["Effect"]:
             bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
-            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details["Value"]:.2f}")
+            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details["Value"]:.4f}")
