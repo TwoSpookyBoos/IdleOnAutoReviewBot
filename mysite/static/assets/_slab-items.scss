@@ -2,6 +2,7 @@
 @import "caverns";
 @import "world-contents";
 @import "gem-shop";
+@import "equipment";
 
 $resources: (
     // Ores
@@ -380,7 +381,7 @@ $quest-items: (
     flowies: img('wiki/Flowies.png'),
     elderly-peanut: img('wiki/Elderly_Peanut.png'),
     pete-the-peanut: img('wiki/Pete_the_Peanut.png'),
-    picnic-stowaways-jam: img('wiki/Golden_Jam.png'),
+    picnic-stowaways-jam: map-get($equipment-foods, golden-jam),
     scouting-report: img('wiki/Scouting_Report.png'),
     strange-rock: img('wiki/Strange_Rock.png'),
     green-tea: img('wiki/Green_Tea.png'),
@@ -406,7 +407,7 @@ $quest-items: (
     stone-peanut: img('wiki/Stone_Peanut.png'),
     ketchup-bottle: img('wiki/Ketchup_Bottle.png'),
     mustard-bottle: img('wiki/Mustard_Bottle.png'),
-    sculpting-tools: img('data/SmithingHammerChisel1.png'),
+    sculpting-tools: img('data/SmithingHammerChisel.png'),
     guilding-tools: img('data/SmithingHammerChisel2.png'),
     onyx-tools: img('data/SmithingHammerChisel3.png'),
     zenith-tools: img('data/SmithingHammerChisel4.png'),
@@ -616,7 +617,7 @@ $dungeon-items: (
     grassy-brim: img('wiki/Grassy_Brim.png'),
     winter-brim: img('wiki/Winter_Brim.png'),
     maize-brim: img('wiki/Maize_Brim.png'),
-    the-crow-perch: img('wiki/The_Crow_Perch.png'),
+    //the-crow-perch: duplicate display name and image for EquipmentHats84 and DungEquipmentHats4
     white-tee: img('wiki/White_Tee.png'),
     green-shirt: img('wiki/Green_Shirt.png'),
     blue-stripe-tee: img('wiki/Blue_Stripe_Tee.png'),
@@ -628,11 +629,11 @@ $dungeon-items: (
     royale-jeans: img('wiki/Royale_Jeans.png'),
     pop-lock-and-drop-jeans: img('wiki/Pop_Lock_and_Drop_Jeans.png'),
     dull-flops: img('wiki/Dull_Flops.png'),
-    flap-flops: img('wiki/Flap_Flops.png'),
+    //flap-flops: duplicate display name and image for EquipmentShoes10 and DungEquipmentShoes1
     floop-floops: img('wiki/Floop_Floops.png'),
     fluppo-wuppos: img('wiki/Fluppo_Wuppos.png'),
     flipper-snapper-slipper-floppers: img('wiki/Flipper_Snapper_Slipper_Floppers.png'),
-    quartz-pendant: img('wiki/Quartz_Pendant.png'),
+    //quartz-pendant: duplicate display name and image for EquipmentPendant13 and DungEquipmentPendant0
     shruck-stone-pendant: img('wiki/Shruck_Stone_Pendant.png'),
     skydive-pendant: img('wiki/Skydive_Pendant.png'),
     maegatia-pendant: img('wiki/Maegatia_Pendant.png'),

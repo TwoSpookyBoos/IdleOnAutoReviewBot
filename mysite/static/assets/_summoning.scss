@@ -1,11 +1,12 @@
 $summoning-familiars: (
     familiar-slime:   img('data/SummMob0.png'),
-    familiar-vrumbi:  img('data/SummMob4.png'),
-    familiar-bloomy:  img('data/SummMob3.png'),
-    familiar-tonka:   img('data/SummMob5.png'),
-    familiar-regalis: img('data/SummMob2.png'),
     familiar-sparkie: img('data/SummMob1.png'),
-    familiar-guardio: img('data/SummMob6.png')
+    familiar-regalis: img('data/SummMob2.png'),
+    familiar-bloomy:  img('data/SummMob3.png'),
+    familiar-vrumbi:  img('data/SummMob4.png'),
+    familiar-tonka:   img('data/SummMob5.png'),
+    familiar-guardio: img('data/SummMob6.png'),
+    familiar-muddah:  img('data/SummMob7.png'),
 );
 
 $summoning-stones: (
@@ -16,16 +17,17 @@ $summoning-stones: (
     purple-summoning-stone: img('extracted_sprites/SummoningStone4.png'),
     red-summoning-stone:    img('extracted_sprites/SummoningStone5.png'),
     cyan-summoning-stone:   img('extracted_sprites/SummoningStone6.png'),
+    teal-summoning-stone:   img('data/SummC8.png'),  //TODO: Replace with extracted sprite once available
 );
 
 $summoning-essences: (
-    white-essence: img('wiki/Summoning_Item_1.png'),
-    green-essence: img('wiki/Summoning_Item_2.png'),
-    yellow-essence: img('wiki/Summoning_Item_3.png'),
-    blue-essence: img('wiki/Summoning_Item_4.png'),
-    purple-essence: img('wiki/Summoning_Item_5.png'),
-    red-essence: img('wiki/Summoning_Item_6.png'),
-    cyan-essence: img('wiki/Summoning_Item_7.png'),
+    white-essence: img('data/W6item6_x1.png'),
+    green-essence: img('data/W6item7_x1.png'),
+    yellow-essence: img('data/W6item8_x1.png'),
+    blue-essence: img('data/W6item9_x1.png'),
+    purple-essence: img('data/W6item10_x1.png'),
+    //red-essence: img(''),  //might be available in a sprite sheet somewhere?
+    //cyan-essence: img(''),  //might be available in a sprite sheet somewhere?
 );
 
 $summoning-upgrades: (
@@ -101,6 +103,17 @@ $summoning-upgrades: (
     summoning-upgrade-69: img('data/SumUpgIc69.png'),
     summoning-upgrade-70: img('data/SumUpgIc70.png'),
     endless-summoning: img('data/SumUpgIc70.png'),  //so I can be lazy and not look up its number each time
+    summoning-upgrade-71: img('data/SumUpgIc71.png'),
+    summoning-upgrade-72: img('data/SumUpgIc72.png'),
+    summoning-upgrade-73: img('data/SumUpgIc73.png'),
+    summoning-upgrade-74: img('data/SumUpgIc74.png'),
+    summoning-upgrade-75: img('data/SumUpgIc75.png'),
+    summoning-upgrade-76: img('data/SumUpgIc76.png'),
+    summoning-upgrade-77: img('data/SumUpgIc77.png'),
+    summoning-upgrade-78: img('data/SumUpgIc78.png'),
+    summoning-upgrade-79: img('data/SumUpgIc79.png'),
+    summoning-upgrade-80: img('data/SumUpgIc80.png'),
+    summoning-upgrade-81: img('data/SumUpgIc81.png'),
 );
 
 $summoning-etc: (
