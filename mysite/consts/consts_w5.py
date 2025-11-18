@@ -324,8 +324,14 @@ dungeon_jewelry_dict = {
 max_dungeon_jewelry_available = [len(value) for value in dungeon_jewelry_dict.values()]
 
 #`QuestsToRECLAIM = function` in source. Last updated in v2.43 Nov 15
-# This only provides the codename of the quest. The rest was put together by hand by Trialpears + Scoli
+# This provides the QuestNameCoded entry. The rest was put together by hand by Trialpears + Scoli
 QuestsToRECLAIM = "Scripticus2 Glumlee3 Promotheus2 Stiltzcho3 Goldric5 Bandit_Bob3 Shuvelle4 Yondergreen4 Bill_Brr4 Promotheus4 Rocklyte3 Cactolyte4 Nebulyte4 Monolith2 Rocklyte1 Sussy_Gene1 Sussy_Gene2 Sussy_Gene3 Scripticus8 Sad_Urie1".split(" ")
+
+# Search for `QuestName: "Scripticus2"` in source. Sub in the QuestName of course. Rewards should be the line above. For example:
+# Rewards: ["CraftMat2", 1, "COIN", 100, "Experience0", 37],
+# QuestName: "Scripticus2"
+# My understanding is that the reclaim is the 1st item codename only.
+# Quest Display Name can be found in `SceneNPCquestInfo = function`. Scripticus2 is the 2nd overall list with "Scripticus" as the 2nd entry
 reclaimable_quest_items = {
     "CraftMat2": {
         "ItemName": "Crimson String",
@@ -387,7 +393,12 @@ reclaimable_quest_items = {
         "QuestName": "The Witcher, But Not Really",
         "QuestNameCoded": QuestsToRECLAIM[9]  #'Promotheus4'
     },
-    #TODO: QuestsToRECLAIM[10] #'Rocklyte3'
+    "Trophy3": {
+        "ItemName": "Club Member",
+        "QuestGiver": "Rocklyte",
+        "QuestName": "Becoming the Best Beginner",
+        "QuestNameCoded": QuestsToRECLAIM[10]  #'Rocklyte3'
+    },
     "Trophy13": {
         "ItemName": "Club Maestro",
         "QuestGiver": "Cactolyte",
@@ -406,12 +417,37 @@ reclaimable_quest_items = {
         "QuestName": "Onyx Statue Crafting",
         "QuestNameCoded": QuestsToRECLAIM[13]  #'Monolith2'
     },
-    #TODO: QuestsToRECLAIM[14] #'Rocklyte1'
-    #TODO: QuestsToRECLAIM[15] #'Sussy_Gene1'
-    #TODO: QuestsToRECLAIM[16] #'Sussy_Gene2'
-    #TODO: QuestsToRECLAIM[17] #'Sussy_Gene3'
-    #TODO: QuestsToRECLAIM[18] #'Scripticus8'
-    #TODO: QuestsToRECLAIM[19] #'Sad_Urie1'
+    #TODO: QuestsToRECLAIM[14] #'Rocklyte1'  #This rewards the Peanut recipe I think? "SmithingRecipes1" with 'quantity' 51
+    "StampB53": {
+        "ItemName": "Triad Essence Stamp",
+        "QuestGiver": "Sussy Gene",
+        "QuestName": "Goofin' Around",
+        "QuestNameCoded": QuestsToRECLAIM[15]  #'Sussy_Gene1'
+    },
+    "StampB51": {
+        "ItemName": "Summoner Stone Stamp",
+        "QuestGiver": "Sussy Gene",
+        "QuestName": "Messin' Around",
+        "QuestNameCoded": QuestsToRECLAIM[16]  #'Sussy_Gene2'
+    },
+    "StampA41": {
+        "ItemName": "Void Axe Stamp",
+        "QuestGiver": "Sussy Gene",
+        "QuestName": "Loiterin' Around",
+        "QuestNameCoded": QuestsToRECLAIM[17]  #'Sussy_Gene3'
+    },
+    "MaxCapBagM3": {
+        "ItemName": "Small Material Pouch",
+        "QuestGiver": "Scripticus",
+        "QuestName": "Warrior, Archer or Mage?",
+        "QuestNameCoded": QuestsToRECLAIM[18]  #'Scripticus8'
+    },
+    "Quest106": {
+        "ItemName": "Urie's Special Childhood Rock",
+        "QuestGiver": "Urie",
+        "QuestName": "Urie Wants to be a Millionaire",
+        "QuestNameCoded": QuestsToRECLAIM[19]  #'Sad_Urie1'
+    },
 }
 slab_quest_rewards_all_chars = {
     'EquipmentPants16': {
