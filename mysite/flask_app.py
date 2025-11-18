@@ -19,6 +19,7 @@ import consts.consts_w3
 import consts.consts_w4
 import consts.consts_w5
 import consts.consts_w6
+import consts.consts_w7
 import consts.progression_tiers
 import consts.manage_consts  #This import is what runs finalize_consts()
 import taskSuggester

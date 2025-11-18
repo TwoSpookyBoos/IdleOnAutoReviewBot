@@ -57,7 +57,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
             image_name = 'silver-obol-of-pop-pop'
         elif 'Tome' in next_tier[2]:
             image_name = 'blue-tome-pages'
-        elif 'Advice 4 $' in next_tier[2]:
+        elif 'Advice For Money' in next_tier[2]:
             image_name = 'big-fish'
     except:
         pass

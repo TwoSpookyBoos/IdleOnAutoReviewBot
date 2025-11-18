@@ -392,6 +392,7 @@ def _calculate_wave_2(account):
     _calculate_w5(account)
     _calculate_caverns(account)
     _calculate_w6(account)
+    _calculate_w7(account)
 
 def _calculate_general(account):
     _calculate_general_alerts(account)
@@ -457,6 +458,12 @@ def _calculate_general_item_filter(account):
 
 def _calculate_general_highest_world_reached(account):
     if (
+        safer_get(account.raw_optlacc_dict, 408, 0) > 0
+        # TODO: add Achievement as another condition once those exist
+        or account.enemy_worlds[7].maps_dict[301].kill_count > 0
+    ):
+        return 7
+    elif (
         safer_get(account.raw_optlacc_dict, 194, 0) > 0
         or account.achievements['Valley Visitor']['Complete']
         or account.enemy_worlds[6].maps_dict[251].kill_count > 0
@@ -2566,3 +2573,15 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
+
+def _calculate_w7(account):
+    _calculate_advice_for_money(account)
+
+def _calculate_advice_for_money(account):
+    for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
+        bonus_details["Value"] = bonus_details["Level"] / (bonus_details["Level"] + 100) * bonus_details["Bonus"]
+        if "{" in bonus_details["Effect"]:
+            bonus_details["Effect"] = bonus_details["Effect"].replace("{", f"{bonus_details["Value"]:.2f}")
+        elif "}" in bonus_details["Effect"]:
+            bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
+            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details["Value"]:.2f}")
