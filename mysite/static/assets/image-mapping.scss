@@ -20,6 +20,7 @@
 @import "ui";
 @import "event-shop";
 @import "guild";
+@import "equipment";
 
 $id-map: map-merge($all-world-contents, $all-slab);
 $id-map: map-merge($id-map, $sections-map);
@@ -38,6 +39,7 @@ $id-map: map-merge($id-map, $companions-map);
 $id-map: map-merge($id-map, $ui-map);
 $id-map: map-merge($id-map, $event-shop);
 $id-map: map-merge($id-map, $guild-bonus-map);
+$id-map: map-merge($id-map, $all-equipment);
 
 //Master Classes
 @import "grimoire";
