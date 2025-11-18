@@ -56,8 +56,7 @@ def get_progression_tiers_advicegroup() -> tuple[AdviceGroup, int, int, int]:
 
 def get_spelunking_advicesection() -> AdviceSection:
     #Check if player has reached this section
-    highestSpelunkingSkillLevel = max(session_data.account.all_skills['Spelunking'])
-    if highestSpelunkingSkillLevel < 7:
+    if session_data.account.highest_world_reached < 7:
         spelunking_AdviceSection = AdviceSection(
             name='Spelunking',
             tier='Not Yet Evaluated',

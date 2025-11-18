@@ -14,6 +14,19 @@ def get_upgrade_info_group():
     )
 
 def get_advice_for_money_section():
+    # Check if player has reached this section
+    if session_data.account.highest_world_reached < 7:
+        afm_AdviceSection = AdviceSection(
+            name='Advice For Money',
+            tier='Not Yet Evaluated',
+            header='Come back after unlocking Spelunking in W7!',
+            picture='',
+            unrated=None,
+            unreached=True,
+            completed=False
+        )
+        return afm_AdviceSection
+
     groups = [get_upgrade_info_group()]
     return AdviceSection(
         name='Advice For Money',
@@ -24,4 +37,3 @@ def get_advice_for_money_section():
         informational=True,
         unrated=True,
     )
-
