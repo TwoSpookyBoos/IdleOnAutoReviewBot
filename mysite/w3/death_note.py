@@ -156,16 +156,19 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     if deathnote_failed_skull_type[f'W{world_index}'] == '':
                                         # Store the type of skull failed to be used in the AG header
                                         deathnote_failed_skull_type[f'W{world_index}'] = dn_skull_value_to_name_dict[tier[world_index]]
-                                    deathnote_AdviceDict[f'W{world_index}'].append(Advice(
-                                        label=(
-                                            f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
-                                        ),
-                                        picture_class=enemy[3],
-                                        progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
-                                        goal=100,
-                                        unit='%',
-                                        resource=skull_name
-                                    ))
+                                    try:
+                                        deathnote_AdviceDict[f'W{world_index}'].append(Advice(
+                                            label=(
+                                                f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
+                                            ),
+                                            picture_class=enemy[3],
+                                            progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
+                                            goal=100,
+                                            unit='%',
+                                            resource=skull_name
+                                        ))
+                                    except:
+                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy[0]}")
                     # If all failed requirements were delayed, be sure to increase the Tier as this counts as a Pass
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
                         tier_combo[world_index] = tier[0]
