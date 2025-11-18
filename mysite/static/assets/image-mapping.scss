@@ -121,13 +121,15 @@ $id-map: map-merge($id-map, $all-farming);
 $id-map: map-merge($id-map, $all-summoning);
 
 //W7
-@import "spelunking";
+@import "advice_for_money";
 @import "clam";
 @import "coral";
+@import "spelunking";
 
-$id-map: map-merge($id-map, $all-spelunking);
+$id-map: map-merge($id-map, $all-advice-for-money);
 $id-map: map-merge($id-map, $all-clam);
 $id-map: map-merge($id-map, $all-coral);
+$id-map: map-merge($id-map, $all-spelunking);
 
 
 @each $class, $link in $id-map {

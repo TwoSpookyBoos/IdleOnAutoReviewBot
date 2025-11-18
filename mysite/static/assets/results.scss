@@ -154,6 +154,14 @@
     --spirited-valley-bg-advice-group-even: hsl(161deg, 24%, 34%);
     --spirited-valley-progress-color: var(--progress-color);
 
+    --shimmerfin-deep-fg-subheading: fg-subheading-dark-mode(165deg);
+    --shimmerfin-deep-bg-subheading: none;
+
+    --shimmerfin-deep-fg-advice-group: var(--fg-advice-group);
+    --shimmerfin-deep-bg-advice-group-odd: hsl(190deg 45% 42%);
+    --shimmerfin-deep-bg-advice-group-even: hsl(190deg 35% 32%);
+    --shimmerfin-deep-progress-color: var(--progress-color);
+
     --banner-display-light: none;
     --banner-display-dark: block;
     --banner-padding: 0;
@@ -296,6 +304,15 @@
     --spirited-valley-bg-advice-group-even: #{bg-advice-group-light-mode(84.57deg)};
     --spirited-valley-progress-color: #{fg-progress-bar-light-mode(84.57deg)};
 
+
+    --shimmerfin-deep-fg-subheading: #{fg-subheading-light-mode(165deg)};
+    --shimmerfin-deep-bg-subheading: #{bg-advice-group-light-mode(84.57deg)};
+
+    --shimmerfin-deep-fg-advice-group: var(--fg-advice-group);
+    --shimmerfin-deep-bg-advice-group-odd: #{bg-advice-group-light-mode(190deg)};
+    --shimmerfin-deep-bg-advice-group-even: #{bg-advice-group-light-mode(190deg)};
+    --shimmerfin-deep-progress-color: #{fg-progress-bar-light-mode(198deg)};
+
     --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
     --fg-show-more: black;
@@ -335,7 +352,8 @@ $worlds: (
     "hyperion-nebula",
     "smolderin--plateau",
     "caverns",
-    "spirited-valley"
+    "spirited-valley",
+    "shimmerfin-deep",
 );
 
 a {

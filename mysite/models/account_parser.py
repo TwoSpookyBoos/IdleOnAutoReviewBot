@@ -57,6 +57,7 @@ from consts.consts_w6 import (
     summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
 from models.general.models_consumables import Bag, StorageChest
+from consts.consts_w7 import spelunky_data
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -173,6 +174,7 @@ def _parse_wave_1(account, run_type):
     _parse_w5(account)
     _parse_caverns(account)
     _parse_w6(account)
+    _parse_w7(account)
 
 def _parse_switches(account):
     # AutoLoot
@@ -3911,3 +3913,31 @@ def _parse_w6_emperor(account):
         bonus_index = fight_map[fight_map_index]
         account.emperor['Bonuses'][bonus_index]['Wins'] += 1
         # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win'])} {account.emperor['Bonuses'][bonus_index]['Bonus Type']}")
+
+def _parse_w7(account):
+    _parse_advice_for_money(account)
+
+def _parse_advice_for_money(account):
+    account.advice_for_money = {
+        'Upgrades': {},
+    }
+    advice_for_money_upgrade_data = spelunky_data[18]
+    try:
+        advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
+    except:
+        advice_for_money_account_data = []
+
+    for index, (upgrade_data, upgrade_level) in enumerate(zip(advice_for_money_upgrade_data, advice_for_money_account_data)):
+        name, description_and_effect, bonus, cost,  _ = upgrade_data.split(',')
+        name = name.replace('_', ' ')
+        description, effect = description_and_effect.split('@')
+        description = description.replace('_', ' ').strip()
+        effect = effect.replace('_', ' ').strip()
+        account.advice_for_money['Upgrades'][name] = {
+            'Description': description,
+            'Effect': effect,
+            'Level': int(upgrade_level),
+            'Bonus': int(bonus),
+            'Cost': int(cost),
+            'Index': index,
+        }
