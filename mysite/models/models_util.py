@@ -45,7 +45,7 @@ def get_advice_for_money_advice(upgrade_name, link_to_section: bool = True) -> t
     return upgrade['Value'], Advice(
         label=f"{link_to_section_text}{upgrade_name}:"
               f"<br>{upgrade['Effect']}",
-        picture_class=f'advice-for-money-{upgrade['Index']}',
+        picture_class=f"advice-for-money-{upgrade['Index']}",
         resource='coins',
         progression=upgrade['Level']
     )

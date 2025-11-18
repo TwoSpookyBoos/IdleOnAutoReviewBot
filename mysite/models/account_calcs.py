@@ -2581,7 +2581,7 @@ def _calculate_advice_for_money(account):
     for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
         bonus_details["Value"] = bonus_details["Level"] / (bonus_details["Level"] + 100) * bonus_details["Bonus"]
         if "{" in bonus_details["Effect"]:
-            bonus_details["Effect"] = bonus_details["Effect"].replace("{", f"{bonus_details["Value"]:.2f}")
+            bonus_details["Effect"] = bonus_details["Effect"].replace("{", f"{bonus_details['Value']:.2f}")
         elif "}" in bonus_details["Effect"]:
             bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
-            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details["Value"]:.4f}")
+            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details['Value']:.4f}")
