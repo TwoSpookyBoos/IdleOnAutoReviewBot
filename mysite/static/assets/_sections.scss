@@ -1,6 +1,7 @@
 @import "alchemy";
 @import "world-contents";
 @import "skill-icons";
+@import "ui";
 
 $sections-map: (
     //Banners
@@ -65,4 +66,7 @@ $sections-map: (
 //W6
     beanstalk: img('Beanstalk.png'),
     emperor: img('data/Boss6A.png'),
+
+//W7
+    spelunking: map-get($ui-quick-ref, quick-ref-spelunking)
 );

@@ -57,7 +57,7 @@ from consts.consts_w6 import (
     summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
 from models.general.models_consumables import Bag, StorageChest
-from consts.consts_w7 import spelunky_data
+from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -3916,11 +3916,10 @@ def _parse_w6_emperor(account):
 
 def _parse_w7(account):
     _parse_advice_for_money(account)
+    _parse_w7_spelunk_cave_bonuses(account)
 
 def _parse_advice_for_money(account):
-    account.advice_for_money = {
-        'Upgrades': {},
-    }
+    # Dependencies: None
     advice_for_money_upgrade_data = spelunky_data[18]
     try:
         advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
@@ -3941,3 +3940,31 @@ def _parse_advice_for_money(account):
             'Cost': int(cost),
             'Index': index,
         }
+
+def _parse_w7_spelunk_cave_bonuses(account):
+    # Dependencies: None
+    # Get Player JSON values for Cave Bonuses in raw_spelunk[0]
+    raw_cave_bonuses = safe_loads(account.raw_data.get('Spelunk', []))[0]
+
+    # Convert the expected list into a dictionary
+    if raw_cave_bonuses and isinstance(raw_cave_bonuses, list):
+        try:
+            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate(raw_cave_bonuses)}
+        except:
+            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
+    else:
+        logger.warning(f"Spelunk[0] sucked. Replacing with a placeholder list of 0s.")
+        player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
+
+    # Populate account.spelunk['Cave Bonuses']
+    for index, description in spelunking_cave_bonus_descriptions.items():
+        #Filter out Lava's placeholders, currently Name9 - Name15
+        this_cave_name = spelunking_cave_names.get(index, f'UnknownCave{index}')
+        if not this_cave_name.startswith('Name'):
+            account.spelunk['Cave Bonuses'][index] = {
+                'Description': description,
+                'Owned': bool(player_cave_bonuses.get(index, 0)),
+                'CaveName': this_cave_name,
+                'Image': f'spelunking-boss-{index}',
+                'Resource': f'spelunking-cavern-{index}'
+            }

@@ -1,7 +1,7 @@
 from collections import defaultdict
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti
-from consts.consts_general import star_tiers
+from consts.consts_general import star_tiers, max_card_stars
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
@@ -250,7 +250,7 @@ def getCardsAdviceSection() -> AdviceSection:
     player_max_card_stars = (
         4
         + (1 * session_data.account.rift['RubyCards'])
-        + (1 * True)  # TODO: Replace True with Majestic Cards unlocked check after Spelunking is implemented
+        + (1 * session_data.account.spelunk['Cave Bonuses'][2]['Owned'])
     )
 
     groups = list()
@@ -260,11 +260,9 @@ def getCardsAdviceSection() -> AdviceSection:
     cardset_rank_total = getCardsetAdviceGroups(cardsets, player_max_card_stars, groups)
 
     note = (
-        ''
-        if session_data.account.rift['RubyCards']
-        else (
-            'Once you reach Rift 46 your max card tier will be bumped to Ruby. Until then, I will only recommend reaching Platinum rank'
-        )
+        '' if player_max_card_stars == max_card_stars
+        else 'Majestic star locked: Only recommending reaching Ruby star' if player_max_card_stars == max_card_stars - 1
+        else 'Ruby star locked: Only recommending reaching Platinum star'
     )
 
     for group in [g for g in groups if g][3:]:
