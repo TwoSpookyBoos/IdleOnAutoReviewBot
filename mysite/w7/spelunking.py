@@ -1,5 +1,6 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
+from models.models_util import get_spelunking_cavern_bonus_advice
 from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
@@ -9,13 +10,7 @@ logger = get_logger(__name__)
 
 def get_cave_bonuses_advicegroup() -> AdviceGroup:
     cb_Advices = [
-        Advice(
-            label=f"{details['CaveName']}: {details['Description']}",
-            picture_class=details['Image'],
-            progression=int(details['Owned']),
-            goal=1,
-            resource=details['Resource'],
-        ) for index, details in session_data.account.spelunk['Cave Bonuses'].items()
+        get_spelunking_cavern_bonus_advice(index, False) for index in session_data.account.spelunk['Cave Bonuses'].keys()
     ]
 
     for advice in cb_Advices:

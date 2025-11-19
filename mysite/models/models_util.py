@@ -3,6 +3,9 @@ from consts.consts_idleon import companions_data
 from models.models import Advice
 from flask import g as session_data
 from utils.misc.has_companion import has_companion
+from utils.logging import get_logger
+logger = get_logger(__name__)
+
 
 def get_guild_bonus_advice(bonus_name: str) -> Advice:
     bonus = session_data.account.guild_bonuses[bonus_name]
@@ -49,3 +52,18 @@ def get_advice_for_money_advice(upgrade_name, link_to_section: bool = True) -> t
         resource='coins',
         progression=upgrade['Level']
     )
+
+def get_spelunking_cavern_bonus_advice(bonus_index: int, link_to_section: bool = True) -> Advice:
+    if bonus_index not in session_data.account.spelunk['Cave Bonuses']:
+        logger.warning(f"bonus_index {bonus_index} not found in session_data.account.spelunk['Cave Bonuses']. Returning generic Advice.")
+
+    bonus = session_data.account.spelunk['Cave Bonuses'].get(bonus_index, {})
+    link_to_section_text = f'{{{{ Spelunking|#spelunking }}}} - ' if link_to_section else ''
+    advice = Advice(
+        label=f"{link_to_section_text}{bonus.get('CaveName', 'UnknownCave')}: {bonus.get('Description', f'UnknownBonus{bonus_index}')}",
+        picture_class=bonus.get('Image', ''),
+        progression=int(bonus.get('Owned', False)),
+        goal=1,
+        resource=bonus.get('Resource', ''),
+    )
+    return advice
