@@ -19,7 +19,7 @@ def get_advice_for_money_section():
         afm_AdviceSection = AdviceSection(
             name='Advice For Money',
             tier='Not Yet Evaluated',
-            header='Come back after unlocking Spelunking in W7!',
+            header='Come back after finding the Big Fish on Doodle Reef in W7!',
             picture='',
             unrated=None,
             unreached=True,
