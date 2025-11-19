@@ -148,8 +148,8 @@ def main(inputData, source_string, runType="web"):
             emperor.getEmperorAdviceSection()
         ],
         sections_7 := [
-            advice_for_money.get_advice_for_money_section(),
             spelunking.get_spelunking_advicesection(),
+            advice_for_money.get_advice_for_money_section(),
         ]
     ]
 
