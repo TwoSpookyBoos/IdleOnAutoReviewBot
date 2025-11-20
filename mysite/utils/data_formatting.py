@@ -14,7 +14,7 @@ from consts.consts_general import cardset_identifiers, cardset_names, getBaseCla
 from consts.consts_idleon import getAllSkillLevelsDict, getHumanReadableClasses, max_characters
 from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
-from .logging import get_logger
+from utils.logging import get_logger
 from config import app
 from .safer_data_handling import safe_loads
 from .text_formatting import InputType
