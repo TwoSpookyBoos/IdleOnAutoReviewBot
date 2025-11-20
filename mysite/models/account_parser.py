@@ -2094,7 +2094,7 @@ def _parse_w3_worship(account):
             try:
                 account.worship['Totems'][totem_index] = {
                     'Name': totem_name,
-                    'Waves': waves[totem_index]
+                    'Waves': safer_convert(waves[totem_index], 0)
                 }
             except:
                 account.worship['Totems'][totem_index] = {
