@@ -1657,3 +1657,9 @@ class Account:
             'Total Slots Owned': 0,
             'Total Slots Max': 0
         }
+        self.spelunk = {
+            'Cave Bonuses': {},
+        }
+        self.advice_for_money = {
+            'Upgrades': {},
+        }

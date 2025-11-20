@@ -6,12 +6,70 @@ $spelunking-chapters: (
 );
 
 $spelunking-caverns: (
+    spelunking-cavern-0: img('data/CaveDoor0.png'),
+    spelunking-cavern-1: img('data/CaveDoor1.png'),
+    spelunking-cavern-2: img('data/CaveDoor2.png'),
+    spelunking-cavern-3: img('data/CaveDoor3.png'),
+    spelunking-cavern-4: img('data/CaveDoor4.png'),
+    spelunking-cavern-5: img('data/CaveDoor5.png'),
+    spelunking-cavern-6: img('data/CaveDoor6.png'),
+    spelunking-cavern-7: img('data/CaveDoor7.png'),
+    spelunking-cavern-8: img('data/CaveDoor8.png'),
+    spelunking-cavern-9: img('data/CaveDoor9.png'),
+    spelunking-cavern-10: img('data/CaveDoor10.png'),
+    spelunking-cavern-11: img('data/CaveDoor11.png'),
+    spelunking-cavern-12: img('data/CaveDoor12.png'),
+    spelunking-cavern-13: img('data/CaveDoor13.png'),
+    spelunking-cavern-14: img('data/CaveDoor14.png'),
+);
 
+$spelunking-cavern-bosses: (
+    spelunking-boss-0:  img('data/CaveBoss0.png'),
+    spelunking-boss-1:  img('data/CaveBoss1.png'),
+    spelunking-boss-2:  img('data/CaveBoss2.png'),
+    spelunking-boss-3:  img('data/CaveBoss3.png'),
+    spelunking-boss-4:  img('data/CaveBoss4.png'),
+    spelunking-boss-5:  img('data/CaveBoss5.png'),
+    spelunking-boss-6:  img('data/CaveBoss6.png'),
+    spelunking-boss-7:  img('data/CaveBoss7.png'),
+    spelunking-boss-8:  img('data/CaveBoss8.png'),
+    spelunking-boss-9:  img('data/CaveBoss9.png'),
+    spelunking-boss-10: img('data/CaveBoss10.png'),
+    spelunking-boss-11: img('data/CaveBoss11.png'),
+    spelunking-boss-12: img('data/CaveBoss12.png'),
+    spelunking-boss-13: img('data/CaveBoss13.png'),
+    spelunking-boss-14: img('data/CaveBoss14.png'),
+);
+
+$spelunking-ambers: (
+    spelunking-amber-0: img('data/CaveAmber0.png'),
+    spelunking-amber-1: img('data/CaveAmber1.png'),
+    spelunking-amber-2: img('data/CaveAmber2.png'),
+    spelunking-amber-3: img('data/CaveAmber3.png'),
+);
+
+$spelunking-elixirs: (
+    spelunking-elixir-0: img('data/CaveElix0.png'),
+    spelunking-elixir-1: img('data/CaveElix1.png'),
+    spelunking-elixir-2: img('data/CaveElix2.png'),
+    spelunking-elixir-3: img('data/CaveElix3.png'),
+    spelunking-elixir-4: img('data/CaveElix4.png'),
+    spelunking-elixir-5: img('data/CaveElix5.png'),
+    spelunking-elixir-6: img('data/CaveElix6.png'),
+    spelunking-elixir-7: img('data/CaveElix7.png'),
+    spelunking-elixir-8: img('data/CaveElix8.png'),
+    spelunking-elixir-9: img('data/CaveElix9.png'),
+    spelunking-elixir-10: img('data/CaveElix10.png'),
+    spelunking-elixir-11: img('data/CaveElix11.png'),
 );
 
 $spelunking-resources: (
     rockenstone: img('data/W7item0_x1.png'),  //TODO: Probably a sprite sheet to cut
+    cave-gold-piece: img('data/CaveGoldPiece.png'),
 );
 
 $all-spelunking: map-merge($spelunking-chapters, $spelunking-caverns);
+$all-spelunking: map-merge($all-spelunking, $spelunking-cavern-bosses);
+$all-spelunking: map-merge($all-spelunking, $spelunking-ambers);
+$all-spelunking: map-merge($all-spelunking, $spelunking-elixirs);
 $all-spelunking: map-merge($all-spelunking, $spelunking-resources);

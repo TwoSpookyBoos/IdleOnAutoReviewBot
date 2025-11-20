@@ -12,7 +12,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         'Tiers': {},
     }
     optional_tiers = 0
-    true_max = true_max_tiers['Template']
+    true_max = true_max_tiers.get('Template', 0)
     max_tier = true_max - optional_tiers
     tier_Template = 0
 
@@ -21,7 +21,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
         if subgroup_label not in template_Advices['Tiers'] and tier_Template == tier_number - 1:
-            tier_ArmorSets = tier_number
+            tier_Template = tier_number
 
     tiers_ag = AdviceGroup(
         tier=tier_Template,
