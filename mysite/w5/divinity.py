@@ -1,8 +1,6 @@
 from math import ceil
-
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.safer_data_handling import safer_convert
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import pl, notateNumber
@@ -68,7 +66,7 @@ def getOfferingsAdviceGroup():
 
     for subgroup in offerings_Advices:
         for advice in offerings_Advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     offerings_AdviceGroup = AdviceGroup(
         tier='',
@@ -270,7 +268,7 @@ def getArctisAdviceGroup(lowest_divinity_level: int, highest_divinity_level: int
 
     for subgroup in arctis_Advices:
         for advice in arctis_Advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     arctis_AdviceGroup = AdviceGroup(
         tier='',

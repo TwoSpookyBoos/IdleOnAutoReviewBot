@@ -3,7 +3,6 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.safer_data_handling import safer_get
 from utils.logging import get_logger
 from flask import g as session_data
@@ -100,7 +99,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
 
     for advicelist in [crystal_Advices, deposit_Advices]:
         for advice in advicelist:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     crystal_AG = AdviceGroup(
         tier='',
@@ -127,7 +126,7 @@ def getCurrentLevelsAdviceGroup() -> AdviceGroup:
 
     for category in advices:
         for advice in advices[category]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     levels_ag = AdviceGroup(
         tier='',

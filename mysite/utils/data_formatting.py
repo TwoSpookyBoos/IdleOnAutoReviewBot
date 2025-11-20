@@ -320,39 +320,6 @@ def getCharacterDetails(inputJSON, runType):
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]
 
-def mark_advice_completed(advice, force=False):
-    def complete():
-        advice.progression = ""
-        advice.goal = "✔"
-        advice.completed = True
-        advice.status = "gilded"
-
-    if force:
-        complete()
-
-    elif not advice.goal and str(advice.progression).endswith('+'):
-        advice.completed = True
-
-    elif not advice.goal and str(advice.progression).endswith('%'):
-        try:
-            if float(str(advice.progression).strip('%')) > 100:
-                complete()
-        except:
-            pass
-
-    elif advice.percent == '100%':
-        #If the progress bar is set to 100%
-        complete()
-
-    else:
-        try:
-            prog = str(advice.progression).strip('x%')
-            goal = str(advice.goal).strip('x%')
-            if advice.goal and advice.progression and float(prog) >= float(goal):
-                complete()
-        except:
-            pass
-
 def scrape_slab():
     url_wiki_slab_raw = "https://raw.githubusercontent.com/BigCoight/IdleonWikiBot3.0/master/exported/ts/data/SpecificItemRepo.ts"
     response = requests.get(url_wiki_slab_raw)

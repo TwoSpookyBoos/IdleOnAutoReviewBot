@@ -1,7 +1,6 @@
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, max_schematics, \
@@ -86,7 +85,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     villager_ag = AdviceGroup(
         tier='',
@@ -178,7 +177,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     villager_ag = AdviceGroup(
         tier="",
@@ -265,7 +264,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     villager_ag = AdviceGroup(
         tier='',
@@ -368,7 +367,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     villager_ag = AdviceGroup(
         tier='',
@@ -490,7 +489,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
 
     for subgroup in villager_advice:
         for advice in villager_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     villager_ag = AdviceGroup(
         tier='',

@@ -2,7 +2,6 @@ from math import ceil
 
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
@@ -278,7 +277,7 @@ def getWisdomAdviceGroup() -> AdviceGroup:
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     cavern_ag = AdviceGroup(
         tier='',
@@ -364,7 +363,7 @@ def getGambitAdviceGroup() -> AdviceGroup:
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     cavern_ag = AdviceGroup(
         tier='',

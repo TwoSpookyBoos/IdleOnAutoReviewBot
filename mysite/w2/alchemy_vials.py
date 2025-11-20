@@ -1,7 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -182,7 +181,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
 
     for subgroup in vb_advices:
         for advice in vb_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     vb_ag = AdviceGroup(
         tier='',

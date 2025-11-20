@@ -1,11 +1,8 @@
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import inventory_bags_dict, storage_chests_dict, inventory_slots_max_usable, inventory_accountwide_bags, \
     inventory_slots_max_usable_without_bundles, storage_chests_item_slots_max
-from models.general.models_consumables import StorageChest
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from models.models_util import get_upgrade_vault_advice
-from utils.data_formatting import mark_advice_completed
-from utils.safer_data_handling import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -130,7 +127,7 @@ def get_inventory_advicegroup() -> AdviceGroup:
 
     for subgroupName in inventorySlots_AdviceDict:
         for advice in inventorySlots_AdviceDict[subgroupName]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     inventorySlots_AdviceGroup = AdviceGroup(
         tier='',

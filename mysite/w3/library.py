@@ -12,7 +12,6 @@ from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
 from models.models import Character
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
-from utils.data_formatting import mark_advice_completed
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.text_formatting import kebab
@@ -118,7 +117,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     bookLevelAdviceGroup = AdviceGroup(
         tier="",
@@ -196,7 +195,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         ))
 
     for advice in bonusLevelAdvices[account_subgroupName]:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
     if (
         int(session_data.account.bonus_talents['ES Family']['Progression']) >= arbitrary_es_family_goal and
         sum([1 for advice in bonusLevelAdvices[account_subgroupName] if advice.goal == "✔" or advice.goal == '']) >= len(bonusLevelAdvices[account_subgroupName])-1
@@ -284,7 +283,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     ))
     
     for advice in speed_Advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     checkoutSpeedAdviceGroup = AdviceGroup(
         tier='',

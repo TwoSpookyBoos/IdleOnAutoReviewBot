@@ -10,7 +10,6 @@ from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Card
 from models.models_util import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -195,7 +194,7 @@ def getCardDropChanceAdviceGroup(groups):
 
     for subgroup in card_drop_chance_advices:
         for advice in card_drop_chance_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     groups.append(AdviceGroup(
         tier="",

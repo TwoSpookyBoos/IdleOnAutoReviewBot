@@ -1,5 +1,4 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import mark_advice_completed
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
@@ -313,7 +312,7 @@ def getGemShopAdviceSection() -> AdviceSection:
         ))
 
     for advice in fomo_advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     groups.append(AdviceGroup(
         tier='',

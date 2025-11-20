@@ -686,7 +686,38 @@ class Advice(AdviceBase):
     def update_optional(self, parent_value: bool):
         self.optional = parent_value
 
+    def mark_advice_completed(self, force=False):
+        def complete():
+            self.progression = ""
+            self.goal = "✔"
+            self.completed = True
+            self.status = "gilded"
 
+        if force:
+            complete()
+
+        elif not self.goal and str(self.progression).endswith('+'):
+            self.completed = True
+
+        elif not self.goal and str(self.progression).endswith('%'):
+            try:
+                if float(str(self.progression).strip('%')) > 100:
+                    complete()
+            except:
+                pass
+
+        elif self.percent == '100%':
+            # If the progress bar is set to 100%
+            complete()
+
+        else:
+            try:
+                prog = str(self.progression).strip('x%')
+                goal = str(self.goal).strip('x%')
+                if self.goal and self.progression and float(prog) >= float(goal):
+                    complete()
+            except:
+                pass
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):

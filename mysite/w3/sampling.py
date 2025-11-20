@@ -3,7 +3,6 @@ from flask import g as session_data
 
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_companion_advice
-from utils.data_formatting import mark_advice_completed
 from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
@@ -214,7 +213,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     for group_name in psr_Advices:
         if group_name != prayerSubgroup:
             for advice in psr_Advices[group_name]:
-                mark_advice_completed(advice)
+                advice.mark_advice_completed()
 
     psrAdviceGroup = AdviceGroup(
         tier='',
@@ -429,7 +428,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     for subgroup in po_Advices:
         for advice in po_Advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     po_AdviceGroup = AdviceGroup(
         tier='',

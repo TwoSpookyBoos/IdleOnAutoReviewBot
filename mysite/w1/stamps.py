@@ -2,7 +2,6 @@ from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_guild_bonus_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_general import inventory_slots_max_usable
@@ -185,7 +184,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
 
     for group_name in capacity_Advices:
         for advice in capacity_Advices[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     # Build the AdviceGroup
     capacity_AdviceGroup = AdviceGroup(
@@ -252,7 +251,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
     for group_name in costReduction_Advices:
         for advice in costReduction_Advices[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     # Build the AdviceGroup
     costReduction_AdviceGroup = AdviceGroup(
@@ -372,7 +371,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     for subgroup in exalted_advice:
         for advice in exalted_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     exalted_ag = AdviceGroup(
         tier='',

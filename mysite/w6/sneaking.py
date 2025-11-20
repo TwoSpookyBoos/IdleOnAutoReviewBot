@@ -1,7 +1,6 @@
 from consts.consts_idleon import lavaFunc
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -74,7 +73,7 @@ def getSneakingProgressionTiersAdviceGroups():
 
     for category in sneaking_AdviceDict:
         for advice in sneaking_AdviceDict[category]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     # Generate AdviceGroups
     sneaking_AdviceGroups['Gemstones'] = AdviceGroup(
