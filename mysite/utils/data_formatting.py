@@ -1,6 +1,5 @@
 import datetime
 import json
-import math
 import re
 import traceback
 from pathlib import Path
@@ -10,14 +9,14 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts.consts_idleon import classes_dict, skill_index_list, empty_skill_list
-from consts.consts_general import max_characters, cardset_identifiers, cardset_names
-from consts.consts_w2 import obols_dict
+from consts.consts_general import cardset_identifiers, cardset_names, getBaseClass, getSubclass, getEliteClass, \
+    getMasterClass
+from consts.consts_idleon import getAllSkillLevelsDict, getHumanReadableClasses, max_characters
 from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
 from .logging import get_logger
 from config import app
-from .number_formatting import parse_number
+from .safer_data_handling import safe_loads
 from .text_formatting import InputType
 
 logger = get_logger(__name__)
@@ -145,7 +144,6 @@ def getJSONfromText(runType, rawJSON):
 
     return parsed, source_string
 
-
 def load_toolbox_data(rawJSON):
     parsed = rawJSON.get("data", {})
     parsed["charNames"] = rawJSON.get("charNames", [])
@@ -169,77 +167,8 @@ def load_toolbox_data(rawJSON):
 
     return parsed
 
-
 def from_toolbox(rawJSON):
     return "data" in rawJSON
-
-
-def getBaseClass(inputClass):
-    match inputClass:
-        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
-            return "Warrior"
-        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Arcane Cultist" | "Wizard" | "Elemental Sorcerer":
-            return "Mage"
-        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Archer"
-        case "Journeyman" | "Maestro" | "Voidwalker":
-            return "Journeyman"
-        case "Beginner":
-            return "Beginner"
-        case _:
-            return f"UnknownBaseClass-{inputClass}"
-
-
-def getSubclass(inputClass):
-    match inputClass:
-        case "Barbarian" | "Blood Berserker" | "Death Bringer":
-            return "Barbarian"
-        case "Squire" | "Divine Knight":
-            return "Squire"
-        case "Shaman" | "Bubonic Conjuror" | "Arcane Cultist":
-            return "Shaman"
-        case "Wizard" | "Elemental Sorcerer":
-            return "Wizard"
-        case "Bowman" | "Siege Breaker":
-            return "Bowman"
-        case "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Hunter"
-        case "Maestro" | "Voidwalker":
-            return "Maestro"
-        case "Beginner" | "Warrior" | "Mage" | "Archer" | "Journeyman":
-            return "None"
-        case _:
-            return f"UnknownSubclass-{inputClass}"
-
-
-def getEliteClass(inputClass):
-    match inputClass:
-        case "Blood Berserker" | "Death Bringer":
-            return "Blood Berserker"
-        case 'Beast Master' | 'Wind Walker':
-            return 'Beast Master'
-        case "Bubonic Conjuror" | "Arcane Cultist":
-            return "Bubonic Conjuror"
-        case "Divine Knight" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
-            return inputClass
-        case (
-            "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
-        ):
-            return "None"
-        case _:
-            return f"UnknownEliteClass-{inputClass}"
-
-def getMasterClass(inputClass):
-    match inputClass:
-        case 'Death Bringer' | 'Wind Walker' | "Arcane Cultist":
-            return inputClass
-        case (
-            "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
-        ):
-            return "None"
-        case _:
-            return f"UnknownMasterClass-{inputClass}"
-
 
 def getCharacterDetails(inputJSON, runType):
     character_count = 0
@@ -320,7 +249,7 @@ def getCharacterDetails(inputJSON, runType):
     kill_lists = {}
     obols_list = {}
     obol_upgrades_list = {}
-    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0,0,0] * max_characters))
+    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0, 0, 0] * max_characters))
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * max_characters))
     equipped_cards_codenames = {}
     equipped_cardset = {}
@@ -330,7 +259,7 @@ def getCharacterDetails(inputJSON, runType):
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
         current_map_index[character_index] = safe_loads(inputJSON.get(f'CurrentMap_{character_index}', 0))
-        postOfficeList.append(safe_loads(inputJSON.get(f'POu_{character_index}', [0]*36)))
+        postOfficeList.append(safe_loads(inputJSON.get(f'POu_{character_index}', [0] * 36)))
         equipped_prayers[character_index] = safe_loads(inputJSON.get(f'Prayers_{character_index}', []))
         characterMaxTalents[character_index] = safe_loads(inputJSON.get(f'SM_{character_index}', {}))
         characterCurrentPresetTalents[character_index] = safe_loads(inputJSON.get(f'SL_{character_index}', {}))
@@ -340,7 +269,7 @@ def getCharacterDetails(inputJSON, runType):
         obols_list[character_index] = safe_loads(inputJSON.get(f'ObolEqO0_{character_index}', []))
         obol_upgrades_list[character_index] = safe_loads(inputJSON.get(f'ObolEqMAP_{character_index}', {}))
         try:
-            equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index+1]
+            equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index + 1]
         except:
             equipped_lab_chips[character_index] = []
         current_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadout_{character_index}', []))
@@ -390,140 +319,6 @@ def getCharacterDetails(inputJSON, runType):
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]
-
-
-def getAllSkillLevelsDict(inputJSON, playerCount):
-    allSkillsDict = {
-        'Skills': {skill: [] for skill in skill_index_list}
-    }
-    for characterIndex in range(0, playerCount):
-        if characterIndex not in allSkillsDict:
-            allSkillsDict[characterIndex] = {}
-        try:
-            characterSkillList = [parse_number(skill_level) for skill_level in inputJSON[f'Lv0_{characterIndex}']]
-        except:
-            characterSkillList = empty_skill_list
-            logger.exception(f"Could not retrieve LV0_{characterIndex} from JSON. Setting character to all 0s for levels")
-        for skillCounter in range(0, len(skill_index_list)):
-            try:
-                allSkillsDict[characterIndex][skill_index_list[skillCounter]] = characterSkillList[skillCounter]
-                allSkillsDict['Skills'][skill_index_list[skillCounter]].append(characterSkillList[skillCounter])
-            except:
-                allSkillsDict[characterIndex][skill_index_list[skillCounter]] = 0
-                allSkillsDict['Skills'][skill_index_list[skillCounter]].append(0)
-                logger.exception(f"Unable to retrieve Lv0_{characterIndex}'s Skill level for {skill_index_list[skillCounter]}")
-    return allSkillsDict
-
-# This returns incomplete data, since the obols_dict currently only contains DR obols
-# Despite this, the function is written to work with whatever data is added to the obols_dict
-def get_obol_totals(obol_list, obol_upgrade_dict):
-    obols_totals = {}
-    for obol_index, obol_name in enumerate(obol_list):
-        obol_index = str(obol_index)
-        # Adds the base values for each equipped obol
-        for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
-            obols_totals[f"Total{obol_base_name}"] = obols_totals.get(f"Total{obol_base_name}", 0) + obol_base_value
-        # Adds any upgrade value for each equipped obol
-        if obol_index in obol_upgrade_dict.keys():
-            if 'UQ1txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ1txt'] != 0:
-                try:
-                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = (
-                        obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0)
-                        + safer_convert(obol_upgrade_dict[obol_index]['UQ1val'], 0)
-                    )
-                except:
-                    logger.exception(f"Could not parse Obol UQ1txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
-            if 'UQ2txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ2txt'] != 0:
-                try:
-                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = (
-                        obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}", 0)
-                        + safer_convert(obol_upgrade_dict[obol_index]['UQ2val'], 0)
-                    )
-                except:
-                    logger.exception(f"Could not parse Obol UQ2txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
-            for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK', 'Defence', 'Weapon_Power', 'Reach', 'Speed']:
-                obols_totals[f"Total{upgrade_val}"] = obols_totals.get(f"Total{upgrade_val}", 0) + obol_upgrade_dict.get(upgrade_val, 0)
-    return obols_totals
-
-def getHumanReadableClasses(classNumber):
-    return classes_dict.get(classNumber, f"Unknown class: {classNumber}")
-
-
-def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
-    if isinstance(desiredSkill, str):
-        try:
-            return session_data.account.all_skills[desiredSkill]
-        except:
-            logger.exception(f"Could not retrieve skill data for {desiredSkill}")
-            return empty_skill_list
-    elif isinstance(desiredSkill, int):
-        try:
-            return session_data.account.all_skills[skill_index_list[desiredSkill]]
-        except:
-            logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
-            return empty_skill_list
-
-
-def setCustomTiers(filename="input.csv"):
-    return
-
-
-def safe_loads(data):
-    return json.loads(data) if isinstance(data, str) else data
-
-def safer_get(data, query, default):
-    """
-    Replace Nonetype result with default param if encountered.
-    Also attempts to typecast the result to the same type as Default param.
-    """
-    try:
-        result = data.get(query, default)
-        if isinstance(result, type(default)):
-            return result
-        else:
-            return safer_convert(result, default)
-    except AttributeError:
-        logger.exception(f"Could not .get() from provided {type(data)} data. Returning default.")
-        return default
-    except Exception as e:
-        logger.exception(f"Something else went wrong lol: {e}")
-        return default
-
-
-def safer_convert(data, default):
-    try:
-        if data is None:
-            return default
-        elif isinstance(default, int):
-            return int(float(data)) if data else default
-        else:
-            return type(default)(data)
-    except (TypeError, ValueError):
-        logger.exception(f"Could not convert [{type(data)}: {data}] to [{type(default)}: {default}]. Returning default.")
-        return default
-    except Exception as e:
-        logger.exception(f"Something else went wrong lol: {e}")
-        return default
-
-def safer_math_pow(base, exponent, default=1e100):
-    try:
-        return math.pow(base, exponent)
-    except:
-        logger.exception(f"An error occurred during math.pow() call. Replacing with default: {default}")
-        return 1e100
-
-def safer_math_log(input_value, base):
-    """
-    :param input_value:
-    :param base: Lava, lava, or 10 will all use Lava's pow10 estimate
-    """
-    if base == 'Lava' or base == 'lava' or base == 10:
-        # When you see _customBlock_getLOG called in source code, use base='Lava' here
-        return math.log(max(input_value, 1)) / 2.30259
-    elif input_value <= 0:
-        return 0
-    else:
-        return math.log(input_value, base)
 
 def mark_advice_completed(advice, force=False):
     def complete():

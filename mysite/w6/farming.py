@@ -4,9 +4,10 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_math_pow
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_general import max_characters
+from consts.consts_idleon import max_characters
 from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, getRequiredCropNumber
 from consts.consts_w4 import max_meal_level
 from consts.consts_w2 import max_vial_level
@@ -187,7 +188,7 @@ def getNightMarketCost(name, first_level, last_level=0):
     if first_level > last_level:
         last_level = first_level-1
     for level in range(first_level, last_level):
-        total_cost += floor(upgrade['BaseCost'] * pow(upgrade['CostIncrement'], level)) * cost_multi
+        total_cost += floor(upgrade['BaseCost'] * safer_math_pow(upgrade['CostIncrement'], level)) * cost_multi
     return floor(total_cost) if 1e8 > total_cost else total_cost
 
 def val_m_s_boost(megaboost, superboost):

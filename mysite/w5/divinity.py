@@ -2,7 +2,8 @@ from math import ceil
 
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed, safer_convert
+from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_convert
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger

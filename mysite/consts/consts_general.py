@@ -1,11 +1,8 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from utils.logging import get_logger
+
 logger = get_logger(__name__)
-
-
-current_world = 7
-max_characters = 10
 
 # Greenstacks
 greenstack_item_difficulty_groups = {
@@ -1308,3 +1305,71 @@ vault_upgrades_list = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_
 vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 999]
 vault_stack_types = ['Knockout']
 vault_section_indexes = [32, 61]  #Vault Mastery and Vault Mastery II's indexes
+
+
+def getBaseClass(inputClass):
+    match inputClass:
+        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
+            return "Warrior"
+        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Arcane Cultist" | "Wizard" | "Elemental Sorcerer":
+            return "Mage"
+        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
+            return "Archer"
+        case "Journeyman" | "Maestro" | "Voidwalker":
+            return "Journeyman"
+        case "Beginner":
+            return "Beginner"
+        case _:
+            return f"UnknownBaseClass-{inputClass}"
+
+
+def getSubclass(inputClass):
+    match inputClass:
+        case "Barbarian" | "Blood Berserker" | "Death Bringer":
+            return "Barbarian"
+        case "Squire" | "Divine Knight":
+            return "Squire"
+        case "Shaman" | "Bubonic Conjuror" | "Arcane Cultist":
+            return "Shaman"
+        case "Wizard" | "Elemental Sorcerer":
+            return "Wizard"
+        case "Bowman" | "Siege Breaker":
+            return "Bowman"
+        case "Hunter" | "Beast Master" | 'Wind Walker':
+            return "Hunter"
+        case "Maestro" | "Voidwalker":
+            return "Maestro"
+        case "Beginner" | "Warrior" | "Mage" | "Archer" | "Journeyman":
+            return "None"
+        case _:
+            return f"UnknownSubclass-{inputClass}"
+
+
+def getEliteClass(inputClass):
+    match inputClass:
+        case "Blood Berserker" | "Death Bringer":
+            return "Blood Berserker"
+        case 'Beast Master' | 'Wind Walker':
+            return 'Beast Master'
+        case "Bubonic Conjuror" | "Arcane Cultist":
+            return "Bubonic Conjuror"
+        case "Divine Knight" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
+            return inputClass
+        case (
+            "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+        ):
+            return "None"
+        case _:
+            return f"UnknownEliteClass-{inputClass}"
+
+
+def getMasterClass(inputClass):
+    match inputClass:
+        case 'Death Bringer' | 'Wind Walker' | "Arcane Cultist":
+            return inputClass
+        case (
+            "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+        ):
+            return "None"
+        case _:
+            return f"UnknownMasterClass-{inputClass}"

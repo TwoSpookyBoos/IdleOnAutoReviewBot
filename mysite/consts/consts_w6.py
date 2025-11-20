@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_idleon import lavaFunc, NinjaInfo, RANDOlist
+from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import numberToLetter
@@ -578,9 +579,9 @@ def getCropEvoChance(overallSeedNumber: int) -> float:
     else:
         try:
             if 'Glassy' in crop_dict[overallSeedNumber]['SeedName']:
-                return crop_base * pow(seed_base['Glassy'], crop_dict[overallSeedNumber]['SeedCropIndex'] - 2)
+                return crop_base * safer_math_pow(seed_base['Glassy'], crop_dict[overallSeedNumber]['SeedCropIndex'] - 2)
             else:
-                return crop_base * pow(seed_base[crop_dict[overallSeedNumber]['SeedName']], crop_dict[overallSeedNumber]['SeedCropIndex'] - 2)
+                return crop_base * safer_math_pow(seed_base[crop_dict[overallSeedNumber]['SeedName']], crop_dict[overallSeedNumber]['SeedCropIndex'] - 2)
         except:
             logger.warning(f"overallSeedNumber {overallSeedNumber} not found in cropDict, or SeedName not found in seed_base. Returning crop_base {crop_base}")
             return crop_base

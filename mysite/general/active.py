@@ -1,7 +1,7 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection, Character
-from consts.consts_idleon import pearlable_skills_list, lavaFunc
-from consts.consts_general import cards_max_level, current_world, max_characters
+from consts.consts_idleon import pearlable_skills_list, lavaFunc, current_world, max_characters
+from consts.consts_general import cards_max_level
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count

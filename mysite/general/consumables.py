@@ -4,7 +4,8 @@ from consts.consts_general import inventory_bags_dict, storage_chests_dict, inve
 from models.general.models_consumables import StorageChest
 from models.models import AdviceGroup, Advice, AdviceSection, Assets
 from models.models_util import get_upgrade_vault_advice
-from utils.data_formatting import safe_loads, mark_advice_completed
+from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safe_loads
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data

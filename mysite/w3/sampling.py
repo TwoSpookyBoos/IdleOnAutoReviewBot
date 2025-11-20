@@ -3,7 +3,8 @@ from flask import g as session_data
 
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_companion_advice
-from utils.data_formatting import mark_advice_completed, safer_get
+from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger

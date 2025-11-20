@@ -8,7 +8,8 @@ from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed, safer_convert
+from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
 

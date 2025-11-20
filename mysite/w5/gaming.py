@@ -5,7 +5,8 @@ import math
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import safer_convert, safer_math_log, mark_advice_completed
+from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_convert, safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_w5 import snail_max_possible_rank, snail_first_consecration_rank
