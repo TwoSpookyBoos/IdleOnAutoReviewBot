@@ -154,6 +154,14 @@
     --spirited-valley-bg-advice-group-even: hsl(161deg, 24%, 34%);
     --spirited-valley-progress-color: var(--progress-color);
 
+    --shimmerfin-deep-fg-subheading: fg-subheading-dark-mode(165deg);
+    --shimmerfin-deep-bg-subheading: none;
+
+    --shimmerfin-deep-fg-advice-group: var(--fg-advice-group);
+    --shimmerfin-deep-bg-advice-group-odd: hsl(190deg 45% 42%);
+    --shimmerfin-deep-bg-advice-group-even: hsl(190deg 35% 32%);
+    --shimmerfin-deep-progress-color: var(--progress-color);
+
     --banner-display-light: none;
     --banner-display-dark: block;
     --banner-padding: 0;
@@ -296,6 +304,15 @@
     --spirited-valley-bg-advice-group-even: #{bg-advice-group-light-mode(84.57deg)};
     --spirited-valley-progress-color: #{fg-progress-bar-light-mode(84.57deg)};
 
+
+    --shimmerfin-deep-fg-subheading: #{fg-subheading-light-mode(165deg)};
+    --shimmerfin-deep-bg-subheading: #{bg-advice-group-light-mode(190deg)}
+
+    --shimmerfin-deep-fg-advice-group: var(--fg-advice-group);
+    --shimmerfin-deep-bg-advice-group-odd: #{bg-advice-group-light-mode(190deg)};
+    --shimmerfin-deep-bg-advice-group-even: #{bg-advice-group-light-mode(190deg)};
+    --shimmerfin-deep-progress-color: #{fg-progress-bar-light-mode(198deg)};
+
     --scrollbar-thumb-color: rgba(0, 0, 0, 0.4);
 
     --fg-show-more: black;
@@ -335,7 +352,8 @@ $worlds: (
     "hyperion-nebula",
     "smolderin--plateau",
     "caverns",
-    "spirited-valley"
+    "spirited-valley",
+    "shimmerfin-deep",
 );
 
 a {
@@ -449,6 +467,7 @@ body {
         height: 100%;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        will-change: transform;
 
         .main-wrapper {
             display: flex;
@@ -763,6 +782,7 @@ body {
                                         row-gap: 5px;
                                         overflow-y: auto;
                                         -webkit-overflow-scrolling: touch;
+                                        will-change: transform;
                                         scrollbar-width: auto;
                                         scrollbar-color: var(--scrollbar-thumb-color) transparent;
 
@@ -958,63 +978,6 @@ body {
             }
         }
 
-        #buttons-floating {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            z-index: 96;
-
-            display: flex;
-            flex-direction: row;
-            gap: 5px;
-
-            @media (max-width: 600px) {
-                flex-direction: column;
-                bottom: calc((var(--nav-height) + var(--nav-padding) * 2) + 10px);
-            }
-
-            #scroll-to-top, #expand-collapse {
-                height: 40px;
-                width: 40px;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                border-radius: 50%;
-                background-color: teal;
-
-            }
-
-            #expand-collapse::before,
-            #expand-collapse::after,
-            #scroll-to-top::before {
-                content: '';
-                height: 10px;
-                width: 10px;
-                border-top: 2px solid white;
-                border-left: 2px solid white;
-            }
-
-            #scroll-to-top::before {
-                transform: rotate(45deg) translateY(15%) translateX(15%);
-            }
-
-            #expand-collapse {
-                background-color: #a22a45;
-                flex-direction: column-reverse;
-                &.closed {
-                    flex-direction: column;
-                }
-                &::after {
-                    transform: rotate(-135deg) translateY(2px) translateX(2px);
-                }
-                &::before {
-                    transform: rotate(45deg) translateY(2px) translateX(2px);
-                }
-            }
-        }
-
         footer {
             font-family: "Open Sans", sans-serif;
             color: oldlace;
@@ -1026,6 +989,63 @@ body {
             justify-content: center;
         }
 
+    }
+
+    #buttons-floating {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 96;
+
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+            bottom: calc((var(--nav-height) + var(--nav-padding) * 2) + 10px);
+        }
+
+        #scroll-to-top, #expand-collapse {
+            height: 40px;
+            width: 40px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+            background-color: teal;
+
+        }
+
+        #expand-collapse::before,
+        #expand-collapse::after,
+        #scroll-to-top::before {
+            content: '';
+            height: 10px;
+            width: 10px;
+            border-top: 2px solid white;
+            border-left: 2px solid white;
+        }
+
+        #scroll-to-top::before {
+            transform: rotate(45deg) translateY(15%) translateX(15%);
+        }
+
+        #expand-collapse {
+            background-color: #a22a45;
+            flex-direction: column-reverse;
+            &.closed {
+                flex-direction: column;
+            }
+            &::after {
+                transform: rotate(-135deg) translateY(2px) translateX(2px);
+            }
+            &::before {
+                transform: rotate(45deg) translateY(2px) translateX(2px);
+            }
+        }
     }
 }
 

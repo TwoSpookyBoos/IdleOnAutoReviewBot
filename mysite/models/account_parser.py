@@ -15,7 +15,7 @@ from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
     compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
-from consts.consts_monster_data import decode_enemy_name
+from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict, statue_count, event_points_shop_dict,
     statue_type_count, get_statue_type_index_from_name
@@ -57,6 +57,7 @@ from consts.consts_w6 import (
     summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
 )
 from models.general.models_consumables import Bag, StorageChest
+from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
 from utils.logging import get_logger
@@ -82,7 +83,7 @@ def _make_cards(account):
             if card_info[0] == 'Blank':
                 continue  #Skip the blank placeholders
             # ["mushG", "A0", "5", "+{_Base_HP", "12"],
-            enemy_decoded_name = decode_enemy_name(card_info[0], card=True)
+            enemy_decoded_name = decode_monster_name(card_info[0], card=True)
             if enemy_decoded_name.startswith('Unknown'):
                 unknown_cards.append(card_info)
             parsed_card_data[enemy_decoded_name] = {
@@ -173,6 +174,7 @@ def _parse_wave_1(account, run_type):
     _parse_w5(account)
     _parse_caverns(account)
     _parse_w6(account)
+    _parse_w7(account)
 
 def _parse_switches(account):
     # AutoLoot
@@ -217,7 +219,7 @@ def _parse_companions(account):
     # Match the Companion IDs to their names
     for companion_name, companion_data in companions_data.items():
         if companion_data['Id'] in acquired_companion_ids:
-            account.companions[companion_name] = companion_data
+            account.companions[companion_name] = copy.deepcopy(companion_data)
             if companion_name == 'Biggole Mole':
                 biggole_mole_max_days = 100
                 biggole_mole_days = min(biggole_mole_max_days, safer_get(account.raw_optlacc_dict, 354, 0))
@@ -703,6 +705,7 @@ def _parse_general_storage_slots(account):
     account.storage['Missing Chests'] = [chest for chest in StorageChest if str(chest.value) not in raw_used_chests.keys()]
     account.storage['Missing Chest Slots'] = sum([storage_chests_dict.get(chest.value) for chest in account.storage['Missing Chests']])
 
+
 def _parse_master_classes(account):
     _parse_master_classes_grimoire(account)
     _parse_master_classes_compass(account)
@@ -963,7 +966,7 @@ def _parse_master_classes_medallions(account, raw_medallions):
                 'Image': known_extras[raw_enemy_name][1],
             }
         else:
-            decoded_name = decode_enemy_name(raw_enemy_name, card=True)
+            decoded_name = decode_monster_name(raw_enemy_name, card=True)
             account.compass['Medallions'][raw_enemy_name] = {
                 'Obtained': raw_enemy_name in raw_medallions,
                 'Enemy Name': decoded_name,
@@ -1035,6 +1038,7 @@ def _parse_master_classes_tesseract(account):
     account.tesseract['Total Upgrades'] = sum([v['Level'] for v in account.tesseract['Upgrades'].values()])
     for upgrade_name in account.tesseract['Upgrades']:
         account.tesseract['Upgrades'][upgrade_name]['Unlocked'] = account.tesseract['Total Upgrades'] >= account.tesseract['Upgrades'][upgrade_name]['Unlock Requirement']
+
 
 def _parse_w1(account):
     _parse_w1_upgrade_vault(account)
@@ -1141,7 +1145,6 @@ def _parse_w1_starsigns(account):
             }
 
     account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
-
 
 def _parse_w1_forge(account):
     account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
@@ -1676,6 +1679,7 @@ def _parse_w2_killroy_skull_shop(account):
 def _parse_w2_weekly_boss(account):
     account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)
 
+
 def _parse_w3(account):
     _parse_w3_refinery(account)
     _parse_w3_buildings(account)
@@ -1696,9 +1700,9 @@ def _parse_w3_refinery(account):
     for saltColor, saltDetails in refinery_dict.items():
         try:
             account.refinery[saltColor] = {
-                'Rank': raw_refinery_list[saltDetails[0]][1],
-                'Running': raw_refinery_list[saltDetails[0]][3],
-                'AutoRefine': raw_refinery_list[saltDetails[0]][4],
+                'Rank': parse_number(raw_refinery_list[saltDetails[0]][1]),
+                'Running': parse_number(raw_refinery_list[saltDetails[0]][3]),
+                'AutoRefine': parse_number(raw_refinery_list[saltDetails[0]][4]),
                 'Image': saltDetails[1],
                 'CyclesPerSynthCycle': saltDetails[2],
                 'PreviousSaltConsumption': saltDetails[3],
@@ -1818,7 +1822,8 @@ def _parse_w3_deathnote_kills(account):
                                     # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
                                     min(99, floor(round((kill_count / apoc_amount) * 100))),  # percent toward Apoc stack
                                     account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                    worldIndex
+                                    worldIndex,
+                                    account.enemy_maps[worldIndex][enemy_map].monster_name
                                 ]
                             )
                         else:
@@ -1837,7 +1842,8 @@ def _parse_w3_deathnote_kills(account):
                                 apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
                                 0,  # percent toward zow/chow/meow
                                 account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                worldIndex
+                                worldIndex,
+                                account.enemy_maps[worldIndex][enemy_map].monster_name
                             ]
                         )
         # Sort them
@@ -2096,6 +2102,7 @@ def _parse_w3_worship(account):
                     'Waves': 0
                 }
 
+
 def _parse_w4(account):
     _parse_w4_cooking(account)
     _parse_w4_lab(account)
@@ -2188,7 +2195,6 @@ def _parse_w4_tome(account):
         },
         'Tome Percent': 100
     }
-
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
@@ -3909,3 +3915,58 @@ def _parse_w6_emperor(account):
         bonus_index = fight_map[fight_map_index]
         account.emperor['Bonuses'][bonus_index]['Wins'] += 1
         # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win'])} {account.emperor['Bonuses'][bonus_index]['Bonus Type']}")
+
+def _parse_w7(account):
+    _parse_advice_for_money(account)
+    _parse_w7_spelunk_cave_bonuses(account)
+
+def _parse_advice_for_money(account):
+    # Dependencies: None
+    advice_for_money_upgrade_data = spelunky_data[18]
+    try:
+        advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
+    except:
+        advice_for_money_account_data = []
+
+    for index, (upgrade_data, upgrade_level) in enumerate(zip(advice_for_money_upgrade_data, advice_for_money_account_data)):
+        name, description_and_effect, bonus, cost,  _ = upgrade_data.split(',')
+        name = name.replace('_', ' ')
+        description, effect = description_and_effect.split('@')
+        description = description.replace('_', ' ').strip()
+        effect = effect.replace('_', ' ').strip()
+        account.advice_for_money['Upgrades'][name] = {
+            'Description': description,
+            'Effect': effect,
+            'Level': int(upgrade_level),
+            'Bonus': int(bonus),
+            'Cost': int(cost),
+            'Index': index,
+        }
+
+def _parse_w7_spelunk_cave_bonuses(account):
+    # Dependencies: None
+    # Get Player JSON values for Cave Bonuses in raw_spelunk[0]
+    raw_cave_bonuses = safe_loads(account.raw_data.get('Spelunk', []))[0]
+
+    # Convert the expected list into a dictionary
+    if raw_cave_bonuses and isinstance(raw_cave_bonuses, list):
+        try:
+            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate(raw_cave_bonuses)}
+        except:
+            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
+    else:
+        logger.warning(f"Spelunk[0] sucked. Replacing with a placeholder list of 0s.")
+        player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
+
+    # Populate account.spelunk['Cave Bonuses']
+    for index, description in spelunking_cave_bonus_descriptions.items():
+        #Filter out Lava's placeholders, currently Name9 - Name15
+        this_cave_name = spelunking_cave_names.get(index, f'UnknownCave{index}')
+        if not this_cave_name.startswith('Name'):
+            account.spelunk['Cave Bonuses'][index] = {
+                'Description': description,
+                'Owned': bool(player_cave_bonuses.get(index, 0)),
+                'CaveName': this_cave_name,
+                'Image': f'spelunking-boss-{index}',
+                'Resource': f'spelunking-cavern-{index}'
+            }

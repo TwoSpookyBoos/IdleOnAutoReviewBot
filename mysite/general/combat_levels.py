@@ -49,21 +49,22 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
 
     overall_CombatLevelTier = curr_tier[0]
 
+    image_name = ''
     try:
         if 'Character' in next_tier[2]:
-            imagename = 'beginner-icon'
+            image_name = 'beginner-icon'
         elif 'Obol' in next_tier[2]:
-            imagename = 'silver-obol-of-pop-pop'
+            image_name = 'silver-obol-of-pop-pop'
         elif 'Tome' in next_tier[2]:
-            imagename = 'blue-tome-pages'
-        else:
-            imagename = ''
+            image_name = 'blue-tome-pages'
+        elif 'Advice For Money' in next_tier[2]:
+            image_name = 'big-fish'
     except:
-        imagename = ''
+        pass
     advices = [
         Advice(
             label=next_tier[2],
-            picture_class=imagename,
+            picture_class=image_name,
             progression=total_combat_level,
             goal=next_tier[1])
     ] if next_tier else []

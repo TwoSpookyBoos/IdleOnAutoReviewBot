@@ -35,7 +35,7 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
         for enemy in char.apoc_dict[apoc_name][difficulty_name]:
             subgroupName = f'World {enemy[4]}' if enemy[4] != 0 else 'Scattered Extras'
             advices[char.character_name][subgroupName].append(Advice(
-                label=enemy[0],
+                label=f"{enemy[5]} in {enemy[0]}",
                 picture_class=enemy[3],
                 goal=f"{enemy[1]:,}"
             ))
@@ -156,16 +156,19 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     if deathnote_failed_skull_type[f'W{world_index}'] == '':
                                         # Store the type of skull failed to be used in the AG header
                                         deathnote_failed_skull_type[f'W{world_index}'] = dn_skull_value_to_name_dict[tier[world_index]]
-                                    deathnote_AdviceDict[f'W{world_index}'].append(Advice(
-                                        label=(
-                                            f"{enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
-                                        ),
-                                        picture_class=enemy[3],
-                                        progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
-                                        goal=100,
-                                        unit='%',
-                                        resource=skull_name
-                                    ))
+                                    try:
+                                        deathnote_AdviceDict[f'W{world_index}'].append(Advice(
+                                            label=(
+                                                f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
+                                            ),
+                                            picture_class=enemy[3],
+                                            progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
+                                            goal=100,
+                                            unit='%',
+                                            resource=skull_name
+                                        ))
+                                    except:
+                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy[0]}")
                     # If all failed requirements were delayed, be sure to increase the Tier as this counts as a Pass
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
                         tier_combo[world_index] = tier[0]
@@ -184,7 +187,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                 deathnote_AdviceDict['ZOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highest_zow_count_index].apoc_dict['ZOW'][difficultyName]:
                                 deathnote_AdviceDict["ZOW"][difficultyName].append(Advice(
-                                    label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
+                                    label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                     picture_class=enemy[3],
                                     progression=enemy[2],
                                     goal=100,
@@ -214,7 +217,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                 deathnote_AdviceDict['CHOW'][difficultyName] = []
                             for enemy in session_data.account.all_characters[highest_chow_count_index].apoc_dict['CHOW'][difficultyName]:
                                 deathnote_AdviceDict["CHOW"][difficultyName].append(Advice(
-                                    label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
+                                    label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                     picture_class=enemy[3],
                                     progression=enemy[2],
                                     goal=100,
@@ -247,7 +250,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
                                 for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]:
                                     deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
-                                        label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
+                                        label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                         picture_class=enemy[3],
                                         progression=enemy[2],
                                         goal=100,
@@ -280,7 +283,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     deathnote_AdviceDict['WOW'][difficulty_name] = []
                                 for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW'][difficulty_name]:
                                     deathnote_AdviceDict['WOW'][difficulty_name].append(Advice(
-                                        label=f"{enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
+                                        label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
                                         picture_class=enemy[3],
                                         progression=enemy[2],
                                         goal=100,

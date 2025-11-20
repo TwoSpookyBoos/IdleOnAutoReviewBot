@@ -12,7 +12,10 @@ from .logging import get_logger, log_unknown_item
 
 logger = get_logger(__name__)
 
-numeralList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+numeral_list = [
+    "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+    "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+]
 
 def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
     """Pluralize"""
@@ -130,9 +133,17 @@ def getItemCodeName(itemName):
     if itemName != "":
         return _get_item_name(ITEM_CODE_DICT, itemName)
 
-def numeralToNumber(numeral: str):
-    if numeral in numeralList:
-        return numeralList.index(numeral)+1
+def numeral_to_number(numeral: str):
+    if numeral in numeral_list:
+        return numeral_list.index(numeral)+1
+    else:
+        return ''
+
+def number_to_numeral(number: int) -> str:
+    if len(numeral_list) > number:
+        return numeral_list[number - 1]
+    else:
+        return ''
 
 
 stringToDecimal = {

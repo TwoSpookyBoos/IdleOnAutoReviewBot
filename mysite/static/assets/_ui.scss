@@ -1,4 +1,20 @@
-$ui-map: (
+$ui-quick-ref: (
+    quick-ref-anvil:        img('data/UIquickref1.png'),
+    quick-ref-storage:      img('data/UIquickref2.png'),
+    quick-ref-stamps:       img('data/UIquickref3.png'),
+    quick-ref-tasks:        img('data/UIquickref4.png'),
+    quick-ref-obols:        img('data/UIquickref5.png'),
+    quick-ref-alchemy:      img('data/UIquickref6.png'),
+    quick-ref-orion:        img('data/UIquickref7.png'),
+    quick-ref-arcade:       img('data/UIquickref8.png'),
+    quick-ref-construction: img('data/UIquickref9.png'),
+    quick-ref-gaming:       img('data/UIquickref10.png'),
+    quick-ref-printer:      img('data/UIquickref11.png'),
+    quick-ref-sneaking:     img('data/UIquickref12.png'),
+    quick-ref-spelunking:   img('data/UIquickref13.png'),
+);
+
+$ui-misc: (
     placeholder: img('tbd.png'),
     empty-forge-slot: img('Empty_Forge_Slot.png'),
     forge-upgrades: img('Forge_Upgrades.png'),
@@ -20,3 +36,5 @@ $ui-map: (
     ui-talents: img('UI/UIbuttons2.png'),
     ui-inventory-bag-0: img('data/UIinventoryTabs1.png')
 );
+
+$all-ui: map-merge($ui-quick-ref, $ui-misc);

@@ -7,9 +7,11 @@ from pathlib import Path
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
+import consts.consts_monster_data
+import consts.consts_item_data
+
 import consts.consts_autoreview
 import consts.consts_idleon
-import consts.consts_monster_data
 import consts.consts_general
 import consts.consts_w1
 import consts.consts_w2
@@ -17,6 +19,7 @@ import consts.consts_w3
 import consts.consts_w4
 import consts.consts_w5
 import consts.consts_w6
+import consts.consts_w7
 import consts.progression_tiers
 import consts.manage_consts  #This import is what runs finalize_consts()
 import taskSuggester

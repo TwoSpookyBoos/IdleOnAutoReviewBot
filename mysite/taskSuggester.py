@@ -21,6 +21,7 @@ from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
 from w6 import beanstalk, sneaking, farming, summoning, emperor
+from w7 import advice_for_money, spelunking
 
 logger = get_logger(__name__)
 
@@ -146,6 +147,10 @@ def main(inputData, source_string, runType="web"):
             beanstalk.getBeanstalkAdviceSection(),
             emperor.getEmperorAdviceSection()
         ],
+        sections_7 := [
+            spelunking.get_spelunking_advicesection(),
+            advice_for_money.get_advice_for_money_section(),
+        ]
     ]
 
     #Sort sections into rated and unrated, as well as checking for completeness
@@ -221,8 +226,7 @@ def main(inputData, source_string, runType="web"):
 
     #Build Worlds
     reviews = [
-        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False,
-                    complete=False, optional=False, informational=False, unrated=False),
+        AdviceWorld(name=WorldName.PINCHY, sections=sections_pinchy, title="Pinchy AutoReview", collapse=False, complete=False, optional=False, informational=False, unrated=False),
         AdviceWorld(name=WorldName.GENERAL, sections=sections_general, banner=["generalbanner.jpg", "generalbannertext.png"]),
         AdviceWorld(name=WorldName.MASTER_CLASSES, sections=sections_master_classes, banner=["master_classes_banner.png", "master_classes_banner_text.png"]),
         AdviceWorld(name=WorldName.BLUNDER_HILLS, sections=sections_1, banner=["w1banner.png", "w1bannertext.png"]),
@@ -232,6 +236,7 @@ def main(inputData, source_string, runType="web"):
         AdviceWorld(name=WorldName.SMOLDERIN_PLATEAU, sections=sections_5, banner=["w5banner.png", "w5bannertext.png"]),
         AdviceWorld(name=WorldName.CAVERNS, sections=sections_caverns, banner=["cavernsbanner.png", "cavernsbannertext.png"]),
         AdviceWorld(name=WorldName.SPIRITED_VALLEY, sections=sections_6, banner=["w6banner.png", "w6bannertext.png"]),
+        AdviceWorld(name=WorldName.SHIMMERFIN_DEEP, sections=sections_7, banner=["w7banner.png", "w7bannertext.png"]),
     ]
 
     for world in reviews:

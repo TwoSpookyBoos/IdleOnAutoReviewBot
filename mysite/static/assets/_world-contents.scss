@@ -187,7 +187,6 @@ $world-contents: (
     spirit-sungmin: img('wiki/Spirit_Sungmin.gif'),
     crop-scientist: img('Crop_Scientist.gif'),
     jade-vendor: img('wiki/Jade_Vendor.gif'),
-    emporium-quick-ref-access: img('wiki/Emporium_Quick_Ref_Access.png'),
     hoov: img('wiki/Hoov.gif'),
     whimsical-colosseum: img('wiki/Whimsical_Colosseum_Sprite.png'),
     bamboo-tree: img('wiki/Bamboo_Tree.png'),
@@ -254,7 +253,7 @@ $world-monsters: (
     sir-stache: img('wiki/Sir_Stache_Idle.gif'),
     bloque: img('wiki/Bloque_Idle.gif'),
     mamooth: img('wiki/Mamooth_Idle.gif'),
-    snowman: img('wiki/Snowman_Idle.gif'),
+    snowmen: img('wiki/Snowman_Idle.gif'),  //Changed to Snowmen to de-dupe from Snowman hat
     penguin: img('wiki/Penguin_Idle.gif'),
     thermister: img('wiki/Thermister_Idle.gif'),
     quenchie: img('wiki/Quenchie_Idle.gif'),
@@ -346,6 +345,8 @@ $world-monsters: (
     coralcave-crab: img('data/2CardsJ11.png'),
     coralcave-guardian: img('data/2CardsJ12.png'),
     crystal-cuttlefish: img('data/2CardsJ99.png'),
+
+    big-fish: img('data/W7_fish.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);

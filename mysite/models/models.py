@@ -503,6 +503,7 @@ class WorldName(Enum):
     SMOLDERIN_PLATEAU = "Smolderin' Plateau"
     SPIRITED_VALLEY = "Spirited Valley"
     THE_CAVERNS_BELOW = "The Caverns Below"
+    SHIMMERFIN_DEEP = "Shimmerfin Deep"
 
 class AdviceBase:
     """
@@ -1415,6 +1416,8 @@ class Card:
         6 stars = 14,670x additional what 1star took, for a total of 484+14,670 = 15,129x  (123^2).
         7 stars = 496x additional what 1star took, for a total of 15,129+496 = 15,625x (125^2).
         """
+        if star == 0:
+            return 1
         previous_star = star - 1
         if self.name == 'Chaotic Chizoar':
             tier_coefficient = previous_star + 1 + floor(previous_star/3)
@@ -1477,13 +1480,14 @@ class EnemyWorld:
             self.lowest_skulls_dict[skullValue] = []
         if len(mapsdict) > 0:
             for enemy_map_index in self.maps_dict:
-                self.lowest_skulls_dict[self.maps_dict[enemy_map_index].skull_mk_value].append(
-                    [self.maps_dict[enemy_map_index].map_name,
-                     self.maps_dict[enemy_map_index].kills_to_next_skull,
-                     self.maps_dict[enemy_map_index].percent_toward_next_skull,
-                     self.maps_dict[enemy_map_index].monster_image,
-                     self.maps_dict[enemy_map_index].kill_count],
-                )
+                self.lowest_skulls_dict[self.maps_dict[enemy_map_index].skull_mk_value].append([
+                    self.maps_dict[enemy_map_index].map_name,
+                    self.maps_dict[enemy_map_index].kills_to_next_skull,
+                    self.maps_dict[enemy_map_index].percent_toward_next_skull,
+                    self.maps_dict[enemy_map_index].monster_image,
+                    self.maps_dict[enemy_map_index].kill_count,
+                    self.maps_dict[enemy_map_index].monster_name,
+                ],)
             for skullDict in self.lowest_skulls_dict:
                 self.lowest_skulls_dict[skullDict] = sorted(self.lowest_skulls_dict[skullDict], key=lambda item: item[2], reverse=True)
             for skullDict in self.lowest_skulls_dict:
@@ -1652,4 +1656,10 @@ class Account:
             'Other Slots Max': 0,
             'Total Slots Owned': 0,
             'Total Slots Max': 0
+        }
+        self.spelunk = {
+            'Cave Bonuses': {},
+        }
+        self.advice_for_money = {
+            'Upgrades': {},
         }

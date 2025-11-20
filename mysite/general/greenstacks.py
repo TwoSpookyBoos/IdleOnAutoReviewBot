@@ -1,6 +1,6 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
-from consts.consts_w5 import find_vendor_name
+from consts.consts_w5 import get_vendor_name
 from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Assets
 from utils.data_formatting import mark_advice_completed
@@ -181,7 +181,7 @@ def getGStackAdviceSections():
             category: [
                 Advice(
                     label=f"{item.name}"
-                          f"{f' ({find_vendor_name(item.codename)})' if category == 'Vendor Shops' else ''}",
+                          f"{f' ({get_vendor_name(item.codename)})' if category == 'Vendor Shops' else ''}",
                     picture_class=item.name,
                     progression=item.progression,
                     goal=100,

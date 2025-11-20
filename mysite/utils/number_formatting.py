@@ -3,7 +3,7 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def parse_number(number: str, default=1e100) -> int | float:
+def parse_number(number: str | int | float, default=1e100) -> int | float:
     """
     Parses a string to a number. Simplifies to an int if possible. Otherwise, it returns a float
     """

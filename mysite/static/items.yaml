@@ -137,10 +137,10 @@ Spelunking1: Chapter Two 'Decay Surrounds'
 Spelunking2: Chapter Three 'This is Gospel'
 Spelunking3: Chapter Four 'No Escape'
 EquipmentHats1: Farmer Brim
-TestObj15: Slime Cap
-EquipmentHatsBeg1: Ice Cream Sunday
-EquipmentHats61: Mark of Member
-EquipmentHats15: Leather Cap
+EquipmentHats2: Royal Turban
+EquipmentHats3: Thief Hood
+EquipmentHats4: Stump Prop
+EquipmentHats4Choppin: Stump Prop
 EquipmentHats5: White Headband
 EquipmentHats6: Green Headband
 EquipmentHats7: Red Headband
@@ -151,62 +151,120 @@ EquipmentHats11: Grey Beret
 EquipmentHats12: Traffic Cone
 EquipmentHats13: Propeller Cap
 EquipmentHats14: Baseball Hat
-TestObj14: Trojan Helmet
-TestObj16: Demon Horns
-EquipmentHats4Choppin: Stump Prop
+EquipmentHats15: Leather Cap
+EquipmentHats16: Top Hat
 EquipmentHats17: Copper Helmet
 EquipmentHats18: Iron Helmet
-EquipmentHats28: Gold Helmet
-EquipmentHats22: Amarok Helmet
 EquipmentHats19: Platinum Helmet
-EquipmentHats53: Dementia Helmet
-EquipmentHats52: Efaunt Helmet
-EquipmentHats54: Void Imperium Helmet
-EquipmentHats68: Chizoar Helmet
-EquipmentHats70: Lustre Veil
-EquipmentHats71: Diabolical Headcase
-EquipmentHats74: Thin Veil of The Troll
-EquipmentHats77: Magma Core Headdress
-EquipmentHats83: Skulled Helmet of the Divine
-EquipmentHats105: Marbiglass Headdress
-EquipmentHats106: Crown of the Gods
-EquipmentHats119: Emperor Kabuto
-EquipmentHats107: Shiny Bored Beanie
-EquipmentHats84: The Crow Perch
+EquipmentHats20: Militia Helm
 EquipmentHats21: Birthday Hat
+EquipmentHats22: Amarok Helmet
 EquipmentHats23: Farmer Brimer
 EquipmentHats24: Farmer Brimest
 EquipmentHats25: Bored Beanie
-EquipmentHats2: Royal Turban
+EquipmentHats26: Witch Hat
 EquipmentHats27: Paper Boat
+EquipmentHats28: Gold Helmet
 EquipmentHats29: Alien Headband
 EquipmentHats30: Cowbo Galloneer
+EquipmentHats31: Smitty's Bubble Blowing Hat
+EquipmentHats32: Bandit Bob Mask
+EquipmentHats33: Paper Bag
+EquipmentHats34: Parasite
+EquipmentHats35: Diamond Horns
+EquipmentHats36: Halloween Pumpkin
+EquipmentHats37: Hotdog Hero
+EquipmentHats38: Invisible Hat
 EquipmentHats39: Grandma Disguise
+EquipmentHats40: Pardoned Turkey
+EquipmentHats41: Sleek Coif
 EquipmentHats42: Santa Hat
+EquipmentHats43: Snowman
 EquipmentHats44: Jar
+EquipmentHats45: Giftmas Tree
+EquipmentHats46: Strawbiggy
+EquipmentHats47: Pop Cat
+EquipmentHats48: Dairy Dunk
+EquipmentHats49: The Classic
+EquipmentHats50: Green Beanie
 EquipmentHats51: Big Pretty Bow
+EquipmentHats52: Efaunt Helmet
+EquipmentHats53: Dementia Helmet
+EquipmentHats54: Void Imperium Helmet
 EquipmentHats55: Steam Cap
-EquipmentHats108: 3rd Anniversary Ice Cream Topper
 EquipmentHats56: Bunny Ears
+EquipmentHats57: Big Bunny
+EquipmentHats58: Murmillo Helm
+EquipmentHats59: Conquistador Plume
+EquipmentHats60: Adornment of the High Priest
+EquipmentHats61: Mark of Member
+EquipmentHats62: Fluffy Ramsy
 EquipmentHats63: Summer Shell
 EquipmentHats64: Nuget Cake Fedora
+EquipmentHats65: The Red Boaty
 EquipmentHats66: Honker Hat
 EquipmentHats67: Acorn Topper
+EquipmentHats68: Chizoar Helmet
+EquipmentHats69: Giftmas Snoozy Cap
+EquipmentHats70: Lustre Veil
+EquipmentHats71: Diabolical Headcase
 EquipmentHats72: Nondescript Game Show Host Hair
 EquipmentHats73: Real Civil Engineer Helmet
+EquipmentHats74: Thin Veil of The Troll
 EquipmentHats75: Apple Launch Hat
 EquipmentHats76: Funny Hat
+EquipmentHats77: Magma Core Headdress
 EquipmentHats78: Meteorhead
 EquipmentHats79: Ice Guard Helmet
-EquipmentHats20: Militia Helm
+EquipmentHats80: Corgi Topper
+EquipmentHats81: Siege Captain Cap
+EquipmentHats82: Ele Sorcerer Pointed Hat
+EquipmentHats83: Skulled Helmet of the Divine
+EquipmentHats84: The Crow Perch
+EquipmentHats85: Bedsheet with Holes
+EquipmentHats86: Carrotman Mask
+EquipmentHats87: Glublin Mask
+EquipmentHats88: Bloque Mask
+EquipmentHats89: Borzoi Topper
+EquipmentHats90: Straw Hat
+EquipmentHats91: Wig Bandana
+EquipmentHats92: Funky Hat
+EquipmentHats93: Reinforced Headband
+EquipmentHats94: Shogun Helmet
+EquipmentHats95: Gilded Headband
+EquipmentHats96: Bamboo Hat
+EquipmentHats97: Festive Beast Mask
+EquipmentHats98: Heiress Headdress
+EquipmentHats99: Spirited Mane
+EquipmentHats100: Fiery Mane
+EquipmentHats101: Guardian Mane
+EquipmentHats102: Fanned Blossomage
+EquipmentHats103: Dainty Brim
+EquipmentHats104: Charcoal Hat
+EquipmentHats105: Marbiglass Headdress
+EquipmentHats106: Crown of the Gods
+EquipmentHats107: Shiny Bored Beanie
+EquipmentHats108: 3rd Anniversary Ice Cream Topper
+EquipmentHats109: Husky Hat
+EquipmentHats110: Yellow Beanie
+EquipmentHats111: Epic Santa Hat
+EquipmentHats112: Deathbringer Hood of Death
+EquipmentHats113: Pink Beanie
+EquipmentHats114: True Crown
+EquipmentHats115: Celebration Mane
+EquipmentHats116: Goldberry
+EquipmentHats117: Orange Beanie
+EquipmentHats118: Windwalker Hood
+EquipmentHats119: Emperor Kabuto
+EquipmentHats120: Umbrella Brim
+EquipmentHats121: Bloo Creamer
+EquipmentHats122: Arcanist Crown
+EquipmentHats123: Prehistoric Battlehair
+EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
-EquipmentHats58: Murmillo Helm
-EquipmentHats3: Thief Hood
-EquipmentHats41: Sleek Coif
-EquipmentHats59: Conquistador Plume
-EquipmentHats16: Top Hat
-EquipmentHats26: Witch Hat
-EquipmentHats60: Adornment of the High Priest
+TestObj14: Trojan Helmet
+TestObj15: Slime Cap
+TestObj16: Demon Horns
 EquipmentPunching1: Boxing Gloves
 EquipmentPunching2: The Stingers
 EquipmentPunching3: Bandage Wraps
@@ -218,9 +276,18 @@ EquipmentPunching8: Molten Core Knucklers
 EquipmentPunching9: Crackled Skull Destroyer
 EquipmentPunching10: Pentastud Slapper
 EquipmentPunching11: Mittens of the Gods
+EquipmentPunching12: Talon of the Hawk
 TestObj1: Wooden Spear
-TestObj7: Steel Axe
+TestObj2: Steel Spear
 TestObj3: Royal Bayonet
+TestObj4: Frozen Impaler
+TestObj5: Blood Screamer
+#TestObj6 has an image, but no item definition
+TestObj7: Steel Axe
+TestObj8: Flaming Katana
+TestObj9: Emerald Eizon
+TestObj10: Stalagmite
+EquipmentWeapons1: Iron Sword
 EquipmentSword1: Enforced Slasher
 EquipmentSword2: The Ice Breaker
 EquipmentSword3: Deuscythe
@@ -231,14 +298,8 @@ EquipmentSword7: Skull Lance
 EquipmentSword8: Elegant Spear
 EquipmentSword9: Massive Godbreaker
 EquipmentSword10: Sabertoothed Gorehacker
-TestObj4: Frozen Impaler
-TestObj5: Blood Screamer
-TestObj8: Flaming Katana
-TestObj9: Emerald Eizon
-TestObj10: Stalagmite
-EquipmentWeapons1: Iron Sword
-TestObj2: Steel Spear
 EquipmentBows1: Wooden Bow
+#EquipmentBows2 has an image, but no item definition
 EquipmentBows3: Birch Longbow
 EquipmentBows4: Carrot Launcher
 EquipmentBows5: Spiked Menace
@@ -254,9 +315,10 @@ EquipmentBows14: Doublestring Godshooter
 EquipmentBows15: Raptor Shardslinger
 EquipmentWands1: Gnarled Wand
 EquipmentWands2: Quarterstaff
+EquipmentWands3: Spriggly Storm
+EquipmentWands4: Microphone
 EquipmentWands5: Starlight
 EquipmentWands6: Crows Nest
-EquipmentWands3: Spriggly Storm
 EquipmentWands7: Grey Gatsby
 EquipmentWands8: Skullslip Hallow
 EquipmentWands9: Diabolical Opticule
@@ -265,38 +327,37 @@ EquipmentWands11: Staff of the Undead Plague
 EquipmentWands12: Sparky Marble Staff
 EquipmentWands13: Magnifique Godcaster
 EquipmentWands14: Beastly Orblauncher
-EquipmentWands4: Microphone
 EquipmentShirts1: Orange Tee
-EquipmentShirts17: MCR Tshirt
-EquipmentShirts19: Planktop
-EquipmentShirts20: Hide Shirt
-EquipmentShirts24: Green Tee
-EquipmentShirts25: Purple Tee
 EquipmentShirts2: Blue Tee
-EquipmentShirts16: Spore Tee
 EquipmentShirts3: Black Tee
 EquipmentShirts4: Tanned Hide
+EquipmentShirts5: Studded Hide
+EquipmentShirts6: Chizoar Bodyplate
 EquipmentShirts7: Molten Chest
 EquipmentShirts8: REPLACE ME
 EquipmentShirts9: REPLACE ME
-EquipmentShirts21: Tattered Cloth
 EquipmentShirts10: Fur Shirt
 EquipmentShirts11: Copper Platebody
 EquipmentShirts12: Iron Platebody
 EquipmentShirts13: Gold Platebody
-EquipmentShirts18: Amarok Bodyplate
 EquipmentShirts14: Platinum Platbody
-EquipmentShirts5: Studded Hide
-EquipmentShirts23: Feral Leathering
-EquipmentShirts22: Furled Robes
 EquipmentShirts15: Dementia Body
+EquipmentShirts16: Spore Tee
+EquipmentShirts17: MCR Tshirt
+EquipmentShirts18: Amarok Bodyplate
+EquipmentShirts19: Planktop
+EquipmentShirts20: Hide Shirt
+EquipmentShirts21: Tattered Cloth
+EquipmentShirts22: Furled Robes
+EquipmentShirts23: Feral Leathering
+EquipmentShirts24: Green Tee
+EquipmentShirts25: Purple Tee
 EquipmentShirts26: Efaunt Ribcage
 EquipmentShirts27: Void Imperium Platebody
-EquipmentShirts31: Member Hoodie
 EquipmentShirts28: Damascus Plates
 EquipmentShirts29: Evergreen Wraps
 EquipmentShirts30: Elegantine Robes
-EquipmentShirts6: Chizoar Bodyplate
+EquipmentShirts31: Member Hoodie
 EquipmentShirts32: Lustre Chestplate
 EquipmentShirts33: Diabolical Abdomen
 EquipmentShirts34: Trollish Garb
@@ -311,12 +372,11 @@ EquipmentPants1: Torn Jeans
 EquipmentPants2: Copper Platelegs
 EquipmentPants3: Iron Platelegs
 EquipmentPants4: Gold Platelegs
-EquipmentPants17: Amarok Hinds
 EquipmentPants5: Platinum Shins
 EquipmentPants6: Dementia Shins
-EquipmentPants20: Efaunt Hipilium
-EquipmentPants21: Void Imperium Shardshins
 EquipmentPants7: Gilded Pilates
+EquipmentPants8: Twisted Scales
+EquipmentPants9: Chizoar Scaled Leggings
 EquipmentPants10: Give Up On Life Pants
 EquipmentPants11: Yellow Belt Ninja Pants
 EquipmentPants12: Merchantile Pants
@@ -324,14 +384,15 @@ EquipmentPants13: Ancient Leggings
 EquipmentPants14: Forensic Leggings
 EquipmentPants15: Bleached Designer Wode Patch Pants
 EquipmentPants16: Adam's Leaf
+EquipmentPants17: Amarok Hinds
 EquipmentPants18: Dirty Coal Miner Baggy Soot Pants
 EquipmentPants19: Trimmed Rune Platelegs
+EquipmentPants20: Efaunt Hipilium
+EquipmentPants21: Void Imperium Shardshins
 EquipmentPants22: Fishing Overalls
 EquipmentPants23: Bandito Pantaloon
-EquipmentPants9: Chizoar Scaled Leggings
 EquipmentPants24: Lustre Scales
 EquipmentPants25: Diabolical Trimed Leg Guards
-EquipmentPants8: Twisted Scales
 EquipmentPants26: Magma Core Battleskirt
 EquipmentPants27: Spiked Leggings of the Divine
 EquipmentPants29: Marbiglass Legplates
@@ -339,28 +400,30 @@ EquipmentPants30: Tatters of the Gods
 EquipmentPants31: Emperor Zubon
 EquipmentPants32: Prehistoric Pantaloons
 EquipmentShoes1: Copper Boots
+EquipmentShoes2: Eyern Boots
+EquipmentShoes3: Gold Boots
+EquipmentShoes4: Platinum Boots
+EquipmentShoes5: Dementia Boots
+EquipmentShoes6: Hermes Boots
+EquipmentShoes7: Goo Galoshes
+EquipmentShoes8: Yeti Walkers
 EquipmentShoes9: Flip Flops
 EquipmentShoes10: Flap Flops
 EquipmentShoes11: Floop Flops
 EquipmentShoes12: Flux Flops
-EquipmentShoes15: Iron Boots
-EquipmentShoes3: Gold Boots
-EquipmentShoes20: Amarok Paws
-EquipmentShoes4: Platinum Boots
-EquipmentShoes5: Dementia Boots
-EquipmentShoes21: Efaunts Broken Ankles
-EquipmentShoes22: Void Imperium Kicks
-EquipmentShoes6: Hermes Boots
-EquipmentShoes7: Goo Galoshes
-EquipmentShoes8: Yeti Walkers
 EquipmentShoes13: Gaia Shoes
 EquipmentShoes14: Cauldrunners
+EquipmentShoes15: Iron Boots
 EquipmentShoes16: Cavern Trekkers
 EquipmentShoes17: Logger Heels
 EquipmentShoes18: Angler Boots
 EquipmentShoes19: Bandito Boots
-EquipmentShoes2: Eyern Boots
+EquipmentShoes20: Amarok Paws
+EquipmentShoes21: Efaunts Broken Ankles
+EquipmentShoes22: Void Imperium Kicks
 EquipmentShoes23: Chizoar Walkers
+EquipmentShoes24: Lustre Shieldshoe
+EquipmentShoes25: Diabolical Toe Tips
 EquipmentShoes26: Rough Rockers
 EquipmentShoes27: Fiberous Footings
 EquipmentShoes28: Deep Sea Galoshes
@@ -369,14 +432,12 @@ EquipmentShoes30: Cooking Clogs
 EquipmentShoes31: Chef Hat Shoes
 EquipmentShoes32: Laboratory Scrubs
 EquipmentShoes33: Sheek Scrubs
-EquipmentShoes39: Divvy Slippers
-EquipmentShoes24: Lustre Shieldshoe
-EquipmentShoes25: Diabolical Toe Tips
 EquipmentShoes34: Soles of the Troll
 EquipmentShoes35: Magma Core Lavarunners
 EquipmentShoes36: Devious Slippers of the Divine
 EquipmentShoes37: Marbiglass Soles
 EquipmentShoes38: Drip of the Gods
+EquipmentShoes39: Divvy Slippers
 EquipmentShoes40: Emperor Geta
 EquipmentShoes41: Perhistoric Bracers
 EquipmentPendant1: Mint Icey
@@ -426,19 +487,17 @@ EquipmentRings8: The Used Bandaid
 EquipmentRings9: Chat Ring
 EquipmentRings10: Spikeweed Ring
 EquipmentRings11: Defenders Dignity
-EquipmentRingsFishing1: Shallow Watering
-EquipmentRingsFishing2: Oceanic Ring
-EquipmentRingsFishing3: Deepwater Trench Ring
 EquipmentRings12: Frisbee Ring
 EquipmentRings13: Silver Stopwatch
 EquipmentRings14: Dooble Goopi
 EquipmentRings15: Sanic Ring
 EquipmentRings16: Efaunt Trunculus
-EquipmentRings21: Elf Twist Ring
-EquipmentRings20: Rex Ring
-EquipmentRings19: Bejeweled Ring
-EquipmentRings22: Tenacity Ring
+#EquipmentRings17 has an image, but no item definition
 EquipmentRings18: The Emperor's Opal
+EquipmentRings19: Bejeweled Ring
+EquipmentRings20: Rex Ring
+EquipmentRings21: Elf Twist Ring
+EquipmentRings22: Tenacity Ring
 EquipmentRings23: Neutron Ice Ring
 EquipmentRings24: Lab Ring
 EquipmentRings25: Chef Ring
@@ -461,10 +520,14 @@ EquipmentRingsChat3: Wealth Ring
 EquipmentRingsChat4: Bob Ring
 EquipmentRingsChat5: Bubble Ring
 EquipmentRingsChat6: Cthulu's Ring
+#EquipmentRings7 has a blank image, but no item definition
 EquipmentRingsChat8: Lava Sez Buy More Gems
 EquipmentRingsChat9: HONK Ring
 EquipmentRingsChat10: Meteorite Ring
 EquipmentRingsChat11: Equinox Ring
+EquipmentRingsFishing1: Shallow Watering
+EquipmentRingsFishing2: Oceanic Ring
+EquipmentRingsFishing3: Deepwater Trench Ring
 EquipmentCape0: Angel Wings
 EquipmentCape1: Lava Wings
 EquipmentCape2: Easter Egg Backpack
@@ -642,7 +705,7 @@ StoneA4: Armor Upgrade Stone IV
 StoneA5: Armor Upgrade Stone V
 StoneA6: Armor Upgrade Stone SK
 StoneA7: Armor Upgrade Stone VI
-StoneA8: Armor Upgrade Sonte VII
+StoneA8: Armor Upgrade Stone VII
 StoneTe: Easter Tool Upgrade Stone
 StoneT1: Tool Upgrade Stone I
 StoneT1e: Giftmas Tool Upgrade Stone
@@ -681,6 +744,7 @@ Timecandy6: 72 HR Time Candy
 Timecandy7: Steamy Time Candy
 Timecandy8: Spooky Time Candy
 Timecandy9: Cosmic Time Candy
+Timecandy10: Spirit Time Candy
 InvBag1: Inventory Bag A
 InvBag2: Inventory Bag B
 InvBag3: Inventory Bag C
@@ -740,6 +804,8 @@ InvStorage25: Storage Chest 25
 InvStorage26: Storage Chest 26
 InvStorage27: Storage Chest 27
 InvStorage28: Storage Chest 28
+InvStorage29: Storage Chest 29
+InvStorage30: Storage Chest 30
 InvStorage31: Storage Chest 90
 InvStorage32: Storage Chest 91
 InvStorage33: Storage Chest 92
@@ -1197,9 +1263,16 @@ w7A9: Demonflesh
 w7A10: Fishfork
 w7A11: Crabclaw
 w7A12: Guardian Mace
+ClamPearl0: Clam Pearl
+ClamPearl1: Pure Pearl
 Coral1: Vibrant Coral
 Coral2: Glowing Coral
 Coral3: Neon Coral
+Coral4: Coral4
+Coral5: Coral5
+Coral6: Coral6
+Coral7: Coral7
+Coral8: Coral8
 GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
@@ -1502,6 +1575,7 @@ EquipmentNametag26: Tome Pro Nametag
 EquipmentNametag27: Tome Master Nametag
 EquipmentNametag28: Tome Legend Nametag
 EquipmentNametag29: Reliquarium Nametag
+EquipmentNametag30: Cropfall Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1532,6 +1606,7 @@ EquipmentNametagReplica26: Tome Pro Nametag
 EquipmentNametagReplica27: Tome Master Nametag
 EquipmentNametagReplica28: Tome Legend Nametag
 EquipmentNametagReplica29: Reliquarium Nametag
+EquipmentNametagReplica30: Cropfall Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1616,33 +1691,34 @@ TrophyReplica25: Luckiest Lad
 EquipmentTools1: Junk Pickaxe
 EquipmentTools2: Copper Pickaxe
 EquipmentTools3: Iron Pickaxe
+#EquipmentTools4 has an image, but no item definition
 EquipmentTools5: Gold Pickaxe
 EquipmentTools6: Platinum Pickaxe
 EquipmentTools7: Dementia Pickaxe
-EquipmentTools11: Void Imperium Pik
 EquipmentTools8: Lustre Pickaxe
-EquipmentTools12: Starfire Pickaxe
 EquipmentTools9: Dreadlo Pickolo
+EquipmentTools10: Poopy Pickaxe
+EquipmentTools11: Void Imperium Pik
+EquipmentTools12: Starfire Pickaxe
+EquipmentTools13: Skewered Snek
 EquipmentTools14: Marbiglass Pickaxe
 EquipmentTools15: Destroyer of the Mollo Gomme
 EquipmentTools16: Prehistoric Pickaxe
-EquipmentTools10: Poopy Pickaxe
-EquipmentTools13: Skewered Snek
 EquipmentToolsHatchet0: Old Hatchet
-EquipmentToolsHatchet3: Copper Chopper
 EquipmentToolsHatchet1: Iron Hatchet
-EquipmentToolsHatchet2b: Stinky Axe
 EquipmentToolsHatchet2: Golden Axe
+EquipmentToolsHatchet2b: Stinky Axe
+EquipmentToolsHatchet3: Copper Chopper
 EquipmentToolsHatchet4: Plat Hatchet
 EquipmentToolsHatchet5: Dementia Dicer
-EquipmentToolsHatchet7: Void Imperium Axe
 EquipmentToolsHatchet6: Lustre Logger
+EquipmentToolsHatchet7: Void Imperium Axe
 EquipmentToolsHatchet8: Starfire Hatchet
 EquipmentToolsHatchet9: Dreadlo Hatchet
-EquipmentToolsHatchet12: Marbiglass Hatchet
-EquipmentToolsHatchet13: Prehistoric Choppah
 EquipmentToolsHatchet10: Annihilator of the Yggdrasil
 EquipmentToolsHatchet11: Grumbie the Hatchet Hammer
+EquipmentToolsHatchet12: Marbiglass Hatchet
+EquipmentToolsHatchet13: Prehistoric Choppah
 FishingRod1: Wood Fishing Rod
 FishingRod2: Copper Fish Rod
 FishingRod3: Iron Fishing Rod
@@ -1668,7 +1744,7 @@ CatchingNet9: Starfire Trim Netting
 CatchingNet10: Dreadlo Matted Netting
 CatchingNet11: Marbiglass Netting
 CatchingNet12: Wrangler of the Qoxzul
-CatchingNet13: Wrangler of the Qoxzul
+CatchingNet13: Prehistoric Net
 TrapBoxSet1: Cardboard Traps
 TrapBoxSet2: Silkskin Traps
 TrapBoxSet3: Wooden Traps
@@ -1697,27 +1773,34 @@ DNAgun1: Bolstered DNA Splicer
 DNAgun2: Double Barreled DNA Splicer
 DNAgun3: Ergonomic DNA Splicer
 FoodHealth1: Nomwich
-FoodHealth3: Hot Dog
 FoodHealth2: Cheezy Pizza
-Peanut: Peanut
+FoodHealth3: Hot Dog
 FoodHealth4: Saucy Weiner
+FoodHealth5: Cranberry Jam
 FoodHealth6: Kebab Sticks
 FoodHealth7: Meat Pie
-FoodHealth10: Mountain Bread
+FoodHealth8: Crabby Cake Supreme  # Unreleased
 FoodHealth9: Yeti Ham
+FoodHealth10: Mountain Bread
 FoodHealth11: Sheepie Dairy
-FoodHealth13: Cupcake
 FoodHealth12: Spicy Space Ribs
+FoodHealth13: Cupcake
 FoodHealth14: Lemon Slice
 FoodHealth15: Grilled Cheese Nomwich
 FoodHealth16: Raw Nigiri
 FoodHealth17: Dumpling
 FoodHealth18: Saltwater Taffy
 FoodHealth19: Sugar Cookie
-FoodHealth5: Cranberry Jam
-FoodHealth8: Crabby Cake Supreme
-FoodEvent8: Milk Choco
 Meatloaf: Magic Meatloaf
+Peanut: Peanut
+FoodPotGr1: Small Speed Potion
+FoodPotGr2: Average Speed Potion
+FoodPotGr3: Decent Speed Potion
+FoodPotGr4: Potent Speed Potion
+FoodPotMana1: Small Mana Potion
+FoodPotMana2: Average Mana Potion
+FoodPotMana3: Decent Mana Potion
+FoodPotMana4: Potent Mana Potion
 FoodPotOr1: Small Strength Potion
 FoodPotOr2: Average Strength Potion
 FoodPotOr3: Decent Strength Potion
@@ -1726,39 +1809,35 @@ FoodPotRe1: Small Life Potion
 FoodPotRe2: Average Life Potion
 FoodPotRe3: Decent Life Potion
 FoodPotRe4: Potent Life Potion
-FoodPotGr1: Small Speed Potion
-FoodPotGr2: Average Speed Potion
-FoodPotGr3: Decent Speed Potion
-FoodPotGr4: Potent Speed Potion
-FoodEvent7: Minto Choco
-FoodPotMana1: Small Mana Potion
-FoodPotMana2: Average Mana Potion
-FoodPotMana3: Decent Mana Potion
-FoodPotMana4: Potent Mana Potion
 FoodPotYe1: Small EXP Potion
 FoodPotYe2: Average EXP Potion
 FoodPotYe3: Decent EXP Potion
 FoodPotYe4: Potent EXP Potion
 FoodPotYe5: Quotient EXP Potion
-FoodEvent6: Lemony Choco
-Pearl3: Shiny Pearl
 FoodMining1: Icing Ironbite
-FoodEvent1: Giftybread Man
-Pearl2: Stained Pearl
 FoodChoppin1: Saucy Logfries
-FoodEvent2: Chogg Nog
 FoodFish1: Slurpin Herm
-FoodEvent3: Candy Canes
-Pearl1: Aqua Pearl
 FoodCatch1: Buttered Toasted Butter
-FoodEvent4: Mistleberries
 FoodTrapping1: Critter Numnums
 FoodWorship1: Soulble Gum
+FoodEvent1: Giftybread Man
+FoodEvent2: Chogg Nog
+FoodEvent3: Candy Canes
+FoodEvent4: Mistleberries
+FoodEvent5: Cherry Choco
+FoodEvent6: Lemony Choco
+FoodEvent7: Minto Choco
+FoodEvent8: Milk Choco
+Pearl1: Aqua Pearl
+Pearl2: Stained Pearl
+Pearl3: Shiny Pearl
+Pearl4: Black Pearl
+Pearl5: Holy Pearl
+Pearl6: Divinity Pearl
 Bullet: Bullet
 BulletB: FMJ Bullet
 Bullet3: Coldseeker Bullet
 MidnightCookie: Midnight Cookie
-FoodEvent5: Cherry Choco
 PeanutG: Golden Peanut
 FoodG1: Golden Jam
 FoodG2: Golden Kebabs
@@ -1774,6 +1853,7 @@ FoodG11: Golden Nigiri
 FoodG12: Golden Dumpling
 FoodG13: Golden Cake
 FoodG14: Golden Saltwater Taffy
+FoodG15: Golden Sugar Cookie
 ButterBar: Butter Bar
 rtt0: Bottled Town Teleport
 ResetFrag: Talent Point Reset Fragment
@@ -1847,9 +1927,6 @@ Quest50: Beach Oyster
 Quest51: Skull Coin
 Quest52: Coin
 PalmTreeD: Palm Tree Log
-Pearl4: Black Pearl
-Pearl5: Holy Pearl
-Pearl6: Divinity Pearl
 Quest53: Meat Cube
 Quest54: Sand Pile
 Quest55: Buried Treasure
@@ -2125,61 +2202,7 @@ GemP45: Lifetime Tickets
 GemP46: Single Entry
 GemP36: Funny 2hr Fishy
 GemP37: Funny 2hr Feather
-EquipmentHats31: Smitty's Bubble Blowing Hat
-EquipmentHats32: Bandit Bob Mask
-EquipmentHats33: Paper Bag
-EquipmentHats34: Parasite
-EquipmentHats35: Diamon Horns
-EquipmentHats36: Halloween Pumpkin
-EquipmentHats40: Pardoned Turkey
-EquipmentHats37: Hotdog Hero
-EquipmentHats38: Invisible Hat
-EquipmentHats46: Strawbiggy
-EquipmentHats47: Pop Cat
-EquipmentHats48: Dairy Dunk
-EquipmentHats49: The Classic
-EquipmentHats50: Green Beanie
-EquipmentHats43: Snowman
-EquipmentHats45: Giftmas Tree
-EquipmentHats57: Big Bunny
-EquipmentHats62: Fluffy Ramsy
-EquipmentHats65: The Red Boaty
-EquipmentHats69: Giftmas Snoozy Cap
-EquipmentHats80: Corgi Topper
-EquipmentHats81: Siege Captain Cap
-EquipmentHats82: Ele Sorcerer Pointed Hat
-EquipmentHats85: Bedsheet with Holes
-EquipmentHats86: Carrotman Mask
-EquipmentHats87: Glublin Mask
-EquipmentHats88: Bloque Mask
-EquipmentHats89: Borzoi Topper
-EquipmentHats90: Straw Hat
-EquipmentHats91: Wig Bandana
-EquipmentHats92: Funky Hat
-EquipmentHats93: Reinforced Headband
-EquipmentHats94: Shogun Helmet
-EquipmentHats95: Gilded Headband
-EquipmentHats96: Bamboo Hat
-EquipmentHats97: Festive Beast Mask
-EquipmentHats98: Heiress Headdress
-EquipmentHats99: Spirited Mane
-EquipmentHats100: Fiery Mane
-EquipmentHats101: Guardian Mane
-EquipmentHats102: Fanned Blossomage
-EquipmentHats103: Dainty Brim
-EquipmentHats104: Charcoal Hat
-EquipmentHats109: Husky Hat
-EquipmentHats110: Yellow Beanie
-EquipmentHats111: Epic Santa Hat
-EquipmentHats112: Deathbringer Hood of Death
-EquipmentHats113: Pink Beanie
-EquipmentHats114: True Crown
-EquipmentHats115: Celebration Mane
-EquipmentHats116: Goldberry
-EquipmentHats117: Orange Beanie
-EquipmentHats118: Windwalker Hood
-EquipmentHats122: Arcanist Crown
-EquipmentHats123: Prehistoric Battlehair
+
 CardsA0: Green Mushroom Card
 CardsA1: Red Mushroom Card
 CardsA2: Frog Card
@@ -2464,8 +2487,6 @@ StoneTempestR2: Tempest Ring Stone 10 PCT
 WWcoin: Wind Walker Medallion
 EquipmentWandsArc0: Arcanist Staff
 EquipmentRingsArc0: Cultist Ring
-EquipmentHats120: Umbrella Brim
-EquipmentHats121: Bloo Creamer
 InvStorageZ: Buried Treasure Chest
 GemP6: Ivory Bubble Cauldrons
 GemQ17: 4 Star Cardifier

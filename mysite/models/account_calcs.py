@@ -4,8 +4,9 @@ from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, Mult
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_monster_data import decode_enemy_name
-from consts.consts_w1 import statue_type_dict, statues_dict, get_statue_type_index_from_name
+from consts.consts_w1 import get_statue_type_index_from_name
+from consts.consts_monster_data import decode_monster_name
+from consts.consts_w1 import statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
 from consts.consts_caverns import (
@@ -391,6 +392,7 @@ def _calculate_wave_2(account):
     _calculate_w5(account)
     _calculate_caverns(account)
     _calculate_w6(account)
+    _calculate_w7(account)
 
 def _calculate_general(account):
     _calculate_general_alerts(account)
@@ -409,51 +411,59 @@ def _calculate_general_alerts(account):
 def _calculate_general_item_filter(account):
     raw_fishing_toolkit_lures = safe_loads(account.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
     raw_fishing_toolkit_lines = safe_loads(account.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
-    for filtered_codeName in account.item_filter:
-        filtered_displayName = getItemDisplayName(filtered_codeName)
+    for filtered_item_codename in account.item_filter:
+        filtered_displayname = getItemDisplayName(filtered_item_codename)
         if (
-            filtered_codeName == 'Trophy2'  #Lucky Lad
+            filtered_item_codename == 'Trophy2'  #Lucky Lad
             and 'Trophy20' not in account.registered_slab  #Luckier Lad
-            and account.stored_assets.get("Trophy2").amount < 75
+            and account.stored_assets.get('Trophy2').amount < 75
         ):
             account.alerts_Advices['General'].append(Advice(
-                label=f"Lucky filtered before 75 for Luckier Lad",
-                picture_class="lucky-lad",
-                resource="luckier-lad"
+                label='Lucky Lad filtered before 75 for Luckier Lad',
+                picture_class='lucky-lad',
+                resource='luckier-lad'
             ))
-        elif filtered_displayName in filter_recipes:
-            for itemName in filter_recipes[filtered_displayName]:
-                if getItemCodeName(itemName) not in account.registered_slab:
+        elif filtered_item_codename in filter_recipes:
+            for craftable_item_codename in filter_recipes[filtered_item_codename]:
+                if craftable_item_codename not in account.registered_slab:
                     account.alerts_Advices['General'].append(Advice(
-                        label=f"{filtered_displayName} filtered, {itemName} not in Slab",
-                        picture_class=filtered_displayName,
-                        resource=itemName
+                        label=f"{filtered_displayname} filtered, {getItemDisplayName(craftable_item_codename)} not in Slab",
+                        picture_class=filtered_displayname,
+                        resource=craftable_item_codename
                     ))
-        elif filtered_displayName in filter_never and account.autoloot:
+        elif filtered_item_codename in filter_never and account.autoloot:
             account.alerts_Advices['General'].append(Advice(
-                label=f"Why did you filter {filtered_displayName}???",
-                picture_class=filtered_displayName,
+                label=f'Why did you filter {filtered_displayname}?',
+                picture_class=filtered_displayname,
             ))
-        elif filtered_codeName not in account.registered_slab:
+        elif filtered_item_codename not in account.registered_slab:
             account.alerts_Advices['General'].append(Advice(
-                label=f"{filtered_displayName} filtered, not in Slab",
-                picture_class=filtered_displayName,
+                label=f"{filtered_displayname} filtered, not in Slab",
+                picture_class=filtered_displayname,
             ))
-        elif filtered_displayName in fishing_toolkit_dict['Lures']:
-            if fishing_toolkit_dict['Lures'].index(filtered_displayName) not in raw_fishing_toolkit_lures.values():
+        elif filtered_item_codename in fishing_toolkit_dict['Lures']:
+            # index + 1 needed to account for the default lure which is not an Item registered in Slab
+            if fishing_toolkit_dict['Lures'].index(filtered_item_codename) + 1 not in raw_fishing_toolkit_lures.values():
                 account.alerts_Advices['General'].append(Advice(
-                    label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
-                    picture_class=filtered_displayName,
+                    label=f"{filtered_displayname} filtered, not in Fishing Toolkit",
+                    picture_class=filtered_displayname,
                 ))
-        elif filtered_displayName in fishing_toolkit_dict['Lines']:
-            if fishing_toolkit_dict['Lines'].index(filtered_displayName) not in raw_fishing_toolkit_lines.values():
+        elif filtered_item_codename in fishing_toolkit_dict['Lines']:
+            # index + 1 needed to account for the default line which is not an Item registered in Slab
+            if fishing_toolkit_dict['Lines'].index(filtered_item_codename) + 1 not in raw_fishing_toolkit_lines.values():
                 account.alerts_Advices['General'].append(Advice(
-                    label=f"{filtered_displayName} filtered, not in Fishing Toolkit",
-                    picture_class=filtered_displayName,
+                    label=f"{filtered_displayname} filtered, not in Fishing Toolkit",
+                    picture_class=filtered_displayname,
                 ))
 
 def _calculate_general_highest_world_reached(account):
     if (
+        safer_get(account.raw_optlacc_dict, 408, 0) > 0
+        # TODO: add Achievement as another condition once those exist
+        or account.enemy_worlds[7].maps_dict[301].kill_count > 0
+    ):
+        return 7
+    elif (
         safer_get(account.raw_optlacc_dict, 194, 0) > 0
         or account.achievements['Valley Visitor']['Complete']
         or account.enemy_worlds[6].maps_dict[251].kill_count > 0
@@ -610,9 +620,9 @@ def _calculate_master_classes_grimoire_upgrades(account):
                     next_stack_target = "All done!"
                 else:
                     try:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
                     except:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
                 account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
                     'Target:$', f"Target: {next_stack_target}"
                 )
@@ -852,9 +862,9 @@ def _calculate_w1_upgrade_vault(account):
                     next_stack_target = "All done!"
                 else:
                     try:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
                     except:
-                        next_stack_target = decode_enemy_name(grimoire_coded_stack_monster_order[0])
+                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
                 account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
                     'Target:&', f"Target: {next_stack_target}"
                 )
@@ -2563,3 +2573,15 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
+
+def _calculate_w7(account):
+    _calculate_advice_for_money(account)
+
+def _calculate_advice_for_money(account):
+    for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
+        bonus_details["Value"] = bonus_details["Level"] / (bonus_details["Level"] + 100) * bonus_details["Bonus"]
+        if "{" in bonus_details["Effect"]:
+            bonus_details["Effect"] = bonus_details["Effect"].replace("{", f"{bonus_details['Value']:.2f}")
+        elif "}" in bonus_details["Effect"]:
+            bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
+            bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details['Value']:.4f}")

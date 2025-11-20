@@ -33,8 +33,14 @@ combatLevels_progressionTiers = [
     [28, 2100, "Family - Circle Obol Slot 12", 500, "Credit towards Equinox Dream 23", ""],
     [29, 2500, "Family - Sparkle Obol Slot 3", 500, "Credit towards Equinox Dream 23", ""],
     [30, 3000, "Family - Hexagon Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
-    [31, 4855, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
-    [32, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
+    [31, 4000, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Life And Death\"', None, None, None],
+    [32, 4300, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Being Tired\"', None, None, None],
+    [32, 4600, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Sleeping\"', None, None, None],
+    [33, 4855, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
+    [34, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
+    [35, 5050, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Murder One\"', None, None, None],
+    [36, 5600, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Being Smart\"', None, None, None],
+    [37, 6250, f'{{{{Advice For Money|#advice-for-money}}}} - Unlock \"Advice On Materialism\"', None, None, None],
 ]
 secret_class_progressionTiers = {
     0: {},
