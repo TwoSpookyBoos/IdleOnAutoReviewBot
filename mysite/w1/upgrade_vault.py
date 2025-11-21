@@ -3,7 +3,6 @@ from consts.progression_tiers import vault_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -82,7 +81,7 @@ def getVaultUpgradesAdviceGroup():
 
     for subgroup in upgrades_AdviceDict:
         for advice in upgrades_AdviceDict[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     upgrades_ag = AdviceGroup(
         tier='',

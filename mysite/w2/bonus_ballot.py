@@ -1,11 +1,9 @@
 import math
 import time
-
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_companion_advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -90,7 +88,7 @@ def getBallotMultiAdviceGroup():
 
     for subgroup in multis_advice:
         for advice in multis_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     multis_ag = AdviceGroup(
         tier='',

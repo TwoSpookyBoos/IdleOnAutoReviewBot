@@ -1,5 +1,5 @@
 from models.models import AdviceSection, AdviceGroup, Advice, Character
-from utils.data_formatting import safe_loads, mark_advice_completed
+from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, EmojiType
@@ -154,7 +154,7 @@ def getRightHandsAdviceGroups(true_max):
     #Stay Ahead
     for subgroup in stayahead_advices:
         for advice in stayahead_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     stayahead_ag = AdviceGroup(
         tier='',

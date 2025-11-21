@@ -3,7 +3,7 @@ from math import ceil
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed, safer_math_log
+from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import (
@@ -237,7 +237,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
 
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     currency_ag = AdviceGroup(
         tier='',
@@ -276,7 +276,7 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
 
     for subgroup in upgrades_AdviceDict:
         for advice in upgrades_AdviceDict[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     upgrades_ag = AdviceGroup(
         tier='',

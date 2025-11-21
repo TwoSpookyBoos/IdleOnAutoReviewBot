@@ -1,7 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
-from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w2 import islands_fractal_rewards_dict
@@ -61,7 +60,7 @@ def getFractalAdviceGroup() -> AdviceGroup:
         ))
 
     for advice in fractal_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     fractal_advicegroup = AdviceGroup(
         tier='',
@@ -167,7 +166,7 @@ def getRandomEventItemsAdviceGroup() -> AdviceGroup:
         ))
 
     for advice in items_advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     items_ag = AdviceGroup(
         tier='',

@@ -1,7 +1,6 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_spelunking_cavern_bonus_advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
@@ -14,7 +13,7 @@ def get_cave_bonuses_advicegroup() -> AdviceGroup:
     ]
 
     for advice in cb_Advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     cb_AdviceGroup = AdviceGroup(
         tier='',

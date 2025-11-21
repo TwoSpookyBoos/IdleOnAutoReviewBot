@@ -1,6 +1,5 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_match_colors
@@ -129,7 +128,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
 
     for subgroup in upgrades_advice:
         for advice in upgrades_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     upgrades_ag = AdviceGroup(
         tier='',

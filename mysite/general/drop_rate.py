@@ -12,7 +12,6 @@ from consts.consts_w1 import stamp_maxes, starsigns_dict
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
@@ -678,7 +677,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     for subgroup in drop_rate_aw_advice:
         for advice in drop_rate_aw_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus
     account_wide_advice_group = AdviceGroup(
@@ -1158,7 +1157,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         for subgroup in character_specific_advice.values():
             for advice in subgroup:
-                mark_advice_completed(advice)
+                advice.mark_advice_completed()
 
         tabbed_advices[character.character_name] = (
             TabbedAdviceGroupTab(kebab(character.class_name_icon), str(index + 1)),

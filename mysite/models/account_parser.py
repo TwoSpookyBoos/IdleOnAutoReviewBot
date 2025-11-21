@@ -4,9 +4,9 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import ValueToMulti, items_codes_and_names
-from consts.consts_idleon import lavaFunc, companions_data
+from consts.consts_idleon import lavaFunc, companions_data, max_characters
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, max_characters, gem_shop_dict, gem_shop_optlacc_dict,
+    key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
     vault_section_indexes, vault_upgrades_list, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
@@ -22,7 +22,7 @@ from consts.consts_w1 import (
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
-    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames
+    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -59,7 +59,8 @@ from consts.consts_w6 import (
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
-from utils.data_formatting import getCharacterDetails, safe_loads, safer_get, safer_convert, get_obol_totals
+from utils.data_formatting import getCharacterDetails
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName, numberToLetter
@@ -737,7 +738,7 @@ def _parse_master_classes_grimoire(account):
         if clean_name != 'Ripped Page':
             try:
                 account.grimoire['Upgrades'][clean_name] = {
-                    'Level': int(raw_grimoire[upgrade_index]),
+                    'Level': min(int(upgrade_values_list[4]), int(raw_grimoire[upgrade_index])),
                     'Index': upgrade_index,
                     'Image': f"grimoire-upgrade-{upgrade_index}",
                     'Cost Base': int(upgrade_values_list[1]),
@@ -856,7 +857,7 @@ def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
             # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
             try:
                 account.compass['Upgrades'][clean_name] = {
-                    'Level': int(raw_compass_upgrades[upgrade_index]),
+                    'Level': min(int(upgrade_values_list[4]), int(raw_compass_upgrades[upgrade_index])),
                     'Index': upgrade_index,
                     'Image': f"compass-upgrade-{upgrade_index}",
                     'Cost Base': int(upgrade_values_list[1]),
@@ -1015,7 +1016,7 @@ def _parse_master_classes_tesseract(account):
         clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
         if clean_name != 'Boundless Energy':
             try:
-                level = int(raw_tesseract[upgrade_index])
+                level = min(int(upgrade_values_list[4]), int(raw_tesseract[upgrade_index]))
             except IndexError:
                 level = 0
             account.tesseract['Upgrades'][clean_name] = {
@@ -1078,7 +1079,7 @@ def _parse_w1_upgrade_vault(account):
                 break
         try:
             account.vault['Upgrades'][clean_name] = {
-                'Level': int(raw_vault[upgrade_index]),
+                'Level': min(int(upgrade_values_list[4]), int(raw_vault[upgrade_index])),
                 'Index': upgrade_index,
                 'Image': f"vault-upgrade-{upgrade_index}",
                 'Cost Base': safer_convert(upgrade_values_list[1], 0),
@@ -2094,7 +2095,7 @@ def _parse_w3_worship(account):
             try:
                 account.worship['Totems'][totem_index] = {
                     'Name': totem_name,
-                    'Waves': waves[totem_index]
+                    'Waves': safer_convert(waves[totem_index], 0)
                 }
             except:
                 account.worship['Totems'][totem_index] = {
@@ -3400,7 +3401,7 @@ def _parse_caverns_gambit(account, raw_caverns_list):
         clean_description = details_list[2].replace('_', ' ').strip().strip("'")
         if clean_description == 'no':
             clean_description = ''
-        pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * pow(1.26, bonus_index)
+        pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * safer_math_pow(1.26, bonus_index)
         account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
             'ScalingValue': safer_convert(details_list[0], 0),
             'ScalesWithPts': safer_convert(details_list[1], False),

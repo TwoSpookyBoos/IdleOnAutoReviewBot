@@ -1,8 +1,9 @@
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import safe_loads, safer_get, safer_convert, mark_advice_completed
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
-from consts.consts_general import current_world, max_characters, gem_shop_optlacc_dict, get_gem_shop_bonus_section_name
+from consts.consts_general import gem_shop_optlacc_dict, get_gem_shop_bonus_section_name
+from consts.consts_idleon import current_world, max_characters
 from consts.consts_w6 import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
 from consts.consts_w4 import cooking_close_enough, breeding_total_pets
@@ -311,7 +312,7 @@ def getGemShopAdviceSection() -> AdviceSection:
         ))
 
     for advice in fomo_advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     groups.append(AdviceGroup(
         tier='',

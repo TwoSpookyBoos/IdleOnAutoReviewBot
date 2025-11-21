@@ -9,18 +9,18 @@ from typing import Any, Union
 from flask import g
 from config import app
 from consts.consts_autoreview import ignorable_labels
-from consts.consts_idleon import lavaFunc, expected_talents_dict
+from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
-    greenstack_item_difficulty_groups, current_world
+    greenstack_item_difficulty_groups
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
     prayers_dict, dn_skull_requirement_list, dn_skull_value_list, reversed_dn_skull_requirement_list, reversed_dn_skull_value_list,
     apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
-from consts.consts_w2 import alchemy_jobs_list, po_box_dict
+from consts.consts_w2 import alchemy_jobs_list, po_box_dict, get_obol_totals
 from models.custom_exceptions import VeryOldDataException
-from utils.data_formatting import safe_loads, safer_get, get_obol_totals, safer_convert
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 
@@ -685,6 +685,39 @@ class Advice(AdviceBase):
 
     def update_optional(self, parent_value: bool):
         self.optional = parent_value
+
+    def mark_advice_completed(self, force=False):
+        def complete():
+            self.progression = ""
+            self.goal = "✔"
+            self.completed = True
+            self.status = "gilded"
+
+        if force:
+            complete()
+
+        elif not self.goal and str(self.progression).endswith('+'):
+            self.completed = True
+
+        elif not self.goal and str(self.progression).endswith('%'):
+            try:
+                if float(str(self.progression).strip('%')) > 100:
+                    complete()
+            except:
+                pass
+
+        elif self.percent == '100%':
+            # If the progress bar is set to 100%
+            complete()
+
+        else:
+            try:
+                prog = str(self.progression).strip('x%')
+                goal = str(self.goal).strip('x%')
+                if self.goal and self.progression and float(prog) >= float(goal):
+                    complete()
+            except:
+                pass
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):

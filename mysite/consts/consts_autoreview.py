@@ -182,6 +182,8 @@ versions_patches = {
 }
 ignorable_labels: tuple = ('Weekly Ballot',)
 
+default_huge_number_replacement = 1e100
+
 ###AutoReview Functions###
 def ceilUpToBase(inputValue: int, base: int) -> int:
     toReturn = base
@@ -190,7 +192,11 @@ def ceilUpToBase(inputValue: int, base: int) -> int:
     return toReturn
 
 def ValueToMulti(value: float, min_value=1.0):
-    return max(min_value, 1 + (value / 100))
+    try:
+        return max(min_value, 1 + (value / 100))
+    except:
+        logger.exception(f"Could not calculate Value to Multi")
+        return default_huge_number_replacement
 
 def MultiToValue(multi: float, min_value=0.0):
     return max(min_value, (multi - 1) * 100)

@@ -7,7 +7,7 @@ import yaml
 
 from config import app
 from models.custom_exceptions import UserDataException
-from .logging import get_logger, log_unknown_item
+from utils.logging import get_logger, log_unknown_item
 
 
 logger = get_logger(__name__)

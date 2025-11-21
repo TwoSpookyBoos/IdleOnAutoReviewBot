@@ -3,7 +3,6 @@ from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 from flask import g as session_data
@@ -364,7 +363,7 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
 
     for subgroup in speed_advices:
         for advice in speed_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     sailingSpeedAdviceGroup = AdviceGroup(
         tier='',

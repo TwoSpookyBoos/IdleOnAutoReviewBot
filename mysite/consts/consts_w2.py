@@ -1,5 +1,9 @@
+from utils.data_formatting import logger
 from utils.number_formatting import parse_number
+from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 # `AlchemyDescription` in source. Last updated in v2.43 Nov 10
 # [0]=Orange, [1]=Green, [2]=Purple, [3]=Yellow bubbles,
@@ -481,3 +485,34 @@ killroy_dict = {
     },
         }
 killroy_only_1_level = ['Talent Points', 'Dungeon Credits', 'Pearls']
+
+# This returns incomplete data, since the obols_dict currently only contains DR obols
+# Despite this, the function is written to work with whatever data is added to the obols_dict
+def get_obol_totals(obol_list, obol_upgrade_dict) -> dict:
+    obols_totals = {}
+    for obol_index, obol_name in enumerate(obol_list):
+        obol_index = str(obol_index)
+        # Adds the base values for each equipped obol
+        for obol_base_name, obol_base_value in obols_dict.get(obol_name, {}).get('Base', {}).items():
+            obols_totals[f"Total{obol_base_name}"] = obols_totals.get(f"Total{obol_base_name}", 0) + obol_base_value
+        # Adds any upgrade value for each equipped obol
+        if obol_index in obol_upgrade_dict.keys():
+            if 'UQ1txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ1txt'] != 0:
+                try:
+                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}"] = (
+                            obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ1txt']}", 0)
+                            + safer_convert(obol_upgrade_dict[obol_index]['UQ1val'], 0)
+                    )
+                except:
+                    logger.exception(f"Could not parse Obol UQ1txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
+            if 'UQ2txt' in obol_upgrade_dict[obol_index] and obol_upgrade_dict[obol_index]['UQ2txt'] != 0:
+                try:
+                    obols_totals[f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}"] = (
+                            obols_totals.get(f"Total{obol_upgrade_dict[obol_index]['UQ2txt']}", 0)
+                            + safer_convert(obol_upgrade_dict[obol_index]['UQ2val'], 0)
+                    )
+                except:
+                    logger.exception(f"Could not parse Obol UQ2txt at {obol_index}: {obol_upgrade_dict[obol_index]}")
+            for upgrade_val in ['STR', 'AGI', 'WIS', 'LUK', 'Defence', 'Weapon_Power', 'Reach', 'Speed']:
+                obols_totals[f"Total{upgrade_val}"] = obols_totals.get(f"Total{upgrade_val}", 0) + obol_upgrade_dict.get(upgrade_val, 0)
+    return obols_totals

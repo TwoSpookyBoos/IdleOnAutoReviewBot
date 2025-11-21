@@ -8,7 +8,7 @@ from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 from flask import g as session_data
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed, safer_convert
+from utils.safer_data_handling import safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -107,7 +107,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Total Value'])

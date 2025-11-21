@@ -1,7 +1,6 @@
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
@@ -103,7 +102,7 @@ def getBoxesAdviceGroup() -> TabbedAdviceGroup:
                 po_Advices[tab_name] = []
 
             po_Advices[tab_name].append(advice)
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
         tabbed_advices[character.character_name] = (
             TabbedAdviceGroupTab(kebab(character.class_name_icon), str(index + 1)),

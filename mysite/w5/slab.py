@@ -6,7 +6,7 @@ from flask import g as session_data
 from consts.consts_autoreview import (
     break_you_best
 )
-from consts.consts_general import max_characters
+from consts.consts_idleon import max_characters
 from consts.consts_w5 import slab_list, dungeon_drops_list, max_dungeon_weapons_available, dungeon_weapons_list, \
     max_dungeon_armors_available, dungeon_armors_dict, max_dungeon_jewelry_available, dungeon_jewelry_dict, reclaimable_quest_items, slab_quest_rewards_all_chars, \
     slab_quest_rewards_once, vendor_items, vendor_unlock_item, anvil_items, anvil_tabs

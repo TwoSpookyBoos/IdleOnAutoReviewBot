@@ -1,6 +1,6 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed, safer_math_log
+from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import (
@@ -286,7 +286,7 @@ def getCompassCurrenciesAdviceGroup(compass):
 
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     currencies_ag = AdviceGroup(
         tier='',
@@ -319,7 +319,7 @@ def getCompassAbominationsAdviceGroup(compass):
             ))
 
     for advice in abom_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     abom_ag = AdviceGroup(
         tier='',
@@ -349,7 +349,7 @@ def getCompassMedallionsAdviceGroup(compass):
         ))
 
     for advice in medallion_advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     medallion_ag = AdviceGroup(
         tier='',
@@ -417,7 +417,7 @@ def getCompassUpgradesAdviceGroups(compass):
 
     for subgroup in upgrades_AdviceDict:
         for advice in upgrades_AdviceDict[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     for path_name, path_advice in upgrades_AdviceDict.items():
         upgrades_AdviceGroups.append(AdviceGroup(
