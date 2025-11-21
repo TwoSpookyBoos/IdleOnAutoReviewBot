@@ -1,6 +1,5 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, AdviceType
@@ -233,7 +232,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             ))
 
     for advice in cooking_Advices['NextTier']:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     # Generate Advice Groups
     cooking_AdviceGroupDict['NextTier'] = AdviceGroup(
@@ -272,7 +271,7 @@ def getCookingMealsAdviceGroup() -> AdviceGroup:
         ) for meal_name, meal_values in session_data.account.meals.items()
     ]
     for advice in meals_advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     meals_ag = AdviceGroup(
         tier='',

@@ -4,7 +4,7 @@ from consts.consts_w3 import max_trapping_critter_types, trapping_quests_require
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.text_formatting import pl
-from utils.data_formatting import safe_loads, mark_advice_completed
+from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -323,7 +323,7 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
                     goal=required_quantity
                 ))
     for advice in trapping_Advices['UnlockCritters']:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     # UnusedTraps
     if len(unplaced_traps) > 0:

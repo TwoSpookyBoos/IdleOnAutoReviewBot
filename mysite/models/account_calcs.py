@@ -1,6 +1,6 @@
 from math import ceil, floor, log2, prod
 
-from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue
+from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
@@ -19,7 +19,7 @@ from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, kil
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.models import Advice
 from models.models_util import get_upgrade_vault_advice
-from utils.data_formatting import safe_loads, safer_get, safer_math_pow, safer_convert, safer_math_log
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
@@ -673,7 +673,7 @@ def _calculate_master_classes_compass_upgrades(account):
         value = (
             account.compass['Upgrades'][upgrade_name]['Base Value']
             * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            * (pow(2, account.compass['Upgrades'][upgrade_name]['Level']//50) if upgrade_name == 'Moon of Sneak' else 1)
+            * (safer_math_pow(2, account.compass['Upgrades'][upgrade_name]['Level']//50) if upgrade_name == 'Moon of Sneak' else 1)
         )
         # Update description with total value, stack counts, and scaling info
         if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
@@ -1153,7 +1153,7 @@ def _calculate_w3_collider_atoms(account):
                     '}', f"{ValueToMulti(account.atom_collider['Atoms'][atom_name]['Value']):.3f}"
                 )
         except:
-            logger.exception(f"Failed to calcuate Value and Description for {atom_name}")
+            logger.exception(f"Failed to calculate Value and Description for {atom_name}")
             account.atom_collider['Atoms'][atom_name]['Value'] = 0
 
 def _calculate_w3_collider_base_costs(account):
@@ -1411,8 +1411,8 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
             cost = cost * safer_math_pow(min(1.8, max(1, 1 + DivCostAfter3 / 100)), unlockedDivinity - 2)
         return ceil(cost)
     except OverflowError:
-        logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}")
-        return 1e100
+        logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}. Returning {default_huge_number_replacement}")
+        return default_huge_number_replacement
 
 
 def _calculate_caverns(account):
@@ -1717,7 +1717,7 @@ def _calculate_caverns_motherlode_layers(account):
     )
 
     for cavern_name in ['Motherlode', 'The Hive', 'Evertree']:
-        base_requirement = ceil(200 * pow(2.2, 1 + account.caverns['Caverns'][cavern_name]['LayersDestroyed']))
+        base_requirement = ceil(200 * safer_math_pow(2.2, 1 + account.caverns['Caverns'][cavern_name]['LayersDestroyed']))
         account.caverns['Caverns'][cavern_name]['ResourcesRemaining'] = base_requirement / max(1, account.caverns['MotherlodeResourceDiscount'])
 
 def _calculate_caverns_monuments_bravery(account):

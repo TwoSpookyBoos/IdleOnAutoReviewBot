@@ -1,7 +1,6 @@
 from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
-from utils.data_formatting import mark_advice_completed
 from flask import g as session_data
 from utils.logging import get_logger
 
@@ -31,7 +30,7 @@ def getBonusesAdviceGroup(player_emperor: dict) -> AdviceGroup:
 
     for label in bonus_Advices:
         for advice in bonus_Advices[label]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     bonus_ag = AdviceGroup(
         tier='',
@@ -56,7 +55,7 @@ def getShowdownsAdviceGroup(player_emperor: dict) -> AdviceGroup:
     ]
 
     for advice in sd_Advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     sd_ag = AdviceGroup(
         tier='',

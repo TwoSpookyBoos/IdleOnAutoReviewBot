@@ -1,4 +1,6 @@
 import math
+
+from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 
@@ -714,7 +716,7 @@ breedabilityDaysList = [
     114686626.8729,
     2177232407.5082,
 ]
-breedabilityHearts = [1 + pow(x, 1.25) for x in range(0, 10)]
+breedabilityHearts = [1 + safer_math_pow(x, 1.25) for x in range(0, 10)]
 
 
 def getBreedabilityMultiFromDays(days: float) -> float:
@@ -724,7 +726,7 @@ def getBreedabilityMultiFromDays(days: float) -> float:
         except:
             logger.warning(f"Expected days to be float type, got {type(days)}: {days}. Using 0 days instead.")
             days = 0
-    result = 1 + math.log(max(1, pow(days+1, 0.725)))
+    result = 1 + math.log(max(1, safer_math_pow(days+1, 0.725)))
     #logger.debug(f"getBreedabilityMultiFromDays: Given {days} days, Breedability Multi = {result}")
     return result
 

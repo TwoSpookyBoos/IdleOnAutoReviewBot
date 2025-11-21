@@ -1,6 +1,6 @@
 import math
-from consts.consts_autoreview import ValueToMulti
-from utils.data_formatting import safer_convert
+from consts.consts_autoreview import ValueToMulti, default_huge_number_replacement
+from utils.safer_data_handling import safer_convert, safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 
@@ -409,32 +409,32 @@ def getVillagerEXPRequired(villager_index, villager_level, game_version):
             else:
                 result = (
                     10 * (
-                        (10 + 7 * pow(villager_level, 2.1))
-                        * pow(2.1, villager_level)
+                        (10 + 7 * safer_math_pow(villager_level, 2.1))
+                        * safer_math_pow(2.1, villager_level)
                         * (1 + .75 * max(0, villager_level - 4))
-                        * pow(3.4, min(1, max(0, math.floor((1e5 + game_version) / 100247.3))) * max(0, villager_level - 12))
+                        * safer_math_pow(3.4, min(1, max(0, math.floor((1e5 + game_version) / 100247.3))) * max(0, villager_level - 12))
                     )
                     - 1.5
                 )
         case 1:
-            result = 30 * ((10 + 6 * pow(villager_level, 1.8)) * pow(1.57, villager_level))
+            result = 30 * ((10 + 6 * safer_math_pow(villager_level, 1.8)) * safer_math_pow(1.57, villager_level))
         case 2:
-            result = 50 * ((10 + 5 * pow(villager_level, 1.7)) * pow(1.4, villager_level))
+            result = 50 * ((10 + 5 * safer_math_pow(villager_level, 1.7)) * safer_math_pow(1.4, villager_level))
         case 3:
-            result = 120 * ((30 + 10 * pow(villager_level, 2)) * pow(2, villager_level))
+            result = 120 * ((30 + 10 * safer_math_pow(villager_level, 2)) * safer_math_pow(2, villager_level))
         case 4:
-            result = 500 * (10 + 5 * pow(villager_level, 1.3)) * pow(1.13, villager_level)
+            result = 500 * (10 + 5 * safer_math_pow(villager_level, 1.3)) * safer_math_pow(1.13, villager_level)
         case _:
-            result = 10 * pow(10, 20)
+            result = 10 * safer_math_pow(10, 20)
     return result
 
 
 def getSedimentBarRequirement(sediment_index, sediment_level):
     try:
-        result = 100 * pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
+        result = 100 * safer_math_pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
     except OverflowError:
-        logger.exception(f"Overflow error calculating SedimentBarRequirement given {sediment_index = } and {sediment_level = }. Returning 1e100.")
-        result = 1e100
+        logger.exception(f"Overflow error calculating SedimentBarRequirement given {sediment_index = } and {sediment_level = }. Returning {default_huge_number_replacement}.")
+        result = default_huge_number_replacement
     return result
 
 
@@ -446,25 +446,25 @@ def getWellOpalTrade(holes_11_9):
         return 60
     else:
         result = (
-            (1 + (3 * holes_11_9) + pow(holes_11_9, 2))
-            * pow(3.5 + holes_11_9 / 10, holes_11_9)
+            (1 + (3 * holes_11_9) + safer_math_pow(holes_11_9, 2))
+            * safer_math_pow(3.5 + holes_11_9 / 10, holes_11_9)
         )
         return math.ceil(result) if 1e9 > result else math.floor(result)
 
 
 def getMotherlodeEfficiencyRequired(layers_destroyed: int):
-    result = math.ceil(9000 * pow(1.8, layers_destroyed))
+    result = math.ceil(9000 * safer_math_pow(1.8, layers_destroyed))
     return result
 
 
 def getDenOpalRequirement(current_opals: int):
-    result = 12 * (150 + (30 + current_opals) * current_opals) * pow(1.5, current_opals)
+    result = 12 * (150 + (30 + current_opals) * current_opals) * safer_math_pow(1.5, current_opals)
     return round(result)
 
 
 def getMonumentOpalChance(current_opals: int, opal_bonus_value: float = 1):
     result = (
-        min(0.5, pow(0.5, current_opals))
+        min(0.5, safer_math_pow(0.5, current_opals))
         * ValueToMulti(opal_bonus_value)
     )
     return result
@@ -473,11 +473,11 @@ def getMonumentOpalChance(current_opals: int, opal_bonus_value: float = 1):
 def getBellExpRequired(bell_index, current_uses: int):
     match bell_index:
         case 0:  #Ring
-            result = (5 + 3 * current_uses) * pow(1.05, current_uses)
+            result = (5 + 3 * current_uses) * safer_math_pow(1.05, current_uses)
         case 1:  #Ping
-            result = (10 + (10 * current_uses + pow(current_uses, 2.5))) * pow(1.75, current_uses)
+            result = (10 + (10 * current_uses + safer_math_pow(current_uses, 2.5))) * safer_math_pow(1.75, current_uses)
         case 2:  #Clean
-            result = 100 * pow(3, current_uses)
+            result = 100 * safer_math_pow(3, current_uses)
         case _:  #Renew falls into this else
             result = 250
     return result
@@ -487,18 +487,18 @@ def getBellImprovementBonus(i_index, i_level, schematic_stacks=0, schematic_owne
     # `BellMethodsQTY` in source. Last updated in v2.43 Nov 6
     # Yes, HolesInfo[61] only applies AFTER the schematic is purchased. Probably a bug in game but must be replicated here for accuracy.
     result = (
-        2 * i_level * max(1, pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))
+        2 * i_level * max(1, safer_math_pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))
     )
     return result
 
 
 def getGrottoKills(current_opals: int):
-    result = 5000 * pow(3.4, current_opals)
+    result = 5000 * safer_math_pow(3.4, current_opals)
     return result
 
 
 def getHarpNoteUnlockCost(note_index):
-    result = math.ceil(150 * pow(1 + note_index, 1.5) * pow(4.5, note_index))
+    result = math.ceil(150 * safer_math_pow(1 + note_index, 1.5) * safer_math_pow(4.5, note_index))
     return result
 
 
@@ -506,11 +506,11 @@ def getWishCost(wish_index, wish_level):
     match wish_index:
         case 0:  #New Wish Type
             if 11 > wish_level:
-                result = math.floor(1 + (2 * wish_level) + pow(wish_level, 2))
+                result = math.floor(1 + (2 * wish_level) + safer_math_pow(wish_level, 2))
             else:
                 result = 999999
         case 2:  #Opal
-            result = math.floor(1 + (2 * wish_level) + pow(wish_level, 1.7))
+            result = math.floor(1 + (2 * wish_level) + safer_math_pow(wish_level, 1.7))
         case _:  #Everything else
             result = math.floor(lamp_wishes[wish_index]['BaseCost'] + (wish_level * lamp_wishes[wish_index]['CostIncreaser']))
     return result

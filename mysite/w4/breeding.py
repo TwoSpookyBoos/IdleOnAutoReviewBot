@@ -5,7 +5,6 @@ from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from flask import g as session_data
@@ -141,7 +140,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
 
     for group_name in sps_adviceDict:
         for advice in sps_adviceDict[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     sps_AdviceGroup = AdviceGroup(
         tier='',
@@ -197,7 +196,7 @@ def getBreedabilityAdviceGroup():
     ))
 
     for advice in b_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
     
     b_ag = AdviceGroup(
         tier='',
@@ -365,7 +364,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
 
     for subgroupName in abm_adviceDict:
         for advice in abm_adviceDict[subgroupName]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     abm_AdviceGroup = AdviceGroup(
         tier='',
@@ -703,7 +702,7 @@ def getPetDamageAdviceGroup():
     }
     for subgroup in pet_damage_advices:
         for advice in pet_damage_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     pet_damage_advice_group = AdviceGroup(
         tier='',

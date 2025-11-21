@@ -3,7 +3,6 @@ from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
 from consts.consts_w5 import get_vendor_name
 from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Assets
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -282,7 +281,7 @@ def getGStackAdviceSections():
 
     for subgroup in dream_advice:
         for advice in dream_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     groups.insert(0, AdviceGroup(
         tier=overall_SectionTier,

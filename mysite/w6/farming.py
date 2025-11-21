@@ -3,10 +3,10 @@ from math import ceil, floor
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
-from utils.data_formatting import mark_advice_completed
+from utils.safer_data_handling import safer_math_pow
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_general import max_characters
+from consts.consts_idleon import max_characters
 from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, getRequiredCropNumber
 from consts.consts_w4 import max_meal_level
 from consts.consts_w2 import max_vial_level
@@ -115,7 +115,7 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
         ))
 
     for advice in cd_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     cd_ag = AdviceGroup(
         tier='',
@@ -146,7 +146,7 @@ def getDayMarketAdviceGroup(farming) -> AdviceGroup:
         for name, details in dm.items()]
 
     for advice in dm_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     dm_ag = AdviceGroup(
         tier='',
@@ -168,7 +168,7 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
         for name, details in nm.items()]
 
     for advice in nm_advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     nm_ag = AdviceGroup(
         tier='',
@@ -187,7 +187,7 @@ def getNightMarketCost(name, first_level, last_level=0):
     if first_level > last_level:
         last_level = first_level-1
     for level in range(first_level, last_level):
-        total_cost += floor(upgrade['BaseCost'] * pow(upgrade['CostIncrement'], level)) * cost_multi
+        total_cost += floor(upgrade['BaseCost'] * safer_math_pow(upgrade['CostIncrement'], level)) * cost_multi
     return floor(total_cost) if 1e8 > total_cost else total_cost
 
 def val_m_s_boost(megaboost, superboost):
@@ -635,7 +635,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
 
     for category in evo_advices.values():
         for advice in category:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     evo_ag = AdviceGroup(
         tier='',
@@ -720,7 +720,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 
     for category in speed_advices.values():
         for advice in category:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     speed_ag = AdviceGroup(
         tier='',
@@ -773,7 +773,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
 
     for category in bm_advices.values():
         for advice in category:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     bm_ag = AdviceGroup(
         tier='',
@@ -868,7 +868,7 @@ def getOGAdviceGroup(farming):
 
     for category in og_advices.values():
         for advice in category:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     og_ag = AdviceGroup(
         tier='',
@@ -1175,7 +1175,7 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
     )
 
     for advice in cost_Advices:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     cost_ag = AdviceGroup(
         tier='',

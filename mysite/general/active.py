@@ -1,14 +1,13 @@
 from consts.progression_tiers import true_max_tiers
 from models.models import Advice, AdviceGroup, AdviceSection, Character
-from consts.consts_idleon import pearlable_skills_list, lavaFunc
-from consts.consts_general import cards_max_level, current_world, max_characters
+from consts.consts_idleon import pearlable_skills_list, lavaFunc, current_world, max_characters
+from consts.consts_general import cards_max_level
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
 from consts.consts_w4 import cooking_close_enough
 from models.models_util import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -107,7 +106,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     for subgroup in crystal_Advice:
         for advice in crystal_Advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     crystal_AG = AdviceGroup(
         tier="",
@@ -814,7 +813,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
     for subgroup in bubo_advice:
         for advice in bubo_advice[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     bubo_ag = AdviceGroup(
         tier='',

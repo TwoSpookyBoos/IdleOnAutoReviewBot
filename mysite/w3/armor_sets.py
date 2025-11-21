@@ -1,7 +1,6 @@
 from consts.progression_tiers import armor_sets_progressionTiers, true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
@@ -145,7 +144,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     for set_name in sets_Advices:
         for advice_type in sets_Advices[set_name]:
             for advice in sets_Advices[set_name][advice_type]:
-                mark_advice_completed(advice)
+                advice.mark_advice_completed()
 
     sets_ags = {
         name: AdviceGroup(
@@ -167,7 +166,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     ]
 
     for advice in set_bonuses_Advice:
-        mark_advice_completed(advice)
+        advice.mark_advice_completed()
 
     sets_ags['Total Set Bonuses'] = AdviceGroup(
         tier='',

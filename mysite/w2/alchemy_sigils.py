@@ -8,7 +8,6 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.data_formatting import mark_advice_completed
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -196,7 +195,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     for group_name in speed_Advice:
         for advice in speed_Advice[group_name]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     speed_AdviceGroup = AdviceGroup(
         tier='',

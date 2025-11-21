@@ -1,5 +1,4 @@
 from flask import g as session_data
-
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
@@ -7,7 +6,6 @@ from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.all_talentsDict import all_talentsDict
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from utils.text_formatting import notateNumber
 
@@ -211,7 +209,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     currency_ag = AdviceGroup(
         tier='',
@@ -248,7 +246,7 @@ def get_tesseract_upgrades_advice_group(tesseract) -> AdviceGroup:
 
     for subgroup in upgrades_advice_dict:
         for advice in upgrades_advice_dict[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     upgrades_ag = AdviceGroup(
         tier='',

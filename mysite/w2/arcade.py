@@ -2,7 +2,6 @@ from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_companion_advice
-from utils.data_formatting import mark_advice_completed
 from utils.logging import get_logger
 from flask import g as session_data
 
@@ -35,7 +34,7 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
 
     for subgroup in arcade_Advices:
         for advice in arcade_Advices[subgroup]:
-            mark_advice_completed(advice)
+            advice.mark_advice_completed()
 
     arcade_ag = AdviceGroup(
         tier='',
