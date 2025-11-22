@@ -609,6 +609,8 @@ class Advice(AdviceBase):
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
         if completed is None:
             self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
+        elif completed is True:
+            self.mark_advice_completed(True)
         else:
             self.completed = completed
         self.unrated: bool = unrated
@@ -693,11 +695,12 @@ class Advice(AdviceBase):
             self.completed = True
             self.status = "gilded"
 
+        if force:
+            complete()
+
         # Only let the automated completion run if self.completed has not been manually set already
-        if self.completed is not None:
-            if force:
-                complete()
-            elif not self.goal and str(self.progression).endswith('+'):
+        if self.completed is None:
+            if not self.goal and str(self.progression).endswith('+'):
                 self.completed = True
 
             elif not self.goal and str(self.progression).endswith('%'):
