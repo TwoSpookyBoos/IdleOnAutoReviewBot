@@ -1697,6 +1697,9 @@ class Account:
         self.basketball_minigame = {
             'Upgrades': {}
         }
+        self.darts_minigame = {
+            'Upgrades': {}
+        }
         self.spelunk = {
             'Cave Bonuses': {},
         }

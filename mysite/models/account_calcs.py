@@ -974,12 +974,22 @@ def _calculate_w1_owl_bonuses(account):
 
 def _calculate_w1_minigames(account):
     _calculate_w1_basketball_minigame(account)
+    _calculate_w1_darts_minigame(account)
 
 def _calculate_w1_basketball_minigame(account):
     for upgrade in account.basketball_minigame['Upgrades'].values():
         if '{' in upgrade['Description']:
             upgrade['Value'] = upgrade['Level']
             upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
+
+def _calculate_w1_darts_minigame(account):
+    for upgrade in account.darts_minigame['Upgrades'].values():
+        if '{' in upgrade['Description']:
+            upgrade['Value'] = upgrade['Level']
+            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
+        elif '}' in upgrade['Description']:
+            upgrade['Value'] = ValueToMulti(upgrade['Level'])
+            upgrade['Description'] = upgrade['Description'].replace('}', str(upgrade['Value']))
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)

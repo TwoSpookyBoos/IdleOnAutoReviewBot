@@ -76,6 +76,17 @@ def get_basketball_minigame_advice(upgrade_index, link_to_section: bool = True) 
         label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
         picture_class=upgrade['Image'],
         progression=upgrade['Level'],
-        resource='basketball-points',
+        resource='basketball-shop-currency',
+    )
+    return upgrade['Value'], advice
+
+def get_darts_minigame_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+    upgrade = session_data.account.darts_minigame['Upgrades'][upgrade_index]
+    link_to_section_text = f'{{{{ Darts|#darts-minigame }}}} - ' if link_to_section else ''
+    advice = Advice(
+        label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
+        picture_class=upgrade['Image'],
+        progression=upgrade['Level'],
+        resource='darts-shop-currency',
     )
     return upgrade['Value'], advice

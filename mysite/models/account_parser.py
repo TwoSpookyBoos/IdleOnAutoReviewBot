@@ -19,7 +19,7 @@ from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions
+    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
@@ -1307,6 +1307,7 @@ def _parse_w1_statues(account):
 
 def _parse_w1_minigames(account):
     _parse_w1_basketball_minigame(account)
+    _parse_w1_darts_minigame(account)
 
 def _parse_w1_basketball_minigame(account):
     # skip the first item in the array because that's just the default shop text, not an upgrade description
@@ -1315,6 +1316,15 @@ def _parse_w1_basketball_minigame(account):
             'Level': safer_get(account.raw_optlacc_dict, 419 + index, 0),
             'Description': description.replace('_', ' '),
             'Image': f'basketball-upgrade-{index + 1}'
+        }
+
+def _parse_w1_darts_minigame(account):
+    # skip the first item in the array because that's just the default shop text, not an upgrade description
+    for index, description in enumerate(darts_upgrade_descriptions[1:]):
+        account.darts_minigame['Upgrades'][index] = {
+            'Level': safer_get(account.raw_optlacc_dict, 435 + index, 0),
+            'Description': description.replace('_', ' '),
+            'Image': f'darts-upgrade-{index + 1}'
         }
 
 def _parse_w2(account):
