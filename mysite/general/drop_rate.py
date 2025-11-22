@@ -978,7 +978,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         midas_minded_prayer = session_data.account.prayers[midas_minded_name]
         midas_mind_completed = (midas_minded_prayer['Level'] == midas_minded_data['MaxLevel']) and midas_minded_equipped
         prayer_advice.append(Advice(
-            label=f"{f'(EQUIPPED {EmojiType.CHECK.value}) ' if midas_minded_equipped else ''} {{{{ Prayers|#prayers }}}}- {midas_minded_name}:"
+            label=f"{{{{ Prayers|#prayers }}}} - {midas_minded_name}:"
                   f"<br>+{round(midas_minded_prayer['BonusValue'], 1):g}/{round(midas_minded_bonus_max, 1):g}% Drop Rate Bonus | "
                   f"+{round(midas_minded_prayer['CurseValue'], 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE."
                   f"{midas_minded_equip_notice}",
