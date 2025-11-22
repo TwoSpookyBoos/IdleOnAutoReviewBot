@@ -67,3 +67,15 @@ def get_spelunking_cavern_bonus_advice(bonus_index: int, link_to_section: bool =
         resource=bonus.get('Resource', ''),
     )
     return advice
+
+
+def get_basketball_minigame_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+    upgrade = session_data.account.basketball_minigame['Upgrades'][upgrade_index]
+    link_to_section_text = f'{{{{ Basketball|#basketball-minigame }}}} - ' if link_to_section else ''
+    advice = Advice(
+        label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
+        picture_class=upgrade['Image'],
+        progression=upgrade['Level'],
+        resource='basketball-points',
+    )
+    return upgrade['Value'], advice

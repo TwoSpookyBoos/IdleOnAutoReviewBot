@@ -14,7 +14,7 @@ from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combat_levels, greenstacks, pinchy, cards, secret_path, consumables, gem_shop, active, achievements, event_shop, drop_rate
 from master_classes import grimoire, compass, tesseract
-from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
+from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl, basketball_minigame
 from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
 from w4 import breeding, cooking, rift
@@ -97,7 +97,8 @@ def main(inputData, source_string, runType="web"):
             smithing.getSmithingAdviceSection(),
             statues.getStatuesAdviceSection(),
             starsigns.getStarsignsAdviceSection(),
-            owl.getOwlAdviceSection()
+            owl.getOwlAdviceSection(),
+            basketball_minigame.get_basketball_minigame_section()
         ],
         sections_2 := [
             alchemy_bubbles.getAlchemyBubblesAdviceSection(),

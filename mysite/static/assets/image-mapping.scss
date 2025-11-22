@@ -55,11 +55,13 @@ $id-map: map-merge($id-map, $all-tesseract);
 @import "bribes";
 @import "owl";
 @import "statues";
+@import "minigames";
 
 $id-map: map-merge($id-map, $all-vault);
 $id-map: map-merge($id-map, $bribes-map);
 $id-map: map-merge($id-map, $owl-map);
 $id-map: map-merge($id-map, $all-statues);
+$id-map: map-merge($id-map, $all-minigames);
 
 //W2
 @import "alchemy";

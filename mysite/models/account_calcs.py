@@ -806,6 +806,7 @@ def _calculate_w1(account):
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     _calculate_w1_owl_bonuses(account)
+    _calculate_w1_minigames(account)
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -971,6 +972,14 @@ def _calculate_w1_owl_bonuses(account):
             'Value': safer_convert(bonus_value, 0)
         }
 
+def _calculate_w1_minigames(account):
+    _calculate_w1_basketball_minigame(account)
+
+def _calculate_w1_basketball_minigame(account):
+    for upgrade in account.basketball_minigame['Upgrades'].values():
+        if '{' in upgrade['Description']:
+            upgrade['Value'] = upgrade['Level']
+            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
