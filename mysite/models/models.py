@@ -693,31 +693,32 @@ class Advice(AdviceBase):
             self.completed = True
             self.status = "gilded"
 
-        if force:
-            complete()
+        # Only let the automated completion run if self.completed has not been manually set already
+        if self.completed is not None:
+            if force:
+                complete()
+            elif not self.goal and str(self.progression).endswith('+'):
+                self.completed = True
 
-        elif not self.goal and str(self.progression).endswith('+'):
-            self.completed = True
+            elif not self.goal and str(self.progression).endswith('%'):
+                try:
+                    if float(str(self.progression).strip('%')) > 100:
+                        complete()
+                except:
+                    pass
 
-        elif not self.goal and str(self.progression).endswith('%'):
-            try:
-                if float(str(self.progression).strip('%')) > 100:
-                    complete()
-            except:
-                pass
+            elif self.percent == '100%':
+                # If the progress bar is set to 100%
+                complete()
 
-        elif self.percent == '100%':
-            # If the progress bar is set to 100%
-            complete()
-
-        else:
-            try:
-                prog = str(self.progression).strip('x%')
-                goal = str(self.goal).strip('x%')
-                if self.goal and self.progression and float(prog) >= float(goal):
-                    complete()
-            except:
-                pass
+            else:
+                try:
+                    prog = str(self.progression).strip('x%')
+                    goal = str(self.goal).strip('x%')
+                    if self.goal and self.progression and float(prog) >= float(goal):
+                        complete()
+                except:
+                    pass
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):
