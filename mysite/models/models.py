@@ -5,7 +5,7 @@ import re
 import sys
 from enum import Enum
 from math import ceil, floor
-from typing import Any, Union
+from typing import Any, Union, Callable
 from flask import g
 from config import app
 from consts.consts_autoreview import ignorable_labels
@@ -582,6 +582,7 @@ class Advice(AdviceBase):
             value_format: str = "{value}{unit}",
             resource: str = "",
             completed: bool | None = None,
+            completed_callback: Callable[[], bool] | None = None,
             unrated: bool = False,
             overwhelming: bool = False,
             optional: bool = False,
@@ -607,7 +608,10 @@ class Advice(AdviceBase):
                 )
             if self.goal:
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
-        if completed is None:
+        self.completed_callback = completed_callback
+        if self.completed_callback:
+            self.completed = completed_callback()
+        elif completed is None:
             self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
         else:
             self.completed = completed
@@ -695,6 +699,10 @@ class Advice(AdviceBase):
 
         if force:
             complete()
+
+        elif self.completed_callback:
+            if self.completed_callback():
+                complete()
 
         elif not self.goal and str(self.progression).endswith('+'):
             self.completed = True
