@@ -974,14 +974,18 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         )
 
         midas_minded_equipped = midas_minded_name in character.equipped_prayers
+        midas_minded_equip_notice = "" if midas_minded_equipped else "<br>Equip the prayer to gain its bonus!"
         midas_minded_prayer = session_data.account.prayers[midas_minded_name]
+        midas_mind_completed = (midas_minded_prayer['Level'] == midas_minded_data['MaxLevel']) and midas_minded_equipped
         prayer_advice.append(Advice(
-            label=f"{f'(EQUIPPED {EmojiType.CHECK.value}) ' if midas_minded_equipped else ''} {{{{ Prayers|#prayers }}}}- {midas_minded_name}:"
+            label=f"{{{{ Prayers|#prayers }}}} - {midas_minded_name}:"
                   f"<br>+{round(midas_minded_prayer['BonusValue'], 1):g}/{round(midas_minded_bonus_max, 1):g}% Drop Rate Bonus | "
-                  f"+{round(midas_minded_prayer['CurseValue'], 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE",
+                  f"+{round(midas_minded_prayer['CurseValue'], 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE."
+                  f"{midas_minded_equip_notice}",
             picture_class=midas_minded_name,
             progression=midas_minded_prayer['Level'],
             goal=midas_minded_data['MaxLevel'],
+            completed=midas_mind_completed
         ))
         prayer_bonus += midas_minded_prayer['BonusValue'] * midas_minded_equipped
 
