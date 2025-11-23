@@ -1306,22 +1306,22 @@ def _parse_w1_statues(account):
 
 
 def _parse_w1_minigames(account):
-    _parse_w1_basketball_minigame(account)
-    _parse_w1_darts_minigame(account)
+    _parse_w1_basketball(account)
+    _parse_w1_darts(account)
 
-def _parse_w1_basketball_minigame(account):
+def _parse_w1_basketball(account):
     # skip the first item in the array because that's just the default shop text, not an upgrade description
     for index, description in enumerate(basketball_upgrade_descriptions[1:]):
-        account.basketball_minigame['Upgrades'][index] = {
+        account.basketball['Upgrades'][index] = {
             'Level': safer_get(account.raw_optlacc_dict, 419 + index, 0),
             'Description': description.replace('_', ' '),
             'Image': f'basketball-upgrade-{index + 1}'
         }
 
-def _parse_w1_darts_minigame(account):
+def _parse_w1_darts(account):
     # skip the first item in the array because that's just the default shop text, not an upgrade description
     for index, description in enumerate(darts_upgrade_descriptions[1:]):
-        account.darts_minigame['Upgrades'][index] = {
+        account.darts['Upgrades'][index] = {
             'Level': safer_get(account.raw_optlacc_dict, 435 + index, 0),
             'Description': description.replace('_', ' '),
             'Image': f'darts-upgrade-{index + 1}'

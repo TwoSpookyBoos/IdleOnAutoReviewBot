@@ -69,9 +69,9 @@ def get_spelunking_cavern_bonus_advice(bonus_index: int, link_to_section: bool =
     return advice
 
 
-def get_basketball_minigame_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
-    upgrade = session_data.account.basketball_minigame['Upgrades'][upgrade_index]
-    link_to_section_text = f'{{{{ Basketball|#basketball-minigame }}}} - ' if link_to_section else ''
+def get_basketball_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+    upgrade = session_data.account.basketball['Upgrades'][upgrade_index]
+    link_to_section_text = f'{{{{ Basketball|#basketball }}}} - ' if link_to_section else ''
     advice = Advice(
         label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
         picture_class=upgrade['Image'],
@@ -80,9 +80,9 @@ def get_basketball_minigame_advice(upgrade_index, link_to_section: bool = True) 
     )
     return upgrade['Value'], advice
 
-def get_darts_minigame_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
-    upgrade = session_data.account.darts_minigame['Upgrades'][upgrade_index]
-    link_to_section_text = f'{{{{ Darts|#darts-minigame }}}} - ' if link_to_section else ''
+def get_darts_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+    upgrade = session_data.account.darts['Upgrades'][upgrade_index]
+    link_to_section_text = f'{{{{ Darts|#darts }}}} - ' if link_to_section else ''
     advice = Advice(
         label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
         picture_class=upgrade['Image'],

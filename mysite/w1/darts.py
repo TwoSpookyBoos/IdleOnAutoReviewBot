@@ -1,11 +1,11 @@
 from models.models import AdviceSection, AdviceGroup
 from flask import g as session_data
 
-from models.models_util import get_darts_minigame_advice
+from models.models_util import get_darts_advice
 
 
 def get_upgrade_info_group():
-    advices = [get_darts_minigame_advice(index, link_to_section=False)[1] for index in session_data.account.darts_minigame['Upgrades'].keys()]
+    advices = [get_darts_advice(index, link_to_section=False)[1] for index in session_data.account.darts['Upgrades'].keys()]
     return AdviceGroup(
         pre_string='Upgrades',
         advices=advices,
@@ -13,12 +13,12 @@ def get_upgrade_info_group():
         informational=True
     )
 
-def get_darts_minigame_section():
+def get_darts_section():
     groups = [get_upgrade_info_group()]
     return AdviceSection(
-        name='Darts Minigame',
+        name='Darts',
         tier='',
-        header='Darts Minigame',
+        header='Darts',
         picture='data/DartArm.png',
         groups=groups,
         informational=True,
