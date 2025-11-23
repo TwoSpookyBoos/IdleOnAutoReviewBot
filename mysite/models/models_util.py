@@ -1,4 +1,5 @@
 # These functions will eventually be moved to their own respective models once we introduce more types/classes
+from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import companions_data
 from models.models import Advice
 from flask import g as session_data
@@ -50,6 +51,7 @@ def get_advice_for_money_advice(upgrade_name, link_to_section: bool = True) -> t
               f"<br>{upgrade['Effect']}",
         picture_class=f"advice-for-money-{upgrade['Index']}",
         resource='coins',
+        goal=EmojiType.INFINITY.value,
         progression=upgrade['Level']
     )
 
@@ -76,6 +78,7 @@ def get_basketball_advice(upgrade_index, link_to_section: bool = True) -> tuple[
         label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
         picture_class=upgrade['Image'],
         progression=upgrade['Level'],
+        goal=EmojiType.INFINITY.value,
         resource='basketball-shop-currency',
     )
     return upgrade['Value'], advice
@@ -87,6 +90,7 @@ def get_darts_advice(upgrade_index, link_to_section: bool = True) -> tuple[int |
         label=f"{link_to_section_text}Upgrade {upgrade_index + 1}: {upgrade['Description']}",
         picture_class=upgrade['Image'],
         progression=upgrade['Level'],
+        goal=EmojiType.INFINITY.value,
         resource='darts-shop-currency',
     )
     return upgrade['Value'], advice
