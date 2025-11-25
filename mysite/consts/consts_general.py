@@ -1,8 +1,7 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
-from utils.logging import get_logger
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 # Greenstacks
 greenstack_item_difficulty_groups = {
@@ -346,11 +345,8 @@ expected_stackables = {
         'FoodPotRe2',  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     'Rare Drops': [
-        'EquipmentStatues1', 'EquipmentStatues2', 'EquipmentStatues3', 'EquipmentStatues4', 'EquipmentStatues5',  #'EquipmentStatues6' Kachows
-        'EquipmentStatues6', 'EquipmentStatues7', 'EquipmentStatues8', 'EquipmentStatues9', 'EquipmentStatues10',
-        'EquipmentStatues11', 'EquipmentStatues12', 'EquipmentStatues13', 'EquipmentStatues14', 'EquipmentStatues15',
-        'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues18', 'EquipmentStatues19', 'EquipmentStatues20',
-        'EquipmentStatues21', 'EquipmentStatues22', 'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25',
+        # TODO: Move Statues to their corresponding Crystals
+        'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
         'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues29', 'EquipmentStatues30',
         'EquipmentStatues31', 'EquipmentStatues32',
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
@@ -361,8 +357,8 @@ expected_stackables = {
         'EfauntDrop1',  # Basic Efaunt material
         # 'Key2', 'Key3',  # Efaunt and Chizoar keys
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
-        'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10',  # Gold Foods
-        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'PeanutG', 'ButterBar'  # Gold Foods
+        'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
+        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar'  # Gold Foods
     ],
     'Cheater': [
         'BabaYagaETC', 'JobApplication',  # W1 Rare Drops
@@ -403,10 +399,10 @@ for dg in greenstack_item_difficulty_groups:
             gstacks_rated_items.append(item_name)
 gstack_rated_not_expected = [item for item in gstacks_rated_items if item not in gstackable_codenames_expected]
 if len(gstack_rated_not_expected) > 0:
-    logger.warning(f"Rated but not Expected Greenstacks found: {gstack_rated_not_expected}")
+    logger.warning(f"{len(gstack_rated_not_expected)} Rated but not Expected Greenstacks found: {gstack_rated_not_expected}")
 gstack_expected_not_rated = [item for item in gstackable_codenames_expected if item not in gstacks_rated_items]
 if len(gstack_expected_not_rated) > 0:
-    logger.warning(f"Expected but not Rated Greenstacks found: {gstack_expected_not_rated}")
+    logger.warning(f"{len(gstack_expected_not_rated)} Expected but not Rated Greenstacks found: {gstack_expected_not_rated}")
 gstack_unique_expected = set()
 gstack_duplicate_expected = set()
 for item_name in gstackable_codenames_expected:
@@ -414,9 +410,9 @@ for item_name in gstackable_codenames_expected:
         gstack_duplicate_expected.add(item_name)
     else:
         gstack_unique_expected.add(item_name)
-# if len(gstack_duplicate_expected) > 0:
-# These 3 are expected as they're sold in Vendor Shops category + Rare Drops from enemies {'FoodPotGr3', 'FoodPotRe2', 'FoodHealth9'}
-#     print(f"Reminder: Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
+if len(gstack_duplicate_expected) > 0:
+    logger.warning(f"{len(gstack_duplicate_expected)} Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
+    #These 3 are expected as they're sold in Vendor Shops category + Rare Drops from enemies {'FoodPotGr3', 'FoodPotRe2', 'FoodHealth9'}
 
 #Cards
 max_card_stars = 6

@@ -1,10 +1,9 @@
 import yaml
 from enum import Enum
 from pathlib import Path
-from utils.logging import get_logger
 from config import app
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 with open(Path(app.static_folder) / 'items.yaml', 'r') as f:
     items_codes_and_names = yaml.load(f, yaml.Loader)
