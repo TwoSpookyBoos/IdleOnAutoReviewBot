@@ -352,7 +352,7 @@ expected_stackables = {
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
         'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
-        'GalaxyC1b', 'GalaxyA2b', 'Key4',  #W4 Rare Drops
+        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
         'EfauntDrop1',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
@@ -378,7 +378,7 @@ expected_stackables = {
         'Line1', 'Line2', 'Line3', 'Line4', 'Line5', 'Line6', 'Line7', 'Line8', 'Line9', 'Line10', 'Line11', 'Line12', 'Line13', 'Line14',  # Fishing Lines
         'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
         'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9',  # Time Candies
-        'PetEgg', 'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
+        'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
         'Quest70', 'Quest71', 'Quest75', 'Gfoodcoupon', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags
         'FoodHealth8', 'Quest69', 'Quest74',  # Unobtainables
         'EquipmentStatues6',  # Kachow
