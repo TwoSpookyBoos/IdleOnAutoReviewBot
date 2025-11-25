@@ -1,10 +1,9 @@
 import math
 from consts.consts_autoreview import ValueToMulti, default_huge_number_replacement
 from utils.safer_data_handling import safer_convert, safer_math_pow
-from utils.logging import get_logger
 from utils.number_formatting import parse_number
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 
 def getCavernResourceImage(resource_number: int):

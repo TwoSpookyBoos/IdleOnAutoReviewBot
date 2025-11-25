@@ -1,9 +1,9 @@
 from consts.generated.monster_data import monster_data
 from utils.generate_data_dict import generate_data_dict
-from utils.logging import get_logger
 import re
 import json5
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 # `scripts.MonsterDefinitions` in source. Last updated in v2.45 Nov 16
 # paste body of the `make` function (excluding outer curly braces)

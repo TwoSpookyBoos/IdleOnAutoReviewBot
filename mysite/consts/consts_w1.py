@@ -1,6 +1,8 @@
 from consts.consts_idleon import NinjaInfo
 from utils.text_formatting import numberToLetter
 from utils.number_formatting import parse_number
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 bribes_dict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],

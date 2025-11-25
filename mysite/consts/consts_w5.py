@@ -1,6 +1,7 @@
 import re
-
-from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral, getItemCodeName
+from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 artifact_tiers = ['Base', 'Ancient', 'Eldritch', 'Sovereign']
 max_sailing_artifact_level = len(artifact_tiers)

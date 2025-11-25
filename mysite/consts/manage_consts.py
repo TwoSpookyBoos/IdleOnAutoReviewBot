@@ -8,9 +8,8 @@ from consts.consts_w1 import stamp_maxes, capacity_stamps, stamps_dict, unavaila
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
 from consts.progression_tiers import stamps_progressionTiers, vials_progressionTiers, true_max_tiers, greenstack_progressionTiers, combatLevels_progressionTiers
-from utils.logging import get_logger
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 def finalize_consts():
     finalize_general_greenstacks()
@@ -23,20 +22,18 @@ def finalize_general_greenstacks():
     try:
         assert greenstack_progressionTiers[5]['Required Stacks'] == len(gstack_unique_expected)
     except AssertionError:
-        print(
-            f"manage_consts.finalize_general_greenstacks [ERROR] "
+        logger.error(
             f"Total number of Expected GStacks not in sync between "
             f"tier {greenstack_progressionTiers[5]['Required Stacks']} and "
             f"list {len(gstack_unique_expected)}"
         )
-        greenstack_progressionTiers[5]['Required Stacks'] = max(greenstack_progressionTiers[5]['Required Stacks'], gstack_unique_expected)
+        greenstack_progressionTiers[5]['Required Stacks'] = max(greenstack_progressionTiers[5]['Required Stacks'], len(gstack_unique_expected))
 
 def finalize_general_cards():
     try:
         assert true_max_tiers['Cards'] == len(cardset_names) * (max_card_stars + 1)
     except AssertionError:
-        print(
-            f"manage_consts.finalize_general_cards [ERROR] "
+        logger.error(
             f"Total number of Card Set stars out of sync between "
             f"tier {true_max_tiers['Cards']} and "
             f"variables {len(cardset_names) * (max_card_stars + 1)}"
@@ -47,8 +44,7 @@ def finalize_general_combat_levels():
     try:
         assert get_final_combat_level_required_for_tome() == combatLevels_progressionTiers[-2][1]
     except AssertionError:
-        print(
-            f"manage_consts.finalize_general_combat_levels [ERROR] "
+        logger.error(
             f"Total Account Level for Tome out of sync between "
             f"variable {get_final_combat_level_required_for_tome()} and "
             f"tier {combatLevels_progressionTiers[-2][1]}"
@@ -63,10 +59,7 @@ def finalize_w1_stamps():
 
     # In the 3rd to last tier, set every Capacity Stamp to its max from stamp_maxes
     stamps_progressionTiers[max(stamps_progressionTiers) - 2]['Stamps']['Specific'] = {stampName: stamp_maxes[stampName] for stampName in capacity_stamps}
-    print(
-        f"manage_consts.finalize_w1_stamps [DEBUG] "
-        f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 2}"
-    )
+    logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 2}")
     for tier in stamps_progressionTiers:
         if tier < max(stamps_progressionTiers) - 2:
             for required_stamp in stamps_progressionTiers[tier].get('Stamps', {}).get('Specific', []):
@@ -78,7 +71,7 @@ def finalize_w1_stamps():
     for stamp_type in stamps_dict:
         for stamp in stamps_dict[stamp_type].values():
             if stamp['Name'] not in stamp_maxes and stamp['Name'] not in unavailable_stamps_list:
-                print(f"manage_consts.finalize_w1_stamps [WARNING] No entry in stamp_maxes for: {stamp['Name']}")
+                logger.warning(f"No entry in stamp_maxes for: {stamp['Name']}")
             if stamp['Name'] not in unavailable_stamps_list and stamp['Name'] not in capacity_stamps:
                 if stamp['Name'] in tiered_stamps:
                     ordered_tiers_stamps.append(stamp['Name'])
@@ -87,24 +80,17 @@ def finalize_w1_stamps():
 
     # In the 2nd to last tier, set every previously required stamp to its max from stamp_maxes
     stamps_progressionTiers[max(stamps_progressionTiers) - 1]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in ordered_tiers_stamps}
-    print(
-        f"manage_consts.finalize_w1_stamps [DEBUG] "
-        f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 1}"
-    )
+    logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 1}")
 
     # In the last tier, set every stamp not covered by the previous 2 to its max from stamp_maxes
     stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in remaining_stamps}
-    print(
-        f"manage_consts.finalize_w1_stamps [DEBUG] "
-        f"Successfully updated Stamp Tier {max(stamps_progressionTiers)}"
-    )
+    logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers)}")
 
 def finalize_w2_vials():
     try:
         assert max_maxable_vials == vials_progressionTiers[true_max_tiers['Vials']]['Maxed']
     except AssertionError:
-        print(
-            f"manage_consts.finalize_w2_vials [ERROR] "
+        logger.error(
             f"Max number of Maxable Vials not in sync between "
             f"variable {max_maxable_vials} and "
             f"tier {vials_progressionTiers[true_max_tiers['Vials']]['Maxed']}"

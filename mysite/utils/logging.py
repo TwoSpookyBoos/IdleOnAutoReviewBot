@@ -15,9 +15,8 @@ from config import app
 import logging
 
 
-DEFAULT_FORMAT = (
-    "%(asctime)s | %(name)s | %(requestID)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
-)
+DEFAULT_FORMAT = "%(asctime)s | %(name)s | %(requestID)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
+CONSTS_FORMAT = "%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
 SHORT_FORMAT = "%(asctime)s | %(requestID)s | %(message)s"
 
 
@@ -73,6 +72,22 @@ def _try_colorise(logger):
         )
     return is_local_instance
 
+def _try_consts_colorise(logger):
+    is_local_instance = os.environ.get("PYTHONANYWHERE_DOMAIN", None) is None
+    if is_local_instance:
+        import coloredlogs
+
+        # coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["color"] = "white"
+        coloredlogs.DEFAULT_FIELD_STYLES |= {
+            "levelname": {"color": "white"},
+            "funcName": {"color": "magenta"},
+            "lineno": {"color": "cyan"},
+        }
+        coloredlogs.install(
+            level="DEBUG", fmt=CONSTS_FORMAT, stream=sys.stdout, logger=logger
+        )
+    return is_local_instance
+
 
 def _set_regular_logger(logger: logging.Logger):
     formatter = logging.Formatter(DEFAULT_FORMAT)
@@ -82,6 +97,13 @@ def _set_regular_logger(logger: logging.Logger):
 
     logger.addHandler(handler)
 
+def _set_consts_logger(logger: logging.Logger):
+    formatter = logging.Formatter(CONSTS_FORMAT)
+    handler = logging.StreamHandler(stream=sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
 
 def get_logger(name: str) -> logging.Logger:
     logger_ = logging.getLogger(name)
@@ -90,6 +112,16 @@ def get_logger(name: str) -> logging.Logger:
 
     if not _try_colorise(logger_):
         _set_regular_logger(logger_)
+
+    return logger_
+
+# Does not include the requestID for logging needs before evaluating player data
+def get_consts_logger(name: str) -> logging.Logger:
+    logger_ = logging.getLogger(name)
+    logger_.setLevel(logging.DEBUG)
+
+    if not _try_consts_colorise(logger_):
+        _set_consts_logger(logger_)
 
     return logger_
 

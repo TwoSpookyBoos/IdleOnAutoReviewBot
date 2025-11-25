@@ -1,10 +1,8 @@
 import math
-
 from utils.safer_data_handling import safer_math_pow
-from utils.logging import get_logger
 from utils.number_formatting import parse_number
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 tomepct = {
     95: 765,

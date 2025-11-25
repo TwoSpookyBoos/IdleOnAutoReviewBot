@@ -1,3 +1,6 @@
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
+
 max_printer_sample_rate = 90
 arbitrary_shrine_goal = 30
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
