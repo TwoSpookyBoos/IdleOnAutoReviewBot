@@ -1694,6 +1694,12 @@ class Account:
             'Total Slots Owned': 0,
             'Total Slots Max': 0
         }
+        self.basketball = {
+            'Upgrades': {}
+        }
+        self.darts = {
+            'Upgrades': {}
+        }
         self.spelunk = {
             'Cave Bonuses': {},
         }

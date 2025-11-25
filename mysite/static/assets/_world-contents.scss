@@ -61,6 +61,8 @@ $world-contents: (
     mousey: img('wiki/Mousey.png'),
     meel: img('wiki/Meel.gif'),
     glunko-the-massive: img('wiki/Glunko_The_Massive_Idle.gif'),
+    basketball: img('data/BasketBall.png'),
+    darts: img('data/Dart.png'),
 // World 2
     alchemy-cauldron: img('wiki/Alchemy_Cauldron.gif'),
     yum-yum-grotto-vendor: img('wiki/Yum_Yum_Grotto_Vendor.gif'),
@@ -198,7 +200,9 @@ $world-contents: (
     sussy-gene: img('wiki/Sussy_Gene.gif'),
     potti: img('wiki/Potti.gif'),
     effervescent-eucalyptus-tree: img('wiki/Effervescent_Eucalyptus_Tree.png'),
-    tuttle: img('Tuttle.png')
+    tuttle: img('Tuttle.png'),
+// World 7
+    big-fish: img('data/W7_fish.png'),
 );
 
 $world-monsters: (
@@ -346,7 +350,6 @@ $world-monsters: (
     coralcave-guardian: img('data/2CardsJ12.png'),
     crystal-cuttlefish: img('data/2CardsJ99.png'),
 
-    big-fish: img('data/W7_fish.png'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);

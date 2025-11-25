@@ -20,6 +20,10 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         99: "AlchemyLiquid2",
         100: "AlchemyLiquid3"
     },
+    "font-95.fnt": {
+        33945: "BasketballShopCurrency",
+        32435: "DartsShopCurrency"
+    },
     "sprite-673-16.png": {
         "base_file_name": "SummoningStone",
         "columns": 3,
