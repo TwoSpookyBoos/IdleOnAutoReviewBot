@@ -351,11 +351,11 @@ expected_stackables = {
         'EquipmentStatues31', 'EquipmentStatues32',
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
         'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
-        'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3',  # W3 Rare Drops
+        'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
         'GalaxyC1b', 'GalaxyA2b', 'Key4',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
         'EfauntDrop1',  # Basic Efaunt material
-        # 'Key2', 'Key3',  # Efaunt and Chizoar keys
+        # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
         'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar'  # Gold Foods
