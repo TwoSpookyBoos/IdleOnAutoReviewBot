@@ -284,6 +284,7 @@ expected_stackables = {
         "GalaxyC3", "GalaxyC4",  # W4
         "LavaA1", "LavaA2", "LavaA3", "LavaA4", "LavaA5", "LavaB1", "LavaB2", "LavaB3", "LavaB4", "LavaB5", "LavaB6", "LavaC1", "LavaC2",  # W5
         "SpiA1", "SpiA2", "SpiA3", "SpiA4", "SpiA5", "SpiB1", "SpiB2", "SpiB3", "SpiB4", "SpiC1", "SpiC2", "SpiD1", "SpiD2", "SpiD3",  # W6
+        'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A6', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         "Sewers3", "Quest15", "Hgg"  # Specialty Monster Materials
     ],
     "Crystal Enemy Drops": [
@@ -297,19 +298,19 @@ expected_stackables = {
         "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",  # "W1" statues, some in W1-W3
         "EquipmentStatues1", "EquipmentStatues5",  # Plausible but time consuming
         "EquipmentStatues10", "EquipmentStatues12", "EquipmentStatues13", "EquipmentStatues8", "EquipmentStatues11",  # W2 statues are all slower than Power/Health
-        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1",  #W1 Slow drops = Town TP + Stones
+        "rtt0", "StoneZ1", "StoneT1", "StoneW1", "StoneA1", 'StoneHelm1',  #W1 Slow drops = Town TP + Stones
         "StoneT2", "StoneZ2",  "StoneW2", "StoneA2",  # W2 upgrade stones and Mystery2
         "PureWater", "EquipmentStatues18",  #W3 Slow drops = Distilled Water + EhExPee Statue
         "EquipmentStatues20", "EquipmentStatues21", "EquipmentStatues22",  # W4 Statues
-        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9",  #W5 Slow drops = Golden W5 Sammy + Statues
+        "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25", "FoodG9", 'StoneZ3',  #W5 Slow drops = Golden W5 Sammy + Statues
         # "FoodG11", "FoodG12"  #W6 gold foods
     ],
     "Printable Skilling Resources": [
         "OakTree", "BirchTree", "JungleTree", "ForestTree", "ToiletTree", "PalmTree", "StumpTree", "SaharanFoal",  # Logs1
-        "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10", "Tree12", "Tree13",  # Logs2
+        "Tree7", "AlienTree", "Tree8", "Tree9", "Tree11", "Tree10", "Tree12", "Tree13", 'Tree14',  # Logs2
 
         "Copper", "Iron", "Gold", "Plat", "Dementia", "Void", "Lustre",  # Ores1
-        "Starfire", "Marble", "Dreadlo", "Godshard",  # Ores2
+        "Starfire", "Marble", "Dreadlo", "Godshard", 'Prehistrium',  # Ores2
 
         "Fish1", "Fish2", "Fish3", "Fish4",  # Small Fish
         "Fish5", "Fish6", "Fish7", "Fish8",  # Medium Fish
@@ -318,6 +319,7 @@ expected_stackables = {
         "Bug1", "Bug2", "Bug3", "Bug4",  # W2 Bugs
         "Bug5", "Bug6", "Bug7", "Bug8",  # W3-4 Bugs
         "Bug9", "Bug11", "Bug10", "Bug12", "Bug13",  # W5-6 Bugs
+        'Bug15',  # W7 bugs
     ],
     "Other Skilling Resources": [
         "CraftMat1", "CraftMat5", "CraftMat6", "CraftMat7", "CraftMat8", "CraftMat9", "CraftMat10", "CraftMat11", "CraftMat12", "CraftMat13",  #Anvil1
@@ -326,7 +328,7 @@ expected_stackables = {
         "Critter7", "Critter8", "Critter9", "Critter10", "Critter11",
         "Critter1A", "Critter2A",  "Critter3A", "Critter4A", "Critter5A", "Critter6A", "Critter7A", "Critter8A",  #ShinyCritter1
         "Critter9A", "Critter10A", "Critter11A",  #ShinyCritter2
-        "Soul1", "Soul2", "Soul3", "Soul4", "Soul5", "Soul6", "Soul7",  #WorshipSouls
+        "Soul1", "Soul2", "Soul3", "Soul4", "Soul5", "Soul6", "Soul7", 'Soul8',  #WorshipSouls
         "CopperBar", "IronBar", "GoldBar", "PlatBar", "DementiaBar", "VoidBar", "LustreBar",  #SmeltedBars1
         "StarfireBar", "DreadloBar", "MarbleBar", "GodshardBar",  #SmeltedBars2
         "Bullet", "BulletB", "FoodMining1", "FoodFish1", "FoodCatch1", "Peanut",  #Crafted1
@@ -337,35 +339,33 @@ expected_stackables = {
         "Ladle",
     ],
     "Vendor Shops": [
-        "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17", "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
+        'FoodHealth18', 'FoodHealth19', "FoodHealth14", "FoodHealth15", "FoodHealth16", "FoodHealth17",
+        "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4",
         "FoodPotYe4", "OilBarrel6", "OilBarrel7", "FoodHealth4", "FoodHealth9", "FoodHealth11", "Quest19", "CraftMat3",  # Sorted by daily quantity
         "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
         "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     "Rare Drops": [
-        "FoodPotGr3",  #Decent Speed from W3 Shop + Sir Stache
-        "FoodPotRe2",  #Average Life Potion from W2 Shop + Gigafrogs
-        "FoodPotRe1",  #Small Life Potion from W1 Sewers and Tree mobs, not crystals
-        "ButterBar",  #Catching Butterflies
-        "EquipmentStatues9",  #Oceanman statue can be candied from W2 bugs
-        'EquipmentStatues15',  #Bullseye
-        'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',  # W3 Statues not from Crystals
-        "FoodPotMana3",  #Decent Mana Potion from Bloques
-        "FoodHealth9",  #Yeti Ham from Bop Box
-        "OilBarrel2",  # Slime Barrel, 1 in 3334
-        'Sewers1b',  # W1 Golden Plop
-        "DesertC2b", 'DesertA3b', 'DesertA1b',  # W2 Ghost, Nuget Cake, Glass Shard
-        "Quest78", 'SnowC4a', 'SnowB2a', 'SnowA2a',  # W3 Equinox Mirror, Black Lense, Ice Age 3, Yellow Snowflake
-        'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell, Lost Batteries
+        'EquipmentStatues1', 'EquipmentStatues2', 'EquipmentStatues3', 'EquipmentStatues4', 'EquipmentStatues5',  #'EquipmentStatues6' Kachows
+        'EquipmentStatues6', 'EquipmentStatues7', 'EquipmentStatues8', 'EquipmentStatues9', 'EquipmentStatues10',
+        'EquipmentStatues11', 'EquipmentStatues12', 'EquipmentStatues13', 'EquipmentStatues14', 'EquipmentStatues15',
+        'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues18', 'EquipmentStatues19', 'EquipmentStatues20',
+        'EquipmentStatues21', 'EquipmentStatues22', 'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25',
+        'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues29', 'EquipmentStatues30',
+        'EquipmentStatues31', 'EquipmentStatues32',
+        'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
+        "DesertC2b", 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
+        "Quest78", 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3',  # W3 Rare Drops
+        'GalaxyC1b', 'GalaxyA2b', 'Key4',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
         "EfauntDrop1",  # Basic Efaunt material
         # "Key2", "Key3",  # Efaunt and Chizoar keys
-        'EquipmentStatues29', 'EquipmentStatues30',  # Villager and Dragon Warrior statues from Caverns
+        "SpiA2b", "SpiB2b", 'Quest95',  #W6 Rare Drops
+        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", 'FoodG9', "FoodG10",  # Gold Foods
+        "FoodG11", "FoodG12", "FoodG13", "FoodG14", "FoodG15", 'PeanutG', 'ButterBar'  # Gold Foods
     ],
     "Cheater": [
-        "TreeInterior1b", "BabaYagaETC", "JobApplication",  # W1 Rare Drops
-        "MidnightCookie",  # W2 Rare Drops
-        "SpiA2b", "SpiB2b",  # W6 Rare Drops
+        "BabaYagaETC", "JobApplication",  # W1 Rare Drops
         "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart", "KrukPart2",  # World Boss Materials
         "CraftMat2",  # Crimson String
         "OilBarrel1", "OilBarrel3", "OilBarrel4", "OilBarrel5",  # Oil Barrels
@@ -386,7 +386,6 @@ expected_stackables = {
         "Quest70", "Quest71", "Quest75", "Gfoodcoupon", "ItemsCoupon1", "ItemsCoupon2",  # Loot Bags
         "FoodHealth8", "Quest69", "Quest74",  # Unobtainables
         "EquipmentStatues6",  # Kachow
-        "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10",  # Gold Foods
         "ResetCompleted", "ResetCompletedS", "ClassSwap",
         "ClassSwapB", "ResetBox",
     ]
