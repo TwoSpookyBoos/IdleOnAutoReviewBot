@@ -1237,10 +1237,17 @@ def _parse_w1_owl(account):
         logger.warning(f"Owl data not present{', as expected' if account.version < 217 else ''}.")
     account.owl = {
         'Discovered': safer_get(account.raw_optlacc_dict, 265, False),
+        'Feathers': safer_get(account.raw_optlacc_dict, 253, 0),
         'FeatherGeneration': safer_get(account.raw_optlacc_dict, 254, 0),
         'BonusesOfOrion': safer_get(account.raw_optlacc_dict, 255, 0),
+        'FeatherMultiplier': safer_get(account.raw_optlacc_dict, 256, 0),
+        'FeatherCheapener': safer_get(account.raw_optlacc_dict, 257, 0),
         'FeatherRestarts': safer_get(account.raw_optlacc_dict, 258, 0),
-        'MegaFeathersOwned': safer_get(account.raw_optlacc_dict, 262, 0)
+        'SuperFeatherProduction': safer_get(account.raw_optlacc_dict, 259, 0),
+        'ShinyFeatherLevel': safer_get(account.raw_optlacc_dict, 260, 0),
+        'SuperFeatherCheapener': safer_get(account.raw_optlacc_dict, 261, 0),
+        'MegaFeathersOwned': safer_get(account.raw_optlacc_dict, 262, 0),
+        'ShinyFeathers': safer_get(account.raw_optlacc_dict, 264, 0)
     }
 
 def _parse_w1_statues(account):
