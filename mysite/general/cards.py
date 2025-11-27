@@ -150,7 +150,7 @@ def getCardDropChanceAdviceGroup(groups):
             ),
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
-                picture_class='boaty-bubble',
+                picture_class='card-champ',
                 resource=card_champ_bubble['Material'],
                 progression=card_champ_bubble['Level'],
                 goal=3960
@@ -175,7 +175,7 @@ def getCardDropChanceAdviceGroup(groups):
             ),
             Advice(
                 label=f'2x 8 Ball Keychains: 2x +10%',
-                picture_class="eight-ball-chain"
+                picture_class="x8-ball-chain"
             )
         ],
         f'Multi Group A - class-specific': [

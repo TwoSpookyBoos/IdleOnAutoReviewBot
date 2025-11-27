@@ -1,0 +1,15 @@
+$minigames: (
+  basketball-shop-currency: img('extracted_sprites/BasketballShopCurrency.png'),
+  basketball-upgrade-1: img('data/HoopShop0.png'),
+  basketball-upgrade-2: img('data/HoopShop1.png'),
+  basketball-upgrade-3: img('data/HoopShop2.png'),
+  basketball-upgrade-4: img('data/HoopShop3.png'),
+
+  darts-shop-currency: img('extracted_sprites/DartsShopCurrency.png'),
+  darts-upgrade-1: img('data/DartShop0.png'),
+  darts-upgrade-2: img('data/DartShop1.png'),
+  darts-upgrade-3: img('data/DartShop2.png'),
+  darts-upgrade-4: img('data/DartShop3.png'),
+);
+
+$all-minigames: $minigames

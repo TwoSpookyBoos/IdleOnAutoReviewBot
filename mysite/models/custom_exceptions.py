@@ -1,4 +1,6 @@
 from config import app
+from consts.consts_autoreview import lowest_accepted_version
+
 
 class BaseCustomException(Exception):
     reportable = True
@@ -115,10 +117,11 @@ class WtfDataException(BaseCustomException):
 
 class VeryOldDataException(BaseCustomException):
     reportable = False
-    faq = True
+    faq = False
     dirname = "old"
-    msg_base = "This data is from before World 7 released and is too old to review accurately.<br>Please refresh your Data and try again!"
+    msg_base = "This data is from before World 7 released and is too old to review accurately.<br>$<br>Please refresh your Data and try again! If you very recently reuploaded your public profile, wait a few minutes and try again."
 
     def __init__(self, data):
         super().__init__()
         self.data = data
+        self.msg_display = self.msg_base.replace('$', f"Found version: {self.data}. Required: {lowest_accepted_version}+")

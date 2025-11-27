@@ -1,4 +1,6 @@
 from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 combatLevels_progressionTiers = [
     # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes

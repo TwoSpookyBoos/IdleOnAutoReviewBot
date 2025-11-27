@@ -1,6 +1,8 @@
 from consts.consts_idleon import NinjaInfo
 from utils.text_formatting import numberToLetter
 from utils.number_formatting import parse_number
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 bribes_dict = {
     "W1": ["Insider Trading", "Tracking Chips", "Mandatory Fire Sale", "Sleeping On the Job", "Artificial Demand", "The Art of the Deal"],
@@ -405,3 +407,8 @@ event_points_shop_dict = {
     }
     for index in range(0, len(NinjaInfo_event_shop), 2)
 }
+
+# unnamed arrays in source. Last updated in v2.45 Nov 16
+# search for any of these string, they're unique enough to find quickly
+basketball_upgrade_descriptions = ["Select_an_upgrade,_these_bonuses_are_permanent_and_affect_the_rest_of_the_game!", "+{%_Damage_to_Monsters", "+{%_Coins_dropped_by_monsters", "+{%_Class_EXP_when_killing_monsters", "+{%_Efficiency_for_all_Skills,_like_Mining_and_Choppin!"]
+darts_upgrade_descriptions = ["Select_an_upgrade,_these_bonuses_are_permanent_and_affect_the_rest_of_the_game!", "+{%_Extra_Damage_against_Monsters!", "+{_Talent_PTS_for_the_first_page!", "All_Vault_upgrades_are_}x_Cheaper!", "+{%_Movement_Speed,_so_you_can_run_faster!"]

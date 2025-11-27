@@ -8,7 +8,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from config import app
-from consts.consts_autoreview import ignorable_labels
+from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
@@ -609,6 +609,8 @@ class Advice(AdviceBase):
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
         if completed is None:
             self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
+        elif completed is True:
+            self.mark_advice_completed(True)
         else:
             self.completed = completed
         self.unrated: bool = unrated
@@ -696,28 +698,30 @@ class Advice(AdviceBase):
         if force:
             complete()
 
-        elif not self.goal and str(self.progression).endswith('+'):
-            self.completed = True
+        # Only let the automated completion run if self.completed has not been manually set already
+        if self.completed is None:
+            if not self.goal and str(self.progression).endswith('+'):
+                self.completed = True
 
-        elif not self.goal and str(self.progression).endswith('%'):
-            try:
-                if float(str(self.progression).strip('%')) > 100:
-                    complete()
-            except:
-                pass
+            elif not self.goal and str(self.progression).endswith('%'):
+                try:
+                    if float(str(self.progression).strip('%')) > 100:
+                        complete()
+                except:
+                    pass
 
-        elif self.percent == '100%':
-            # If the progress bar is set to 100%
-            complete()
+            elif self.percent == '100%':
+                # If the progress bar is set to 100%
+                complete()
 
-        else:
-            try:
-                prog = str(self.progression).strip('x%')
-                goal = str(self.goal).strip('x%')
-                if self.goal and self.progression and float(prog) >= float(goal):
-                    complete()
-            except:
-                pass
+            else:
+                try:
+                    prog = str(self.progression).strip('x%')
+                    goal = str(self.goal).strip('x%')
+                    if self.goal and self.progression and float(prog) >= float(goal):
+                        complete()
+                except:
+                    pass
 
 @functools.total_ordering
 class AdviceGroup(AdviceBase):
@@ -1659,7 +1663,7 @@ class Account:
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
-        if self.version < 297:  # 297.x was the W7 release patch
+        if self.version < lowest_accepted_version:
             raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {
@@ -1689,6 +1693,12 @@ class Account:
             'Other Slots Max': 0,
             'Total Slots Owned': 0,
             'Total Slots Max': 0
+        }
+        self.basketball = {
+            'Upgrades': {}
+        }
+        self.darts = {
+            'Upgrades': {}
         }
         self.spelunk = {
             'Cave Bonuses': {},

@@ -1,10 +1,9 @@
 import yaml
 from enum import Enum
 from pathlib import Path
-from utils.logging import get_logger
 from config import app
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 with open(Path(app.static_folder) / 'items.yaml', 'r') as f:
     items_codes_and_names = yaml.load(f, yaml.Loader)
@@ -178,8 +177,10 @@ versions_patches = {
     279: "v2.41 Summoning Bosses",
     297: "v2.43 World 7",
     299: "v2.44 Cropfall Event",
-    301: "v2.45 Zenith Statues"
+    301: "v2.45 Zenith Statues",
+    306: "v2.46 Bubba Clicker"
 }
+lowest_accepted_version = 297  # 297.x was the W7 release patch
 ignorable_labels: tuple = ('Weekly Ballot',)
 
 default_huge_number_replacement = 1e100

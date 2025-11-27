@@ -1,6 +1,5 @@
-from utils.logging import get_logger
-
-logger = get_logger(__name__)
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 # `Spelunky` in source. Last updated in v2.45 Nov 16
 # make sure to manually turn `.split("")` into `.split(" ")` and add spaces between each value

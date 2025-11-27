@@ -6,15 +6,15 @@ from flask import g as session_data
 import models.account_calcs
 import models.account_parser
 from config import app
-from consts.consts_autoreview import versions_patches
-from models.custom_exceptions import UsernameBanned
+from consts.consts_autoreview import versions_patches, lowest_accepted_version
+from models.custom_exceptions import UsernameBanned, VeryOldDataException
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combat_levels, greenstacks, pinchy, cards, secret_path, consumables, gem_shop, active, achievements, event_shop, drop_rate
 from master_classes import grimoire, compass, tesseract
-from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl
+from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl, darts, basketball
 from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
 from w4 import breeding, cooking, rift
@@ -55,13 +55,17 @@ def main(inputData, source_string, runType="web"):
     parsedJSON, verified_source_string = get_or_parse_json(inputData, source_string, runType)
 
     # Step 2: Make account data available throughout the session
-    session_data.account = Account(parsedJSON, source_string)
+    try:
+        session_data.account = Account(parsedJSON, source_string)
+        patch_guess = ''
+        for version in versions_patches:
+            if session_data.account.version > version:
+                patch_guess = versions_patches[version]
+        logger.info(f"Data version {session_data.account.version}: {patch_guess} or later")
+    except VeryOldDataException as e:
+        logger.error(f"Found Version {e.data} < {lowest_accepted_version}. Raising VeryOldDataException.")
+        raise VeryOldDataException(e.data)
 
-    patch_guess = ''
-    for version in versions_patches:
-        if session_data.account.version > version:
-            patch_guess = versions_patches[version]
-    logger.info(f"Data version {session_data.account.version}: {patch_guess} or later")
     models.account_parser.parse_account(session_data.account, runType)
     models.account_calcs.calculate_account(session_data.account)
 
@@ -97,7 +101,9 @@ def main(inputData, source_string, runType="web"):
             smithing.getSmithingAdviceSection(),
             statues.getStatuesAdviceSection(),
             starsigns.getStarsignsAdviceSection(),
-            owl.getOwlAdviceSection()
+            owl.getOwlAdviceSection(),
+            basketball.get_basketball_section(),
+            darts.get_darts_section(),
         ],
         sections_2 := [
             alchemy_bubbles.getAlchemyBubblesAdviceSection(),
