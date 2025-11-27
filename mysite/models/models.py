@@ -8,7 +8,7 @@ from math import ceil, floor
 from typing import Any, Union
 from flask import g
 from config import app
-from consts.consts_autoreview import ignorable_labels
+from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
@@ -1663,7 +1663,7 @@ class Account:
     def __init__(self, json_data, source_string: InputType):
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
-        if self.version < 297:  # 297.x was the W7 release patch
+        if self.version < lowest_accepted_version:
             raise VeryOldDataException(self.version)
         self.data_source = source_string.value
         self.alerts_Advices = {

@@ -6,8 +6,8 @@ from flask import g as session_data
 import models.account_calcs
 import models.account_parser
 from config import app
-from consts.consts_autoreview import versions_patches
-from models.custom_exceptions import UsernameBanned
+from consts.consts_autoreview import versions_patches, lowest_accepted_version
+from models.custom_exceptions import UsernameBanned, VeryOldDataException
 from models.models import AdviceWorld, WorldName, Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
@@ -55,13 +55,17 @@ def main(inputData, source_string, runType="web"):
     parsedJSON, verified_source_string = get_or_parse_json(inputData, source_string, runType)
 
     # Step 2: Make account data available throughout the session
-    session_data.account = Account(parsedJSON, source_string)
+    try:
+        session_data.account = Account(parsedJSON, source_string)
+        patch_guess = ''
+        for version in versions_patches:
+            if session_data.account.version > version:
+                patch_guess = versions_patches[version]
+        logger.info(f"Data version {session_data.account.version}: {patch_guess} or later")
+    except VeryOldDataException as e:
+        logger.error(f"Found Version {e.data} < {lowest_accepted_version}. Raising VeryOldDataException.")
+        raise VeryOldDataException(e.data)
 
-    patch_guess = ''
-    for version in versions_patches:
-        if session_data.account.version > version:
-            patch_guess = versions_patches[version]
-    logger.info(f"Data version {session_data.account.version}: {patch_guess} or later")
     models.account_parser.parse_account(session_data.account, runType)
     models.account_calcs.calculate_account(session_data.account)
 

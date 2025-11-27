@@ -180,6 +180,7 @@ versions_patches = {
     301: "v2.45 Zenith Statues",
     306: "v2.46 Bubba Clicker"
 }
+lowest_accepted_version = 297  # 297.x was the W7 release patch
 ignorable_labels: tuple = ('Weekly Ballot',)
 
 default_huge_number_replacement = 1e100
