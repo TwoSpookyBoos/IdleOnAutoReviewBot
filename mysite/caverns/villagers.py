@@ -11,7 +11,7 @@ from consts.consts_w1 import stamp_maxes
 
 logger = get_logger(__name__)
 
-def getVillagersAdviceGroups() -> dict[str | AdviceGroup]:
+def getVillagersAdviceGroups() -> dict[str, AdviceGroup]:
     villager_ags = {
         'Explorer': getExplorerAdviceGroup(),
         'Engineer': getEngineerAdviceGroup(),
