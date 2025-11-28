@@ -77,7 +77,7 @@ nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
     'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain', 'Kill Per Kill',  #Green
     'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
-    'Yellow Bargain', 'Petting The Rift',  #Yellow
+    'Stamp Tramp', 'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
 bubble_name_overrides = {
     0: {
