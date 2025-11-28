@@ -36,13 +36,16 @@ def getReadableVialNames(inputNumber):
         return f"Unknown Vial {inputNumber}"
 
 
-critter_vials_list = [
-    getReadableVialNames(23),  #Crabbo
-    getReadableVialNames(31),  #Mousey
-    getReadableVialNames(37),  #Bunny
-    getReadableVialNames(40),  #Honker
-    getReadableVialNames(47),  #Blobfish
-    getReadableVialNames(74),  #Tuttle
+maxable_critter_vials_list = [
+    # getReadableVialNames(23),  #Crabbo
+    # getReadableVialNames(31),  #Mousey
+    # getReadableVialNames(37),  #Bunny
+    # getReadableVialNames(40),  #Honker
+    # getReadableVialNames(47),  #Blobfish
+    # getReadableVialNames(74),  #Tuttle
+    getReadableVialNames(index) for index, values in vials_dict.items()
+    if values['Material'].startswith('Critter')
+    and getItemDisplayName(values['Material']) not in vials_considered_unmaxable
 ]
 
 # `SigilDesc` in source. Last updated in v2.43 Nov 9
