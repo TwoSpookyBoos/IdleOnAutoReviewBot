@@ -71,7 +71,8 @@ bubble_cauldron_color_list = ['Orange', 'Green', 'Purple', 'Yellow']
 alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
 alchemy_jobs_list = bubble_cauldron_color_list + alchemy_liquids_list + [k for k in sigils_dict.keys()]
 min_NBLB = 2
-max_NBLB = 1500
+# Last updated in v2.46 Nov 27
+max_NBLB = 10000
 nblb_max_index = 24
 nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
