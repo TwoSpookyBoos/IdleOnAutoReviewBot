@@ -6,7 +6,7 @@ from consts.consts_general import max_card_stars, cards_max_level, equipment_by_
 from consts.consts_w6 import max_farming_crops, max_land_rank_level
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
-from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es
+from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
@@ -611,11 +611,11 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Siege Breaker - Talents -  Archlord of the Pirates
     sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
     goal_string = notateNumber('Basic', 1e6, 2)
-    sb_talent_bonus_max = lavaFunc(sb_talent['funcType'], approx_max_talent_level_non_es, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
+    sb_talent_bonus_max = lavaFunc(sb_talent['funcType'], approx_max_talent_level_non_es_non_star, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
     sb_talent_multi = ValueToMulti(sb_talent['Total Value'])
     drop_rate_aw_advice[special].append(Advice(
         label=f"Siege Breaker talent- Archlord of the Pirates:"
-              f"<br>Level {sb_talent['Highest Preset Level']}/{approx_max_talent_level_non_es} with your current kills gives"
+              f"<br>Level {sb_talent['Highest Preset Level']}/{approx_max_talent_level_non_es_non_star} with your current kills gives"
               f"<br>{round(sb_talent_multi, 5):g}/{round(ValueToMulti(sb_talent_bonus_max), 5):g}x Drop Rate MULTI",
         picture_class='archlord-of-the-pirates',
         progression=notateNumber('Match', sb_talent['Kills'], 2, '', goal_string),

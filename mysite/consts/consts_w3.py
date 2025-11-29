@@ -1,12 +1,17 @@
+from consts.consts_autoreview import ValueToMulti
 from utils.logging import get_consts_logger
+from utils.number_formatting import parse_number
+from utils.text_formatting import getItemDisplayName
+
 logger = get_consts_logger(__name__)
 
 max_printer_sample_rate = 90
-arbitrary_shrine_goal = 30
+arbitrary_shrine_goal = 32  # Last updated in v2.46 Nov 19
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
 max_implemented_dreams = 36  # Last verified as of v2.30
 max_possible_dreams = 35  # Last verified as of v2.30. The dream to complete Killroy Prime is impossible
 dreams_that_unlock_new_bonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
+#`DreamUpg = function ()` in source. Last updated in v2.46 Nov 19
 equinox_bonuses_dict = {
     2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False},
     3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended', 'SummoningExpands': False},
@@ -23,18 +28,25 @@ equinox_bonuses_dict = {
     12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended', 'SummoningExpands': True},
     13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended', 'SummoningExpands': True},
 }
+#`RefineryInfo = function` in source holds the material cost, if we ever want to care about that.
 refinery_dict = {
-    # "salt": [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
-    "Red": [3, "redox-salts", 4, 0, 2, 4],
-    "Orange": [4, "explosive-salts", 4, 2, 2, 4],
-    "Blue": [5, "spontaneity-salts", 4, 2, 1, 1],
-    "Green": [6, "dioxide-synthesis", 1, 1, 2, 1],
-    "Purple": [7, "purple-salt", 1, 2, 2, 1],
-    "Nullo": [8, "nullo-salt", 1, 2, 0, 0]
+    # 'salt': [json index, advice image name, cycles per Synth cycle, consumption of previous salt, next salt consumption, next salt cycles per Synth cycle]
+    'Red': [3, 'redox-salts', 4, 0, 2, 4],
+    'Orange': [4, 'explosive-salts', 4, 2, 2, 4],
+    'Blue': [5, 'spontaneity-salts', 4, 2, 1, 1],
+    'Green': [6, 'dioxide-synthesis', 1, 1, 2, 1],
+    'Purple': [7, 'purple-salt', 1, 2, 2, 1],
+    'Nullo': [8, 'nullo-salt', 1, 2, 0, 0]
 }
+#`TowerInfo = function ()` in source. Last updated in v2.46 Nov 29
+#"3D_Printer Using_the_new_Star_Talent_(on_the_2nd_tab_of_Star_Talents),_you_can_collect_samples_to_start_printing_resources!_@_Current_Bonuses:_@_$_Player_Slots_Unlocked 1 30 Refinery1 Blank 3 0 10 1 10".split(" ")
+#[0] = name, [1] = description,
+#[2] = ?, [3] = ?, [4] = 1st required material. 2 and 3 are probably cost / scaling
+#[5] = 2nd required material, [6] = ?, [7] = ?. 6 and 7 are probably cost / scaling
+#[7] = default max level, [8] = ?, [9] = final max level after various upgrades
 buildings_dict = {
     # Buildings
-    0: {'Name': '3D Printer', 'Image': 'three-d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
+    0: {'Name': '3D Printer', 'Image': 'x3d-printer', 'BaseMaxLevel': 10, 'Type': 'Utility'},
     1: {'Name': 'Talent Book Library', 'Image': 'talent-book-library', 'BaseMaxLevel': 101, 'Type': 'Utility'},
     2: {'Name': 'Death Note', 'Image': 'death-note', 'BaseMaxLevel': 51, 'Type': 'Utility'},
     3: {'Name': 'Salt Lick', 'Image': 'salt-lick', 'BaseMaxLevel': 10, 'Type': 'Utility'},
@@ -62,58 +74,40 @@ buildings_dict = {
     22: {'Name': 'Clover Shrine', 'Image': 'clover-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 15, 'ValueIncrement': 3},
     23: {'Name': 'Summereading Shrine', 'Image': 'summereading-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 6, 'ValueIncrement': 1},
     24: {'Name': 'Crescent Shrine', 'Image': 'crescent-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 50, 'ValueIncrement': 7.5},
-    # Nerfed in v2.35 WW from 10 to 7.5
     25: {'Name': 'Undead Shrine', 'Image': 'undead-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 5, 'ValueIncrement': 1},
     26: {'Name': 'Primordial Shrine', 'Image': 'primordial-shrine', 'BaseMaxLevel': 100, 'Type': 'Shrine', 'ValueBase': 1, 'ValueIncrement': 0.1},
 }
 # buildings_utilities = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Utility']
 
 buildings_towers = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Tower']
+# Last updated in v2.46 Nov 29
 buildings_tower_max_level = (
-        50  # Base
-        + 30  # 2.5 Cons Mastery
-        + 60  # 2 per level times 30 max levels of Atom Collider - Carbon
-        + 100  # Cavern 14 - Gambit - Bonus Index 9
-)  # As of v2.35
+    50  # Base
+    + 30  # 2.5 Cons Mastery
+    + 100  # 2 per level times 50 max levels of Atom Collider - Carbon
+           # (including 20 max levels from WW Compass Atomic Potential)
+    + 100  # Cavern 14 - Gambit - Bonus Index 9
+)
 buildings_shrines: list[str] = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if
                                 buildingValuesDict['Type'] == 'Shrine']
 
-# AtomInfo in code. Last pulled 2.36 WW
-atoms_list: list[list] = [
-    ["Hydrogen - Stamp Decreaser", 1, 1.35, 2, 1,
-     "Every day you log in, the resource cost to upgrade a stamp's max lv decreases by {% up to a max of 90%. This reduction resets back to 0% when upgrading any stamp max lv."],
-    ["Helium - Talent Power Stacker", 0, 10, 10, 1,
-     "All talents that give more bonus per 'Power of 10 resources you own' will count +{ more powers of 10 than you actually own when giving the bonus."],
-    ["Lithium - Bubble Insta Expander", 10, 1.25, 25, 1,
-     "No Bubble Left Behind bonus now has a 15% chance to level up the lowest bubble out of ALL bubbles, not just the first 15 of each colour. Also, +{% chance to give +1 additional Lv."],
-    ["Beryllium - Post Office Penner", 20, 1.26, 75, 7,
-     "Every day, 1 silver pen from your Post Office will instantly convert into 1 PO Box for all characters. This conversion happens { times per day."],
-    ["Boron - Particle Upgrader", 70, 1.37, 175, 2,
-     "When a bubble has a cost of 100M or more to upgrade, you can instead spend particles. However, you can only do this { times a day, after which the cost will return to resources."],
-    ["Carbon - Wizard Maximizer", 250, 1.27, 500, 2,
-     "All wizard towers in construction get +{ max levels. Also, all wizards get a +2% damage bonus for each wizard tower level above 50 in construction."],
-    ["Nitrogen - Construction Trimmer", 500, 1.25, 1000, 15,
-     "Gold trimmed construction slots give +{% more build rate than before. Also, you now have 1 additional trimmed slot."],
-    ["Oxygen - Library Booker", 2000, 1.24, 3250, 2,
-     "Increases the Checkout Refresh Speed of the Talent Library by +{%. Also, the Maximum Talent LV is increased by +10."],
-    ["Fluoride - Void Plate Chef", 12000, 1.23, 10000, 1,
-     "Multiplies your cooking speed by +{% for every meal at Lv 30+. In other words, every meal with a studded black void plate."],
-    ["Neon - Damage N' Cheapener", 40000, 1.22, 40000, 1, "Increases your total damage by +{%. Also, reduces the cost of all atom upgrades by {% too."],
-    ["Sodium - Snail Kryptonite", 50000, 2, 50000, 5,
-     "When you fail a snail upgrade, it's LV gets reset to the nearest 5 (Up to Lv {) instead of back to 0, like failing at Lv 7 will reset to Lv 5."],
-    ['Magnesium - Trap Compounder', 30000, 1.6, 30000, 1,
-     'Every day, critters gained from traps increases by +{%. This bonus is capped at 60 days, and resets back to +0% when a new trap is placed.'],
-    ['Aluminium - Stamp Supercharger', 200000, 1.3, 200000, 2, 'Stamp Doublers give an extra +{% MORE bonus than the normal +100% they give!']
+#`AtomInfo = function ()` in source. Last updated in v2.46 Nov 29
+AtomInfo = ["Hydrogen_-_Stamp_Decreaser 1 1.35 2 1 Every_day_you_log_in,_the_resource_cost_to_upgrade_a_stamp's_max_lv_decreases_by_{%_up_to_a_max_of_90%._This_reduction_resets_back_to_0%_when_upgrading_any_stamp_max_lv.".split(" "), "Helium_-_Talent_Power_Stacker 0 10 10 1 All_talents_that_give_more_bonus_per_'Power_of_10_resources_you_own'_will_count_+{_more_powers_of_10_than_you_actually_own_when_giving_the_bonus.".split(" "), "Lithium_-_Bubble_Insta_Expander 10 1.25 25 1 No_Bubble_Left_Behind_bonus_now_has_a_15%_chance_to_level_up_the_lowest_bubble_out_of_ALL_bubbles,_not_just_the_first_15_of_each_colour._Also,_+{%_chance_to_give_+1_additional_Lv.".split(" "), "Beryllium_-_Post_Office_Penner 20 1.26 75 7 Every_day,_1_silver_pen_from_your_Post_Office_will_instantly_convert_into_1_PO_Box_for_all_characters._This_conversion_happens_{_times_per_day.".split(" "), "Boron_-_Particle_Upgrader 70 1.37 175 2 When_a_bubble_has_a_cost_of_100M_or_more_to_upgrade,_you_can_instead_spend_particles._However,_you_can_only_do_this_{_times_a_day,_after_which_the_cost_will_return_to_resources.".split(" "), "Carbon_-_Wizard_Maximizer 250 1.27 500 2 All_wizard_towers_in_construction_get_+{_max_levels._Also,_all_wizards_get_a_+2%_damage_bonus_for_each_wizard_tower_level_above_50_in_construction._Total_bonus:_}%_wizard_dmg.".split(" "), "Nitrogen_-_Construction_Trimmer 500 1.25 1000 15 Gold_trimmed_construction_slots_give_+{%_more_build_rate_than_before._Also,_you_now_have_1_additional_trimmed_slot.".split(" "), "Oxygen_-_Library_Booker 1000 1.24 3250 2 Increases_the_Checkout_Refresh_Speed_of_the_Talent_Library_by_+{%._Also,_the_Minimum_Talent_LV_is_increased_by_+<,_and_the_Maximum_Talent_LV_is_increased_by_+10.".split(" "), "Fluoride_-_Void_Plate_Chef 2500 1.23 2500 1 Multiplies_your_cooking_speed_by_+{%_for_every_meal_at_Lv_30+._In_other_words,_every_plate_with_a_studded_black_void_plate._Total_bonus:_>%_cooking_speed".split(" "), "Neon_-_Damage_N'_Cheapener 5000 1.22 5000 1 Increases_your_total_damage_by_+{%._Also,_reduces_the_cost_of_all_atom_upgrades_by_{%_too.".split(" "), "Sodium_-_Snail_Kryptonite 12000 2 12000 5 When_you_fail_a_snail_upgrade,_it's_LV_gets_reset_to_the_nearest_5_(Up_to_Lv_{)_instead_of_back_to_0,_like_failing_at_Lv_7_will_reset_to_Lv_5.".split(" "), "Magnesium_-_Trap_Compounder 30000 1.6 30000 1 Every_day,_critters_gained_from_traps_increases_by_+{%._This_bonus_is_capped_at_60_days,_and_resets_back_to_+0%_when_a_new_trap_is_placed.".split(" "), "Aluminium_-_Stamp_Supercharger 200000 1.45 200000 1 Stamp_Doublers_give_an_extra_+{%_MORE_bonus_than_the_normal_+100%_they_give!".split(" ")]
+atoms_list = [
+    [
+        name.replace('_', ' '),
+        parse_number(pos1),
+        parse_number(pos2),
+        parse_number(pos3),
+        parse_number(valueperlevel),
+        description.replace('_', ' ')
+    ]
+    for name, pos1, pos2, pos3, valueperlevel, description in AtomInfo
 ]
 collider_storage_limit_list = [15, 25, 100, 250, 1050]
-prayers_list: list[str] = [
-    "Big Brain Time (Forest Soul)", "Skilled Dimwit (Forest Soul)", "Unending Energy (Forest Soul)",
-    "Shiny Snitch (Forest Soul)", "Zerg Rushogen (Forest Soul)",
-    "Tachion of the Titans (Dune Soul)", "Balance of Precision (Dune Soul)", "Midas Minded (Dune Soul)", "Jawbreaker (Dune Soul)",
-    "The Royal Sampler (Rooted Soul)", "Antifun Spirit (Rooted Soul)", "Circular Criticals (Rooted Soul)", "Ruck Sack (Rooted Soul)",
-    "Fibers of Absence (Frigid Soul)", "Vacuous Tissue (Frigid Soul)", "Beefy For Real (Frigid Soul)",
-    "Balance of Pain (Squishy Soul)", "Balance of Proficiency (Squishy Soul)", "Glitterbug (Squishy Soul)",
-]
+
+#Names and the soul costs to level the prayers are in `PrayerInfo = function ()` in source. Last updated in v2.46 Nov 29
+#The numbers for the bonus and curse functions are elsewhere, so this remains handwritten for now. Pretty sure I stole formulas from Wiki
 prayers_dict = {
     0: {"Name": "Big Brain Time", "Material": "Forest Soul", "Display": "Big Brain Time (Forest Soul)", "MaxLevel": 50,
         "bonus_funcType": 'bigBase', 'bonus_x1': 27, 'bonus_x2': 3, 'bonus_stat': 'Class EXP', 'bonus_pre': '+', 'bonus_post': '%',
@@ -179,6 +173,7 @@ prayers_dict = {
          'bonus_post': '%',
          "curse_funcType": 'bigBase', 'curse_x1': 18, 'curse_x2': 2, 'curse_stat': 'less likely to spawn', 'curse_pre': 'Giant Mobs are ', 'curse_post': '%'},
 }
+prayers_list: list[str] = [details['Display']for details in prayers_dict.values()]
 conditional_prayers = {'Unending Energy': 50, 'Big Brain Time': 50, 'Antifun Spirit': 10, 'Fibers of Absence': 50, 'Beefy For Real': 40, 'Glitterbug': 25}
 ignorable_prayers = {'Tachion of the Titans': 1, 'Balance of Precision': 1, 'Circular Criticals': 1, 'Vacuous Tissue': 1}
 salt_lick_list: list[str] = [
@@ -188,19 +183,42 @@ salt_lick_list: list[str] = [
 
 totems_max_wave = 300
 totems_list = [
-    "Goblin Gorefest",
-    "Wakawaka War",
-    "Acorn Assault",
-    "Frosty Firefight",
-    "Clash of Cans",
-    "Citric Conflict",
-    "Breezy Battle"
+    'Goblin Gorefest',
+    'Wakawaka War',
+    'Acorn Assault',
+    'Frosty Firefight',
+    'Clash of Cans',
+    'Citric Conflict',
+    'Breezy Battle'
 ]
 
 # TODO: W7 has added more sources
-max_static_book_levels = 140
-max_scaling_book_levels = 30
-max_summoning_book_levels = 31
+max_static_book_levels = (
+    25  #Construction Building: Talent Level Library
+    + 5  #W3 Achievement: Checkout Takeout
+    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
+    + 10  #Atom Collider: Oxygen (level 1 gives all 10 levels)
+    # 165 total last updated in v2.46 Nov 29
+)
+max_scaling_book_levels = (
+    20  #Salt Lick
+    + 10  #World 3 Merit Shop
+    # 30 total last updated in v2.46 Nov 29
+)
+max_summoning_book_levels = round(
+    (10.5  #Summoning Battle: Cyan 14
+     + 3.5  #Summoning Battle: Teal 9
+     )
+    * ValueToMulti(50)  #Gem Shop: King of all Winners
+    * ValueToMulti(30)  #Pristine Charm: Crystal Comb
+    * ValueToMulti(
+        1       #Achievement: Spectre Stars
+        + 10    #World 6 Merit Shop
+        + 15    #Armor Set bonus: Godshard Set
+        + 125   #Sailing Artifact: Winz Lantern. 25 per tier * 5 tiers
+    )
+    #69 total last updated in v2.46 Nov 29
+)
 max_overall_book_levels = 100 + max_static_book_levels + max_scaling_book_levels + max_summoning_book_levels
 hardcap_symbols = (max_overall_book_levels // 20) * 20
 
@@ -874,19 +892,27 @@ unbookable_talents_list = [
     266, 267,  # Archer tab1 Featherweight and I See You
     446, 447,  # Mage tab1 Overclocked Energy and Farsight
 ]
-approx_max_talent_level_non_es = (
+approx_max_talent_level_star_talents = (
     max_overall_book_levels
-    + 30    # Grimoire
-    + 25    # Equinox
-    + 25    # Companion: Rift Slug
-    + 20    # Arctis
-    + 15    # Symbols of Beyond
-    + 14    # ES Family Bonus (Note: Not Family Guy!)
-    + 5     # Sneak Mastery III
-    + 5     #Kattlekruk Set
-    + 1     # Maroon Warship achievement
+    + 30  # Grimoire
+    + 60  # Equinox last updated in v2.46 Nov 29, including +10 from Gaming: Duper Bits: Equinox Unending
+    + 25  # Companion: Rift Slug
+    + 32  # Arctis last updated in v2.46 Nov 29
+    + 19  # Symbols of Beyond last updated in v2.46 Nov 29 with expected max level of 1 + (364//20) = 19
+    + 15  # ES Family Bonus (Note: Not Family Guy!)
+    + 5  # Sneak Mastery III
+    + 5  # Kattlekruk Set
+    + 1  # Maroon Warship achievement
 )
-approx_max_talent_level_es = approx_max_talent_level_non_es + 4  # Family Guy
+approx_max_talent_level_non_es_non_star = (
+    approx_max_talent_level_star_talents
+    + 50  # Super Talent Points 1/1. Last updated in v2.46 Nov 29
+    + 50  # Super Duper Talents 5/5. Last updated in v2.46 Nov 29
+    + 25  # Zenith Super Dupers 25/25. Last updated in v2.46 Nov 29
+)
+approx_max_talent_level_es = approx_max_talent_level_non_es_non_star + 6  # Family Guy, last updated in v2.46 Nov 29
+
+
 dn_skull_requirement_list = [0, 25000, 100000, 250000, 500000, 1000000, 5000000, 100000000, 1000000000]
 dn_miniboss_skull_requirement_list = [0, 100, 250, 1000, 5000, 25000, 100000, 1000000, 1000000000]
 dn_skull_value_list = [0, 1, 2, 3, 4, 5, 7, 10, 20]
@@ -1121,6 +1147,7 @@ printer_indexes_being_printed_by_character_index = [
 # This flattens the above list of lists. Nested list comprehension sucks to read
 printer_all_indexes_being_printed = [index for character_index in printer_indexes_being_printed_by_character_index for index in character_index]
 
+#`EquipmentSets = function ()` in source. Last updated in v2.46 Nov 29
 equipment_sets_dict = {
     'COPPER_SET': [
         ["EquipmentHats17", "EquipmentShirts11", "EquipmentPants2"],
@@ -1223,6 +1250,12 @@ equipment_sets_dict = {
         ["none"],
         ["none"],
         ["0", "0", "20", "Ribbons_and_Exalted|Stamps_give_}x_more_multi", "Ribbons_and_Exalted_Stamps|give_}x_more_multi"]
+    ],
+    'PREHISTORIC_SET': [
+        ["EquipmentHats123", "EquipmentShirts41", "EquipmentPants32", "EquipmentShoes41"],
+        "EquipmentTools16 EquipmentToolsHatchet13 FishingRod13 CatchingNet13 TrapBoxSet11 WorshipSkull12".split(" "),
+        ["EquipmentPunching12", "EquipmentSword10", "EquipmentBows15", "EquipmentWands14"],
+        ["6", "1", "100", "}x_EXP_Gain_in_all|World_7_Skills", "}x_EXP_Gain_in_all_World_7|Skills"]
     ],
     'SECRET_SET': [
         ["EquipmentHats61", "EquipmentPunching11", "EquipmentShirts31", "Trophy3", "EquipmentNametag4"],

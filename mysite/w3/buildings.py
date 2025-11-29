@@ -20,6 +20,8 @@ def getInfluencers():
     return results
 
 def generateShrineLevelingAlerts():
+    #TODO: Legend Talent: Shrine World Order Bill (Yellow 3) allows shrines to be leveled anywhere
+    #Check for that first and return if obtained
     shrine_data = session_data.account.shrines
     unlocked_shrines = [value['Image'] for key, value in session_data.account.construction_buildings.items() if value['Type'] == 'Shrine' and value['Level'] > 0]
     unlocked_shrines_data = {key: {'map_index': shrine['MapIndex'], 'leveled_by': [], 'image': shrine['Image']} for key, shrine in shrine_data.items() if shrine['Image'] in unlocked_shrines}
