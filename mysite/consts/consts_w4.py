@@ -108,7 +108,11 @@ lab_jewels_dict = {
         'Name': data[11].replace('_', ' '),
         'Description': data[3].replace('_', ' '),
         'BaseValue': parse_number(data[12])
-    } for index, data in enumerate(JewelDesc)}
+    }
+    for index, data in enumerate(JewelDesc)
+}
+
+# TODO: Carry on evaluating from here down
 max_nblb_bubbles = 10
 max_breeding_territories = 24  # as of w6 launch
 breeding_last_arena_bonus_unlock_wave = 200
