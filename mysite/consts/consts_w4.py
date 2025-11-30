@@ -118,7 +118,6 @@ lab_jewels_dict = {
     for index, data in enumerate(JewelDesc)
 }
 
-# TODO: Carry on evaluating from here down
 max_nblb_bubbles = 10  # Last updated in v2.46 Nov 29
 max_breeding_territories = 25  # Last updated in v2.46 Nov 29
 breeding_last_arena_bonus_unlock_wave = 200
