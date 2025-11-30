@@ -29,7 +29,15 @@ tome_challenges_count = len(tome_challenges)
 # Formula pulled from `if ("TomeLvReq" == e)` under `_customBlock_Summoning = function`. Last updated in v2.46 Nov 29
 def get_final_combat_level_required_for_tome() -> int:
     #return 40 * t + (5 * Math.max(0, t - 35) + (10 * Math.max(0, t - 60) + (10 * Math.max(0, t - 80) + 15 * Math.max(0, t - 100)))) + 350;
-    return 40 * tome_challenges_count + (5 * max(0, tome_challenges_count - 35)) + (10 * max(0, tome_challenges_count - 60)) + 350
+    result = (
+        40 * tome_challenges_count
+        + (5 * max(0, tome_challenges_count - 35))
+        + (10 * max(0, tome_challenges_count - 60))
+        + (10 * max(0, tome_challenges_count - 80))
+        + (15 * max(0, tome_challenges_count - 100))
+        + 350
+    )
+    return result
 
 
 max_cooking_tables = 10  # Last updated in v2.46 Nov 29
