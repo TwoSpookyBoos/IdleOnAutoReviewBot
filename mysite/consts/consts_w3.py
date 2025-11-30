@@ -1,8 +1,7 @@
 from consts.consts_autoreview import ValueToMulti
-from utils.logging import get_consts_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName
-
+from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
 max_printer_sample_rate = 90
