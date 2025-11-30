@@ -1,3 +1,4 @@
+from consts.consts_idleon import NinjaInfo
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName
@@ -36,13 +37,16 @@ def getReadableVialNames(inputNumber):
         return f"Unknown Vial {inputNumber}"
 
 
-critter_vials_list = [
-    getReadableVialNames(23),  #Crabbo
-    getReadableVialNames(31),  #Mousey
-    getReadableVialNames(37),  #Bunny
-    getReadableVialNames(40),  #Honker
-    getReadableVialNames(47),  #Blobfish
-    getReadableVialNames(74),  #Tuttle
+maxable_critter_vials_list = [
+    # getReadableVialNames(23),  #Crabbo
+    # getReadableVialNames(31),  #Mousey
+    # getReadableVialNames(37),  #Bunny
+    # getReadableVialNames(40),  #Honker
+    # getReadableVialNames(47),  #Blobfish
+    # getReadableVialNames(74),  #Tuttle
+    getReadableVialNames(index) for index, values in vials_dict.items()
+    if values['Material'].startswith('Critter')
+    and getItemDisplayName(values['Material']) not in vials_considered_unmaxable
 ]
 
 # `SigilDesc` in source. Last updated in v2.43 Nov 9
@@ -68,13 +72,14 @@ bubble_cauldron_color_list = ['Orange', 'Green', 'Purple', 'Yellow']
 alchemy_liquids_list = ['Water Droplets', 'Liquid Nitrogen', 'Trench Seawater', 'Toxic Mercury']
 alchemy_jobs_list = bubble_cauldron_color_list + alchemy_liquids_list + [k for k in sigils_dict.keys()]
 min_NBLB = 2
-max_NBLB = 1500
+# Last updated in v2.46 Nov 27
+max_NBLB = 10000
 nblb_max_index = 24
 nblb_skippable = [
     'Reely Smart', 'Bappity Boopity', 'Orange Bargain', 'Bite But Not Chew',  #Orange
     'Lil Big Damage', 'Anvilnomics', 'Cheap Shot', 'Green Bargain', 'Kill Per Kill',  #Green
     'Noodubble', 'Purple Bargain', 'Matrix Evolved',  #Purple
-    'Yellow Bargain', 'Petting The Rift',  #Yellow
+    'Stamp Tramp', 'Yellow Bargain', 'Petting The Rift',  #Yellow
 ]
 bubble_name_overrides = {
     0: {
@@ -194,7 +199,7 @@ arcade_bonuses = {
 }
 arcade_max_level = 100
 post_office_tabs = ["Bob's Boxes", "Charlie's Crates"]
-#po_box_dict last taken from code in 2.09: #PostOffUpgradeInfo = function ()
+#`PostOffUpgradeInfo = function ()` in source. Last updated in v2.46 Nov 27
 #Translate using the Post Office tab in AR spreadsheet
 po_box_dict = {
     0: {
@@ -344,43 +349,18 @@ po_box_dict = {
 }
 max_po_box_before_myriad = sum([v['Max Level'] for v in po_box_dict.values() if v['Name'] != 'Myriad Crate'])
 max_po_box_after_myriad = max_po_box_before_myriad + po_box_dict[20]['Max Level']
+NinjaInfo_ballot = NinjaInfo[38]
+#Ballot info is not broken into sublists. Indexes 0, 1, 2 all relate to a single bonus.
 ballot_dict = {
-    0:  {'BaseValue': 25, 'Description': "All your characters deal }x more damage to enemies", 'Image': "ballot-1"},
-    1:  {'BaseValue': 25, 'Description': "All your characters deal }x more damage to enemies", 'Image': "ballot-1"},
-    2:  {'BaseValue': 15, 'Description': "Increases STR AGI WIS and LUK for all characters by {%", 'Image': "ballot-2"},
-    3:  {'BaseValue': 30, 'Description': "Increases Defence and Accuracy by +{% for all characters", 'Image': "ballot-3"},
-    4:  {'BaseValue': 30, 'Description': "Logging in each day gives +{ more GP to your guild than you normally do", 'Image': "ballot-4"},
-    5:  {'BaseValue': 20, 'Description': "}x Kill per Kill, making monster kills worth more for portals and deathnote", 'Image': "ballot-5"},
-    6:  {'BaseValue': 15, 'Description': "{% AFK gain for both fighting and skills for all characters", 'Image': "ballot-6"},
-    7:  {'BaseValue': 42, 'Description': "Boosts all Mining EXP gain and Mining Efficiency by +{%", 'Image': "ballot-7"},
-    8:  {'BaseValue': 50, 'Description': "Boosts all Fishing EXP gain and Fishing Efficiency by +{%", 'Image': "ballot-8"},
-    9:  {'BaseValue': 38, 'Description': "Boosts all Chopping' EXP gain and Choppin' Efficiency by +{%", 'Image': "ballot-9"},
-    10: {'BaseValue': 46, 'Description': "Boosts all Catching EXP gain and Catching Efficiency by +{%", 'Image': "ballot-10"},
-    11: {'BaseValue': 20, 'Description': "Increases the amount of resources produced by the 3D printer by }x", 'Image': "ballot-11"},
-    12: {'BaseValue': 25, 'Description': "Boosts liquid generation rate for all Alchemy liquids by +{%", 'Image': "ballot-12"},
-    13: {'BaseValue': 63, 'Description': "Boosts all Cooking EXP gain and Cooking speed by +{%", 'Image': "ballot-13"},
-    14: {'BaseValue': 50, 'Description': "Boosts Dungeon Credit and Dungeon Flurbo gain by }x", 'Image': "ballot-14"},
-    15: {'BaseValue': 60, 'Description': "All your characters gain +{% more class EXP from monsters", 'Image': "ballot-15"},
-    16: {'BaseValue': 50, 'Description': "Speeds up Egg incubation and Breeding EXP gain by +{%", 'Image': "ballot-16"},
-    17: {'BaseValue': 80, 'Description': "Boosts Sigil EXP gain by }x, still requires Sigils active in Lab", 'Image': "ballot-17"},
-    18: {'BaseValue': 40, 'Description': "Boosts Construction Build Rate and Construction EXP gain by +{%", 'Image': "ballot-18"},
-    19: {'BaseValue': 53, 'Description': "Boosts Shrine EXP gain by a staggering }x", 'Image': "ballot-19"},
-    20: {'BaseValue': 31, 'Description': "Boosts Artifact Find Chance in Sailing by }x", 'Image': "ballot-20"},
-    21: {'BaseValue': 80, 'Description': "Boosts New Species chance when using DNA in gaming by }x", 'Image': "ballot-21"},
-    22: {'BaseValue': 75, 'Description': "Find +{% more gold Nuggets when digging with the shovel in gaming", 'Image': "ballot-22"},
-    23: {'BaseValue': 60, 'Description': "Boosts Divinity PTS gain by }x and Divinity EXP gain by +{%", 'Image': "ballot-23"},
-    24: {'BaseValue': 50, 'Description': "Boosts Sailing Captain EXP gain and Sailing Speed by }x", 'Image': "ballot-24"},
-    25: {'BaseValue': 65, 'Description': "Boosts Sneaking Stealth by }x and EXP gain by +{% for all your Ninja Twins", 'Image': "ballot-25"},
-    26: {'BaseValue': 30, 'Description': "Boosts bonuses from all Golden food by +{%", 'Image': "ballot-26"},
-    27: {'BaseValue': 38, 'Description': "Increases Drop Rate for all your characters by +{%", 'Image': "ballot-27"},
-    28: {'BaseValue': 40, 'Description': "Boosts Summoning EXP gain by +40% and all Essence gained by }x", 'Image': "ballot-28"},
-    29: {'BaseValue': 40, 'Description': "Boosts Crop Value, and Farming EXP gain, AND Next Crop Chance by +{%", 'Image': "ballot-29"},
-    30: {'BaseValue': 45, 'Description': "Increases Trapping EXP gain and Worship EXP gain by +{%", 'Image': "ballot-30"},
-    31: {'BaseValue': 90, 'Description': "Increases Lab EXP gain by +{%", 'Image': "ballot-31"},
-    32: {'BaseValue': 40, 'Description': "Boosts Equinox Bar Fill rate by }x", 'Image': "ballot-32"},
-    33: {'BaseValue': 50, 'Description': "Boosts Refinery Cycle Speed by +{%", 'Image': "ballot-33"},
-    34: {'BaseValue': 52, 'Description': "Increases cash earned from monsters by +{%", 'Image': "ballot-34"},
+    i//3: {
+        'Description': NinjaInfo_ballot[i].replace('_', ' '),
+        'BaseValue': parse_number(NinjaInfo_ballot[i+1]),
+        'Image': f'ballot-{i//3}'
+    }
+    for i in range(0, len(NinjaInfo_ballot), 3)
 }
+
+
 fishing_toolkit_dict = {
     'Lures': [f"Weight{i}" for i in range(1, 15)],
     'Lines': [f"Line{i}" for i in range(1, 15)]

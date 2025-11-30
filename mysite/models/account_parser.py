@@ -2165,35 +2165,28 @@ def _parse_w4_cooking_meals(account):
     emptyMeal = [0] * max_meal_count
     # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
     emptyMeals = [emptyMeal for meal in range(4)]
-    raw_meals_list = safe_loads(account.raw_data.get("Meals", emptyMeals))
-    # Make the sublists max_meal_count long
-    for sublistIndex, value in enumerate(raw_meals_list):
-        if isinstance(raw_meals_list[sublistIndex], list):
-            while len(raw_meals_list[sublistIndex]) < max_meal_count:
-                raw_meals_list[sublistIndex].append(0)
-            while len(raw_meals_list[sublistIndex]) > max_meal_count:
-                raw_meals_list[sublistIndex].pop()
+    raw_meals_list = safe_loads(account.raw_data.get('Meals', emptyMeals))
+    if len(raw_meals_list[0]) < max_meal_count:
+        logger.warning(f"Data's meal levels list shorter than expected: {len(raw_meals_list[0])} < {max_meal_count}")
+        while len(raw_meals_list[0]) < max_meal_count:
+            raw_meals_list[0].append(0)
 
     account.meals = {}
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
-    for index, mealLevel in enumerate(raw_meals_list[0]):
-        # Create meal dict
-        account.meals[cooking_meal_dict[index]['Name']] = {
-            'Level': int(mealLevel),
-            'Value': int(mealLevel) * cooking_meal_dict[index]['BaseValue'],  # Mealmulti applied in calculate section
-            'BaseValue': cooking_meal_dict[index]['BaseValue'],
-            'Effect': cooking_meal_dict[index]['Effect'],
+    for index, details in cooking_meal_dict.items():
+        account.meals[details['Name']] = {
+            'Level': parse_number(raw_meals_list[0][index], 0),
+            'Value': parse_number(raw_meals_list[0][index], 0) * details['BaseValue'],  # Mealmulti applied in calculate section
+            'BaseValue': details['BaseValue'],
+            'Effect': details['Effect'],
             'Index': index,
-            'Image': f"{cooking_meal_dict[index]['Name']}-meal"
+            'Image': details['Image']
         }
 
-        if int(mealLevel) > 0:
-            account.cooking['MealsUnlocked'] += 1
-            account.cooking['PlayerTotalMealLevels'] += int(mealLevel)
-            if int(mealLevel) < 11:
-                account.cooking['MealsUnder11'] += 1
-            if int(mealLevel) < 30:
-                account.cooking['MealsUnder30'] += 1
+    account.cooking['PlayerTotalMealLevels'] = sum([details['Level'] for details in account.meals.values()])
+    account.cooking['MealsUnlocked'] = sum([details['Level'] > 0 for details in account.meals.values()])
+    account.cooking['MealsUnder11'] = sum([details['Level'] < 11 for details in account.meals.values()])
+    account.cooking['MealsUnder30'] = sum([details['Level'] < 30 for details in account.meals.values()])
 
 def _parse_w4_cooking_ribbons(account):
     raw_ribbons = safe_loads(account.raw_data.get('Ribbon', []))

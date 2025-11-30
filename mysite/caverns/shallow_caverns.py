@@ -8,6 +8,7 @@ from flask import g as session_data
 # from consts.consts import shallow_caverns_progressionTiers, break_you_best, ValueToMulti
 from consts.consts_caverns import schematics_unlocking_buckets, schematics_unlocking_amplifiers, sediment_names, max_sediments, monument_layer_rewards, \
     getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired, getDenOpalRequirement, getMonumentOpalChance
+from utils.safer_data_handling import safer_math_pow
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -432,7 +433,7 @@ def getBellAdviceGroup(schematics):
     ]
     cavern_advice[improvement_stats].insert(0, Advice(
         label=f"Total Improvements: {total_improvements} ({total_stacks} stacks)"
-              f"<br>Total Bonus: {pow(1.1, total_stacks):.1f}x"
+              f"<br>Total Bonus: {safer_math_pow(1.1, total_stacks):.1f}x"
               f"<br>Next stack progress",
         picture_class='engineer-schematic-45',
         progression=total_improvements % stack_size,

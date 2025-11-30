@@ -1,4 +1,4 @@
-from consts.consts_autoreview import break_you_best
+from consts.consts_autoreview import break_you_best, EmojiType
 from consts.progression_tiers import combatLevels_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
 from utils.logging import get_logger
@@ -89,7 +89,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
 
     else:
         advice_PersonalLevels = f"Your family class level is {total_combat_level}. The last reward was back at 5k. Still... Pretty neat :)"
-        goal = '∞'
+        goal = EmojiType.INFINITY.value
 
     lvlup_advices = [
         Advice(

@@ -29,6 +29,7 @@ $towers: (
 
 $utilities: (
     three-d-printer: map-get($world-contents, three-d-printer),
+    x3d-printer: map-get($world-contents, three-d-printer),
     talent-book-library: map-get($world-contents, talent-book-library),
     death-note: map-get($world-contents, death-note),
     salt-lick: map-get($world-contents, salt-lick),

@@ -5,7 +5,7 @@ from consts.consts_general import star_tiers, max_card_stars
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
-from consts.consts_w3 import approx_max_talent_level_non_es
+from consts.consts_w3 import approx_max_talent_level_star_talents
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, Card
 from models.models_util import get_guild_bonus_advice
@@ -70,7 +70,7 @@ def getCardDropChanceAdviceGroup(groups):
 
     # JMAN ONLY
     cards_galore_talent = all_talentsDict[28]
-    cards_galore_talent_bonus = lavaFunc(cards_galore_talent['funcX'], approx_max_talent_level_non_es, cards_galore_talent['x1'], cards_galore_talent['x2'])
+    cards_galore_talent_bonus = lavaFunc(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
 
     guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
     guild_bonus_bonus = guild_bonus['Value']
