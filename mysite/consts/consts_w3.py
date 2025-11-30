@@ -898,7 +898,7 @@ approx_max_talent_level_star_talents = (
     + 60  # Equinox last updated in v2.46 Nov 29, including +10 from Gaming: Duper Bits: Equinox Unending
     + 25  # Companion: Rift Slug
     + 32  # Arctis last updated in v2.46 Nov 29
-    + 19  # Symbols of Beyond last updated in v2.46 Nov 29 with expected max level of 1 + (364//20) = 19
+    + (1 + hardcap_symbols // 20)  # Symbols of Beyond last updated in v2.46 Nov 29 
     + 15  # ES Family Bonus (Note: Not Family Guy!)
     + 5  # Sneak Mastery III
     + 5  # Kattlekruk Set
