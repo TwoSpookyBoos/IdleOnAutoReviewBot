@@ -133,112 +133,19 @@ territory_names = [
     "Spirit Fields", "Bamboo Forest", "Lullaby Airways", "Dharma Mesa",
     'The Doodling School',
 ]
-breeding_upgrades_dict: dict[int, dict[str, str | int]] = {
-    0: {
-        'Name': 'No Upgrade Selected',
-        'BonusText': "TAP AN UPGRADE ABOVE! Also, as a reward for reading this, I'll let you know that upgrading this 'nothing' bonus actually boosts breeding exp gain!!",
-        'BonusValue': 2,
-        'MaxLevel': 100,
-        'MaxValue': 200,
-        'UnlockLevel': 1,
-    },
-    1: {
-        'Name': 'Genetic Splicing',
-        'BonusText': "Unlocks the 1st Breeding Multiplier, Gene Boosting. Genes are found while fighting with the DNA Splicer tool purchased at the Town Shop.",
-        'BonusValue': 4,
-        'MaxLevel': 20,
-        'MaxValue': 80,
-        'UnlockLevel': 1,
-    },
-    2: {
-        'Name': 'Egg Capacity',
-        'BonusText': "Increases the maximum number of eggs your incubator can hold. The more eggs you currently hold, the rarer it is to get a new one.",
-        'BonusValue': 1,
-        'MaxLevel': 5,
-        'MaxValue': 5,
-        'UnlockLevel': 5,
-    },
-    3: {
-        'Name': 'Breedability Pulse',
-        'BonusText': "Unlocks the 2nd Breeding Multiplier, Breedability. Pets placed in the Fenceyard with the Breedable Gene increase this multi over time.",
-        'BonusValue': 25,
-        'MaxLevel': 10,
-        'MaxValue': 250,
-        'UnlockLevel': 10,
-    },
-    4: {
-        'Name': 'Fence Extension',
-        'BonusText': "Increases the number of slots in your Fence Yard, allowing for more pets to roam around, free range style!",
-        'BonusValue': 1,
-        'MaxLevel': 10,
-        'MaxValue': 10,
-        'UnlockLevel': 15,
-    },
-    5: {
-        'Name': 'Rarity of the Egg',
-        'BonusText': "Unlocks the 3rd Breeding Multi, Rarity. When the egg incubator is full, theres a chance to increase the rarity of another egg!",
-        'BonusValue': 0,
-        'MaxLevel': 10,
-        'MaxValue': 3.5,
-        'UnlockLevel': 20,
-    },
-    6: {
-        'Name': 'Blooming Axe',
-        'BonusText': "Forage pets contribute a fraction of their forage speed toward Fight Power. Now you no longer need at least 1 fighting pet!",
-        'BonusValue': 6,
-        'MaxLevel': 10,
-        'MaxValue': 60,
-        'UnlockLevel': 25,
-    },
-    7: {
-        'Name': 'Pastpresent Brood',
-        'BonusText': "Unlocks the 4th Breeding Multiplier, Pastpres. This increases based on the number of different pets discovered from the previous world.",
-        'BonusValue': 0.15,
-        'MaxLevel': 5,
-        'MaxValue': 1.75,
-        'UnlockLevel': 30,
-    },
-    8: {
-        'Name': 'Paint Bucket',
-        'BonusText': "Unlocks Shiny Pet Breeding. Shiny Pets come in 1 of 5 colours, and boost their Special Passive bonus when in the Fenceyard.",
-        'BonusValue': 2,
-        'MaxLevel': 100,
-        'MaxValue': 201,
-        'UnlockLevel': 40,
-    },
-    9: {
-        'Name': 'Overwhelmed Golden Egg',
-        'BonusText': "Your New Pet Chance is multiplied for every 100 kitchen upgrade levels across all kitchens! So 200 Lvs would apply it twice!!",
-        'BonusValue': 0.02,
-        'MaxLevel': 20,
-        'MaxValue': 1.4,
-        'UnlockLevel': 50,
-    },
-    10: {
-        'Name': 'Failsafe Restitution Cloud',
-        'BonusText': "Unlocks the 5th Breeding Multiplier, Failure. This increases every time you fail to get a pet, up to a max, and depletes when you succeed.",
-        'BonusValue': 10,
-        'MaxLevel': 25,
-        'MaxValue': 250,
-        'UnlockLevel': 60,
-    },
-    11: {
-        'Name': 'Shattershell Iteration',
-        'BonusText': "Every time you use up your last incubator egg, there is a chance to produce 2 more eggs immediately.",
-        'BonusValue': 6,
-        'MaxLevel': 10,
-        'MaxValue': 60,
-        'UnlockLevel': 70,
-    },
-    12: {
-        'Name': 'Grand Martial of Shinytown',
-        'BonusText': "Boosts the rate at which shiny pets level up from being in the fenceyard. This will help you rack up those 100+ Day requirements!",
-        'BonusValue': 5,
-        'MaxLevel': 300,
-        'MaxValue': 1500,
-        'UnlockLevel': 80,
-    },
-
+#`PetUpgradeINFO = function ()` in source. Last updated in v2.46 Nov 30
+PetUpgradeINFO = ["No_Upgrade_Selected Filler PetDeadCell Blank 6 1.08 0 1.15 100 TAP_AN_UPGRADE_ABOVE!_Also,_as_a_reward_for_reading_this,_I'll_let_you_know_that_upgrading_this_'nothing'_bonus_actually_boosts_breeding_exp_gain_1%_per_LV_lmao _ 0".split(" "), "Gene_Splicing_}_Helps_unlock_next_pet_type Filler PetDeadCell 0 6 1.1 3 2.5 20 Unlocks_Gene_Boosting,_which_increases_chance_to_breed_new_pets._Use_the_DNA_Splicer_tool_from_the_Town_Shop_to_get_Genes. -}%_Gene_Boost_Cost 4".split(" "), "Egg_Capacity Filler PetDeadCell 3 20 1.5 10 100 5 Increases_the_maximum_number_of_eggs_your_incubator_can_hold._The_more_eggs_you_currently_hold,_the_rarer_it_is_to_get_a_new_one. +}_Egg_Max 1".split(" "), "Breedability_Pets Filler PetDeadCell 6 5 1.25 10 7 10 Unlocks_Breedability,_which_increases_chance_to_breed_new_pets._Put_a_'pink'_pets_in_the_Fenceyard_to_increase_their_multiplier. +}%_Breedability_Spd 25".split(" "), "Fence_Extension Filler PetDeadCell 11 30 1.16 10 4 10 Increases_the_number_of_slots_in_your_Fence_Yard,_allowing_for_more_pets_to_roam_around,_free_range_style! +}_Fenceyard_Slots 1".split(" "), "Rarity_of_the_Egg Filler PetDeadCell 14 35 1.25 10 9 10 Unlocks_the_3rd_Multi,_Egg_Rarity._When_the_egg_incubator_is_full,_theres_a_chance_to_increase_the_rarity_of_another_egg! }x_Chance 1".split(" "), "Blooming_Axe Filler PetDeadCell 20 40 1.25 10 10 10 All_pets_do_more_damage_in_battle! +}%_Pet_Damage 6".split(" "), "Pastpresent_Brood Filler PetDeadCell 25 45 1.6 10 130 5 Unlocks_the_4th_Breeding_Multi,_Pastpres._This_increases_based_on_the_number_of_different_pets_discovered_from_the_previous_world. }x_Bigger_Multi 0.15".split(" "), "Paint_Bucket Filler PetDeadCell 30 50 1.05 10 1.35 100 Unlocks_Shiny_Pet_Breeding._Shiny_Pets_come_in_1_of_5_colours,_and_boost_their_Special_Passive_bonus_when_in_the_Fenceyard. +}%_Base_Shiny_Chance 2".split(" "), "Overwhelmed_Golden_Egg Filler PetDeadCell 35 55 1.6 10 5 20 Your_New_Pet_Chance_is_multiplied_for_every_100_kitchen_upgrade_levels_across_all_kitchens!_So_200_Lvs_would_apply_it_twice!! }x_Multiplier_every_100_Upg 0.02".split(" "), "Failsafe_Restitution_Cloud Filler PetDeadCell 40 60 1.08 10 3.88 25 Unlocks_the_5th_Breeding_Multiplier,_Failure._This_increases_every_time_you_fail_to_get_a_new/shiny_pet,_up_to_a_max,_and_depletes_when_you_succeed. }_Maximum_Times 10".split(" "), "Shattershell_Iteration Filler PetDeadCell 45 65 1.25 10 34 10 Every_time_you_use_up_your_last_incubator_egg,_there_is_a_chance_to_produce_2_more_eggs_immediately. }%_Chance 8".split(" "), "Grand_Martial_of_Shinytown Filler PetDeadCell 62 3 1.01 1000 2.85 300 Boosts_the_rate_at_which_shiny_pets_level_up_from_being_in_the_fenceyard._This_will_help_you_rack_up_those_100+_Day_requirements! +}%_Shiny_Pet_LV_Up_Rate 5".split(" ")]
+#Need to find where these levels are established in source.
+breeding_upgrade_unlock_levels = [1, 1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80]
+breeding_upgrades_dict = {
+    index: {
+        'Name': name.replace('_', ' '),
+        'BonusText': bonustext.replace('_', ' '),
+        'BonusValue': parse_number(bonusvalue),
+        'MaxLevel': parse_number(maxlevel),
+        'UnlockLevel': breeding_upgrade_unlock_levels[index]
+    }
+    for index, (name, _, _, _, _, _, _, _, maxlevel, bonustext, _, bonusvalue) in enumerate(PetUpgradeINFO)
 }
 breeding_genetics_list: list[str] = [
     "Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer",
