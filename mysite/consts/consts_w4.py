@@ -40,7 +40,7 @@ def get_final_combat_level_required_for_tome() -> int:
 
 max_cooking_tables = 10  # Last updated in v2.46 Nov 29
 max_meal_level = 200  # Last updated in v2.46 Nov 29
-max_cooking_ribbon = 23
+max_cooking_ribbon = 23  # Last updated in v2.46 Nov 29
 cooking_close_enough = 300  # Last updated in v2.46 Nov 29
 #`MealINFO = function ()` in source. Last updated in v2.46 Nov 29
 MealINFO = ["Turkey_a_la_Thank 10 2 +{%_Total_Damage Do_I_smell_gratitude?_Oh,_no,_that's_colonialization... TotDmg".split(" "), "Egg 15 5 +{%_Meal_Cooking_Speed It's_just_an_egg. Mcook".split(" "), "Salad 25 3 +{%_Cash_from_Monsters Yea_uhm,_could_I_get_a_burger,_but_hold_the_meat_and_buns? Cash".split(" "), "Pie 40 5 +{%_New_Recipe_Cooking_Speed Cartoon_characters_with_a_fear_of_levitation_HATE_the_smell_of_this! Rcook".split(" "), "Frenk_Fries 60 5 +{%_New_Pet_Breeding_Odds You're_breeding_pets_in_outer_space,_don't_be_shocked_that_there's_no_France! Npet".split(" "), "Spaghetti 90 4 +{%_Breeding_EXP Your_mom_made_this._It's_her_spaghetti. BrExp".split(" "), "Corn 125 2 +{%_Skill_Efficiency To_think_the_government_is_subsidizing_this..._its_bonus_is_terrible!!! Seff".split(" "), "Garlic_Bread 175 4 +{%_VIP_Library_Membership The_letter_H_ain't_lookin'_so_good_after_eating_a_few_of_these... VIP".split(" "), "Garlicless_Bread 250 2 +{%_Lab_EXP Many_revolutions_in_the_world_originate_from_an_increase_in_the_price_of_bread Lexp".split(" "), "Pizza 350 9 +{%_New_Pet_Breeding_Odds Mama_mia_mahhh_piiiiiiiizzza!!!_Wait_I_already_did_that_joke,_replace_this_one Npet".split(" "), "Apple 500 5 +{_Base_DEF Aw_jeez_Richard,_I_sure_am_hungry_for_apples! Def".split(" "), "Pancakes 700 2 +{Px_Line_Width_in_Lab_Mainframe Ohhh,_they're_called_'pan'cakes_because_they're_like_cakes_made_in_a_pan_haha PxLine".split(" "), "Corndog 1000 12 +{%_Meal_Cooking_Speed Ohhh,_they're_called_'corn'dogs_because..._wait,_why_are_they_called_corndogs? Mcook".split(" "), "Cabbage 1400 5 +{%_Cooking_Spd_per_10_Kitchen_LVs More_speed_every_10_total_kitchen_upgrade_LVs!_That's_one_IMPORTANT_vegetable! KitchenEff".split(" "), "Potato_Pea_Pastry 2000 1 +{%_Lower_Egg_Incubator_Time Yuhhhh_it's_that_Triple_P_threat!_Look_out_for_them_P's_bro! TimeEgg".split(" "), "Dango 3000 2 +{%_Lower_Kitchen_Upgrade_Costs Look,_I'm_not_sure_what_these_are_either,_just_go_with_it. KitchC".split(" "), "Sourish_Fish 4000 4 +{%_VIP_Library_Membership Shhh_stop_saying_they're_sweet,_you're_gonna_get_me_in_trouble! VIP".split(" "), "Octoplop 5000 2 +{%_Total_Damage They_really_did_just_plop_an_octopus_on_a_plate_and_call_it_a_day. TotDmg".split(" "), "Croissant 8000 1 +{%_Pet_Fighting_Damage Carl_loves_these! PetDmg".split(" "), "Canopy 12500 10 +{%_New_Recipe_Cooking_Speed ...oh,_you_said_'Can_of_Pea's._You_know,_that_does_make_a_lot_more_sense. Rcook".split(" "), "Cannoli 20000 1 +{%_Points_earned_in_Tower_Defence Ain't_got_no_joke_for_this_one,_it's_existence_is_enough_of_a_joke. TDpts".split(" "), "Cheese 35000 5 +{%_Cooking_EXP Sourced_organically,_straight_from_the_moon! CookExp".split(" "), "Sawdust 50000 5 +{%_Lab_EXP 'Id_rather_starve_than_eat_that'_-_Angie,_2021 Lexp".split(" "), "Eggplant 75000 5 +{%_Pet_Breedability_Speed Idk_what_you_Zoomers_are_up_to_with_those_eggplant_emojis,_but_I_don't_like_it... Breed".split(" "), "Cheesy_Bread 110000 1 +{%_Total_Accuracy Another_bread_meal?_Wow_so_unoriginal,_I'm_glad_I_already_left_a_1_star_rating. TotAcc".split(" "), "Wild_Boar 200000 2 +{Px_Line_Width_in_Lab_Mainframe It's_not_really_wild_anymore_is_it,_it_looks_kinda_dead_and_roasted. PxLine".split(" "), "Donut 300000 15 +{%_New_Pet_Breeding_Odds Mmmmm..._doooooooonut... Npet".split(" "), "Riceball 500000 3 +{%_Skill_Efficiency Dude_it's_just_a_ball_of_rice,_like_what_do_you_want_me_to_say_about_it? Seff".split(" "), "Cauliflower 750000 1 +{%_Basic_Atk_Speed The_white_part_is_called_Curd!_Hmm,_time_to_recategorize_this_as_an_educational_game! AtkSpd".split(" "), "Durian_Fruit 1000000 6 +{%_Lower_Kitchen_Upgrade_costs This_must_have_been_in_the_room_when_Kurt_said_it_smelled_like_'teen_spirit'... KitchC".split(" "), "Orange 1500000 3 +{%_VIP_Library_Membership The_true_arch-nemesis_of_rappers_and_poets_alike. VIP".split(" "), "Bunt_Cake 3000000 7 +{%_Cash_from_Monsters Bunt_cake_more_like_Punt_cake_because_I'm_kicking_this_trash_straight_to_the_garbage. Cash".split(" "), "Chocolate_Truffle 5000000 25 +{%_New_Pet_Breeding_Odds I_mean_it's_got_a_bite_taken_out_of_it,_pretty_gross. Npet".split(" "), "Leek 8000000 2 +{%_skilling_prowess Prowess_lowers_the_efficiency_needed_when_efficiency_bar_is_orange_in_AFK_info Sprow".split(" "), "Fortune_Cookie 12000000 4 +{%_Faster_Library_checkout_Speed It_reads:_'Salvation_lies_not_within_enjoying_video_games,_but_from_gitting_gud_at_them' Lib".split(" "), "Pretzel 20000000 7 +{%_Lab_EXP I_love_pretzels,_people_really_be_sleepin'_on_the_versatility_they_bring_to_the_table! Lexp".split(" "), "Sea_Urchin 30000000 1 +{%_Critters_from_traps At_least_one_person_reading_this_has_eating_one_of_these._Oh,_it's_you?_Good_for_you. Critter".split(" "), "Mashed_Potato 40000000 6 +{%_Cooking_EXP This_nutritious_meal_reminds_me_of_the_potato_monster_from_that_IdleOn_video_game! CookExp".split(" "), "Mutton 90000000 1 +{%_Crit_Chance Yeap_I_tell_you_hwat_Bobby,_this_is_a_real_man's_meal_right_here! Crit".split(" "), "Wedding_Cake 135000000 2 +{%_Pet_Fighting_Damage Imagine_getting_married_lol_so_cringe_haha_am_I_right??!?!_High-five,_fellow_kids! PetDmg".split(" "), "Eel 200000000 1 +{%_Line_Width_in_Lab_Mainframe The_younger_sibling_of_the_Loch_Ness_Monster._He's_real,_but_no_one_really_cares. LinePct".split(" "), "Whipped_Cocoa 300000000 4 +{%_Skill_Efficiency Why_is_this_being_served_on_a_plate?_Was_the_cup_not_good_enough_for_you?? Seff".split(" "), "Onion 500000000 3 +{%_Total_Damage No,_I'm_not_crying,_this_onion_is_just_stimulating_the_lachrymal_glands_in_my_eyes. TotDmg".split(" "), "Soda 700000000 20 +{%_Meal_Cooking_Speed Yea_those_red_marks_are_grill_marks,_our_chef_doesn't_know_what_he's_doing. Mcook".split(" "), "Sushi_Roll 900000000 7 +{%_VIP_Library_Membership For_something_called_a_'sushi_roll',_it_isn't_moving_around_very_much. VIP".split(" "), "Buncha_Banana 1250000000.0 4 +{_Max_LVs_for_TP_Pete_Star_Talent Straight_from_the_island_of_Karjama!_Or_something_like_that,_starts_with_a_K_at_least. TPpete".split(" "), "Pumpkin 1700000000.0 2 +{%_Liquid_Cap_for_liquids_1_and_2 According_to_the_author_of_the_Iliad,_its_value_should_peak_right_around_January... Liquid12".split(" "), "Cotton_Candy 4000000000.0 2 +{%_Divinity_EXP The_most_exquisite_of_fairground_cuisine! DivExp".split(" "), "Massive_Fig 7000000000.0 3 +{%_Total_Damage This_thing_has_gotta_weigh_at_least_30! TotDmg".split(" "), "Head_Chef_Geustloaf 10000000000.0 4 +{%_Bits_Gained_in_Gaming How_DARE_you_question_the_honorable_Chef_Geustloaf's_cooking_abilities! GamingBits".split(" "), "Kiwi_Fruit 14000000000.0 2 +{%_Liquid_Cap_for_liquids_3_and_4 Is_there_a_reason_these_are_so_hard_to_cook?_Aren't_you_just_like..._cutting_it_in_half? Liquid34".split(" "), "Popped_Corn 20000000000.0 2 +{%_Sailing_Speed Effectively_no_different_than_a_normal_bowl_of_popcorn,_but_it's_still_impressive! Sailing".split(" "), "Double_Cherry 32000000000.0 30 +{%_Meal_Cooking_Speed So_like..._why_did_the_yellow_circle_want_these_again?_This_bonus_is_pretty_bad. Mcook".split(" "), "Ratatouey 52000000000.0 8 +{%_Lower_Kitchen_Upgrade_costs Hey_cmon_man_how_should_I_know_how_to_spell_Ratatouille,_there's_no_France_remember? KitchC".split(" "), "Giant_Tomato 90000000000.0 5 +{%_Gaming_EXP It's_big,_it's_large,_it's_round,_it's_red,_and_it'll_fill_you_up_thats_for_sure! GamingExp".split(" "), "Wrath_Grapes 130000000000.0 4 +{%_Divinity_EXP I'd_be_angry_too_if_I_were_a_grape. DivExp".split(" "), "Sausy_Sausage 225000000000.0 6 +{%_Bits_Gained_in_Gaming Plump_innit!_Would_go_great_with_some_momey_milk! GamingBits".split(" "), "Seasoned_Marrow 350000000000.0 3 +{%_Farming_EXP You_ate_all_the_edible_stuff_around_the_bone?_Why_not_try_the_stuff_inside_the_bone! zFarmExp".split(" "), "Sticky_Bun 700000000000.0 5 +{%_All_Summoning_Essence_Gain This_frosting_better_be_made_of_superglue_or_I'm_suing_for_false_advertising. zSumEss".split(" "), "Frazzleberry 1000000000000.0 2 +{%_Sneaking_EXP Big._Blue._Beautiful._Boing._Boat._Broom._Balls._Backgammon._Bort. zSneakExp".split(" "), "Misterloin_Steak 1700000000000.0 6 +{%_Jade_gain_from_Sneaking Make_sure_to_paint_on_the_grill_marks_to_really_give_it_that_extra_taste! zJade".split(" "), "Large_Pohayoh 6000000000000.0 2 +{%_Summoning_EXP Aye_lad_if_thah_ain't_tha_larjes'_fookin'_poh'ay'oh_eyev_evah_seen_wih_me_own_eyes! zSummonExp".split(" "), "Bill_Jack_Pepper 35000000000000.0 5 +{%_Crop_Evolution_Chance It's_Him. zCropEvo".split(" "), "Burned_Marshmallow 90000000000000.0 40 +{%_Meal_Cooking_Speed IMPORTANT,_this_bonus_DOUBLES_at_Farming_Lv_50._Triples_at_Farming_Lv_100,_and_so_on! zMealFarm".split(" "), "Yumi_Peachring 800000000000000.0 2 +{%_All_Golden_Food_bonus Don't_disrespect_the_ring._All_hail_the_ring. zGoldFood".split(" "), "Plumpcakes 6000000000000000.0 6 +{%_Total_Damage Ohhh,_they're_called_'plump'cakes_because_they're_dummy_thicc_can_I_get_an_amen! TotDmg".split(" "), "Nyanborgir 50000000000000000.0 9 +{%_Crop_Evolution_Chance It's_the_greatest_meal_ever!_Bonus_DOUBLES_at_Summoning_Lv_50,_Triples_at_100,_etc zCropEvoSumm".split(" "), "Tempura_Shrimp 25000000000000000000000000000000000000000000.0 0.07 +{%_Spelunking_EXP Ah_yes,_the_Chicken_Wings_of_the_sea..._Shrimply_delicious. SplkExp".split(" "), "Woahtermelon 5000000000000000000000000000000000000000000000000.0 0.03 +{%_cheaper_Spelunking_Upgrades IMPORTANT,_this_bonus_DOUBLES_once_your_first_character_reaches_Lv_50_Spelunking! SplkUpg".split(" "), "Cookies 888880000000000000000000000000000000000000000000000000.0 0.30 +{%_Total_Spelunking_POW They're_pipin'_hot,_fresh_outta_the_oven..._wait,_what_oven? SplkPOW".split(" "), "Singing_Seed 100000000000000000000000000000000000000000000000000000000000.0 0.20 +{%_Amber_gain_from_Spelunking You're_asking_me_will_my_love_grow?_Pistachioooooh_ohhh,_Pishaaaaaaachio!!! SplkAmb".split(" ")]
@@ -118,9 +118,8 @@ lab_jewels_dict = {
     for index, data in enumerate(JewelDesc)
 }
 
-# TODO: Carry on evaluating from here down
-max_nblb_bubbles = 10
-max_breeding_territories = 24  # as of w6 launch
+max_nblb_bubbles = 10  # Last updated in v2.46 Nov 29
+max_breeding_territories = 25  # Last updated in v2.46 Nov 29
 breeding_last_arena_bonus_unlock_wave = 200
 index_first_territory_assigned_pet = 28
 slot_unlock_waves_list = [2, 15, 50, 125]
@@ -130,114 +129,22 @@ territory_names = [
     "Frosty Peaks", "Tundra Outback", "Crystal Caverns", "Pristalle Lake",
     "Nebulon Mantle", "Starfield Skies", "Shores of Eternity",
     "Molten Bay", "Smokey Lake", "Wurm Catacombs",
-    "Spirit Fields", "Bamboo Forest", "Lullaby Airways", "Dharma Mesa"
+    "Spirit Fields", "Bamboo Forest", "Lullaby Airways", "Dharma Mesa",
+    'The Doodling School',
 ]
-breeding_upgrades_dict: dict[int, dict[str, str | int]] = {
-    0: {
-        'Name': 'No Upgrade Selected',
-        'BonusText': "TAP AN UPGRADE ABOVE! Also, as a reward for reading this, I'll let you know that upgrading this 'nothing' bonus actually boosts breeding exp gain!!",
-        'BonusValue': 2,
-        'MaxLevel': 100,
-        'MaxValue': 200,
-        'UnlockLevel': 1,
-    },
-    1: {
-        'Name': 'Genetic Splicing',
-        'BonusText': "Unlocks the 1st Breeding Multiplier, Gene Boosting. Genes are found while fighting with the DNA Splicer tool purchased at the Town Shop.",
-        'BonusValue': 4,
-        'MaxLevel': 20,
-        'MaxValue': 80,
-        'UnlockLevel': 1,
-    },
-    2: {
-        'Name': 'Egg Capacity',
-        'BonusText': "Increases the maximum number of eggs your incubator can hold. The more eggs you currently hold, the rarer it is to get a new one.",
-        'BonusValue': 1,
-        'MaxLevel': 5,
-        'MaxValue': 5,
-        'UnlockLevel': 5,
-    },
-    3: {
-        'Name': 'Breedability Pulse',
-        'BonusText': "Unlocks the 2nd Breeding Multiplier, Breedability. Pets placed in the Fenceyard with the Breedable Gene increase this multi over time.",
-        'BonusValue': 25,
-        'MaxLevel': 10,
-        'MaxValue': 250,
-        'UnlockLevel': 10,
-    },
-    4: {
-        'Name': 'Fence Extension',
-        'BonusText': "Increases the number of slots in your Fence Yard, allowing for more pets to roam around, free range style!",
-        'BonusValue': 1,
-        'MaxLevel': 10,
-        'MaxValue': 10,
-        'UnlockLevel': 15,
-    },
-    5: {
-        'Name': 'Rarity of the Egg',
-        'BonusText': "Unlocks the 3rd Breeding Multi, Rarity. When the egg incubator is full, theres a chance to increase the rarity of another egg!",
-        'BonusValue': 0,
-        'MaxLevel': 10,
-        'MaxValue': 3.5,
-        'UnlockLevel': 20,
-    },
-    6: {
-        'Name': 'Blooming Axe',
-        'BonusText': "Forage pets contribute a fraction of their forage speed toward Fight Power. Now you no longer need at least 1 fighting pet!",
-        'BonusValue': 6,
-        'MaxLevel': 10,
-        'MaxValue': 60,
-        'UnlockLevel': 25,
-    },
-    7: {
-        'Name': 'Pastpresent Brood',
-        'BonusText': "Unlocks the 4th Breeding Multiplier, Pastpres. This increases based on the number of different pets discovered from the previous world.",
-        'BonusValue': 0.15,
-        'MaxLevel': 5,
-        'MaxValue': 1.75,
-        'UnlockLevel': 30,
-    },
-    8: {
-        'Name': 'Paint Bucket',
-        'BonusText': "Unlocks Shiny Pet Breeding. Shiny Pets come in 1 of 5 colours, and boost their Special Passive bonus when in the Fenceyard.",
-        'BonusValue': 2,
-        'MaxLevel': 100,
-        'MaxValue': 201,
-        'UnlockLevel': 40,
-    },
-    9: {
-        'Name': 'Overwhelmed Golden Egg',
-        'BonusText': "Your New Pet Chance is multiplied for every 100 kitchen upgrade levels across all kitchens! So 200 Lvs would apply it twice!!",
-        'BonusValue': 0.02,
-        'MaxLevel': 20,
-        'MaxValue': 1.4,
-        'UnlockLevel': 50,
-    },
-    10: {
-        'Name': 'Failsafe Restitution Cloud',
-        'BonusText': "Unlocks the 5th Breeding Multiplier, Failure. This increases every time you fail to get a pet, up to a max, and depletes when you succeed.",
-        'BonusValue': 10,
-        'MaxLevel': 25,
-        'MaxValue': 250,
-        'UnlockLevel': 60,
-    },
-    11: {
-        'Name': 'Shattershell Iteration',
-        'BonusText': "Every time you use up your last incubator egg, there is a chance to produce 2 more eggs immediately.",
-        'BonusValue': 6,
-        'MaxLevel': 10,
-        'MaxValue': 60,
-        'UnlockLevel': 70,
-    },
-    12: {
-        'Name': 'Grand Martial of Shinytown',
-        'BonusText': "Boosts the rate at which shiny pets level up from being in the fenceyard. This will help you rack up those 100+ Day requirements!",
-        'BonusValue': 5,
-        'MaxLevel': 300,
-        'MaxValue': 1500,
-        'UnlockLevel': 80,
-    },
-
+#`PetUpgradeINFO = function ()` in source. Last updated in v2.46 Nov 30
+PetUpgradeINFO = ["No_Upgrade_Selected Filler PetDeadCell Blank 6 1.08 0 1.15 100 TAP_AN_UPGRADE_ABOVE!_Also,_as_a_reward_for_reading_this,_I'll_let_you_know_that_upgrading_this_'nothing'_bonus_actually_boosts_breeding_exp_gain_1%_per_LV_lmao _ 0".split(" "), "Gene_Splicing_}_Helps_unlock_next_pet_type Filler PetDeadCell 0 6 1.1 3 2.5 20 Unlocks_Gene_Boosting,_which_increases_chance_to_breed_new_pets._Use_the_DNA_Splicer_tool_from_the_Town_Shop_to_get_Genes. -}%_Gene_Boost_Cost 4".split(" "), "Egg_Capacity Filler PetDeadCell 3 20 1.5 10 100 5 Increases_the_maximum_number_of_eggs_your_incubator_can_hold._The_more_eggs_you_currently_hold,_the_rarer_it_is_to_get_a_new_one. +}_Egg_Max 1".split(" "), "Breedability_Pets Filler PetDeadCell 6 5 1.25 10 7 10 Unlocks_Breedability,_which_increases_chance_to_breed_new_pets._Put_a_'pink'_pets_in_the_Fenceyard_to_increase_their_multiplier. +}%_Breedability_Spd 25".split(" "), "Fence_Extension Filler PetDeadCell 11 30 1.16 10 4 10 Increases_the_number_of_slots_in_your_Fence_Yard,_allowing_for_more_pets_to_roam_around,_free_range_style! +}_Fenceyard_Slots 1".split(" "), "Rarity_of_the_Egg Filler PetDeadCell 14 35 1.25 10 9 10 Unlocks_the_3rd_Multi,_Egg_Rarity._When_the_egg_incubator_is_full,_theres_a_chance_to_increase_the_rarity_of_another_egg! }x_Chance 1".split(" "), "Blooming_Axe Filler PetDeadCell 20 40 1.25 10 10 10 All_pets_do_more_damage_in_battle! +}%_Pet_Damage 6".split(" "), "Pastpresent_Brood Filler PetDeadCell 25 45 1.6 10 130 5 Unlocks_the_4th_Breeding_Multi,_Pastpres._This_increases_based_on_the_number_of_different_pets_discovered_from_the_previous_world. }x_Bigger_Multi 0.15".split(" "), "Paint_Bucket Filler PetDeadCell 30 50 1.05 10 1.35 100 Unlocks_Shiny_Pet_Breeding._Shiny_Pets_come_in_1_of_5_colours,_and_boost_their_Special_Passive_bonus_when_in_the_Fenceyard. +}%_Base_Shiny_Chance 2".split(" "), "Overwhelmed_Golden_Egg Filler PetDeadCell 35 55 1.6 10 5 20 Your_New_Pet_Chance_is_multiplied_for_every_100_kitchen_upgrade_levels_across_all_kitchens!_So_200_Lvs_would_apply_it_twice!! }x_Multiplier_every_100_Upg 0.02".split(" "), "Failsafe_Restitution_Cloud Filler PetDeadCell 40 60 1.08 10 3.88 25 Unlocks_the_5th_Breeding_Multiplier,_Failure._This_increases_every_time_you_fail_to_get_a_new/shiny_pet,_up_to_a_max,_and_depletes_when_you_succeed. }_Maximum_Times 10".split(" "), "Shattershell_Iteration Filler PetDeadCell 45 65 1.25 10 34 10 Every_time_you_use_up_your_last_incubator_egg,_there_is_a_chance_to_produce_2_more_eggs_immediately. }%_Chance 8".split(" "), "Grand_Martial_of_Shinytown Filler PetDeadCell 62 3 1.01 1000 2.85 300 Boosts_the_rate_at_which_shiny_pets_level_up_from_being_in_the_fenceyard._This_will_help_you_rack_up_those_100+_Day_requirements! +}%_Shiny_Pet_LV_Up_Rate 5".split(" ")]
+#Need to find where these levels are established in source.
+breeding_upgrade_unlock_levels = [1, 1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80]
+breeding_upgrades_dict = {
+    index: {
+        'Name': name.replace('_', ' '),
+        'BonusText': bonustext.replace('_', ' '),
+        'BonusValue': parse_number(bonusvalue),
+        'MaxLevel': parse_number(maxlevel),
+        'UnlockLevel': breeding_upgrade_unlock_levels[index]
+    }
+    for index, (name, _, _, _, _, _, _, _, maxlevel, bonustext, _, bonusvalue) in enumerate(PetUpgradeINFO)
 }
 breeding_genetics_list: list[str] = [
     "Fighter", "Defender", "Forager", "Fleeter", "Breeder", "Special", "Mercenary", "Boomer",

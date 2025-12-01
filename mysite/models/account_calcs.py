@@ -1535,6 +1535,9 @@ def _calculate_caverns_measurements_multis(account):
             except IndexError:
                 logger.exception(f"JSON doesn't contain TaskZZ0[1][0] to retrieve Highest Damage from W2 Tasks. Defaulting to 1")
                 raw_damage = 1
+            except:
+                logger.exception(f"JSON has bad value for TaskZZ0[1][0] to retrieve Highest Damage from W2 Tasks. Defaulting to 1")
+                raw_damage = 1
             account.caverns['MeasurementMultis'][clean_entry_name] = {
                 'Raw': raw_damage,
                 'PrettyRaw': notateNumber('Basic', raw_damage, 3),
