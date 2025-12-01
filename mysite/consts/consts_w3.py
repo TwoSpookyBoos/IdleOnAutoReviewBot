@@ -236,10 +236,19 @@ skill_talentsDict = {
     # [0] = the starting level
     # [1] = the interval of levels after the starting level which provide a bonus
     # [2] = does this talent benefit from bonuses over the max book level, True of False]
-    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
+    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift, Slug, or Arctis
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
 
     # Wisdom Skills
+    'Summoning': {
+        'High': {
+            595: {'Name': 'Essential Essence', 'Tab': 'Tab 5'},
+            596: {'Name': 'Passion of the Summon', 'Tab': 'Tab 5'},
+        },
+        'Medium': {
+            597: {'Name': 'Absolute Stardom', 'Tab': 'Tab 5'},
+        },
+    },
     "Chopping": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Tab 2"},
@@ -250,6 +259,7 @@ skill_talentsDict = {
             532: {"Name": "Skill Wiz", "Tab": "Tab 4"},
         },
         "Medium": {
+            593: {'Name': 'Individuality', 'Tab': 'Tab 5'},
             533: {"Name": "Utmost Intellect", "Tab": "Tab 4"},
             456: {"Name": "Unt'WIS'ted Robes", "Tab": "Tab 2"},
             459: {"Name": "Individual Insight", "Tab": "Tab 2"},
@@ -271,6 +281,7 @@ skill_talentsDict = {
     },
     "Alchemy": {
         "Medium": {
+            598: {'Name': 'Tachyon Truth', 'Tab': 'Tab 5'},
             492: {"Name": "Bubble Breakthrough", "Tab": "Tab 3"},
         },
         "Low": {
@@ -626,6 +637,25 @@ combat_talentsDict = {
     },
 
     # Mages
+    'Arcane Cultist': {
+        'High': {
+            587: {'Name': 'Arcane Skulls', 'Tab': 'Tab 5'},
+            587: {'Name': 'Tesseract', 'Tab': 'Tab 5'},
+            587: {'Name': 'Backup Energy', 'Tab': 'Tab 5'},
+            587: {'Name': 'Arcane Crystals', 'Tab': 'Tab 5'},
+
+        },
+        'Medium': {
+            587: {'Name': 'Arcanist Form', 'Tab': 'Tab 5'},
+            587: {'Name': 'Ghastly Power', 'Tab': 'Tab 5'},
+            587: {'Name': 'Ghoulish Power', 'Tab': 'Tab 5'},
+            587: {'Name': 'Labotomizer', 'Tab': 'Tab 5'},
+        },
+        'Low': {
+            587: {'Name': 'Overwhelming Energy', 'Tab': 'Tab 5'},
+            587: {'Name': 'Primo Prisma', 'Tab': 'Tab 5'},
+        }
+    },
     "Bubonic Conjuror": {
         "High": {
             490: {"Name": "Cranium Cooking", "Tab": "Tab 3"},
