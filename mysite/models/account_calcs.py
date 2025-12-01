@@ -1364,9 +1364,9 @@ def _calculate_w4_meal_multi(account):
         account.meals[meal]['RibbonMulti'] = ribbon_multi_table[min(len(ribbon_multi_table) - 1, account.meals[meal]['RibbonTier'])]
         account.meals[meal]['Value'] = float(account.meals[meal]['Value']) * meal_multi * account.meals[meal]['RibbonMulti']
         if '{' in account.meals[meal]['Effect']:
-            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('{', f"{account.meals[meal]['Value']:.3f}")
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('{', f"{account.meals[meal]['Value']:,.3f}")
         elif '}' in account.meals[meal]['Effect']:
-            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('}', f"{account.meals[meal]['Value']:.3f}")
+            account.meals[meal]['Description'] = account.meals[meal]['Effect'].replace('}', f"{account.meals[meal]['Value']:,.3f}")
         else:
             account.meals[meal]['Description'] = account.meals[meal]['Effect']
 
@@ -1534,6 +1534,9 @@ def _calculate_caverns_measurements_multis(account):
                 raw_damage = 1e20
             except IndexError:
                 logger.exception(f"JSON doesn't contain TaskZZ0[1][0] to retrieve Highest Damage from W2 Tasks. Defaulting to 1")
+                raw_damage = 1
+            except:
+                logger.exception(f"JSON has bad value for TaskZZ0[1][0] to retrieve Highest Damage from W2 Tasks. Defaulting to 1")
                 raw_damage = 1
             account.caverns['MeasurementMultis'][clean_entry_name] = {
                 'Raw': raw_damage,

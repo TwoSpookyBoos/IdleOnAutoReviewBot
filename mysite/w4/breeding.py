@@ -12,7 +12,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
-from consts.consts_w2 import critter_vials_list, max_vial_level, arcade_max_level
+from consts.consts_w2 import maxable_critter_vials_list, max_vial_level, arcade_max_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -40,7 +40,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 
-    if all([session_data.account.alchemy_vials[vial_name]['Level'] >= max_vial_level for vial_name in critter_vials_list]):
+    if all([session_data.account.alchemy_vials[vial_name]['Level'] >= max_vial_level for vial_name in maxable_critter_vials_list]):
         shinyExclusionsDict['Base Critter Per Trap'] = True
 
     shinyExclusionsDict['Faster Shiny Pet Lv Up Rate'] = session_data.account.sneaking['JadeEmporium']["Science Crayon"]['Obtained']

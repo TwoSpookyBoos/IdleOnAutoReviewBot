@@ -1428,7 +1428,7 @@ armor_sets_progressionTiers = {
         'Sets': ['KATTLEKRUK SET', 'MARBIGLASS SET', 'GODSHARD SET']
     },
     6: {
-        'Sets': ['EMPEROR SET']
+        'Sets': ['EMPEROR SET', 'PREHISTORIC SET']
     },
     7: {
         'Sets': ['SECRET SET']

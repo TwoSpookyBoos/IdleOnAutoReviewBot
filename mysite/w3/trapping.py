@@ -1,5 +1,5 @@
 from consts.consts_autoreview import break_keep_it_up
-from consts.consts_w2 import max_vial_level, critter_vials_list
+from consts.consts_w2 import max_vial_level, maxable_critter_vials_list
 from consts.consts_w3 import max_trapping_critter_types, trapping_quests_requirement_list, trapset_images
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
@@ -151,7 +151,7 @@ def getSecretClassTrapStatus(placed_traps):
 
 def getUnmaxedCritterVialStatus():
     unmaxed_critter_vials_count = 0
-    for vial_name in critter_vials_list:
+    for vial_name in maxable_critter_vials_list:
         if session_data.account.alchemy_vials[vial_name]['Level'] < max_vial_level:
             unmaxed_critter_vials_count += 1
     return unmaxed_critter_vials_count != 0
