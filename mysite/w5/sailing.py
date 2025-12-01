@@ -389,7 +389,8 @@ def get_sailing_artifacts_advicegroup() -> AdviceGroup:
     arti_ag = AdviceGroup(
         tier='',
         pre_string='Artifact Bonuses',
-        advices=arti_advices
+        advices=arti_advices,
+        informational=True
     )
     return arti_ag
 
