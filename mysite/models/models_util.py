@@ -1,6 +1,7 @@
 # These functions will eventually be moved to their own respective models once we introduce more types/classes
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import companions_data
+from consts.consts_w5 import max_sailing_artifact_level
 from models.models import Advice
 from flask import g as session_data
 from utils.misc.has_companion import has_companion
@@ -42,8 +43,7 @@ def get_companion_advice(companion_name: str) -> tuple[int | float, Advice]:
         goal=1
     )
 
-
-def get_advice_for_money_advice(upgrade_name, link_to_section: bool = True) -> tuple[int | float, Advice]:
+def get_advice_for_money_advice(upgrade_name: str, link_to_section: bool = True) -> tuple[int | float, Advice]:
     upgrade = session_data.account.advice_for_money['Upgrades'][upgrade_name]
     link_to_section_text = f'{{{{ Advice For Money|#advice-for-money }}}} - ' if link_to_section else ''
     return upgrade['Value'], Advice(
@@ -70,8 +70,7 @@ def get_spelunking_cavern_bonus_advice(bonus_index: int, link_to_section: bool =
     )
     return advice
 
-
-def get_basketball_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+def get_basketball_advice(upgrade_index: int, link_to_section: bool = True) -> tuple[int | float, Advice]:
     upgrade = session_data.account.basketball['Upgrades'][upgrade_index]
     link_to_section_text = f'{{{{ Basketball|#basketball }}}} - ' if link_to_section else ''
     advice = Advice(
@@ -83,7 +82,7 @@ def get_basketball_advice(upgrade_index, link_to_section: bool = True) -> tuple[
     )
     return upgrade['Value'], advice
 
-def get_darts_advice(upgrade_index, link_to_section: bool = True) -> tuple[int | float, Advice]:
+def get_darts_advice(upgrade_index: int, link_to_section: bool = True) -> tuple[int | float, Advice]:
     upgrade = session_data.account.darts['Upgrades'][upgrade_index]
     link_to_section_text = f'{{{{ Darts|#darts }}}} - ' if link_to_section else ''
     advice = Advice(
@@ -94,3 +93,20 @@ def get_darts_advice(upgrade_index, link_to_section: bool = True) -> tuple[int |
         resource='darts-shop-currency',
     )
     return upgrade['Value'], advice
+
+def get_sailing_artifact_advice(artifact_name: str, include_island_name: bool = False, link_to_section: bool = True) -> Advice:
+    artifact = session_data.account.sailing['Artifacts'][artifact_name]
+    link_to_section_text = f'{{{{ Artifact|#sailing }}}} - ' if link_to_section else ''
+    island_text = f"{artifact['Island']} - " if include_island_name else ''
+    advice = Advice(
+        label=f"{link_to_section_text}{island_text}{artifact_name}"
+              f"<br>{artifact['Description']}"
+              f"<br>{artifact['Form']} Bonus: {artifact['FormBonus']}",
+        picture_class=artifact['Image'],
+        progression=artifact['Level'],
+        goal=max_sailing_artifact_level
+    )
+    logger.debug(f"{artifact_name}: {advice.progression}/{advice.goal}: {advice.completed}")
+    advice.mark_advice_completed()
+    logger.debug(f"{artifact_name}: {advice.progression}/{advice.goal}: {advice.completed}")
+    return advice

@@ -607,10 +607,12 @@ class Advice(AdviceBase):
                 )
             if self.goal:
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
-        if completed is None:
-            self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
-        elif completed is True:
+        self.completed = completed
+        if completed is True:
             self.mark_advice_completed(True)
+        elif completed is None:
+            if self.goal in ("✔", "") or self.label.startswith(ignorable_labels):
+                self.completed = True
         else:
             self.completed = completed
         self.unrated: bool = unrated
@@ -705,7 +707,7 @@ class Advice(AdviceBase):
 
             elif not self.goal and str(self.progression).endswith('%'):
                 try:
-                    if float(str(self.progression).strip('%')) > 100:
+                    if float(str(self.progression).strip('%')) >= 100:
                         complete()
                 except:
                     pass
