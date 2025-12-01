@@ -9,7 +9,7 @@ from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, vault_upgrades_list, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
+    vault_section_indexes, UpgradeVault, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
@@ -65,7 +65,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner
 
 logger = get_logger(__name__)
 
@@ -1063,13 +1063,10 @@ def _parse_w1_upgrade_vault(account):
     raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
     if not raw_vault:
         logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
+    for upgrade_index, upgrade_values_list in enumerate(UpgradeVault):
+        clean_name = vault_string_cleaner(upgrade_values_list[0])
         if len(upgrade_values_list) >= 11:
-            if upgrade_values_list != '_':
-                secondary_description = f"{upgrade_values_list[10].replace('_', ' ')}"
-            else:
-                secondary_description = ''
+            secondary_description = vault_string_cleaner(upgrade_values_list[10]) if upgrade_values_list != '_' else ''
         else:
             secondary_description = ''
         if clean_name.split('!')[0] in vault_stack_types:
@@ -1093,7 +1090,7 @@ def _parse_w1_upgrade_vault(account):
                 'Unlock Requirement': int(upgrade_values_list[6]),
                 # 'Placeholder7': upgrade_values_list[7],
                 # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')} {secondary_description}",
+                'Description': f"{vault_string_cleaner(upgrade_values_list[9])} {secondary_description}",
                 'Scaling Value': upgrade_index not in vault_dont_scale,
                 'Vault Section': vault_section
             }
