@@ -137,7 +137,7 @@ def main(inputData, source_string, runType="web"):
         sections_5 := [
             slab.getSlabAdviceSection(),
             divinity.getDivinityAdviceSection(),
-            sailing.get_sailing_advicesection(),
+            sailing.getSailingAdviceSection(),
             gaming.getGamingAdviceSection(),
         ],
         sections_caverns := [

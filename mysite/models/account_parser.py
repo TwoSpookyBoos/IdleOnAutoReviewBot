@@ -37,8 +37,7 @@ from consts.consts_w4 import (
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
-    sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
+    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens
 )
 from consts.consts_caverns import (
     getCavernResourceImage, caverns_cavern_names, caverns_villagers, caverns_engineer_schematics,
@@ -65,7 +64,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab
+from utils.text_formatting import getItemDisplayName, numberToLetter
 
 logger = get_logger(__name__)
 
@@ -2573,41 +2572,31 @@ def _parse_w5_sailing(account):
         account.sum_artifact_tiers = sum(raw_sailing_list[3])
     except:
         account.sum_artifact_tiers = 0
-    #Islands
-    for island_index, island_values_dict in sailing_dict.items():
+    for islandIndex, islandValuesDict in sailing_dict.items():
         try:
-            account.sailing['Islands'][island_values_dict['Name']] = {
-                'Unlocked': raw_sailing_list[0][island_index] == -1,
-                'Distance': island_values_dict['Distance'],
-                'NormalTreasure': island_values_dict['NormalTreasure'],
-                'RareTreasure': island_values_dict['RareTreasure']
+            account.sailing['Islands'][islandValuesDict['Name']] = {
+                'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
+                'Distance': islandValuesDict['Distance'],
+                'NormalTreasure': islandValuesDict['NormalTreasure'],
+                'RareTreasure': islandValuesDict['RareTreasure']
             }
+            account.sailing['IslandsDiscovered'] += 1 if account.sailing['Islands'][islandValuesDict['Name']]['Unlocked'] else 0
         except:
-            account.sailing['Islands'][island_values_dict['Name']] = {
+            account.sailing['Islands'][islandValuesDict['Name']] = {
                 'Unlocked': False,
-                'Distance': island_values_dict['Distance'],
-                'NormalTreasure': island_values_dict['NormalTreasure'],
-                'RareTreasure': island_values_dict['RareTreasure']
+                'Distance': islandValuesDict['Distance'],
+                'NormalTreasure': islandValuesDict['NormalTreasure'],
+                'RareTreasure': islandValuesDict['RareTreasure']
             }
-    account.sailing['IslandsDiscovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
-    #Artifacts
-    for artifact_index, artifact_values_dict in sailing_artifacts_dict.items():
-        try:
-            artifact_level = parse_number(raw_sailing_list[3][artifact_index], 0)
-        except:
-            artifact_level = 0
-        description = sailing_artifacts_description_overrides.get(artifact_values_dict['Name'], {}).get(artifact_level, artifact_values_dict['Description'])
-        account.sailing['Artifacts'][artifact_values_dict['Name']] = {
-            'Level': artifact_level,
-            'Description': description,
-            'FormBonuses': {index: description for index, description in enumerate(artifact_values_dict['FormBonuses'])},
-            'FormBonus': artifact_values_dict['FormBonuses'].get(artifact_level, 'Unknown Bonus'),
-            'Form': artifact_tier_names.get(artifact_level),
-            'Values': {index: value for index, value in enumerate(artifact_values_dict['Values'])},
-            'Island': artifact_values_dict['Island'],
-            'Image': kebab(artifact_values_dict['Name'])
-        }
-
+        for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
+            try:
+                account.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                    'Level': parse_number(raw_sailing_list[3][artifactIndex], 0)
+                }
+            except:
+                account.sailing['Artifacts'][artifactValuesDict['Name']] = {
+                    'Level': 0
+                }
     _parse_w5_sailing_boats(account)
     _parse_w5_sailing_captains(account)
 
