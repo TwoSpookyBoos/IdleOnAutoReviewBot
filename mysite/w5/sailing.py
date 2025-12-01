@@ -1,7 +1,10 @@
+from collections import defaultdict
+
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
+from models.models_util import get_sailing_artifact_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -28,7 +31,7 @@ def getSailingDelays() -> dict:
         delaysDict[16] = ['Amberite']
     return delaysDict
 
-def getSailingProgressionTierAdviceGroups():
+def get_sailing_progression_tier_advicegroups():
     sailing_Advices = {
         'Islands Discovered': {},
         'Captains And Boats': {},
@@ -166,7 +169,7 @@ def getSailingProgressionTierAdviceGroups():
     overall_SectionTier = min(true_max, tier_Islands, tier_CaptainsAndBoats, tier_Artifacts)
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
-def getSailingSpeedAdviceGroup() -> AdviceGroup:
+def get_sailing_speed_advicegroup() -> AdviceGroup:
     # Multi Group A -- Purrmep Minor Link, Cards, Bubble
     purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'))
     purrmep_base_max_minor_bonus = 50
@@ -374,7 +377,23 @@ def getSailingSpeedAdviceGroup() -> AdviceGroup:
 
     return sailingSpeedAdviceGroup
 
-def getSailingAdviceSection() -> AdviceSection:
+def get_sailing_artifacts_advicegroup() -> AdviceGroup:
+    arti_advices = defaultdict(list)
+    for artifact_name, details in session_data.account.sailing['Artifacts'].items():
+        arti_advices[details['Island']].append(get_sailing_artifact_advice(artifact_name, False, False))
+
+    for island_name in arti_advices:
+        for advice in arti_advices[island_name]:
+            advice.mark_advice_completed()
+
+    arti_ag = AdviceGroup(
+        tier='',
+        pre_string='Artifact Bonuses',
+        advices=arti_advices
+    )
+    return arti_ag
+
+def get_sailing_advicesection() -> AdviceSection:
     highest_sailing_level = max(session_data.account.all_skills['Sailing'])
     if highest_sailing_level < 1:
         sailing_AdviceSection = AdviceSection(
@@ -388,9 +407,9 @@ def getSailingAdviceSection() -> AdviceSection:
         return sailing_AdviceSection
 
     #Generate AdviceGroup
-    sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSailingProgressionTierAdviceGroups()
-
-    sailing_AdviceGroupDict['SailingSpeed'] = getSailingSpeedAdviceGroup()
+    sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = get_sailing_progression_tier_advicegroups()
+    sailing_AdviceGroupDict['SailingSpeed'] = get_sailing_speed_advicegroup()
+    sailing_AdviceGroupDict['Artifacts'] = get_sailing_artifacts_advicegroup()
 
     # Generate AdviceSection
     tier_section = f'{overall_SectionTier}/{max_tier}'
