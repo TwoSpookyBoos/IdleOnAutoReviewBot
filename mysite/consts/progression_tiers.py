@@ -628,7 +628,7 @@ vault_progressionTiers = {
     },
     3: {
         'Exclude': [
-            'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
+            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
             'Beeg Forge',  #Having too large of Ore capacity can be annoying. Not maxing this is one way player's have chosen to keep capacity down
             'Card Retirement'  #Passive cards cannot be doubled. I don't care, but some people like the option
         ]  #You're probably going to regret doing an exclude after Vault3 gets added, RIP
