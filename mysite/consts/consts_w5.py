@@ -1532,7 +1532,7 @@ filter_only_after_gstack = [
     'DesertA1b', 'DesertA3b', 'DesertC2b', 'MidnightCookie',  #W2 Rares
     'SnowB2a', 'SnowC4a',  #W3 Rares
     'GalaxyA2b', 'GalaxyC1b',  #W4 Rares
-    'LavaA1b', 'LavaA5b', 'LavaB3b', 'ObolLava',  #W5 Rares
+    'LavaA1b', 'LavaA5b', 'LavaB3b',  #W5 Rares
     'SpiA2b', 'SpiB2b',  #W6 Rares
     'Key1', 'Key2', 'Key3', 'Key4', 'Key5',  #Boss Keys
 ]
