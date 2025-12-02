@@ -640,20 +640,20 @@ combat_talentsDict = {
     'Arcane Cultist': {
         'High': {
             587: {'Name': 'Arcane Skulls', 'Tab': 'Tab 5'},
-            587: {'Name': 'Tesseract', 'Tab': 'Tab 5'},
-            587: {'Name': 'Backup Energy', 'Tab': 'Tab 5'},
-            587: {'Name': 'Arcane Crystals', 'Tab': 'Tab 5'},
+            586: {'Name': 'Tesseract', 'Tab': 'Tab 5'},
+            599: {'Name': 'Backup Energy', 'Tab': 'Tab 5'},
+            588: {'Name': 'Arcane Crystals', 'Tab': 'Tab 5'},
 
         },
         'Medium': {
-            587: {'Name': 'Arcanist Form', 'Tab': 'Tab 5'},
-            587: {'Name': 'Ghastly Power', 'Tab': 'Tab 5'},
-            587: {'Name': 'Ghoulish Power', 'Tab': 'Tab 5'},
-            587: {'Name': 'Labotomizer', 'Tab': 'Tab 5'},
+            585: {'Name': 'Arcanist Form', 'Tab': 'Tab 5'},
+            590: {'Name': 'Ghastly Power', 'Tab': 'Tab 5'},
+            591: {'Name': 'Ghoulish Power', 'Tab': 'Tab 5'},
+            592: {'Name': 'Labotomizer', 'Tab': 'Tab 5'},
         },
         'Low': {
-            587: {'Name': 'Overwhelming Energy', 'Tab': 'Tab 5'},
-            587: {'Name': 'Primo Prisma', 'Tab': 'Tab 5'},
+            589: {'Name': 'Overwhelming Energy', 'Tab': 'Tab 5'},
+            594: {'Name': 'Primo Prisma', 'Tab': 'Tab 5'},
         }
     },
     "Bubonic Conjuror": {
