@@ -1,6 +1,6 @@
 import re
 from utils.number_formatting import parse_number
-from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral
+from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral, getItemDisplayName
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -1510,32 +1510,29 @@ filter_never = [
     'EquipmentStatues31', 'EquipmentStatues32',
     #Golden Foods
     'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'Gfoodcoupon',
-    #Choppin Efficiency talent
-    'Leaf1',
+
     #Consumables
     'PremiumGem', 'Quest71', 'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',
     'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9', 'Timecandy10',
-    'Key1', 'Key2', 'Key3', 'Key4', 'Key5',
     'SilverPen', 'PetEgg', 'Ladle',
     'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',
     'DungCredits1', 'DungCredits2',
-    #W1 Rares
-    'Sewers1b', 'TreeInterior1b', 'Quest15',
-    #W2 Rares
-    'DesertA1b', 'DesertA3b', 'DesertC2b', 'MidnightCookie',
-    #W3 Rares
-    'SnowB2a', 'SnowC4a',
-    #W4 Rares
-    'GalaxyA2b', 'GalaxyC1b',
-    #W5 Rares
-    'LavaA1b', 'LavaA5b', 'LavaB3b', 'ObolLava',
-    #W6 Rares
-    'SpiA2b', 'SpiB2b',
     #Event Lootboxes and Drops
     'Quest89',
     'Quest49', 'Quest50', 'Quest88',
     'Quest40', 'Quest39',
     'Quest42', 'Quest43', 'Quest44',
     'Quest70', 'Quest75', 'Quest85', 'Quest79', 'Quest64'
+]
+filter_only_after_gstack = [
+    'Leaf1',  #Choppin Efficiency talent
+    'SilverPen',  #Shared Crystal Drops
+    'Sewers1b', 'TreeInterior1b', 'Quest15',  #W1 Rares
+    'DesertA1b', 'DesertA3b', 'DesertC2b', 'MidnightCookie',  #W2 Rares
+    'SnowB2a', 'SnowC4a',  #W3 Rares
+    'GalaxyA2b', 'GalaxyC1b',  #W4 Rares
+    'LavaA1b', 'LavaA5b', 'LavaB3b', 'ObolLava',  #W5 Rares
+    'SpiA2b', 'SpiB2b',  #W6 Rares
+    'Key1', 'Key2', 'Key3', 'Key4', 'Key5',  #Boss Keys
 ]

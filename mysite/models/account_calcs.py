@@ -2,13 +2,14 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name, \
+    greenstack_amount
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_w1 import get_statue_type_index_from_name
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
-from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never
+from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never, filter_only_after_gstack
 from consts.consts_caverns import (
     caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
     caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses, getBellImprovementBonus
@@ -434,6 +435,11 @@ def _calculate_general_item_filter(account):
         elif filtered_item_codename in filter_never and account.autoloot:
             account.alerts_Advices['General'].append(Advice(
                 label=f'Why did you filter {filtered_displayname}?',
+                picture_class=filtered_displayname,
+            ))
+        elif filtered_item_codename in filter_only_after_gstack and account.autoloot and account.all_assets.get(filtered_item_codename).amount < greenstack_amount:
+            account.alerts_Advices['General'].append(Advice(
+                label=f'Unfilter {filtered_displayname} until Greenstacked',
                 picture_class=filtered_displayname,
             ))
         elif filtered_item_codename not in account.registered_slab:

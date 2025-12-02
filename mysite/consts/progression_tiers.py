@@ -614,11 +614,11 @@ statues_progressionTiers = {
 vault_progressionTiers = {
     1: {
         'Include': [
-            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday$',
+            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday',
             'Baby on Board', 'Bored to Death', 'Stamp Bonanza', 'Drops for Days', 'Slice N Dice', 'Go Go Secret Owl',
             'Boss Decimation', 'Sleepy Time', 'Production Revolution', 'Statue Bonanza', 'Stick Snapping', 'Liquid Knowledge',
-            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish$", 'Straight to Storage', 'Bubble Money',
-            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse$', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
+            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish", 'Straight to Storage', 'Bubble Money',
+            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
         ]
     },
     2: {

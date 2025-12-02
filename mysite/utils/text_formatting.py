@@ -219,6 +219,7 @@ def vault_string_cleaner(input: str) -> str:
         .replace('$%_Build_SPD', '')
         .replace('Total_Bonus:+', '')
         .replace('_', ' ')
+        .replace('$', '')
         .strip()
     )
     return clean

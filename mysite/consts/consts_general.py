@@ -354,7 +354,7 @@ expected_stackables = {
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
         'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
-        'EfauntDrop1',  # Basic Efaunt material
+        'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
@@ -362,7 +362,7 @@ expected_stackables = {
     ],
     'Cheater': [
         'BabaYagaETC', 'JobApplication',  # W1 Rare Drops
-        'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # World Boss Materials
+        'EmpPart',  # W6 Boss Material
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
