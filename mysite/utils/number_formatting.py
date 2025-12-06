@@ -1,7 +1,7 @@
 from consts.consts_autoreview import default_huge_number_replacement
-from utils.logging import get_logger
+from utils.logging import get_consts_logger
 
-logger = get_logger(__name__)
+logger = get_consts_logger(__name__)
 
 
 def parse_number(number: str | int | float, default=default_huge_number_replacement) -> int | float:

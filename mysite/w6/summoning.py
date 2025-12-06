@@ -1,8 +1,10 @@
+from jsonpickle import remove_backend
+
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
 from flask import g as session_data
-from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_match_colors
+from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_regular_match_colors
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
 
@@ -51,6 +53,38 @@ def getEndlessAdviceGroup() -> AdviceGroup:
     endless_ag.remove_empty_subgroups()
     return endless_ag
 
+def get_regular_battles_advicegroup() -> AdviceGroup:
+    rb_advices = {
+        color: []
+        for color in summoning_regular_match_colors
+    }
+    bd = session_data.account.summoning['BattleDetails']
+
+    for color, battles in bd.items():
+        if color in summoning_regular_match_colors:
+            rb_advices[color] = [
+                Advice(
+                    label=f"{battle_number}: {battle_details['OpponentName']}"
+                          f"<br>Reward: {battle_details['Description']}",
+                    picture_class=battle_details['Image'],
+                    progression=int(battle_details['Defeated']),
+                    goal=1
+                ) for battle_number, battle_details in battles.items()
+            ]
+
+    for color in rb_advices:
+        for advice in rb_advices[color]:
+            advice.mark_advice_completed()
+
+    rb_ag = AdviceGroup(
+        tier='',
+        pre_string='Regular Battles',
+        advices=rb_advices,
+        informational=True
+    )
+    rb_ag.remove_empty_subgroups()
+    return rb_ag
+
 def getUpgradesAdviceGroup() -> AdviceGroup:
     sources = 'Available Doublers and their Sources'
     doublers = 'Recommended Upgrades to Double for Matches'
@@ -58,7 +92,7 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
         sources: [],
         doublers: []
     }
-    upgrades_advice.update({f"{k} Upgrades":[] for k in summoning_match_colors})
+    upgrades_advice.update({f"{k} Upgrades":[] for k in summoning_regular_match_colors})
 
     summoning = session_data.account.summoning
     doublers_spent = summoning['Doubled Upgrades']
@@ -177,6 +211,7 @@ def getSummoningAdviceSection() -> AdviceSection:
     #Generate AdviceGroups
     summoning_AdviceGroupDict = {}
     summoning_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
+    summoning_AdviceGroupDict['Regular'] = get_regular_battles_advicegroup()
     summoning_AdviceGroupDict['Upgrades'] = getUpgradesAdviceGroup()
     summoning_AdviceGroupDict['Endless'] = getEndlessAdviceGroup()
     summoning_AdviceGroupDict['Summoning Stones'] = getSummoningStoneAdviceGroup()

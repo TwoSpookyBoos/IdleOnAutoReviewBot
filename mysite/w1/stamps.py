@@ -46,7 +46,7 @@ def getStampExclusions() -> dict[str, bool]:
         exclusionsDict['Mason Jar Stamp'] = True
 
     # If all summoning matches are finished, exclude the Sussy Gene stamps if not obtained
-    if session_data.account.summoning['AllBattlesWon']:
+    if session_data.account.summoning['AllRegularBattlesWon']:
         exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp']['Delivered'] else False
         exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
         exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False

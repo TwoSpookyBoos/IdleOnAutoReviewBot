@@ -191,25 +191,25 @@ totems_list = [
     'Breezy Battle'
 ]
 
-# TODO: W7 has added more sources
 max_static_book_levels = (
     25  #Construction Building: Talent Level Library
     + 5  #W3 Achievement: Checkout Takeout
-    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
     + 10  #Atom Collider: Oxygen (level 1 gives all 10 levels)
+    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
+
     # 165 total last updated in v2.46 Nov 29
 )
 max_scaling_book_levels = (
-    20  #Salt Lick
-    + 10  #World 3 Merit Shop
+    10  #World 3 Merit Shop
+    + 20  #Salt Lick
     # 30 total last updated in v2.46 Nov 29
 )
 max_summoning_book_levels = round(
     (10.5  #Summoning Battle: Cyan 14
      + 3.5  #Summoning Battle: Teal 9
      )
-    * ValueToMulti(50)  #Gem Shop: King of all Winners
     * ValueToMulti(30)  #Pristine Charm: Crystal Comb
+    * ValueToMulti(50)  #Gem Shop: King of all Winners
     * ValueToMulti(
         1       #Achievement: Spectre Stars
         + 10    #World 6 Merit Shop

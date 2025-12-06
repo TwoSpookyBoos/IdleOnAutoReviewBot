@@ -52,11 +52,12 @@ from consts.consts_w6 import (
     jade_emporium, gfood_codes, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
-    max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
+    max_summoning_upgrades, summoning_regular_match_colors,
+    summoning_dict, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
     emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
+    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict, summoning_matches_per_color_dict,
+    summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
@@ -3752,7 +3753,7 @@ def _parse_w6_summoning(account):
                 'MaxLevel': int(upg_details[8]),
                 'UpgradeIndex': upg_index,
                 'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_match_colors[int(upg_details[2])],
+                'Color': summoning_regular_match_colors[int(upg_details[2])],
                 'LockedBehindIndex': locked_behind_index,
                 'LockedBehindName': summoning_upgrades[locked_behind_index][3].replace('_', ' '),
                 'Unlocked': locked_behind_index < 0
@@ -3765,7 +3766,7 @@ def _parse_w6_summoning(account):
                 'MaxLevel': int(upg_details[8]),
                 'UpgradeIndex': upg_index,
                 'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_match_colors[int(upg_details[2])],
+                'Color': summoning_regular_match_colors[int(upg_details[2])],
                 'LockedBehindIndex': locked_behind_index,
                 'LockedBehindName': summoning_upgrades[int(upg_details[10])][3].replace('_', ' '),
                 'Unlocked': locked_behind_index < 0
@@ -3804,76 +3805,49 @@ def _parse_w6_summoning(account):
     account.summoning['Summoning Stones'] = {}
     raw_kr_best = safe_loads(account.raw_data.get('KRbest', {}))
     if raw_kr_best:
-        for colorIndex in range(len(summoning_match_colors)):
-            color = summoning_match_colors[colorIndex]
+        for color_index in range(len(summoning_regular_match_colors)):
+            color = summoning_regular_match_colors[color_index]
             # TODO: remove this if/continue once the Teal Summoning Stone exists
             if color == "Teal":
                 continue
-            wins = safer_get(raw_kr_best, f'SummzTrz{colorIndex}', 0)
+            wins = safer_get(raw_kr_best, f'SummzTrz{color_index}', 0)
             account.summoning['Summoning Stones'][color] = {
                 'Wins': wins,
-                'Location': summoning_stone_locations[colorIndex],
-                'Base HP': int(summoning_stone_boss_base_hp[colorIndex]),
-                'Base DMG': int(summoning_stone_boss_base_damage[colorIndex]),
-                'StoneImage': summoning_stone_stone_images[colorIndex],
-                'BossImage': summoning_stone_boss_images[colorIndex]
+                'Location': summoning_stone_locations[color_index],
+                'Base HP': int(summoning_stone_boss_base_hp[color_index]),
+                'Base DMG': int(summoning_stone_boss_base_damage[color_index]),
+                'StoneImage': summoning_stone_stone_images[color_index],
+                'BossImage': summoning_stone_boss_images[color_index]
             }
 
-def _parse_w6_summoning_battles(account, rawBattles):
-    safe_battles = [safer_convert(battle, '') for battle in rawBattles]
-    regular_battles = [
-        battle
-        for battle in safe_battles
-        if (
-            not battle.startswith('rift')  #Removes Endless fights
-            and battle not in summoning_stone_fight_codenames  #Removes Summoning Stone fights
-        )
-    ]
-    account.summoning['Battles']['NormalTotal'] = len(regular_battles)
-
-    # I don't know if this might be needed in the future, so leaving it commented here
-    # summoning_stone_battles = [
-    #     battle
-    #     for battle in safe_battles
-    #     if battle in summoning_stone_fight_codenames
-    # ]
-
-    account.summoning['AllBattlesWon'] = True
-    for colorName, colorDict in summoning_dict.items():
-        account.summoning["Battles"][colorName] = 0
-        for battleIndex, battleValuesDict in colorDict.items():
-            if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
-                account.summoning["Battles"][colorName] = battleIndex + 1
-        if account.summoning["Battles"][colorName] != summoning_battle_counts_dict[colorName]:
-            account.summoning['AllBattlesWon'] = False
-
+def _parse_w6_summoning_battles(account, raw_battles):
+    safe_battles = [safer_convert(battle, '') for battle in raw_battles]
+    regular_battles = [battle for battle in safe_battles if battle in summoning_regular_battles]
+    regular_battles = []  #TODO: REMOVE AFTER TESTING LMAO
+    account.summoning['Battles']['RegularTotal'] = len(regular_battles)
+    account.summoning['AllRegularBattlesWon'] = len(regular_battles) >= len(summoning_regular_battles)
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
 
-    for colorName, colorDict in summoning_dict.items():
-        for battleIndex, battleValuesDict in colorDict.items():
-            account.summoning["BattleDetails"][colorName][battleIndex + 1] = {
-                'Defeated': battleValuesDict['EnemyID'] in rawBattles,
-                'Image': battleValuesDict['Image'],
-                'RewardType': battleValuesDict['RewardID'],
-                'RewardQTY': battleValuesDict['RewardQTY'],
-                'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
-            }
-            if account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('+ '):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].replace(
-                        '+', f"+{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}")
-                )
-            elif account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('%'):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}"
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
-                )
-            elif account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('x'):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    f"{ValueToMulti(account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
-                )
+    for color_name, color_dict in summoning_dict.items():
+        if color_name in summoning_regular_match_colors:
+            account.summoning['Battles'][color_name] = sum([battle_values_dict['EnemyID'] in raw_battles for battle_values_dict in color_dict.values()])
+            for battle_index, battle_values_dict in color_dict.items():
+                this_battle = {
+                    'Defeated': battle_values_dict['EnemyID'] in raw_battles,
+                    'Image': battle_values_dict['Image'],
+                    'RewardType': battle_values_dict['RewardID'],
+                    'RewardQTY': battle_values_dict['RewardQTY'],
+                    'RewardBaseValue': battle_values_dict['RewardQTY'] * 3.5,
+                    'OpponentName': battle_values_dict['OpponentName']
+                }
+                if this_battle['RewardType'].startswith('+{ '):
+                    this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
+                elif this_battle['RewardType'].startswith('+{%'):
+                    this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
+                elif this_battle['RewardType'].startswith('<x'):
+                    this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
+                account.summoning['BattleDetails'][color_name][battle_index + 1] = this_battle
 
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}
@@ -3883,7 +3857,7 @@ def _parse_w6_summoning_battles_endless(account):
         endless_enemy_index = true_battle_index % 40
         this_battle = {
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],
-            'Image': summoning_endlessEnemies.get(image_index, ''),
+            'Image': summoning_dict['Endless'][image_index]['Image'],
             'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
             'Challenge': summoning_endlessDict.get(endless_enemy_index, {}).get('Challenge', 'Unknown'),
             # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
@@ -3891,12 +3865,12 @@ def _parse_w6_summoning_battles_endless(account):
                 summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)
             )
         }
-        if this_battle['RewardType'].startswith('+'):
-            this_battle['Description'] = this_battle['RewardType'].replace('+', f"+{this_battle['RewardBaseValue']}")
-        elif this_battle['RewardType'].startswith('%'):
-            this_battle['Description'] = f"+{this_battle['RewardBaseValue']}{this_battle['RewardType']}"
-        elif this_battle['RewardType'].startswith('x'):
-            this_battle['Description'] = f"{ValueToMulti(this_battle['RewardBaseValue'])}{this_battle['RewardType']}"
+        if this_battle['RewardType'].startswith('+{ '):
+            this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
+        elif this_battle['RewardType'].startswith('+{%'):
+            this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
+        elif this_battle['RewardType'].startswith('<x'):
+            this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
         account.summoning['BattleDetails']['Endless'][true_battle_index + 1] = this_battle
         if this_battle['RewardType'] not in account.summoning['Endless Bonuses']:
             account.summoning['Endless Bonuses'][this_battle['RewardType']] = 0

@@ -23,7 +23,7 @@ from models.models_util import get_upgrade_vault_advice
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
-from utils.text_formatting import getItemDisplayName, getItemCodeName, notateNumber
+from utils.text_formatting import getItemDisplayName, notateNumber
 from utils.all_talentsDict import all_talentsDict
 
 logger = get_logger(__name__)
@@ -216,38 +216,53 @@ def _calculate_w6_emperor(account):
 
 def _calculate_w6_summoning_winner_bonuses(account):
     # _customBlock_Summoning if ("WinBonus" == e)
+# Multi Group A: Pristine Charm - Crystal Comb
     max_mga = 1.3
     player_mga = ValueToMulti(30 * account.sneaking['PristineCharms']['Crystal Comb']['Obtained'])
     account.summoning['WinnerBonusesAdvice'].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: "
-              f"{round(player_mga, 1):g}/1.3x",
+              f"{round(player_mga, 1):g}/{max_mga}x",
         picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
         progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
         goal=1
     ))
 
-    if not account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
-        winz_lantern_post_string = '. Unlocked from {{ Jade Emporium|#sneaking }}'
-    else:
-        winz_lantern_post_string = ''
+# Multi Group B: Gem Shop - King of all Winners
+    max_purchases = 5
+    max_mgb = ValueToMulti(10 * max_purchases)
+    player_mgb = ValueToMulti(10 * account.gemshop['King Of All Winners'])
+    account.summoning['WinnerBonusesAdvice'].append(Advice(
+        label=f"{{{{ Gem Shop|#gem-shop }}}}: King Of All Winners ({get_gem_shop_bonus_section_name('King Of All Winners')}): "
+              f"{round(player_mgb, 1):g}/{max_mgb}x",
+        picture_class='king-of-all-winners',
+        progression=int(account.gemshop['King Of All Winners']),
+        goal=max_purchases
+    ))
 
-    max_mgb_library = ValueToMulti(
+# Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
+
+    winz_lantern_post_string = (
+        '' if account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']
+        else '. Unlocked from {{ Jade Emporium|#sneaking }}'
+    )
+
+    max_mgc_library = ValueToMulti(
         (25 * max_sailing_artifact_level)
-        + account.merits[5][4]['MaxLevel']
+        + account.merits[5][4]['MaxLevel']  #World 6 Merit Shop
         + 1  #int(account.achievements['Spectre Stars'])
         + 1  #int(account.achievements['Regalis My Beloved'])
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
     )
-    max_mgb_rest = ValueToMulti(
+    max_mgc_rest = ValueToMulti(
         (25 * max_sailing_artifact_level)
-        + account.merits[5][4]['MaxLevel']
+        + account.merits[5][4]['MaxLevel']  #World 6 Merit Shop
         + 1  #int(account.achievements['Spectre Stars'])
         + 1  #int(account.achievements['Regalis My Beloved'])
-        + account.summoning['Endless Bonuses']['x Winner Bonuses']
+        + account.summoning['Endless Bonuses']['<x Winner Bonuses']
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
         + MultiToValue(account.emperor['Bonuses'][8]['Total Value'])  #Technically infinite
     )
-    player_mgb_library = ValueToMulti(
+    player_mgc_library = ValueToMulti(
         (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
         + account.merits[5][4]['Level']
         + int(account.achievements['Spectre Stars']['Complete'])
@@ -255,22 +270,23 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
     )  #This is used to calculate bonus 19, library max level
 
-    player_mgb_rest = ValueToMulti(
+    player_mgc_rest = ValueToMulti(
         (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
         + account.merits[5][4]['Level']
         + int(account.achievements['Spectre Stars']['Complete'])
         + int(account.achievements['Regalis My Beloved']['Complete'])
-        + account.summoning['Endless Bonuses']['x Winner Bonuses']
+        + account.summoning['Endless Bonuses']['<x Winner Bonuses']
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
         + MultiToValue(account.emperor['Bonuses'][8]['Total Value'])
     )
 
     account.summoning['WinnerBonusesAdvice'].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-              f"{1 + (.25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])}/2x{winz_lantern_post_string}",
+              f"{1 + (.25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])}/{1 + (.25 * max_sailing_artifact_level)}x"
+              f"{winz_lantern_post_string}",
         picture_class="the-winz-lantern",
         progression=account.sailing['Artifacts']['The Winz Lantern']['Level'],
-        goal=4
+        goal=max_sailing_artifact_level
     ))
     account.summoning['WinnerBonusesAdvice'].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
@@ -303,8 +319,8 @@ def _calculate_w6_summoning_winner_bonuses(account):
     ))
 
     # Library
-    account.summoning['WinnerBonusesMultiLibrary'] = max(1, player_mga * player_mgb_library)
-    account.summoning['WinnerBonusesMultiMaxLibrary'] = max(1, max_mga * max_mgb_library)
+    account.summoning['WinnerBonusesMultiLibrary'] = max(1, player_mga * player_mgb * player_mgc_library)
+    account.summoning['WinnerBonusesMultiMaxLibrary'] = max(1, max_mga * max_mgb * max_mgc_library)
     account.summoning['WinnerBonusesSummaryLibrary'] = Advice(
         label=f"Winner Bonuses Multi: {account.summoning['WinnerBonusesMultiLibrary']:.3f}/{account.summoning['WinnerBonusesMultiMaxLibrary']:.3f}x",
         picture_class="summoning",
@@ -313,8 +329,8 @@ def _calculate_w6_summoning_winner_bonuses(account):
         #unit="x"
     )
     # Not Library
-    account.summoning['WinnerBonusesMultiRest'] = max(1, player_mga * player_mgb_rest)
-    account.summoning['WinnerBonusesMultiMaxRest'] = max(1, max_mga * max_mgb_rest)
+    account.summoning['WinnerBonusesMultiRest'] = max(1, player_mga * player_mgb * player_mgc_rest)
+    account.summoning['WinnerBonusesMultiMaxRest'] = max(1, max_mga * max_mgb * max_mgc_rest)
     account.summoning['WinnerBonusesSummaryRest'] = [
         Advice(
             label=f"{{{{Emperor Showdowns|#emperor}}}}: {account.emperor['Bonuses'][8]['Description']}"
@@ -325,9 +341,9 @@ def _calculate_w6_summoning_winner_bonuses(account):
         ),
         Advice(
             label=f"{{{{Endless Summoning|#summoning}}}}: Winner Bonuses multi: "
-                  f"{account.summoning['Endless Bonuses']['x Winner Bonuses']}/{EmojiType.INFINITY.value}",
+                  f"{account.summoning['Endless Bonuses']['<x Winner Bonuses']}/{EmojiType.INFINITY.value}",
             picture_class='endless-summoning',
-            progression=account.summoning['Endless Bonuses']['x Winner Bonuses'],
+            progression=f"{round(account.summoning['Endless Bonuses']['<x Winner Bonuses'], 5):g}",
             goal=EmojiType.INFINITY.value,
             completed=True
         ),
@@ -1079,7 +1095,7 @@ def _calculate_w2_ballot(account):
     account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
-        + account.summoning['Endless Bonuses']['% Ballot Bonus']
+        + account.summoning['Endless Bonuses']['+{% Ballot Bonus']
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * has_companion('Mashed Potato'))
@@ -1350,7 +1366,7 @@ def _calculate_w4_meal_multi(account):
             (account.labJewels['Black Diamond Rhinestone']['Value'] * account.labJewels['Black Diamond Rhinestone']['Enabled'])
             + account.breeding['Total Shiny Levels']['Bonuses from All Meals']
         )
-        * account.summoning['Endless Bonuses']['x Meal Bonuses']
+        * account.summoning['Endless Bonuses']['<x Meal Bonuses']
     )
 
     ribbon_multi_table = []
@@ -2290,7 +2306,7 @@ def _calculate_w3_library_max_book_levels(account):
         + (25 * (0 < account.construction_buildings['Talent Book Library']['Level']))
         + (5 * account.achievements['Checkout Takeout']['Complete'])
         + (10 * (0 < account.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-        + (25 * account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0))
+        + (25 * account.sailing['Artifacts']['Fury Relic']['Level'])
     )
     account.library['ScalingSum'] = (
         0
@@ -2304,7 +2320,10 @@ def _calculate_w3_library_max_book_levels(account):
     #               )
     # summGroupB = 1 + (.3 * account.sneaking.get('PristineCharms', {}).get('Crystal Comb', 0))
     account.library['SummoningSum'] = round(
-        10.5 * (account.summoning['Battles']['Cyan'] >= 14)
+        (
+            10.5 * (account.summoning['Battles']['Cyan'] >= 14)
+            + 3.5 * (account.summoning['Battles']['Teal'] >= 9)
+        )
         * account.summoning['WinnerBonusesMultiLibrary']
     )
     account.library['MaxBookLevel'] = 100 + account.library['StaticSum'] + account.library['ScalingSum'] + account.library['SummoningSum']

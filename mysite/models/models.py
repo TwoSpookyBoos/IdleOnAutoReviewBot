@@ -23,6 +23,8 @@ from models.custom_exceptions import VeryOldDataException
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 
 def session_singleton(cls):
@@ -89,10 +91,12 @@ class Equipment:
 def getExpectedTalents(classes_list):
     expectedTalents = []
     for className in classes_list:
-        try:
-            expectedTalents.extend(expected_talents_dict[className])
-        except:
-            continue
+        if className != 'None':
+            try:
+                expectedTalents.extend(expected_talents_dict[className])
+            except:
+                logger.warning(f"Failed to add expected talents for {className}")
+                continue
     return expectedTalents
 
 def getSpecializedSkills(classes_list):

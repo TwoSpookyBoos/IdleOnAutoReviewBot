@@ -106,5 +106,4 @@ def get_sailing_artifact_advice(artifact_name: str, include_island_name: bool = 
         progression=artifact['Level'],
         goal=max_sailing_artifact_level
     )
-    advice.mark_advice_completed()
     return advice
