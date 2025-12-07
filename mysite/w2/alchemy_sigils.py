@@ -13,7 +13,7 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-chilled_yarn_multi = [1, 2, 3, 4, 5]
+chilled_yarn_multi = [1, 2, 3, 4, 5, 6]
 
 def get_max_chilled_yarn_multi():
     return max(chilled_yarn_multi)
@@ -24,7 +24,7 @@ def get_chilled_yarn_multi(artifact_level: int) -> int:
         return chilled_yarn_multi[artifact_level]
     except:
         logger.error(f"Failed to calculate Chilled Yarn level of {artifact_level}. Returning max value of {max(chilled_yarn_multi)}")
-        return max(chilled_yarn_multi)
+        return get_max_chilled_yarn_multi()
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group A = several
@@ -41,7 +41,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     mga = ValueToMulti(
         (20 * session_data.account.achievements['Vial Junkee']['Complete'])
-        + (20 * session_data.account.gemshop['Sigil Supercharge'])
+        + (20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned'])
         + player_peapod_value
         + willow_vial_value
         + player_sigil_stamp_value
@@ -111,10 +111,11 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     ))
     speed_Advice[mga_label].append(Advice(
         label=f"{{{{ Gem Shop|#gem-shop }}}}: Sigil Supercharge: "
-              f"+{20 * session_data.account.gemshop['Sigil Supercharge']}/{20 * 10}%",
+              f"+{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned']}/"
+              f"{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel']}%",
         picture_class='sigil-supercharge',
-        progression=session_data.account.gemshop['Sigil Supercharge'],
-        goal=10,
+        progression=session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned'],
+        goal=session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel'],
         completed=not practical_maxed
     ))
     speed_Advice[mga_label].append(Advice(

@@ -44,7 +44,7 @@ $chests: (
 	gilded-chest: img('wiki/Sail_Chest_2.png'),
 	noble-chest: img('wiki/Sail_Chest_3.png'),
 	occult-chest: img('wiki/Sail_Chest_4.png'),
-	miracle-chest: img('wiki/Sail_Chest_5.png')
+	//miracle-chest: map-get($gem-shop, miracle-chest),
 );
 
 $treasures: (

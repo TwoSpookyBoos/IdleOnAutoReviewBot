@@ -149,7 +149,7 @@ def _calculate_w6_emperor(account):
     account.emperor['Max Attempts'] = (
         5  #base
         + (5 * account.sneaking['JadeEmporium']['Emperor Season Pass']['Obtained'])
-        + (6 * account.gemshop['Lifetime Tickets'])
+        + (6 * account.gemshop['Purchases']['Lifetime Tickets']['Owned'])
     )
     emperor_bonus_multi = ValueToMulti(account.arcade[51]['Value']) # TODO: ArcaneUpgBonus48 (additive to Arcade bonus)
 
@@ -228,15 +228,14 @@ def _calculate_w6_summoning_winner_bonuses(account):
     ))
 
 # Multi Group B: Gem Shop - King of all Winners
-    max_purchases = 5
-    max_mgb = ValueToMulti(10 * max_purchases)
-    player_mgb = ValueToMulti(10 * account.gemshop['King Of All Winners'])
+    max_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['MaxLevel'])
+    player_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['Owned'])
     account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: King Of All Winners ({get_gem_shop_bonus_section_name('King Of All Winners')}): "
+        label=f"{{{{ Gem Shop|#gem-shop }}}}: King Of All Winners ({account.gemshop['Purchases']['King Of All Winners']['Subsection']}): "
               f"{round(player_mgb, 1):g}/{max_mgb}x",
         picture_class='king-of-all-winners',
-        progression=int(account.gemshop['King Of All Winners']),
-        goal=max_purchases
+        progression=int(account.gemshop['Purchases']['King Of All Winners']['Owned']),
+        goal=account.gemshop['Purchases']['King Of All Winners']['MaxLevel']
     ))
 
 # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
@@ -535,15 +534,12 @@ def _calculate_general_storage_slots(account):
     construction_buildings = {
         'Chest Space': 2
     }
-    # TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
     gem_shop_purchases = {
         'Storage Chest Space': {
             'Slots': 9,
-            'Max Purchases': 12
         },
         'More Storage Space': {
             'Slots': 9,
-            'Max Purchases': 10
         }
     }
     for name, slots in event_shop_bonuses.items():
@@ -576,14 +572,15 @@ def _calculate_general_storage_slots(account):
 
         }
     for name, details in gem_shop_purchases.items():
+        gs = account.gemshop['Purchases'][name]
         account.storage['Other Storage'][name] = {
             'Source': 'Gem Shop',
             'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({get_gem_shop_bonus_section_name(name)}): "
-                     f"{details['Slots'] * account.gemshop[name]}/{details['Slots'] * details['Max Purchases']} total slots",
-            'Owned Slots': details['Slots'] * account.gemshop[name],
-            'Max Slots': details['Slots'] * details['Max Purchases'],
-            'Progression': account.gemshop[name],
-            'Goal': details['Max Purchases'],
+                     f"{details['Slots'] * gs['Owned']}/{details['Slots'] * gs['MaxLevel']} total slots",
+            'Owned Slots': details['Slots'] * gs['Owned'],
+            'Max Slots': details['Slots'] * gs['MaxLevel'],
+            'Progression': gs['Owned'],
+            'Goal': gs['MaxLevel'],
             'Image': name,
             'Resource': 'gem'
         }

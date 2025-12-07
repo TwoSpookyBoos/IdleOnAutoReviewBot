@@ -1689,6 +1689,11 @@ class Account:
             'Account Wide Inventory Slots Owned': 0,
             'Account Wide Inventory Slots Max': 0,
         }
+        self.gemshop = {
+            'Purchases': {},
+            'Bundle Data Present': None,
+            'Bundles': {}
+        }
         self.storage = {
             'Used Chests': [],
             'Used Chests Slots': 0,
@@ -1700,12 +1705,14 @@ class Account:
             'Total Slots Owned': 0,
             'Total Slots Max': 0
         }
+        #W1
         self.basketball = {
             'Upgrades': {}
         }
         self.darts = {
             'Upgrades': {}
         }
+        #W7
         self.spelunk = {
             'Cave Bonuses': {},
         }

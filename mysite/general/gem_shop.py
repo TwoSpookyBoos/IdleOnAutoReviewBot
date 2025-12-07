@@ -100,7 +100,7 @@ def try_exclude_Gaming(exclusionLists):
         pass
     
 def try_exclude_ConjurorPts(exclusionLists):
-    if session_data.account.gemshop['Conjuror Pts'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
+    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
         for sublist in exclusionLists:
             sublist.append('Conjuror Pts')
     
@@ -113,7 +113,7 @@ def try_exclude_ParallelVillagers(exclusionLists):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Engineer')
         
-    if session_data.account.caverns['Villagers']['Cosmos']['Level'] >= (max_majiks - session_data.account.gemshop['Conjuror Pts']):
+    if session_data.account.caverns['Villagers']['Cosmos']['Level'] >= (max_majiks - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Conjuror')
         
@@ -174,12 +174,12 @@ def getGemShopExclusions():
     return s_through_d, practical
 
 def getGemShopAdviceSection() -> AdviceSection:
-    boughtItems = session_data.account.gemshop
+    boughtItems = session_data.account.gemshop['Purchases']
     ss_through_d_exclusions, practical_max_exclusions = getGemShopExclusions()
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
     recommended_total = sum(recommended_stock.values())
-    recommended_stock_bought = {k: min(v, boughtItems.get(k, 0)) for k, v in recommended_stock.items()}
+    recommended_stock_bought = {k: min(v, boughtItems[k]['Owned']) for k, v in recommended_stock.items()}
     recommended_total_bought = sum(recommended_stock_bought.values())
 
     #Review all tiers
@@ -247,12 +247,12 @@ def getGemShopAdviceSection() -> AdviceSection:
         fomo_advice.append(Advice(
             label=purchase_name,
             picture_class=purchase_name,
-            progression=boughtItems[purchase_name],
-            goal=purchase_details[1],
+            progression=boughtItems[purchase_name]['Owned'],
+            goal=boughtItems[purchase_name]['MaxLevel'],
             informational=True,
             completed=(
-                boughtItems[purchase_name] >= purchase_details[1]
-                if purchase_details[1] != EmojiType.INFINITY.value
+                boughtItems[purchase_name]['Owned'] >= boughtItems[purchase_name]['MaxLevel']
+                if boughtItems[purchase_name]['MaxLevel'] != EmojiType.INFINITY.value
                 else True
             )
         ))

@@ -327,32 +327,52 @@ def _parse_class_unique_kill_stacks(account):
     }
 
 def _parse_general_gem_shop(account):
-    account.gemshop = {}
-    raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
-    for purchaseName, purchaseIndex in gem_shop_dict.items():
+    raw_gem_items_purchased = safe_loads(account.raw_data.get('GemItemsPurchased', []))
+    for purchase_name, details in gem_shop_dict.items():
         try:
-            account.gemshop[purchaseName] = safer_convert(raw_gem_items_purchased[purchaseIndex], 0)
+            purchased_amount = safer_convert(raw_gem_items_purchased[details['Index']], 0)
         except Exception as e:
-            logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
-            account.gemshop[purchaseName] = 0
+            logger.warning(f"Gemshop Parse error with details {details}: {e}. Defaulting to 0")
+            purchased_amount = 0
+        account.gemshop['Purchases'][purchase_name] = {
+            'Owned': purchased_amount,
+            'ItemCodename': details['ItemCodename'],
+            'Description': details['Description'],
+            'Index': details['Index'],
+            'MaxLevel': details['MaxLevel'],
+            'BaseGemCost': details['BaseGemCost'],
+            'IncrementGemCost': details['IncrementGemCost'],
+            'Section': details['Section'],
+            'Subsection': details['Subsection'],
+        }
 
-    account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
+    account.minigame_plays_daily = 5 + (4 * account.gemshop['Purchases']['Daily Minigame Plays']['Owned'])
 
 def _parse_general_gem_shop_optlacc(account):
     for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
-            account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
+            purchased_amount = safer_convert(safer_get(account.raw_optlacc_dict, details['Index'], 0), 0)
         except:
-            if max(account.raw_optlacc_dict.keys()) < details[0]:
-                logger.info(f"Error parsing {purchase_name} because optlacc_index {details[0]} not present in JSON. Defaulting to 0")
+            purchased_amount = 0
+            if max(account.raw_optlacc_dict.keys()) < details['Index']:
+                logger.info(f"Error parsing {purchase_name} because optlacc_index {details['Index']} not present in JSON. Defaulting to 0")
             else:
-                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details[0]}: Could not convert {account.raw_optlacc_dict.get(details[0])} to int")
-                account.gemshop[purchase_name] = 0
+                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details['Index']}: Could not convert {account.raw_optlacc_dict.get(details['Index'])} to int")
+        account.gemshop['Purchases'][purchase_name] = {
+            'Owned': purchased_amount,
+            'ItemCodename': '',
+            'Description': details['Description'],
+            'Index': details['Index'],
+            'MaxLevel': details['MaxLevel'],
+            'BaseGemCost': details['BaseGemCost'],
+            'IncrementGemCost': details['IncrementGemCost'],
+            'Section': details['Section'],
+            'Subsection': details['Subsection'],
+        }
 
 def _parse_general_gem_shop_bundles(account):
     raw_gem_shop_bundles = safe_loads(account.raw_data.get('BundlesReceived', []))
     account.gemshop['Bundle Data Present'] = 'BundlesReceived' in account.raw_data
-    account.gemshop['Bundles'] = {}
     for code_name, display_name in gem_shop_bundles_dict.items():
         account.gemshop['Bundles'][code_name] = {
             'Display': display_name,
@@ -2332,7 +2352,7 @@ def _parse_w4_breeding(account):
     _parse_w4_breeding_territories(account)
     _parse_w4_breeding_pets(account, raw_breeding_list)
     account.breeding['Egg Slots'] += (
-        account.gemshop['Royal Egg Cap']
+        account.gemshop['Purchases']['Royal Egg Cap']['Owned']
         + account.breeding['Upgrades']['Egg Capacity']['Level']
         + account.merits[3][2]['Level']
     )
@@ -2733,7 +2753,13 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'VillagerNumber': villager_data['VillagerNumber'],
                 'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
             }
-            account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
+            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
+                'Owned': parallel_villagers[villager_index],
+                'MaxLevel': 1,
+                'ItemCodename': 'GemP40',
+                'Section': 'Oddities',
+                'Subsection': 'Caverns'
+            }
             account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
         except:
             account.caverns['Villagers'][villager_data['Name']] = {
@@ -2745,7 +2771,13 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'VillagerNumber': villager_data['VillagerNumber'],
                 'LevelPercent': 0,
             }
-            account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = 0
+            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
+                'Owned': 0,
+                'MaxLevel': 1,
+                'ItemCodename': 'GemP40',
+                'Section': 'Oddities',
+                'Subsection': 'Caverns'
+            }
 
 def _parse_caverns_actual_caverns(account, opals_per_cavern):
     for cavern_index, cavern_name in caverns_cavern_names.items():
@@ -3591,7 +3623,7 @@ def _parse_w6_farming(account):
     account.farming['Total Plots'] = (
         1
         + account.farming['MarketUpgrades']['Land Plots']['Level']
-        + account.gemshop['Plot of Land']
+        + account.gemshop['Purchases']['Plot Of Land']['Owned']
         + min(3, account.merits[5][2]['Level'])
     )
 

@@ -344,8 +344,6 @@ $consumables: (
     pet-egg: map-get($gem-shop, pet-egg),
     crop-transfer-ticket: img('wiki/Crop_Transfer_Ticket.png'),
     blinding-lantern: img('wiki/Blinding_Lantern.png'),
-    funny-2hr-fishy: img('data/GemP36.png'),
-    funny-2hr-feather: img('data/GemP37.png'),
 
     // Time Candies
     x1-hr-time-candy:   img('data/Timecandy1.png'),
@@ -474,7 +472,7 @@ $dungeon-items: (
     rare-rng-item: img('wiki/Rare_RNG_Item.png'),
     epic-rng-item: img('wiki/Epic_RNG_Item.png'),
     legendary-rng-item: img('wiki/Legendary_RNG_Item.png'),
-    loot-dice: img('wiki/Dungeon_Loot_Dice.png'),
+    loot-dice: map-get($gem-shop, dungeon-loot-dice),
     // Dungeon Foods
     big-cake: img('wiki/Big_Cake.png'),
     // Dungeon Drops
@@ -823,8 +821,6 @@ $obols: (
     hyper-pyre-obol: img('wiki/Hyper_Pyre_Obol.png'),
     hyper-dmg-obol: img('wiki/Hyper_DMG_Obol.png'),
     hyper-skull-obol: img('wiki/Hyper_Skull_Obol.png'),
-    hyper-obol-stack: img('wiki/Hyper_Obol_Stack.png'),
-    hyper-obol-stack-square-edition: img('wiki/Hyper_Obol_Stack_Square_Edition.png'),
 
     // Random Events
     grumpy-obol-of-the-grandfrogger: img('wiki/Grumpy_Obol_of_the_Grandfrogger.png'),
@@ -960,7 +956,7 @@ $obols: (
     dementia-obol-of-worship: img('wiki/Dementia_Obol_of_Worship.png'),
 
     // Bosses
-    bossius-obol-stack: img('wiki/Bossius_Obol_Stack.png'),
+    //bossius-obol-stack: map-get($gem-shop, bossius-obol-stack),
     granite-obol-of-amaroks-stare: img('wiki/Granite_Obol_of_Amarok%27s_Stare.png'),
     skeletal-obol-of-efaunts-gaze: img('wiki/Skeletal_Obol_of_Efaunt%27s_Gaze.png'),
     frozen-obol-of-chizoars-rage: img('wiki/Frozen_Obol_of_Chizoar%27s_Rage.png'),

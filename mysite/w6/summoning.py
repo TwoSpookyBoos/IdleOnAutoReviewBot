@@ -1,5 +1,3 @@
-from jsonpickle import remove_backend
-
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from utils.logging import get_logger
