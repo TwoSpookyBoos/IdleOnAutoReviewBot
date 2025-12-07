@@ -5,8 +5,19 @@ $coral-resources: (
     neon-coral:         img('data/Coral3.png'),
 );
 
+$coral-reef: (
+    coral-0: img('data/Reefz1.png'),
+    coral-1: img('data/ReefA1.png'),
+    coral-2: img('data/ReefB1.png'),
+    coral-3: img('data/ReefC1.png'),
+    coral-4: img('data/ReefD1.png'),
+    coral-5: img('data/ReefE1.png'),
+);
+
 $coral-misc: (
 
 );
 
-$all-coral: map-merge($coral-resources, $coral-misc);
+$all-coral: map-merge($coral-resources, $coral-reef);
+$all-coral: map-merge($all-coral, $coral-misc);
+

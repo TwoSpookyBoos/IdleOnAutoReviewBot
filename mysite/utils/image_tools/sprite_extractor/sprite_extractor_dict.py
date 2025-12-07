@@ -29,5 +29,11 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "columns": 3,
         "rows": 3,
         "num_sprites": 7
+    },
+    "sprite-84-101.png": {
+        "base_file_name": "HumbleHugh",
+        "columns": 3,
+        "rows": 3,
+        "num_sprites": 1
     }
 }

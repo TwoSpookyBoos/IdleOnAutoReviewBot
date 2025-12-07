@@ -21,7 +21,7 @@ from w4 import breeding, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
 from w6 import beanstalk, sneaking, farming, summoning, emperor
-from w7 import advice_for_money, spelunking
+from w7 import advice_for_money, spelunking, coral_reef
 
 logger = get_logger(__name__)
 
@@ -155,6 +155,7 @@ def main(inputData, source_string, runType="web"):
         ],
         sections_7 := [
             spelunking.get_spelunking_advicesection(),
+            coral_reef.get_coral_reef_section(),
             advice_for_money.get_advice_for_money_section(),
         ]
     ]

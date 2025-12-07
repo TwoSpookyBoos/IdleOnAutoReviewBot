@@ -60,7 +60,7 @@ from consts.consts_w6 import (
     summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
-from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
+from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
@@ -3950,10 +3950,11 @@ def _parse_w6_emperor(account):
 def _parse_w7(account):
     _parse_advice_for_money(account)
     _parse_w7_spelunk_cave_bonuses(account)
+    _parse_w7_coral_reef(account)
 
 def _parse_advice_for_money(account):
     # Dependencies: None
-    advice_for_money_upgrade_data = spelunky_data[18]
+    advice_for_money_upgrade_data = Spelunky[18]
     try:
         advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
     except:
@@ -4001,3 +4002,12 @@ def _parse_w7_spelunk_cave_bonuses(account):
                 'Image': f'spelunking-boss-{index}',
                 'Resource': f'spelunking-cavern-{index}'
             }
+
+def _parse_w7_coral_reef(account):
+    # Dependencies: None
+    unlocked_corals = safe_loads(account.raw_data.get('Spelunk', []))[12]
+    coral_levels = safe_loads(account.raw_data.get('Spelunk', []))[13]
+
+    for index, coral_data in enumerate(account.coral_reef.values()):
+        coral_data['Unlocked'] = bool(unlocked_corals[index])
+        coral_data['Level'] = coral_levels[index]
