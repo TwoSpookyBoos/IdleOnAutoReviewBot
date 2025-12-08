@@ -5,7 +5,8 @@ from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, Mult
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, greenstack_amount
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_w1 import get_statue_type_index_from_name
+from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
+    get_seraph_stacks, seraph_max
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import statues_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
@@ -894,23 +895,35 @@ def _calculate_w1_upgrade_vault(account):
         )
 
 def _calculate_w1_starsigns(account):
-    account.star_sign_extras['SeraphMulti'] = min(3, 1.1 ** ceil((max(account.all_skills['Summoning'], default=0) + 1) / 20))
-    account.star_sign_extras['SeraphGoal'] = min(220, ceilUpToBase(max(account.all_skills['Summoning'], default=0), 20))
-    min_level_stacks = ceil((min(account.all_skills['Summoning'], default=0) + 1) / 20)
-    max_level_stacks = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 20)
-    inequality_notice = ' (Note: Some characters lower leveled)' if min_level_stacks != max_level_stacks else ''
-    if bool(account.star_signs.get("Seraph Cosmos", {}).get('Unlocked', False)):
-        account.star_sign_extras['SeraphEval'] = f"Multis signs by {account.star_sign_extras['SeraphMulti']:.2f}x."
+    seraph_summoning_player = get_seraph_cosmos_max_summ_level_goal(account.tesseract['Upgrades']['Astrology Cultism']['Level'])
+    account.star_sign_extras['SeraphMulti'] = get_seraph_cosmos_multi(
+        astrology_cultism_level=account.tesseract['Upgrades']['Astrology Cultism']['Level'],
+        all_summoning_levels=account.all_skills['Summoning']
+    )
+    account.star_sign_extras['SeraphGoal'] = get_seraph_cosmos_summ_level_goal(
+        astrology_cultism_level=account.tesseract['Upgrades']['Astrology Cultism']['Level'],
+        all_summoning_levels=account.all_skills['Summoning']
+    )
+    min_level_stacks = get_seraph_stacks(min(account.all_skills['Summoning'], default=0))
+    max_level_stacks = get_seraph_stacks(max(account.all_skills['Summoning'], default=0))
+    inequality_notice = ' (Note: Some lower leveled characters have less)' if min_level_stacks != max_level_stacks else ''
+    if account.star_signs['Seraph Cosmos']['Unlocked']:
+        account.star_sign_extras['SeraphEval'] = f"Multis Passive signs by {round(account.star_sign_extras['SeraphMulti'], 3):g}/{seraph_max}x."
     else:
-        account.star_sign_extras['SeraphEval'] = f"Locked. Would increase other signs by {account.star_sign_extras['SeraphMulti']:.2f}x if unlocked.{inequality_notice}"
+        account.star_sign_extras['SeraphEval'] = f"Locked. Would increase other Passive signs by {account.star_sign_extras['SeraphMulti']:.2f}/{seraph_max}x if unlocked.{inequality_notice}"
         account.star_sign_extras['SeraphMulti'] = 1
-    if account.star_sign_extras['SeraphGoal'] < 240:
+    if account.star_sign_extras['SeraphGoal'] < seraph_summoning_player:
         account.star_sign_extras['SeraphEval'] += f" Increases every 20 Summoning levels.{inequality_notice}"
     account.star_sign_extras['SeraphAdvice'] = Advice(
         label=f"{{{{ Star Sign|#star-signs }}}}: Seraph Cosmos: {account.star_sign_extras['SeraphEval']}",
-        picture_class="seraph-cosmos",
+        picture_class='seraph-cosmos',
         progression=max(account.all_skills['Summoning'], default=0),
-        goal=account.star_sign_extras['SeraphGoal'])
+        goal=account.star_sign_extras['SeraphGoal'],
+        completed=(
+            True if account.star_sign_extras['SeraphMulti'] == seraph_max
+            else None
+        )
+    )
 
     if account.labChips.get('Silkrode Nanochip', 0) > 0:
         account.star_sign_extras['DoublerOwned'] = True

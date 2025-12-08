@@ -1,4 +1,7 @@
+from math import ceil, e
+from consts.consts_autoreview import ceilUpToBase
 from consts.consts_idleon import NinjaInfo
+from utils.safer_data_handling import safer_math_log, safer_math_pow
 from utils.text_formatting import numberToLetter
 from utils.number_formatting import parse_number
 from utils.logging import get_consts_logger
@@ -304,6 +307,66 @@ starsigns_dict = {
     for index, (name, bonus1, bonus2, bonus3) in enumerate(StarSigns) if not name.startswith("Fillerz")
 }
 
+# The formula including this is buried. Search for `Seraph_Cosmos` and pray
+seraph_max = 5  #Last updated in v2.46 Dec 8
+
+def get_seraph_cosmos_max_summ_level_goal(astrology_cultism_level: int) -> int:
+    # Returns the highest summoning level needed to reach seraph_max based on astrology_cultism levels
+    try:
+        result = 20 * ceil(safer_math_log(seraph_max, e) / safer_math_log(1.1 + min(0.01 * astrology_cultism_level, 0.10), e))
+        return result
+    except:
+        logger.exception(f"Something went wrong. Returning max as if they have no astrology cultism.")
+        result = 20 * ceil(safer_math_log(seraph_max, e) / safer_math_log(1.1, e))
+        return result
+
+def get_seraph_cosmos_summ_level_goal(astrology_cultism_level: int, character_summoning_level: int | None = None, all_summoning_levels: list | None = None) -> int:
+    max_summ_level_goal = get_seraph_cosmos_max_summ_level_goal(astrology_cultism_level)
+    if character_summoning_level is not None:
+        result = min(max_summ_level_goal, ceilUpToBase(character_summoning_level, 20))
+        return result
+    elif all_summoning_levels is not None:
+        result = min(max_summ_level_goal, ceilUpToBase(max(all_summoning_levels, default=0), 20))
+        return result
+    else:
+        logger.error(
+            f"get_seraph_cosmos_summ_level_goal() was called with no summoning level type goal. Please submit "
+            f"character_summoning_level to calculate an individual character's goal, "
+            f"or all_summoning_levels to find the account-wide goal based on the character with the highest level summoning."
+        )
+        result = max_summ_level_goal
+        return result
+
+def get_seraph_cosmos_multi(astrology_cultism_level: int, character_summoning_level: int | None = None, all_summoning_levels: list | None = None) -> float:
+    # This formula is kind of buried. Search for `Seraph_Cosmos` and pray
+    # if (t = a.engine.getGameAttribute("StarSignsUnlocked"), Object.prototype.hasOwnProperty.call(t.h, "Seraph_Cosmos"))
+    # Math.min(5, Math.pow(1.1 + Math.min(c.asNumber(a.engine.getGameAttribute("Arcane")[40]), 10) / 100, Math.ceil((c.asNumber(a.engine.getGameAttribute("Lv0")[18]) + 1) / 20)))
+    if character_summoning_level is not None:
+        result = min(seraph_max, safer_math_pow(
+            1.1 + min(0.01 * astrology_cultism_level, 0.10),
+            ceil(character_summoning_level + 1) / 20)
+        )
+        return result
+    elif all_summoning_levels is not None:
+        result = min(seraph_max, safer_math_pow(
+            1.1 + min(0.01 * astrology_cultism_level, 0.10),
+            ceil(max(all_summoning_levels, default=0) + 1) / 20)
+        )
+        return result
+    else:
+        logger.error(
+            f"get_seraph_cosmos_summ_level_goal() was called with no summoning level type goal. Please submit "
+            f"character_summoning_level to calculate an individual character's goal, "
+            f"or all_summoning_levels to find the account-wide goal based on the character with the highest level summoning."
+        )
+        result = 1
+        return result
+
+def get_seraph_stacks(summoning_level) -> int:
+    result = ceil((summoning_level + 1) / 20)
+    return result
+
+
 forge_upgrades_dict = {
     0: {
         "UpgradeName": "New Forge Slot",
@@ -336,7 +399,6 @@ forge_upgrades_dict = {
         "MaxPurchases": 60
     }
 }
-
 
 # `StatueInfo` in source. Last updated in v2.43 Nov 10
 StatueInfo = [["POWER", "@BASE_DAMAGE", "30", "3"], ["SPEED", "%@MOVE_SPEED", "65", "0.1"], ["MINING", "@MINING_POWER", "280", "0.3"], ["FEASTY", "%@FOOD_EFFECT", "320", "1"], ["HEALTH", "@BASE_HEALTH", "0", "3"], ["KACHOW", "%@CRIT_DAMAGE", "-15", "0.4"], ["LUMBERBOB", "@CHOPPIN_POWER", "90", "0.3"], ["THICC_SKIN", "@BASE_DEFENCE", "210", "1"], ["OCEANMAN", "@FISHING_POWER", "115", "0.3"], ["OL_RELIABLE", "@CATCHIN_POWER", "45", "0.3"], ["EXP", "%@CLASS_EXP", "0", "0.1"], ["ANVIL", "%@PRODUCT_SPD", "165", "0.5"], ["CAULDRON", "%@ALCHEMY_EXP", "280", "0.5"], ["BEHOLDER", "%@CRIT_CHANCE", "300", "0.2"], ["BULLSEYE", "%@ACCURACY", "110", "0.8"], ["BOX", "@TRAPPIN_POWER", "180", "0.3"], ["TWOSOUL", "@WORSHIP_POWER", "260", "0.3"], ["EHEXPEE", "%@SKILL_EXP", "69", "0.1"], ["SEESAW", "%@CONS_EXP", "13", "0.5"], ["PECUNIA", "%@COINS", "50", "1"], ["MUTTON", "%@COOKING_EXP", "0", "0.3"], ["EGG", "%@BREEDING_EXP", "25", "0.4"], ["BATTLEAXE", "%@DAMAGE", "300", "0.2"], ["SPIRAL", "%@DIVINITY_EXP", "70", "1"], ["BOAT", "%@SAILING_SPD", "210", "0.5"], ["COMPOST", "%@FARMING_EXP", "75", "0.4"], ["STEALTH", "%@STEALTH", "185", "0.3"], ["ESSENCE", "%@WHITE_ESS", "160", "0.6"], ["VILLAGER", "%@VILLAGER_EXP", "120", "0.3"], ["DRAGON", "%@STATUES_BONUS", "270", "0.2"], ["SPELUNKY", "%@SPELUNK_EXP", "43", "0.2"], ["CORAL", "%@DAILY_CORAL", "181", "0.02"]]

@@ -8,7 +8,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
-from consts.consts_w1 import stamp_maxes, starsigns_dict
+from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
@@ -889,15 +889,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         # Seraph Cosmos
         # Always shown because the modifier can grow based on Summoning levels
         seraph_cosmos_starsign_unlocked = session_data.account.star_signs['Seraph Cosmos']['Unlocked']
-        seraph_cosmos_starsign_mod = (1.1 ** max(3, ceil((session_data.account.all_skills['Summoning'][0] + 1) / 20))) if seraph_cosmos_starsign_unlocked else 1.0
-        star_signs_advice.append(Advice(
-            label=f"{{{{ Star Signs|#star-signs }}}}- Seraph Cosmos:"
-                  f"<br>x{round(seraph_cosmos_starsign_mod, 3)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
-                  f"<br>Note: Always improves the Star Signs below",
-            picture_class='seraph-cosmos',
-            progression=int(seraph_cosmos_starsign_unlocked),
-            goal=1
-        ))
+        seraph_cosmos_starsign_mod = session_data.account.star_sign_extras['SeraphMulti']
+        star_signs_advice.append(session_data.account.star_sign_extras['SeraphAdvice'])
 
         # Add up Infinite Star Sign levels
         infinite_star_sign_levels = session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs'] * 2 + 5
