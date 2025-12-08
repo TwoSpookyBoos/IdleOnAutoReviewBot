@@ -1,6 +1,6 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
-from models.models_util import get_guild_bonus_advice
+from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -116,12 +116,10 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     gscp = session_data.account.gemshop['Purchases']['Carry Capacity']
-    capacity_Advices['Account Wide'].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: Carry Capacity: "
-              f"{25 * gscp['Owned']}%/{gscp['MaxLevel']}%",
-        picture_class='carry-capacity',
-        progression=gscp['Owned'],
-        goal=gscp['MaxLevel']
+    capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
+        purchase_name='Carry Capacity',
+        link_to_section=True,
+        secondary_label=f": +{25 * gscp['Owned']}/{25 * gscp['MaxLevel']}%"
     ))
     capacity_Advices['Account Wide'].append(session_data.account.star_sign_extras['SeraphAdvice'])
 

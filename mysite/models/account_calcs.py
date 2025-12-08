@@ -1,9 +1,9 @@
+import math
 from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, get_gem_shop_bonus_section_name, \
-    greenstack_amount
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, greenstack_amount
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_w1 import get_statue_type_index_from_name
 from consts.consts_monster_data import decode_monster_name
@@ -19,7 +19,7 @@ from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, build
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.models import Advice
-from models.models_util import get_upgrade_vault_advice
+from models.models_util import get_upgrade_vault_advice, get_gem_shop_purchase_advice
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
@@ -230,12 +230,10 @@ def _calculate_w6_summoning_winner_bonuses(account):
 # Multi Group B: Gem Shop - King of all Winners
     max_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['MaxLevel'])
     player_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['Owned'])
-    account.summoning['WinnerBonusesAdvice'].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: King Of All Winners ({account.gemshop['Purchases']['King Of All Winners']['Subsection']}): "
-              f"{round(player_mgb, 1):g}/{max_mgb}x",
-        picture_class='king-of-all-winners',
-        progression=int(account.gemshop['Purchases']['King Of All Winners']['Owned']),
-        goal=account.gemshop['Purchases']['King Of All Winners']['MaxLevel']
+    account.summoning['WinnerBonusesAdvice'].append(get_gem_shop_purchase_advice(
+        purchase_name='King Of All Winners',
+        link_to_section=True,
+        secondary_label=f": {round(player_mgb, 1):g}/{round(max_mgb, 1):g}x"
     ))
 
 # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
@@ -575,7 +573,7 @@ def _calculate_general_storage_slots(account):
         gs = account.gemshop['Purchases'][name]
         account.storage['Other Storage'][name] = {
             'Source': 'Gem Shop',
-            'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({get_gem_shop_bonus_section_name(name)}): "
+            'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({gs['Subsection']}): "
                      f"{details['Slots'] * gs['Owned']}/{details['Slots'] * gs['MaxLevel']} total slots",
             'Owned Slots': details['Slots'] * gs['Owned'],
             'Max Slots': details['Slots'] * gs['MaxLevel'],

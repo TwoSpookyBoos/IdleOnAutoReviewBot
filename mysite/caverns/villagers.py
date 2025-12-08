@@ -240,7 +240,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         unit='%'
     ))
     villager_advice[v_stats].append(Advice(
-        label=f"Up to {gscp['MaxLevel']} Conjuror Pts can be purchased from the Gem Shop",
+        label=f"Up to {gscp['MaxLevel']} Conjuror Pts can be purchased from the {{{{Gem Shop|#gem-shop}}}}",
         picture_class='conjuror-pts',
         progression=gscp['Owned'],
         goal=gscp['MaxLevel']

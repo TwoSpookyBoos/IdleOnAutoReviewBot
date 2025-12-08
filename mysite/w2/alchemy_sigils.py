@@ -7,6 +7,7 @@ from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, 
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
+from models.models_util import get_gem_shop_purchase_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
@@ -109,15 +110,16 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
         goal=1
     ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: Sigil Supercharge: "
-              f"+{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned']}/"
-              f"{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel']}%",
-        picture_class='sigil-supercharge',
-        progression=session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned'],
-        goal=session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel'],
-        completed=not practical_maxed
-    ))
+    gsss_advice = get_gem_shop_purchase_advice(
+        purchase_name='Sigil Supercharge',
+        link_to_section=True,
+        secondary_label=(
+            f": +{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned']}/"
+            f"{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel']}%"
+        )
+    )
+    gsss_advice.completed = not practical_maxed
+    speed_Advice[mga_label].append(gsss_advice)
     speed_Advice[mga_label].append(Advice(
         label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
               f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * get_max_chilled_yarn_multi()}%",

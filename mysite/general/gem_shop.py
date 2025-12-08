@@ -1,8 +1,9 @@
 from models.models import Advice, AdviceGroup, AdviceSection
+from models.models_util import get_gem_shop_purchase_advice
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
-from consts.consts_general import gem_shop_optlacc_dict, get_gem_shop_bonus_section_name
+from consts.consts_general import gem_shop_optlacc_dict
 from consts.consts_idleon import current_world, max_characters
 from consts.consts_w6 import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
@@ -17,7 +18,7 @@ def try_exclude_DungeonTickets(exclusionLists):
     #Scenario 1: All Credit and Flurbo upgrades maxed
     #8 Credit Upgrades with max Rank 100 in [1]
     #8 Flurbo Upgrades with max Rank 50 in [5]
-    if sum(session_data.account.dungeon_upgrades.get("CreditShop", [0])) == 100*8 and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8:
+    if sum(session_data.account.dungeon_upgrades.get('CreditShop', [0])) == 100*8 and sum(session_data.account.dungeon_upgrades.get('FlurboShop', [0])) == 50*8:
         if 'Weekly Dungeon Boosters' not in exclusionLists:
             for sublist in exclusionLists:
                 sublist.append('Weekly Dungeon Boosters')
@@ -38,7 +39,7 @@ def try_exclude_SoupedUpTube(exclusionLists):
     sum_LabLevels = sum(session_data.account.all_skills['Laboratory'])
     if sum_LabLevels >= 180:
         for sublist in exclusionLists:
-            sublist.append("Souped Up Tube")
+            sublist.append('Souped Up Tube')
 
 def try_exclude_FluorescentFlaggies(exclusionLists):
     """
@@ -49,18 +50,18 @@ def try_exclude_FluorescentFlaggies(exclusionLists):
     105-107 are purple cog-makingss_through_d_exclusions
     """
     try:
-        cogList = safe_loads(session_data.account.raw_data.get("CogO", []))
-        cogBlanks = sum(1 for cog in cogList[0:95] if cog == "Blank")
+        cogList = safe_loads(session_data.account.raw_data.get('CogO', []))
+        cogBlanks = sum(1 for cog in cogList[0:95] if cog == 'Blank')
         if cogBlanks <= 60:
             for sublist in exclusionLists:
-                sublist.append("Fluorescent Flaggies")
+                sublist.append('Fluorescent Flaggies')
     except:
         pass
 
 def try_exclude_BurningBadBooks(exclusionLists):
     if session_data.account.construction_buildings['Automation Arm']['Level'] >= 5:
         for sublist in exclusionLists:
-            sublist.append("Burning Bad Books")
+            sublist.append('Burning Bad Books')
 
 def try_exclude_EggCapacity(exclusionLists):
     if session_data.account.breeding['Total Unlocked Count'] >= breeding_total_pets - 5:
@@ -78,7 +79,7 @@ def try_exclude_ChestSluggo(exclusionLists):
     # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
     if session_data.account.sum_artifact_tiers >= 58:  #(sailing_artifacts_count * max_sailing_artifact_level) * 0.43:
         for sublist in exclusionLists:
-            sublist.append("Chest Sluggo")
+            sublist.append('Chest Sluggo')
 
 def try_exclude_Gaming(exclusionLists):
     if (
@@ -133,7 +134,7 @@ def try_exclude_IvoryBubbleCauldrons(exclusionLists):
             sublist.append('Ivory Bubble Cauldrons')
 
 def try_exclude_Farming(exclusionLists):
-    if session_data.account.farming["CropsUnlocked"] >= max_farming_crops:
+    if session_data.account.farming['CropsUnlocked'] >= max_farming_crops:
         for sublist in exclusionLists:
             sublist.append('Instagrow Generator')
             sublist.append('Plot of Land')
@@ -174,12 +175,12 @@ def getGemShopExclusions():
     return s_through_d, practical
 
 def getGemShopAdviceSection() -> AdviceSection:
-    boughtItems = session_data.account.gemshop['Purchases']
+    gsp = session_data.account.gemshop['Purchases']
     ss_through_d_exclusions, practical_max_exclusions = getGemShopExclusions()
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
     recommended_total = sum(recommended_stock.values())
-    recommended_stock_bought = {k: min(v, boughtItems[k]['Owned']) for k, v in recommended_stock.items()}
+    recommended_stock_bought = {k: min(v, gsp[k]['Owned']) for k, v in recommended_stock.items()}
     recommended_total_bought = sum(recommended_stock_bought.values())
 
     #Review all tiers
@@ -188,55 +189,55 @@ def getGemShopAdviceSection() -> AdviceSection:
     #progressionTiers[tier][2] = dict recommendedPurchases
     #progressionTiers[tier][3] = str notes
 
-    s_through_d_groups = [*"SABCD"]
+    s_through_d_groups = [*'SABCD']
     groups = [
         AdviceGroup(
-            tier="",
+            tier='',
             pre_string=tier,
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                get_gem_shop_purchase_advice(name, False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in ss_through_d_exclusions
-                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                and gsp[name]['Owned'] < (goal := int(qty))
             ],
             informational=True
         )
         for i, tier in enumerate(s_through_d_groups, start=1)
     ]
 
-    practical_max_groups = ["Practical Max"]
+    practical_max_groups = ['Practical Max']
     for i, tier in enumerate(practical_max_groups, start=len(s_through_d_groups)+1):
         groups.append(AdviceGroup(
-            tier="",
+            tier='',
             pre_string=tier,
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                get_gem_shop_purchase_advice(name, False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in practical_max_exclusions
-                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                and gsp[name]['Owned'] < (goal := int(qty))
             ],
             informational=True
         ))
 
-    unfiltered_groups = ["True Max"]
+    unfiltered_groups = ['True Max']
     for i, tier in enumerate(unfiltered_groups, start=len(s_through_d_groups)+len(practical_max_groups)+1):
         groups.append(AdviceGroup(
-            tier="",
+            tier='',
             pre_string=tier,
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                Advice(label=f"{name} ({get_gem_shop_bonus_section_name(name)})", picture_class=name, progression=int(prog), goal=int(goal))
+                get_gem_shop_purchase_advice(name, False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!
-                and (prog := float(recommended_stock_bought[name])) < (goal := float(qty))
+                and gsp[name]['Owned'] < (goal := int(qty))
             ],
             informational=True
         ))
@@ -244,18 +245,10 @@ def getGemShopAdviceSection() -> AdviceSection:
     # FOMO tracked through OptionsListAccount entries
     fomo_advice = []
     for purchase_name, purchase_details in gem_shop_optlacc_dict.items():
-        fomo_advice.append(Advice(
-            label=purchase_name,
-            picture_class=purchase_name,
-            progression=boughtItems[purchase_name]['Owned'],
-            goal=boughtItems[purchase_name]['MaxLevel'],
-            informational=True,
-            completed=(
-                boughtItems[purchase_name]['Owned'] >= boughtItems[purchase_name]['MaxLevel']
-                if boughtItems[purchase_name]['MaxLevel'] != EmojiType.INFINITY.value
-                else True
-            )
-        ))
+        advice = get_gem_shop_purchase_advice(purchase_name, False)
+        advice.informational = True
+        advice.completed = False if gsp[purchase_name]['MaxLevel'] == EmojiType.INFINITY.value else None
+        fomo_advice.append(advice)
 
     # FOMO Equipment
     fomo_equipment = {
@@ -295,19 +288,19 @@ def getGemShopAdviceSection() -> AdviceSection:
             'Goal': 1,
             'Image': 'windwalker-hood'
         },
-
     }
     for display, details in fomo_equipment.items():
+        prog = safer_convert(session_data.account.all_assets.get(details['Code Name']).amount, 0)
         fomo_advice.append(Advice(
             label=display,
             picture_class=details['Image'],
-            progression=safer_convert(session_data.account.all_assets.get(details['Code Name']).amount, 0),
+            progression=prog,
             goal=details['Goal'],
+            resource='gem' if prog < details['Goal'] else '',
             informational=True,
             completed=(
-                session_data.account.all_assets.get(details['Code Name']).amount >= details['Goal']
-                if details['Goal'] != EmojiType.INFINITY.value
-                else True
+                False if details['Goal'] == EmojiType.INFINITY.value
+                else session_data.account.all_assets.get(details['Code Name']).amount >= details['Goal']
             )
         ))
 
@@ -341,14 +334,13 @@ def getGemShopAdviceSection() -> AdviceSection:
         "patch/update."
     )
     section = AdviceSection(
-        name="Gem Shop",
+        name='Gem Shop',
         tier=tier,
         header=section_title,
-        picture="gemshop.png",
+        picture='gemshop.png',
         groups=groups,
         note=disclaimer,
         unrated=True,
         informational=True
     )
-
     return section
