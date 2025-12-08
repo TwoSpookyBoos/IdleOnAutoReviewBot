@@ -55,10 +55,10 @@ class UserDataException(BaseCustomException):
 class DataTooLong(UserDataException):
     faq = True
     msg_base = (
-        "Looks like the data you submitted was too long.<br>"
-        "Check what you submitted - it must be either the first toon name or the "
+        "The data you submitted was much longer than expected.<br>"
+        "Verify that you submitted either a Public Profile link or the "
         "JSON object provided by either IdleonEfficiency or IdleonToolbox."
-        "<br><b>STEAM WORKAROUND DATA NOT SUPPORTED.</b>"
+        "<br>If you're positive you did nothing wrong, post in the AutoReview discord."
     )
 
 
