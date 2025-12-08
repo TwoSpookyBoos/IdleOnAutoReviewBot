@@ -291,7 +291,7 @@ expected_stackables = {
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
         'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'FoodHealth1', 'FoodHealth3', 'FoodHealth2', 'Leaf1',  # W1
-        'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2',  # W2
+        'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2', 'StoneA2b',  # W2
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
         'FoodPotYe5', 'Leaf5',  # W5
@@ -354,7 +354,7 @@ expected_stackables = {
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
         'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
-        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',  #W4 Rare Drops
+        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg', 'Weight3',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
         'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
