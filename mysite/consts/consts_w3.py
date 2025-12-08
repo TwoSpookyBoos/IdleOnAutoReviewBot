@@ -1275,7 +1275,7 @@ equipment_sets_dict = {
         ["6", "1", "15", "}x_Higher_Winners|Bonuses_from_Summoning", "}x_Higher_Winners_Bonuses_from|Summoning"]
     ],
     'EMPEROR_SET': [
-        "EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40 EquipmentRings36 EquipmentCape17".split(" "),
+        "EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40 EquipmentRings36 EquipmentPendant35 EquipmentCape17".split(" "),
         ["none"],
         ["none"],
         ["0", "0", "20", "Ribbons_and_Exalted|Stamps_give_}x_more_multi", "Ribbons_and_Exalted_Stamps|give_}x_more_multi"]
