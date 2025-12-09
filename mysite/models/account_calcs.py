@@ -2422,7 +2422,7 @@ def _calculate_general_character_bonus_talent_levels(account):
     account.sum_account_wide_bonus_talents = 0
     for bonusName, bonusValuesDict in account.bonus_talents.items():
         try:
-            account.sum_account_wide_bonus_talents += bonusValuesDict.get('Value', 0)
+            account.sum_account_wide_bonus_talents += int(bonusValuesDict.get('Value', 0))
         except:
             continue
 
