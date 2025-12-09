@@ -8,6 +8,7 @@ from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, ma
     library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import stamp_maxes
+from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
 from models.models import Character
@@ -68,17 +69,19 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
-        furyPostString = ". Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31"
+        furyPostString = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
     elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 3:
-        furyPostString = ". Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}"
+        furyPostString = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
+    elif not session_data.account.spelunk['Cave Bonuses'][0]['Owned'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 4:
+        furyPostString = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
     else:
-        furyPostString = ""
+        furyPostString = ''
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
-              f"+{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}/100{furyPostString}",
-        picture_class="fury-relic",
-        progression=session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0),
-        goal=4
+              f"+{25 * session_data.account.sailing['Artifacts']['Fury Relic']['Level']}/{25 * max_sailing_artifact_level}{furyPostString}",
+        picture_class='fury-relic',
+        progression=session_data.account.sailing['Artifacts']['Fury Relic']['Level'],
+        goal=max_sailing_artifact_level
     ))
 
     #Scaling Sources
@@ -103,14 +106,23 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     #Summoning Sources
     summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{max_summoning_book_levels}"
     bookLevelAdvices[summoningSubgroup] = []
-    cyan14beat = session_data.account.summoning['Battles']['Cyan'] >= 14
+    cyan14 = session_data.account.summoning['BattleDetails']['Cyan'][14]
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning match Cyan14: "
-              f"+{10.5 * cyan14beat}/10.5{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
-        picture_class="samurai-guardian",
-        progression=1 if cyan14beat else 0,
+        label=f"{{{{Summoning|#summoning}}}} match Cyan14: "
+              f"+{cyan14['RewardBaseValue'] * cyan14['Defeated']}/{cyan14['Description']}",
+        picture_class=cyan14['Image'],
+        progression=1 if cyan14['Defeated'] else 0,
         goal=1
     ))
+    teal9 = session_data.account.summoning['BattleDetails']['Teal'][9]
+    bookLevelAdvices[summoningSubgroup].append(Advice(
+        label=f"{{{{Summoning|#summoning}}}} match Teal9: "
+              f"+{teal9['RewardBaseValue'] * teal9['Defeated']}/{teal9['Description']}",
+        picture_class=teal9['Image'],
+        progression=1 if teal9['Defeated'] else 0,
+        goal=1
+    ))
+
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
     bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryLibrary'])
