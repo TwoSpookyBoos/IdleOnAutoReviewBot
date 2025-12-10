@@ -67,8 +67,8 @@ def parse_user_input():
     if not data:
         return None, None
 
-    if len(data) >= 1e6:
-        raise DataTooLong("Submitted data is too long.", data)
+    if len(data) >= 1e7:
+        raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", data)
 
     if is_username(data):
         parsed, source_string = format_character_name(data)

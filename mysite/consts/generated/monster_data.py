@@ -599,6 +599,9 @@ monster_data = {
     "xmasEvent3": {
         "Name": "Golden Giftmas Box"
     },
+    "xmasEvent4": {
+        "Name": "Big Ol Giftmas Box"
+    },
     "loveEvent": {
         "Name": "Loveulyte"
     },
@@ -697,6 +700,9 @@ monster_data = {
     },
     "Pet12": {
         "Name": "Axolotl"
+    },
+    "bubba": {
+        "Name": "Bubba the Seal"
     },
     "Copper": {
         "Name": "Copper"
@@ -1091,5 +1097,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "e7e03d02af061a4f03ab869aa81c83ea159ed9c4c2324b93d13ab88ca4dc6ed3"
+    "_hash": "10077ec037b60caa54567c6a9c47e555e3bfbfafac570f5447a42cb977961a6e"
 }

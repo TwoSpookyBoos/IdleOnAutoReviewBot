@@ -45,7 +45,7 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 
 def getBallotMultiAdviceGroup():
     e_vr = session_data.account.equinox_bonuses['Voter Rights']
-    endless = session_data.account.summoning['Endless Bonuses']['% Ballot Bonus']
+    endless = session_data.account.summoning['Endless Bonuses']['+{% Ballot Bonus']
     voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']

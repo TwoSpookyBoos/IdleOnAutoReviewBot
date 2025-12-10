@@ -26,7 +26,7 @@ def getAchievementExclusions() -> set[str]:
         # This achievement is Steam only- This gives other platforms a way around the requirement
         exclusionsSet.add('Mutant Massacrer')
 
-    if session_data.account.gemshop['Royal Egg Cap'] < 2:
+    if session_data.account.gemshop['Purchases']['Royal Egg Cap']['Owned'] < 2:
         # I wouldn't go spend gems just for this achievement, but you should get it if you already spent the Gems
         exclusionsSet.add('Gilded Shells')
 

@@ -1,5 +1,3 @@
-@import "sailing";
-
 $cosmic-storage-chest: img('data/InvStorage99.png');
 $storage-chest-90: img('wiki/Storage_Chest_90.png');
 
@@ -9,14 +7,67 @@ $gem-shop: (
     storage: $cosmic-storage-chest,
     storage-chest-space: $storage-chest-90,
     more-storage-space: $cosmic-storage-chest,
+    cosmic-storage-chest: $cosmic-storage-chest,
 
     // Normal Gem Shop stuff
-    inventory-bag-u: img('data/InvBag21.png'),
-    storage-chest-90: $storage-chest-90,
-    carry-capacity: img('wiki/Carry_Capacity.png'),
-    food-slot: img('wiki/Food_Slot.png'),
+    inventory-bag-u:        img('data/InvBag21.png'),
+    storage-chest-90:       $storage-chest-90,
 
-    cosmic-storage-chest: $cosmic-storage-chest,
+    infinity-hammer:                    img('data/GemP1.png'),
+    carry-capacity:                     img('data/GemP2.png'),
+    extra-card-slot:                    img('data/GemP3.png'),
+    brimstone-forge-slot:               img('data/GemP4.png'),
+    obol-storage-space:                 img('data/GemP5.png'),
+    ivory-bubble-cauldrons:             img('data/GemP6.png'),
+    bleach-liquid-cauldrons:            img('data/GemP7.png'),
+    food-slot:                          img('data/GemP8.png'),
+    quality-obol-stack:                 img('data/GemP9.png'),
+    marvelous-obol-stack:               img('data/GemP10.png'),
+    smol-arcade-balls:                  img('data/GemP11.png'),
+    med-arcade-balls:                   img('data/GemP12.png'),
+    biggy-arcade-balls:                 img('data/GemP13.png'),
+                                        //GemP14 is a Pink version of GemP15. I don't think it is in use as of 2025-12-07
+    weekly-dungeon-boosters:            img('data/GemP15.png'),
+    dungeon-loot-dice:                  img('data/GemP16.png'),
+    sigil-supercharge:                  img('data/GemP17.png'),
+    dragonic-liquid-cauldron:           img('data/GemP18.png'),
+    bossius-obol-stack:                 img('data/GemP19.png'),
+    miracle-chest:                      img('data/GemP20.png'),
+    chest-sluggo:                       img('data/GemP21.png'),
+    divinity-sparkie:                   img('data/GemP22.png'),
+    golden-sprinkler:                   img('data/GemP23.png'),
+    lava-sprouts:                       img('data/GemP24.png'),
+    hyper-obol-stack:                   img('data/GemP25.png'),
+    ancient-artifact:                   img('data/GemP26.png'),
+    plot-of-land:                       img('data/GemP27.png'),
+    pristine-charm:                     img('data/GemP28.png'),
+    shroom-familiar:                    img('data/GemP29.png'),
+    sand-of-time:                       img('data/GemP30.png'),
+    instagrow-generator:                img('data/GemP31.png'),
+    life-refill:                        img('data/GemP32.png'),
+                                        //GemP33 and 34 don't exist
+    hyper-obol-stack-square-edition:    img('data/GemP35.png'),
+    funny-2hr-fishy:                    img('data/GemP36.png'),
+    funny-2hr-feather:                  img('data/GemP37.png'),
+    rupie-slug:                         img('data/GemP38.png'),
+    exalted-stamps:                     img('data/GemP39.png'),
+    parallel-villagers:                 img('data/GemP40.png'),
+    resource-boost:                     img('data/GemP41.png'),
+    conjuror-pts:                       img('data/GemP42.png'),
+    opal:                               img('data/GemP43.png'),
+    equinox-pingy:                      img('data/GemP44.png'),
+    lifetime-tickets:                   img('data/GemP45.png'),
+    single-entry:                       img('data/GemP46.png'),
+    cosmic-arcade-ball:                 img('data/GemP47.png'),
+    gallery-showcases:                  img('data/GemP48.png'),
+    more-coral:                         img('data/GemP49.png'),
+    legend-talent-pts:                  img('data/GemP50.png'),
+    super-auto-mode:                    img('data/GemP51.png'),
+    bling-bags:                         img('data/GemP52.png'),
+    davey-jones-training:               img('data/GemP53.png'),
+    novelty-jade-coins:                 img('data/GemP54.png'),
+    king-of-all-winners:                img('data/GemP55.png'),
+
     card-presets: img('wiki/Card_Presets.png'),
     daily-teleports: img('wiki/Daily_Teleports.png'),
     daily-minigame-plays: img('wiki/Daily_Minigame_Plays.png'),
@@ -31,36 +82,17 @@ $gem-shop: (
     dungeon-card-pack: img('wiki/Dungeon_Card_Pack.png'),
     smolderin-card-pack: img('wiki/Smolderin_Card_Pack.png'),
     spirit-card-pack: img('wiki/Spirit_Card_Pack.png'),
-    extra-card-slot: img('wiki/Extra_Card_Slot.png'),
     cardifier-4-star: img('wiki/4_Star_Cardifier.png'),
-
-    smol-arcade-balls: img('wiki/Smol_Arcade_Balls.png'),
-    med-arcade-balls: img('wiki/Med_Arcade_Balls.png'),
-    
-    weekly-dungeon-boosters: img('wiki/Weekly_Dungeon_Boosters.png'),
-    //key-chains in _equipment $equipment-keychains
-    
-    biggy-arcade-balls: img('wiki/Biggy_Arcade_Balls.png'),
-    falloween-treat: img('wiki/Falloween_Treat.png'),
     cardifier-5-star: img('wiki/5_Star_Cardifier.png'),
-
+    falloween-treat: img('wiki/Falloween_Treat.png'),
     trophie: img('wiki/Trophie.png'),
     gold-pocketwatch: img('wiki/Gold_Pocketwatch.png'),
     silver-pocketwatch: img('wiki/Silver_Pocketwatch.png'),
-    
     hat-premiumifier: img('data/Ht.png'),
     //premium stones in _equipment $equipment-stones
-    
-    infinity-hammer: img('wiki/Infinity_Hammer.png'),
-    brimstone-forge-slot: img('wiki/Brimstone_Forge_Slot.png'),
-    
-    ivory-bubble-cauldrons: img('wiki/Ivory_Bubble_Cauldrons.png'),
-    bleach-liquid-cauldrons: img('wiki/Bleach_Liquid_Cauldrons.png'),
-    obol-storage-space: img('wiki/Obol_Storage_Space.png'),
-    quality-obol-stack: img('wiki/Quality_Obol_Stack.png'),
-    marvelous-obol-stack: img('wiki/Marvelous_Obol_Stack.png'),
-    sigil-supercharge: img('wiki/Sigil_Supercharge.png'),
-    
+    //key-chains in _equipment $equipment-keychains
+
+    //W3
     crystal-3d-printer: img('wiki/Crystal_3d_Printer.png'),
     more-sample-spaces: img('wiki/More_Sample_Spaces.png'),
     burning-bad-books: img('wiki/Burning_Bad_Books.png'),
@@ -69,7 +101,8 @@ $gem-shop: (
     cog-inventory-space: img('wiki/Cog_Inventory_Space.png'),
     tower-building-slots: img('wiki/Tower_Building_Slots.png'),
     fluorescent-flaggies: img('wiki/Fluorescent_Flaggies.png'),
-    
+
+    //W4
     royal-egg-cap: img('wiki/Royal_Egg_Cap.png'),
     richelin-kitchen: img('wiki/Richelin_Kitchen.png'),
     console-chip: img('wiki/Console_Chip.png'),
@@ -78,42 +111,17 @@ $gem-shop: (
     pet-storage: img('wiki/Pet_Storage.png'),
     fenceyard-space: img('wiki/Fenceyard_Space.png'),
     pet-egg: img('wiki/Pet_Egg.png'),
-    
-    miracle-chest: map-get($chests, miracle-chest),
+
+    //W5
     bottled-wind: img('wiki/Bottled_Wind.png'),
-    chest-sluggo: img('wiki/Chest_Sluggo.png'),
-    ancient-artifact: img('wiki/Ancient_Artifact.png'),
-    divinity-sparkie: img('wiki/Divinity_Sparkie.png'),
-    golden-sprinkler: img('wiki/Golden_Sprinkler.png'),
     gaming-fertilizer: img('wiki/Gaming_Fertilizer.png'),
-    lava-sprouts: img('wiki/Lava_Sprouts.png'),
-    
-    plot-of-land: img('wiki/Plot_Of_Land.png'),
-    pristine-charm: img('wiki/Pristine_Charm.png'),
-    shroom-familiar: img('wiki/Shroom_Familiar.png'),
-    sand-of-time: img('wiki/Sand_of_Time.png'),
-    instagrow-generator: img('wiki/Instagrow_Generator.png'),
-    life-refill: img('wiki/Life_Refill.png'),
     compost-bag: img('wiki/Compost_Bag.png'),
     summoner-stone: img('wiki/Summoner_Stone.png'),
-    
-    dungeon-loot-dice: img('wiki/Dungeon_Loot_Dice.png'),
 
+    //Caverns
     two-hour-lantern: img('wiki/2_Hour_Lantern.png'),
-    parallel-villagers: img('wiki/Parallel_Villagers.png'),
     parallel-villagers-the-explorer: img('wiki/Polonai.gif'),
     parallel-villagers-the-engineer: img('wiki/Kaipu.gif'),
     parallel-villagers-the-conjuror: img('wiki/Cosmos.gif'),
     parallel-villagers-the-measurer: img('wiki/Minau.gif'),
-    resource-boost: img('wiki/Resource_Boost.png'),
-    conjuror-pts: img('wiki/Conjuror_Pts.png'),
-    opal: img('wiki/Opal.png'),
-
-    //Limited FOMO Shop stuff
-    equinox-pingy: img('data/GemP44.png'),
-    rupie-slug: img('data/GemP38.png'),
-    dragonic-liquid-cauldron: img('wiki/Dragonic_Liquid_Cauldron.png'),
-    exalted-stamps: img('data/GemP39.png'),
-    lifetime-tickets: img('data/GemP45.png'),
-    single-entry: img('data/GemP46.png'),
 );

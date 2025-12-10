@@ -1,6 +1,6 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
-from models.models_util import get_guild_bonus_advice
+from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -46,7 +46,7 @@ def getStampExclusions() -> dict[str, bool]:
         exclusionsDict['Mason Jar Stamp'] = True
 
     # If all summoning matches are finished, exclude the Sussy Gene stamps if not obtained
-    if session_data.account.summoning['AllBattlesWon']:
+    if session_data.account.summoning['AllRegularBattlesWon']:
         exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp']['Delivered'] else False
         exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
         exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False
@@ -115,12 +115,11 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Account Wide'].append(get_guild_bonus_advice('Rucksack'))
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
-    capacity_Advices['Account Wide'].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: Carry Capacity: "
-              f"{(25 * session_data.account.gemshop.get('Carry Capacity', 0))}%/250%",
-        picture_class="carry-capacity",
-        progression=session_data.account.gemshop.get('Carry Capacity', 0),
-        goal=10
+    gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']
+    capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
+        purchase_name='Carry Capacity',
+        link_to_section=True,
+        secondary_label=f": +{25 * gemshop_carry_capacity['Owned']}/{25 * gemshop_carry_capacity['MaxLevel']}%"
     ))
     capacity_Advices['Account Wide'].append(session_data.account.star_sign_extras['SeraphAdvice'])
 
@@ -276,7 +275,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     stamps = session_data.account.stamps
     compass = session_data.account.compass
-    gemshop = session_data.account.gemshop
+    gemshop = session_data.account.gemshop['Purchases']
     atom_collider = session_data.account.atom_collider
     pc = session_data.account.sneaking['PristineCharms']
 
@@ -330,7 +329,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         picture_class='event-shop-18'
     ))
 
-    tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps'] + int(extra_exaltedness['Owned'])
+    tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
 
     exalted_advice[tot].append(Advice(
         label=f"Total Exalted Stamps spent: {compass['Total Exalted']}/{tot_available}",
@@ -344,11 +343,12 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         progression=compass['Upgrades']['Exalted Stamps']['Level'],
         goal=compass['Upgrades']['Exalted Stamps']['Max Level']
     ))
+    gemshop_exalted_stamps = gemshop['Exalted Stamps']
     exalted_advice[tot].append(Advice(
-        label=f"Exalted Stamps from Gem Shop (Limited Availability): {gemshop['Exalted Stamps']}",
+        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps['Subsection']}): {gemshop_exalted_stamps['Owned']}",
         picture_class='exalted-stamps',
-        progression=gemshop['Exalted Stamps'],
-        goal=EmojiType.INFINITY.value
+        progression=gemshop_exalted_stamps['Owned'],
+        goal=gemshop_exalted_stamps['MaxLevel']
     ))
 
     exalted_advice[rec] = [

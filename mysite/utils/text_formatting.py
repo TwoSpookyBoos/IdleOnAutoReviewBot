@@ -200,3 +200,26 @@ def notateNumber(inputType: str, inputValue: float | Decimal, decimals=2, overri
         case _:
             result = f"{inputValue:,}"
     return result
+
+def vault_string_cleaner(input: str) -> str:
+    clean = (
+        input
+        .replace('(Tap_for_more_info)', '')
+        .replace('(Tap_for_Info)', '')
+        .replace('製', '')
+        .replace('Total_Coin_Bonus_from@all@sources;~x', '')
+        .replace('Total_bonus:+$%_Coins', '')
+        .replace('$%_Coins', '')
+        .replace('Total:+$%_DMG', '')
+        .replace('Total_Bonus:+$%_DMG', '')
+        .replace('(Total:+^%)', '')
+        .replace('$_Dmg', '')
+        .replace('$%_DMG', '')
+        .replace('Total_Bonus:+$%_Class_EXP', '')
+        .replace('$%_Build_SPD', '')
+        .replace('Total_Bonus:+', '')
+        .replace('_', ' ')
+        .replace('$', '')
+        .strip()
+    )
+    return clean

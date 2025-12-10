@@ -4,6 +4,7 @@ from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice
 from math import floor, ceil
 from utils.logging import get_logger
+from utils.misc.has_companion import has_companion
 
 logger = get_logger(__name__)
 
@@ -25,7 +26,7 @@ class Salt:
             self.consumption_of_previous_salt: int = session_data.account.refinery[salt_name]['PreviousSaltConsumption']
             self.next_salt_consumption: int = session_data.account.refinery[salt_name]['NextSaltConsumption']
             self.next_salt_cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['NextSaltCyclesPerSynthCycle']
-            self.output: int = int(floor(self.salt_rank ** 1.3)) * self.cycles_per_Synthesis_cycle
+            self.output: int = int(floor((self.salt_rank ** 1.3) * (2 if has_companion("Panda") else 1))) * self.cycles_per_Synthesis_cycle
             if next_salt_rank != 0:
                 self.consumed: int = int(floor(next_salt_rank ** self.salt_consumption_scaling) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
             else:

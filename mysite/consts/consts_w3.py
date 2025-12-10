@@ -191,25 +191,25 @@ totems_list = [
     'Breezy Battle'
 ]
 
-# TODO: W7 has added more sources
 max_static_book_levels = (
     25  #Construction Building: Talent Level Library
     + 5  #W3 Achievement: Checkout Takeout
-    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
     + 10  #Atom Collider: Oxygen (level 1 gives all 10 levels)
+    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
+
     # 165 total last updated in v2.46 Nov 29
 )
 max_scaling_book_levels = (
-    20  #Salt Lick
-    + 10  #World 3 Merit Shop
+    10  #World 3 Merit Shop
+    + 20  #Salt Lick
     # 30 total last updated in v2.46 Nov 29
 )
 max_summoning_book_levels = round(
     (10.5  #Summoning Battle: Cyan 14
      + 3.5  #Summoning Battle: Teal 9
      )
-    * ValueToMulti(50)  #Gem Shop: King of all Winners
     * ValueToMulti(30)  #Pristine Charm: Crystal Comb
+    * ValueToMulti(50)  #Gem Shop: King of all Winners
     * ValueToMulti(
         1       #Achievement: Spectre Stars
         + 10    #World 6 Merit Shop
@@ -236,10 +236,19 @@ skill_talentsDict = {
     # [0] = the starting level
     # [1] = the interval of levels after the starting level which provide a bonus
     # [2] = does this talent benefit from bonuses over the max book level, True of False]
-    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift Slug of Arctis
+    # Example: Symbols of Beyond gives a benefit every 20 levels and does NOT benefit from bonuses like Rift, Slug, or Arctis
     # 2nd example: Apocalypse ZOW gives a bonus every 33 and DOES benefit from bonuses
 
     # Wisdom Skills
+    'Summoning': {
+        'High': {
+            595: {'Name': 'Essential Essence', 'Tab': 'Tab 5'},
+            596: {'Name': 'Passion of the Summon', 'Tab': 'Tab 5'},
+        },
+        'Medium': {
+            597: {'Name': 'Absolute Stardom', 'Tab': 'Tab 5'},
+        },
+    },
     "Chopping": {
         "High": {
             460: {"Name": "Log on Logs", "Tab": "Tab 2"},
@@ -250,6 +259,7 @@ skill_talentsDict = {
             532: {"Name": "Skill Wiz", "Tab": "Tab 4"},
         },
         "Medium": {
+            593: {'Name': 'Individuality', 'Tab': 'Tab 5'},
             533: {"Name": "Utmost Intellect", "Tab": "Tab 4"},
             456: {"Name": "Unt'WIS'ted Robes", "Tab": "Tab 2"},
             459: {"Name": "Individual Insight", "Tab": "Tab 2"},
@@ -271,6 +281,7 @@ skill_talentsDict = {
     },
     "Alchemy": {
         "Medium": {
+            598: {'Name': 'Tachyon Truth', 'Tab': 'Tab 5'},
             492: {"Name": "Bubble Breakthrough", "Tab": "Tab 3"},
         },
         "Low": {
@@ -626,6 +637,25 @@ combat_talentsDict = {
     },
 
     # Mages
+    'Arcane Cultist': {
+        'High': {
+            587: {'Name': 'Arcane Skulls', 'Tab': 'Tab 5'},
+            586: {'Name': 'Tesseract', 'Tab': 'Tab 5'},
+            599: {'Name': 'Backup Energy', 'Tab': 'Tab 5'},
+            588: {'Name': 'Arcane Crystals', 'Tab': 'Tab 5'},
+
+        },
+        'Medium': {
+            585: {'Name': 'Arcanist Form', 'Tab': 'Tab 5'},
+            590: {'Name': 'Ghastly Power', 'Tab': 'Tab 5'},
+            591: {'Name': 'Ghoulish Power', 'Tab': 'Tab 5'},
+            592: {'Name': 'Labotomizer', 'Tab': 'Tab 5'},
+        },
+        'Low': {
+            589: {'Name': 'Overwhelming Energy', 'Tab': 'Tab 5'},
+            594: {'Name': 'Primo Prisma', 'Tab': 'Tab 5'},
+        }
+    },
     "Bubonic Conjuror": {
         "High": {
             490: {"Name": "Cranium Cooking", "Tab": "Tab 3"},
@@ -1245,7 +1275,7 @@ equipment_sets_dict = {
         ["6", "1", "15", "}x_Higher_Winners|Bonuses_from_Summoning", "}x_Higher_Winners_Bonuses_from|Summoning"]
     ],
     'EMPEROR_SET': [
-        "EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40 EquipmentRings36 EquipmentCape17".split(" "),
+        "EquipmentHats119 EquipmentShirts39 EquipmentPants31 EquipmentShoes40 EquipmentRings36 EquipmentPendant35 EquipmentCape17".split(" "),
         ["none"],
         ["none"],
         ["0", "0", "20", "Ribbons_and_Exalted|Stamps_give_}x_more_multi", "Ribbons_and_Exalted_Stamps|give_}x_more_multi"]

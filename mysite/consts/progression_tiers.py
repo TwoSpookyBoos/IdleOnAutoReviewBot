@@ -63,7 +63,7 @@ gemShop_progressionTiers = [
     # int tier, str tierName, dict recommendedPurchases, str notes
     [0, "", {}, ""],
     [1, "S", {
-        'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3d Printer': 1, 'Richelin Kitchen': 1, 'Divinity Sparkie': 1, 'Instagrow Generator': 1,
+        'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3D Printer': 1, 'Richelin Kitchen': 1, 'Divinity Sparkie': 1, 'Instagrow Generator': 1,
         'Extra Card Slot': 4},
      ""],
     [2, "A", {
@@ -72,28 +72,28 @@ gemShop_progressionTiers = [
         'Royal Egg Cap': 3, 'Souped Up Tube': 1,
         'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 1,
         'Conjuror Pts': 1,
-        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot of Land': 2},
+        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot Of Land': 2},
      ""],
     [3, "B", {
         'Item Backpack Space': 2, 'Storage Chest Space': 4, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
         'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2, 'Zen Cogs': 4, 'Tower Building Slots': 2,
         'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Conjuror Pts': 3,
-        'Plot of Land': 4, 'Instagrow Generator': 5},
+        'Plot Of Land': 4, 'Instagrow Generator': 5},
      ""],
     [4, "C", {
         'Item Backpack Space': 3, 'Storage Chest Space': 8, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9,
         'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Parallel Villagers The Librarian': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
-        'Plot of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
+        'Plot Of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
      ""],
     [5, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8,
         'Ivory Bubble Cauldrons': 4, 'More Sample Spaces': 6, 'Zen Cogs': 8,
         'Souped Up Tube': 3, 'Fenceyard Space': 6, 'Chest Sluggo': 12,
         'Resource Boost': 4, 'Conjuror Pts': 12, 'Opal': 8,
-        'Plot of Land': 8, 'Instagrow Generator': 8,
+        'Plot Of Land': 8, 'Instagrow Generator': 8,
     },
      ""],
     [6, "Practical Max", {
@@ -103,7 +103,7 @@ gemShop_progressionTiers = [
         'Golden Sprinkler': 1, 'Divinity Sparkie': 6, 'Lava Sprouts': 6,
         'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 20,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1,
-        'Plot of Land': 12, 'Shroom Familiar': 6,
+        'Plot Of Land': 12, 'Shroom Familiar': 6,
     },
      "I wouldn't recommend going any further as of v2.26."],
     [7, "True Max",
@@ -120,7 +120,7 @@ gemShop_progressionTiers = [
         'Infinity Hammer': 1, 'Brimstone Forge Slot': 16, 'Ivory Bubble Cauldrons': 4, 'Bleach Liquid Cauldrons': 4,
         'Obol Storage Space': 12, 'Sigil Supercharge': 10,
         #World 3
-        'Crystal 3d Printer': 1, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Prayer Slots': 4,
+        'Crystal 3D Printer': 1, 'More Sample Spaces': 6, 'Burning Bad Books': 4, 'Prayer Slots': 4,
         'Zen Cogs': 8, 'Cog Inventory Space': 20, 'Tower Building Slots': 4, 'Fluorescent Flaggies': 6,
         #World 4
         'Royal Egg Cap': 5, 'Richelin Kitchen': 10, 'Souped Up Tube': 5, 'Pet Storage': 12, 'Fenceyard Space': 6,
@@ -129,7 +129,7 @@ gemShop_progressionTiers = [
         #Caverns
         'Resource Boost': 10, 'Conjuror Pts': 12, 'Opal': 60,
         #World 6
-        'Plot of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
+        'Plot Of Land': 12, 'Shroom Familiar': 6, 'Instagrow Generator': 8,
      },
      "This final tier is for the truly depraved. Many of these bonuses are very weak or outright useless."]
 ]
@@ -614,11 +614,11 @@ statues_progressionTiers = {
 vault_progressionTiers = {
     1: {
         'Include': [
-            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday$',
+            'Bigger Damage', 'Massive Whirl', 'Rapid Arrows', 'Dual Fireballs', 'Weapon Craft', 'Mining Payday',
             'Baby on Board', 'Bored to Death', 'Stamp Bonanza', 'Drops for Days', 'Slice N Dice', 'Go Go Secret Owl',
             'Boss Decimation', 'Sleepy Time', 'Production Revolution', 'Statue Bonanza', 'Stick Snapping', 'Liquid Knowledge',
-            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish$", 'Straight to Storage', 'Bubble Money',
-            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse$', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
+            'Bug Knowledge', 'Fish Knowledge', 'Dirty Money', "Schoolin' the Fish", 'Straight to Storage', 'Bubble Money',
+            'Drip Drip Drip', 'Active Learning', 'Bug Power En Masse', 'Vial Overtune', 'Daily Mailbox', 'Duplicate Entries'
         ]
     },
     2: {
@@ -628,7 +628,7 @@ vault_progressionTiers = {
     },
     3: {
         'Exclude': [
-            'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
+            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
             'Beeg Forge',  #Having too large of Ore capacity can be annoying. Not maxing this is one way player's have chosen to keep capacity down
             'Card Retirement'  #Passive cards cannot be doubled. I don't care, but some people like the option
         ]  #You're probably going to regret doing an exclude after Vault3 gets added, RIP

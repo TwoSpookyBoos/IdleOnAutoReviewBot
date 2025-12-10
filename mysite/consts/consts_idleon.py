@@ -32,11 +32,11 @@ current_world = 7
 max_characters = 10
 
 expected_talents_dict = {
-    "Beginner": [
+    'Beginner': [
         0, 1, 8, 9, 5,
         10, 11, 12, 13, 6,
     ],
-    "Journeyman": [
+    'Journeyman': [
         #All 3 rows from Tab1
         0, 1, 8, 9, 5,
         10, 11, 12, 13, 6,
@@ -46,19 +46,19 @@ expected_talents_dict = {
         20, 21, 22, 23, 24,  #Middle row
         25, 26, 27, 28, 29  #Bottom row
     ],
-    "Maestro": [
+    'Maestro': [
         30, 31, 32, 33, 34,
         35, 36, 37, 38, 39,
         40, 41, 42, 43, 44
     ],
-    "Voidwalker": [
+    'Voidwalker': [
         45, 46, 47, 48, 49,
         50, 51, 52, 53, 54,
         55, 56, 57, 58, 59
     ],
     #"Infinilyte": [],
 
-    "Warrior": [
+    'Warrior': [
         #All 3 rows from Tab1
         0, 1, 8, 9, 5,
         10, 11, 12, 13, 6,
@@ -68,34 +68,34 @@ expected_talents_dict = {
         95, 96, 97, 98, 99,
         100, 101, 102, 103, 104
     ],
-    "Barbarian": [
+    'Barbarian': [
         105, 106, 107, 108, 109,
         110, 111, 112, 81, 114,
         115, 116, 117, 118, 119
     ],
-    "Squire": [
+    'Squire': [
         120, 121, 122, 123, 124,
         125, 111, 127, 81, 129,
         130, 131, 132, 133, 119
     ],
-    "Blood Berserker": [
+    'Blood Berserker': [
         135, 136, 137, 138, 139,
         140, 141, 142, 143, 144,
         145, 146, 147, 148, 149
     ],
-    "Death Bringer": [
+    'Death Bringer': [
         195, 196, 197, 198, 199,
         200, 201, 202, 203, 204,
         205, 206, 207, 208, 209
     ],
-    "Divine Knight": [
+    'Divine Knight': [
         165, 166, 167, 168, 169,
         170, 141, 142, 143, 144,
         175, 176, 177, 178, 149
     ],
     #"Royal Guardian": [],
 
-    "Archer": [
+    'Archer': [
         #All 3 rows from Tab1
         0, 1, 8, 9, 5,
         10, 11, 12, 13, 6,
@@ -105,34 +105,34 @@ expected_talents_dict = {
         284, 276, 277, 278, 279,
         280, 281, 282, 283, 265
     ],
-    "Bowman": [
+    'Bowman': [
         285, 286, 287, 288, 289,
         290, 291, 292, 293, 294,
         295, 296, 297, 298, 299
     ],
-    "Hunter": [
+    'Hunter': [
         300, 301, 302, 303, 304,
         305, 291, 307, 293, 309,
         310, 311, 312, 313, 299
     ],
-    "Siege Breaker": [
+    'Siege Breaker': [
         360, 316, 317, 318, 319,
         320, 366, 367, 368, 144,
         325, 326, 327, 328, 374
     ],
     #"Mayheim": [],
-    "Beast Master": [
+    'Beast Master': [
         315, 361, 362, 363, 364,
         365, 366, 367, 368, 144,
         370, 371, 372, 373, 374
     ],
-    "Wind Walker": [
+    'Wind Walker': [
         420, 421, 422, 423, 424,
         425, 426, 427, 428, 429,
         430, 431, 432, 433, 434
     ],
 
-    "Mage": [
+    'Mage': [
         #All 3 rows from Tab1
         0, 1, 8, 9, 5,
         10, 11, 12, 13, 6,
@@ -142,87 +142,91 @@ expected_talents_dict = {
         455, 456, 457, 458, 459,
         460, 461, 462, 464, 463  #Not a typo, 464 is before 463
     ],
-    "Wizard": [
+    'Wizard': [
         465, 466, 467, 468, 469,
         470, 486, 472, 488, 474,
         475, 476, 477, 478, 494
     ],
-    "Shaman": [
+    'Shaman': [
         480, 481, 482, 483, 484,
         485, 486, 487, 488, 489,
         490, 491, 492, 493, 494
     ],
-    "Elemental Sorcerer": [
+    'Elemental Sorcerer': [
         495, 496, 497, 498, 499,
         500, 531, 532, 533, 144,
         505, 506, 507, 508, 539
     ],
     #"Spiritual Monk": [],
-    "Bubonic Conjuror": [
+    'Bubonic Conjuror': [
         525, 526, 527, 528, 529,
         530, 531, 532, 533, 144,
         535, 536, 537, 538, 539
     ],
-    #"Arcane Cultist": [],
-    "VIP": [
+    'Arcane Cultist': [
+        585, 586, 587, 588, 589,
+        590, 591, 592, 593, 594,
+        595, 596, 597, 598, 599,
+    ],
+    'VIP': [
         641, 642, 643, 644, 645
     ],
 }
 base_crystal_chance = 0.0005  # 1 in 2000
 max_crystal_chance = 0.1  #10% last updated in v2.45 Nov 15. Any extra crystal spawn chance above this increases loot and killcount, but not spawns
 
-# `CompanionDB` in source. Last updated in v2.43 Nov 6
+# `CompanionDB` in source. Last updated in v2.48 Dec 10
 companions_info = [
-    "babaMummy All_Divinities_from_World_5_count_as_Active 1 -53 -22 -14 2000".split(" "),
-    "rift2 +25_Lv_for_all_Talents 25 -31 6 -14 450".split(" "),
-    "ram You_can_use_Storage_Chest_anywhere_in_Quickref 1 -26 16 -19 150".split(" "),
-    "Crystal3 {100%_Drop_Rate_and_Exp_from_monsters 100 -19 20 -8 150".split(" "),
-    "sheep All_big_bubbles_in_Alchemy_count_as_equipped 1 -6 0 -11 10".split(" "),
-    "w5b1 {5%_All_Skill_Efficiency 5 0 0 -5 10".split(" "),
-    "beanG {5%_AFK_Gains_Rate_for_Fighting_and_Skills 5 -9 0 -22 10".split(" "),
-    "slimeG +25%_Golden_Balls_earned_in_Arcade_for_Upgrades 1 17 0 -1 5".split(" "),
-    "jarSand +15_Base_All_Stats_(STR/AGI/WIS/LUK) 15 5 0 -3 5".split(" "),
-    "bloque +20%_All_Skill_EXP 20 1 0 -17 5".split(" "),
-    "frogG +10%_Total_Damage 10 12 0 -5 5".split(" "),
-    "slimeBz Only_100_of_these_exist_in_IdleOn... 10 -48 0 -30 1".split(" "),
-    "caveC 10x_Total_Damage 9 -44 0 -35 1000".split(" "),
-    "w6d3 3x_Villager_EXP_and_+25_Opals 1 -29 0 -19 250".split(" "),
-    "rift3 2x_Kills_for_Opening_Portals_and_Deathnote 1 -21 0 -16 250".split(" "),
-    "w6b4 3.50x_faster_Equinox_Bar_Fill_Rate 2.5 -23 0 -19 100".split(" "),
-    "Crystal4 1.75x_Lab_EXP_and_Divinity_EXP_Gain .75 -21 0 -5 100".split(" "),
-    "w5b6 3d_Printer_samples_grow_{1%/day_for_100_days 1 -17 0 -15 100".split(" "),
-    "frogBIG {25%_Carry_Capacity_for_all_item_types 25 -13 0 -29 10".split(" "),
-    "potato {5%_Ballot_Bonus_Multi_(World_2_feature) 5 -46 0 -25 10".split(" "),
-    "w4b1 {30_Talent_Points_for_all_classes 30 -1 0 -5 10".split(" "),
-    "frogP +15%_Defence 15 10 0 -5 5".split(" "),
-    "glass +15%_Drop_Rate 15 -2 0 -5 5".split(" "),
-    "mushG +15%_Accuracy 15 -8 0 -5 5".split(" "),
-    "Pet10 4x_Coins_from_Mobs 3 -10 0 -13 500".split(" "),
-    "Pet12 {50%_AFK_Gains 50 3 0 -20 500".split(" "),
-    "Pet3 1.30x_Drop_Rate .3 -1 0 0 500".split(" "),
-    "reindeer 2.00x_Gold_Ball_Shop_Bonuses 1 -40 0 -33 500".split(" "),
-    "w7d1 {30%_AFK_gains_for_World_7_skills,_and_+1_World_Class_Showcase_Slot_(Grade_4) 30 -30 0 -48 500".split(" "),
-    "Pet0 1.50x_Kills_for_Opening_Portals_and_Deathnote .5 6 0 -8 100".split(" "),
-    "Pet1 2x_Friend_Bonuses,_{2_Friend_Bonus_Slots,_Auto_Loot,_Storage_Quickref_Usage,_Infinite_Teleporting 1 4 0 -5 100".split(
-        " "),
-    "Pet2 Bababooey! 3 2 0 -8 100".split(" "),
-    "Pet4 2x_Class_EXP_gain_and_2x_All_Skill_EXP_gain 1 -2 0 -13 100".split(" "),
-    "Pet5 Bababooey! 3 -2 0 -10 100".split(" "),
-    "Pet6 Bababooey! 3 2 0 -9 100".split(" "),
-    "Pet8 Bababooey! 3 -5 0 -13 100".split(" "),
-    "Pet11 Bababooey! 3 -4 0 -11 100".split(" "),
-    "w7e1 10x_Class_EXP_and_{10_Legend_Talent_PTS 1 -10 20 -33 1000".split(" "),
-    "w7a5 4x_Masterclass_drops_(Bones/Dust/Tachyon) 3 -54 0 -15 250".split(" "),
-    "w7a8 +50%_Meritocracy_Bonus_Multi_(World_7_feature) 50 -15 30 -7 100".split(" "),
-    "w7a4 1.75x_Daily_Reef_Coral_(World_7_feature) .75 -10 20 -19 250".split(" "),
-    "Crystal6 {40%_Ballot_Bonus_Multi_(World_2_feature) 40 -17 0 -14 100".split(" "),
-    "w7a3 {1_Grade_for_2_Gallery_Showcases_(World_7_feature) 2 -9 28 -17 100".split(" "),
-    "w7a7 1.25x_Artifact_Find_chance_(World_5_feature) .25 -4 0 -19 10".split(" "),
-    "w7a10 {1_Friend_Bonus_slot 1 -9 0 -15 10".split(" "),
-    "w7a1 1.50x_Coins_from_monsters .50 6 0 -5 10".split(" "),
-    "coconut +15%_faster_Alchemy_Brew_Speed 15 -4 0 -24 5".split(" "),
-    "snakeG +10%_Class_EXP 10 3 0 -9 5".split(" "),
-    "mushP +5%_Golden_Food_bonus 5 -10 0 -11 5".split(" "),
+    "babaMummy All_Divinities_from_World_5_count_as_Active 1 -53 -22 -14 2000 140".split(" "),
+    "rift2 +25_Lv_for_all_Talents 25 -31 6 -14 450 130".split(" "),
+    "ram You_can_use_Storage_Chest_anywhere_in_Quickref 1 -26 16 -19 150 125".split(" "),
+    "Crystal3 {100%_Drop_Rate_and_Exp_from_monsters 100 -19 20 -8 150 120".split(" "),
+    "sheep All_big_bubbles_in_Alchemy_count_as_equipped 1 -6 0 -11 10 110".split(" "),
+    "w5b1 {5%_All_Skill_Efficiency 5 0 0 -5 10 110".split(" "),
+    "beanG {5%_AFK_Gains_Rate_for_Fighting_and_Skills 5 -9 0 -22 10 110".split(" "),
+    "slimeG +25%_Golden_Balls_earned_in_Arcade_for_Upgrades 1 17 0 -1 5 100".split(" "),
+    "jarSand +15_Base_All_Stats_(STR/AGI/WIS/LUK) 15 5 0 -3 5 100".split(" "),
+    "bloque +20%_All_Skill_EXP 20 1 0 -17 5 100".split(" "),
+    "frogG +10%_Total_Damage 10 12 0 -5 5 100".split(" "),
+    "slimeBz Only_100_of_these_exist_in_IdleOn... 10 -48 0 -30 1 10".split(" "),
+    "caveC 10x_Total_Damage 9 -44 0 -35 1000 150".split(" "),
+    "w6d3 3x_Villager_EXP_and_+25_Opals 1 -29 0 -19 250 130".split(" "),
+    "rift3 2x_Kills_for_Opening_Portals_and_Deathnote 1 -21 0 -16 250 135".split(" "),
+    "w6b4 3.50x_faster_Equinox_Bar_Fill_Rate 2.5 -23 0 -19 100 120".split(" "),
+    "Crystal4 1.75x_Lab_EXP_and_Divinity_EXP_Gain .75 -21 0 -5 100 120".split(" "),
+    "w5b6 3d_Printer_samples_grow_{1%/day_for_100_days 1 -17 0 -15 100 120".split(" "),
+    "frogBIG {25%_Carry_Capacity_for_all_item_types 25 -13 0 -29 10 110".split(" "),
+    "potato {5%_Ballot_Bonus_Multi_(World_2_feature) 5 -46 0 -25 10 110".split(" "),
+    "w4b1 {30_Talent_Points_for_all_classes 30 -1 0 -5 10 110".split(" "),
+    "frogP +15%_Defence 15 10 0 -5 5 100".split(" "),
+    "glass +15%_Drop_Rate 15 -2 0 -5 5 100".split(" "),
+    "mushG +15%_Accuracy 15 -8 0 -5 5 100".split(" "),
+    "Pet10 4x_Coins_from_Mobs 3 -10 0 -13 500 100".split(" "),
+    "Pet12 {50%_AFK_Gains 50 3 0 -20 500 100".split(" "),
+    "Pet3 1.30x_Drop_Rate .3 -1 0 0 500 100".split(" "),
+    "reindeer 2.00x_Gold_Ball_Shop_Bonuses 1 -40 0 -33 500 135".split(" "),
+    "w7d1 {30%_AFK_gains_for_World_7_skills,_and_{1_World_Class_Showcase_Slot_(Grade_4) 30 -30 0 -48 500 200".split(" "),
+    "Pet0 1.50x_Kills_for_Opening_Portals_and_Deathnote .5 6 0 -8 100 80".split(" "),
+    "Pet1 2x_Friend_Bonuses,_{2_Friend_Bonus_Slots,_Auto_Loot,_Storage_Quickref_Usage,_Infinite_Teleporting 1 4 0 -5 100 100".split(" "),
+    "Pet2 Bababooey! 3 2 0 -8 100 15".split(" "),
+    "Pet4 2x_Class_EXP_gain_and_2x_All_Skill_EXP_gain 1 -2 0 -13 100 120".split(" "),
+    "Pet5 2x_Total_Damage,_and_2x_Class_EXP_gain 1 -2 0 -10 100 15".split(" "),
+    "Pet6 3x_Class_EXP_gain 2 2 0 -9 100 15".split(" "),
+    "Pet8 2x_Refinery_Salts_produced_(affects_POW_produced_in_Refinery) 1 -5 0 -13 100 15".split(" "),
+    "Pet11 {200%_Gold_Balls_gained_from_the_Arcade, 200 -4 0 -11 100 15".split(" "),
+    "w7e1 10x_Class_EXP_and_{10_Legend_Talent_PTS 1 -10 20 -33 1000 150".split(" "),
+    "w7a5 4x_Masterclass_drops_(Bones/Dust/Tachyon) 3 -54 0 -15 250 140".split(" "),
+    "w7a8 +50%_Meritocracy_Bonus_Multi_(World_7_feature) 50 -15 30 -7 250 130".split(" "),
+    "w7a4 1.75x_Daily_Reef_Coral_(World_7_feature) .75 -10 20 -19 100 120".split(" "),
+    "Crystal6 {40%_Ballot_Bonus_Multi_(World_2_feature) 40 -17 0 -14 100 120".split(" "),
+    "w7a3 {1_Grade_for_2_Gallery_Showcases_(World_7_feature) 2 -9 28 -17 100 120".split(" "),
+    "w7a7 1.25x_Artifact_Find_chance_(World_5_feature) .25 -4 0 -19 10 110".split(" "),
+    "w7a10 {1_Friend_Bonus_slot 1 -9 0 -15 10 110".split(" "),
+    "w7a1 1.50x_Coins_from_monsters .50 6 0 -5 10 110".split(" "),
+    "coconut +15%_faster_Alchemy_Brew_Speed 15 -4 0 -24 5 100".split(" "),
+    "snakeG +10%_Class_EXP 10 3 0 -9 5 100".split(" "),
+    "mushP +5%_Golden_Food_bonus 5 -10 0 -11 5 100".split(" "),
+    "bubba {30%_Gallery_Bonus_Multi_(World_7_feature) 30 -29 0 -37 5 100".split(" "),
 ]
 
 companions_data = {
