@@ -1,6 +1,7 @@
+from math import ceil, e
 from consts.consts_autoreview import ValueToMulti
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName
+from utils.safer_data_handling import safer_math_log, safer_math_pow
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -37,6 +38,11 @@ refinery_dict = {
     'Purple': [7, 'purple-salt', 1, 2, 2, 1],
     'Nullo': [8, 'nullo-salt', 1, 2, 0, 0]
 }
+#`if ("PowerPerCycle" == e)` in source. Last updated in v2.48 Dec 10
+refinery_max_powerpercycle = 25e4
+refinery_max_rank_panda = ceil(safer_math_pow(refinery_max_powerpercycle/2, 1 / 1.3))
+refinery_max_rank_no_panda = ceil(safer_math_pow(refinery_max_powerpercycle, 1 / 1.3))
+
 #`TowerInfo = function ()` in source. Last updated in v2.46 Nov 29
 #"3D_Printer Using_the_new_Star_Talent_(on_the_2nd_tab_of_Star_Talents),_you_can_collect_samples_to_start_printing_resources!_@_Current_Bonuses:_@_$_Player_Slots_Unlocked 1 30 Refinery1 Blank 3 0 10 1 10".split(" ")
 #[0] = name, [1] = description,
