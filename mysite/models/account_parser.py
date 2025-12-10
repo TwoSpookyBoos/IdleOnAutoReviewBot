@@ -9,7 +9,7 @@ from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, vault_upgrades_list, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
+    vault_section_indexes, UpgradeVault, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
@@ -37,7 +37,8 @@ from consts.consts_w4 import (
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens
+    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
+    sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from consts.consts_caverns import (
     getCavernResourceImage, caverns_cavern_names, caverns_villagers, caverns_engineer_schematics,
@@ -51,11 +52,12 @@ from consts.consts_w6 import (
     jade_emporium, gfood_codes, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
-    max_summoning_upgrades, summoning_match_colors,
-    summoning_dict, summoning_endlessEnemies, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
+    max_summoning_upgrades, summoning_regular_match_colors,
+    summoning_dict, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
     emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict
+    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict, summoning_matches_per_color_dict,
+    summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
@@ -64,7 +66,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner
 
 logger = get_logger(__name__)
 
@@ -325,32 +327,52 @@ def _parse_class_unique_kill_stacks(account):
     }
 
 def _parse_general_gem_shop(account):
-    account.gemshop = {}
-    raw_gem_items_purchased = safe_loads(account.raw_data.get("GemItemsPurchased", []))
-    for purchaseName, purchaseIndex in gem_shop_dict.items():
+    raw_gem_items_purchased = safe_loads(account.raw_data.get('GemItemsPurchased', []))
+    for purchase_name, details in gem_shop_dict.items():
         try:
-            account.gemshop[purchaseName] = safer_convert(raw_gem_items_purchased[purchaseIndex], 0)
+            purchased_amount = safer_convert(raw_gem_items_purchased[details['Index']], 0)
         except Exception as e:
-            logger.warning(f"Gemshop Parse error with purchaseIndex {purchaseIndex}: {e}. Defaulting to 0")
-            account.gemshop[purchaseName] = 0
+            logger.warning(f"Gemshop Parse error with details {details}: {e}. Defaulting to 0")
+            purchased_amount = 0
+        account.gemshop['Purchases'][purchase_name] = {
+            'Owned': purchased_amount,
+            'ItemCodename': details['ItemCodename'],
+            'Description': details['Description'],
+            'Index': details['Index'],
+            'MaxLevel': details['MaxLevel'],
+            'BaseGemCost': details['BaseGemCost'],
+            'IncrementGemCost': details['IncrementGemCost'],
+            'Section': details['Section'],
+            'Subsection': details['Subsection'],
+        }
 
-    account.minigame_plays_daily = 5 + (4 * account.gemshop['Daily Minigame Plays'])
+    account.minigame_plays_daily = 5 + (4 * account.gemshop['Purchases']['Daily Minigame Plays']['Owned'])
 
 def _parse_general_gem_shop_optlacc(account):
     for purchase_name, details in gem_shop_optlacc_dict.items():
         try:
-            account.gemshop[purchase_name] = safer_convert(safer_get(account.raw_optlacc_dict, details[0], 0), 0)
+            purchased_amount = safer_convert(safer_get(account.raw_optlacc_dict, details['Index'], 0), 0)
         except:
-            if max(account.raw_optlacc_dict.keys()) < details[0]:
-                logger.info(f"Error parsing {purchase_name} because optlacc_index {details[0]} not present in JSON. Defaulting to 0")
+            purchased_amount = 0
+            if max(account.raw_optlacc_dict.keys()) < details['Index']:
+                logger.info(f"Error parsing {purchase_name} because optlacc_index {details['Index']} not present in JSON. Defaulting to 0")
             else:
-                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details[0]}: Could not convert {account.raw_optlacc_dict.get(details[0])} to int")
-                account.gemshop[purchase_name] = 0
+                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details['Index']}: Could not convert {account.raw_optlacc_dict.get(details['Index'])} to int")
+        account.gemshop['Purchases'][purchase_name] = {
+            'Owned': purchased_amount,
+            'ItemCodename': '',
+            'Description': details['Description'],
+            'Index': details['Index'],
+            'MaxLevel': details['MaxLevel'],
+            'BaseGemCost': details['BaseGemCost'],
+            'IncrementGemCost': details['IncrementGemCost'],
+            'Section': details['Section'],
+            'Subsection': details['Subsection'],
+        }
 
 def _parse_general_gem_shop_bundles(account):
     raw_gem_shop_bundles = safe_loads(account.raw_data.get('BundlesReceived', []))
     account.gemshop['Bundle Data Present'] = 'BundlesReceived' in account.raw_data
-    account.gemshop['Bundles'] = {}
     for code_name, display_name in gem_shop_bundles_dict.items():
         account.gemshop['Bundles'][code_name] = {
             'Display': display_name,
@@ -1062,13 +1084,10 @@ def _parse_w1_upgrade_vault(account):
     raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
     if not raw_vault:
         logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(vault_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('(Tap_for_Info)', '').replace('製', '').replace('_', ' ').rstrip()
+    for upgrade_index, upgrade_values_list in enumerate(UpgradeVault):
+        clean_name = vault_string_cleaner(upgrade_values_list[0])
         if len(upgrade_values_list) >= 11:
-            if upgrade_values_list != '_':
-                secondary_description = f"{upgrade_values_list[10].replace('_', ' ')}"
-            else:
-                secondary_description = ''
+            secondary_description = vault_string_cleaner(upgrade_values_list[10]) if upgrade_values_list != '_' else ''
         else:
             secondary_description = ''
         if clean_name.split('!')[0] in vault_stack_types:
@@ -1092,7 +1111,7 @@ def _parse_w1_upgrade_vault(account):
                 'Unlock Requirement': int(upgrade_values_list[6]),
                 # 'Placeholder7': upgrade_values_list[7],
                 # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')} {secondary_description}",
+                'Description': f"{vault_string_cleaner(upgrade_values_list[9])} {secondary_description}",
                 'Scaling Value': upgrade_index not in vault_dont_scale,
                 'Vault Section': vault_section
             }
@@ -2333,7 +2352,7 @@ def _parse_w4_breeding(account):
     _parse_w4_breeding_territories(account)
     _parse_w4_breeding_pets(account, raw_breeding_list)
     account.breeding['Egg Slots'] += (
-        account.gemshop['Royal Egg Cap']
+        account.gemshop['Purchases']['Royal Egg Cap']['Owned']
         + account.breeding['Upgrades']['Egg Capacity']['Level']
         + account.merits[3][2]['Level']
     )
@@ -2572,31 +2591,41 @@ def _parse_w5_sailing(account):
         account.sum_artifact_tiers = sum(raw_sailing_list[3])
     except:
         account.sum_artifact_tiers = 0
-    for islandIndex, islandValuesDict in sailing_dict.items():
+    #Islands
+    for island_index, island_values_dict in sailing_dict.items():
         try:
-            account.sailing['Islands'][islandValuesDict['Name']] = {
-                'Unlocked': True if raw_sailing_list[0][islandIndex] == -1 else False,
-                'Distance': islandValuesDict['Distance'],
-                'NormalTreasure': islandValuesDict['NormalTreasure'],
-                'RareTreasure': islandValuesDict['RareTreasure']
+            account.sailing['Islands'][island_values_dict['Name']] = {
+                'Unlocked': raw_sailing_list[0][island_index] == -1,
+                'Distance': island_values_dict['Distance'],
+                'NormalTreasure': island_values_dict['NormalTreasure'],
+                'RareTreasure': island_values_dict['RareTreasure']
             }
-            account.sailing['IslandsDiscovered'] += 1 if account.sailing['Islands'][islandValuesDict['Name']]['Unlocked'] else 0
         except:
-            account.sailing['Islands'][islandValuesDict['Name']] = {
+            account.sailing['Islands'][island_values_dict['Name']] = {
                 'Unlocked': False,
-                'Distance': islandValuesDict['Distance'],
-                'NormalTreasure': islandValuesDict['NormalTreasure'],
-                'RareTreasure': islandValuesDict['RareTreasure']
+                'Distance': island_values_dict['Distance'],
+                'NormalTreasure': island_values_dict['NormalTreasure'],
+                'RareTreasure': island_values_dict['RareTreasure']
             }
-        for artifactIndex, artifactValuesDict in islandValuesDict['Artifacts'].items():
-            try:
-                account.sailing['Artifacts'][artifactValuesDict['Name']] = {
-                    'Level': parse_number(raw_sailing_list[3][artifactIndex], 0)
-                }
-            except:
-                account.sailing['Artifacts'][artifactValuesDict['Name']] = {
-                    'Level': 0
-                }
+    account.sailing['IslandsDiscovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
+    #Artifacts
+    for artifact_index, artifact_values_dict in sailing_artifacts_dict.items():
+        try:
+            artifact_level = parse_number(raw_sailing_list[3][artifact_index], 0)
+        except:
+            artifact_level = 0
+        description = sailing_artifacts_description_overrides.get(artifact_values_dict['Name'], {}).get(artifact_level, artifact_values_dict['Description'])
+        account.sailing['Artifacts'][artifact_values_dict['Name']] = {
+            'Level': artifact_level,
+            'Description': description,
+            'FormBonuses': {index: description for index, description in enumerate(artifact_values_dict['FormBonuses'])},
+            'FormBonus': artifact_values_dict['FormBonuses'].get(artifact_level, 'Unknown Bonus'),
+            'Form': artifact_tier_names.get(artifact_level),
+            'Values': {index: value for index, value in enumerate(artifact_values_dict['Values'])},
+            'Island': artifact_values_dict['Island'],
+            'Image': kebab(artifact_values_dict['Name'])
+        }
+
     _parse_w5_sailing_boats(account)
     _parse_w5_sailing_captains(account)
 
@@ -2724,7 +2753,13 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'VillagerNumber': villager_data['VillagerNumber'],
                 'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
             }
-            account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = parallel_villagers[villager_index]
+            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
+                'Owned': parallel_villagers[villager_index],
+                'MaxLevel': 1,
+                'ItemCodename': 'GemP40',
+                'Section': 'Oddities',
+                'Subsection': 'Caverns'
+            }
             account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
         except:
             account.caverns['Villagers'][villager_data['Name']] = {
@@ -2736,7 +2771,13 @@ def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_inves
                 'VillagerNumber': villager_data['VillagerNumber'],
                 'LevelPercent': 0,
             }
-            account.gemshop[f"Parallel Villagers {villager_data['Role']}"] = 0
+            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
+                'Owned': 0,
+                'MaxLevel': 1,
+                'ItemCodename': 'GemP40',
+                'Section': 'Oddities',
+                'Subsection': 'Caverns'
+            }
 
 def _parse_caverns_actual_caverns(account, opals_per_cavern):
     for cavern_index, cavern_name in caverns_cavern_names.items():
@@ -3582,7 +3623,7 @@ def _parse_w6_farming(account):
     account.farming['Total Plots'] = (
         1
         + account.farming['MarketUpgrades']['Land Plots']['Level']
-        + account.gemshop['Plot of Land']
+        + account.gemshop['Purchases']['Plot Of Land']['Owned']
         + min(3, account.merits[5][2]['Level'])
     )
 
@@ -3744,7 +3785,7 @@ def _parse_w6_summoning(account):
                 'MaxLevel': int(upg_details[8]),
                 'UpgradeIndex': upg_index,
                 'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_match_colors[int(upg_details[2])],
+                'Color': summoning_regular_match_colors[int(upg_details[2])],
                 'LockedBehindIndex': locked_behind_index,
                 'LockedBehindName': summoning_upgrades[locked_behind_index][3].replace('_', ' '),
                 'Unlocked': locked_behind_index < 0
@@ -3757,7 +3798,7 @@ def _parse_w6_summoning(account):
                 'MaxLevel': int(upg_details[8]),
                 'UpgradeIndex': upg_index,
                 'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_match_colors[int(upg_details[2])],
+                'Color': summoning_regular_match_colors[int(upg_details[2])],
                 'LockedBehindIndex': locked_behind_index,
                 'LockedBehindName': summoning_upgrades[int(upg_details[10])][3].replace('_', ' '),
                 'Unlocked': locked_behind_index < 0
@@ -3796,76 +3837,48 @@ def _parse_w6_summoning(account):
     account.summoning['Summoning Stones'] = {}
     raw_kr_best = safe_loads(account.raw_data.get('KRbest', {}))
     if raw_kr_best:
-        for colorIndex in range(len(summoning_match_colors)):
-            color = summoning_match_colors[colorIndex]
+        for color_index in range(len(summoning_regular_match_colors)):
+            color = summoning_regular_match_colors[color_index]
             # TODO: remove this if/continue once the Teal Summoning Stone exists
             if color == "Teal":
                 continue
-            wins = safer_get(raw_kr_best, f'SummzTrz{colorIndex}', 0)
+            wins = safer_get(raw_kr_best, f'SummzTrz{color_index}', 0)
             account.summoning['Summoning Stones'][color] = {
                 'Wins': wins,
-                'Location': summoning_stone_locations[colorIndex],
-                'Base HP': int(summoning_stone_boss_base_hp[colorIndex]),
-                'Base DMG': int(summoning_stone_boss_base_damage[colorIndex]),
-                'StoneImage': summoning_stone_stone_images[colorIndex],
-                'BossImage': summoning_stone_boss_images[colorIndex]
+                'Location': summoning_stone_locations[color_index],
+                'Base HP': int(summoning_stone_boss_base_hp[color_index]),
+                'Base DMG': int(summoning_stone_boss_base_damage[color_index]),
+                'StoneImage': summoning_stone_stone_images[color_index],
+                'BossImage': summoning_stone_boss_images[color_index]
             }
 
-def _parse_w6_summoning_battles(account, rawBattles):
-    safe_battles = [safer_convert(battle, '') for battle in rawBattles]
-    regular_battles = [
-        battle
-        for battle in safe_battles
-        if (
-            not battle.startswith('rift')  #Removes Endless fights
-            and battle not in summoning_stone_fight_codenames  #Removes Summoning Stone fights
-        )
-    ]
-    account.summoning['Battles']['NormalTotal'] = len(regular_battles)
-
-    # I don't know if this might be needed in the future, so leaving it commented here
-    # summoning_stone_battles = [
-    #     battle
-    #     for battle in safe_battles
-    #     if battle in summoning_stone_fight_codenames
-    # ]
-
-    account.summoning['AllBattlesWon'] = True
-    for colorName, colorDict in summoning_dict.items():
-        account.summoning["Battles"][colorName] = 0
-        for battleIndex, battleValuesDict in colorDict.items():
-            if battleIndex + 1 >= account.summoning["Battles"][colorName] and battleValuesDict['EnemyID'] in rawBattles:
-                account.summoning["Battles"][colorName] = battleIndex + 1
-        if account.summoning["Battles"][colorName] != summoning_battle_counts_dict[colorName]:
-            account.summoning['AllBattlesWon'] = False
-
+def _parse_w6_summoning_battles(account, raw_battles):
+    safe_battles = [safer_convert(battle, '') for battle in raw_battles]
+    regular_battles = [battle for battle in safe_battles if battle in summoning_regular_battles]
+    account.summoning['Battles']['RegularTotal'] = len(regular_battles)
+    account.summoning['AllRegularBattlesWon'] = len(regular_battles) >= len(summoning_regular_battles)
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
 
-    for colorName, colorDict in summoning_dict.items():
-        for battleIndex, battleValuesDict in colorDict.items():
-            account.summoning["BattleDetails"][colorName][battleIndex + 1] = {
-                'Defeated': battleValuesDict['EnemyID'] in rawBattles,
-                'Image': battleValuesDict['Image'],
-                'RewardType': battleValuesDict['RewardID'],
-                'RewardQTY': battleValuesDict['RewardQTY'],
-                'RewardBaseValue': battleValuesDict['RewardQTY'] * 3.5,
-            }
-            if account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('+ '):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].replace(
-                        '+', f"+{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}")
-                )
-            elif account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('%'):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue']}"
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
-                )
-            elif account.summoning["BattleDetails"][colorName][battleIndex + 1]['RewardType'].startswith('x'):
-                account.summoning["BattleDetails"][colorName][battleIndex + 1]['Description'] = (
-                    f"{ValueToMulti(account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardBaseValue'])}"
-                    f"{account.summoning['BattleDetails'][colorName][battleIndex + 1]['RewardType']}"
-                )
+    for color_name, color_dict in summoning_dict.items():
+        if color_name in summoning_regular_match_colors:
+            account.summoning['Battles'][color_name] = sum([battle_values_dict['EnemyID'] in raw_battles for battle_values_dict in color_dict.values()])
+            for battle_index, battle_values_dict in color_dict.items():
+                this_battle = {
+                    'Defeated': battle_values_dict['EnemyID'] in raw_battles,
+                    'Image': battle_values_dict['Image'],
+                    'RewardType': battle_values_dict['RewardID'],
+                    'RewardQTY': battle_values_dict['RewardQTY'],
+                    'RewardBaseValue': battle_values_dict['RewardQTY'] * 3.5,
+                    'OpponentName': battle_values_dict['OpponentName']
+                }
+                if this_battle['RewardType'].startswith('+{ '):
+                    this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
+                elif this_battle['RewardType'].startswith('+{%'):
+                    this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
+                elif this_battle['RewardType'].startswith('<x'):
+                    this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
+                account.summoning['BattleDetails'][color_name][battle_index + 1] = this_battle
 
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}
@@ -3875,7 +3888,7 @@ def _parse_w6_summoning_battles_endless(account):
         endless_enemy_index = true_battle_index % 40
         this_battle = {
             'Defeated': true_battle_index < account.summoning['Battles']['Endless'],
-            'Image': summoning_endlessEnemies.get(image_index, ''),
+            'Image': summoning_dict['Endless'][image_index]['Image'],
             'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
             'Challenge': summoning_endlessDict.get(endless_enemy_index, {}).get('Challenge', 'Unknown'),
             # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
@@ -3883,12 +3896,12 @@ def _parse_w6_summoning_battles_endless(account):
                 summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)
             )
         }
-        if this_battle['RewardType'].startswith('+'):
-            this_battle['Description'] = this_battle['RewardType'].replace('+', f"+{this_battle['RewardBaseValue']}")
-        elif this_battle['RewardType'].startswith('%'):
-            this_battle['Description'] = f"+{this_battle['RewardBaseValue']}{this_battle['RewardType']}"
-        elif this_battle['RewardType'].startswith('x'):
-            this_battle['Description'] = f"{ValueToMulti(this_battle['RewardBaseValue'])}{this_battle['RewardType']}"
+        if this_battle['RewardType'].startswith('+{ '):
+            this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
+        elif this_battle['RewardType'].startswith('+{%'):
+            this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
+        elif this_battle['RewardType'].startswith('<x'):
+            this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
         account.summoning['BattleDetails']['Endless'][true_battle_index + 1] = this_battle
         if this_battle['RewardType'] not in account.summoning['Endless Bonuses']:
             account.summoning['Endless Bonuses'][this_battle['RewardType']] = 0

@@ -39,7 +39,7 @@ def get_final_combat_level_required_for_tome() -> int:
 
 
 max_cooking_tables = 10  # Last updated in v2.46 Nov 29
-max_meal_level = 200  # Last updated in v2.46 Nov 29
+max_meal_level = 150  # Last updated in v2.46 Nov 29
 max_cooking_ribbon = 23  # Last updated in v2.46 Nov 29
 cooking_close_enough = 300  # Last updated in v2.46 Nov 29
 #`MealINFO = function ()` in source. Last updated in v2.46 Nov 29

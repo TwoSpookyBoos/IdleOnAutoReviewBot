@@ -23,6 +23,8 @@ from models.custom_exceptions import VeryOldDataException
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
+from utils.logging import get_consts_logger
+logger = get_consts_logger(__name__)
 
 
 def session_singleton(cls):
@@ -89,10 +91,12 @@ class Equipment:
 def getExpectedTalents(classes_list):
     expectedTalents = []
     for className in classes_list:
-        try:
-            expectedTalents.extend(expected_talents_dict[className])
-        except:
-            continue
+        if className != 'None':
+            try:
+                expectedTalents.extend(expected_talents_dict[className])
+            except:
+                logger.warning(f"Failed to add expected talents for {className}")
+                continue
     return expectedTalents
 
 def getSpecializedSkills(classes_list):
@@ -607,10 +611,12 @@ class Advice(AdviceBase):
                 )
             if self.goal:
                 self.goal = self.value_format.format(value=self.goal, unit=self.unit)
-        if completed is None:
-            self.completed: bool = self.goal in ("✔", "") or self.label.startswith(ignorable_labels)
-        elif completed is True:
+        self.completed = completed
+        if completed is True:
             self.mark_advice_completed(True)
+        elif completed is None:
+            if self.goal in ("✔", "") or self.label.startswith(ignorable_labels):
+                self.completed = True
         else:
             self.completed = completed
         self.unrated: bool = unrated
@@ -705,7 +711,7 @@ class Advice(AdviceBase):
 
             elif not self.goal and str(self.progression).endswith('%'):
                 try:
-                    if float(str(self.progression).strip('%')) > 100:
+                    if float(str(self.progression).strip('%')) >= 100:
                         complete()
                 except:
                     pass
@@ -1683,6 +1689,11 @@ class Account:
             'Account Wide Inventory Slots Owned': 0,
             'Account Wide Inventory Slots Max': 0,
         }
+        self.gemshop = {
+            'Purchases': {},
+            'Bundle Data Present': None,
+            'Bundles': {}
+        }
         self.storage = {
             'Used Chests': [],
             'Used Chests Slots': 0,
@@ -1694,12 +1705,14 @@ class Account:
             'Total Slots Owned': 0,
             'Total Slots Max': 0
         }
+        #W1
         self.basketball = {
             'Upgrades': {}
         }
         self.darts = {
             'Upgrades': {}
         }
+        #W7
         self.spelunk = {
             'Cave Bonuses': {},
         }

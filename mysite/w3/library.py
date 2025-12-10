@@ -8,6 +8,7 @@ from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, ma
     library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
 from consts.consts_w2 import max_vial_level
 from consts.consts_w1 import stamp_maxes
+from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
 from models.models import Character
@@ -26,7 +27,7 @@ def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, ma
         optimal = interval * ((doNotExceed - start) // interval)
         try:
             #logger.debug(f"Given {start}, {interval}, {doNotExceed}, {talentExceedsBookLevels > 0}: optimal {optimal}: Returning {optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])}")
-            return optimal - (doNotExceed - session_data.account.library['MaxBookLevel'])
+            return int(optimal - (doNotExceed - session_data.account.library['MaxBookLevel']))
         except Exception as reason:
             logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
             return doNotExceed
@@ -34,7 +35,7 @@ def getJeopardyGoal(start: int, interval: int, talentExceedsBookLevels: bool, ma
         doNotExceed = session_data.account.library['MaxBookLevel']
         optimal = interval * ((doNotExceed - start) // interval)
         try:
-            return optimal
+            return int(optimal)
         except Exception as reason:
             logger.exception(f"Could not find optimal target level using start {start}, interval {interval}, doNotExceed {doNotExceed} because: {reason}")
             return session_data.account.library['MaxBookLevel']
@@ -68,17 +69,19 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
-        furyPostString = ". Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31"
+        furyPostString = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
     elif not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 3:
-        furyPostString = ". Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}"
+        furyPostString = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
+    elif not session_data.account.spelunk['Cave Bonuses'][0]['Owned'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 4:
+        furyPostString = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
     else:
-        furyPostString = ""
+        furyPostString = ''
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
-              f"+{25 * session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0)}/100{furyPostString}",
-        picture_class="fury-relic",
-        progression=session_data.account.sailing['Artifacts'].get('Fury Relic', {}).get('Level', 0),
-        goal=4
+              f"+{25 * session_data.account.sailing['Artifacts']['Fury Relic']['Level']}/{25 * max_sailing_artifact_level}{furyPostString}",
+        picture_class='fury-relic',
+        progression=session_data.account.sailing['Artifacts']['Fury Relic']['Level'],
+        goal=max_sailing_artifact_level
     ))
 
     #Scaling Sources
@@ -103,14 +106,23 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     #Summoning Sources
     summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{max_summoning_book_levels}"
     bookLevelAdvices[summoningSubgroup] = []
-    cyan14beat = session_data.account.summoning['Battles']['Cyan'] >= 14
+    cyan14 = session_data.account.summoning['BattleDetails']['Cyan'][14]
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"Summoning match Cyan14: "
-              f"+{10.5 * cyan14beat}/10.5{'' if cyan14beat else '. No other multipliers apply until this is beaten.'}",
-        picture_class="samurai-guardian",
-        progression=1 if cyan14beat else 0,
+        label=f"{{{{Summoning|#summoning}}}} match Cyan14: "
+              f"+{cyan14['RewardBaseValue'] * cyan14['Defeated']}/{cyan14['Description']}",
+        picture_class=cyan14['Image'],
+        progression=1 if cyan14['Defeated'] else 0,
         goal=1
     ))
+    teal9 = session_data.account.summoning['BattleDetails']['Teal'][9]
+    bookLevelAdvices[summoningSubgroup].append(Advice(
+        label=f"{{{{Summoning|#summoning}}}} match Teal9: "
+              f"+{teal9['RewardBaseValue'] * teal9['Defeated']}/{teal9['Description']}",
+        picture_class=teal9['Image'],
+        progression=1 if teal9['Defeated'] else 0,
+        goal=1
+    ))
+
     for advice in session_data.account.summoning['WinnerBonusesAdvice']:
         bookLevelAdvices[summoningSubgroup].append(advice)
     bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryLibrary'])
@@ -151,7 +163,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
         arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
 
-        char_bonus_levels = char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library['MaxBookLevel']
+        char_bonus_levels = int(char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library['MaxBookLevel'])
         subgroupName = f"{char.character_name} the {char.class_name}: +{char_bonus_levels}"
         bonusLevelAdvices[subgroupName] = []
 
@@ -226,16 +238,17 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Atom
     speed_Advices.append(Advice(
-        label=f"""Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level']}/60%""",
-        picture_class="oxygen",
+        label=f"Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level']}/60%",
+        picture_class='oxygen',
         progression=session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level'],
         goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
     ))
 
     # Tower
     speed_Advices.append(Advice(
-        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
-        picture_class="talent-book-library",
+        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/"
+              f"{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
+        picture_class='talent-book-library',
         progression=session_data.account.construction_buildings['Talent Book Library']['Level'],
         goal=session_data.account.construction_buildings['Talent Book Library']['MaxLevel']
     ))
@@ -243,7 +256,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     # Bubble
     speed_Advices.append(Advice(
         label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.1f}/100%",
-        picture_class="ignore-overdues",
+        picture_class='ignore-overdues',
         progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
         resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
     ))
@@ -413,14 +426,12 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
             account_wide_talent_prios[talentNumber][1] in session_data.account.classes
             and account_wide_talent_prios[talentNumber][0] < session_data.account.library['MaxBookLevel']
         ):
-            category_advices[awp].append(
-                Advice(
-                    label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on any {account_wide_talent_prios[talentNumber][1]}",
-                    picture_class=all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}'),
-                    progression=account_wide_talent_prios[talentNumber][0],
-                    goal=session_data.account.library['MaxBookLevel']
-                )
-            )
+            category_advices[awp].append(Advice(
+                label=f"Max {all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}')} on any {account_wide_talent_prios[talentNumber][1]}",
+                picture_class=all_talentsDict.get(talentNumber, {}).get('name', f'Unknown{talentNumber}'),
+                progression=account_wide_talent_prios[talentNumber][0],
+                goal=session_data.account.library['MaxBookLevel']
+            ))
 
     #Character Specific
     for char in session_data.account.safe_characters:

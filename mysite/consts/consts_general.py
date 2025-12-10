@@ -1,6 +1,8 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from utils.logging import get_consts_logger
+from utils.number_formatting import parse_number
+
 logger = get_consts_logger(__name__)
 
 # Greenstacks
@@ -289,7 +291,7 @@ expected_stackables = {
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
         'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'FoodHealth1', 'FoodHealth3', 'FoodHealth2', 'Leaf1',  # W1
-        'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2',  # W2
+        'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2', 'StoneA2b',  # W2
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
         'FoodPotYe5', 'Leaf5',  # W5
@@ -352,9 +354,9 @@ expected_stackables = {
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
         'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
-        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',  #W4 Rare Drops
+        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg', 'Weight3',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
-        'EfauntDrop1',  # Basic Efaunt material
+        'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
@@ -362,7 +364,7 @@ expected_stackables = {
     ],
     'Cheater': [
         'BabaYagaETC', 'JobApplication',  # W1 Rare Drops
-        'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # World Boss Materials
+        'EmpPart',  # W6 Boss Material
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
@@ -894,127 +896,88 @@ storage_chests_item_slots_max = (
 )
 
 #Gem Shop
-# TODO: At some point, it would be great if the Gem Shop parsing from source included the max number of purchases
+gem_shop_section_names = ['Oddities', 'Usables', 'Bonuses']
+gem_shop_subsection_names = [
+    ['Caverns', 'Time Skips', 'Premium Stones', 'Placeholder1', 'Placeholder2', 'Chat Rings'],
+    ['Time Candy', 'Inventory and Storage', "Dailies N' Resets", 'Cards', 'Goods and Services', 'Limited Specials'],
+    ['W1&2', 'W3', 'W4', 'W5', 'W6', 'W7']
+]
+gem_shop_unimplemented_sections = [
+    'Premium Stones', 'Placeholder1', 'Placeholder2', 'Chat Rings'
+]
+#`MTXinfo = function` in source. Last updated in v2.46 Dec 7
+MTXinfo = [[["Quest90 2_HOUR_LANTERN Gives_you_a_Lantern_usable_item,_use_it_to_instantly_get_2_hours_of_ALL_cavern_progress!!_____(Except_for_skilling_caverns,_like_Motherlode)_____________This_item_restocks_each_day. 160 0 8 1 0".split(" "), "GemP40 PARALLEL_VILLAGERS Permanently_get_a_2x_EXP_boost_for_the_villager_of_your_choice!_@_You_can_only_buy_this_once_per_villager. 780 1 5 0 0".split(" "), "GemP41 RESOURCE_BOOST Permanently_get_a_1.50x_boost_to_resources_collected_from_The_Well_and_The_Harp_caverns!_Two_purchases_would_mean_2.00x_resources,_three_purchases_are_2.50x,_etc. 420 2 10 0 15".split(" "), "Blank NAME_OF_ITEM desc 250 3 100000 1 0".split(" "), "GemP42 CONJUROR_PTS Gives_you_+1_Conjure_Point_to_invest_in_bonuses!_If_you_haven't_rescued_Cosmo_the_Conjuror_Villager_yet,_you'll_want_to_hold_off_buying_any_of_these. 330 4 12 0 15".split(" "), "GemP43 OPAL Gives_you_+1_Opal_to_invest_into_villagers!_You'll_find_most_of_your_opals_in_the_caverns,_but_some_____________________ended_up_here!__________________NOTE:_You_can_only_buy_4_per_day. 250 5 60 0 0".split(" "), "Blank NAME_OF_ITEM desc 3000 6 100000 1 0".split(" "), "Blank NAME_OF_ITEM desc 200 7 100000 1 0".split(" ")], ["Quest72 BOTTLED_WIND ____Gives_you_a_bottled_wind_item._Use_it_in_your_______player_inventory_to_instantly_get_6_hours_of___________________________sailing_progress!_______________________This_item_restocks_each_day. 140 128 4 1 0".split(" "), "Quest73 GAMING_FERTILIZER Gives_you_a_gaming_fertilizer_item._Use_it_in_your____player_inventory_to_instantly_get_8_hours_of_________________________gaming_progress!_____________________This_item_restocks_each_day. 110 132 4 1 0".split(" "), "GemP30 SAND_OF_TIME Gives_you_a_Sand_of_Time_usable_item._Use_it_in_your_player_inventory_to_instantly_get_6_hours_of_________Sneaking_progress_for_all_Ninja_Twins!___________This_item_restocks_each_day. 110 138 6 1 0".split(" "), "Quest81 COMPOST_BAG Gives_you_a_Compost_Bag_usable_item._Use_it_in_your_player_inventory_to_instantly_get_4_hours_of_____Farming_growth_for_all_your_crops,_instantly!________This_item_restocks_each_day. 85 150 9 1 0".split(" "), "Quest82 SUMMONER_STONE Gives_you_a_Summoner_Stone_usable_item_Use_it_in_your_player_inventory_to_instantly_get_4_hours____________of_Summoning_Essence,_instantly!____________This_item_restocks_each_day. 95 151 9 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 13 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 14 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 15 1 1 0".split(" ")], ["StonePremSTR STR_STONE Gives_+5_STR_to_the_applied_item,_and_has_a_100%_Success_Rate._Can_ONLY_be_used_on_Premium_Equipment_bought_in_the_Gem_Shop! 200 95 100000 1 0".split(" "), "StonePremAGI AGI_STONE Gives_+5_AGI_to_the_applied_item,_and_has_a_100%_Success_Rate._Can_ONLY_be_used_on_Premium_Equipment_bought_in_the_Gem_Shop! 200 96 100000 1 0".split(" "), "StonePremWIS WIS_STONE Gives_+5_WIS_to_the_applied_item,_and_has_a_100%_Success_Rate._Can_ONLY_be_used_on_Premium_Equipment_bought_in_the_Gem_Shop! 200 97 100000 1 0".split(" "), "StonePremLUK LUK_STONE Gives_+5_LUK_to_the_applied_item,_and_has_a_100%_Success_Rate._Can_ONLY_be_used_on_Premium_Equipment_bought_in_the_Gem_Shop! 175 98 100000 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 99 1 1 0".split(" "), "Ht HAT_PREMIUMIFIER Turns_any_normal_hat_into_a_premium_hat!_This_is_the_same_item_buyable_in_the_Cosmetics_section,_but_I'm_putting_it_here_also_since_it_works_great_with_the_Premium_Hat_Swapper_Stone! 250 100 100000 1 0".split(" "), "StonePremStatswap PREMIUM_HAT_SWAPPER Put_two_hats_on_either_side_of_this_stone,_and_it'll_swap_the_special_bonuses_between_them!_Works_with_Premium_hats,_as_well_as_normal_hats_that_you've_Premium-ified! 25 101 100000 1 0".split(" "), "StonePremRestore PREMIUM_STONE_REFUND Use_this_on_a_premium_hat_to_refund_all_Premium_Stones_used_on_it,_and_reset_the_hat_back_to_starting_stats._No,_this_does_not_reset_upgrades_on_regular_items_lol 30 102 100000 1 0".split(" ")], ["EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 16 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 17 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 18 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 19 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 20 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 21 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 22 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 23 1 1 0".split(" ")], ["EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 32 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 33 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 34 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 35 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 36 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 37 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 38 1 1 0".split(" "), "EquipmentHats1 NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 39 1 1 0".split(" ")], ["EquipmentRingsChat1 LOVERS_CHAT_RING _ 300 24 100000 1 0".split(" "), "EquipmentRingsChat2 ALL_NATURAL_CHAT_RING _ 250 25 100000 1 0".split(" "), "EquipmentRingsChat4 BANDIT_BOB_CHAT_RING _ 350 26 100000 1 0".split(" "), "EquipmentRingsChat5 BUBBLE_POP_CHAT_RING _ 325 27 100000 1 0".split(" "), "EquipmentRingsChat6 EYES_OF_CTHULU_CHAT_RING _ 400 28 100000 1 0".split(" "), "EquipmentRingsChat3 MONEY_TALKS_CHAT_RING _ 2500 31 100000 1 0".split(" "), "EquipmentRingsChat9 HONK_RING _ 300 29 100000 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 30 100000 1 0".split(" ")]], [["Timecandy1 JUST_ONE,_PLEASE Gives_you_a_single_1_Hour_Candy! 40 47 4 1 0".split(" "), "Timecandy2 BABY'S_FIRST_LOLLY Gives_a_random_Time_Candy._The_chances_are:_34%_for_1_Hr,_33%_for_2_Hr,_and_33%_for_4_Hr. 80 48 4 1 0".split(" "), "Timecandy3 KID_IN_A_CANDY_STORE Gives_a_random_Time_Candy._The_chances_are:_50%_for_2_Hr,_25%_for_4_Hr,_18%_for_12_Hr,_and_7%_for_24_Hr. 150 49 4 1 0".split(" "), "Timecandy4 ABSOLUTE_SUGAR_MANIAC Gives_a_random_Time_Candy._The_chances_are:_33%_for_4_Hr,_40%_for_12_Hr,_22%_for_24_Hr,_and_4%_for_72_Hr. 270 50 4 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 51 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 52 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 53 1 1 0".split(" "), "Blank COSMIC_CANDY Gives_1_Cosmic_Time_Candy,_which_can_give_up_to_500_HOURS_of_AFK_time!_On_average,_it_will_give_24_hrs. 325 54 100000 1 0".split(" ")], ["InvBag21 ITEM_BACKPACK_SPACE Gives_+4_extra_Item_Slots_for_your_backpack!_Applies_to_all_your_characters,_even_ones_you_haven't_made_yet! 200 55 6 1 25".split(" "), "InvStorage31 STORAGE_CHEST_SPACE Gives_+9_extra_Storage_Chest_Slots!_Storage_Chests_are_found_in_each_town,_and_the_items_you_put_in_are_shared_by_all_your_players! 175 56 12 1 25".split(" "), "GemP2 CARRY_CAPACITY Each_purchase_boosts_the_carry_capacity_by_+25%_for_all_your_characters._This_starts_working_immediately,_and_applies_to_every_item_type! 150 58 10 0 25".split(" "), "GemP8 FOOD_SLOT Gives_+1_extra_food_slot_for_all_characters,_forever!_Dont_worry,_4_food_slots_will_be_added_FOR_FREE_in_game_in_later_updates,_scattered_across_the_game! 450 59 2 0 300".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 60 1 1 0".split(" "), "InvStorage99 MORE_STORAGE_SPACE Gives_+9_extra_Storage_Chest_Slots!_Perfect_for_any_hoarding_tendencies_you_may_have! 450 109 10 1 12".split(" "), "GemQ9 CARD_PRESETS Lets_you_swap_between_different_card_loadouts_with_ease!_No_more_manually_swapping_cards_around_when_doing_different_things!_Each_purchase_gives_+1_preset_for_ALL_characters! 250 66 5 0 160".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 62 1 1 0".split(" ")], ["Pdaily0 DAILY_TELEPORTS Each_purchase_gives_+13_daily_teleports_every_day,_forever._You_can_use_these_on_the_Map_Screen._You_can_be_gone_for_up_to_6_days_and_claim_them_all_upon_your_return! 120 71 10 0 40".split(" "), "Pdaily1 DAILY_MINIGAME_PLAYS Each_purchase_gives_you_+4_additional_Daily_Minigame_Plays_across_your_account._These_dont_stack_from_day_to_day,_else_youd_be_swimmin'_in_them! 150 72 4 0 50".split(" "), "ResetCompleted REGULAR_TALENT_RESET Resets_all_your_talents_to_Lv_0,_and_fully_refunds_all_talent_points._This_does_NOT_reset_any_of_the_____________________Star_Tab_talents.__________________This_item_restocks_each_week. 200 73 10 1 0".split(" "), "ResetCompletedS STAR_TALENT_RESET Resets_all_the_talents_in_the_Star_Tab_to_Lv_0,_and_fully_refunds_all_talent_points._This_does_NOT_reset_other_talents,_only_ones_in_the_Star_Tab._This_item_restocks_each_week. 300 74 3 1 0".split(" "), "ClassSwap SUBCLASS_SWAP_TOKEN Lets_you_swap_subclass,_like_going_from_Barbarian_to_Squire._HOWEVER,_you_CANT_change_between_main_classes,_like_Warrior_or_Archer,_or_change_Elite_Classes_like_Blood_Berserker._Stock_refreshes_after_each_major_update. 500 75 2 1 250".split(" "), "ResetBox PANDORAS_OFFICE_BOX ____Resets_all_your_post_office_upgrades,_and____________refunds_all_boxes_spent._This_lets_you_choose__________different_post_office_box_upgrades!____________This_item_restocks_each_week. 250 76 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 77 1 1 0".split(" "), "ClassSwapC COMPLETE_CLASS_REDO Sets_you_back_to_being_a_Level_1_Beginner._Nothing_else_resets._You_can_then_redo_the_Class_quests_and_become_whatever_you_like._And_yea,_you_can_only_buy_ONE_of_these. 999 78 1 1 0".split(" ")], ["CardPack1 NEWBIE_CARD_PACK Contains_3_cards_from_._Has_a_15%_chance_to_give_at_least_one_Boss_Card._Card_Lv_Rarities_are:_50%_for_Lv_1,_35%_for_Lv_2,_and_15%_for_Lv_3. 200 64 100000 1 0".split(" "), "CardPack2 ANCIENT_CARD_PACK Contains_4_cards_from_any_set_in_the_game,_other_than_world_3_because_it's_not_out_yet._Has_a_40%_chance_to_give_at_least_one_Boss_Card._Card_Lv_Rarities_are:_26%_for_Lv_1,_30%_for_Lv_2,_27%_for_Lv_3,_and_17%_for_Lv_4. 425 65 100000 1 0".split(" "), "CardPack3 ETERNAL_CARD_PACK Blah 600 65 100000 1 0".split(" "), "CardPack5 GALAXY_CARD_PACK Blah 650 69 100000 1 0".split(" "), "GemP3 EXTRA_CARD_SLOT Lets_you_equip_another_card,_so_you_can_have_more_card_bonuses!_This_applies_to_all_characters,_and_is_recommended_before_buying_card_packs! 150 63 4 0 40".split(" "), "GemQ17 4_STAR_CARDIFIER Use_this_on_a_3_star_card_to_upgrade_it_to_4_stars!_You_can_use_it_on_any_3_star_card_you_have,_it's_up_to_you!_Each_purchase_allows_for_one_card_of_your_choice_to_be_upgraded. 325 67 100000 0 0".split(" "), "CardPack6 SMOLDERIN_CARD_PACK Blah 690 61 100000 1 0".split(" "), "CardPack7 SPIRIT_CARD_PACK Blah 720 70 100000 1 0".split(" ")], ["GemP11 SMOL_ARCADE_BALLS 30_arcade_balls._Use_these_at_the_Arcade,_found_at_the_clown_in_World_2_town! 100 79 100000 0 0".split(" "), "GemP12 MED_ARCADE_BALLS 100_arcade_balls._Use_these_at_the_Arcade,_found_at_the_clown_in_World_2_town!_+20%_better_value_compared_to_smol_ball_pack! 275 80 100000 0 0".split(" "), "GemP13 BIGGY_ARCADE_BALLS 500_arcade_balls._Use_these_at_the_Arcade,_found_at_the_clown_in_World_2_town!_+33%_better_value_compared_to_smol_ball_pack! 1250 81 100000 0 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 82 1 1 0".split(" "), "GemP15 WEEKLY_DUNGEON_BOOSTERS Get_an_additional_+3_Dungeon_runs_every_week,_FOREVER!_I_give_you_12_per_week_for_free,_so_buying_this_once,_for_example,_would_get_you_15_runs_every_week! 275 84 11 0 40".split(" "), "EquipmentKeychain0;TIER_1_KEYCHAIN;Gives_you_40_keychain_fragments,_enough_to_claim_a_Tier_1_Keychain_from_the_Frog_Dungeon_Lobby!_These_keychains_randomly_give_the_following_bonuses:_Base_Def, Accuracy,_Move_speed,_Base_Dmg,_Card_Drop_rate,_Money,_Base_Stat;150;86;100000;0;0".split(";"), "EquipmentKeychain8 TIER_2_KEYCHAIN Gives_you_120_keychain_fragments,_enough_to_claim_a_Tier_2_Keychain_from_the_Frog_Dungeon_Lobby!_These_keychains_randomly_give_the_following_bonuses:_%DEF,_Mining_XP,_Fishing_XP,_%DMG,_Drop_chance,_Atk_speed,_Crit_chance,_Multikill 325 85 100000 0 0".split(" "), "EquipmentKeychain17 TIER_3_KEYCHAIN Gives_you_300_keychain_fragments,_enough_to_claim_a_Tier_3_Keychain_from_the_Frog_Dungeon_Lobby!_These_keychains_randomly_give_the_following_bonuses:_%DEF,_%Stat,_%AFK_gain,_%DMG,_mob_respawn,_Skilling_spd,_%All_stat 490 83 100000 0 0".split(" ")], ["EquipmentHats40 PARDONED_TURKEY_HAT Gobble_gobble_gobble! 1 87 1 1 0".split(" "), "EquipmentHats55 STEAM_CAP An_old_reward_from_2021's_Steam_Launch_of_IdleOn!_Comes_with_a_massive_+3%_additive_Class_EXP_bonus,_long_live_PC_gaming! 199 88 1 1 0".split(" "), "EquipmentHats75 APPLE_LAUNCH_HAT An_old_reward_from_2022's_iOS_Launch_of_IdleOn!_Comes_with_a_meager_+5%_additive_Class_EXP_bonus..._but_it's_not_nothin! 199 89 1 1 0".split(" "), "EquipmentHats81 SIEGE_CAPTAIN_HAT 30%_OFF!_Argh,_ye_ain't_no_real_pirate_without_no_real_pirate_hat!_Comes_with_a_+10%_additive_Drop_Rate_bonus,_to_plunder_your_enemies_with! 550 90 1 1 0".split(" "), "EquipmentHats82 ELEMENTAL_SORCERER_HAT 30%_OFF!_You_can't_be_a_real_sorcerer_without_a_big_wizard_hat!_Comes_with_a_+5%_All_Stats_bonus,_so_your_STR_AGI_WIS_LUK_will_be_in_good_hands! 550 91 1 1 0".split(" "), "EquipmentHats112 DEATHBRINGER_HOOD The_hood_of_the_reaper_himself!_Comes_with_a_1.25x_Extra_Bones_multiplier,_which_will_help_upgrade_the_GRIMOIRE_on_your_Deathbringer 790 92 1 1 0".split(" "), "EquipmentHats118 WINDWALKER_HOOD Comes_with_a_1.25x_Extra_Dust_multiplier,_which_will_help_upgrade_The_Compass_while_playing_on_your_Windwalker! 790 93 1 1 0".split(" "), "EquipmentHats122 ARCANIST_CROWN Comes_with_a_+25%_Extra_Tachyon_multiplier,_which_will_help_upgrade_the_Tesseract_while_playing_on_your_Arcane_Cultist! 790 94 1 1 0".split(" ")]], [["GemP1 INFINITY_HAMMER Lets_you_produce_TWO_anvil_items_at_once!_Applies_to_all_characters_you_make._Stacks_with_other_bonuses_that_give_+1_anvil_hammer. 300 103 1 0 0".split(" "), "GemP4 BRIMSTONE_FORGE_SLOT Brimstone_slots_smelt_bars_50%_faster,_and_have_+50%_multi-bar_chance,_meaning_you'll_get_extra_bars_for_every_ore!_These_MULTIPLY_with_forge_upgrades,_so_they're_always_good! 100 104 16 0 15".split(" "), "GemP6 IVORY_BUBBLE_CAULDRONS Can_assign_+2_extra_players_to_this_cauldron._Also_has_1.5x_faster_brewing,_and_1.5x_higher_new_bubble_chance. 300 105 4 0 50".split(" "), "GemP7 BLEACH_LIQUID_CAULDRONS Can_assign_+1_extra_player_to_this_cauldron._Also_has_1.5x_higher_Liquid_Cap,_and_1.5x_faster_liquid_regeneration_rate._Unlike_the_Bubble_Cauldrons,_you_have_to_buy_these_in_order. 500 106 4 0 0".split(" "), "GemP5 OBOL_STORAGE_SPACE Every_purchase_gives_+4_Circle_Slots._Every_2nd_purchase_gives_+4_Square_Slots._Every_3rd_purchase_gives_+4_Hexagon_and_+4_Sparkle_Slots._So_buying_this_4_times_would_give_+16_Circles,_+8_square,_and_+4_Hexagon_and_Sparkle 250 57 12 0 50".split(" "), "GemP9 QUALITY_OBOL_STACK Gives_3_random_obols._Each_obol_has_a_70%_chance_to_be_Silver,_and_30%_chance_to_be_gold._Guaranteed_at_least_1_Gold_obol_per_stack! 250 107 100000 1 0".split(" "), "GemP10 MARVELOUS_OBOL_STACK Gives_3_random_obols._Each_obol_has_65%_chance_to_be_Gold,_25%_chance_to_be_Platinum,_and_10%_chance_to_be_Dementia_rarity._Guaranteed_at_least_1_Platinum_or_Dementia_Obol_per_stack! 550 108 100000 1 0".split(" "), "GemP17 SIGIL_SUPERCHARGE Each_purchase_gives_you_a_permanent_bonus_of_+20%_Sigil_EXP_gain!_Remember,_you_must_reach_World_4_before_you_can_level_up_sigils! 250 110 10 0 30".split(" ")], ["GemQ1 CRYSTAL_3D_PRINTER Unlocks_the_2nd_printer_chamber_to_print_stuff_in!_This_lets_you_print_two_things_at_once,_on_all_characters!_It_can_even_be_the_same_thing_twice! 875 111 1 0 0".split(" "), "GemQ2 MORE_SAMPLE_SPACES Unlocks_+1_space_to_take_samples_in._These_are_the_tiny_blue_squares._Buy_this_if_you_want_to_juggle_between_different_samples_without_having_to_retake_them_all_the_time. 250 112 6 0 40".split(" "), "GemQ3 BURNING_BAD_BOOKS Raises_the_minimum_level_of_books_from_the_Talent_Book_Library_by_+5._This_means_it's_more_likely_for_you_to_get_the_highest_possible_level_books! 250 113 4 0 75".split(" "), "GemQ4 PRAYER_SLOTS Lets_you_equip_+1_more_Prayer_at_the_same_time,_on_all_characters! 250 114 4 0 75".split(" "), "GemQ5 ZEN_COGS These_premium_cogs_are_the_best_in_the_game!_Yin_Cogs_have_the_best_base_stats!_Yang_Cogs_have_the_best_Surround_Effects!_Each_purchase_gives_1_of_each! 500 115 8 0 125".split(" "), "GemQ6 COG_INVENTORY_SPACE Each_purchase_gives_you_+4_cog_inventory_spaces,_to_store_all_your_cogs_in! 100 116 20 0 40".split(" "), "GemQ7 TOWER_BUILDING_SLOTS Unlocks_+1_more_slot_to_build_towers_in!_Remember,_each_slot_builds_at_your_FULL_build_rate,_so_this_upgrade_helps_massively_to_upgrade_all_your_towers_to_max_level! 350 117 4 0 100".split(" "), "GemQ8 FLUORESCENT_FLAGGIES Makes_your_flaggies_unlock_spaces_faster,_opening_up_your_board_for_more_cogs!_Each_purchase_boosts_Flaggy_rate_by_+50% 250 118 6 0 75".split(" ")], ["GemQ10 ROYAL_EGG_CAP Boosts_the_max_number_of_eggs_in_your_breeding_nest_by_+1._ALSO,_as_an_added_bonus,_you_get_1.10x_New_Pet_Breeding_Chance_for_each_time_you_buy_this! 350 119 5 0 50".split(" "), "GemQ11 RICHELIN_KITCHEN Upgrades_1_kitchen,_in_order_from_first_to_last,_to_a_Richelin_Kitchen!_These_have_3x_Meal_Cooking_Speed,_2x_New_Recipe_Speed,_and_40%_Cheaper_Upgrade_Costs! 250 120 10 0 40".split(" "), "GemQ12 CONSOLE_CHIP Gives_you_a_random_console_chip._There_are_currently_22_Chips_in_the_game,_so_you_have_a_1_in______22_chance_of_getting_any_particular_chip.______This_item_restocks_each_week. 385 121 7 0 0".split(" "), "GemQ13 MAINFRAME_JEWEL Gives_you_a_random_Jewel_that_you_don't_already____own._No_need_to_worry_about_duplicate_jewels!____This_item_restocks_each_week,_unless_you_own_all_Jewels,_then_it_wont_restock. 450 122 2 0 0".split(" "), "GemQ14 SOUPED_UP_TUBE Each_purchase_soups_up_2_lab_Tubes._Players_in_souped-up_tubes_get_2x_Lab_EXP_gain,_and_+30%_Line_Width._Keep_in_mind,_players_are_placed_in_tubes_in_chronological_order. 480 123 5 0 65".split(" "), "GemQ15 PET_STORAGE Unlocks_12_pet_storage_spaces,_which_is_an_entire_row!_ 325 124 12 0 55".split(" "), "GemQ16 FENCEYARD_SPACE Unlocks_2_Fenceyard_slots,_which_are_great_for_Breedability_Pets_and_Shiny_Pets! 275 125 6 0 45".split(" "), "GemP56 NEW_MEAL Each_purchase_unlocks_a_new_meal_type_to_cook!_You're_meant_to_unlock_all_the_meals_for_free_with_spices,_but_you_can_buy_them_here_instead_if_you're_having_trouble... 250 126 100000 0 0".split(" ")], ["GemP20 MIRACLE_CHEST Gives_you_1_Miracle_Chest_from_a_random_island!_These_have_20x_more_treasure_and_30x_higher_____Artifact_chance,_including_Ancient_Artifacts!______________This_item_restocks_each_day. 345 127 3 0 0".split(" "), "GemP53 DAVEY_JONES_TRAINING Each_purchase_boosts_the_following_Sailing_stats_by_1.50x:Boat_Travel_Speed,_Loot_Value_from_chests,_Artifact_Find_Chance,_and_Captain_EXP_gain_per_trip._Also_reduces_minimum_travel_time_by_4_minutes. 450 8 8 0 10".split(" "), "GemP21 CHEST_SLUGGO Increases_the_maximum_number_of_chests_your_sailing_Loot_Pile_can_hold_by_+1!_Also_adds_a_Chest_Sluggo_to_roam_around_your_dock!_(Note:Not_every_purchase_will_visually_add_another_slug,_it'd_be_too_chaotic!) 320 129 12 0 30".split(" "), "GemP26 ANCIENT_ARTIFACT Upgrades_a_random_artifact_you_own_to_its_ANCIENT_form!_100%_Success_chance,_no_foolin!_This_item_restocks_every_week._See_Guild_GP_claim_for_when_that_happens._You_must_own_a_normal_artifact_to_buy_this. 690 134 2 0 0".split(" "), "GemP22 DIVINITY_SPARKIE Boosts_the_amount_of_Divinity_Points_and_Divinity_EXP_gained_by_+25%_for_all_of_your_players!_Also_adds_a_divinity_sparkie_that_wanders_around_the_deity_volcanos,_pondering_its_existence. 250 130 6 0 50".split(" "), "GemP23 GOLDEN_SPRINKLER The_Sprinkler_in_the_garden,_which_instantly_regrows_sprouts,_now_has_a_30%_chance_to_not_use_up_its_charge!_Each_additional_purchase_boosts_this_chance_by_1.5x!_Instantly_unlocks_Sprinkler_if_not_unlocked_yet! 425 131 4 0 25".split(" "), "GemP24 LAVA_SPROUTS Increases_the_maximum_number_of_sprouts_your_garden_can_hold_by_+1!_Also_adds_a_small_lava_sprout_to_your_underground_gamer_lair,_which_complements_the_dankness_of_the_ground_walls! 360 133 6 0 40".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 9 1 1 0".split(" ")], ["GemP27 PLOT_OF_LAND Permanently_gives_you_+1_Land_Plot_to_grow_crops_in! 420 135 12 0 40".split(" "), "GemP28 PRISTINE_CHARM Gives_you_a_random_Pristine_Charm!_Find_it_in_your_Sneaking_Inventory._You_cannot_get_duplicates_from_this._This_item_restocks_each_day. 790 136 2 0 0".split(" "), "GemP29 SHROOM_FAMILIAR Adds_a_shroom_familiar_to_your_Summoning_Sanctuary,_which_gives_a_permanent_1.40x_bonus_to_all_Essence_gain. 650 137 6 0 10".split(" "), "GemP54 NOVELTY_JADE_COINS Each_purchase_boosts_your_jade_coin_gain_by_2x!_So_two_purchases_will_gives_4x,_then_8x,_then_16x,_then_32x,_then_a_super_64x! 460 10 7 0 20".split(" "), "GemP31 INSTAGROW_GENERATOR Each_purchase_gives_+2_daily_crop_instagrows_every_day_you_log_in,_forever._Also,_each_purchase_gives_+20%_additional_chance_for_+1_crop_when_fully_grown. 610 139 8 0 50".split(" "), "GemP32 LIFE_REFILL Refills_1_life_in_Summoning,_so_you_can_try_again_now_without_waiting_for_the_free_life_refill_you_get_every_day._This_restocks_every_day,_so_you_can_buy_12_every_day. 60 140 15 0 9".split(" "), "GemP55 KING_OF_ALL_WINNERS Boosts_all_of_your_Winner_Bonuses_from_summoning_by_1.10x!_So_if_you_bought_this_say,_three_times,_all_your_Winner_Bonuses_would_be_1.30x_bigger! 590 11 5 0 20".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 12 1 1 0".split(" ")], ["GemP48 GALLERY_SHOWCASES Gives_you_+1_gallery_slot,_wherein_Trophies_give_100%_of_their_bonuses_instead_of_30%!_Every_2nd_purchase_will_also_BOOST_a_slot_to_give_150%,_and_every_3rd_purchase_will_SUPERBOOST_a_slot_to_give_200%_bonus! 690 40 6 0 20".split(" "), "GemP49 MORE_CORAL Boosts_the_amount_of_coral_you_get_for_the_Coral_Reef_every_day_by_1.20x!_Buying_all_ten_would_thus_give_a_total_bonus_of_3.00x_coral! 330 41 10 0 15".split(" "), "GemP50 LEGEND_TALENT_PTS Gives_you_+1_point_to_spend_on_Whallamus'_Legend_Talents!_These_are_super_powerful_and_awesome,_so_I_don't_have_that_many_in_stock! 750 42 5 0 40".split(" "), "GemP51 SUPER_AUTO_MODE Each_purchase_lets_you_click_the_Auto_button_in_Spelunking_tunnels_1_additional_time_to_make_it_go_2x_faster!_Each_purchase_also_gives_2x_Spelunking_POW._NOTE:You_unlock_a_slow_version_of_Auto_Mode_for_free_later. 580 43 4 0 40".split(" "), "GemP52 BLING_BAGS Spelunking_objects_can_now_drop_Bling_Bags,_with_each_one_boosting_Amber_Gain_by_1.10x_for_the_entire_delve!_Each_purchase_here_boosts_the_chance_they_drop_by_1.50x! 490 44 8 0 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 45 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 46 1 1 0".split(" "), "Blank NAME_OF_ITEM DESCRIPTION_OF_ITEM GemCostNum 47 1 1 0".split(" ")]]]
 gem_shop_dict = {
-    # Inventory and Storage
-    'Item Backpack Space': 55,
-    'Storage Chest Space': 56,
-    'Carry Capacity': 58,
-    'Food Slot': 59,
-    'More Storage Space': 109,
-    'Card Presets': 66,
-
-    # Dailies N' Resets
-    'Daily Teleports': 71,
-    'Daily Minigame Plays': 72,
-
-    # Cards
-    'Extra Card Slot': 63,
-
-    # Goods & Services
-    'Weekly Dungeon Boosters': 84,
-
-    # World 1&2
-    'Infinity Hammer': 103,
-    'Brimstone Forge Slot': 104,
-    'Ivory Bubble Cauldrons': 105,
-    'Bleach Liquid Cauldrons': 106,
-    'Obol Storage Space': 57,
-    'Sigil Supercharge': 110,
-
-    # World 3
-    'Crystal 3d Printer': 111,
-    'More Sample Spaces': 112,
-    'Burning Bad Books': 113,
-    'Prayer Slots': 114,
-    'Zen Cogs': 115,
-    'Cog Inventory Space': 116,
-    'Tower Building Slots': 117,
-    'Fluorescent Flaggies': 118,
-
-    # World 4
-    'Royal Egg Cap': 119,
-    'Richelin Kitchen': 120,
-    'Souped Up Tube': 123,
-    'Pet Storage': 124,
-    'Fenceyard Space': 125,
-
-    # World 5
-    'Chest Sluggo': 129,
-    'Divinity Sparkie': 130,
-    'Golden Sprinkler': 131,
-    'Lava Sprouts': 133,
-
-    # World 6
-    'Plot of Land': 135,
-    'Pristine Charm': 136,
-    'Shroom Familiar': 137,
-    'Sand of Time': 138,
-    'Instagrow Generator': 139,
-    'Life Refill': 140,
-    'Compost Bag': 141,
-    'Summoner Stone': 142,
-
-    # Fomo
-    'FOMO-1': 87,
-    'FOMO-2': 88,
-    'FOMO-3': 89,
-    'FOMO-4': 90,
-    'FOMO-5': 91,
-    'FOMO-6': 92,
-    'FOMO-7': 93,
-    'FOMO-8': 94,
-
-    # Oddities
-    'Blinding Lantern': 0,
-    'Parallel Villagers': 1,
-    'Resource Boost': 2,
-    'Conjuror Pts': 4,
-    'Opal': 5
+    purchasename.replace('_', ' ').title(): {
+        'ItemCodename': itemcodename,
+        'Description': description.replace('_', ' ').replace('@', ''),
+        'Index': parse_number(index),
+        'MaxLevel': parse_number(maxlevel),
+        #There are a lot of placeholders with non-numbers such as _ or 'GemCostNum'
+        'BaseGemCost': (parse_number(basegemcost, 0) if basegemcost.isnumeric() else 0),
+        'IncrementGemCost': parse_number(incrementgemcost, 0) if incrementgemcost.isnumeric() else 0,
+        'Section': gem_shop_section_names[sectionindex],
+        'Subsection': gem_shop_subsection_names[sectionindex][subsectionindex]
+    }
+    for sectionindex, section in enumerate(MTXinfo)
+    for subsectionindex, subsection in enumerate(section)
+    for mtxinfoindex, (itemcodename, purchasename, description, basegemcost, index, maxlevel, _, incrementgemcost) in enumerate(subsection)
+    if gem_shop_subsection_names[sectionindex][subsectionindex] not in gem_shop_unimplemented_sections
 }
+
 gem_shop_optlacc_dict = {
-    'Dragonic Liquid Cauldron': [123, 4],
-    'Equinox Pingy': [320, EmojiType.INFINITY.value],
-    'Rupie Slug': [355, EmojiType.INFINITY.value],
-    'Exalted Stamps': [366, EmojiType.INFINITY.value],
-    'Lifetime Tickets': [382, EmojiType.INFINITY.value]
+    'Dragonic Liquid Cauldron': {
+        'Index': 123,
+        'MaxLevel': 4,
+        'ItemCodename': 'GemP18',
+        'Description': "Turns your 1st Liquid Cauldron into a Dragonic Cauldron, or 2nd Liquid Cauldron if you bought this before. Dragonic Cauldrons give 2x Liquid Capacity, a bonus which stacks with the 1.5x from Bleach Liquid Cauldrons.",
+        'BaseGemCost': 969,
+        'IncrementGemCost': 0,
+        'Section': gem_shop_section_names[1],
+        'Subsection': gem_shop_subsection_names[1][5]
+    },
+    'Equinox Pingy': {
+        'Index': 320,
+        'MaxLevel': EmojiType.INFINITY.value,
+        'ItemCodename': 'GemP44',
+        'Description': "",
+        'BaseGemCost': 0,
+        'IncrementGemCost': 0,
+        'Section': gem_shop_section_names[1],
+        'Subsection': gem_shop_subsection_names[1][5]
+    },
+    'Rupie Slug': {
+        'Index': 355,
+        'MaxLevel': EmojiType.INFINITY.value,
+        'ItemCodename': 'GemP38',
+        'Description': "",
+        'BaseGemCost': 0,
+        'IncrementGemCost': 0,
+        'Section': gem_shop_section_names[1],
+        'Subsection': gem_shop_subsection_names[1][5]
+    },
+    'Exalted Stamps': {
+        'Index': 366,
+        'MaxLevel': EmojiType.INFINITY.value,
+        'ItemCodename': 'GemP39',
+        'Description': "",
+        'BaseGemCost': 0,
+        'IncrementGemCost': 0,
+        'Section': gem_shop_section_names[1],
+        'Subsection': gem_shop_subsection_names[1][5]
+    },
+    'Lifetime Tickets': {
+        'Index': 382,
+        'MaxLevel': EmojiType.INFINITY.value,
+        'ItemCodename': 'GemP45',
+        'Description': "",
+        'BaseGemCost': 0,
+        'IncrementGemCost': 0,
+        'Section': gem_shop_section_names[1],
+        'Subsection': gem_shop_subsection_names[1][5]
+    },
 }
 
-def get_gem_shop_bonus_section_name(bonus_name: str) -> str:
-    match bonus_name:
-        case 'Item Backpack Space' | 'Storage Chest Space' | 'Carry Capacity' | 'Food Slot' | 'More Storage Space' | 'Card Presets':
-            return "Inventory and Storage"
-
-        case 'Daily Teleports' | 'Daily Minigame Plays':
-            return "Dailies N' Resets"
-
-        case 'Extra Card Slot':
-            return "Cards"
-
-        case 'Weekly Dungeon Boosters':
-            return "Goods & Services"
-
-        case 'Infinity Hammer' | 'Brimstone Forge Slot' | 'Ivory Bubble Cauldrons' | 'Bleach Liquid Cauldrons' | 'Obol Storage Space' | 'Sigil Supercharge':
-            return "W1&2"
-
-        case 'Crystal 3d Printer' | 'More Sample Spaces' | 'Burning Bad Books' | 'Prayer Slots' | 'Zen Cogs' | 'Cog Inventory Space' | 'Tower Building Slots' | 'Fluorescent Flaggies':
-            return "W3"
-
-        case 'Royal Egg Cap' | 'Richelin Kitchen' | 'Souped Up Tube' | 'Pet Storage' | 'Fenceyard Space':
-            return "W4"
-
-        case 'Chest Sluggo' | 'Divinity Sparkie' | 'Golden Sprinkler' | 'Lava Sprouts':
-            return "W5"
-
-        case 'Plot of Land' | 'Pristine Charm' | 'Shroom Familiar' | 'Sand of Time' | 'Instagrow Generator' | 'Life Refill' | 'Compost Bag' | 'Summoner Stone':
-            return "W6"
-
-        case 'FOMO-1' | 'FOMO-2' | 'FOMO-3' | 'FOMO-4' | 'FOMO-5' | 'FOMO-6' | 'FOMO-7' | 'FOMO-8':
-            return "Limited Shop"
-        case 'Blinding Lantern' | 'Parallel Villagers The Explorer' | 'Parallel Villagers The Engineer' | 'Parallel Villagers The Conjuror' | 'Parallel Villagers The Measurer' | 'Parallel Villagers The Librarian' | 'Resource Boost' | 'Conjuror Pts' | 'Opal':
-            return "Oddities"
-        case _:
-            return "UnknownShop"
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
 # Last updated in 2.43 Nov 6
@@ -1295,8 +1258,8 @@ equipment_by_bonus_dict = {
     }
 }
 
-# `UpgradeVault`. Last updated in v2.43 Nov 6
-vault_upgrades_list = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_\u88fd_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 49 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_\u88fd 25 1.15 0 200 1 69 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 80 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_\u88fd 90 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 95 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 97 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 99 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_\u88fd 170 7.5 0 5 10 120 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_Codex".split(" "), "Mining_Payday$_\u88fd 200 1.28 0 40 2 170 0 0 Boosts_Coins_based_on_total_ores_mined_(Total:+^%) Make_a_2nd_player_to_do_the_mining_for_you!".split(" "), "Baby_on_Board_\u88fd 250 1.08 0 50 2 210 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 240 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_\u88fd 300 4.50 0 10 5 280 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_\u88fd 1000 6 0 5 1 330 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 370 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Carry_Capacity_\u88fd 650 1.35 0 100 5 410 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Drops_for_Days 700 1.17 0 50 1 450 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_\u88fd 800 1.25 0 100 2 480 0 0 +{%_Dog Happiness".split(" "), "Slice_N_Dice_\u88fd 900 1.10 0 100 2 550 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_\u88fd 400 1.10 0 100 5 600 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 630 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 680 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_\u88fd 1300 1.15 0 100 5 750 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 810 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 860 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_\u88fd 1800 1.13 0 50 1 900 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 930 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 950 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 980 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_\u88fd 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_\u88fd 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_\u88fd 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_\u88fd 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_\u88fd 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_\u88fd 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_\u88fd 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_\u88fd 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_\u88fd 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_\u88fd 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
+# `UpgradeVault = function` in source. Last updated in v2.46 Dec 1
+UpgradeVault = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_製_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 49 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_製 25 1.15 0 500 1 69 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 80 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_製 90 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 95 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 97 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 99 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_製 170 7.5 0 5 10 115 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_Codex".split(" "), "Carry_Capacity_製 200 1.35 0 100 5 130 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Baby_on_Board_製 250 1.08 0 50 2 180 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 240 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_製 300 4.50 0 10 5 280 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_製 1000 6 0 5 1 330 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 370 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Mining_Payday$_製 650 1.28 0 100 2 410 0 0 Boosts_Coins_based_on_total_ores_mined_(Total:+^%) Go_do_the_mining_on_your_2nd_player!".split(" "), "Drops_for_Days 700 1.17 0 50 1 450 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_製 800 1.25 0 100 2 480 0 0 +{%_Dog Happiness".split(" "), "Slice_N_Dice_製 900 1.10 0 100 2 550 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_製 400 1.10 0 100 5 600 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 630 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 680 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_製 1300 1.15 0 100 5 750 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 810 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 860 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_製 1800 1.13 0 50 1 900 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 930 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 950 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 980 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_製 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_製 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_製 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_製 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_製 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_製 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_製 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_製 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_製 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_製 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
 # `"VaultUpgBonus" == d` in `_customBlock_Summoning`. Last updated in v2.43 Nov 6
 vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 999]
 vault_stack_types = ['Knockout']

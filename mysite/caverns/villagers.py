@@ -203,7 +203,8 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
     villager_name = 'Cosmos'
     villager = session_data.account.caverns['Villagers'][villager_name]
-    earned_conjuror_points = session_data.account.gemshop['Conjuror Pts'] + villager['Level']
+    gscp = session_data.account.gemshop['Purchases']['Conjuror Pts']
+    earned_conjuror_points = gscp['Owned'] + villager['Level']
     spent_conjuror_points = session_data.account.caverns['TotalMajiks']
 
     #Generate Alert
@@ -229,7 +230,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         label=f"{villager['Title']} level for all implemented unlocks",
         picture_class=villager_name,
         progression=villager['Level'],
-        goal=max_majiks - total_placeholder_majiks - session_data.account.gemshop['Conjuror Pts']
+        goal=max_majiks - total_placeholder_majiks - gscp['Owned']
     ))
     villager_advice[v_stats].append(Advice(
         label="Next level progress",
@@ -238,16 +239,15 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         goal=100,
         unit='%'
     ))
-    max_conjuror_pts = 12  # TODO Do I not have max levels stored somewhere for gemshop?
     villager_advice[v_stats].append(Advice(
-        label=f"Up to {max_conjuror_pts} Conjuror Pts can be purchased from the Gem Shop",
+        label=f"Up to {gscp['MaxLevel']} Conjuror Pts can be purchased from the {{{{Gem Shop|#gem-shop}}}}",
         picture_class='conjuror-pts',
-        progression=session_data.account.gemshop['Conjuror Pts'],
-        goal=max_conjuror_pts
+        progression=gscp['Owned'],
+        goal=gscp['MaxLevel']
     ))
     if earned_conjuror_points > spent_conjuror_points < max_majiks - total_placeholder_majiks:
         unspent_pts_advice = Advice(
-            label=f"You have {earned_conjuror_points-spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
+            label=f"You have {earned_conjuror_points - spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
             picture_class='cosmos',
             progression=spent_conjuror_points,
             goal=earned_conjuror_points
@@ -271,7 +271,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         pre_string=f"Level {villager['Level']} {villager['Title']}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= max_majiks - total_placeholder_majiks - session_data.account.gemshop['Conjuror Pts']
+        completed=villager['Level'] >= max_majiks - total_placeholder_majiks - gscp['Owned']
     )
     return villager_ag
 

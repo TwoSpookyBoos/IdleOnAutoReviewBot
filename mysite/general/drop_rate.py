@@ -8,7 +8,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
-from consts.consts_w1 import stamp_maxes, starsigns_dict
+from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
@@ -700,31 +700,36 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     return account_wide_advice_group, account_wide_bonuses
 
 
-def process_star_sign(name, drop_rate, picture_class, character, infinite_star_sign_levels, silkroad_chip_equipped, seraph_cosmos_starsign_mod, silkroad_chip_starsign_mod, star_signs_advice):
+def process_star_sign(name, drop_rate, picture_class, character, infinite_star_sign_levels, silkroad_chip_equipped, silkroad_chip_starsign_mod, star_signs_advice):
     starsign = session_data.account.star_signs[name]
     infinite_unlocked = starsign['Index'] <= infinite_star_sign_levels
     equipped = (starsign['Index'] - 1) in character.equipped_star_signs
-    boosted = silkroad_chip_equipped and equipped
+    silkroad_chip_owned = session_data.account.star_sign_extras['DoublerOwned']
+    boosted = silkroad_chip_equipped and infinite_unlocked
+    ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+    seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
 
     passive_value = drop_rate * seraph_cosmos_starsign_mod
     boosted_value = drop_rate * seraph_cosmos_starsign_mod * silkroad_chip_starsign_mod
 
-    active_value = 0
-    if (infinite_unlocked or equipped) and not boosted:
-        active_value = passive_value
-    if boosted:
-        active_value = boosted_value
+    active_value = passive_value if not boosted else boosted_value
 
-    text = f"<br>+{round(active_value, 1):g}% Drop Rate {'(PASSIVE)' if infinite_unlocked and not boosted else ''}"
-    alert_text = None
-    if silkroad_chip_equipped and not equipped:
-        alert_text = f'<br>Not being boosted by Silkrode Nanochip. Equip the Star Sign!'
-        text += alert_text
+    text = (
+        f"<br>+{round(active_value, 1):g}% Drop Rate {'(PASSIVE)' if infinite_unlocked and not boosted else ''}"
+        f"{'<br>Not being boosted by Silkrode Nanochip. Equip the Lab Chip!' if infinite_unlocked and silkroad_chip_owned and not boosted else ''}"
+    )
+
+    if infinite_unlocked and silkroad_chip_equipped:
+        max_boosted_for_this_character = True
+    elif (equipped or infinite_unlocked) and not silkroad_chip_owned:
+        max_boosted_for_this_character = True
+    else:
+        max_boosted_for_this_character = False
 
     star_signs_advice.append(Advice(
         label=f"{{{{ Star Signs|#star-signs }}}}- {name}:{text}",
         picture_class=picture_class,
-        progression=int(active_value > 0 and alert_text is None),
+        progression=int(active_value > 0 and max_boosted_for_this_character),
         goal=1
     ))
     return active_value
@@ -875,12 +880,10 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         # Lab Chips - Silkrode Nanochip
         # Modifier for Star Signs below, must be equipped so we always show
-        silkroad_chip_equipped = "Silkrode Nanochip" in character.equipped_lab_chips
+        silkroad_chip_equipped = 'Silkrode Nanochip' in character.equipped_lab_chips
         silkroad_chip_starsign_mod = 2 if silkroad_chip_equipped else 1
         star_signs_advice.append(Advice(
-            label=f"Lab Chips- Silkrode Nanochip:"
-                  f"<br>x2 Star Sign Bonuses while equipped"
-                  f"<br>Note: Improves the Star Signs only if they are also equipped",
+            label=f"Lab Chips- Silkrode Nanochip: 2x Passive Star Sign Bonuses while equipped",
             picture_class='silkrode-nanochip',
             progression=int(silkroad_chip_equipped),
             goal=1
@@ -888,14 +891,20 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         # Seraph Cosmos
         # Always shown because the modifier can grow based on Summoning levels
-        seraph_cosmos_starsign_unlocked = session_data.account.star_signs['Seraph Cosmos']['Unlocked']
-        seraph_cosmos_starsign_mod = (1.1 ** max(3, ceil((session_data.account.all_skills['Summoning'][0] + 1) / 20))) if seraph_cosmos_starsign_unlocked else 1.0
+        ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+        seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
+        next_multi_goal = get_seraph_cosmos_summ_level_goal(ac_level, character.summoning_level)
+        next_level_note = (
+            f"<br>{character.summoning_level}/{next_multi_goal} summoning levels toward next multi increase."
+            if seraph_cosmos_starsign_mod < seraph_max
+            else ''
+        )
         star_signs_advice.append(Advice(
             label=f"{{{{ Star Signs|#star-signs }}}}- Seraph Cosmos:"
-                  f"<br>x{round(seraph_cosmos_starsign_mod, 3)} Star Sign Bonuses (x1.10 per 20 Summoning levels)"
-                  f"<br>Note: Always improves the Star Signs below",
+                  f"<br>{round(seraph_cosmos_starsign_mod, 3):g}/{seraph_max}x Passive Star Sign Bonuses"
+                  f"{next_level_note}",
             picture_class='seraph-cosmos',
-            progression=int(seraph_cosmos_starsign_unlocked),
+            progression=int(session_data.account.star_signs['Seraph Cosmos']['Unlocked']),
             goal=1
         ))
 
@@ -915,7 +924,6 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             character,
             infinite_star_sign_levels,
             silkroad_chip_equipped,
-            seraph_cosmos_starsign_mod,
             silkroad_chip_starsign_mod,
             star_signs_advice
         )
@@ -926,7 +934,6 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             character,
             infinite_star_sign_levels,
             silkroad_chip_equipped,
-            seraph_cosmos_starsign_mod,
             silkroad_chip_starsign_mod,
             star_signs_advice
         )

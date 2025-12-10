@@ -7,13 +7,14 @@ from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, 
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.models import AdviceGroup, Advice, AdviceSection
+from models.models_util import get_gem_shop_purchase_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-chilled_yarn_multi = [1, 2, 3, 4, 5]
+chilled_yarn_multi = [1, 2, 3, 4, 5, 6]
 
 def get_max_chilled_yarn_multi():
     return max(chilled_yarn_multi)
@@ -24,7 +25,7 @@ def get_chilled_yarn_multi(artifact_level: int) -> int:
         return chilled_yarn_multi[artifact_level]
     except:
         logger.error(f"Failed to calculate Chilled Yarn level of {artifact_level}. Returning max value of {max(chilled_yarn_multi)}")
-        return max(chilled_yarn_multi)
+        return get_max_chilled_yarn_multi()
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group A = several
@@ -41,7 +42,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     mga = ValueToMulti(
         (20 * session_data.account.achievements['Vial Junkee']['Complete'])
-        + (20 * session_data.account.gemshop['Sigil Supercharge'])
+        + (20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned'])
         + player_peapod_value
         + willow_vial_value
         + player_sigil_stamp_value
@@ -109,14 +110,16 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
         goal=1
     ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Gem Shop|#gem-shop }}}}: Sigil Supercharge: "
-              f"+{20 * session_data.account.gemshop['Sigil Supercharge']}/{20 * 10}%",
-        picture_class='sigil-supercharge',
-        progression=session_data.account.gemshop['Sigil Supercharge'],
-        goal=10,
-        completed=not practical_maxed
-    ))
+    gsss_advice = get_gem_shop_purchase_advice(
+        purchase_name='Sigil Supercharge',
+        link_to_section=True,
+        secondary_label=(
+            f": +{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned']}/"
+            f"{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel']}%"
+        )
+    )
+    gsss_advice.completed = not practical_maxed
+    speed_Advice[mga_label].append(gsss_advice)
     speed_Advice[mga_label].append(Advice(
         label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
               f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * get_max_chilled_yarn_multi()}%",
