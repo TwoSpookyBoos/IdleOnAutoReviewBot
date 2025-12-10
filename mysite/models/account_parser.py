@@ -3855,7 +3855,6 @@ def _parse_w6_summoning(account):
 def _parse_w6_summoning_battles(account, raw_battles):
     safe_battles = [safer_convert(battle, '') for battle in raw_battles]
     regular_battles = [battle for battle in safe_battles if battle in summoning_regular_battles]
-    regular_battles = []  #TODO: REMOVE AFTER TESTING LMAO
     account.summoning['Battles']['RegularTotal'] = len(regular_battles)
     account.summoning['AllRegularBattlesWon'] = len(regular_battles) >= len(summoning_regular_battles)
     # Endless doesn't follow the same structure as the once-only battles

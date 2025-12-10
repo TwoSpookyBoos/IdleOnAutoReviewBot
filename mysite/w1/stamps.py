@@ -115,11 +115,11 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Account Wide'].append(get_guild_bonus_advice('Rucksack'))
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
-    gscp = session_data.account.gemshop['Purchases']['Carry Capacity']
+    gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']
     capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
         purchase_name='Carry Capacity',
         link_to_section=True,
-        secondary_label=f": +{25 * gscp['Owned']}/{25 * gscp['MaxLevel']}%"
+        secondary_label=f": +{25 * gemshop_carry_capacity['Owned']}/{25 * gemshop_carry_capacity['MaxLevel']}%"
     ))
     capacity_Advices['Account Wide'].append(session_data.account.star_sign_extras['SeraphAdvice'])
 
@@ -343,11 +343,12 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         progression=compass['Upgrades']['Exalted Stamps']['Level'],
         goal=compass['Upgrades']['Exalted Stamps']['Max Level']
     ))
+    gemshop_exalted_stamps = gemshop['Exalted Stamps']
     exalted_advice[tot].append(Advice(
-        label=f"Exalted Stamps from Gem Shop ({gemshop['Exalted Stamps']['Subsection']}): {gemshop['Exalted Stamps']['Owned']}",
+        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps['Subsection']}): {gemshop_exalted_stamps['Owned']}",
         picture_class='exalted-stamps',
-        progression=gemshop['Exalted Stamps']['Owned'],
-        goal=gemshop['Exalted Stamps']['MaxLevel']
+        progression=gemshop_exalted_stamps['Owned'],
+        goal=gemshop_exalted_stamps['MaxLevel']
     ))
 
     exalted_advice[rec] = [
