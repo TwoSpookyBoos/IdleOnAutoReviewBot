@@ -132,7 +132,7 @@ def get_gem_shop_purchase_advice(
 
 
 def get_coral_reef_advice(coral_name: str) -> Advice:
-    upgrade = session_data.account.coral_reef[coral_name]
+    upgrade = session_data.account.coral_reef['Reef Corals'][coral_name]
     unlock_or_upgrade_text = 'Level up' if upgrade['Unlocked'] else "Unlock"
     next_level_cost_text = f'<br>Next level costs {upgrade['Next Cost']} corals' if upgrade['Unlocked'] else ''
     advice = Advice(

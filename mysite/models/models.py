@@ -1718,7 +1718,10 @@ class Account:
         self.spelunk = {
             'Cave Bonuses': {},
         }
-        self.coral_reef = copy.deepcopy(coral_reef_bonuses)
+        self.coral_reef = {
+            'Town Corals': 0,
+            'Reef Corals': copy.deepcopy(coral_reef_bonuses)
+        }
         self.advice_for_money = {
             'Upgrades': {},
         }

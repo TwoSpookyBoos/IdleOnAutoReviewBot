@@ -8,7 +8,12 @@ from models.models_util import get_coral_reef_advice, get_companion_advice, get_
 
 
 def get_corals_info_group() -> AdviceGroup:
-    coral_advice: list[Advice] = [get_coral_reef_advice(name) for name in session_data.account.coral_reef.keys()]
+    coral_advice: list[Advice] = [
+        Advice(
+            label=f"Town Corals: {int(session_data.account.coral_reef['Town Corals'])}",
+            picture_class="coral"
+        ), *[get_coral_reef_advice(name) for name in session_data.account.coral_reef['Reef Corals'].keys()]
+    ]
     return AdviceGroup(
         pre_string='Corals',
         advices=coral_advice,

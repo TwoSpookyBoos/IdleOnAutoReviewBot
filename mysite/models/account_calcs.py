@@ -2656,5 +2656,5 @@ def _calculate_w7_advice_for_money(account):
             bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details['Value']:.4f}")
 
 def _calculate_w7_coral_reef(account):
-    for coral_details in account.coral_reef.values():
+    for coral_details in account.coral_reef['Reef Corals'].values():
         coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))
