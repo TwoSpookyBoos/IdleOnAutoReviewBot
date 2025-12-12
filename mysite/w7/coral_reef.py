@@ -189,7 +189,6 @@ def get_coral_reef_section():
             tier='Not Yet Evaluated',
             header='Come back after unlocking W7!',
             picture='',
-            unrated=None,
             unreached=True,
             completed=False
         )
