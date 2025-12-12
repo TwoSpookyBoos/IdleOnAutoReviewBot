@@ -40,7 +40,6 @@ def getTemplateAdviceSection() -> AdviceSection:
             header='Come back after unlocking Template!',
             picture='',
             unreached=True,
-            completed=False
         )
         return template_AdviceSection
 

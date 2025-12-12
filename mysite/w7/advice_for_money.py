@@ -22,7 +22,6 @@ def get_advice_for_money_section():
             header='Come back after finding the Big Fish on Doodle Reef in W7!',
             picture='',
             unreached=True,
-            completed=False
         )
         return afm_AdviceSection
 

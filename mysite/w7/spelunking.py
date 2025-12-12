@@ -57,7 +57,6 @@ def get_spelunking_advicesection() -> AdviceSection:
             header='Come back after unlocking Spelunking in W7!',
             picture='',
             unreached=True,
-            completed=False
         )
         return spelunking_AdviceSection
 

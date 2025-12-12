@@ -190,7 +190,6 @@ def get_coral_reef_section():
             header='Come back after unlocking W7!',
             picture='',
             unreached=True,
-            completed=False
         )
         return reef_AdviceSection
 
