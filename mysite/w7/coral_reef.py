@@ -37,8 +37,8 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
         label=f'{{{{ Event Shop|#event-shop }}}} - Coolral: x{coolral_multi}/x1.3 Daily Corals',
         resource='event-point',
         picture_class='event-shop-25',
-        progression = int(coolral['Owned']),
-        goal = 1,
+        progression=int(coolral['Owned']),
+        goal=1,
     )
 
     # Mult C
@@ -64,21 +64,21 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
         label="Dancing Coral Bonus (WIP)",
         picture_class="coming-soon"
     )
-    multi_group_d_advice.append(dancing_coral_advice )
+    multi_group_d_advice.append(dancing_coral_advice)
 
     # TODO: Clamwork bonus
     clamwork_advice = Advice(
         label="Clamwork Bonus (WIP)",
         picture_class="coming-soon"
     )
-    multi_group_d_advice.append(clamwork_advice )
+    multi_group_d_advice.append(clamwork_advice)
 
     # TODO: Killroy bonus
     killroy_advice = Advice(
         label="Killroy Bonus (WIP)",
         picture_class="coming-soon"
     )
-    multi_group_d_advice.append(killroy_advice )
+    multi_group_d_advice.append(killroy_advice)
 
     corale_stamp = session_data.account.stamps['Corale Stamp']
     corale_stamp_value = corale_stamp['Total Value']
@@ -152,22 +152,22 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(coral_statue_advice)
     multi_group_d_value += coral_statue_value
 
-    multi_group_d_mult = round(ValueToMulti(multi_group_d_value), 2)
+    multi_group_d_mult = ValueToMulti(multi_group_d_value)
 
     # Total
-    total_daily_corals = base_daily_corals * shellslug_multi * coolral_multi * more_coral_multi
+    total_daily_corals = base_daily_corals * shellslug_multi * coolral_multi * more_coral_multi * multi_group_d_mult
 
     coral_sources: dict[str, list[Advice]] = {
-        f'Total daily corals: {total_daily_corals}': [],
+        f'Total daily corals: {round(total_daily_corals, 2):g}': [],
         f'Base: {base_daily_corals}': [Advice(
            label=f'Base daily corals: {base_daily_corals}',
-            picture_class='coral',
-            completed=True,
+           picture_class='coral',
+           completed=True,
         )],
-        f'Multi Group A: x{shellslug_multi}': [shellslug_advice],
-        f'Multi Group B: x{coolral_multi}': [coolral_advice],
-        f'Multi Group C: x{more_coral_multi}': [more_coral_advice],
-        f'Multi Group D: x{multi_group_d_mult}': multi_group_d_advice,
+        f'Multi Group A: x{round(shellslug_multi, 2):g}': [shellslug_advice],
+        f'Multi Group B: x{round(coolral_multi, 2):g}': [coolral_advice],
+        f'Multi Group C: x{round(more_coral_multi, 2):g}': [more_coral_advice],
+        f'Multi Group D: x{round(multi_group_d_mult, 2):g}': multi_group_d_advice,
     }
 
     for subgroup in coral_sources.values():
