@@ -87,7 +87,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
         picture_class='corale-stamp',
         progression=corale_stamp['Level'],
         resource=corale_stamp['Material'],
-        goal=stamp_maxes['Corale Stamp'] if corale_stamp['Delivered'] else 1
+        goal=stamp_maxes.get('Corale Stamp', 1) if corale_stamp['Delivered'] else 1
     )
     multi_group_d_advice.append(corale_stamp_advice)
     multi_group_d_value += corale_stamp_value
