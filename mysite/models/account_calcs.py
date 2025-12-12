@@ -2643,9 +2643,10 @@ def _calculate_w1_statues(account):
     ]
 
 def _calculate_w7(account):
-    _calculate_advice_for_money(account)
+    _calculate_w7_advice_for_money(account)
+    _calculate_w7_coral_reef(account)
 
-def _calculate_advice_for_money(account):
+def _calculate_w7_advice_for_money(account):
     for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
         bonus_details["Value"] = bonus_details["Level"] / (bonus_details["Level"] + 100) * bonus_details["Bonus"]
         if "{" in bonus_details["Effect"]:
@@ -2653,3 +2654,7 @@ def _calculate_advice_for_money(account):
         elif "}" in bonus_details["Effect"]:
             bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
             bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details['Value']:.4f}")
+
+def _calculate_w7_coral_reef(account):
+    for coral_details in account.coral_reef['Reef Corals'].values():
+        coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))

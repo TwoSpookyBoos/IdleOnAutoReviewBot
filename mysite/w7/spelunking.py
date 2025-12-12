@@ -56,9 +56,7 @@ def get_spelunking_advicesection() -> AdviceSection:
             tier='Not Yet Evaluated',
             header='Come back after unlocking Spelunking in W7!',
             picture='',
-            unrated=None,
             unreached=True,
-            completed=False
         )
         return spelunking_AdviceSection
 

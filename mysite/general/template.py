@@ -39,9 +39,7 @@ def getTemplateAdviceSection() -> AdviceSection:
             tier='Not Yet Evaluated',
             header='Come back after unlocking Template!',
             picture='',
-            unrated=None,
             unreached=True,
-            completed=False
         )
         return template_AdviceSection
 
@@ -63,7 +61,6 @@ def getTemplateAdviceSection() -> AdviceSection:
         picture="",
         groups=template_AdviceGroupDict.values(),
         completed=None,
-        unrated=None,
     )
 
     return template_AdviceSection

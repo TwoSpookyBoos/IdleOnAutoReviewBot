@@ -1,9 +1,12 @@
 import json
 import math
+from typing import TypeVar
+
 from consts.consts_autoreview import default_huge_number_replacement
 from utils.logging import get_logger
 logger = get_logger(__name__)
 
+T = TypeVar("T")
 
 def safe_loads(data):
     return json.loads(data) if isinstance(data, str) else data
@@ -67,3 +70,9 @@ def safer_math_log(input_value, base):
         return 0
     else:
         return math.log(input_value, base)
+
+def safer_index(array: list, index: int, default: T) -> T:
+    try:
+        return array[index]
+    except IndexError:
+        return default

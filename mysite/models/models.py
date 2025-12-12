@@ -1,3 +1,4 @@
+import copy
 import functools
 import json
 import os
@@ -19,6 +20,7 @@ from consts.consts_w3 import (
     apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict, get_obol_totals
+from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.number_formatting import parse_number
@@ -1715,6 +1717,10 @@ class Account:
         #W7
         self.spelunk = {
             'Cave Bonuses': {},
+        }
+        self.coral_reef = {
+            'Town Corals': 0,
+            'Reef Corals': copy.deepcopy(coral_reef_bonuses)
         }
         self.advice_for_money = {
             'Upgrades': {},
