@@ -61,7 +61,9 @@ def extract_items(dump: str) -> dict:
         elif '.lvReqToCraft=' in line:
             lv_req_to_craft = extract_string_property('lvReqToCraft')
             try:
-                lv_req_to_craft = parse_number(lv_req_to_craft)
+                lv_req_to_craft = parse_number(lv_req_to_craft, -1)
+                if lv_req_to_craft == -1:
+                    continue
                 new_item['Level Required (Craft)'] = lv_req_to_craft
             except:
                 pass
@@ -114,7 +116,18 @@ def extract_items(dump: str) -> dict:
             # this branch finishes the item. Do any "final parsing" of an item here
             new_item['Code (Name)'] = next(re.finditer(r'addNew\S+\("([^"]+)"', line)).group(1)
 
-            # combine lines of description, replace any placeholders
+            # parse stamps
+            if new_item['Type'] == "STAMP":
+                _, scaling_type, x1, x2, _, material_code, _, _, _, _, _, effect, _ = new_item['Description']['1'].split(',')
+                new_item['Stamp Bonus'] = {
+                    'Effect': effect.replace('_', ' ').replace('{}', '').strip(),
+                    'Scaling Type': scaling_type,
+                    'x1': parse_number(x1, -1),
+                    'x2': parse_number(x2, -1),
+                    'Code (Material)': material_code,
+                }
+
+            # combine lines of description, replace placeholders, remove filler
             item_definitions[new_item['Code (Name)']] = new_item
             if 'Description' in new_item:
                 new_item['Description'] = ' '.join(

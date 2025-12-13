@@ -9494,7 +9494,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,1,0,5,Grasslands1,3,5,10,1.2,0,{} Base Damage,3",
-        "Code (Name)": "StampA1"
+        "Code (Name)": "StampA1",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Grasslands1"
+        }
     },
     "StampA2": {
         "Name": "Heart Stamp",
@@ -9503,7 +9510,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseHP,add,1,0,5,OakTree,5,6,15,1.2,0,{} Base HP,3",
-        "Code (Name)": "StampA2"
+        "Code (Name)": "StampA2",
+        "Stamp Bonus": {
+            "Effect": "Base HP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "OakTree"
+        }
     },
     "StampA3": {
         "Name": "Mana Stamp",
@@ -9512,7 +9526,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseMP,add,1,0,5,Copper,6,6,30,1.2,0,{} Base MP,0",
-        "Code (Name)": "StampA3"
+        "Code (Name)": "StampA3",
+        "Stamp Bonus": {
+            "Effect": "Base MP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Copper"
+        }
     },
     "StampA4": {
         "Name": "Tomahawk Stamp",
@@ -9521,7 +9542,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,6,40,4,CopperBar,5,6,50,1.3,0,{}% Total Damage,3",
-        "Code (Name)": "StampA4"
+        "Code (Name)": "StampA4",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 6,
+            "x2": 40,
+            "Code (Material)": "CopperBar"
+        }
     },
     "StampA5": {
         "Name": "Target Stamp",
@@ -9530,7 +9558,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAcc,add,1,0,5,CraftMat1,5,6,50,1.3,0,{} Base Accuracy,3",
-        "Code (Name)": "StampA5"
+        "Code (Name)": "StampA5",
+        "Stamp Bonus": {
+            "Effect": "Base Accuracy",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "CraftMat1"
+        }
     },
     "StampA6": {
         "Name": "Shield Stamp",
@@ -9539,7 +9574,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDef,add,1,0,5,Iron,5,7,50,1.3,0,{} Base Defence,3",
-        "Code (Name)": "StampA6"
+        "Code (Name)": "StampA6",
+        "Stamp Bonus": {
+            "Effect": "Base Defence",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Iron"
+        }
     },
     "StampA7": {
         "Name": "Longsword Stamp",
@@ -9548,7 +9590,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,2,0,4,Grasslands3,10,6,50,1.3,0,{} Base Damage,6",
-        "Code (Name)": "StampA7"
+        "Code (Name)": "StampA7",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Grasslands3"
+        }
     },
     "StampA8": {
         "Name": "Kapow Stamp",
@@ -9557,7 +9606,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CritDmg,decay,8,40,3,CraftMat5,20,6,50,1.3,0,{}% Critical Damage,6",
-        "Code (Name)": "StampA8"
+        "Code (Name)": "StampA8",
+        "Stamp Bonus": {
+            "Effect": "% Critical Damage",
+            "Scaling Type": "decay",
+            "x1": 8,
+            "x2": 40,
+            "Code (Material)": "CraftMat5"
+        }
     },
     "StampA9": {
         "Name": "Fist Stamp",
@@ -9566,7 +9622,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseSTR,add,1,0,2,BirchTree,20,7,50,1.3,0,{} STR,3",
-        "Code (Name)": "StampA9"
+        "Code (Name)": "StampA9",
+        "Stamp Bonus": {
+            "Effect": "STR",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "BirchTree"
+        }
     },
     "StampA10": {
         "Name": "Battleaxe Stamp",
@@ -9575,7 +9638,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,10,40,4,Leaf1,15,4,50,1.3,0,{}% Total Damage,5",
-        "Code (Name)": "StampA10"
+        "Code (Name)": "StampA10",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 10,
+            "x2": 40,
+            "Code (Material)": "Leaf1"
+        }
     },
     "StampA11": {
         "Name": "Agile Stamp",
@@ -9584,7 +9654,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAGI,add,1,0,2,EquipmentToolsHatchet3,1,4,50,1.3,0,{} AGI,0",
-        "Code (Name)": "StampA11"
+        "Code (Name)": "StampA11",
+        "Stamp Bonus": {
+            "Effect": "AGI",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "EquipmentToolsHatchet3"
+        }
     },
     "StampA12": {
         "Name": "Vitality Stamp",
@@ -9593,7 +9670,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseHP,add,2,0,4,Jungle2,25,6,50,1.3,0,{} Base HP,6",
-        "Code (Name)": "StampA12"
+        "Code (Name)": "StampA12",
+        "Stamp Bonus": {
+            "Effect": "Base HP",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Jungle2"
+        }
     },
     "StampA13": {
         "Name": "Book Stamp",
@@ -9602,7 +9686,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseWIS,add,1,0,2,IronBar,20,5,50,1.35,0,{} WIS,3",
-        "Code (Name)": "StampA13"
+        "Code (Name)": "StampA13",
+        "Stamp Bonus": {
+            "Effect": "WIS",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "IronBar"
+        }
     },
     "StampA14": {
         "Name": "Manamoar Stamp",
@@ -9611,7 +9702,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseMP,add,2,0,3,Forest1,25,6,75,1.32,0,{} Base MP,2",
-        "Code (Name)": "StampA14"
+        "Code (Name)": "StampA14",
+        "Stamp Bonus": {
+            "Effect": "Base MP",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Forest1"
+        }
     },
     "StampA15": {
         "Name": "Clover Stamp",
@@ -9620,7 +9718,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseLUK,add,1,0,2,EquipmentShirts12,1,2,300,1.38,0,{} LUK,6",
-        "Code (Name)": "StampA15"
+        "Code (Name)": "StampA15",
+        "Stamp Bonus": {
+            "Effect": "LUK",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "EquipmentShirts12"
+        }
     },
     "StampA16": {
         "Name": "Scimitar Stamp",
@@ -9629,7 +9734,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,3,0,4,Fish1,75,7,2000,1.33,0,{} Base Damage,0",
-        "Code (Name)": "StampA16"
+        "Code (Name)": "StampA16",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 3,
+            "x2": 0,
+            "Code (Material)": "Fish1"
+        }
     },
     "StampA17": {
         "Name": "Bullseye Stamp",
@@ -9638,7 +9750,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAcc,add,2,0,5,Bug3,100,10,5000,1.36,0,{} Base Accuracy,0",
-        "Code (Name)": "StampA17"
+        "Code (Name)": "StampA17",
+        "Stamp Bonus": {
+            "Effect": "Base Accuracy",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Bug3"
+        }
     },
     "StampA18": {
         "Name": "Feather Stamp",
@@ -9647,7 +9766,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctMoveSpd,decay,5,50,5,DesertB1,25,6,2500,1.3,0,{} Base Move Speed,0",
-        "Code (Name)": "StampA18"
+        "Code (Name)": "StampA18",
+        "Stamp Bonus": {
+            "Effect": "Base Move Speed",
+            "Scaling Type": "decay",
+            "x1": 5,
+            "x2": 50,
+            "Code (Material)": "DesertB1"
+        }
     },
     "StampA19": {
         "Name": "Polearm Stamp",
@@ -9656,7 +9782,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,16,40,6,TestObj7,1,2,3000,1.3,0,{}% Total Damage,0",
-        "Code (Name)": "StampA19"
+        "Code (Name)": "StampA19",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 16,
+            "x2": 40,
+            "Code (Material)": "TestObj7"
+        }
     },
     "StampA20": {
         "Name": "Violence Stamp",
@@ -9665,7 +9798,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseSTR,add,1,0,3,Dementia,10,7,10000,1.3,0,{} STR,0",
-        "Code (Name)": "StampA20"
+        "Code (Name)": "StampA20",
+        "Stamp Bonus": {
+            "Effect": "STR",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Dementia"
+        }
     },
     "StampA21": {
         "Name": "Buckler Stamp",
@@ -9674,7 +9814,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDef,add,1,0,7,PlatBar,25,6,2200,1.305,0,{} Base Defence,0",
-        "Code (Name)": "StampA21"
+        "Code (Name)": "StampA21",
+        "Stamp Bonus": {
+            "Effect": "Base Defence",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "PlatBar"
+        }
     },
     "StampA22": {
         "Name": "Hermes Stamp",
@@ -9683,7 +9830,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAGI,add,1,0,3,Soul3,30,7,10000,1.3,0,{} STR,0",
-        "Code (Name)": "StampA22"
+        "Code (Name)": "StampA22",
+        "Stamp Bonus": {
+            "Effect": "STR",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Soul3"
+        }
     },
     "StampA23": {
         "Name": "Sukka Foo",
@@ -9692,7 +9846,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BossDmg,decay,20,60,10,Quest17,3,5,10000,1.34,0,{}% Boss Damage,0",
-        "Code (Name)": "StampA23"
+        "Code (Name)": "StampA23",
+        "Stamp Bonus": {
+            "Effect": "% Boss Damage",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 60,
+            "Code (Material)": "Quest17"
+        }
     },
     "StampA24": {
         "Name": "Arcane Stamp",
@@ -9701,7 +9862,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseWIS,add,1,0,3,GoldBar,50,7,1550,1.36,0,{} Base WIS,0",
-        "Code (Name)": "StampA24"
+        "Code (Name)": "StampA24",
+        "Stamp Bonus": {
+            "Effect": "Base WIS",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "GoldBar"
+        }
     },
     "StampA25": {
         "Name": "Avast Yar Stamp",
@@ -9710,7 +9878,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,6,0,5,Critter7,75,7,15000,1.33,0,{} Base Damage,0",
-        "Code (Name)": "StampA25"
+        "Code (Name)": "StampA25",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 6,
+            "x2": 0,
+            "Code (Material)": "Critter7"
+        }
     },
     "StampA26": {
         "Name": "Steve Sword",
@@ -9719,7 +9894,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,20,60,10,Bug4,150,5,10000,1.32,0,{}% Total Damage,0",
-        "Code (Name)": "StampA26"
+        "Code (Name)": "StampA26",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 60,
+            "Code (Material)": "Bug4"
+        }
     },
     "StampA27": {
         "Name": "Blover Stamp",
@@ -9728,7 +9910,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseLUK,add,1,0,4,Fish3,100,7,25000,1.39,0,{} Base LUK,0",
-        "Code (Name)": "StampA27"
+        "Code (Name)": "StampA27",
+        "Stamp Bonus": {
+            "Effect": "Base LUK",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Fish3"
+        }
     },
     "StampA28": {
         "Name": "Stat Graph Stamp",
@@ -9737,7 +9926,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAllStat,add,1,0,2,StoneZ1,2,2,2000,1.36,0,{} All Stats,0",
-        "Code (Name)": "StampA28"
+        "Code (Name)": "StampA28",
+        "Stamp Bonus": {
+            "Effect": "All Stats",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "StoneZ1"
+        }
     },
     "StampA29": {
         "Name": "Gilded Axe Stamp",
@@ -9746,7 +9942,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,8,0,6,CraftMat12,200,6,2000000,1.43,0,{} Base Damage,0",
-        "Code (Name)": "StampA29"
+        "Code (Name)": "StampA29",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 8,
+            "x2": 0,
+            "Code (Material)": "CraftMat12"
+        }
     },
     "StampA30": {
         "Name": "Diamond Axe Stamp",
@@ -9755,7 +9958,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,20,60,10,CraftMat14,200,6,3000000,1.47,0,{}% Total Damage,0",
-        "Code (Name)": "StampA30"
+        "Code (Name)": "StampA30",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 60,
+            "Code (Material)": "CraftMat14"
+        }
     },
     "StampA31": {
         "Name": "Tripleshot Stamp",
@@ -9764,7 +9974,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAcc,add,3,0,10,CraftMat13,200,6,1500000,1.4,0,{} Base Accuracy,0",
-        "Code (Name)": "StampA31"
+        "Code (Name)": "StampA31",
+        "Stamp Bonus": {
+            "Effect": "Base Accuracy",
+            "Scaling Type": "add",
+            "x1": 3,
+            "x2": 0,
+            "Code (Material)": "CraftMat13"
+        }
     },
     "StampA32": {
         "Name": "Blackheart Stamp",
@@ -9773,7 +9990,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseHP,add,10,0,15,CraftMat11,200,6,1000000,1.4,0,{} Base HP,0",
-        "Code (Name)": "StampA32"
+        "Code (Name)": "StampA32",
+        "Stamp Bonus": {
+            "Effect": "Base HP",
+            "Scaling Type": "add",
+            "x1": 10,
+            "x2": 0,
+            "Code (Material)": "CraftMat11"
+        }
     },
     "StampA33": {
         "Name": "Maxo Slappo Stamp",
@@ -9782,7 +10006,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseSTR,add,4,0,7,Tree9,1000,10,100000000,1.4,0,{} Base STR,0",
-        "Code (Name)": "StampA33"
+        "Code (Name)": "StampA33",
+        "Stamp Bonus": {
+            "Effect": "Base STR",
+            "Scaling Type": "add",
+            "x1": 4,
+            "x2": 0,
+            "Code (Material)": "Tree9"
+        }
     },
     "StampA34": {
         "Name": "Sashe Sidestamp",
@@ -9791,7 +10022,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAGI,add,4,0,7,Bug9,1000,10,100000000,1.4,0,{} Base AGI,0",
-        "Code (Name)": "StampA34"
+        "Code (Name)": "StampA34",
+        "Stamp Bonus": {
+            "Effect": "Base AGI",
+            "Scaling Type": "add",
+            "x1": 4,
+            "x2": 0,
+            "Code (Material)": "Bug9"
+        }
     },
     "StampA35": {
         "Name": "Intellectostampo",
@@ -9800,7 +10038,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseWIS,add,4,0,7,Soul6,150,7,100000000,1.4,0,{} Base WIS,0",
-        "Code (Name)": "StampA35"
+        "Code (Name)": "StampA35",
+        "Stamp Bonus": {
+            "Effect": "Base WIS",
+            "Scaling Type": "add",
+            "x1": 4,
+            "x2": 0,
+            "Code (Material)": "Soul6"
+        }
     },
     "StampA36": {
         "Name": "Conjocharmo Stamp",
@@ -9809,7 +10054,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseLUK,add,4,0,10,LavaA1,1000,10,100000000,1.4,0,{} Base LUK,0",
-        "Code (Name)": "StampA36"
+        "Code (Name)": "StampA36",
+        "Stamp Bonus": {
+            "Effect": "Base LUK",
+            "Scaling Type": "add",
+            "x1": 4,
+            "x2": 0,
+            "Code (Material)": "LavaA1"
+        }
     },
     "StampA37": {
         "Name": "Dementia Sword Stamp",
@@ -9818,7 +10070,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,25,80,10,Dreadlo,1000,10,200000000,1.43,0,{}% Total Damage,0",
-        "Code (Name)": "StampA37"
+        "Code (Name)": "StampA37",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 25,
+            "x2": 80,
+            "Code (Material)": "Dreadlo"
+        }
     },
     "StampA38": {
         "Name": "Golden Sixes Stamp",
@@ -9827,7 +10086,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DropRate,decay,20,80,10,Fish8,250,10,10000000,1.43,0,{}% Drop Rate,0",
-        "Code (Name)": "StampA38"
+        "Code (Name)": "StampA38",
+        "Stamp Bonus": {
+            "Effect": "% Drop Rate",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 80,
+            "Code (Material)": "Fish8"
+        }
     },
     "StampA39": {
         "Name": "Stat Wallstreet Stamp",
@@ -9836,7 +10102,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAllStat,add,2,0,2,StoneZ2,5,2,25000000,1.36,0,{} All Stats,0",
-        "Code (Name)": "StampA39"
+        "Code (Name)": "StampA39",
+        "Stamp Bonus": {
+            "Effect": "All Stats",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "StoneZ2"
+        }
     },
     "StampA40": {
         "Name": "Void Sword Stamp",
@@ -9845,7 +10118,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseDmg,add,12,0,10,SpiA2,20000,10,2500000000,1.36,0,{} Base Damage,0",
-        "Code (Name)": "StampA40"
+        "Code (Name)": "StampA40",
+        "Stamp Bonus": {
+            "Effect": "Base Damage",
+            "Scaling Type": "add",
+            "x1": 12,
+            "x2": 0,
+            "Code (Material)": "SpiA2"
+        }
     },
     "StampA41": {
         "Name": "Void Axe Stamp",
@@ -9854,7 +10134,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,35,200,15,Tree12,25000,10,66000000000,1.36,0,{}% Total Damage,0",
-        "Code (Name)": "StampA41"
+        "Code (Name)": "StampA41",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 35,
+            "x2": 200,
+            "Code (Material)": "Tree12"
+        }
     },
     "StampA42": {
         "Name": "Captalist Stats Stamp",
@@ -9863,7 +10150,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AllStatPct,decay,5,100,10,Bug13,40000,10,2200000000000,1.36,0,{}% All Stats,0",
-        "Code (Name)": "StampA42"
+        "Code (Name)": "StampA42",
+        "Stamp Bonus": {
+            "Effect": "% All Stats",
+            "Scaling Type": "decay",
+            "x1": 5,
+            "x2": 100,
+            "Code (Material)": "Bug13"
+        }
     },
     "StampA43": {
         "Name": "Splosion Stamp",
@@ -9872,7 +10166,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "PctDmg,decay,50,200,15,w7A3,50000,7,660000000000000,1.36,0,{}% Total Damage,0",
-        "Code (Name)": "StampA43"
+        "Code (Name)": "StampA43",
+        "Stamp Bonus": {
+            "Effect": "% Total Damage",
+            "Scaling Type": "decay",
+            "x1": 50,
+            "x2": 200,
+            "Code (Material)": "w7A3"
+        }
     },
     "StampA44": {
         "Name": "Gud EXP Stamp",
@@ -9881,7 +10182,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "classxp,decay,5,200,15,w7A3,50000,7,660000000000000,1.36,0,{}% Class EXP Multi,0",
-        "Code (Name)": "StampA44"
+        "Code (Name)": "StampA44",
+        "Stamp Bonus": {
+            "Effect": "% Class EXP Multi",
+            "Scaling Type": "decay",
+            "x1": 5,
+            "x2": 200,
+            "Code (Material)": "w7A3"
+        }
     },
     "StampB1": {
         "Name": "Pickaxe Stamp",
@@ -9890,7 +10198,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseMinEff,add,1,0,10,OakTree,5,4,10,1.2,1,{} Mining Efficiency,0",
-        "Code (Name)": "StampB1"
+        "Code (Name)": "StampB1",
+        "Stamp Bonus": {
+            "Effect": "Mining Efficiency",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "OakTree"
+        }
     },
     "StampB2": {
         "Name": "Hatchet Stamp",
@@ -9899,7 +10214,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseChopEff,add,1,0,10,CraftMat1,10,4,10,1.2,3,{} Choppin Efficiency,0",
-        "Code (Name)": "StampB2"
+        "Code (Name)": "StampB2",
+        "Stamp Bonus": {
+            "Effect": "Choppin Efficiency",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "CraftMat1"
+        }
     },
     "StampB3": {
         "Name": "Anvil Zoomer Stamp",
@@ -9908,7 +10230,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AnvilPAspd,add,1,0,5,Copper,25,6,50,1.3,2,{}% Anvil Production Spd,0",
-        "Code (Name)": "StampB3"
+        "Code (Name)": "StampB3",
+        "Stamp Bonus": {
+            "Effect": "% Anvil Production Spd",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Copper"
+        }
     },
     "StampB4": {
         "Name": "Lil' Mining Baggy Stamp",
@@ -9917,7 +10246,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "MinCap,add,1,0,10,JungleTree,25,6,50,1.3,1,{} Mining Carry Cap,0",
-        "Code (Name)": "StampB4"
+        "Code (Name)": "StampB4",
+        "Stamp Bonus": {
+            "Effect": "Mining Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "JungleTree"
+        }
     },
     "StampB5": {
         "Name": "Twin Ores Stamp",
@@ -9926,7 +10262,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DoubleMin,decay,15,40,5,EquipmentHats3,1,3,10000,1.3,1,{}% Multi Ore Chance,0",
-        "Code (Name)": "StampB5"
+        "Code (Name)": "StampB5",
+        "Stamp Bonus": {
+            "Effect": "% Multi Ore Chance",
+            "Scaling Type": "decay",
+            "x1": 15,
+            "x2": 40,
+            "Code (Material)": "EquipmentHats3"
+        }
     },
     "StampB6": {
         "Name": "Choppin' Bag Stamp",
@@ -9935,7 +10278,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ChopCap,add,1,0,10,Jungle3,25,6,50,1.3,3,{} Choppin Carry Cap,0",
-        "Code (Name)": "StampB6"
+        "Code (Name)": "StampB6",
+        "Stamp Bonus": {
+            "Effect": "Choppin Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Jungle3"
+        }
     },
     "StampB7": {
         "Name": "Duplogs Stamp",
@@ -9944,7 +10294,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DoubleChop,decay,15,40,5,EquipmentHats20,1,3,20000,1.3,3,{}% Multi Log Chance,0",
-        "Code (Name)": "StampB7"
+        "Code (Name)": "StampB7",
+        "Stamp Bonus": {
+            "Effect": "% Multi Log Chance",
+            "Scaling Type": "decay",
+            "x1": 15,
+            "x2": 40,
+            "Code (Material)": "EquipmentHats20"
+        }
     },
     "StampB8": {
         "Name": "Matty Bag Stamp",
@@ -9953,7 +10310,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "MatCap,add,1,0,10,MaxCapBagM2,1,2,50,1.3,2,{} Material Carry Cap,0",
-        "Code (Name)": "StampB8"
+        "Code (Name)": "StampB8",
+        "Stamp Bonus": {
+            "Effect": "Material Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "MaxCapBagM2"
+        }
     },
     "StampB9": {
         "Name": "Smart Dirt Stamp",
@@ -9962,7 +10326,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "MinExp,add,1,0,5,Forest2,25,6,80,1.35,1,{}% Mining Exp,0",
-        "Code (Name)": "StampB9"
+        "Code (Name)": "StampB9",
+        "Stamp Bonus": {
+            "Effect": "% Mining Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Forest2"
+        }
     },
     "StampB10": {
         "Name": "Cool Diggy Tool Stamp",
@@ -9971,7 +10342,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseMinEff,add,2,0,10,EquipmentToolsHatchet1,1,2,35000,1.4,\t1,{} Mining Efficiency,0",
-        "Code (Name)": "StampB10"
+        "Code (Name)": "StampB10",
+        "Stamp Bonus": {
+            "Effect": "Mining Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "EquipmentToolsHatchet1"
+        }
     },
     "StampB11": {
         "Name": "High IQ Lumber Stamp",
@@ -9980,7 +10358,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ChopExp,add,1,0,5,Forest3,25,6,80,1.35,3,{}% Choppin Exp,0",
-        "Code (Name)": "StampB11"
+        "Code (Name)": "StampB11",
+        "Stamp Bonus": {
+            "Effect": "% Choppin Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Forest3"
+        }
     },
     "StampB12": {
         "Name": "Swag Swingy Tool Stamp",
@@ -9989,7 +10374,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseChopEff,add,2,0,10,EquipmentTools2,1,2,50000,1.36,3,{} Choppin Efficiency,0",
-        "Code (Name)": "StampB12"
+        "Code (Name)": "StampB12",
+        "Stamp Bonus": {
+            "Effect": "Choppin Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "EquipmentTools2"
+        }
     },
     "StampB13": {
         "Name": "Alch Go Brrr Stamp",
@@ -9998,7 +10390,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AlchSpd,add,1,0,4,ForestTree,40,6,800,1.29,-1,{}% Alch Speed,0",
-        "Code (Name)": "StampB13"
+        "Code (Name)": "StampB13",
+        "Stamp Bonus": {
+            "Effect": "% Alch Speed",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "ForestTree"
+        }
     },
     "StampB14": {
         "Name": "Brainstew Stamps",
@@ -10007,7 +10406,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AlchExp,add,1,0,5,Gold,40,6,1250,1.28,5,{}% Alch Exp,0",
-        "Code (Name)": "StampB14"
+        "Code (Name)": "StampB14",
+        "Stamp Bonus": {
+            "Effect": "% Alch Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Gold"
+        }
     },
     "StampB15": {
         "Name": "Drippy Drop Stamp",
@@ -10016,7 +10422,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "LiquidSpd,add,1,0,5,DesertA1,60,6,1000,1.3,-1,{}% Liquid Spd,0",
-        "Code (Name)": "StampB15"
+        "Code (Name)": "StampB15",
+        "Stamp Bonus": {
+            "Effect": "% Liquid Spd",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertA1"
+        }
     },
     "StampB16": {
         "Name": "Droplots Stamp",
@@ -10025,7 +10438,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "LiquidCap,add,1,0,2,Fish4,25,4,2500,1.3,-1,{} Liquid Cap,0",
-        "Code (Name)": "StampB16"
+        "Code (Name)": "StampB16",
+        "Stamp Bonus": {
+            "Effect": "Liquid Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Fish4"
+        }
     },
     "StampB17": {
         "Name": "Fishing Rod Stamp",
@@ -10034,7 +10454,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseFishEff,add,2,0,5,Bug1,50,6,1000,1.32,4,{} Fishing Efficiency,0",
-        "Code (Name)": "StampB17"
+        "Code (Name)": "StampB17",
+        "Stamp Bonus": {
+            "Effect": "Fishing Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Bug1"
+        }
     },
     "StampB18": {
         "Name": "Fishhead Stamp",
@@ -10043,7 +10470,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "FishExp,add,1,0,5,DesertA2,55,9,1500,1.33,4,{}% Fishing Exp,0",
-        "Code (Name)": "StampB18"
+        "Code (Name)": "StampB18",
+        "Stamp Bonus": {
+            "Effect": "% Fishing Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertA2"
+        }
     },
     "StampB19": {
         "Name": "Catch Net Stamp",
@@ -10052,7 +10486,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseCatchEff,add,2,0,5,Fish1,50,6,1000,1.3,6,{} Catching Efficiency,0",
-        "Code (Name)": "StampB19"
+        "Code (Name)": "StampB19",
+        "Stamp Bonus": {
+            "Effect": "Catching Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Fish1"
+        }
     },
     "StampB20": {
         "Name": "Fly Intel Stamp",
@@ -10061,7 +10502,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CatchExp,add,1,0,5,DesertA3,40,10,1500,1.33,6,{}% Catching Exp,0",
-        "Code (Name)": "StampB20"
+        "Code (Name)": "StampB20",
+        "Stamp Bonus": {
+            "Effect": "% Catching Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertA3"
+        }
     },
     "StampB21": {
         "Name": "Bag o Heads Stamp",
@@ -10070,7 +10518,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "FishCap,add,1,0,8,Bug2,35,7,1000,1.3,4,{}% Fish Carry Cap,0",
-        "Code (Name)": "StampB21"
+        "Code (Name)": "StampB21",
+        "Stamp Bonus": {
+            "Effect": "% Fish Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Bug2"
+        }
     },
     "StampB22": {
         "Name": "Holy Mackerel Stamp",
@@ -10079,7 +10534,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DoubleFish,decay,20,40,5,Plat,30,6,1500,1.3,4,{}% Multifish Chance,0",
-        "Code (Name)": "StampB22"
+        "Code (Name)": "StampB22",
+        "Stamp Bonus": {
+            "Effect": "% Multifish Chance",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 40,
+            "Code (Material)": "Plat"
+        }
     },
     "StampB23": {
         "Name": "Bugsack Stamp",
@@ -10088,7 +10550,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CatchCap,add,1,0,8,Fish2,35,7,1000,1.3,6,{}% Bug Carry Cap,0",
-        "Code (Name)": "StampB23"
+        "Code (Name)": "StampB23",
+        "Stamp Bonus": {
+            "Effect": "% Bug Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Fish2"
+        }
     },
     "StampB24": {
         "Name": "Buzz Buzz Stamp",
@@ -10097,7 +10566,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DoubleCatch,decay,20,40,5,ToiletTree,45,6,1500,1.3,6,{}% Multibug Chance,0",
-        "Code (Name)": "StampB24"
+        "Code (Name)": "StampB24",
+        "Stamp Bonus": {
+            "Effect": "% Multibug Chance",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 40,
+            "Code (Material)": "ToiletTree"
+        }
     },
     "StampB25": {
         "Name": "Hidey Box Stamp",
@@ -10106,7 +10582,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "TrappingEff,add,2,0,10,Critter2,100,5,7500,1.3,7,{} Trapping Efficiency,0",
-        "Code (Name)": "StampB25"
+        "Code (Name)": "StampB25",
+        "Stamp Bonus": {
+            "Effect": "Trapping Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Critter2"
+        }
     },
     "StampB26": {
         "Name": "Purp Froge Stamp",
@@ -10115,7 +10598,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ShinyChance,add,1,0,5,Critter3,125,6,10000,1.3,7,{}% Shiny Chance,0",
-        "Code (Name)": "StampB26"
+        "Code (Name)": "StampB26",
+        "Stamp Bonus": {
+            "Effect": "% Shiny Chance",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Critter3"
+        }
     },
     "StampB27": {
         "Name": "Spikemouth Stamp",
@@ -10124,7 +10614,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "TrappingExp,add,1,0,3,Critter4,150,6,12500,1.3,7,{}% Trapping Exp,0",
-        "Code (Name)": "StampB27"
+        "Code (Name)": "StampB27",
+        "Stamp Bonus": {
+            "Effect": "% Trapping Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Critter4"
+        }
     },
     "StampB28": {
         "Name": "Shiny Crab Stamp",
@@ -10133,7 +10630,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ShinyChance,add,2,0,3,Critter5,200,7,15000,1.3,7,{}% Shiny Chance,0",
-        "Code (Name)": "StampB28"
+        "Code (Name)": "StampB28",
+        "Stamp Bonus": {
+            "Effect": "% Shiny Chance",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Critter5"
+        }
     },
     "StampB29": {
         "Name": "Gear Stamp",
@@ -10142,7 +10646,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BuildProd,add,1,0,3,SnowB1,100,5,10000,1.3,8,{}% Building Spd,0",
-        "Code (Name)": "StampB29"
+        "Code (Name)": "StampB29",
+        "Stamp Bonus": {
+            "Effect": "% Building Spd",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "SnowB1"
+        }
     },
     "StampB30": {
         "Name": "Stample Stamp",
@@ -10151,7 +10662,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SampleRate,decay,4,30,4,SnowA1,100,6,10000,1.3,0,{}% Sample Size,0",
-        "Code (Name)": "StampB30"
+        "Code (Name)": "StampB30",
+        "Stamp Bonus": {
+            "Effect": "% Sample Size",
+            "Scaling Type": "decay",
+            "x1": 4,
+            "x2": 30,
+            "Code (Material)": "SnowA1"
+        }
     },
     "StampB31": {
         "Name": "Saw Stamp",
@@ -10160,7 +10678,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ConstructionExp,add,1,0,3,DementiaBar,20,5,15000,1.3,8,{}% Construction Exp,0",
-        "Code (Name)": "StampB31"
+        "Code (Name)": "StampB31",
+        "Stamp Bonus": {
+            "Effect": "% Construction Exp",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DementiaBar"
+        }
     },
     "StampB32": {
         "Name": "Amplestample Stamp",
@@ -10169,7 +10694,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SampleRate,decay,5,30,4,Bug5,2500,12,50000,1.5,0,{}% Sample Size,0",
-        "Code (Name)": "StampB32"
+        "Code (Name)": "StampB32",
+        "Stamp Bonus": {
+            "Effect": "% Sample Size",
+            "Scaling Type": "decay",
+            "x1": 5,
+            "x2": 30,
+            "Code (Material)": "Bug5"
+        }
     },
     "StampB33": {
         "Name": "SpoOoky Stamp",
@@ -10178,7 +10710,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "WorshipEff,add,2,0,10,Soul1,45,6,7500,1.3,9,{} Worship Efficiency,0",
-        "Code (Name)": "StampB33"
+        "Code (Name)": "StampB33",
+        "Stamp Bonus": {
+            "Effect": "Worship Efficiency",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Soul1"
+        }
     },
     "StampB34": {
         "Name": "Flowin Stamp",
@@ -10187,7 +10726,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "WorshipCharge,add,1,0,2,Refinery1,2,5,15000,1.3,9,{}% Charging Speed,0",
-        "Code (Name)": "StampB34"
+        "Code (Name)": "StampB34",
+        "Stamp Bonus": {
+            "Effect": "% Charging Speed",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Refinery1"
+        }
     },
     "StampB35": {
         "Name": "Prayday Stamp",
@@ -10196,7 +10742,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "WorshipMax,add,1,0,2,SnowB4,150,6,10000,1.3,9,{}% Max Charge,0",
-        "Code (Name)": "StampB35"
+        "Code (Name)": "StampB35",
+        "Stamp Bonus": {
+            "Effect": "% Max Charge",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "SnowB4"
+        }
     },
     "StampB36": {
         "Name": "Banked Pts Stamp",
@@ -10205,7 +10758,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "WorshipPTS,add,1,0,6,Soul2,100,3,6000,1.3,9,{} Starting TD Pts,0",
-        "Code (Name)": "StampB36"
+        "Code (Name)": "StampB36",
+        "Stamp Bonus": {
+            "Effect": "Starting TD Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Soul2"
+        }
     },
     "StampB37": {
         "Name": "Cooked Meal Stamp",
@@ -10214,7 +10774,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "MealCook,add,2,0,15,Fish5,200,5,1000000,1.35,0,{}% Meal Cooking Spd,0",
-        "Code (Name)": "StampB37"
+        "Code (Name)": "StampB37",
+        "Stamp Bonus": {
+            "Effect": "% Meal Cooking Spd",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "Fish5"
+        }
     },
     "StampB38": {
         "Name": "Spice Stamp",
@@ -10223,7 +10790,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "RecipeCook,add,2,0,15,GalaxyA1,200,5,1000000,1.35,0,{}% New Recipe Spd,0",
-        "Code (Name)": "StampB38"
+        "Code (Name)": "StampB38",
+        "Stamp Bonus": {
+            "Effect": "% New Recipe Spd",
+            "Scaling Type": "add",
+            "x1": 2,
+            "x2": 0,
+            "Code (Material)": "GalaxyA1"
+        }
     },
     "StampB39": {
         "Name": "Ladle Stamp",
@@ -10232,7 +10806,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CookingEff,add,25,0,10,Fish6,200,5,1000000,1.35,0,{} Cooking Efficiency,0",
-        "Code (Name)": "StampB39"
+        "Code (Name)": "StampB39",
+        "Stamp Bonus": {
+            "Effect": "Cooking Efficiency",
+            "Scaling Type": "add",
+            "x1": 25,
+            "x2": 0,
+            "Code (Material)": "Fish6"
+        }
     },
     "StampB40": {
         "Name": "Nest Eggs Stamp",
@@ -10241,7 +10822,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BreedExp,add,1,0,10,AlienTree,200,5,1000000,1.4,0,{}% Breeding EXP,0",
-        "Code (Name)": "StampB40"
+        "Code (Name)": "StampB40",
+        "Stamp Bonus": {
+            "Effect": "% Breeding EXP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "AlienTree"
+        }
     },
     "StampB41": {
         "Name": "Egg Stamp",
@@ -10250,7 +10838,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "NewPet,add,1,0,15,GalaxyA3,200,5,1000000,1.4,0,{}% New Pet Chance,0",
-        "Code (Name)": "StampB41"
+        "Code (Name)": "StampB41",
+        "Stamp Bonus": {
+            "Effect": "% New Pet Chance",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "GalaxyA3"
+        }
     },
     "StampB42": {
         "Name": "Lab Tube Stamp",
@@ -10259,7 +10854,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "LabExp,add,1,0,10,GalaxyB1,200,5,1000000,1.35,0,{}% Lab EXP,0",
-        "Code (Name)": "StampB42"
+        "Code (Name)": "StampB42",
+        "Stamp Bonus": {
+            "Effect": "% Lab EXP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "GalaxyB1"
+        }
     },
     "StampB43": {
         "Name": "Sailboat Stamp",
@@ -10268,7 +10870,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SailSpd,add,1,0,5,LavaA5,1000,5,500000000,1.35,0,{}% Sailing Speed,0",
-        "Code (Name)": "StampB43"
+        "Code (Name)": "StampB43",
+        "Stamp Bonus": {
+            "Effect": "% Sailing Speed",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "LavaA5"
+        }
     },
     "StampB44": {
         "Name": "Gamejoy Stamp",
@@ -10277,7 +10886,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "GamingExp,add,1,0,5,Tree10,500,8,500000000,1.35,0,{}% Gaming EXP,0",
-        "Code (Name)": "StampB44"
+        "Code (Name)": "StampB44",
+        "Stamp Bonus": {
+            "Effect": "% Gaming EXP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Tree10"
+        }
     },
     "StampB45": {
         "Name": "Divine Stamp",
@@ -10286,7 +10902,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DivineExp,add,1,0,8,LavaB3,1000,10,500000000,1.35,0,{}% Divinity EXP,0",
-        "Code (Name)": "StampB45"
+        "Code (Name)": "StampB45",
+        "Stamp Bonus": {
+            "Effect": "% Divinity EXP",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "LavaB3"
+        }
     },
     "StampB46": {
         "Name": "Multitool Stamp",
@@ -10295,7 +10918,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BaseAllEff,add,10,0,10,Bug10,500,8,800000000,1.35,0,{} All Efficiency,0",
-        "Code (Name)": "StampB46"
+        "Code (Name)": "StampB46",
+        "Stamp Bonus": {
+            "Effect": "All Efficiency",
+            "Scaling Type": "add",
+            "x1": 10,
+            "x2": 0,
+            "Code (Material)": "Bug10"
+        }
     },
     "StampB47": {
         "Name": "Skelefish Stamp",
@@ -10304,7 +10934,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "FishEffPerLv,decay,0.2,20,2,Fish5,250,10,800000000,1.35,0,{}% Fishing Eff Per Fishing Lv,0",
-        "Code (Name)": "StampB47"
+        "Code (Name)": "StampB47",
+        "Stamp Bonus": {
+            "Effect": "% Fishing Eff Per Fishing Lv",
+            "Scaling Type": "decay",
+            "x1": 0.2,
+            "x2": 20,
+            "Code (Material)": "Fish5"
+        }
     },
     "StampB48": {
         "Name": "Crop Evo Stamp",
@@ -10313,7 +10950,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CropEvo,add,5,0,5,Fish9,12000,10,100000000000.0,1.37,0,{}% Crop Evolution Chance,0",
-        "Code (Name)": "StampB48"
+        "Code (Name)": "StampB48",
+        "Stamp Bonus": {
+            "Effect": "% Crop Evolution Chance",
+            "Scaling Type": "add",
+            "x1": 5,
+            "x2": 0,
+            "Code (Material)": "Fish9"
+        }
     },
     "StampB49": {
         "Name": "Sneaky Peeky Stamp",
@@ -10322,7 +10966,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SneakExp,decay,50,150,8,SpiA4,20000,10,50000000000.0,1.37,0,{}% Sneaking EXP gain,0",
-        "Code (Name)": "StampB49"
+        "Code (Name)": "StampB49",
+        "Stamp Bonus": {
+            "Effect": "% Sneaking EXP gain",
+            "Scaling Type": "decay",
+            "x1": 50,
+            "x2": 150,
+            "Code (Material)": "SpiA4"
+        }
     },
     "StampB50": {
         "Name": "Jade Mint Stamp",
@@ -10331,7 +10982,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "JadeCoin,add,0.5,0,10,SpiA2b,15,7,20000000000.0,1.37,0,{}% Jade Coin gain,0",
-        "Code (Name)": "StampB50"
+        "Code (Name)": "StampB50",
+        "Stamp Bonus": {
+            "Effect": "% Jade Coin gain",
+            "Scaling Type": "add",
+            "x1": 0.5,
+            "x2": 0,
+            "Code (Material)": "SpiA2b"
+        }
     },
     "StampB51": {
         "Name": "Summoner Stone Stamp",
@@ -10340,7 +10998,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SummonExp,decay,50,150,8,Soul7,8000,10,50000000000.0,1.37,0,{}% Summoning EXP gain,0",
-        "Code (Name)": "StampB51"
+        "Code (Name)": "StampB51",
+        "Stamp Bonus": {
+            "Effect": "% Summoning EXP gain",
+            "Scaling Type": "decay",
+            "x1": 50,
+            "x2": 150,
+            "Code (Material)": "Soul7"
+        }
     },
     "StampB52": {
         "Name": "White Essence Stamp",
@@ -10349,7 +11014,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "WhiteEss,add,1,0,8,Bug12,15000,10,60000000000.0,1.37,0,{}% White Essence Gain gain,0",
-        "Code (Name)": "StampB52"
+        "Code (Name)": "StampB52",
+        "Stamp Bonus": {
+            "Effect": "% White Essence Gain gain",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Bug12"
+        }
     },
     "StampB53": {
         "Name": "Triad Essence Stamp",
@@ -10358,7 +11030,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "123Ess,add,1,0,8,Fish12,8000,10,800000000000.0,1.37,0,{}% G Y and B Essence gain,0",
-        "Code (Name)": "StampB53"
+        "Code (Name)": "StampB53",
+        "Stamp Bonus": {
+            "Effect": "% G Y and B Essence gain",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Fish12"
+        }
     },
     "StampB54": {
         "Name": "Dark Triad Essence Stamp",
@@ -10367,7 +11046,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "456Ess,add,1,0,8,Tree13,45000,10,12000000000000.0,1.37,0,{}% P R and C Essence gain,0",
-        "Code (Name)": "StampB54"
+        "Code (Name)": "StampB54",
+        "Stamp Bonus": {
+            "Effect": "% P R and C Essence gain",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Tree13"
+        }
     },
     "StampB55": {
         "Name": "Amber Stamp",
@@ -10376,7 +11062,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "spelunkamb,decay,30,150,8,Spelunking1,500,10,1200000000000000.0,1.37,0,{}% Amber Gain,0",
-        "Code (Name)": "StampB55"
+        "Code (Name)": "StampB55",
+        "Stamp Bonus": {
+            "Effect": "% Amber Gain",
+            "Scaling Type": "decay",
+            "x1": 30,
+            "x2": 150,
+            "Code (Material)": "Spelunking1"
+        }
     },
     "StampB56": {
         "Name": "Little Rock Stamp",
@@ -10385,7 +11078,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "spelunkeff,decay,200,220,8,Spelunking0,100,10,1200000000000000.0,1.37,0,{}% Spelunking Efficiency,0",
-        "Code (Name)": "StampB56"
+        "Code (Name)": "StampB56",
+        "Stamp Bonus": {
+            "Effect": "% Spelunking Efficiency",
+            "Scaling Type": "decay",
+            "x1": 200,
+            "x2": 220,
+            "Code (Material)": "Spelunking0"
+        }
     },
     "StampB57": {
         "Name": "Hardhat Stamp",
@@ -10394,7 +11094,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "spelunkxp,decay,50,150,8,Spelunking2,100,10,1200000000000000.0,1.37,0,{}% Spelunking EXP gain,0",
-        "Code (Name)": "StampB57"
+        "Code (Name)": "StampB57",
+        "Stamp Bonus": {
+            "Effect": "% Spelunking EXP gain",
+            "Scaling Type": "decay",
+            "x1": 50,
+            "x2": 150,
+            "Code (Material)": "Spelunking2"
+        }
     },
     "StampC1": {
         "Name": "Questin Stamp",
@@ -10403,7 +11110,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "QuestExp,decay,70,50,10,Jungle1,30,6,500,1.32,0,{}% Quest EXP,3",
-        "Code (Name)": "StampC1"
+        "Code (Name)": "StampC1",
+        "Stamp Bonus": {
+            "Effect": "% Quest EXP",
+            "Scaling Type": "decay",
+            "x1": 70,
+            "x2": 50,
+            "Code (Material)": "Jungle1"
+        }
     },
     "StampC2": {
         "Name": "Mason Jar Stamp",
@@ -10412,7 +11126,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AllCarryCap,add,1,0,4,DesertA1b,1,3,4000,1.28,0,{}% All Carry Cap,3",
-        "Code (Name)": "StampC2"
+        "Code (Name)": "StampC2",
+        "Stamp Bonus": {
+            "Effect": "% All Carry Cap",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertA1b"
+        }
     },
     "StampC3": {
         "Name": "Crystallin",
@@ -10421,7 +11142,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CrySpawn,decay,110,50,10,CraftMat6,35,8,800,1.31,0,{}% Spawn Chance,3",
-        "Code (Name)": "StampC3"
+        "Code (Name)": "StampC3",
+        "Stamp Bonus": {
+            "Effect": "% Spawn Chance",
+            "Scaling Type": "decay",
+            "x1": 110,
+            "x2": 50,
+            "Code (Material)": "CraftMat6"
+        }
     },
     "StampC4": {
         "Name": "Arcade Ball Stamp",
@@ -10430,7 +11158,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ArcadeBallz,decay,50,100,10,Copper,30,6,1500,1.33,0,{}% ball gain rate,3",
-        "Code (Name)": "StampC4"
+        "Code (Name)": "StampC4",
+        "Stamp Bonus": {
+            "Effect": "% ball gain rate",
+            "Scaling Type": "decay",
+            "x1": 50,
+            "x2": 100,
+            "Code (Material)": "Copper"
+        }
     },
     "StampC5": {
         "Name": "Gold Ball Stamp",
@@ -10439,7 +11174,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "GoldBallz,decay,40,100,10,Fish1,50,6.5,1000,1.33,0,{}% HP Food Effect,3",
-        "Code (Name)": "StampC5"
+        "Code (Name)": "StampC5",
+        "Stamp Bonus": {
+            "Effect": "% HP Food Effect",
+            "Scaling Type": "decay",
+            "x1": 40,
+            "x2": 100,
+            "Code (Material)": "Fish1"
+        }
     },
     "StampC6": {
         "Name": "Potion Stamp",
@@ -10448,7 +11190,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BFood,add,1,0,5,FoodMining1,50,8,1500,1.305,0,{}% Boost Food Effect,3",
-        "Code (Name)": "StampC6"
+        "Code (Name)": "StampC6",
+        "Stamp Bonus": {
+            "Effect": "% Boost Food Effect",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "FoodMining1"
+        }
     },
     "StampC7": {
         "Name": "Golden Apple Stamp",
@@ -10457,7 +11206,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "GFood,add,1,0,4,FoodG4,2,4,3000,1.30,0,{}% Gold Food Effect,3",
-        "Code (Name)": "StampC7"
+        "Code (Name)": "StampC7",
+        "Stamp Bonus": {
+            "Effect": "% Gold Food Effect",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "FoodG4"
+        }
     },
     "StampC8": {
         "Name": "Ball Timer Stamp",
@@ -10466,7 +11222,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ArcadeTimeMax,decay,12,30,5,OakTree,100,15,1000,1.32,0,{}hr Max Claim Time,3",
-        "Code (Name)": "StampC8"
+        "Code (Name)": "StampC8",
+        "Stamp Bonus": {
+            "Effect": "hr Max Claim Time",
+            "Scaling Type": "decay",
+            "x1": 12,
+            "x2": 30,
+            "Code (Material)": "OakTree"
+        }
     },
     "StampC9": {
         "Name": "Card Stamp",
@@ -10475,7 +11238,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CardDrop,add,1,0,10,DesertB2,25,6,1200,1.31,0,{}% Card Drop Rate,3",
-        "Code (Name)": "StampC9"
+        "Code (Name)": "StampC9",
+        "Stamp Bonus": {
+            "Effect": "% Card Drop Rate",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertB2"
+        }
     },
     "StampC10": {
         "Name": "Forge Stamp",
@@ -10484,7 +11254,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ForgeCap,decay,120,250,10,Godshard,250,8,5000000000000,1.3,0,{}% Forge Capacity,0",
-        "Code (Name)": "StampC10"
+        "Code (Name)": "StampC10",
+        "Stamp Bonus": {
+            "Effect": "% Forge Capacity",
+            "Scaling Type": "decay",
+            "x1": 120,
+            "x2": 250,
+            "Code (Material)": "Godshard"
+        }
     },
     "StampC11": {
         "Name": "Vendor Stamp",
@@ -10493,7 +11270,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "ShopQty,decay,35,100,10,CraftMat3,100,10,30000,1.5,0,{}% Higher Shop QTY,3",
-        "Code (Name)": "StampC11"
+        "Code (Name)": "StampC11",
+        "Stamp Bonus": {
+            "Effect": "% Higher Shop QTY",
+            "Scaling Type": "decay",
+            "x1": 35,
+            "x2": 100,
+            "Code (Material)": "CraftMat3"
+        }
     },
     "StampC12": {
         "Name": "Sigil Stamp",
@@ -10502,7 +11286,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "SigilCharge,decay,40,150,12,SnowA4,2000,6,1000000,1.32,0,{}% Sigil Charge rate,0",
-        "Code (Name)": "StampC12"
+        "Code (Name)": "StampC12",
+        "Stamp Bonus": {
+            "Effect": "% Sigil Charge rate",
+            "Scaling Type": "decay",
+            "x1": 40,
+            "x2": 150,
+            "Code (Material)": "SnowA4"
+        }
     },
     "StampC13": {
         "Name": "Talent I Stamp",
@@ -10511,7 +11302,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Talent1,add,1,0,2,Grasslands2,50,10,2000,1.4,0,{} Talent 1 Pts,3",
-        "Code (Name)": "StampC13"
+        "Code (Name)": "StampC13",
+        "Stamp Bonus": {
+            "Effect": "Talent 1 Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Grasslands2"
+        }
     },
     "StampC14": {
         "Name": "Talent II Stamp",
@@ -10520,7 +11318,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Talent2,add,1,0,2,DesertB3,200,8,4000,1.35,0,{} Talent 2 Pts,3",
-        "Code (Name)": "StampC14"
+        "Code (Name)": "StampC14",
+        "Stamp Bonus": {
+            "Effect": "Talent 2 Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "DesertB3"
+        }
     },
     "StampC15": {
         "Name": "Talent III Stamp",
@@ -10529,7 +11334,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Talent3,add,1,0,2,Leaf3,20,4,40000,1.35,0,{} Talent 3 Pts,3",
-        "Code (Name)": "StampC15"
+        "Code (Name)": "StampC15",
+        "Stamp Bonus": {
+            "Effect": "Talent 3 Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Leaf3"
+        }
     },
     "StampC16": {
         "Name": "Talent IV Stamp",
@@ -10538,7 +11350,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Talent4,add,1,0,2,LavaA1b,2,3,300000000,1.4,0,{} Talent 4 Pts,3",
-        "Code (Name)": "StampC16"
+        "Code (Name)": "StampC16",
+        "Stamp Bonus": {
+            "Effect": "Talent 4 Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "LavaA1b"
+        }
     },
     "StampC17": {
         "Name": "Talent V Stamp",
@@ -10547,7 +11366,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Talent5,add,1,0,2,Copper,25,6,50,1.3,0,{} Talent 5 Pts,3",
-        "Code (Name)": "StampC17"
+        "Code (Name)": "StampC17",
+        "Stamp Bonus": {
+            "Effect": "Talent 5 Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Copper"
+        }
     },
     "StampC18": {
         "Name": "Talent S Stamp",
@@ -10556,7 +11382,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "TalentS,add,1,0,2,Leaf2,20,4,50,1.3,0,{} Star Talent Pts,3",
-        "Code (Name)": "StampC18"
+        "Code (Name)": "StampC18",
+        "Stamp Bonus": {
+            "Effect": "Star Talent Pts",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Leaf2"
+        }
     },
     "StampC19": {
         "Name": "Multikill Stamp",
@@ -10565,7 +11398,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "Overkill,add,1,0,2,Grasslands1,100,3,10000,1.3,0,{}% Base Overkill,3",
-        "Code (Name)": "StampC19"
+        "Code (Name)": "StampC19",
+        "Stamp Bonus": {
+            "Effect": "% Base Overkill",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Grasslands1"
+        }
     },
     "StampC20": {
         "Name": "Biblio Stamp",
@@ -10574,7 +11414,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "BookSpd,add,1,0,2,SaharanFoal,125,5,12500,1.3,0,{}% Faster Books,3",
-        "Code (Name)": "StampC20"
+        "Code (Name)": "StampC20",
+        "Stamp Bonus": {
+            "Effect": "% Faster Books",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "SaharanFoal"
+        }
     },
     "StampC21": {
         "Name": "DNA Stamp",
@@ -10583,7 +11430,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "DNAsplice,add,1,0,3,Bug7,200,5,1000000,1.6,0,{}% more DNA,0",
-        "Code (Name)": "StampC21"
+        "Code (Name)": "StampC21",
+        "Stamp Bonus": {
+            "Effect": "% more DNA",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "Bug7"
+        }
     },
     "StampC22": {
         "Name": "Refinery Stamp",
@@ -10592,7 +11446,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "RefinerySpd,add,1,0,5,LavaA4,250,5,25000000,1.52,0,{}% faster refinery,0",
-        "Code (Name)": "StampC22"
+        "Code (Name)": "StampC22",
+        "Stamp Bonus": {
+            "Effect": "% faster refinery",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "LavaA4"
+        }
     },
     "StampC23": {
         "Name": "Atomic Stamp",
@@ -10601,7 +11462,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "AtomCost,decay,20,80,8,SpiA3,2500,5,25000000,1.52,0,{}% lower Atom upgrade costs,0",
-        "Code (Name)": "StampC23"
+        "Code (Name)": "StampC23",
+        "Stamp Bonus": {
+            "Effect": "% lower Atom upgrade costs",
+            "Scaling Type": "decay",
+            "x1": 20,
+            "x2": 80,
+            "Code (Material)": "SpiA3"
+        }
     },
     "StampC24": {
         "Name": "Cavern Resource Stamp",
@@ -10610,7 +11478,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "CavernRes,decay,100,250,20,Ladle,10,20,2000000000,1.72,0,{}% more resources from caverns,0",
-        "Code (Name)": "StampC24"
+        "Code (Name)": "StampC24",
+        "Stamp Bonus": {
+            "Effect": "% more resources from caverns",
+            "Scaling Type": "decay",
+            "x1": 100,
+            "x2": 250,
+            "Code (Material)": "Ladle"
+        }
     },
     "StampC25": {
         "Name": "Study Hall Stamp",
@@ -10619,7 +11494,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "VillageStudy,decay,30,160,15,EquipmentStatues29,30,20,2000000000,1.72,0,{}% faster Study Rate for Bolaia,0",
-        "Code (Name)": "StampC25"
+        "Code (Name)": "StampC25",
+        "Stamp Bonus": {
+            "Effect": "% faster Study Rate for Bolaia",
+            "Scaling Type": "decay",
+            "x1": 30,
+            "x2": 160,
+            "Code (Material)": "EquipmentStatues29"
+        }
     },
     "StampC26": {
         "Name": "Kruker Stamp",
@@ -10628,7 +11510,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "krukd,add,1,0,1,w7A1,20000,100,2000000000000000000.0,4.5,0,{} daily Kattlekruk bubble LVs,0",
-        "Code (Name)": "StampC26"
+        "Code (Name)": "StampC26",
+        "Stamp Bonus": {
+            "Effect": "daily Kattlekruk bubble LVs",
+            "Scaling Type": "add",
+            "x1": 1,
+            "x2": 0,
+            "Code (Material)": "w7A1"
+        }
     },
     "StampC27": {
         "Name": "Corale Stamp",
@@ -10637,7 +11526,14 @@ item_data = {
         "Type": "STAMP",
         "Level Required (Craft)": 0,
         "Description": "corale,decay,10,150,15,w7A9,2500,10,20000000000000.0,1.72,0,{}% extra daily Reef Coral,0",
-        "Code (Name)": "StampC27"
+        "Code (Name)": "StampC27",
+        "Stamp Bonus": {
+            "Effect": "% extra daily Reef Coral",
+            "Scaling Type": "decay",
+            "x1": 10,
+            "x2": 150,
+            "Code (Material)": "w7A9"
+        }
     },
     "StoneWe": {
         "Name": "Easter Weapon Stone",
