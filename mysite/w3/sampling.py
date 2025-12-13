@@ -98,7 +98,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         picture_class='amplestample-stamp',
         progression=session_data.account.stamps['Amplestample Stamp']['Level'],
         goal=32,
-        resource=session_data.account.stamps['Amplestample Stamp']['Material'],
+        resource=session_data.account.stamps['Amplestample Stamp']['Material']['Name'],
     ))
     psr_Advices[account_subgroup].append(Advice(
         label=f"Stample Stamp base value: +{stample_base_value:.3f}/2.667%"
@@ -106,7 +106,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         picture_class='stample-stamp',
         progression=session_data.account.stamps['Stample Stamp']['Level'],
         goal=60,
-        resource=session_data.account.stamps['Stample Stamp']['Material'],
+        resource=session_data.account.stamps['Stample Stamp']['Material']['Name'],
     ))
     psr_Advices[account_subgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "

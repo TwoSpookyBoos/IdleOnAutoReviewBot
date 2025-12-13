@@ -146,7 +146,7 @@ def getCardDropChanceAdviceGroup(groups):
                 picture_class='Card Stamp',
                 progression=card_stamp['Level'],
                 goal=stamp_maxes['Card Stamp'],
-                resource=card_stamp['Material'],
+                resource=card_stamp['Material']['Name'],
             ),
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",

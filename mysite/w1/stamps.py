@@ -8,7 +8,8 @@ from consts.consts_general import inventory_slots_max_usable
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w2 import max_vial_level, max_sigil_level
-from consts.consts_w1 import stamp_types, unavailable_stamps_list, stamp_maxes, stamps_dict, stamps_exalt_recommendations, capacity_stamps
+from consts.consts_w1 import unavailable_stamps_list, stamp_maxes, stamps_exalt_recommendations, capacity_stamps, \
+    stamp_types
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
 from flask import g as session_data
 
@@ -101,7 +102,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
             picture_class=cap_stamp,
             progression=session_data.account.stamps[cap_stamp]['Level'],
             goal=stamp_maxes[cap_stamp],
-            resource=session_data.account.stamps[cap_stamp]['Material'],
+            resource=session_data.account.stamps[cap_stamp]['Material']['Name'],
         ))
 
     # Account-Wide
@@ -429,11 +430,11 @@ def getProgressionTiersAdviceGroup():
                     add_subgroup_if_available_slot(stamp_Advices['Find Required'], subgroup_label)
                     if subgroup_label in stamp_Advices['Find Required']:
                         stamp_Advices['Find Required'][subgroup_label].append(Advice(
-                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material'].replace('-', ' ').title()}",
+                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material']['Name']}",
                             picture_class=required_stamp,
                             progression=0,
                             goal=1,
-                            resource=player_stamps[required_stamp]['Material'],
+                            resource=player_stamps[required_stamp]['Material']['Name'],
                         ))
         if subgroup_label not in stamp_Advices['Find Required'] and tier_FindRequiredStamps >= tier_number - 1:
             tier_FindRequiredStamps = tier_number
@@ -455,7 +456,7 @@ def getProgressionTiersAdviceGroup():
                             picture_class=stamp_name,
                             progression=player_stamps[stamp_name]['Level'],
                             goal=required_level,
-                            resource=player_stamps[stamp_name]['Material'],
+                            resource=player_stamps[stamp_name]['Material']['Name'],
                         ))
 
         if subgroup_label not in stamp_Advices['Specific'] and tier_SpecificStamps == tier_number - 1:
@@ -471,7 +472,7 @@ def getProgressionTiersAdviceGroup():
                     stamp_Advices['Not Recommended'][subgroup_label].append(Advice(
                         label=f"{player_stamps[required_stamp]['StampType']}: {required_stamp}",
                         picture_class=required_stamp,
-                        resource=player_stamps[required_stamp]['Material'],
+                        resource=player_stamps[required_stamp]['Material']['Name'],
                         informational=True,
                         completed=True
                     ))

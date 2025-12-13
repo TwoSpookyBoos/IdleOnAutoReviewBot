@@ -276,7 +276,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
         picture_class='biblio-stamp',
         progression=session_data.account.stamps["Biblio Stamp"]['Level'],
         goal=stamp_maxes['Biblio Stamp'],
-        resource=session_data.account.stamps["Biblio Stamp"]['Material'],
+        resource=session_data.account.stamps["Biblio Stamp"]['Material']['Name'],
     ))
 
     # Superbit

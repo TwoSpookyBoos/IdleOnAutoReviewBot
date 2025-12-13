@@ -203,7 +203,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
-        resource=golden_sixes_stamp['Material'],
+        resource=golden_sixes_stamp['Material']['Name'],
         goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp['Delivered'] else 1
     ))
     world_1_bonus += golden_sixes_bonus

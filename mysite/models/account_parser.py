@@ -17,9 +17,10 @@ from consts.consts_master_classes import (
 )
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
+    bribes_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions
+    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions,
+    stamp_types
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
@@ -63,10 +64,11 @@ from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.models import Character, buildMaps, EnemyWorld, Card, Assets
 from utils.data_formatting import getCharacterDetails
+from utils.item_data_utils import get_all_stamps, get_item_from_codename
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -1005,18 +1007,19 @@ def _parse_master_classes_exalted_stamps(account):
         raw_compass.append([])
     raw_stamps_exalted = raw_compass[4]
 
-    for stampType in stamps_dict:
-        exalted_stamp_type = numberToLetter(stamp_types.index(stampType))
-        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
-            try:
-                exalted_stamp_key = f"{exalted_stamp_type}{stampIndex}"
-                # if exalted_stamp_key in raw_stamps_exalted:
-                #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
-                account.stamps[stampValuesDict['Name']]['Exalted'] = exalted_stamp_key in raw_stamps_exalted
-            except:
-                if raw_compass:
-                    logger.exception(f"Error parsing Exalted status for stamp {stampType}{stampIndex}: {stampValuesDict['Name']}")
-                account.stamps[stampValuesDict['Name']]['Exalted'] = False
+    for stamp in get_all_stamps():
+        stamp_codename = stamp['Code (Name)'].split('Stamp')[1]
+        stamp_type_code = numberToLetter(letterToNumber(stamp_codename[0].lower()) - 1)
+        stamp_code = ''.join(stamp_codename[1:])
+        try:
+            exalted_stamp_key = f"{stamp_type_code}{stamp_code}"
+            # if exalted_stamp_key in raw_stamps_exalted:
+            #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
+            account.stamps[stamp['Name']]['Exalted'] = exalted_stamp_key in raw_stamps_exalted
+        except:
+            if raw_compass:
+                logger.exception(f"Error parsing Exalted status for stamp {stamp_type_code}{stamp_code}: {stamp['Name']}")
+            account.stamps[stamp['Name']]['Exalted'] = False
 
 def _parse_master_classes_tesseract(account):
     account.tesseract = {
@@ -1195,60 +1198,60 @@ def _parse_w1_bribes(account):
 def _parse_w1_stamps(account):
     account.stamps = {}
     account.stamp_totals = {"Total": 0}
-    for stampType in stamp_types:
-        account.stamp_totals[stampType] = 0
+    for stamp_type in stamp_types:
+        account.stamp_totals[stamp_type] = 0
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))
     raw_stamps_dict = {}
-    for stampTypeIndex, stampTypeValues in enumerate(raw_stamps_list):
-        raw_stamps_dict[int(stampTypeIndex)] = {}
-        for stampKey, stampValue in stampTypeValues.items():
-            if stampKey != "length":
-                raw_stamps_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+    for stamp_type_index, stamp_type_stamps in enumerate(raw_stamps_list):
+        for stamp_key, stamp_level in stamp_type_stamps.items():
+            if stamp_key != "length":
+                stamp_code = f"Stamp{numberToLetter(stamp_type_index + 1).upper()}{int(stamp_key) + 1}"
+                raw_stamps_dict[stamp_code] = int(stamp_level)
     raw_stamp_max_list = safe_loads(account.raw_data.get("StampLvM", {0: {}, 1: {}, 2: {}}))
     raw_stamp_max_dict = {}
-    for stampTypeIndex, stampTypeValues in enumerate(raw_stamp_max_list):
-        raw_stamp_max_dict[int(stampTypeIndex)] = {}
-        for stampKey, stampValue in stampTypeValues.items():
-            if stampKey != "length":
+    for stamp_type_index, stamp_type_stamps in enumerate(raw_stamp_max_list):
+        for stamp_key, stamp_level in stamp_type_stamps.items():
+            if stamp_key != "length":
+                stamp_code = f"Stamp{numberToLetter(stamp_type_index + 1).upper()}{int(stamp_key) + 1}"
                 try:
-                    raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+                    raw_stamp_max_dict[stamp_code] = int(stamp_level)
                 except:
-                    logger.exception(f"Unexpected stampTypeIndex {stampTypeIndex} or stampKey {stampKey} or stampValue: {stampValue}")
+                    logger.exception(f"Unexpected stamp_type_index {stamp_type_index} or stamp_key {stamp_key} or stamp_level: {stamp_level}")
                     try:
-                        raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = 0
-                        logger.debug(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
+                        raw_stamp_max_dict[stamp_code] = 0
+                        logger.debug(f"Able to set the value of stamp {stamp_type_index}-{stamp_key} to 0. Hopefully no accuracy was lost.")
                     except:
                         logger.exception(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
-    for stampType in stamps_dict:
-        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
-            try:
-                account.stamps[stampValuesDict['Name']] = {
-                    'Index': stampIndex,
-                    'Material': stampValuesDict['Material'],
-                    'Level': safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Max': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Delivered': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0) > 0,
-                    'StampType': stampType,
-                    'Value': lavaFunc(
-                        stampValuesDict['funcType'],
-                        safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                        stampValuesDict['x1'],
-                        stampValuesDict['x2'],
-                    ),
-                }
-                account.stamp_totals['Total'] += account.stamps[stampValuesDict['Name']]['Level']
-                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]['Level']
-            except Exception as e:
-                logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
-                account.stamps[stampValuesDict['Name']] = {
-                    "Index": stampIndex,
-                    "Level": 0,
-                    "Max": 0,
-                    "Delivered": False,
-                    "StampType": stampType,
-                    "Value": 0,
-                    'Exalted': False
-                }
+    all_stamps = get_all_stamps()
+    for stamp in all_stamps:
+        stamp_type = stamp_types[letterToNumber(stamp['Code (Name)'].split('Stamp')[1][0].lower()) - 1]
+        try:
+            stamp_level = safer_convert(raw_stamps_dict.get(stamp['Code (Name)'], 0), 0)
+            account.stamps[stamp['Name']] = {
+                'Material': get_item_from_codename(stamp['Stamp Bonus']['Code (Material)']),
+                'Level': stamp_level,
+                'Max': safer_convert(raw_stamp_max_dict.get(stamp['Code (Name)'], 0), 0),
+                'Delivered': safer_convert(raw_stamp_max_dict.get(stamp['Code (Name)'], 0), 0) > 0,
+                'StampType': stamp_type,
+                'Value': lavaFunc(
+                    stamp['Stamp Bonus']['Scaling Type'],
+                    stamp_level,
+                    stamp['Stamp Bonus']['x1'],
+                    stamp['Stamp Bonus']['x2'],
+                ),
+            }
+            account.stamp_totals['Total'] += account.stamps[stamp['Name']]['Level']
+            account.stamp_totals[stamp_type] += account.stamps[stamp['Name']]['Level']
+        except Exception as e:
+            logger.warning(f"Stamp Parse error at {stamp_type}: {e}. Defaulting to Undelivered")
+            account.stamps[stamp['Name']] = {
+                "Level": 0,
+                "Max": 0,
+                "Delivered": False,
+                "StampType": stamp_type,
+                "Value": 0,
+                'Exalted': False
+            }
     _parse_master_classes_exalted_stamps(account)
 
 def _parse_w1_owl(account):
