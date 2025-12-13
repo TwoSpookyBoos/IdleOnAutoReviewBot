@@ -118,13 +118,13 @@ def extract_items(dump: str) -> dict:
 
             # parse stamps
             if new_item['Type'] == "STAMP":
-                _, scaling_type, x1, x2, _, resource_code, _, _, _, _, _, effect, _ = new_item['Description']['1'].split(',')
+                _, scaling_type, x1, x2, _, material_code, _, _, _, _, _, effect, _ = new_item['Description']['1'].split(',')
                 new_item['Stamp Bonus'] = {
                     'Effect': effect.replace('_', ' ').replace('{}', '').strip(),
                     'Scaling Type': scaling_type,
                     'x1': parse_number(x1, -1),
                     'x2': parse_number(x2, -1),
-                    'Code (Resource)': resource_code,
+                    'Code (Material)': material_code,
                 }
 
             # combine lines of description, replace placeholders, remove filler

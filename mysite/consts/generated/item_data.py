@@ -9500,7 +9500,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Grasslands1"
+            "Code (Material)": "Grasslands1"
         }
     },
     "StampA2": {
@@ -9516,7 +9516,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "OakTree"
+            "Code (Material)": "OakTree"
         }
     },
     "StampA3": {
@@ -9532,7 +9532,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Copper"
+            "Code (Material)": "Copper"
         }
     },
     "StampA4": {
@@ -9548,7 +9548,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 6,
             "x2": 40,
-            "Code (Resource)": "CopperBar"
+            "Code (Material)": "CopperBar"
         }
     },
     "StampA5": {
@@ -9564,7 +9564,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "CraftMat1"
+            "Code (Material)": "CraftMat1"
         }
     },
     "StampA6": {
@@ -9580,7 +9580,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Iron"
+            "Code (Material)": "Iron"
         }
     },
     "StampA7": {
@@ -9596,7 +9596,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Grasslands3"
+            "Code (Material)": "Grasslands3"
         }
     },
     "StampA8": {
@@ -9612,7 +9612,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 8,
             "x2": 40,
-            "Code (Resource)": "CraftMat5"
+            "Code (Material)": "CraftMat5"
         }
     },
     "StampA9": {
@@ -9628,7 +9628,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "BirchTree"
+            "Code (Material)": "BirchTree"
         }
     },
     "StampA10": {
@@ -9644,7 +9644,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 10,
             "x2": 40,
-            "Code (Resource)": "Leaf1"
+            "Code (Material)": "Leaf1"
         }
     },
     "StampA11": {
@@ -9660,7 +9660,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "EquipmentToolsHatchet3"
+            "Code (Material)": "EquipmentToolsHatchet3"
         }
     },
     "StampA12": {
@@ -9676,7 +9676,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Jungle2"
+            "Code (Material)": "Jungle2"
         }
     },
     "StampA13": {
@@ -9692,7 +9692,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "IronBar"
+            "Code (Material)": "IronBar"
         }
     },
     "StampA14": {
@@ -9708,7 +9708,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Forest1"
+            "Code (Material)": "Forest1"
         }
     },
     "StampA15": {
@@ -9724,7 +9724,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "EquipmentShirts12"
+            "Code (Material)": "EquipmentShirts12"
         }
     },
     "StampA16": {
@@ -9740,7 +9740,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 3,
             "x2": 0,
-            "Code (Resource)": "Fish1"
+            "Code (Material)": "Fish1"
         }
     },
     "StampA17": {
@@ -9756,7 +9756,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Bug3"
+            "Code (Material)": "Bug3"
         }
     },
     "StampA18": {
@@ -9772,7 +9772,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 5,
             "x2": 50,
-            "Code (Resource)": "DesertB1"
+            "Code (Material)": "DesertB1"
         }
     },
     "StampA19": {
@@ -9788,7 +9788,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 16,
             "x2": 40,
-            "Code (Resource)": "TestObj7"
+            "Code (Material)": "TestObj7"
         }
     },
     "StampA20": {
@@ -9804,7 +9804,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Dementia"
+            "Code (Material)": "Dementia"
         }
     },
     "StampA21": {
@@ -9820,7 +9820,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "PlatBar"
+            "Code (Material)": "PlatBar"
         }
     },
     "StampA22": {
@@ -9836,7 +9836,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Soul3"
+            "Code (Material)": "Soul3"
         }
     },
     "StampA23": {
@@ -9852,7 +9852,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 60,
-            "Code (Resource)": "Quest17"
+            "Code (Material)": "Quest17"
         }
     },
     "StampA24": {
@@ -9868,7 +9868,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "GoldBar"
+            "Code (Material)": "GoldBar"
         }
     },
     "StampA25": {
@@ -9884,7 +9884,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 6,
             "x2": 0,
-            "Code (Resource)": "Critter7"
+            "Code (Material)": "Critter7"
         }
     },
     "StampA26": {
@@ -9900,7 +9900,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 60,
-            "Code (Resource)": "Bug4"
+            "Code (Material)": "Bug4"
         }
     },
     "StampA27": {
@@ -9916,7 +9916,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Fish3"
+            "Code (Material)": "Fish3"
         }
     },
     "StampA28": {
@@ -9932,7 +9932,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "StoneZ1"
+            "Code (Material)": "StoneZ1"
         }
     },
     "StampA29": {
@@ -9948,7 +9948,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 8,
             "x2": 0,
-            "Code (Resource)": "CraftMat12"
+            "Code (Material)": "CraftMat12"
         }
     },
     "StampA30": {
@@ -9964,7 +9964,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 60,
-            "Code (Resource)": "CraftMat14"
+            "Code (Material)": "CraftMat14"
         }
     },
     "StampA31": {
@@ -9980,7 +9980,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 3,
             "x2": 0,
-            "Code (Resource)": "CraftMat13"
+            "Code (Material)": "CraftMat13"
         }
     },
     "StampA32": {
@@ -9996,7 +9996,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 10,
             "x2": 0,
-            "Code (Resource)": "CraftMat11"
+            "Code (Material)": "CraftMat11"
         }
     },
     "StampA33": {
@@ -10012,7 +10012,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 4,
             "x2": 0,
-            "Code (Resource)": "Tree9"
+            "Code (Material)": "Tree9"
         }
     },
     "StampA34": {
@@ -10028,7 +10028,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 4,
             "x2": 0,
-            "Code (Resource)": "Bug9"
+            "Code (Material)": "Bug9"
         }
     },
     "StampA35": {
@@ -10044,7 +10044,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 4,
             "x2": 0,
-            "Code (Resource)": "Soul6"
+            "Code (Material)": "Soul6"
         }
     },
     "StampA36": {
@@ -10060,7 +10060,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 4,
             "x2": 0,
-            "Code (Resource)": "LavaA1"
+            "Code (Material)": "LavaA1"
         }
     },
     "StampA37": {
@@ -10076,7 +10076,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 25,
             "x2": 80,
-            "Code (Resource)": "Dreadlo"
+            "Code (Material)": "Dreadlo"
         }
     },
     "StampA38": {
@@ -10092,7 +10092,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 80,
-            "Code (Resource)": "Fish8"
+            "Code (Material)": "Fish8"
         }
     },
     "StampA39": {
@@ -10108,7 +10108,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "StoneZ2"
+            "Code (Material)": "StoneZ2"
         }
     },
     "StampA40": {
@@ -10124,7 +10124,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 12,
             "x2": 0,
-            "Code (Resource)": "SpiA2"
+            "Code (Material)": "SpiA2"
         }
     },
     "StampA41": {
@@ -10140,7 +10140,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 35,
             "x2": 200,
-            "Code (Resource)": "Tree12"
+            "Code (Material)": "Tree12"
         }
     },
     "StampA42": {
@@ -10156,7 +10156,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 5,
             "x2": 100,
-            "Code (Resource)": "Bug13"
+            "Code (Material)": "Bug13"
         }
     },
     "StampA43": {
@@ -10172,7 +10172,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 50,
             "x2": 200,
-            "Code (Resource)": "w7A3"
+            "Code (Material)": "w7A3"
         }
     },
     "StampA44": {
@@ -10188,7 +10188,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 5,
             "x2": 200,
-            "Code (Resource)": "w7A3"
+            "Code (Material)": "w7A3"
         }
     },
     "StampB1": {
@@ -10204,7 +10204,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "OakTree"
+            "Code (Material)": "OakTree"
         }
     },
     "StampB2": {
@@ -10220,7 +10220,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "CraftMat1"
+            "Code (Material)": "CraftMat1"
         }
     },
     "StampB3": {
@@ -10236,7 +10236,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Copper"
+            "Code (Material)": "Copper"
         }
     },
     "StampB4": {
@@ -10252,7 +10252,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "JungleTree"
+            "Code (Material)": "JungleTree"
         }
     },
     "StampB5": {
@@ -10268,7 +10268,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 15,
             "x2": 40,
-            "Code (Resource)": "EquipmentHats3"
+            "Code (Material)": "EquipmentHats3"
         }
     },
     "StampB6": {
@@ -10284,7 +10284,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Jungle3"
+            "Code (Material)": "Jungle3"
         }
     },
     "StampB7": {
@@ -10300,7 +10300,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 15,
             "x2": 40,
-            "Code (Resource)": "EquipmentHats20"
+            "Code (Material)": "EquipmentHats20"
         }
     },
     "StampB8": {
@@ -10316,7 +10316,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "MaxCapBagM2"
+            "Code (Material)": "MaxCapBagM2"
         }
     },
     "StampB9": {
@@ -10332,7 +10332,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Forest2"
+            "Code (Material)": "Forest2"
         }
     },
     "StampB10": {
@@ -10348,7 +10348,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "EquipmentToolsHatchet1"
+            "Code (Material)": "EquipmentToolsHatchet1"
         }
     },
     "StampB11": {
@@ -10364,7 +10364,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Forest3"
+            "Code (Material)": "Forest3"
         }
     },
     "StampB12": {
@@ -10380,7 +10380,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "EquipmentTools2"
+            "Code (Material)": "EquipmentTools2"
         }
     },
     "StampB13": {
@@ -10396,7 +10396,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "ForestTree"
+            "Code (Material)": "ForestTree"
         }
     },
     "StampB14": {
@@ -10412,7 +10412,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Gold"
+            "Code (Material)": "Gold"
         }
     },
     "StampB15": {
@@ -10428,7 +10428,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertA1"
+            "Code (Material)": "DesertA1"
         }
     },
     "StampB16": {
@@ -10444,7 +10444,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Fish4"
+            "Code (Material)": "Fish4"
         }
     },
     "StampB17": {
@@ -10460,7 +10460,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Bug1"
+            "Code (Material)": "Bug1"
         }
     },
     "StampB18": {
@@ -10476,7 +10476,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertA2"
+            "Code (Material)": "DesertA2"
         }
     },
     "StampB19": {
@@ -10492,7 +10492,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Fish1"
+            "Code (Material)": "Fish1"
         }
     },
     "StampB20": {
@@ -10508,7 +10508,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertA3"
+            "Code (Material)": "DesertA3"
         }
     },
     "StampB21": {
@@ -10524,7 +10524,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Bug2"
+            "Code (Material)": "Bug2"
         }
     },
     "StampB22": {
@@ -10540,7 +10540,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 40,
-            "Code (Resource)": "Plat"
+            "Code (Material)": "Plat"
         }
     },
     "StampB23": {
@@ -10556,7 +10556,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Fish2"
+            "Code (Material)": "Fish2"
         }
     },
     "StampB24": {
@@ -10572,7 +10572,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 40,
-            "Code (Resource)": "ToiletTree"
+            "Code (Material)": "ToiletTree"
         }
     },
     "StampB25": {
@@ -10588,7 +10588,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Critter2"
+            "Code (Material)": "Critter2"
         }
     },
     "StampB26": {
@@ -10604,7 +10604,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Critter3"
+            "Code (Material)": "Critter3"
         }
     },
     "StampB27": {
@@ -10620,7 +10620,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Critter4"
+            "Code (Material)": "Critter4"
         }
     },
     "StampB28": {
@@ -10636,7 +10636,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Critter5"
+            "Code (Material)": "Critter5"
         }
     },
     "StampB29": {
@@ -10652,7 +10652,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "SnowB1"
+            "Code (Material)": "SnowB1"
         }
     },
     "StampB30": {
@@ -10668,7 +10668,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 4,
             "x2": 30,
-            "Code (Resource)": "SnowA1"
+            "Code (Material)": "SnowA1"
         }
     },
     "StampB31": {
@@ -10684,7 +10684,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DementiaBar"
+            "Code (Material)": "DementiaBar"
         }
     },
     "StampB32": {
@@ -10700,7 +10700,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 5,
             "x2": 30,
-            "Code (Resource)": "Bug5"
+            "Code (Material)": "Bug5"
         }
     },
     "StampB33": {
@@ -10716,7 +10716,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Soul1"
+            "Code (Material)": "Soul1"
         }
     },
     "StampB34": {
@@ -10732,7 +10732,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Refinery1"
+            "Code (Material)": "Refinery1"
         }
     },
     "StampB35": {
@@ -10748,7 +10748,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "SnowB4"
+            "Code (Material)": "SnowB4"
         }
     },
     "StampB36": {
@@ -10764,7 +10764,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Soul2"
+            "Code (Material)": "Soul2"
         }
     },
     "StampB37": {
@@ -10780,7 +10780,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "Fish5"
+            "Code (Material)": "Fish5"
         }
     },
     "StampB38": {
@@ -10796,7 +10796,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 2,
             "x2": 0,
-            "Code (Resource)": "GalaxyA1"
+            "Code (Material)": "GalaxyA1"
         }
     },
     "StampB39": {
@@ -10812,7 +10812,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 25,
             "x2": 0,
-            "Code (Resource)": "Fish6"
+            "Code (Material)": "Fish6"
         }
     },
     "StampB40": {
@@ -10828,7 +10828,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "AlienTree"
+            "Code (Material)": "AlienTree"
         }
     },
     "StampB41": {
@@ -10844,7 +10844,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "GalaxyA3"
+            "Code (Material)": "GalaxyA3"
         }
     },
     "StampB42": {
@@ -10860,7 +10860,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "GalaxyB1"
+            "Code (Material)": "GalaxyB1"
         }
     },
     "StampB43": {
@@ -10876,7 +10876,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "LavaA5"
+            "Code (Material)": "LavaA5"
         }
     },
     "StampB44": {
@@ -10892,7 +10892,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Tree10"
+            "Code (Material)": "Tree10"
         }
     },
     "StampB45": {
@@ -10908,7 +10908,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "LavaB3"
+            "Code (Material)": "LavaB3"
         }
     },
     "StampB46": {
@@ -10924,7 +10924,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 10,
             "x2": 0,
-            "Code (Resource)": "Bug10"
+            "Code (Material)": "Bug10"
         }
     },
     "StampB47": {
@@ -10940,7 +10940,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 0.2,
             "x2": 20,
-            "Code (Resource)": "Fish5"
+            "Code (Material)": "Fish5"
         }
     },
     "StampB48": {
@@ -10956,7 +10956,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 5,
             "x2": 0,
-            "Code (Resource)": "Fish9"
+            "Code (Material)": "Fish9"
         }
     },
     "StampB49": {
@@ -10972,7 +10972,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 50,
             "x2": 150,
-            "Code (Resource)": "SpiA4"
+            "Code (Material)": "SpiA4"
         }
     },
     "StampB50": {
@@ -10988,7 +10988,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 0.5,
             "x2": 0,
-            "Code (Resource)": "SpiA2b"
+            "Code (Material)": "SpiA2b"
         }
     },
     "StampB51": {
@@ -11004,7 +11004,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 50,
             "x2": 150,
-            "Code (Resource)": "Soul7"
+            "Code (Material)": "Soul7"
         }
     },
     "StampB52": {
@@ -11020,7 +11020,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Bug12"
+            "Code (Material)": "Bug12"
         }
     },
     "StampB53": {
@@ -11036,7 +11036,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Fish12"
+            "Code (Material)": "Fish12"
         }
     },
     "StampB54": {
@@ -11052,7 +11052,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Tree13"
+            "Code (Material)": "Tree13"
         }
     },
     "StampB55": {
@@ -11068,7 +11068,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 30,
             "x2": 150,
-            "Code (Resource)": "Spelunking1"
+            "Code (Material)": "Spelunking1"
         }
     },
     "StampB56": {
@@ -11084,7 +11084,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 200,
             "x2": 220,
-            "Code (Resource)": "Spelunking0"
+            "Code (Material)": "Spelunking0"
         }
     },
     "StampB57": {
@@ -11100,7 +11100,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 50,
             "x2": 150,
-            "Code (Resource)": "Spelunking2"
+            "Code (Material)": "Spelunking2"
         }
     },
     "StampC1": {
@@ -11116,7 +11116,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 70,
             "x2": 50,
-            "Code (Resource)": "Jungle1"
+            "Code (Material)": "Jungle1"
         }
     },
     "StampC2": {
@@ -11132,7 +11132,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertA1b"
+            "Code (Material)": "DesertA1b"
         }
     },
     "StampC3": {
@@ -11148,7 +11148,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 110,
             "x2": 50,
-            "Code (Resource)": "CraftMat6"
+            "Code (Material)": "CraftMat6"
         }
     },
     "StampC4": {
@@ -11164,7 +11164,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 50,
             "x2": 100,
-            "Code (Resource)": "Copper"
+            "Code (Material)": "Copper"
         }
     },
     "StampC5": {
@@ -11180,7 +11180,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 40,
             "x2": 100,
-            "Code (Resource)": "Fish1"
+            "Code (Material)": "Fish1"
         }
     },
     "StampC6": {
@@ -11196,7 +11196,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "FoodMining1"
+            "Code (Material)": "FoodMining1"
         }
     },
     "StampC7": {
@@ -11212,7 +11212,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "FoodG4"
+            "Code (Material)": "FoodG4"
         }
     },
     "StampC8": {
@@ -11228,7 +11228,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 12,
             "x2": 30,
-            "Code (Resource)": "OakTree"
+            "Code (Material)": "OakTree"
         }
     },
     "StampC9": {
@@ -11244,7 +11244,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertB2"
+            "Code (Material)": "DesertB2"
         }
     },
     "StampC10": {
@@ -11260,7 +11260,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 120,
             "x2": 250,
-            "Code (Resource)": "Godshard"
+            "Code (Material)": "Godshard"
         }
     },
     "StampC11": {
@@ -11276,7 +11276,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 35,
             "x2": 100,
-            "Code (Resource)": "CraftMat3"
+            "Code (Material)": "CraftMat3"
         }
     },
     "StampC12": {
@@ -11292,7 +11292,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 40,
             "x2": 150,
-            "Code (Resource)": "SnowA4"
+            "Code (Material)": "SnowA4"
         }
     },
     "StampC13": {
@@ -11308,7 +11308,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Grasslands2"
+            "Code (Material)": "Grasslands2"
         }
     },
     "StampC14": {
@@ -11324,7 +11324,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "DesertB3"
+            "Code (Material)": "DesertB3"
         }
     },
     "StampC15": {
@@ -11340,7 +11340,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Leaf3"
+            "Code (Material)": "Leaf3"
         }
     },
     "StampC16": {
@@ -11356,7 +11356,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "LavaA1b"
+            "Code (Material)": "LavaA1b"
         }
     },
     "StampC17": {
@@ -11372,7 +11372,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Copper"
+            "Code (Material)": "Copper"
         }
     },
     "StampC18": {
@@ -11388,7 +11388,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Leaf2"
+            "Code (Material)": "Leaf2"
         }
     },
     "StampC19": {
@@ -11404,7 +11404,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Grasslands1"
+            "Code (Material)": "Grasslands1"
         }
     },
     "StampC20": {
@@ -11420,7 +11420,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "SaharanFoal"
+            "Code (Material)": "SaharanFoal"
         }
     },
     "StampC21": {
@@ -11436,7 +11436,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "Bug7"
+            "Code (Material)": "Bug7"
         }
     },
     "StampC22": {
@@ -11452,7 +11452,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "LavaA4"
+            "Code (Material)": "LavaA4"
         }
     },
     "StampC23": {
@@ -11468,7 +11468,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 20,
             "x2": 80,
-            "Code (Resource)": "SpiA3"
+            "Code (Material)": "SpiA3"
         }
     },
     "StampC24": {
@@ -11484,7 +11484,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 100,
             "x2": 250,
-            "Code (Resource)": "Ladle"
+            "Code (Material)": "Ladle"
         }
     },
     "StampC25": {
@@ -11500,7 +11500,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 30,
             "x2": 160,
-            "Code (Resource)": "EquipmentStatues29"
+            "Code (Material)": "EquipmentStatues29"
         }
     },
     "StampC26": {
@@ -11516,7 +11516,7 @@ item_data = {
             "Scaling Type": "add",
             "x1": 1,
             "x2": 0,
-            "Code (Resource)": "w7A1"
+            "Code (Material)": "w7A1"
         }
     },
     "StampC27": {
@@ -11532,7 +11532,7 @@ item_data = {
             "Scaling Type": "decay",
             "x1": 10,
             "x2": 150,
-            "Code (Resource)": "w7A9"
+            "Code (Material)": "w7A9"
         }
     },
     "StoneWe": {
