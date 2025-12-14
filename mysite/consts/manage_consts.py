@@ -4,11 +4,11 @@
 
 from consts import consts_w2, progression_tiers
 from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars
-from consts.consts_w1 import stamp_maxes, capacity_stamps, unavailable_stamps_list
+from consts.consts_w1 import stamp_maxes, unavailable_stamps_list
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
 from consts.progression_tiers import stamps_progressionTiers, vials_progressionTiers, true_max_tiers, greenstack_progressionTiers, combatLevels_progressionTiers
-from utils.item_data_utils import get_all_stamps
+from utils.item_data_utils import get_all_stamps, get_capacity_stamps
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -58,8 +58,9 @@ def finalize_w1_stamps():
     ordered_tiers_stamps = []
     remaining_stamps = []
 
+    capacity_stamps = get_capacity_stamps()
     # In the 3rd to last tier, set every Capacity Stamp to its max from stamp_maxes
-    stamps_progressionTiers[max(stamps_progressionTiers) - 2]['Stamps']['Specific'] = {stampName: stamp_maxes[stampName] for stampName in capacity_stamps}
+    stamps_progressionTiers[max(stamps_progressionTiers) - 2]['Stamps']['Specific'] = {stamp['Name']: stamp_maxes[stamp['Name']] for stamp in capacity_stamps}
     logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 2}")
     for tier in stamps_progressionTiers:
         if tier < max(stamps_progressionTiers) - 2:

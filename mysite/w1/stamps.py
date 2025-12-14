@@ -1,6 +1,7 @@
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
+from utils.item_data_utils import get_capacity_stamps
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -8,8 +9,7 @@ from consts.consts_general import inventory_slots_max_usable
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w2 import max_vial_level, max_sigil_level
-from consts.consts_w1 import unavailable_stamps_list, stamp_maxes, stamps_exalt_recommendations, capacity_stamps, \
-    stamp_types
+from consts.consts_w1 import unavailable_stamps_list, stamp_maxes, stamps_exalt_recommendations, stamp_types
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
 from flask import g as session_data
 
@@ -96,13 +96,13 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    for cap_stamp in capacity_stamps:
+    for cap_stamp in get_capacity_stamps():
         capacity_Advices['Stamps'].append(Advice(
-            label=f"{cap_stamp}: {round(session_data.account.stamps[cap_stamp]['Total Value'], 2):g}%",
-            picture_class=cap_stamp,
-            progression=session_data.account.stamps[cap_stamp]['Level'],
-            goal=stamp_maxes[cap_stamp],
-            resource=session_data.account.stamps[cap_stamp]['Material']['Name'],
+            label=f"{cap_stamp['Name']}: {round(session_data.account.stamps[cap_stamp['Name']]['Total Value'], 2):g}%",
+            picture_class=cap_stamp['Name'],
+            progression=session_data.account.stamps[cap_stamp['Name']]['Level'],
+            goal=stamp_maxes[cap_stamp['Name']],
+            resource=session_data.account.stamps[cap_stamp['Name']]['Material']['Name'],
         ))
 
     # Account-Wide
@@ -382,10 +382,6 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     )
     exalted_ag.remove_empty_subgroups()
     return exalted_ag
-
-def getReadableStampName(stampNumber, stampType):
-    # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
-    return stamps_dict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
 
 def getProgressionTiersAdviceGroup():
     stamp_Advices = {
