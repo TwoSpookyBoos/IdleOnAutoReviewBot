@@ -15,7 +15,7 @@ from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
-from math import floor, ceil
+from math import floor
 from flask import g as session_data
 
 logger = get_logger(__name__)
@@ -203,7 +203,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
         progression=golden_sixes_stamp['Level'],
-        resource=golden_sixes_stamp['Material']['Name'],
+        resource=golden_sixes_stamp['Material'].name,
         goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp['Delivered'] else 1
     ))
     world_1_bonus += golden_sixes_bonus

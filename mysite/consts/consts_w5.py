@@ -1,6 +1,6 @@
 import re
 from utils.number_formatting import parse_number
-from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral, getItemDisplayName
+from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 

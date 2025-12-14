@@ -86,7 +86,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
         label=f"{{{{ Stamps|#stamps }}}} - Corale: +{round(corale_stamp_value, 1):g}% Daily Corals",
         picture_class='corale-stamp',
         progression=corale_stamp['Level'],
-        resource=corale_stamp['Material']['Name'],
+        resource=corale_stamp['Material'].name,
         goal=stamp_maxes.get('Corale Stamp', 1) if corale_stamp['Delivered'] else 1
     )
     multi_group_d_advice.append(corale_stamp_advice)

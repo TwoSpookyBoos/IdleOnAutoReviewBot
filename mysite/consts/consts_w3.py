@@ -1,7 +1,7 @@
-from math import ceil, e
+from math import ceil
 from consts.consts_autoreview import ValueToMulti
 from utils.number_formatting import parse_number
-from utils.safer_data_handling import safer_math_log, safer_math_pow
+from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 

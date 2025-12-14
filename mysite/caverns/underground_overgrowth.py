@@ -400,7 +400,7 @@ def getTempleAdviceGroup() -> AdviceGroup:
         if not session_data.account.stamps[stamp_name]['Delivered']:
             cavern_advice[c_stats].append(Advice(
                 label=f"Bonus Objective - Collect {stamp_name} from AFK kills,"
-                      f" then level with {session_data.account.stamps[stamp_name]['Material']['Name']}",
+                      f" then level with {session_data.account.stamps[stamp_name]['Material'].name}",
                 picture_class=stamp_name,
             ))
 

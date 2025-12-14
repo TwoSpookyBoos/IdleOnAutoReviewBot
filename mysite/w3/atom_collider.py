@@ -193,7 +193,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Total Value']:.3f}%",
         picture_class='atomic-stamp',
         progression=session_data.account.stamps['Atomic Stamp']['Level'],
-        resource=session_data.account.stamps['Atomic Stamp']['Material']['Name'],
+        resource=session_data.account.stamps['Atomic Stamp']['Material'].name,
     ))
 
     cr_advice.append(Advice(

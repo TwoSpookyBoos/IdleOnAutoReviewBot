@@ -4,9 +4,10 @@ import json
 import os
 import re
 import sys
+from dataclasses import dataclass
 from enum import Enum
 from math import ceil, floor
-from typing import Any, Union
+from typing import Any, Union, TypeVar
 from flask import g
 from config import app
 from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
@@ -1725,3 +1726,32 @@ class Account:
         self.advice_for_money = {
             'Upgrades': {},
         }
+
+@dataclass
+class ItemDefinition:
+    name: str
+    code_name: str
+    type: str
+
+@dataclass
+class StampBonus:
+    effect: str
+    code_material: str
+    scaling_type: str
+    x1: int
+    x2: int
+
+@dataclass
+class StampItemDefinition(ItemDefinition):
+    stamp_bonus: StampBonus
+
+ItemDef = TypeVar("ItemDef", bound=ItemDefinition | StampItemDefinition)
+class ItemDefinitions(dict[str, ItemDef]):
+    def get_item_from_codename(self, codename: str) -> ItemDefinition:
+        return next(item for code, item in self.items() if code == codename)
+
+    def get_all_stamps(self) -> list[StampItemDefinition]:
+        return [item for item in self.values() if isinstance(item, StampItemDefinition)]
+
+    def get_capacity_stamps(self) -> list[StampItemDefinition]:
+        return [stamp for stamp in self.get_all_stamps() if 'Carry Cap' in stamp.stamp_bonus.effect]

@@ -146,7 +146,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         picture_class='sigil-stamp',
         progression=session_data.account.stamps['Sigil Stamp']['Level'],
         goal=stamp_maxes['Sigil Stamp'],
-        resource=session_data.account.stamps['Sigil Stamp']['Material']['Name'],
+        resource=session_data.account.stamps['Sigil Stamp']['Material'].name,
     ))
 
     # Multi Group B

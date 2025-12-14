@@ -1,7 +1,7 @@
+from consts.consts_item_data import ITEM_DATA
 from consts.consts_w5 import max_sailing_artifact_level
 from models.models import AdviceSection, AdviceGroup, Advice
 from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
-from utils.item_data_utils import get_capacity_stamps
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
@@ -96,13 +96,13 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    for cap_stamp in get_capacity_stamps():
+    for cap_stamp in ITEM_DATA.get_capacity_stamps():
         capacity_Advices['Stamps'].append(Advice(
-            label=f"{cap_stamp['Name']}: {round(session_data.account.stamps[cap_stamp['Name']]['Total Value'], 2):g}%",
-            picture_class=cap_stamp['Name'],
-            progression=session_data.account.stamps[cap_stamp['Name']]['Level'],
-            goal=stamp_maxes[cap_stamp['Name']],
-            resource=session_data.account.stamps[cap_stamp['Name']]['Material']['Name'],
+            label=f"{cap_stamp.name}: {round(session_data.account.stamps[cap_stamp.name]['Total Value'], 2):g}%",
+            picture_class=cap_stamp.name,
+            progression=session_data.account.stamps[cap_stamp.name]['Level'],
+            goal=stamp_maxes[cap_stamp.name],
+            resource=session_data.account.stamps[cap_stamp.name]['Material'].name,
         ))
 
     # Account-Wide
@@ -426,11 +426,11 @@ def getProgressionTiersAdviceGroup():
                     add_subgroup_if_available_slot(stamp_Advices['Find Required'], subgroup_label)
                     if subgroup_label in stamp_Advices['Find Required']:
                         stamp_Advices['Find Required'][subgroup_label].append(Advice(
-                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material']['Name']}",
+                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material'].name}",
                             picture_class=required_stamp,
                             progression=0,
                             goal=1,
-                            resource=player_stamps[required_stamp]['Material']['Name'],
+                            resource=player_stamps[required_stamp]['Material'].name,
                         ))
         if subgroup_label not in stamp_Advices['Find Required'] and tier_FindRequiredStamps >= tier_number - 1:
             tier_FindRequiredStamps = tier_number
@@ -452,7 +452,7 @@ def getProgressionTiersAdviceGroup():
                             picture_class=stamp_name,
                             progression=player_stamps[stamp_name]['Level'],
                             goal=required_level,
-                            resource=player_stamps[stamp_name]['Material']['Name'],
+                            resource=player_stamps[stamp_name]['Material'].name,
                         ))
 
         if subgroup_label not in stamp_Advices['Specific'] and tier_SpecificStamps == tier_number - 1:
@@ -468,7 +468,7 @@ def getProgressionTiersAdviceGroup():
                     stamp_Advices['Not Recommended'][subgroup_label].append(Advice(
                         label=f"{player_stamps[required_stamp]['StampType']}: {required_stamp}",
                         picture_class=required_stamp,
-                        resource=player_stamps[required_stamp]['Material']['Name'],
+                        resource=player_stamps[required_stamp]['Material'].name,
                         informational=True,
                         completed=True
                     ))

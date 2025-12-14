@@ -325,7 +325,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 picture_class='Sailboat Stamp',
                 progression=sailboat_stamp['Level'],
                 goal=stamp_maxes['Sailboat Stamp'],
-                resource=sailboat_stamp['Material']['Name'],
+                resource=sailboat_stamp['Material'].name,
             ),
             Advice(
                 label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",

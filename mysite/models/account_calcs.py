@@ -1,7 +1,6 @@
-import math
 from math import ceil, floor, log2, prod
 
-from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
+from consts.consts_autoreview import ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_idleon import lavaFunc, base_crystal_chance
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, greenstack_amount
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order

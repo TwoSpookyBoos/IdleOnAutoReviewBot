@@ -4,11 +4,11 @@
 
 from consts import consts_w2, progression_tiers
 from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars
+from consts.consts_item_data import ITEM_DATA
 from consts.consts_w1 import stamp_maxes, unavailable_stamps_list
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
 from consts.progression_tiers import stamps_progressionTiers, vials_progressionTiers, true_max_tiers, greenstack_progressionTiers, combatLevels_progressionTiers
-from utils.item_data_utils import get_all_stamps, get_capacity_stamps
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -58,9 +58,9 @@ def finalize_w1_stamps():
     ordered_tiers_stamps = []
     remaining_stamps = []
 
-    capacity_stamps = get_capacity_stamps()
+    capacity_stamps = ITEM_DATA.get_capacity_stamps()
     # In the 3rd to last tier, set every Capacity Stamp to its max from stamp_maxes
-    stamps_progressionTiers[max(stamps_progressionTiers) - 2]['Stamps']['Specific'] = {stamp['Name']: stamp_maxes[stamp['Name']] for stamp in capacity_stamps}
+    stamps_progressionTiers[max(stamps_progressionTiers) - 2]['Stamps']['Specific'] = {stamp.name: stamp_maxes[stamp.name] for stamp in capacity_stamps}
     logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers) - 2}")
     for tier in stamps_progressionTiers:
         if tier < max(stamps_progressionTiers) - 2:
@@ -70,15 +70,15 @@ def finalize_w1_stamps():
                         and required_stamp != 'Crop Evo Stamp'
                 ):
                     tiered_stamps.add(required_stamp)
-    all_stamps = get_all_stamps()
+    all_stamps = ITEM_DATA.get_all_stamps()
     for stamp in all_stamps:
-        if stamp['Name'] not in stamp_maxes and stamp['Name'] not in unavailable_stamps_list:
-            logger.warning(f"No entry in stamp_maxes for: {stamp['Name']}")
-        if stamp['Name'] not in unavailable_stamps_list and stamp['Name'] not in capacity_stamps:
-            if stamp['Name'] in tiered_stamps:
-                ordered_tiers_stamps.append(stamp['Name'])
+        if stamp.name not in stamp_maxes and stamp.name not in unavailable_stamps_list:
+            logger.warning(f"No entry in stamp_maxes for: {stamp.name}")
+        if stamp.name not in unavailable_stamps_list and stamp.name not in capacity_stamps:
+            if stamp.name in tiered_stamps:
+                ordered_tiers_stamps.append(stamp.name)
             else:
-                remaining_stamps.append(stamp['Name'])
+                remaining_stamps.append(stamp.name)
 
     # In the 2nd to last tier, set every previously required stamp to its max from stamp_maxes
     stamps_progressionTiers[max(stamps_progressionTiers) - 1]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in ordered_tiers_stamps}

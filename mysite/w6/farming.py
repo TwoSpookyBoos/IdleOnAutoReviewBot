@@ -415,7 +415,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         picture_class='crop-evo-stamp',
         progression=session_data.account.stamps['Crop Evo Stamp']['Level'],
         goal=stamp_maxes['Crop Evo Stamp'],
-        resource=session_data.account.stamps['Crop Evo Stamp']['Material']['Name'],
+        resource=session_data.account.stamps['Crop Evo Stamp']['Material'].name,
     ))
 
 #Meals
