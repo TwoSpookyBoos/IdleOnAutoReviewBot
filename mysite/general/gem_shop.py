@@ -1,4 +1,5 @@
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from models.models_util import get_gem_shop_purchase_advice
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
@@ -9,7 +10,7 @@ from consts.consts_w6 import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
 from consts.consts_w4 import cooking_close_enough, breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

@@ -1,8 +1,9 @@
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.progression_tiers import combatLevels_progressionTiers, true_max_tiers
-from models.models import AdviceGroup, Advice, AdviceSection
+
+from models.models import AdviceGroup, Advice, AdviceSection, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

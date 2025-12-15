@@ -1,4 +1,4 @@
-from flask import g as session_data
+from models.models import session_data
 
 
 def add_subgroup_if_available_slot(dictionary: dict, subgroup_label):

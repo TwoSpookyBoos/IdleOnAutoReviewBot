@@ -2,9 +2,10 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
 from consts.consts_w5 import get_vendor_name
 from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice, Assets
+
+from models.models import AdviceSection, AdviceGroup, Advice, Assets, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, ValueToMulti
 from consts.consts_general import star_tiers, max_card_stars
 from consts.consts_idleon import lavaFunc
@@ -7,7 +7,8 @@ from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
 from consts.consts_w3 import approx_max_talent_level_star_talents
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice, Card
+
+from models.models import AdviceSection, AdviceGroup, Advice, Card, session_data
 from models.models_util import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
@@ -66,7 +67,7 @@ def getCardDropChanceAdviceGroup(groups):
     anearful_vial_bonus = anearful_vial['Value']
 
     card_stamp = session_data.account.stamps['Card Stamp']
-    card_stamp_bonus = card_stamp['Total Value']
+    card_stamp_bonus = card_stamp.total_value
 
     # JMAN ONLY
     cards_galore_talent = all_talentsDict[28]
@@ -141,13 +142,7 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=anearful_vial['Level'],
                 goal=max_vial_level
             ),
-            Advice(
-                label=f"Card Stamp: +{card_stamp['Total Value']:.2f}%",
-                picture_class='Card Stamp',
-                progression=card_stamp['Level'],
-                goal=stamp_maxes['Card Stamp'],
-                resource=card_stamp['Material'],
-            ),
+            session_data.account.stamps['Card Stamp'].get_advice(),
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
                 picture_class='card-champ',

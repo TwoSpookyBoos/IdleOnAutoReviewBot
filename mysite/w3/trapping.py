@@ -2,11 +2,12 @@ from consts.consts_autoreview import break_keep_it_up
 from consts.consts_w2 import max_vial_level, maxable_critter_vials_list
 from consts.consts_w3 import max_trapping_critter_types, trapping_quests_requirement_list, trapset_images
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.text_formatting import pl
 from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

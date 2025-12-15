@@ -7,12 +7,11 @@ from pathlib import Path
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
-import consts.consts_monster_data
-import consts.consts_item_data
-
 import consts.consts_autoreview
-import consts.consts_idleon
 import consts.consts_general
+import consts.consts_idleon
+import consts.consts_item_data
+import consts.consts_monster_data
 import consts.consts_w1
 import consts.consts_w2
 import consts.consts_w3
@@ -20,12 +19,10 @@ import consts.consts_w4
 import consts.consts_w5
 import consts.consts_w6
 import consts.consts_w7
+import consts.manage_consts  # This import is what runs finalize_consts()
 import consts.progression_tiers
-import consts.manage_consts  #This import is what runs finalize_consts()
 import taskSuggester
 from models import custom_exceptions
-from utils.data_formatting import HeaderData
-from models.models import AdviceWorld
 from models.custom_exceptions import (
     UserDataException,
     UsernameBanned,
@@ -38,11 +35,8 @@ from models.custom_exceptions import (
     DataTooLong,
     VeryOldDataException
 )
-from utils.text_formatting import (
-    is_username,
-    json_schema_valid,
-    format_character_name, InputType,
-)
+from models.models import AdviceWorld
+from utils.data_formatting import HeaderData
 from utils.logging import (
     ResponseCache,
     get_logger,
@@ -51,7 +45,11 @@ from utils.logging import (
     # log_browser_data
 )
 from utils.template_filters import *
-
+from utils.text_formatting import (
+    is_username,
+    json_schema_valid,
+    format_character_name, InputType,
+)
 
 logger = get_logger(__name__)
 

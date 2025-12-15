@@ -1,5 +1,7 @@
-from flask import g as session_data
+
 from consts.consts_idleon import companions_data
+from models.models import session_data
+
 from utils.logging import get_logger
 
 logger = get_logger(__name__)

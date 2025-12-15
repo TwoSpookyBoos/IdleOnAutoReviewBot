@@ -1,10 +1,11 @@
 from math import ceil
 
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
 from consts.consts_caverns import caverns_cavern_names, monument_layer_rewards, caverns_jar_rupies, getMotherlodeEfficiencyRequired, getMonumentOpalChance
 from utils.text_formatting import notateNumber
@@ -397,10 +398,10 @@ def getTempleAdviceGroup() -> AdviceGroup:
         picture_class='dragon-warrior-statue',
     ))
     for stamp_name in ['Cavern Resource Stamp', 'Study Hall Stamp']:
-        if not session_data.account.stamps[stamp_name]['Delivered']:
+        if not session_data.account.stamps[stamp_name].delivered:
             cavern_advice[c_stats].append(Advice(
-                label=f"Bonus Objective- Collect {stamp_name} from AFK kills,"
-                      f" then level with {session_data.account.stamps[stamp_name]['Material'].replace('-', ' ').title()}",
+                label=f"Bonus Objective - Collect {stamp_name} from AFK kills,"
+                      f" then level with {session_data.account.stamps[stamp_name].material.name}",
                 picture_class=stamp_name,
             ))
 

@@ -2,9 +2,10 @@ import math
 
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_w2 import killroy_only_1_level
 
 logger = get_logger(__name__)

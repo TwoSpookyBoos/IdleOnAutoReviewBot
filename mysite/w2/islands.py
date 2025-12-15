@@ -1,7 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w2 import islands_fractal_rewards_dict
 from consts.progression_tiers import islands_progressionTiers, true_max_tiers

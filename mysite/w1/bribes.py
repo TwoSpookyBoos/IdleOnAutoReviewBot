@@ -1,9 +1,9 @@
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import bribes_progressionTiers, true_max_tiers
-from flask import g as session_data
 
 logger = get_logger(__name__)
 

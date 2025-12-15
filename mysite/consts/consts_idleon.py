@@ -1,6 +1,7 @@
 import math
-from flask import g as session_data
+
 from consts.generated.monster_data import monster_data
+
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_consts_logger
@@ -275,6 +276,7 @@ def getHumanReadableClasses(classNumber):
 
 
 def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
+    from models.models import session_data
     if isinstance(desiredSkill, str):
         try:
             return session_data.account.all_skills[desiredSkill]

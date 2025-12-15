@@ -1,5 +1,6 @@
 import re
-from consts.generated.item_data import item_data
+from consts.generated.raw_item_data import raw_item_data
+from models.models import ItemDefinition, StampItemDefinition, ItemDefinitions, StampBonus
 from utils.generate_data_dict import generate_data_dict
 from utils.number_formatting import parse_number
 from utils.logging import get_consts_logger
@@ -161,4 +162,34 @@ def extract_items(dump: str) -> dict:
 
 generate_data_dict(
     script_item_definitions + script_item_definitions_2 + script_item_definitions_3 + script_item_definitions_4 + script_item_definitions_5 + script_item_definitions_6,
-    extract_items, 'item_data', item_data)
+    extract_items, 'raw_item_data', raw_item_data)
+
+ITEM_DATA: ItemDefinitions = ItemDefinitions()
+
+for item_code, item in raw_item_data.items():
+    if item_code == "_hash":
+        continue
+    name = item['Name']
+    code_name = item['Code (Name)']
+    _type = item['Type']
+
+    if 'Stamp Bonus' in item:
+        stamp_bonus = item['Stamp Bonus']
+        ITEM_DATA[item['Code (Name)']] = StampItemDefinition(
+            name=name,
+            code_name=code_name,
+            type=_type,
+            stamp_bonus=StampBonus(
+                effect=stamp_bonus['Effect'],
+                code_material=stamp_bonus['Code (Material)'],
+                scaling_type=stamp_bonus['Scaling Type'],
+                x1=stamp_bonus['x1'],
+                x2=stamp_bonus['x2']
+            )
+        )
+        continue
+    ITEM_DATA[item['Code (Name)']] = ItemDefinition(
+        name=name,
+        code_name=code_name,
+        type=_type,
+    )

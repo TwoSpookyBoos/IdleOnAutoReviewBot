@@ -1,7 +1,7 @@
 import math
-from flask import g as session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_companion_advice
 from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion
@@ -41,10 +41,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
-    stample_base_value = session_data.account.stamps['Stample Stamp']['Value']
-    stample_value = session_data.account.stamps['Stample Stamp']['Total Value']
-    amplestample_base_value = session_data.account.stamps['Amplestample Stamp']['Value']
-    amplestample_value = session_data.account.stamps['Amplestample Stamp']['Total Value']
+    stample_value = session_data.account.stamps['Stample Stamp'].total_value
+    amplestample_value = session_data.account.stamps['Amplestample Stamp'].total_value
     account_sum += stample_value
     account_sum += amplestample_value
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
@@ -92,22 +90,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.family_bonuses['Maestro']['Level'],
         goal=328
     ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"Amplestample Stamp base value: +{amplestample_base_value:.3f}/2.581%"
-              f"<br>After multipliers: {amplestample_value:.3f}%",
-        picture_class='amplestample-stamp',
-        progression=session_data.account.stamps['Amplestample Stamp']['Level'],
-        goal=32,
-        resource=session_data.account.stamps['Amplestample Stamp']['Material'],
-    ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"Stample Stamp base value: +{stample_base_value:.3f}/2.667%"
-              f"<br>After multipliers: {stample_value:.3f}%",
-        picture_class='stample-stamp',
-        progression=session_data.account.stamps['Stample Stamp']['Level'],
-        goal=60,
-        resource=session_data.account.stamps['Stample Stamp']['Material'],
-    ))
+    psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice(goal_override=32))
+    psr_Advices[account_subgroup].append(session_data.account.stamps['Stample Stamp'].get_advice(goal_override=60))
     psr_Advices[account_subgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "
               f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",

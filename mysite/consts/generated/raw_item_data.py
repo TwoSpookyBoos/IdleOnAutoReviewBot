@@ -1,4 +1,4 @@
-item_data = {
+raw_item_data = {
     "COIN": {
         "Name": "Coins",
         "Sell Price": 0,

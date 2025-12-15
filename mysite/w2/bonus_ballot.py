@@ -2,10 +2,11 @@ import math
 import time
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_companion_advice
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

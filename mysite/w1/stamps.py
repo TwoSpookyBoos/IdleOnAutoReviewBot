@@ -1,23 +1,24 @@
-from consts.consts_w5 import max_sailing_artifact_level
-from models.models import AdviceSection, AdviceGroup, Advice
-from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
-from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_general import inventory_slots_max_usable
-from consts.consts_w6 import max_farming_crops
-from consts.consts_w3 import max_overall_book_levels
+from consts.consts_item_data import ITEM_DATA
+from consts.consts_w1 import unavailable_stamps_list, stamps_exalt_recommendations, stamp_types
 from consts.consts_w2 import max_vial_level, max_sigil_level
-from consts.consts_w1 import stamp_types, unavailable_stamps_list, stamp_maxes, stamps_dict, stamps_exalt_recommendations, capacity_stamps
+from consts.consts_w3 import max_overall_book_levels
+from consts.consts_w5 import max_sailing_artifact_level
+from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
-from flask import g as session_data
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
+from utils.logging import get_logger
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
 logger = get_logger(__name__)
 
 
 def setMissingStamps():
     return [stampName for stampName, stampValues in session_data.account.stamps.items() if
-            not stampValues['Delivered'] and stampName not in unavailable_stamps_list]
+            not stampValues.delivered and stampName not in unavailable_stamps_list]
 
 def getStampExclusions() -> dict[str, bool]:
     exclusionsDict = {
@@ -37,9 +38,9 @@ def getStampExclusions() -> dict[str, bool]:
         'Void Axe Stamp': False,
         'Crop Evo Stamp': False,
     }
-    if session_data.account.stamps['Crystallin']['Level'] >= 270:  # Highest Crystallin in Tiers
+    if session_data.account.stamps['Crystallin'].level >= 270:  # Highest Crystallin in Tiers
         exclusionsDict['Matty Bag Stamp'] = True
-    if session_data.account.stamps['Multitool Stamp']['Level'] >= 220:  # Highest Multitool in Tiers
+    if session_data.account.stamps['Multitool Stamp'].level >= 220:  # Highest Multitool in Tiers
         exclusionsDict['Bugsack Stamp'] = True
         exclusionsDict['Bag o Heads Stamp'] = True
     if exclusionsDict['Matty Bag Stamp'] and exclusionsDict['Bugsack Stamp'] and exclusionsDict['Bag o Heads Stamp']:
@@ -47,9 +48,9 @@ def getStampExclusions() -> dict[str, bool]:
 
     # If all summoning matches are finished, exclude the Sussy Gene stamps if not obtained
     if session_data.account.summoning['AllRegularBattlesWon']:
-        exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp']['Delivered'] else False
-        exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp']['Delivered'] else False
-        exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp']['Delivered'] else False
+        exclusionsDict['Triad Essence Stamp'] = True if not session_data.account.stamps['Triad Essence Stamp'].delivered else False
+        exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp'].delivered else False
+        exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp'].delivered else False
 
     if session_data.account.farming['CropsUnlocked'] >= max_farming_crops:
         exclusionsDict['Crop Evo Stamp'] = True
@@ -95,14 +96,8 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    for cap_stamp in capacity_stamps:
-        capacity_Advices['Stamps'].append(Advice(
-            label=f"{cap_stamp}: {round(session_data.account.stamps[cap_stamp]['Total Value'], 2):g}%",
-            picture_class=cap_stamp,
-            progression=session_data.account.stamps[cap_stamp]['Level'],
-            goal=stamp_maxes[cap_stamp],
-            resource=session_data.account.stamps[cap_stamp]['Material'],
-        ))
+    for cap_stamp in ITEM_DATA.get_capacity_stamps():
+        capacity_Advices['Stamps'].append(session_data.account.stamps[cap_stamp.name].get_advice(link_to_section=False))
 
     # Account-Wide
     capacity_Advices['Account Wide'].append(Advice(
@@ -353,20 +348,20 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     exalted_advice[rec] = [
         Advice(
-            label=f"{stamps[stamp_name]['StampType']}: {stamp_name}",
+            label=f"{stamps[stamp_name].stamp_type}: {stamp_name}",
             picture_class=stamp_name,
             progression=0,
             goal=1
-        ) for stamp_name in stamps_exalt_recommendations if not stamps[stamp_name]['Exalted'] and stamps[stamp_name]['Delivered']
+        ) for stamp_name in stamps_exalt_recommendations if not stamps[stamp_name].exalted and stamps[stamp_name].delivered
     ]
 
     exalted_advice[cur] = [
         Advice(
-            label=f"{stamp_details['StampType']}: {stamp_name}",
+            label=f"{stamp_details.stamp_type}: {stamp_name}",
             picture_class=stamp_name,
             progression=1,
             goal=1
-        ) for stamp_name, stamp_details in stamps.items() if stamp_details['Exalted']
+        ) for stamp_name, stamp_details in stamps.items() if stamp_details.exalted
     ]
 
     for subgroup in exalted_advice:
@@ -381,10 +376,6 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     )
     exalted_ag.remove_empty_subgroups()
     return exalted_ag
-
-def getReadableStampName(stampNumber, stampType):
-    # logger.debug(f"Fetching name for {stampType} + {stampNumber}")
-    return stamps_dict.get(stampType, {}).get(stampNumber, f"Unknown{stampType}{stampNumber}")
 
 def getProgressionTiersAdviceGroup():
     stamp_Advices = {
@@ -429,11 +420,11 @@ def getProgressionTiersAdviceGroup():
                     add_subgroup_if_available_slot(stamp_Advices['Find Required'], subgroup_label)
                     if subgroup_label in stamp_Advices['Find Required']:
                         stamp_Advices['Find Required'][subgroup_label].append(Advice(
-                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp]['Material'].replace('-', ' ').title()}",
+                            label=f"{stamp_type}: {required_stamp}, leveled with {player_stamps[required_stamp].material.name}",
                             picture_class=required_stamp,
                             progression=0,
                             goal=1,
-                            resource=player_stamps[required_stamp]['Material'],
+                            resource=player_stamps[required_stamp].material.name,
                         ))
         if subgroup_label not in stamp_Advices['Find Required'] and tier_FindRequiredStamps >= tier_number - 1:
             tier_FindRequiredStamps = tier_number
@@ -442,20 +433,20 @@ def getProgressionTiersAdviceGroup():
         for stamp_name, required_level in requirements.get('Stamps', {}).get('Specific', {}).items():
             # if added_stamps.get(stamp_name, 0) >= required_level:
             #     continue  #Don't add the same stamp/level combo into multiple tiers
-            if player_stamps[stamp_name]['Level'] < required_level:
+            if player_stamps[stamp_name].level < required_level:
                 if (
                     (tier_number <= max_tier and exclusions_dict.get(stamp_name, False) == False)
-                    or (tier_number > max_tier and player_stamps[stamp_name]['Delivered'])
+                    or (tier_number > max_tier and player_stamps[stamp_name].delivered)
                 ):
                     add_subgroup_if_available_slot(stamp_Advices['Specific'], subgroup_label)
                     if subgroup_label in stamp_Advices['Specific']:
                         added_stamps[stamp_name] = required_level
                         stamp_Advices['Specific'][subgroup_label].append(Advice(
-                            label=f"{player_stamps[stamp_name]['StampType']}: {stamp_name}",
+                            label=f"{player_stamps[stamp_name].stamp_type}: {stamp_name}",
                             picture_class=stamp_name,
-                            progression=player_stamps[stamp_name]['Level'],
+                            progression=player_stamps[stamp_name].level,
                             goal=required_level,
-                            resource=player_stamps[stamp_name]['Material'],
+                            resource=player_stamps[stamp_name].material.name,
                         ))
 
         if subgroup_label not in stamp_Advices['Specific'] and tier_SpecificStamps == tier_number - 1:
@@ -469,9 +460,9 @@ def getProgressionTiersAdviceGroup():
                     stamp_Advices['Not Recommended'][subgroup_label] = []
                 if subgroup_label in stamp_Advices['Not Recommended']:
                     stamp_Advices['Not Recommended'][subgroup_label].append(Advice(
-                        label=f"{player_stamps[required_stamp]['StampType']}: {required_stamp}",
+                        label=f"{player_stamps[required_stamp].stamp_type}: {required_stamp}",
                         picture_class=required_stamp,
-                        resource=player_stamps[required_stamp]['Material'],
+                        resource=player_stamps[required_stamp].material.name,
                         informational=True,
                         completed=True
                     ))

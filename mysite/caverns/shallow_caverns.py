@@ -2,9 +2,10 @@ from math import ceil
 
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 # from consts.consts import shallow_caverns_progressionTiers, break_you_best, ValueToMulti
 from consts.consts_caverns import schematics_unlocking_buckets, schematics_unlocking_amplifiers, sediment_names, max_sediments, monument_layer_rewards, \
     getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired, getDenOpalRequirement, getMonumentOpalChance

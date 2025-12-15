@@ -3,12 +3,13 @@ from collections import defaultdict
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
-from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
+
+from models.models import AdviceSection, AdviceGroup, Advice, Card, Character, session_data
 from models.models_util import get_sailing_artifact_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles, max_meal_level
@@ -243,7 +244,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     multi_group_e = 1 + (
             5 * bagur['BlessingLevel'] +
             ad_tablet_bonus_percent +
-            sailboat_stamp['Total Value'] +
+            sailboat_stamp.total_value +
             (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
             popped_corn['Value'] +
             oj_jooce_vial['Value'] +
@@ -320,13 +321,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
                 goal=max_sailing_artifact_level
             ),
-            Advice(
-                label=f"Sailboat Stamp: +{sailboat_stamp['Total Value']:.2f}%",
-                picture_class='Sailboat Stamp',
-                progression=sailboat_stamp['Level'],
-                goal=stamp_maxes['Sailboat Stamp'],
-                resource=sailboat_stamp['Material'],
-            ),
+            session_data.account.stamps['Sailboat Stamp'].get_advice(),
             Advice(
                 label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",
                 picture_class=boat_statue['Image'],

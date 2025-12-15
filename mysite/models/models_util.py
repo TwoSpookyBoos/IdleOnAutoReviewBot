@@ -2,8 +2,9 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import companions_data
 from consts.consts_w5 import max_sailing_artifact_level
-from models.models import Advice
-from flask import g as session_data
+
+from models.models import Advice, session_data
+
 from utils.misc.has_companion import has_companion
 from utils.logging import get_logger
 logger = get_logger(__name__)

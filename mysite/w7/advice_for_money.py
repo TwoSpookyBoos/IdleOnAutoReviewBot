@@ -1,5 +1,5 @@
-from models.models import AdviceSection, AdviceGroup
-from flask import g as session_data
+
+from models.models import AdviceSection, AdviceGroup, session_data
 
 from models.models_util import get_advice_for_money_advice
 

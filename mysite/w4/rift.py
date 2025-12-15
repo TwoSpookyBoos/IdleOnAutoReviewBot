@@ -1,7 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best
 from consts.consts_w4 import rift_rewards_dict
 from consts.progression_tiers import rift_progressionTiers, true_max_tiers

@@ -1,5 +1,5 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection, Character
+from models.models import Advice, AdviceGroup, AdviceSection, Character, session_data
 from consts.consts_idleon import pearlable_skills_list, lavaFunc, current_world, max_characters
 from consts.consts_general import cards_max_level
 from consts.consts_w1 import stamp_maxes
@@ -9,7 +9,7 @@ from consts.consts_w4 import cooking_close_enough
 from models.models_util import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
@@ -48,12 +48,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         progression=session_data.account.labChips.get('Omega Motherboard', 0),
         goal=1
     ))
-    crystal_Advice[aw].append(Advice(
-        label=f"Level {session_data.account.stamps['Crystallin']['Level']}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin']['Total Value'] / 100:.3f}x",
-        picture_class="crystallin",
-        progression=session_data.account.stamps['Crystallin']['Level'],
-        goal=stamp_maxes['Crystallin']
-    ))
+    crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
     crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     crystal_Advice[aw].append(Advice(
@@ -492,11 +487,11 @@ def getConsumablesAdviceList() -> list[Advice]:
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="100K"
             ))
-    if session_data.account.stamps['Mason Jar Stamp']['Level'] < stamp_maxes['Mason Jar Stamp']:
+    if session_data.account.stamps['Mason Jar Stamp'].level < stamp_maxes['Mason Jar Stamp']:
         consumables.append(Advice(
             label=f"Candy Glass Shards for Mason Jar Stamp",
             picture_class='mason-jar-stamp',
-            progression=session_data.account.stamps['Mason Jar Stamp']['Level'],
+            progression=session_data.account.stamps['Mason Jar Stamp'].level,
             goal=stamp_maxes['Mason Jar Stamp'],
             resource='x1-hr-time-candy'
         ))

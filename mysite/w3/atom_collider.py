@@ -1,10 +1,11 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import snail_max_possible_rank
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -189,12 +190,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
     ))
 
-    cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Total Value']:.3f}%",
-        picture_class='atomic-stamp',
-        progression=session_data.account.stamps['Atomic Stamp']['Level'],
-        resource=session_data.account.stamps['Atomic Stamp']['Material'],
-    ))
+    cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
 
     cr_advice.append(Advice(
         label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",
