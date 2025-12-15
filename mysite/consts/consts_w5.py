@@ -1508,8 +1508,6 @@ filter_never = [
     'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28',
     'EquipmentStatues29', 'EquipmentStatues30',
     'EquipmentStatues31', 'EquipmentStatues32',
-    #Golden Foods
-    'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'Gfoodcoupon',
 
     #Consumables
     'PremiumGem', 'Quest71', 'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',
@@ -1535,4 +1533,8 @@ filter_only_after_gstack = [
     'LavaA1b', 'LavaA5b', 'LavaB3b',  #W5 Rares
     'SpiA2b', 'SpiB2b',  #W6 Rares
     'Key1', 'Key2', 'Key3', 'Key4', 'Key5',  #Boss Keys
+    # Golden Foods
+    'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10',
+    'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15',
+    'Gfoodcoupon',
 ]
