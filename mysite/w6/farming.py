@@ -410,12 +410,12 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         goal=1
     ))
     evo_advices[stamp].append(Advice(
-        label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp']['Value']:.0f}%"
-              f"<br>Total Value after multis: {session_data.account.stamps['Crop Evo Stamp']['Total Value']:.2f}%",
+        label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp'].value:.0f}%"
+              f"<br>Total Value after multis: {session_data.account.stamps['Crop Evo Stamp'].total_value:.2f}%",
         picture_class='crop-evo-stamp',
-        progression=session_data.account.stamps['Crop Evo Stamp']['Level'],
+        progression=session_data.account.stamps['Crop Evo Stamp'].level,
         goal=stamp_maxes['Crop Evo Stamp'],
-        resource=session_data.account.stamps['Crop Evo Stamp']['Material'].name,
+        resource=session_data.account.stamps['Crop Evo Stamp'].material.name,
     ))
 
 #Meals

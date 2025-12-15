@@ -14,6 +14,7 @@ from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
+from consts.consts_w1 import stamp_types
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
@@ -1709,6 +1710,10 @@ class Account:
             'Total Slots Max': 0
         }
         #W1
+        self.stamps: dict[str, Stamp] = {}
+        self.stamp_totals: dict[str, int] = {"Total": 0}
+        for stamp_type in stamp_types:
+            self.stamp_totals[stamp_type] = 0
         self.basketball = {
             'Upgrades': {}
         }
@@ -1740,6 +1745,18 @@ class StampBonus:
     scaling_type: str
     x1: int
     x2: int
+
+@dataclass
+class Stamp:
+    name: str
+    material: ItemDefinition | None
+    level: int
+    max_level: int
+    delivered: bool
+    stamp_type: str
+    value: float
+    exalted: bool
+    total_value: float = 0,
 
 @dataclass
 class StampItemDefinition(ItemDefinition):

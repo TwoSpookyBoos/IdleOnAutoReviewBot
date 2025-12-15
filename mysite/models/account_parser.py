@@ -63,7 +63,7 @@ from consts.consts_w6 import (
 )
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets
+from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Stamp
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_index
 from utils.logging import get_logger
@@ -1015,11 +1015,11 @@ def _parse_master_classes_exalted_stamps(account):
             exalted_stamp_key = f"{stamp_type_code}{stamp_code}"
             # if exalted_stamp_key in raw_stamps_exalted:
             #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
-            account.stamps[stamp.name]['Exalted'] = exalted_stamp_key in raw_stamps_exalted
+            account.stamps[stamp.name].exalted = exalted_stamp_key in raw_stamps_exalted
         except:
             if raw_compass:
                 logger.exception(f"Error parsing Exalted status for stamp {stamp_type_code}{stamp_code}: {stamp.name}")
-            account.stamps[stamp.name]['Exalted'] = False
+            account.stamps[stamp.name].exalted = False
 
 def _parse_master_classes_tesseract(account):
     account.tesseract = {
@@ -1196,10 +1196,6 @@ def _parse_w1_bribes(account):
             overall_bribe_index += 1
 
 def _parse_w1_stamps(account):
-    account.stamps = {}
-    account.stamp_totals = {"Total": 0}
-    for stamp_type in stamp_types:
-        account.stamp_totals[stamp_type] = 0
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))
     raw_stamps_dict = {}
     for stamp_type_index, stamp_type_stamps in enumerate(raw_stamps_list):
@@ -1227,31 +1223,35 @@ def _parse_w1_stamps(account):
         stamp_type = stamp_types[letterToNumber(stamp.code_name.split('Stamp')[1][0].lower()) - 1]
         try:
             stamp_level = safer_convert(raw_stamps_dict.get(stamp.code_name, 0), 0)
-            account.stamps[stamp.name] = {
-                'Material': ITEM_DATA.get_item_from_codename(stamp.stamp_bonus.code_material),
-                'Level': stamp_level,
-                'Max': safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0),
-                'Delivered': safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0) > 0,
-                'StampType': stamp_type,
-                'Value': lavaFunc(
+            account.stamps[stamp.name] = Stamp(
+                name=stamp.name,
+                material=ITEM_DATA.get_item_from_codename(stamp.stamp_bonus.code_material),
+                level=stamp_level,
+                max_level=safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0),
+                delivered=safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0) > 0,
+                stamp_type=stamp_type,
+                value=lavaFunc(
                     stamp.stamp_bonus.scaling_type,
                     stamp_level,
                     stamp.stamp_bonus.x1,
                     stamp.stamp_bonus.x2,
                 ),
-            }
-            account.stamp_totals['Total'] += account.stamps[stamp.name]['Level']
-            account.stamp_totals[stamp_type] += account.stamps[stamp.name]['Level']
+                exalted=False
+            )
+            account.stamp_totals['Total'] += account.stamps[stamp.name].level
+            account.stamp_totals[stamp_type] += account.stamps[stamp.name].level
         except Exception as e:
             logger.warning(f"Stamp Parse error at {stamp_type}: {e}. Defaulting to Undelivered")
-            account.stamps[stamp.name] = {
-                "Level": 0,
-                "Max": 0,
-                "Delivered": False,
-                "StampType": stamp_type,
-                "Value": 0,
-                'Exalted': False
-            }
+            account.stamps[stamp.name] = Stamp(
+                name=stamp.name,
+                level=0,
+                max_level=0,
+                delivered=False,
+                stamp_type=stamp_type,
+                value=0,
+                exalted=False,
+                material=None
+            )
     _parse_master_classes_exalted_stamps(account)
 
 def _parse_w1_owl(account):

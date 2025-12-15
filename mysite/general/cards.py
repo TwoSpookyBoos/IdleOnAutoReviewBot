@@ -66,7 +66,7 @@ def getCardDropChanceAdviceGroup(groups):
     anearful_vial_bonus = anearful_vial['Value']
 
     card_stamp = session_data.account.stamps['Card Stamp']
-    card_stamp_bonus = card_stamp['Total Value']
+    card_stamp_bonus = card_stamp.total_value
 
     # JMAN ONLY
     cards_galore_talent = all_talentsDict[28]
@@ -142,11 +142,11 @@ def getCardDropChanceAdviceGroup(groups):
                 goal=max_vial_level
             ),
             Advice(
-                label=f"Card Stamp: +{card_stamp['Total Value']:.2f}%",
+                label=f"Card Stamp: +{card_stamp.total_value:.2f}%",
                 picture_class='Card Stamp',
-                progression=card_stamp['Level'],
+                progression=card_stamp.level,
                 goal=stamp_maxes['Card Stamp'],
-                resource=card_stamp['Material'].name,
+                resource=card_stamp.material.name,
             ),
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",

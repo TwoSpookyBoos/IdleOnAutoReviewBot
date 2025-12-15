@@ -81,13 +81,13 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(killroy_advice)
 
     corale_stamp = session_data.account.stamps['Corale Stamp']
-    corale_stamp_value = corale_stamp['Total Value']
+    corale_stamp_value = corale_stamp.total_value
     corale_stamp_advice = Advice(
         label=f"{{{{ Stamps|#stamps }}}} - Corale: +{round(corale_stamp_value, 1):g}% Daily Corals",
         picture_class='corale-stamp',
-        progression=corale_stamp['Level'],
-        resource=corale_stamp['Material'].name,
-        goal=stamp_maxes.get('Corale Stamp', 1) if corale_stamp['Delivered'] else 1
+        progression=corale_stamp.level,
+        resource=corale_stamp.material.name,
+        goal=stamp_maxes.get('Corale Stamp', 1) if corale_stamp.delivered else 1
     )
     multi_group_d_advice.append(corale_stamp_advice)
     multi_group_d_value += corale_stamp_value

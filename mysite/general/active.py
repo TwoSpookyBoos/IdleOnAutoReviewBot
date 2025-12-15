@@ -49,9 +49,9 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     crystal_Advice[aw].append(Advice(
-        label=f"Level {session_data.account.stamps['Crystallin']['Level']}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin']['Total Value'] / 100:.3f}x",
+        label=f"Level {session_data.account.stamps['Crystallin'].level}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin'].total_value / 100:.3f}x",
         picture_class="crystallin",
-        progression=session_data.account.stamps['Crystallin']['Level'],
+        progression=session_data.account.stamps['Crystallin'].level,
         goal=stamp_maxes['Crystallin']
     ))
     crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
@@ -492,11 +492,11 @@ def getConsumablesAdviceList() -> list[Advice]:
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="100K"
             ))
-    if session_data.account.stamps['Mason Jar Stamp']['Level'] < stamp_maxes['Mason Jar Stamp']:
+    if session_data.account.stamps['Mason Jar Stamp'].level < stamp_maxes['Mason Jar Stamp']:
         consumables.append(Advice(
             label=f"Candy Glass Shards for Mason Jar Stamp",
             picture_class='mason-jar-stamp',
-            progression=session_data.account.stamps['Mason Jar Stamp']['Level'],
+            progression=session_data.account.stamps['Mason Jar Stamp'].level,
             goal=stamp_maxes['Mason Jar Stamp'],
             resource='x1-hr-time-candy'
         ))

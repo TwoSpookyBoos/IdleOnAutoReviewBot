@@ -243,7 +243,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     multi_group_e = 1 + (
             5 * bagur['BlessingLevel'] +
             ad_tablet_bonus_percent +
-            sailboat_stamp['Total Value'] +
+            sailboat_stamp.total_value +
             (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
             popped_corn['Value'] +
             oj_jooce_vial['Value'] +
@@ -321,11 +321,11 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 goal=max_sailing_artifact_level
             ),
             Advice(
-                label=f"Sailboat Stamp: +{sailboat_stamp['Total Value']:.2f}%",
+                label=f"Sailboat Stamp: +{sailboat_stamp.total_value:.2f}%",
                 picture_class='Sailboat Stamp',
-                progression=sailboat_stamp['Level'],
+                progression=sailboat_stamp.level,
                 goal=stamp_maxes['Sailboat Stamp'],
-                resource=sailboat_stamp['Material'].name,
+                resource=sailboat_stamp.material.name,
             ),
             Advice(
                 label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",

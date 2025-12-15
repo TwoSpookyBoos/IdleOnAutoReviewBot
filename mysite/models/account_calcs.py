@@ -18,7 +18,7 @@ from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_b
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.progression_tiers import owl_bonuses_of_orion
-from models.models import Advice
+from models.models import Advice, Account
 from models.models_util import get_upgrade_vault_advice, get_gem_shop_purchase_advice
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.logging import get_logger
@@ -977,16 +977,16 @@ def _calculate_w1_stamps(account):
         # TODO: + Legend Talent Bonus
     )
 
-    for stamp_name, stamp_values in account.stamps.items():
+    for stamp_name, stamp in account.stamps.items():
         try:
-            account.stamps[stamp_name]['Total Value'] = (
-                stamp_values['Value']
-                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp_values['StampType'] != 'Misc' else 1)
-                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp_values['StampType'] != 'Misc' else 1)
-                * (account.exalted_stamp_multi if stamp_values['Exalted'] else 1)
+            account.stamps[stamp_name].total_value = (
+                stamp.value
+                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp.stamp_type != 'Misc' else 1)
+                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp.stamp_type != 'Misc' else 1)
+                * (account.exalted_stamp_multi if stamp.exalted else 1)
             )
         except:
-            account.stamps[stamp_name]['Total Value'] = stamp_values['Value']
+            account.stamps[stamp_name].total_value = stamp.value
             logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
             continue
 
@@ -1139,10 +1139,10 @@ def _calculate_w2_islands_trash(account):
     for item in islands_trash_shop_costs:
         account.islands['Trash Island'][item] = {'Cost': islands_trash_shop_costs[item]}
     #Onetime purchases
-    account.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = account.stamps['Skelefish Stamp']['Delivered'] or account.stored_assets.get('StampB47').amount > 0
-    account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp']['Delivered'] or account.stored_assets.get('StampB32').amount > 0
-    account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp']['Delivered'] or account.stored_assets.get('StampA38').amount > 0
-    account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp']['Delivered'] or account.stored_assets.get('StampA39').amount > 0
+    account.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = account.stamps['Skelefish Stamp'].delivered or account.stored_assets.get('StampB47').amount > 0
+    account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp'].delivered or account.stored_assets.get('StampB32').amount > 0
+    account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp'].delivered or account.stored_assets.get('StampA38').amount > 0
+    account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp'].delivered or account.stored_assets.get('StampA39').amount > 0
     account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Trash Island']['Random Garbage'] >= 0
 
     #Repeated purchases
@@ -1258,7 +1258,7 @@ def _calculate_w3_collider_cost_reduction(account):
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
         + account.alchemy_bubbles['Atom Split']['BaseValue']
-        + account.stamps['Atomic Stamp']['Total Value']
+        + account.stamps['Atomic Stamp'].total_value
         + account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']
         + account.compass['Upgrades']['Atomic Cost Crash']['Total Value']
     )
@@ -2177,7 +2177,7 @@ def _calculate_w6_farming_crop_evo(account):
         * ValueToMulti(account.farming['Evo']['Vial Value'])
     )
     # Stamp
-    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp']['Total Value'])
+    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp'].total_value)
     # Meals
     account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
     account.farming['Evo']['Meals Multi'] = (
@@ -2485,7 +2485,7 @@ def _calculate_general_crystal_spawn_chance(account):
 
     account_wide = (
         base_crystal_chance
-        * ValueToMulti(account.stamps['Crystallin']['Total Value'])
+        * ValueToMulti(account.stamps['Crystallin'].total_value)
         * ValueToMulti(total_card_chance)
     )
 

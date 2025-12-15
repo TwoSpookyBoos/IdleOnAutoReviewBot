@@ -189,22 +189,22 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         ))
     # Stamps - Golden Sixes
     golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
-    if not golden_sixes_stamp['Exalted']:
+    if not golden_sixes_stamp.exalted:
         golden_sixes_buffs.append('Exalting the stamp')
     if len(golden_sixes_buffs) == 0:
         golden_sixes_addl_text = f"Note: Can be further increased by Exalted {{{{Stamp|#stamps}}}} bonuses"
     else:
         golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
 
-    golden_sixes_bonus = golden_sixes_stamp['Total Value']
+    golden_sixes_bonus = golden_sixes_stamp.total_value
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{round(golden_sixes_stamp['Total Value'], 1):g}% Drop Rate"
+              f"<br>+{round(golden_sixes_stamp.total_value, 1):g}% Drop Rate"
               f"<br>{golden_sixes_addl_text}",
         picture_class='golden-sixes-stamp',
-        progression=golden_sixes_stamp['Level'],
-        resource=golden_sixes_stamp['Material'].name,
-        goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp['Delivered'] else 1
+        progression=golden_sixes_stamp.level,
+        resource=golden_sixes_stamp.material.name,
+        goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp.delivered else 1
     ))
     world_1_bonus += golden_sixes_bonus
 

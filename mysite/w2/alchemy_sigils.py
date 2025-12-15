@@ -36,7 +36,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     )
     willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
 
-    player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp']['Total Value']
+    player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
     goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
 
@@ -144,9 +144,9 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mga_label].append(Advice(
         label=f"Sigil Stamp: +{player_sigil_stamp_value:.3f}/{goal_sigil_stamp_value:.3f}%",
         picture_class='sigil-stamp',
-        progression=session_data.account.stamps['Sigil Stamp']['Level'],
+        progression=session_data.account.stamps['Sigil Stamp'].level,
         goal=stamp_maxes['Sigil Stamp'],
-        resource=session_data.account.stamps['Sigil Stamp']['Material'].name,
+        resource=session_data.account.stamps['Sigil Stamp'].material.name,
     ))
 
     # Multi Group B

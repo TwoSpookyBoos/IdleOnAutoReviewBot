@@ -272,11 +272,11 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Stamp
     speed_Advices.append(Advice(
-        label=f"Stamp: Biblio Stamp: +{session_data.account.stamps['Biblio Stamp']['Level']}%",
+        label=f"Stamp: Biblio Stamp: +{session_data.account.stamps['Biblio Stamp'].level}%",
         picture_class='biblio-stamp',
-        progression=session_data.account.stamps["Biblio Stamp"]['Level'],
+        progression=session_data.account.stamps["Biblio Stamp"].level,
         goal=stamp_maxes['Biblio Stamp'],
-        resource=session_data.account.stamps["Biblio Stamp"]['Material'].name,
+        resource=session_data.account.stamps["Biblio Stamp"].material.name,
     ))
 
     # Superbit
