@@ -321,13 +321,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
                 goal=max_sailing_artifact_level
             ),
-            Advice(
-                label=f"Sailboat Stamp: +{sailboat_stamp.total_value:.2f}%",
-                picture_class='Sailboat Stamp',
-                progression=sailboat_stamp.level,
-                goal=stamp_maxes['Sailboat Stamp'],
-                resource=sailboat_stamp.material.name,
-            ),
+            session_data.account.stamps['Sailboat Stamp'].get_advice(),
             Advice(
                 label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",
                 picture_class=boat_statue['Image'],

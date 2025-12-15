@@ -90,8 +90,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=session_data.account.family_bonuses['Maestro']['Level'],
         goal=328
     ))
-    psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice())
-    psr_Advices[account_subgroup].append(session_data.account.stamps['Stample Stamp'].get_advice())
+    psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice(goal_override=32))
+    psr_Advices[account_subgroup].append(session_data.account.stamps['Stample Stamp'].get_advice(goal_override=60))
     psr_Advices[account_subgroup].append(Advice(
         label=f"Lab Bonus: Certified Stamp Book: "
               f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",

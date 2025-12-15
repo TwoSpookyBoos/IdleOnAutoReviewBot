@@ -1763,14 +1763,16 @@ class Stamp:
     exalted: bool
     total_value: float = 0
 
-    def get_advice(self, link_to_section: bool = True):
+    def get_advice(self, link_to_section: bool = True, additional_text: str = "", goal_override = ""):
         link_to_section_text = f"{{{{ Stamps|#stamps }}}} - " if link_to_section else ""
         effect_text = f" {self.effect}" if not self.effect.startswith('%') else self.effect
+        unlock_text = "Unlock " if not self.delivered else ""
+        body_text = f": +{round_and_trim(self.total_value)}{effect_text}{additional_text}" if self.delivered else ""
         return Advice(
-            label=f"{link_to_section_text}{self.name}: +{round_and_trim(self.total_value)}{effect_text}",
+            label=f"{link_to_section_text}{unlock_text}{self.name}{body_text}",
             resource=self.material.name,
             progression=self.level,
-            goal=stamp_maxes.get(self.name, EmojiType.INFINITY.value),
+            goal=(goal_override if goal_override else stamp_maxes.get(self.name, EmojiType.INFINITY.value)) if self.delivered else 1,
             picture_class=self.name,
         )
 

@@ -199,15 +199,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
 
     golden_sixes_bonus = golden_sixes_stamp.total_value
-    drop_rate_aw_advice[w1].append(Advice(
-        label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{round(golden_sixes_stamp.total_value, 1):g}% Drop Rate"
-              f"<br>{golden_sixes_addl_text}",
-        picture_class='golden-sixes-stamp',
-        progression=golden_sixes_stamp.level,
-        resource=golden_sixes_stamp.material.name,
-        goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp.delivered else 1
-    ))
+    drop_rate_aw_advice[w1].append(golden_sixes_stamp.get_advice(additional_text=f"<br>{golden_sixes_addl_text}"))
     world_1_bonus += golden_sixes_bonus
 
     drop_rate_aw_advice[f"{w1} - +{round(world_1_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w1)

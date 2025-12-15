@@ -142,13 +142,7 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=anearful_vial['Level'],
                 goal=max_vial_level
             ),
-            Advice(
-                label=f"Card Stamp: +{card_stamp.total_value:.2f}%",
-                picture_class='Card Stamp',
-                progression=card_stamp.level,
-                goal=stamp_maxes['Card Stamp'],
-                resource=card_stamp.material.name,
-            ),
+            session_data.account.stamps['Card Stamp'].get_advice(),
             Advice(
                 label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
                 picture_class='card-champ',

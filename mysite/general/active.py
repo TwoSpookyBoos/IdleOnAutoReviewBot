@@ -488,7 +488,13 @@ def getConsumablesAdviceList() -> list[Advice]:
                 goal="100K"
             ))
     if session_data.account.stamps['Mason Jar Stamp'].level < stamp_maxes['Mason Jar Stamp']:
-        consumables.append(session_data.account.stamps['Mason Jar Stamp'].get_advice())
+        consumables.append(Advice(
+            label=f"Candy Glass Shards for Mason Jar Stamp",
+            picture_class='mason-jar-stamp',
+            progression=session_data.account.stamps['Mason Jar Stamp'].level,
+            goal=stamp_maxes['Mason Jar Stamp'],
+            resource='x1-hr-time-candy'
+        ))
     if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"

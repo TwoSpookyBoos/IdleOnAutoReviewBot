@@ -35,7 +35,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     for card_name in cards:
         crystal_Advices.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice('Minimum 3 star'))
 
-    crystal_Advices.append(session_data.account.stamps['Crystallin'].get_advice())
+    crystal_Advices.append(session_data.account.stamps['Crystallin'].get_advice(additional_text=" (Minimum level 100)", goal_override=100))
     crystal_Advices.append(Advice(
         label=f"Star Talent 'Crystals 4 Dayys' obtained by completing Picnic Stowaway's quest: \"The Last Supper, at Least for Today\"",
         picture_class='crystals-4-dayys',
