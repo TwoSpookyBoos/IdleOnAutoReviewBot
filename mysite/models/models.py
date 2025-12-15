@@ -9,6 +9,9 @@ from enum import Enum
 from math import ceil, floor
 from typing import Any, Union, TypeVar
 from flask import g
+from flask.ctx import _AppCtxGlobals
+from werkzeug.local import LocalProxy
+
 from config import app
 from consts.consts_autoreview import ignorable_labels, lowest_accepted_version, EmojiType
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
@@ -1710,7 +1713,7 @@ class Account:
             'Total Slots Max': 0
         }
         #W1
-        self.stamps: dict[str, Stamp] = {}
+        self.stamps: Stamps = Stamps()
         self.stamp_totals: dict[str, int] = {"Total": 0}
         for stamp_type in stamp_types:
             self.stamp_totals[stamp_type] = 0
@@ -1771,6 +1774,10 @@ class Stamp:
             picture_class=self.name,
         )
 
+class Stamps(dict[str, Stamp]):
+    def __init__(self):
+        super().__init__()
+
 @dataclass
 class StampItemDefinition(ItemDefinition):
     stamp_bonus: StampBonus
@@ -1785,3 +1792,9 @@ class ItemDefinitions(dict[str, ItemDef]):
 
     def get_capacity_stamps(self) -> list[StampItemDefinition]:
         return [stamp for stamp in self.get_all_stamps() if 'Carry Cap' in stamp.stamp_bonus.effect]
+
+@dataclass
+class SessionData(_AppCtxGlobals):
+    account: Account
+
+session_data: SessionData = LocalProxy(lambda: g)

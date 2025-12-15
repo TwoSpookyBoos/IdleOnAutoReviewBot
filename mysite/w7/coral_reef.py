@@ -1,8 +1,7 @@
 from consts.consts_autoreview import ValueToMulti, EmojiType
-from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level
-from models.models import AdviceSection, AdviceGroup, Advice, Card
-from flask import g as session_data
+
+from models.models import AdviceSection, AdviceGroup, Advice, Card, session_data
 
 from models.models_util import get_coral_reef_advice, get_companion_advice, get_gem_shop_purchase_advice
 

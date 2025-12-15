@@ -1,11 +1,12 @@
-from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, \
+    caverns_engineer_schematics_unlock_order, max_schematics, \
+    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, \
+    caverns_measurement_percent_goals, getMaxEngineerLevel
+from consts.progression_tiers import true_max_tiers
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
-from flask import g as session_data
-from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, max_schematics, \
-    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, caverns_measurement_percent_goals, getMaxEngineerLevel
-from consts.consts_w1 import stamp_maxes
 
 #villagers_progressionTiers,
 

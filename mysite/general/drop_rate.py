@@ -1,5 +1,7 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset
+
+from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset, \
+    session_data
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
@@ -16,7 +18,7 @@ from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
 from math import floor
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

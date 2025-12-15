@@ -1,8 +1,9 @@
-from flask import g as session_data
+
 
 from consts.consts_autoreview import break_you_best
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 
 
 def getP2WProgressionTiersAdviceGroup(highest_alchemy_level):

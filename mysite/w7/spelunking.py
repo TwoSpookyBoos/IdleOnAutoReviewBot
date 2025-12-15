@@ -1,8 +1,9 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup
+
+from models.models import AdviceSection, AdviceGroup, session_data
 from models.models_util import get_spelunking_cavern_bonus_advice
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 

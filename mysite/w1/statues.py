@@ -1,11 +1,12 @@
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_get
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 from utils.text_formatting import pl
 

@@ -1,13 +1,14 @@
 import copy
 
 from consts.consts_idleon import lavaFunc
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count

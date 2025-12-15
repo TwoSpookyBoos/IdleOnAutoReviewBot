@@ -1,17 +1,16 @@
 from math import ceil, floor
 
-from models.models import AdviceSection, AdviceGroup, Advice
-from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.logging import get_logger
-from utils.safer_data_handling import safer_math_pow
-from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
 from consts.consts_idleon import max_characters
-from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, getRequiredCropNumber
-from consts.consts_w4 import max_meal_level
 from consts.consts_w2 import max_vial_level
-from consts.consts_w1 import stamp_maxes
+from consts.consts_w4 import max_meal_level
+from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, \
+    getRequiredCropNumber
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from utils.logging import get_logger
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.safer_data_handling import safer_math_pow
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)

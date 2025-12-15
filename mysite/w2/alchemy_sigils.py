@@ -1,12 +1,13 @@
 from collections import defaultdict
-from flask import g as session_data
+
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, sigils_dict
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
-from models.models import AdviceGroup, Advice, AdviceSection
+
+from models.models import AdviceGroup, Advice, AdviceSection, session_data
 from models.models_util import get_gem_shop_purchase_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl

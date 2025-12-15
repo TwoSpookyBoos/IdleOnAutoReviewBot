@@ -1,11 +1,11 @@
 import math
 
-from consts.consts_w1 import stamp_maxes
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
-from flask import g as session_data
+
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert

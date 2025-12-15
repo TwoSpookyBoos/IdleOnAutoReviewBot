@@ -1,30 +1,36 @@
 from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
-from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, greenstack_amount
-from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
-    get_seraph_stacks, seraph_max
-from consts.consts_monster_data import decode_monster_name
-from consts.consts_w1 import statues_dict
-from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
-from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never, filter_only_after_gstack
 from consts.consts_caverns import (
-    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
-    caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses, getBellImprovementBonus
+    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings,
+    schematics_unlocking_harp_chords,
+    caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses,
+    getBellImprovementBonus
 )
-from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
-from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
+    greenstack_amount
+from consts.consts_idleon import lavaFunc, base_crystal_chance
+from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
+from consts.consts_monster_data import decode_monster_name
+from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
+    get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
+    get_seraph_stacks, seraph_max
+from consts.consts_w1 import statues_dict
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
+from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
+from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
+    filter_recipes, filter_never, filter_only_after_gstack
+from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, \
+    summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.progression_tiers import owl_bonuses_of_orion
-from models.models import Advice, Account
+from models.models import Advice
 from models.models_util import get_upgrade_vault_advice, get_gem_shop_purchase_advice
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
-from utils.all_talentsDict import all_talentsDict
 
 logger = get_logger(__name__)
 

@@ -1,5 +1,5 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection, Character
+from models.models import Advice, AdviceGroup, AdviceSection, Character, session_data
 from consts.consts_idleon import pearlable_skills_list, lavaFunc, current_world, max_characters
 from consts.consts_general import cards_max_level
 from consts.consts_w1 import stamp_maxes
@@ -9,7 +9,7 @@ from consts.consts_w4 import cooking_close_enough
 from models.models_util import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber

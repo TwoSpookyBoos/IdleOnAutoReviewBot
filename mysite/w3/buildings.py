@@ -2,9 +2,9 @@ import copy
 
 from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers, true_max_tiers
-from flask import g as session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
 
 

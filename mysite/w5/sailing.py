@@ -3,12 +3,13 @@ from collections import defaultdict
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
-from models.models import AdviceSection, AdviceGroup, Advice, Card, Character
+
+from models.models import AdviceSection, AdviceGroup, Advice, Card, Character, session_data
 from models.models_util import get_sailing_artifact_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles, max_meal_level

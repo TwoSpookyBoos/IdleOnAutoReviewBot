@@ -1,8 +1,9 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import break_keep_it_up, EmojiType
 from consts.consts_w3 import refinery_max_powerpercycle, refinery_max_rank_panda, refinery_max_rank_no_panda
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from math import floor, ceil
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion

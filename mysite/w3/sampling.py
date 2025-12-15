@@ -1,7 +1,7 @@
 import math
-from flask import g as session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_companion_advice
 from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion

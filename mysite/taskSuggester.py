@@ -1,14 +1,15 @@
 from pathlib import Path
 
 import yaml
-from flask import g as session_data
+
 
 import models.account_calcs
 import models.account_parser
 from config import app
 from consts.consts_autoreview import versions_patches, lowest_accepted_version
+
 from models.custom_exceptions import UsernameBanned, VeryOldDataException
-from models.models import AdviceWorld, WorldName, Account
+from models.models import AdviceWorld, WorldName, Account, session_data
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username

@@ -1,8 +1,9 @@
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 # from consts.consts import glowshroom_tunnels_progressionTiers, break_you_best, ValueToMulti
 from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, monument_layer_rewards, justice_monument_currencies, harp_notes, \
     getMotherlodeEfficiencyRequired, getMonumentOpalChance, getHarpNoteUnlockCost

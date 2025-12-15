@@ -1,6 +1,5 @@
-from flask import g as session_data
 
-from models.models import TabbedAdviceGroup, AdviceGroup
+from models.models import TabbedAdviceGroup, AdviceGroup, session_data
 
 
 def add_tabbed_advice_group_or_spread_advice_group_list(src: dict, target: TabbedAdviceGroup, tabbed_key_name: str):

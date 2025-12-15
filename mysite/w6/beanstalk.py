@@ -1,10 +1,11 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w6 import gfood_codes, BEANSTACK_GOAL, SUPER_BEANSTACK_GOAL, gfood_data
 from consts.progression_tiers import true_max_tiers, beanstalk_progressionTiers
-from models.models import AdviceSection, Advice, AdviceGroup
+
+from models.models import AdviceSection, Advice, AdviceGroup, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import getItemDisplayName
-from flask import g as session_data
+
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
