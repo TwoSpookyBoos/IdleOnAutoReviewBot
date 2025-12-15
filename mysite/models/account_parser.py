@@ -2979,11 +2979,11 @@ def _parse_caverns_motherlode(account, raw_caverns_list):
     cavern_name = 'Motherlode'
     motherlode_offset = 0
     try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset] or 0
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0.0)
     except:
         account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
     try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset] or 0
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
     except:
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
