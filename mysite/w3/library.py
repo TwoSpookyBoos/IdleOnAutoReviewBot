@@ -271,13 +271,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     ))
 
     # Stamp
-    speed_Advices.append(Advice(
-        label=f"Stamp: Biblio Stamp: +{session_data.account.stamps['Biblio Stamp'].level}%",
-        picture_class='biblio-stamp',
-        progression=session_data.account.stamps["Biblio Stamp"].level,
-        goal=stamp_maxes['Biblio Stamp'],
-        resource=session_data.account.stamps["Biblio Stamp"].material.name,
-    ))
+    speed_Advices.append(session_data.account.stamps['Biblio Stamp'].get_advice())
 
     # Superbit
     gaming_level = max(session_data.account.all_skills['Gaming'])

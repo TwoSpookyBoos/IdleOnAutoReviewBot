@@ -73,13 +73,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Godshard Ore card
     cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp'].total_value:.2f}/57.50%"
-              f"<br>Note: Exalting the stamp will take it over the goal listed above",
-        picture_class='forge-stamp',
-        progression=session_data.account.stamps['Forge Stamp'].level,
-        goal=stamp_maxes['Forge Stamp']
-    ))
+    cap_Advices['Scaling Sources'].append(session_data.account.stamps['Forge Stamp'].get_advice())
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices['Scaling Sources'].append(Advice(

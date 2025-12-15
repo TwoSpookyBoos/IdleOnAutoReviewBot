@@ -48,12 +48,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         progression=session_data.account.labChips.get('Omega Motherboard', 0),
         goal=1
     ))
-    crystal_Advice[aw].append(Advice(
-        label=f"Level {session_data.account.stamps['Crystallin'].level}/{stamp_maxes['Crystallin']} Crystallin Stamp: {1 + session_data.account.stamps['Crystallin'].total_value / 100:.3f}x",
-        picture_class="crystallin",
-        progression=session_data.account.stamps['Crystallin'].level,
-        goal=stamp_maxes['Crystallin']
-    ))
+    crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
     crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     crystal_Advice[aw].append(Advice(
@@ -493,13 +488,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 goal="100K"
             ))
     if session_data.account.stamps['Mason Jar Stamp'].level < stamp_maxes['Mason Jar Stamp']:
-        consumables.append(Advice(
-            label=f"Candy Glass Shards for Mason Jar Stamp",
-            picture_class='mason-jar-stamp',
-            progression=session_data.account.stamps['Mason Jar Stamp'].level,
-            goal=stamp_maxes['Mason Jar Stamp'],
-            resource='x1-hr-time-candy'
-        ))
+        consumables.append(session_data.account.stamps['Mason Jar Stamp'].get_advice())
     if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"

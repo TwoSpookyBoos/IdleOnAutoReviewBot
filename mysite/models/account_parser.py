@@ -1219,38 +1219,42 @@ def _parse_w1_stamps(account):
                     except:
                         logger.exception(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
     all_stamps = ITEM_DATA.get_all_stamps()
-    for stamp in all_stamps:
-        stamp_type = stamp_types[letterToNumber(stamp.code_name.split('Stamp')[1][0].lower()) - 1]
+    for stamp_definition in all_stamps:
+        stamp_type = stamp_types[letterToNumber(stamp_definition.code_name.split('Stamp')[1][0].lower()) - 1]
         try:
-            stamp_level = safer_convert(raw_stamps_dict.get(stamp.code_name, 0), 0)
-            account.stamps[stamp.name] = Stamp(
-                name=stamp.name,
-                material=ITEM_DATA.get_item_from_codename(stamp.stamp_bonus.code_material),
+            stamp_level = safer_convert(raw_stamps_dict.get(stamp_definition.code_name, 0), 0)
+            account.stamps[stamp_definition.name] = Stamp(
+                name=stamp_definition.name,
+                code_name=stamp_definition.code_name,
+                material=ITEM_DATA.get_item_from_codename(stamp_definition.stamp_bonus.code_material),
+                effect=stamp_definition.stamp_bonus.effect,
                 level=stamp_level,
-                max_level=safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0),
-                delivered=safer_convert(raw_stamp_max_dict.get(stamp.code_name, 0), 0) > 0,
+                max_level=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0),
+                delivered=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0) > 0,
                 stamp_type=stamp_type,
                 value=lavaFunc(
-                    stamp.stamp_bonus.scaling_type,
+                    stamp_definition.stamp_bonus.scaling_type,
                     stamp_level,
-                    stamp.stamp_bonus.x1,
-                    stamp.stamp_bonus.x2,
+                    stamp_definition.stamp_bonus.x1,
+                    stamp_definition.stamp_bonus.x2,
                 ),
                 exalted=False
             )
-            account.stamp_totals['Total'] += account.stamps[stamp.name].level
-            account.stamp_totals[stamp_type] += account.stamps[stamp.name].level
+            account.stamp_totals['Total'] += account.stamps[stamp_definition.name].level
+            account.stamp_totals[stamp_type] += account.stamps[stamp_definition.name].level
         except Exception as e:
             logger.warning(f"Stamp Parse error at {stamp_type}: {e}. Defaulting to Undelivered")
-            account.stamps[stamp.name] = Stamp(
-                name=stamp.name,
+            account.stamps[stamp_definition.name] = Stamp(
+                name=stamp_definition.name,
+                code_name=stamp_definition.code_name,
                 level=0,
                 max_level=0,
                 delivered=False,
                 stamp_type=stamp_type,
                 value=0,
                 exalted=False,
-                material=None
+                material=None,
+                effect=""
             )
     _parse_master_classes_exalted_stamps(account)
 

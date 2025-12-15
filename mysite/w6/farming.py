@@ -409,14 +409,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    evo_advices[stamp].append(Advice(
-        label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp'].value:.0f}%"
-              f"<br>Total Value after multis: {session_data.account.stamps['Crop Evo Stamp'].total_value:.2f}%",
-        picture_class='crop-evo-stamp',
-        progression=session_data.account.stamps['Crop Evo Stamp'].level,
-        goal=stamp_maxes['Crop Evo Stamp'],
-        resource=session_data.account.stamps['Crop Evo Stamp'].material.name,
-    ))
+    evo_advices[stamp].append(session_data.account.stamps['Crop Evo Stamp'].get_advice())
 
 #Meals
     evo_advices[meals].append(Advice(

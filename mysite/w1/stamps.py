@@ -97,13 +97,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         goal=1
     ))
     for cap_stamp in ITEM_DATA.get_capacity_stamps():
-        capacity_Advices['Stamps'].append(Advice(
-            label=f"{cap_stamp.name}: {round(session_data.account.stamps[cap_stamp.name].total_value, 2):g}%",
-            picture_class=cap_stamp.name,
-            progression=session_data.account.stamps[cap_stamp.name].level,
-            goal=stamp_maxes[cap_stamp.name],
-            resource=session_data.account.stamps[cap_stamp.name].material.name,
-        ))
+        capacity_Advices['Stamps'].append(session_data.account.stamps[cap_stamp.name].get_advice(link_to_section=False))
 
     # Account-Wide
     capacity_Advices['Account Wide'].append(Advice(

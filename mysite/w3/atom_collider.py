@@ -189,12 +189,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
     ))
 
-    cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp'].total_value:.3f}%",
-        picture_class='atomic-stamp',
-        progression=session_data.account.stamps['Atomic Stamp'].level,
-        resource=session_data.account.stamps['Atomic Stamp'].material.name,
-    ))
+    cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
 
     cr_advice.append(Advice(
         label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",

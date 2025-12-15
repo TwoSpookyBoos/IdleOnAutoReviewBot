@@ -466,12 +466,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
         progression=majiks['Study All Nighter']['Level'],
         goal=majiks['Study All Nighter']['MaxLevel']
     ))
-    villager_advice[speed_stats].append(Advice(
-        label=f"Group B: Study Hall {{{{ Stamp|#stamps }}}}: +{session_data.account.stamps['Study Hall Stamp'].total_value:.2f}%",
-        picture_class='study-hall-stamp',
-        progression=session_data.account.stamps['Study Hall Stamp'].level,
-        goal=stamp_maxes['Study Hall Stamp']
-    ))
+    villager_advice[speed_stats].append(session_data.account.stamps['Study Hall Stamp'].get_advice())
 
 
 # Study Stats

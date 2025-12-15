@@ -141,13 +141,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
         goal=max_vial_level
     ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"Sigil Stamp: +{player_sigil_stamp_value:.3f}/{goal_sigil_stamp_value:.3f}%",
-        picture_class='sigil-stamp',
-        progression=session_data.account.stamps['Sigil Stamp'].level,
-        goal=stamp_maxes['Sigil Stamp'],
-        resource=session_data.account.stamps['Sigil Stamp'].material.name,
-    ))
+    speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
     for color, battleNumber in {"Green": 9, "Yellow": 5, "Blue": 5, "Purple": 7, "Cyan": 3}.items():

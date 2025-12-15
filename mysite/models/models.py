@@ -10,11 +10,11 @@ from math import ceil, floor
 from typing import Any, Union, TypeVar
 from flask import g
 from config import app
-from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
+from consts.consts_autoreview import ignorable_labels, lowest_accepted_version, EmojiType
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
-from consts.consts_w1 import stamp_types
+from consts.consts_w1 import stamp_types, stamp_maxes
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
@@ -25,7 +25,7 @@ from consts.consts_w2 import alchemy_jobs_list, po_box_dict, get_obol_totals
 from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
-from utils.number_formatting import parse_number
+from utils.number_formatting import parse_number, round_and_trim
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
@@ -1749,14 +1749,27 @@ class StampBonus:
 @dataclass
 class Stamp:
     name: str
-    material: ItemDefinition | None
+    code_name: str
+    effect: str
+    delivered: bool
     level: int
     max_level: int
-    delivered: bool
-    stamp_type: str
+    material: ItemDefinition | None
     value: float
+    stamp_type: str
     exalted: bool
-    total_value: float = 0,
+    total_value: float = 0
+
+    def get_advice(self, link_to_section: bool = True):
+        link_to_section_text = f"{{{{ Stamps|#stamps }}}} - " if link_to_section else ""
+        effect_text = f" {self.effect}" if not self.effect.startswith('%') else self.effect
+        return Advice(
+            label=f"{link_to_section_text}{self.name}: +{round_and_trim(self.total_value)}{effect_text}",
+            resource=self.material.name,
+            progression=self.level,
+            goal=stamp_maxes.get(self.name, EmojiType.INFINITY.value),
+            picture_class=self.name,
+        )
 
 @dataclass
 class StampItemDefinition(ItemDefinition):
@@ -1764,7 +1777,7 @@ class StampItemDefinition(ItemDefinition):
 
 ItemDef = TypeVar("ItemDef", bound=ItemDefinition | StampItemDefinition)
 class ItemDefinitions(dict[str, ItemDef]):
-    def get_item_from_codename(self, codename: str) -> ItemDefinition:
+    def get_item_from_codename(self, codename: str) -> ItemDef:
         return next(item for code, item in self.items() if code == codename)
 
     def get_all_stamps(self) -> list[StampItemDefinition]:
