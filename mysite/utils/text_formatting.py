@@ -175,7 +175,7 @@ def notateNumber(inputType: str, inputValue: float | Decimal, decimals=2, overri
             else:
                 for k, v in stringToDecimal.items():
                     if abs(inputValue) >= v:
-                        result = f"{round(inputValue / Decimal(v), decimals)}{k}"
+                        result = f"{(inputValue / Decimal(v)).quantize(decimals)}{k}"
                         break
         case "Match":
             if not overrideCharacter and isinstance(matchString, str):
@@ -186,9 +186,9 @@ def notateNumber(inputType: str, inputValue: float | Decimal, decimals=2, overri
                 else:
                     overrideCharacter = ''
             if overrideCharacter and overrideCharacter.isalpha():
-                result = f"{round(inputValue / Decimal(stringToDecimal[overrideCharacter.upper()]), decimals)}{overrideCharacter.upper()}"
+                result = f"{(inputValue / Decimal(stringToDecimal[overrideCharacter.upper()])).quantize(decimals)}{overrideCharacter.upper()}"
             elif overrideCharacter and overrideCharacter.isdigit():
-                result = f"{round(inputValue / Decimal(f'1e{overrideCharacter}'), decimals)}e+{overrideCharacter}"
+                result = f"{(inputValue / Decimal(f'1e{overrideCharacter}')).quantize(decimals)}e+{overrideCharacter}"
             else:
                 result = notateNumber('Basic', inputValue, decimals)
             # if matchString.upper() in stringToDecimal:
