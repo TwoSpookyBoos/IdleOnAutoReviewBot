@@ -2370,7 +2370,10 @@ def _calculate_w3_library_max_book_levels(account):
     account.library['MaxBookLevel'] = 100 + account.library['StaticSum'] + account.library['ScalingSum'] + account.library['SummoningSum']
 
 def _calculate_w3_equinox_max_levels(account):
-    bonus_equinox_levels = account.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
+    bonus_equinox_levels = (
+        account.summoning['Endless Bonuses'].get('+{ Equinox Max LV', 0)
+        + (10 * account.gaming['SuperBits']['Equinox Unending']['Unlocked'])
+    )
     if bonus_equinox_levels > 0:
         for bonus, bonus_details in account.equinox_bonuses.items():
             if bonus_details['SummoningExpands']:
