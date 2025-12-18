@@ -1240,6 +1240,10 @@ def _calculate_w3_collider_base_costs(account):
         if account.compass['Upgrades']['Atomic Potential']['Level'] > 0:
             account.atom_collider['Atoms'][atomName]['MaxLevel'] += account.compass['Upgrades']['Atomic Potential']['Total Value']
 
+        #Update max level if Higgs Boson Event Shop bought
+        if account.event_points_shop['Bonuses']['Higgs Boson']['Owned']:
+            account.atom_collider['Atoms'][atomName]['MaxLevel'] += 20
+
         #If atom isn't already at max level:
         if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
             # Calculate base cost to upgrade to next level
