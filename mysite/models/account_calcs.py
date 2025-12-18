@@ -1371,6 +1371,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
             0,
             1
         ))
+    # Grimoire Increases
     account.cooking['PlayerMaxPlateLvl'] += account.grimoire['Upgrades']['Supreme Head Chef Status']['Level']
     if account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'] < account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']:
         account.cooking['PlayerMissingPlateUpgrades'].append((
@@ -1378,6 +1379,16 @@ def _calculate_w4_cooking_max_plate_levels(account):
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Image'],
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'],  #progress
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
+        ))
+    # Spelunking Increases
+    if account.spelunk['Cave Bonuses'][5]['Owned']:
+        account.cooking['PlayerMaxPlateLvl'] += 30
+    else:
+        account.cooking['PlayerMissingPlateUpgrades'].append((
+            "Defeat the Boss of the Lunarheim Cave in {{Spelunking|#spelunking}}",
+            account.spelunk['Cave Bonuses'][5]['Image'],
+            0,
+            1
         ))
 
     account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
