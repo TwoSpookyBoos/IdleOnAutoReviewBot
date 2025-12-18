@@ -260,6 +260,10 @@ EquipmentHats120: Umbrella Brim
 EquipmentHats121: Bloo Creamer
 EquipmentHats122: Arcanist Crown
 EquipmentHats123: Prehistoric Battlehair
+EquipmentHats124: Alpine Beanie
+EquipmentHats125: Rudolph Antlers
+EquipmentHats126: Helper Elf Hat
+EquipmentHats127: Seal Team Skipper Hat
 EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
 TestObj14: Trojan Helmet
@@ -1520,6 +1524,7 @@ Liquid2: Liquid Nitrogen
 Liquid3: Trench Seawater
 Liquid4: Toxic Mercury
 Gfoodcoupon: Gold Food Coupon
+GfoodcouponS: Statue Coupon
 ItemsCoupon1: Resource Coupon
 ItemsCoupon2: Really Really Resource Coupon
 Quest14: Employment Statistics
@@ -1576,6 +1581,7 @@ EquipmentNametag27: Tome Master Nametag
 EquipmentNametag28: Tome Legend Nametag
 EquipmentNametag29: Reliquarium Nametag
 EquipmentNametag30: Cropfall Nametag
+EquipmentNametag31: Gingerbread Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1607,6 +1613,7 @@ EquipmentNametagReplica27: Tome Master Nametag
 EquipmentNametagReplica28: Tome Legend Nametag
 EquipmentNametagReplica29: Reliquarium Nametag
 EquipmentNametagReplica30: Cropfall Nametag
+EquipmentNametagReplica31: Gingerbread Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -1987,6 +1994,10 @@ Quest107: Arcane Fragment # for the Arcane Cultist
 Quest108: Stamina Battery
 Quest109: Cropfall Basket
 Quest110: Zenith Cluster
+Quest111: Green Candle
+Quest112: Funny 2hr Slice
+Quest113: Giftmas Gift
+Quest114: Glimmerwick Candle
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV

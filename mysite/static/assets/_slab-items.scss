@@ -436,6 +436,7 @@ $quest-items: (
     signed-contract: img('wiki/Signed_Contract.png'),
     shovel: img('wiki/Shovel.png'),
     rift-tear: img('wiki/Rift_Tear.png'),
+    funny-2hr-slice: img('data/Quest112.png'),
 );
 
 $seasonal-items: (
@@ -456,6 +457,9 @@ $seasonal-items: (
     choco-box: img('wiki/Choco_Box.png'),
     anniversary-box: img('wiki/Anniversary_Box.png'),
     birthday-candle: img('data/Quest95.png'),
+    green-candle: img('data/Quest111.png'),
+    giftmas-gift: img('data/Quest113.png'),
+    glimmerwick-candle: img('data/Quest114.png'),
 );
 
 $dungeon-items: (
@@ -1118,9 +1122,10 @@ $misc: (
     talent-point-special-tab: img('wiki/Talent_Point_Special_Tab.png'),
 
     // Coupons
-    gold-food-coupon: img('wiki/Gold_Food_Coupon.png'),
-    resource-coupon: img('wiki/Resource_Coupon.png'),
-    really-really-resource-coupon: img('wiki/Really_Really_Resource_Coupon.png'),
+    gold-food-coupon:               img('wiki/Gold_Food_Coupon.png'),
+    statue-coupon:                  img('data/GfoodcouponS.png'),
+    resource-coupon:                img('wiki/Resource_Coupon.png'),
+    really-really-resource-coupon:  img('wiki/Really_Really_Resource_Coupon.png'),
 
     // Anvil Tabs
     anvil-tab-i:    img('data/EquipmentSmithingTabs1.png'),
