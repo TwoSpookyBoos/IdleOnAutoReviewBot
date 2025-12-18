@@ -431,8 +431,8 @@ def getProgressionTiersAdviceGroup():
 
         # SpecificStampLevels
         for stamp_name, required_level in requirements.get('Stamps', {}).get('Specific', {}).items():
-            # if added_stamps.get(stamp_name, 0) >= required_level:
-            #     continue  #Don't add the same stamp/level combo into multiple tiers
+            if added_stamps.get(stamp_name, 0) >= required_level:
+                continue  #Don't add the same stamp/level combo into multiple tiers
             if player_stamps[stamp_name].level < required_level:
                 if (
                     (tier_number <= max_tier and exclusions_dict.get(stamp_name, False) == False)
