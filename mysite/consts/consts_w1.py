@@ -322,15 +322,26 @@ def get_statue_type_index_from_name(statue_type_name: str) -> int:
 
 # Found near end of `NinjaInfo` in source. Last updated in v2.43 Nov10
 NinjaInfo_event_shop = NinjaInfo[39]
-event_points_shop_dict = {
-    NinjaInfo_event_shop[index].split('@')[0].replace('_', ' ').strip(): {
+event_points_shop_dict = {}
+event_points_shop_duplicate_name_overrides = {
+    'Extra Page': 'Extra Page #2',
+    'Plain Showcase': 'The Scroll'
+}
+for index in range(0, len(NinjaInfo_event_shop), 2):
+    name = NinjaInfo_event_shop[index].split('@')[0].replace('_', ' ').strip()
+    if name in event_points_shop_dict:
+        override_name = event_points_shop_duplicate_name_overrides.get(name, 'UNKNOWN')
+        if override_name == 'UNKNOWN':
+            logger.warning(f"Found duplicate Event Shop item name '{name}' without override at index {index}")
+            name = f"{name} #{index}"
+        else:
+            name = override_name
+    event_points_shop_dict[name] = {
         'Cost': NinjaInfo_event_shop[index+1],
         'Code': numberToLetter(int(index/2)),
         'Image': f'event-shop-{int(index/2)}',
         'Description': NinjaInfo_event_shop[index].split('@')[1].replace('_', ' ').strip()
     }
-    for index in range(0, len(NinjaInfo_event_shop), 2)
-}
 
 # unnamed arrays in source. Last updated in v2.45 Nov 16
 # search for any of these string, they're unique enough to find quickly
