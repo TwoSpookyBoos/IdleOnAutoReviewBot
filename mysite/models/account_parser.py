@@ -1010,7 +1010,7 @@ def _parse_master_classes_exalted_stamps(account):
     for stamp in ITEM_DATA.get_all_stamps():
         stamp_codename = stamp.code_name.split('Stamp')[1]
         stamp_type_code = numberToLetter(letterToNumber(stamp_codename[0].lower()) - 1)
-        stamp_code = ''.join(stamp_codename[1:])
+        stamp_code = int(''.join(stamp_codename[1:])) - 1
         try:
             exalted_stamp_key = f"{stamp_type_code}{stamp_code}"
             # if exalted_stamp_key in raw_stamps_exalted:
