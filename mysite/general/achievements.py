@@ -1,7 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import achievement_categories
 from consts.consts_w6 import max_farming_crops

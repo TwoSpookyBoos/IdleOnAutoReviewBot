@@ -1,10 +1,11 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.text_formatting import notateNumber

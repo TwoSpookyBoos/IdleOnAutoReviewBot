@@ -1,5 +1,6 @@
 import re
-from consts.generated.item_data import item_data
+from consts.generated.raw_item_data import raw_item_data
+from models.models import ItemDefinition, StampItemDefinition, ItemDefinitions, StampBonus
 from utils.generate_data_dict import generate_data_dict
 from utils.number_formatting import parse_number
 from utils.logging import get_consts_logger
@@ -61,7 +62,9 @@ def extract_items(dump: str) -> dict:
         elif '.lvReqToCraft=' in line:
             lv_req_to_craft = extract_string_property('lvReqToCraft')
             try:
-                lv_req_to_craft = parse_number(lv_req_to_craft)
+                lv_req_to_craft = parse_number(lv_req_to_craft, -1)
+                if lv_req_to_craft == -1:
+                    continue
                 new_item['Level Required (Craft)'] = lv_req_to_craft
             except:
                 pass
@@ -114,7 +117,18 @@ def extract_items(dump: str) -> dict:
             # this branch finishes the item. Do any "final parsing" of an item here
             new_item['Code (Name)'] = next(re.finditer(r'addNew\S+\("([^"]+)"', line)).group(1)
 
-            # combine lines of description, replace any placeholders
+            # parse stamps
+            if new_item['Type'] == "STAMP":
+                _, scaling_type, x1, x2, _, material_code, _, _, _, _, _, effect, _ = new_item['Description']['1'].split(',')
+                new_item['Stamp Bonus'] = {
+                    'Effect': effect.replace('_', ' ').replace('{}', '').strip(),
+                    'Scaling Type': scaling_type,
+                    'x1': parse_number(x1, -1),
+                    'x2': parse_number(x2, -1),
+                    'Code (Material)': material_code,
+                }
+
+            # combine lines of description, replace placeholders, remove filler
             item_definitions[new_item['Code (Name)']] = new_item
             if 'Description' in new_item:
                 new_item['Description'] = ' '.join(
@@ -148,4 +162,34 @@ def extract_items(dump: str) -> dict:
 
 generate_data_dict(
     script_item_definitions + script_item_definitions_2 + script_item_definitions_3 + script_item_definitions_4 + script_item_definitions_5 + script_item_definitions_6,
-    extract_items, 'item_data', item_data)
+    extract_items, 'raw_item_data', raw_item_data)
+
+ITEM_DATA: ItemDefinitions = ItemDefinitions()
+
+for item_code, item in raw_item_data.items():
+    if item_code == "_hash":
+        continue
+    name = item['Name']
+    code_name = item['Code (Name)']
+    _type = item['Type']
+
+    if 'Stamp Bonus' in item:
+        stamp_bonus = item['Stamp Bonus']
+        ITEM_DATA[item['Code (Name)']] = StampItemDefinition(
+            name=name,
+            code_name=code_name,
+            type=_type,
+            stamp_bonus=StampBonus(
+                effect=stamp_bonus['Effect'],
+                code_material=stamp_bonus['Code (Material)'],
+                scaling_type=stamp_bonus['Scaling Type'],
+                x1=stamp_bonus['x1'],
+                x2=stamp_bonus['x2']
+            )
+        )
+        continue
+    ITEM_DATA[item['Code (Name)']] = ItemDefinition(
+        name=name,
+        code_name=code_name,
+        type=_type,
+    )

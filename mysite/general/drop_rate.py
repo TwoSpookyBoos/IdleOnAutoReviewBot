@@ -1,5 +1,7 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset
+
+from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset, \
+    session_data
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
@@ -15,8 +17,8 @@ from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
-from math import floor, ceil
-from flask import g as session_data
+from math import floor
+
 
 logger = get_logger(__name__)
 
@@ -189,23 +191,15 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         ))
     # Stamps - Golden Sixes
     golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
-    if not golden_sixes_stamp['Exalted']:
+    if not golden_sixes_stamp.exalted:
         golden_sixes_buffs.append('Exalting the stamp')
     if len(golden_sixes_buffs) == 0:
         golden_sixes_addl_text = f"Note: Can be further increased by Exalted {{{{Stamp|#stamps}}}} bonuses"
     else:
         golden_sixes_addl_text = f"Note: Can be increased by " + ", ".join(golden_sixes_buffs)
 
-    golden_sixes_bonus = golden_sixes_stamp['Total Value']
-    drop_rate_aw_advice[w1].append(Advice(
-        label=f"{{{{ Stamps|#stamps }}}}- Golden Sixes:"
-              f"<br>+{round(golden_sixes_stamp['Total Value'], 1):g}% Drop Rate"
-              f"<br>{golden_sixes_addl_text}",
-        picture_class='golden-sixes-stamp',
-        progression=golden_sixes_stamp['Level'],
-        resource=golden_sixes_stamp['Material'],
-        goal=stamp_maxes['Golden Sixes Stamp'] if golden_sixes_stamp['Delivered'] else 1
-    ))
+    golden_sixes_bonus = golden_sixes_stamp.total_value
+    drop_rate_aw_advice[w1].append(golden_sixes_stamp.get_advice(additional_text=f"<br>{golden_sixes_addl_text}"))
     world_1_bonus += golden_sixes_bonus
 
     drop_rate_aw_advice[f"{w1} - +{round(world_1_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w1)

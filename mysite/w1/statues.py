@@ -1,11 +1,12 @@
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_get
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 from utils.text_formatting import pl
 
@@ -34,12 +35,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     for card_name in cards:
         crystal_Advices.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice('Minimum 3 star'))
 
-    crystal_Advices.append(Advice(
-        label=f"Minimum 100 Crystallin Stamp: {session_data.account.stamps['Crystallin']['Level']} (+{session_data.account.stamps['Crystallin']['Total Value']:.3f}%)",
-        picture_class='crystallin',
-        progression=session_data.account.stamps['Crystallin']['Level'],
-        goal=100  #stamp_maxes['Crystallin']
-    ))
+    crystal_Advices.append(session_data.account.stamps['Crystallin'].get_advice(additional_text=" (Minimum level 100)", goal_override=100))
     crystal_Advices.append(Advice(
         label=f"Star Talent 'Crystals 4 Dayys' obtained by completing Picnic Stowaway's quest: \"The Last Supper, at Least for Today\"",
         picture_class='crystals-4-dayys',

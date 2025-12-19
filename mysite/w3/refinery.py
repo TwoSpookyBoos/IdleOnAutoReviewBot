@@ -1,10 +1,13 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import break_keep_it_up, EmojiType
+from consts.consts_w3 import refinery_max_powerpercycle, refinery_max_rank_panda, refinery_max_rank_no_panda
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from math import floor, ceil
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
+from utils.safer_data_handling import safer_math_pow
 
 logger = get_logger(__name__)
 
@@ -26,24 +29,30 @@ class Salt:
             self.consumption_of_previous_salt: int = session_data.account.refinery[salt_name]['PreviousSaltConsumption']
             self.next_salt_consumption: int = session_data.account.refinery[salt_name]['NextSaltConsumption']
             self.next_salt_cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['NextSaltCyclesPerSynthCycle']
-            self.output: int = int(floor((self.salt_rank ** 1.3) * (2 if has_companion("Panda") else 1))) * self.cycles_per_Synthesis_cycle
+            self.output: int = int(floor(min(refinery_max_powerpercycle, safer_math_pow(self.salt_rank, 1.3) * (2 if has_companion('Panda') else 1)))) * self.cycles_per_Synthesis_cycle
+            self.output_maxed = self.output >= refinery_max_powerpercycle
             if next_salt_rank != 0:
-                self.consumed: int = int(floor(next_salt_rank ** self.salt_consumption_scaling) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
+                self.consumed: int = int(floor(safer_math_pow(next_salt_rank, self.salt_consumption_scaling)) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
             else:
                 self.consumed: int = 0
             self.excess: bool = self.output >= self.consumed
             if self.excess:
-                self.excess_or_deficit: str = "excess"
+                self.excess_or_deficit: str = 'excess'
             else:
-                self.excess_or_deficit: str = "deficit"
+                self.excess_or_deficit: str = 'deficit'
             self.excess_amount: int = self.output - self.consumed
             if previousSalt is not None:
                 if previousSalt.excess is True:
                     if next_salt_rank != 0 or salt_name == 'Nullo':
-                        self.max_rank_with_excess: int = max(0, ceil(
-                            (previousSalt.output /
-                             (self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)) ** (1 / self.salt_consumption_scaling)) - 1)
-                    if self.max_rank_with_excess >= salt_rank:
+                        self.max_rank_with_excess: int = (
+                            max(0, ceil(safer_math_pow(
+                                (previousSalt.output / (self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)),
+                                (1 / self.salt_consumption_scaling)) - 1))
+                        )
+                    if self.output_maxed:
+                        self.max_rank_with_excess = salt_rank
+                        self.canBeLeveled = False
+                    elif self.max_rank_with_excess >= salt_rank:
                         self.canBeLeveled = True
                     else:
                         self.max_rank_with_excess = salt_rank
@@ -140,8 +149,8 @@ def getRefineryProgressionTierAdviceGroups():
                 label=f"{salt_dict['RedSalt'].salt_name} Production: Off",
                 picture_class=salt_dict['RedSalt'].image,
                 progression='Off',
-                goal='On')
-            )
+                goal='On'
+            ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Red Salt|#refinery }}}} is not producing",
                 picture_class=salt_dict['RedSalt'].image
@@ -209,43 +218,30 @@ def getRefineryProgressionTierAdviceGroups():
         ))
 
     # Excess and Deficits Advice
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Red Salt {salt_dict['RedSalt'].excess_or_deficit}",
-        picture_class=salt_dict['RedSalt'].image,
-        goal=f"{salt_dict['RedSalt'].excess_amount:,}"
-    ))
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Orange Salt {salt_dict['OrangeSalt'].excess_or_deficit}",
-        picture_class=salt_dict['OrangeSalt'].image,
-        goal=f"{salt_dict['OrangeSalt'].excess_amount:,}"
-    ))
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Blue Salt {salt_dict['BlueSalt'].excess_or_deficit}",
-        picture_class=salt_dict['BlueSalt'].image,
-        goal=f"{salt_dict['BlueSalt'].excess_amount:,}"
-    ))
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Green Salt {salt_dict['GreenSalt'].excess_or_deficit}",
-        picture_class=salt_dict['GreenSalt'].image,
-        goal=f"{salt_dict['GreenSalt'].excess_amount:,}"
-    ))
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Purple Salt {salt_dict['PurpleSalt'].excess_or_deficit}",
-        picture_class=salt_dict['PurpleSalt'].image,
-        goal=f"{salt_dict['PurpleSalt'].excess_amount:,}"
-    ))
-    refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-        label=f"Nullo Salt {salt_dict['NulloSalt'].excess_or_deficit}",
-        picture_class=salt_dict['NulloSalt'].image,
-        goal=f"{salt_dict['NulloSalt'].excess_amount:,}"
-    ))
+    for salt in salt_dict.values():
+        output_maxed_note = (
+            f"<br>Power Per Cycle max of {int(refinery_max_powerpercycle):,} has been reached! "
+            f"Ranking up won't create any more Salts per cycle."
+            if salt.output_maxed
+            else ''
+        )
+        refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
+            label=f"Rank {salt.salt_rank} {salt.salt_name} Salt: {salt.excess_or_deficit}"
+                  f"{output_maxed_note}",
+            picture_class=salt.image,
+            goal=f"{salt.excess_amount:,}"
+        ))
 
     # Ranks Advice
     refinery_AdviceDict['Tab1Ranks'].append(Advice(
         label='Red Salt',
         picture_class=salt_dict['RedSalt'].image,
         progression=salt_dict['RedSalt'].salt_rank,
-        goal=EmojiType.INFINITY.value
+        goal=(
+            salt_dict['RedSalt'].salt_rank if salt_dict['RedSalt'].output_maxed
+            else refinery_max_rank_panda if has_companion('Panda')
+            else refinery_max_rank_no_panda
+        )
     ))
     refinery_AdviceDict['Tab1Ranks'].append(Advice(
         label='Orange Salt',
@@ -263,7 +259,11 @@ def getRefineryProgressionTierAdviceGroups():
         label='Green Salt',
         picture_class=salt_dict['GreenSalt'].image,
         progression=salt_dict['GreenSalt'].salt_rank,
-        goal=EmojiType.INFINITY.value
+        goal=(
+            salt_dict['GreenSalt'].salt_rank if salt_dict['GreenSalt'].output_maxed
+            else refinery_max_rank_panda if has_companion('Panda')
+            else refinery_max_rank_no_panda
+        )
     ))
     refinery_AdviceDict['Tab2Ranks'].append(Advice(
         label='Purple Salt',

@@ -1,7 +1,8 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, AdviceType
 from consts.consts_w4 import max_meal_count, max_meal_level, cooking_close_enough
 from utils.text_formatting import pl

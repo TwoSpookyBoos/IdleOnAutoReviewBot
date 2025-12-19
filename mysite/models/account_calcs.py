@@ -1,31 +1,36 @@
-import math
 from math import ceil, floor, log2, prod
 
-from consts.consts_autoreview import ceilUpToBase, ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
-from consts.consts_idleon import lavaFunc, base_crystal_chance
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, greenstack_amount
-from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
-    get_seraph_stacks, seraph_max
-from consts.consts_monster_data import decode_monster_name
-from consts.consts_w1 import statues_dict
-from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
-from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, filter_recipes, filter_never, filter_only_after_gstack
+from consts.consts_autoreview import ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_caverns import (
-    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings, schematics_unlocking_harp_chords,
-    caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses, getBellImprovementBonus
+    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings,
+    schematics_unlocking_harp_chords,
+    caverns_conjuror_majiks, caverns_measurer_scalars, monument_names, released_monuments, monument_bonuses,
+    getBellImprovementBonus
 )
-from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
-from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
+    greenstack_amount
+from consts.consts_idleon import lavaFunc, base_crystal_chance
+from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
+from consts.consts_monster_data import decode_monster_name
+from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
+    get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
+    get_seraph_stacks, seraph_max
+from consts.consts_w1 import statues_dict
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
+from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
+from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
+    filter_recipes, filter_never, filter_only_after_gstack
+from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, \
+    summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.models import Advice
 from models.models_util import get_upgrade_vault_advice, get_gem_shop_purchase_advice
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
-from utils.all_talentsDict import all_talentsDict
 
 logger = get_logger(__name__)
 
@@ -978,16 +983,16 @@ def _calculate_w1_stamps(account):
         # TODO: + Legend Talent Bonus
     )
 
-    for stamp_name, stamp_values in account.stamps.items():
+    for stamp_name, stamp in account.stamps.items():
         try:
-            account.stamps[stamp_name]['Total Value'] = (
-                stamp_values['Value']
-                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp_values['StampType'] != 'Misc' else 1)
-                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp_values['StampType'] != 'Misc' else 1)
-                * (account.exalted_stamp_multi if stamp_values['Exalted'] else 1)
+            account.stamps[stamp_name].total_value = (
+                stamp.value
+                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp.stamp_type != 'Misc' else 1)
+                * (1.25 if account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] and stamp.stamp_type != 'Misc' else 1)
+                * (account.exalted_stamp_multi if stamp.exalted else 1)
             )
         except:
-            account.stamps[stamp_name]['Total Value'] = stamp_values['Value']
+            account.stamps[stamp_name].total_value = stamp.value
             logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
             continue
 
@@ -1140,10 +1145,10 @@ def _calculate_w2_islands_trash(account):
     for item in islands_trash_shop_costs:
         account.islands['Trash Island'][item] = {'Cost': islands_trash_shop_costs[item]}
     #Onetime purchases
-    account.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = account.stamps['Skelefish Stamp']['Delivered'] or account.stored_assets.get('StampB47').amount > 0
-    account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp']['Delivered'] or account.stored_assets.get('StampB32').amount > 0
-    account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp']['Delivered'] or account.stored_assets.get('StampA38').amount > 0
-    account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp']['Delivered'] or account.stored_assets.get('StampA39').amount > 0
+    account.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = account.stamps['Skelefish Stamp'].delivered or account.stored_assets.get('StampB47').amount > 0
+    account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp'].delivered or account.stored_assets.get('StampB32').amount > 0
+    account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp'].delivered or account.stored_assets.get('StampA38').amount > 0
+    account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp'].delivered or account.stored_assets.get('StampA39').amount > 0
     account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Trash Island']['Random Garbage'] >= 0
 
     #Repeated purchases
@@ -1235,6 +1240,10 @@ def _calculate_w3_collider_base_costs(account):
         if account.compass['Upgrades']['Atomic Potential']['Level'] > 0:
             account.atom_collider['Atoms'][atomName]['MaxLevel'] += account.compass['Upgrades']['Atomic Potential']['Total Value']
 
+        #Update max level if Higgs Boson Event Shop bought
+        if account.event_points_shop['Bonuses']['Higgs Boson']['Owned']:
+            account.atom_collider['Atoms'][atomName]['MaxLevel'] += 20
+
         #If atom isn't already at max level:
         if atomValuesDict['Level'] < atomValuesDict['MaxLevel']:
             # Calculate base cost to upgrade to next level
@@ -1259,7 +1268,7 @@ def _calculate_w3_collider_cost_reduction(account):
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
         + account.alchemy_bubbles['Atom Split']['BaseValue']
-        + account.stamps['Atomic Stamp']['Total Value']
+        + account.stamps['Atomic Stamp'].total_value
         + account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']
         + account.compass['Upgrades']['Atomic Cost Crash']['Total Value']
     )
@@ -1362,6 +1371,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
             0,
             1
         ))
+    # Grimoire Increases
     account.cooking['PlayerMaxPlateLvl'] += account.grimoire['Upgrades']['Supreme Head Chef Status']['Level']
     if account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'] < account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']:
         account.cooking['PlayerMissingPlateUpgrades'].append((
@@ -1369,6 +1379,16 @@ def _calculate_w4_cooking_max_plate_levels(account):
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Image'],
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'],  #progress
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
+        ))
+    # Spelunking Increases
+    if account.spelunk['Cave Bonuses'][5]['Owned']:
+        account.cooking['PlayerMaxPlateLvl'] += 30
+    else:
+        account.cooking['PlayerMissingPlateUpgrades'].append((
+            "Defeat the Boss of the Lunarheim Cave in {{Spelunking|#spelunking}}",
+            account.spelunk['Cave Bonuses'][5]['Image'],
+            0,
+            1
         ))
 
     account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
@@ -2178,7 +2198,7 @@ def _calculate_w6_farming_crop_evo(account):
         * ValueToMulti(account.farming['Evo']['Vial Value'])
     )
     # Stamp
-    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp']['Total Value'])
+    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp'].total_value)
     # Meals
     account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
     account.farming['Evo']['Meals Multi'] = (
@@ -2350,7 +2370,10 @@ def _calculate_w3_library_max_book_levels(account):
     account.library['MaxBookLevel'] = 100 + account.library['StaticSum'] + account.library['ScalingSum'] + account.library['SummoningSum']
 
 def _calculate_w3_equinox_max_levels(account):
-    bonus_equinox_levels = account.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
+    bonus_equinox_levels = (
+        account.summoning['Endless Bonuses'].get('+{ Equinox Max LV', 0)
+        + (10 * account.gaming['SuperBits']['Equinox Unending']['Unlocked'])
+    )
     if bonus_equinox_levels > 0:
         for bonus, bonus_details in account.equinox_bonuses.items():
             if bonus_details['SummoningExpands']:
@@ -2486,7 +2509,7 @@ def _calculate_general_crystal_spawn_chance(account):
 
     account_wide = (
         base_crystal_chance
-        * ValueToMulti(account.stamps['Crystallin']['Total Value'])
+        * ValueToMulti(account.stamps['Crystallin'].total_value)
         * ValueToMulti(total_card_chance)
     )
 
@@ -2643,9 +2666,10 @@ def _calculate_w1_statues(account):
     ]
 
 def _calculate_w7(account):
-    _calculate_advice_for_money(account)
+    _calculate_w7_advice_for_money(account)
+    _calculate_w7_coral_reef(account)
 
-def _calculate_advice_for_money(account):
+def _calculate_w7_advice_for_money(account):
     for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
         bonus_details["Value"] = bonus_details["Level"] / (bonus_details["Level"] + 100) * bonus_details["Bonus"]
         if "{" in bonus_details["Effect"]:
@@ -2653,3 +2677,7 @@ def _calculate_advice_for_money(account):
         elif "}" in bonus_details["Effect"]:
             bonus_details["Value"] = ValueToMulti(bonus_details["Value"])
             bonus_details["Effect"] = bonus_details["Effect"].replace("}", f"{bonus_details['Value']:.4f}")
+
+def _calculate_w7_coral_reef(account):
+    for coral_details in account.coral_reef['Reef Corals'].values():
+        coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))

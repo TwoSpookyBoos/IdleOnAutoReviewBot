@@ -1,8 +1,9 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best
 from consts.consts_w3 import max_possible_dreams
 from consts.progression_tiers import equinox_progressionTiers, true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
 from utils.text_formatting import pl
 

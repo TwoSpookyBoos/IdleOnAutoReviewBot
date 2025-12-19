@@ -11,15 +11,17 @@ from consts.consts_general import (
     guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
     vault_section_indexes, UpgradeVault, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
+from consts.consts_item_data import ITEM_DATA
 from consts.consts_master_classes import (
     grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
     compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
 )
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    bribes_dict, stamp_types, stamps_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
+    bribes_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions
+    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions,
+    stamp_types
 )
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
@@ -53,20 +55,20 @@ from consts.consts_w6 import (
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_regular_match_colors,
-    summoning_dict, summoning_endlessDict, summoning_battle_counts_dict, EmperorBon,
+    summoning_dict, summoning_endlessDict, EmperorBon,
     emperor_bonus_images, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, summoning_stone_fight_codenames, jade_emporium_order, pristine_charms_dict, summoning_matches_per_color_dict,
+    summoning_stone_boss_base_damage, jade_emporium_order, pristine_charms_dict,
     summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
-from consts.consts_w7 import spelunky_data, spelunking_cave_bonus_descriptions, spelunking_cave_names
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets
+from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
+from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Stamp
 from utils.data_formatting import getCharacterDetails
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -1005,18 +1007,19 @@ def _parse_master_classes_exalted_stamps(account):
         raw_compass.append([])
     raw_stamps_exalted = raw_compass[4]
 
-    for stampType in stamps_dict:
-        exalted_stamp_type = numberToLetter(stamp_types.index(stampType))
-        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
-            try:
-                exalted_stamp_key = f"{exalted_stamp_type}{stampIndex}"
-                # if exalted_stamp_key in raw_stamps_exalted:
-                #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
-                account.stamps[stampValuesDict['Name']]['Exalted'] = exalted_stamp_key in raw_stamps_exalted
-            except:
-                if raw_compass:
-                    logger.exception(f"Error parsing Exalted status for stamp {stampType}{stampIndex}: {stampValuesDict['Name']}")
-                account.stamps[stampValuesDict['Name']]['Exalted'] = False
+    for stamp in ITEM_DATA.get_all_stamps():
+        stamp_codename = stamp.code_name.split('Stamp')[1]
+        stamp_type_code = numberToLetter(letterToNumber(stamp_codename[0].lower()) - 1)
+        stamp_code = int(''.join(stamp_codename[1:])) - 1
+        try:
+            exalted_stamp_key = f"{stamp_type_code}{stamp_code}"
+            # if exalted_stamp_key in raw_stamps_exalted:
+            #     logger.debug(f"{stampType}{stampIndex} ({exalted_stamp_key}): {stampValuesDict['Name']} is Exalted")
+            account.stamps[stamp.name].exalted = exalted_stamp_key in raw_stamps_exalted
+        except:
+            if raw_compass:
+                logger.exception(f"Error parsing Exalted status for stamp {stamp_type_code}{stamp_code}: {stamp.name}")
+            account.stamps[stamp.name].exalted = False
 
 def _parse_master_classes_tesseract(account):
     account.tesseract = {
@@ -1193,62 +1196,66 @@ def _parse_w1_bribes(account):
             overall_bribe_index += 1
 
 def _parse_w1_stamps(account):
-    account.stamps = {}
-    account.stamp_totals = {"Total": 0}
-    for stampType in stamp_types:
-        account.stamp_totals[stampType] = 0
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))
     raw_stamps_dict = {}
-    for stampTypeIndex, stampTypeValues in enumerate(raw_stamps_list):
-        raw_stamps_dict[int(stampTypeIndex)] = {}
-        for stampKey, stampValue in stampTypeValues.items():
-            if stampKey != "length":
-                raw_stamps_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+    for stamp_type_index, stamp_type_stamps in enumerate(raw_stamps_list):
+        for stamp_key, stamp_level in stamp_type_stamps.items():
+            if stamp_key != "length":
+                stamp_code = f"Stamp{numberToLetter(stamp_type_index + 1).upper()}{int(stamp_key) + 1}"
+                raw_stamps_dict[stamp_code] = int(stamp_level)
     raw_stamp_max_list = safe_loads(account.raw_data.get("StampLvM", {0: {}, 1: {}, 2: {}}))
     raw_stamp_max_dict = {}
-    for stampTypeIndex, stampTypeValues in enumerate(raw_stamp_max_list):
-        raw_stamp_max_dict[int(stampTypeIndex)] = {}
-        for stampKey, stampValue in stampTypeValues.items():
-            if stampKey != "length":
+    for stamp_type_index, stamp_type_stamps in enumerate(raw_stamp_max_list):
+        for stamp_key, stamp_level in stamp_type_stamps.items():
+            if stamp_key != "length":
+                stamp_code = f"Stamp{numberToLetter(stamp_type_index + 1).upper()}{int(stamp_key) + 1}"
                 try:
-                    raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = int(stampValue)
+                    raw_stamp_max_dict[stamp_code] = int(stamp_level)
                 except:
-                    logger.exception(f"Unexpected stampTypeIndex {stampTypeIndex} or stampKey {stampKey} or stampValue: {stampValue}")
+                    logger.exception(f"Unexpected stamp_type_index {stamp_type_index} or stamp_key {stamp_key} or stamp_level: {stamp_level}")
                     try:
-                        raw_stamp_max_dict[int(stampTypeIndex)][int(stampKey)] = 0
-                        logger.debug(f"Able to set the value of stamp {stampTypeIndex}-{stampKey} to 0. Hopefully no accuracy was lost.")
+                        raw_stamp_max_dict[stamp_code] = 0
+                        logger.debug(f"Able to set the value of stamp {stamp_type_index}-{stamp_key} to 0. Hopefully no accuracy was lost.")
                     except:
                         logger.exception(f"Couldn't set the value to 0, meaning it was the Index or Key that was bad. You done messed up, cowboy.")
-    for stampType in stamps_dict:
-        for stampIndex, stampValuesDict in stamps_dict[stampType].items():
-            try:
-                account.stamps[stampValuesDict['Name']] = {
-                    'Index': stampIndex,
-                    'Material': stampValuesDict['Material'],
-                    'Level': safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Max': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                    'Delivered': safer_convert(raw_stamp_max_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0) > 0,
-                    'StampType': stampType,
-                    'Value': lavaFunc(
-                        stampValuesDict['funcType'],
-                        safer_convert(raw_stamps_dict.get(stamp_types.index(stampType), {}).get(stampIndex, 0), 0),
-                        stampValuesDict['x1'],
-                        stampValuesDict['x2'],
-                    ),
-                }
-                account.stamp_totals['Total'] += account.stamps[stampValuesDict['Name']]['Level']
-                account.stamp_totals[stampType] += account.stamps[stampValuesDict['Name']]['Level']
-            except Exception as e:
-                logger.warning(f"Stamp Parse error at {stampType} {stampIndex}: {e}. Defaulting to Undelivered")
-                account.stamps[stampValuesDict['Name']] = {
-                    "Index": stampIndex,
-                    "Level": 0,
-                    "Max": 0,
-                    "Delivered": False,
-                    "StampType": stampType,
-                    "Value": 0,
-                    'Exalted': False
-                }
+    all_stamps = ITEM_DATA.get_all_stamps()
+    for stamp_definition in all_stamps:
+        stamp_type = stamp_types[letterToNumber(stamp_definition.code_name.split('Stamp')[1][0].lower()) - 1]
+        try:
+            stamp_level = safer_convert(raw_stamps_dict.get(stamp_definition.code_name, 0), 0)
+            account.stamps[stamp_definition.name] = Stamp(
+                name=stamp_definition.name,
+                code_name=stamp_definition.code_name,
+                material=ITEM_DATA.get_item_from_codename(stamp_definition.stamp_bonus.code_material),
+                effect=stamp_definition.stamp_bonus.effect,
+                level=stamp_level,
+                max_level=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0),
+                delivered=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0) > 0,
+                stamp_type=stamp_type,
+                value=lavaFunc(
+                    stamp_definition.stamp_bonus.scaling_type,
+                    stamp_level,
+                    stamp_definition.stamp_bonus.x1,
+                    stamp_definition.stamp_bonus.x2,
+                ),
+                exalted=False
+            )
+            account.stamp_totals['Total'] += account.stamps[stamp_definition.name].level
+            account.stamp_totals[stamp_type] += account.stamps[stamp_definition.name].level
+        except Exception as e:
+            logger.warning(f"Stamp Parse error at {stamp_type}: {e}. Defaulting to Undelivered")
+            account.stamps[stamp_definition.name] = Stamp(
+                name=stamp_definition.name,
+                code_name=stamp_definition.code_name,
+                level=0,
+                max_level=0,
+                delivered=False,
+                stamp_type=stamp_type,
+                value=0,
+                exalted=False,
+                material=None,
+                effect=""
+            )
     _parse_master_classes_exalted_stamps(account)
 
 def _parse_w1_owl(account):
@@ -2979,11 +2986,11 @@ def _parse_caverns_motherlode(account, raw_caverns_list):
     cavern_name = 'Motherlode'
     motherlode_offset = 0
     try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = raw_caverns_list[11][0 + motherlode_offset] or 0
+        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0.0)
     except:
         account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
     try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = raw_caverns_list[11][1 + motherlode_offset] or 0
+        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
     except:
         account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
@@ -3950,10 +3957,11 @@ def _parse_w6_emperor(account):
 def _parse_w7(account):
     _parse_advice_for_money(account)
     _parse_w7_spelunk_cave_bonuses(account)
+    _parse_w7_coral_reef(account)
 
 def _parse_advice_for_money(account):
     # Dependencies: None
-    advice_for_money_upgrade_data = spelunky_data[18]
+    advice_for_money_upgrade_data = Spelunky[18]
     try:
         advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
     except:
@@ -4001,3 +4009,15 @@ def _parse_w7_spelunk_cave_bonuses(account):
                 'Image': f'spelunking-boss-{index}',
                 'Resource': f'spelunking-cavern-{index}'
             }
+
+def _parse_w7_coral_reef(account):
+    # Dependencies: None
+    town_corals_count = safer_index(safer_index(safe_loads(account.raw_data.get('Spelunk', [])),4, []), 5, 0)
+    account.coral_reef['Town Corals'] = town_corals_count
+
+    unlocked_reef_corals = safer_index(safe_loads(account.raw_data.get('Spelunk', [])),12 , [])
+    coral_levels = safer_index(safe_loads(account.raw_data.get('Spelunk', [])), 13, [])
+
+    for index, coral_data in enumerate(account.coral_reef['Reef Corals'].values()):
+        coral_data['Unlocked'] = bool(safer_index(unlocked_reef_corals, index, False))
+        coral_data['Level'] = safer_index(coral_levels, index, 0)

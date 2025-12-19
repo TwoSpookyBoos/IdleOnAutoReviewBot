@@ -2,8 +2,9 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import companions_data
 from consts.consts_w5 import max_sailing_artifact_level
-from models.models import Advice
-from flask import g as session_data
+
+from models.models import Advice, session_data
+
 from utils.misc.has_companion import has_companion
 from utils.logging import get_logger
 logger = get_logger(__name__)
@@ -129,3 +130,29 @@ def get_gem_shop_purchase_advice(
     )
     advice.resource = 'gem' if advice.percent < 100 else ''
     return advice
+
+
+def get_coral_reef_advice(coral_name: str) -> Advice:
+    upgrade = session_data.account.coral_reef['Reef Corals'][coral_name]
+    unlock_or_upgrade_text = 'Level up' if upgrade['Unlocked'] else "Unlock"
+    next_level_cost_text = f"<br>Next level costs {upgrade['Next Cost']} corals" if upgrade['Unlocked'] else ''
+    advice = Advice(
+        label=f"{unlock_or_upgrade_text} {coral_name}: {upgrade['Description']}{next_level_cost_text}",
+        picture_class=upgrade['Image'],
+        progression=upgrade['Level'],
+        goal=upgrade['Max Level'],
+        resource='coral',
+    )
+    return advice
+
+def get_event_shop_advice(bonus_name: str) -> Advice:
+    # TODO: add "Value" field to Event Shop Items so we can use this in other sections. Currently this generator is only useful for the Event Shop section
+    event_points_total = session_data.account.event_points_shop['Points Owned'] + session_data.account.all_assets.get("Quest89").amount
+    bonus = session_data.account.event_points_shop['Bonuses'][bonus_name]
+    return Advice(
+        label=f"{bonus_name}: {bonus['Description']}",
+        picture_class=bonus['Image'],
+        progression=1 if bonus['Owned'] else event_points_total,
+        goal=1 if bonus['Owned'] else bonus['Cost'],
+        resource='event-point' if not bonus['Owned'] else '',
+    )

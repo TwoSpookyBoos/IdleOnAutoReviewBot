@@ -1,7 +1,8 @@
-from models.models import AdviceSection, AdviceGroup, Advice, Character
+
+from models.models import AdviceSection, AdviceGroup, Advice, Character, session_data
 from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.progression_tiers import secret_class_progressionTiers, true_max_tiers
 from utils.text_formatting import pl

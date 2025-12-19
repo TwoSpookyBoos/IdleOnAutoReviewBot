@@ -1,11 +1,11 @@
 import math
 
-from consts.consts_w1 import stamp_maxes
-from models.models import Advice, AdviceGroup, AdviceSection
+
+from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
-from flask import g as session_data
+
 from models.models_util import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert
@@ -73,13 +73,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Godshard Ore card
     cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"{{{{ Forge Stamp|#stamps }}}}: +{session_data.account.stamps['Forge Stamp']['Total Value']:.2f}/57.50%"
-              f"<br>Note: Exalting the stamp will take it over the goal listed above",
-        picture_class='forge-stamp',
-        progression=session_data.account.stamps['Forge Stamp']['Level'],
-        goal=stamp_maxes['Forge Stamp']
-    ))
+    cap_Advices['Scaling Sources'].append(session_data.account.stamps['Forge Stamp'].get_advice())
 
     #Arcade Bonus 26 gives Forge Ore Capacity
     cap_Advices['Scaling Sources'].append(Advice(
@@ -110,7 +104,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
             advice.mark_advice_completed()
 
     groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
-    groupB = ValueToMulti(session_data.account.stamps['Forge Stamp']['Total Value'])
+    groupB = ValueToMulti(session_data.account.stamps['Forge Stamp'].total_value)
     groupC = ValueToMulti(bribe_value + beeg_forge['Total Value'])
     groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))
     groupE = majik_beeg_forge['Value']

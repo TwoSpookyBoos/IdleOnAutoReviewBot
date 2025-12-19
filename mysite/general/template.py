@@ -1,8 +1,8 @@
-from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
-from utils.logging import get_logger
-from flask import g as session_data
 from consts.consts_autoreview import break_you_best, build_subgroup_label
+from consts.progression_tiers import true_max_tiers
+
+from models.models import AdviceSection, AdviceGroup
+from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -39,9 +39,7 @@ def getTemplateAdviceSection() -> AdviceSection:
             tier='Not Yet Evaluated',
             header='Come back after unlocking Template!',
             picture='',
-            unrated=None,
             unreached=True,
-            completed=False
         )
         return template_AdviceSection
 
@@ -63,7 +61,6 @@ def getTemplateAdviceSection() -> AdviceSection:
         picture="",
         groups=template_AdviceGroupDict.values(),
         completed=None,
-        unrated=None,
     )
 
     return template_AdviceSection

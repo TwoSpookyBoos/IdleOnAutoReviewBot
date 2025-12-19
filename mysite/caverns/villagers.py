@@ -1,11 +1,12 @@
-from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
-from models.models import AdviceSection, AdviceGroup, Advice
+from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, \
+    caverns_engineer_schematics_unlock_order, max_schematics, \
+    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, \
+    caverns_measurement_percent_goals, getMaxEngineerLevel
+from consts.progression_tiers import true_max_tiers
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
-from flask import g as session_data
-from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, caverns_engineer_schematics_unlock_order, max_schematics, \
-    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, caverns_measurement_percent_goals, getMaxEngineerLevel
-from consts.consts_w1 import stamp_maxes
 
 #villagers_progressionTiers,
 
@@ -466,12 +467,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
         progression=majiks['Study All Nighter']['Level'],
         goal=majiks['Study All Nighter']['MaxLevel']
     ))
-    villager_advice[speed_stats].append(Advice(
-        label=f"Group B: Study Hall {{{{ Stamp|#stamps }}}}: +{session_data.account.stamps['Study Hall Stamp']['Total Value']:.2f}%",
-        picture_class='study-hall-stamp',
-        progression=session_data.account.stamps['Study Hall Stamp']['Level'],
-        goal=stamp_maxes['Study Hall Stamp']
-    ))
+    villager_advice[speed_stats].append(session_data.account.stamps['Study Hall Stamp'].get_advice())
 
 
 # Study Stats

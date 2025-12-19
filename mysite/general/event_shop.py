@@ -1,35 +1,31 @@
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.models_util import get_event_shop_advice
 from utils.logging import get_logger
-from flask import g as session_data
+
 
 logger = get_logger(__name__)
 
 def getEventShopAdviceGroup() -> AdviceGroup:
     event_points_total = session_data.account.event_points_shop['Points Owned'] + session_data.account.all_assets.get("Quest89").amount
-    es_advice = [
-        Advice(
-            label=f"{bonus_name}: {bonus_details['Description']}",
-            picture_class=bonus_details['Image'],
-            progression=1 if bonus_details['Owned'] else event_points_total,
-            goal=1 if bonus_details['Owned'] else bonus_details['Cost'],
-            resource='event-point' if not bonus_details['Owned'] else '',
-        ) for bonus_name, bonus_details in session_data.account.event_points_shop['Bonuses'].items()
+    event_shop_advice: list[Advice] = [
+        get_event_shop_advice(bonus_name) for bonus_name in session_data.account.event_points_shop['Bonuses'].keys()
     ]
 
-    es_advice.insert(0, Advice(
+    event_shop_advice.insert(0, Advice(
         label=f"Event Points owned: {event_points_total}",
         picture_class='event-point',
         completed=True,
         informational=True
     ))
-    for advice in es_advice:
+    for advice in event_shop_advice:
         if advice.resource == '':
             advice.mark_advice_completed()
 
     es_ag = AdviceGroup(
         tier='',
         pre_string='Seasonal Event Shop bonuses',
-        advices=es_advice,
+        advices=event_shop_advice,
         informational=True
     )
     return es_ag

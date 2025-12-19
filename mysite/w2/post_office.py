@@ -1,8 +1,9 @@
-from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab
+
+from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.logging import get_logger
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import post_office_progression_tiers, true_max_tiers
 from utils.text_formatting import kebab

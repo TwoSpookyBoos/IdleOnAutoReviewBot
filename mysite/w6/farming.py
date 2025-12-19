@@ -1,17 +1,16 @@
 from math import ceil, floor
 
-from models.models import AdviceSection, AdviceGroup, Advice
-from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.logging import get_logger
-from utils.safer_data_handling import safer_math_pow
-from flask import g as session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
 from consts.consts_idleon import max_characters
-from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, getRequiredCropNumber
-from consts.consts_w4 import max_meal_level
 from consts.consts_w2 import max_vial_level
-from consts.consts_w1 import stamp_maxes
+from consts.consts_w4 import max_meal_level
+from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, \
+    getRequiredCropNumber
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from utils.logging import get_logger
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.safer_data_handling import safer_math_pow
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
@@ -409,14 +408,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    evo_advices[stamp].append(Advice(
-        label=f"Crop Evo {{{{ Stamp|#stamps}}}}: {session_data.account.stamps['Crop Evo Stamp']['Value']:.0f}%"
-              f"<br>Total Value after multis: {session_data.account.stamps['Crop Evo Stamp']['Total Value']:.2f}%",
-        picture_class='crop-evo-stamp',
-        progression=session_data.account.stamps['Crop Evo Stamp']['Level'],
-        goal=stamp_maxes['Crop Evo Stamp'],
-        resource=session_data.account.stamps['Crop Evo Stamp']['Material'],
-    ))
+    evo_advices[stamp].append(session_data.account.stamps['Crop Evo Stamp'].get_advice())
 
 #Meals
     evo_advices[meals].append(Advice(

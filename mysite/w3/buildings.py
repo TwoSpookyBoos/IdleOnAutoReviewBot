@@ -2,9 +2,9 @@ import copy
 
 from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import buildingsPostBuffs_progressionTiers, buildingsPreBuffs_progressionTiers, true_max_tiers
-from flask import g as session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.logging import get_logger
 
 
@@ -238,7 +238,8 @@ def getConsBuildingsAdviceSection() -> AdviceSection:
         return building_AdviceSection
 
     # Generate Alerts
-    generateShrineLevelingAlerts()
+    # TODO: Uncomment only after Legend Talent: Shrine World Order Bill (Yellow 3) is accounted for
+    # generateShrineLevelingAlerts()
 
     #Generate AdviceGroups
     building_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()

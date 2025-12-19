@@ -1,10 +1,11 @@
-from flask import g as session_data
+
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import snail_max_possible_rank
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.text_formatting import pl
@@ -30,27 +31,6 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
             picture_class='particles',
         )
     )
-
-    if not session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
-        settings_advice['Information'].append(
-            Advice(
-                label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
-                picture_class='red-bits',
-            )
-        )
-    if session_data.account.compass['Upgrades']['Atomic Potential']['Level'] < session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']:
-        ap = session_data.account.compass['Upgrades']['Atomic Potential']
-        settings_advice['Information'].append(
-            Advice(
-                label=f"{{{{Compass|#the-compass}}}}: {ap['Path Name']}-{ap['Path Ordering']}: Atomic Potential: "
-                      f"+{session_data.account.compass['Upgrades']['Atomic Potential']['Level']}"
-                      f"/{session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']}"
-                      f" max Atom levels",
-                picture_class=ap['Image'],
-                progression=session_data.account.compass['Upgrades']['Atomic Potential']['Level'],
-                goal=session_data.account.compass['Upgrades']['Atomic Potential']['Max Level']
-            )
-        )
 
     for atomName, atomValues in colliderData['Atoms'].items():
         settings_advice['Information'].append(
@@ -148,6 +128,53 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     settings_ag.remove_empty_subgroups()
     return settings_ag
 
+
+def getMaxLevelAdviceGroup() -> AdviceGroup:
+    ml_advice = []
+
+    sp_id = session_data.account.gaming['SuperBits']['Isotope Discovery']
+    ml_advice.append(
+        Advice(
+            label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
+            picture_class='red-bits',
+            progression=int(sp_id['Unlocked']),
+            goal=1
+        )
+    )
+
+    ap = session_data.account.compass['Upgrades']['Atomic Potential']
+    ml_advice.append(
+        Advice(
+            label=f"{{{{Compass|#the-compass}}}}: {ap['Path Name']}-{ap['Path Ordering']}: Atomic Potential: "
+                  f"+{ap['Level']}/{ap['Max Level']} max Atom levels",
+            picture_class=ap['Image'],
+            progression=ap['Level'],
+            goal=ap['Max Level']
+        )
+    )
+
+    hb = session_data.account.event_points_shop['Bonuses']['Higgs Boson']
+    ml_advice.append(
+        Advice(
+            label=f"{{{{Event Shop|#event-shop}}}}: Higgs Boson: {hb['Description']}",
+            picture_class=hb['Image'],
+            progression=int(hb['Owned']),
+            goal=1
+        )
+    )
+
+    for advice in ml_advice:
+        advice.mark_advice_completed()
+
+    ml_ag = AdviceGroup(
+        tier='',
+        pre_string='Sources of Max Atom Levels',
+        advices=ml_advice,
+        informational=True
+    )
+    return ml_ag
+
+
 def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
@@ -189,12 +216,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
     ))
 
-    cr_advice.append(Advice(
-        label=f"Atomic Stamp: {session_data.account.stamps['Atomic Stamp']['Total Value']:.3f}%",
-        picture_class='atomic-stamp',
-        progression=session_data.account.stamps['Atomic Stamp']['Level'],
-        resource=session_data.account.stamps['Atomic Stamp']['Material'],
-    ))
+    cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
 
     cr_advice.append(Advice(
         label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",
@@ -295,6 +317,7 @@ def getColliderAdviceSection() -> AdviceSection:
     collider_AdviceGroupDict = {}
     collider_AdviceGroupDict['Atoms'], overall_ColliderTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     collider_AdviceGroupDict['ColliderSettings'] = getColliderSettingsAdviceGroup()
+    collider_AdviceGroupDict['MaxLevel'] = getMaxLevelAdviceGroup()
     collider_AdviceGroupDict['CostReduction'] = getCostReductionAdviceGroup()
 
     # Generate AdviceSection

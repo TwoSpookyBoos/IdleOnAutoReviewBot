@@ -1,5 +1,5 @@
-from models.models import AdviceSection, AdviceGroup
-from flask import g as session_data
+
+from models.models import AdviceSection, AdviceGroup, session_data
 
 from models.models_util import get_advice_for_money_advice
 
@@ -21,9 +21,7 @@ def get_advice_for_money_section():
             tier='Not Yet Evaluated',
             header='Come back after finding the Big Fish on Doodle Reef in W7!',
             picture='',
-            unrated=None,
             unreached=True,
-            completed=False
         )
         return afm_AdviceSection
 

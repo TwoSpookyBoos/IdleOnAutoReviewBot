@@ -1,9 +1,9 @@
 from consts.progression_tiers import true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice
+
+from models.models import AdviceSection, AdviceGroup, session_data
 from models.models_util import get_spelunking_cavern_bonus_advice
 from utils.logging import get_logger
-from flask import g as session_data
-from consts.consts_autoreview import break_you_best, build_subgroup_label
+
 
 logger = get_logger(__name__)
 
@@ -56,9 +56,7 @@ def get_spelunking_advicesection() -> AdviceSection:
             tier='Not Yet Evaluated',
             header='Come back after unlocking Spelunking in W7!',
             picture='',
-            unrated=None,
             unreached=True,
-            completed=False
         )
         return spelunking_AdviceSection
 

@@ -1,17 +1,23 @@
+import copy
 import functools
 import json
 import os
 import re
 import sys
+from dataclasses import dataclass
 from enum import Enum
 from math import ceil, floor
-from typing import Any, Union
+from typing import Any, Union, TypeVar
 from flask import g
+from flask.ctx import _AppCtxGlobals
+from werkzeug.local import LocalProxy
+
 from config import app
-from consts.consts_autoreview import ignorable_labels, lowest_accepted_version
+from consts.consts_autoreview import ignorable_labels, lowest_accepted_version, EmojiType
 from consts.consts_idleon import lavaFunc, expected_talents_dict, current_world
 from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, cards_max_level, \
     greenstack_item_difficulty_groups
+from consts.consts_w1 import stamp_types, stamp_maxes
 from consts.consts_w5 import divinity_divinities_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w3 import (
@@ -19,9 +25,10 @@ from consts.consts_w3 import (
     apocable_map_index_dict, apoc_names_list, getSkullNames, getNextSkullNames
 )
 from consts.consts_w2 import alchemy_jobs_list, po_box_dict, get_obol_totals
+from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
-from utils.number_formatting import parse_number
+from utils.number_formatting import parse_number, round_and_trim
 from utils.text_formatting import kebab, getItemCodeName, getItemDisplayName, InputType
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
@@ -1706,6 +1713,10 @@ class Account:
             'Total Slots Max': 0
         }
         #W1
+        self.stamps: Stamps = Stamps()
+        self.stamp_totals: dict[str, int] = {"Total": 0}
+        for stamp_type in stamp_types:
+            self.stamp_totals[stamp_type] = 0
         self.basketball = {
             'Upgrades': {}
         }
@@ -1716,6 +1727,76 @@ class Account:
         self.spelunk = {
             'Cave Bonuses': {},
         }
+        self.coral_reef = {
+            'Town Corals': 0,
+            'Reef Corals': copy.deepcopy(coral_reef_bonuses)
+        }
         self.advice_for_money = {
             'Upgrades': {},
         }
+
+@dataclass
+class ItemDefinition:
+    name: str
+    code_name: str
+    type: str
+
+@dataclass
+class StampBonus:
+    effect: str
+    code_material: str
+    scaling_type: str
+    x1: int
+    x2: int
+
+@dataclass
+class Stamp:
+    name: str
+    code_name: str
+    effect: str
+    delivered: bool
+    level: int
+    max_level: int
+    material: ItemDefinition | None
+    value: float
+    stamp_type: str
+    exalted: bool
+    total_value: float = 0
+
+    def get_advice(self, link_to_section: bool = True, additional_text: str = "", goal_override = ""):
+        link_to_section_text = f"{{{{ Stamps|#stamps }}}} - " if link_to_section else ""
+        effect_text = f" {self.effect}" if not self.effect.startswith('%') else self.effect
+        unlock_text = "Unlock " if not self.delivered else ""
+        body_text = f": +{round_and_trim(self.total_value)}{effect_text}{additional_text}" if self.delivered else ""
+        return Advice(
+            label=f"{link_to_section_text}{unlock_text}{self.name}{body_text}",
+            resource=self.material.name,
+            progression=self.level,
+            goal=(goal_override if goal_override else stamp_maxes.get(self.name, EmojiType.INFINITY.value)) if self.delivered else 1,
+            picture_class=self.name,
+        )
+
+class Stamps(dict[str, Stamp]):
+    def __init__(self):
+        super().__init__()
+
+@dataclass
+class StampItemDefinition(ItemDefinition):
+    stamp_bonus: StampBonus
+
+ItemDef = TypeVar("ItemDef", bound=ItemDefinition | StampItemDefinition)
+class ItemDefinitions(dict[str, ItemDef]):
+    def get_item_from_codename(self, codename: str) -> ItemDef:
+        return next(item for code, item in self.items() if code == codename)
+
+    def get_all_stamps(self) -> list[StampItemDefinition]:
+        return [item for item in self.values() if isinstance(item, StampItemDefinition)]
+
+    def get_capacity_stamps(self) -> list[StampItemDefinition]:
+        return [stamp for stamp in self.get_all_stamps() if 'Carry Cap' in stamp.stamp_bonus.effect]
+
+@dataclass
+class SessionData(_AppCtxGlobals):
+    account: Account
+
+session_data: SessionData = LocalProxy(lambda: g)
