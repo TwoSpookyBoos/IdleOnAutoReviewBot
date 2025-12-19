@@ -46,6 +46,7 @@ def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
     _calculate_w3_armor_sets(account)
     _calculate_w2_arcade(account)
+    _calculate_master_classes_tesseract_upgrades(account)
     _calculate_w6_emperor(account)
     _calculate_w6_summoning_winner_bonuses(account)
     _calculate_w6_summoning_endless_bonuses(account)
@@ -155,12 +156,16 @@ def getEmperorHealth(showdowns_completed: int) -> str:
     return hp_string
 
 def _calculate_w6_emperor(account):
+    # Dependency: _calculate_master_classes_tesseract_upgrades, sneaking, _calculate_w2_arcade, gemshop
     account.emperor['Max Attempts'] = (
         5  #base
         + (5 * account.sneaking['JadeEmporium']['Emperor Season Pass']['Obtained'])
         + (6 * account.gemshop['Purchases']['Lifetime Tickets']['Owned'])
     )
-    emperor_bonus_multi = ValueToMulti(account.arcade[51]['Value']) # TODO: ArcaneUpgBonus48 (additive to Arcade bonus)
+    emperor_bonus_multi = ValueToMulti(
+        account.arcade[51]['Value']
+        + MultiToValue(account.tesseract['Upgrades']['Vicar of the Emperor']['Total Value'])
+    )
 
     for bonus_index, bonus_values in account.emperor['Bonuses'].items():
         if '{' in bonus_values['Bonus Type']:
@@ -628,7 +633,6 @@ def _calculate_master_classes(account):
     # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
     _calculate_master_classes_compass_upgrades(account)
     _calculate_master_classes_compass_dust_sources(account)
-    _calculate_master_classes_tesseract_upgrades(account)
     _calculate_master_classes_tesseract_tachyon_sources(account)
 
 def _calculate_master_classes_grimoire_upgrades(account):
