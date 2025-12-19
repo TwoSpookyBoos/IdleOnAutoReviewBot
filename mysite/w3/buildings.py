@@ -238,7 +238,8 @@ def getConsBuildingsAdviceSection() -> AdviceSection:
         return building_AdviceSection
 
     # Generate Alerts
-    generateShrineLevelingAlerts()
+    # TODO: Uncomment only after Legend Talent: Shrine World Order Bill (Yellow 3) is accounted for
+    # generateShrineLevelingAlerts()
 
     #Generate AdviceGroups
     building_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
