@@ -148,7 +148,9 @@ def _calculate_w3_armor_sets(account):
             )
 
 def getEmperorHealth(showdowns_completed: int) -> str:
-    hp = 135e13 * safer_math_pow(1.7, showdowns_completed)
+    # _customBlock_Thingies -> if ("Boss6HP" == d)
+    # Last updated in v2.48 Giftmas Event (December 8, 2025).
+    hp = 135e12 * safer_math_pow(1.54, showdowns_completed)
     hp_string = notateNumber('Basic', hp, 2)
     return hp_string
 
@@ -200,7 +202,7 @@ def _calculate_w6_emperor(account):
     bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
     fight_map = [int(value) for value in EmperorBon[2]]
 
-    for i in range(1, 21):
+    for i in range(0, 20):
         next_showdown = account.emperor['Last Showdown'] + i
         fight_map_index = next_showdown % 48
         bonus_type = bonus_types[fight_map[fight_map_index]]
@@ -215,7 +217,7 @@ def _calculate_w6_emperor(account):
         else:
             scaling = ''
 
-        account.emperor['Upcoming'][next_showdown] = [
+        account.emperor['Upcoming'][next_showdown + 1] = [
             getEmperorHealth(next_showdown),
             scaling,
             emperor_bonus_images[bonus_types.index(bonus_type)]
