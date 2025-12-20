@@ -1582,7 +1582,7 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Cosmic': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
+                'Cosmic': raw_arcade_upgrades[upgrade_index] >= arcade_max_level,
                 'Material': (
                     '' if raw_arcade_upgrades[upgrade_index] == 101
                     else 'arcade-cosmic-ball' if raw_arcade_upgrades[upgrade_index] == 100

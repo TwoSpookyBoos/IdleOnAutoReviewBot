@@ -811,4 +811,4 @@ EmperorBon = [
     "30 5 20 1 5 15 5 50 1 5 5 10".split(" "),
     "0 1 0 2 1 4 0 2 4 3 1 0 2 4 5 0 1 2 4 0 6 5 4 2 7 0 1 3 5 4 11 8 0 7 6 9 2 1 7 10 4 5 7 6 0 2 11 1".split(" ")
 ]
-emperor_bonus_images = ['sneaking', 'grimoire-bone-0', 'farming', 'opal', 'compass-dust-0', 'equinox-mirror', 'placeholder', 'gaming', 'summoning', 'placeholder', 'placeholder', 'drop-rate']
+emperor_bonus_images = ['sneaking', 'grimoire-bone-0', 'farming', 'opal', 'compass-dust-0', 'equinox-mirror', 'tesseract-tachyon-0', 'gaming', 'summoning', 'placeholder', 'placeholder', 'drop-rate']

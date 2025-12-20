@@ -28,7 +28,7 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
             label=f"Bonus {bonus_name}: {bonus_details['Display']}",
             picture_class=bonus_details['Image'],
             progression=bonus_details['Level'],
-            goal=arcade_max_level+1,
+            goal=arcade_max_level,
             resource=bonus_details['Material'],
         ) for bonus_name, bonus_details in session_data.account.arcade.items()
     ]
