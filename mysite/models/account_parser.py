@@ -1582,7 +1582,7 @@ def _parse_w2_arcade(account):
                         upgrade_details['x2']
                     )
                 ),
-                'Cosmic': raw_arcade_upgrades[upgrade_index] > arcade_max_level,
+                'Cosmic': raw_arcade_upgrades[upgrade_index] >= arcade_max_level,
                 'Material': (
                     '' if raw_arcade_upgrades[upgrade_index] == 101
                     else 'arcade-cosmic-ball' if raw_arcade_upgrades[upgrade_index] == 100
@@ -1862,7 +1862,10 @@ def _parse_w3_deathnote_kills(account):
                 if barbCharacterIndex in account.enemy_maps[worldIndex][enemy_map].zow_dict:
                     kill_count = account.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
                     for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
-                        if kill_count < apoc_amount:
+                        if (
+                            kill_count < apoc_amount  #normal trigger for not meeting the apocalypse amount
+                            or apoc_index+1 == len(apoc_amounts_list)  #secondary trigger to make sure every map shows up in Unfiltered
+                        ):
                             # characterDict[barbCharacterIndex].apoc_dict[apoc_names_list[apoc_index]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
                             account.all_characters[barbCharacterIndex].addUnmetApoc(
                                 apoc_names_list[apoc_index],

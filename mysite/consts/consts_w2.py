@@ -197,7 +197,7 @@ arcade_bonuses = {
         'displayType': '%' if stat_code.split("_")[0][-1] == '%' else ''
     } for index, [stat_code, x1, x2, func_type, _, _, _] in enumerate(arcade_shop_info)
 }
-arcade_max_level = 100
+arcade_max_level = 101
 post_office_tabs = ["Bob's Boxes", "Charlie's Crates"]
 #`PostOffUpgradeInfo = function ()` in source. Last updated in v2.46 Nov 27
 #Translate using the Post Office tab in AR spreadsheet

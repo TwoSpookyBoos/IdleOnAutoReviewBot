@@ -249,7 +249,12 @@ def getCharacterDetails(inputJSON, runType):
     kill_lists = {}
     obols_list = {}
     obol_upgrades_list = {}
-    big_alch_bubbles_dict = safe_loads(inputJSON.get('CauldronBubbles', [0, 0, 0] * max_characters))
+    big_alch_bubbles = safe_loads(inputJSON.get('CauldronBubbles', [0, 0, 0] * max_characters))
+    while len(big_alch_bubbles) < character_count:
+        if isinstance(big_alch_bubbles, list):
+            big_alch_bubbles.append([0,0,0])
+        elif isinstance(big_alch_bubbles, dict):
+            big_alch_bubbles[len(big_alch_bubbles)] = [0, 0, 0]
     alchemy_jobs_list = safe_loads(inputJSON.get('CauldronJobs1', [-1] * max_characters))
     equipped_cards_codenames = {}
     equipped_cardset = {}
@@ -292,7 +297,7 @@ def getCharacterDetails(inputJSON, runType):
             alchemy_job=alchemy_jobs_list[character_index],
             all_skill_levels=characterSkillsDict[character_index],
             base_class=getBaseClass(character_classes[character_index]),
-            big_alch_bubbles=big_alch_bubbles_dict[character_index],
+            big_alch_bubbles=big_alch_bubbles[character_index],
             character_index=character_index,
             character_name=character_names[character_index],
             class_name=character_classes[character_index],
