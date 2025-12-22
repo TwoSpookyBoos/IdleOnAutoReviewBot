@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
+from consts.consts_autoreview import ValueToMulti, EmojiType, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, sigils_dict
@@ -51,23 +51,9 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mga_label = f"Multi Group A: {mga:.3f}x"
 
     # Multi Group B = Summoning Winner Bonuses
-    bd = session_data.account.summoning['BattleDetails']
-    player_matches_total = (
-        (bd['Green'][9]['RewardBaseValue'] * bd['Green'][9]['Defeated'])
-        + (bd['Yellow'][5]['RewardBaseValue'] * bd['Yellow'][5]['Defeated'])
-        + (bd['Blue'][5]['RewardBaseValue'] * bd['Blue'][5]['Defeated'])
-        + (bd['Purple'][7]['RewardBaseValue'] * bd['Purple'][7]['Defeated'])
-        + (bd['Cyan'][3]['RewardBaseValue'] * bd['Cyan'][3]['Defeated'])
-    )
-    matches_total = (
-        bd['Green'][9]['RewardBaseValue']
-        + bd['Yellow'][5]['RewardBaseValue']
-        + bd['Blue'][5]['RewardBaseValue']
-        + bd['Purple'][7]['RewardBaseValue']
-        + bd['Cyan'][3]['RewardBaseValue']
-    )
-    mgb = ValueToMulti(player_matches_total * session_data.account.summoning['WinnerBonusesMultiRest'])
-    mgb_label = f"Multi Group B: {mgb:.3f}x"
+    summoning = session_data.account.summoning
+    summoning_speed = summoning['Bonuses']['<x Sigil SPD']
+    mgb_label = f"Summoning: {summoning_speed['Value']:,.3f}x"
 
     # Multi Group C = Tuttle Vial
     tuttle_vial_multi = ValueToMulti(session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value'])
@@ -93,7 +79,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mge = ValueToMulti(ab43['Value'])
     mge_label = f"Multi Group E: {mge:.3f}x"
 
-    total_multi = max(1, mga * mgb * mgc * mgd * mge)
+    total_multi = max(1, mga * summoning_speed['Value'] * mgc * mgd * mge)
 
     speed_Advice = {
         mga_label: [],
@@ -145,24 +131,12 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
-    for color, battleNumber in {"Green": 9, "Yellow": 5, "Blue": 5, "Purple": 7, "Cyan": 3}.items():
-        speed_Advice[mgb_label].append(Advice(
-            label=f"Summoning match {color} {battleNumber}: "
-                  f"+{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue'] * session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated']}"
-                  f"/{session_data.account.summoning['BattleDetails'][color][battleNumber]['RewardBaseValue']}",
-            picture_class=session_data.account.summoning['BattleDetails'][color][battleNumber]['Image'],
-            progression=1 if session_data.account.summoning['BattleDetails'][color][battleNumber]['Defeated'] else 0,
-            goal=1
-        ))
     speed_Advice[mgb_label].append(Advice(
-        label=f"Summoning matches total: +{player_matches_total}/{matches_total}",
-        picture_class='summoning',
-        progression=player_matches_total,
-        goal=matches_total
+        label=f"{{{{Summoning Bonuses|#summoning}}}}: Sigil SPD",
+        picture_class="summoning",
+        progression=f"{summoning_speed['Value']:,.3f}",
+        goal=EmojiType.INFINITY.value
     ))
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        speed_Advice[mgb_label].append(advice)
-    speed_Advice[mgb_label].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(

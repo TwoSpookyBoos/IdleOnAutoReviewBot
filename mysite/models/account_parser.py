@@ -3869,6 +3869,7 @@ def _parse_w6_summoning_battles(account, raw_battles):
     account.summoning['AllRegularBattlesWon'] = len(regular_battles) >= len(summoning_regular_battles)
     # Endless doesn't follow the same structure as the once-only battles
     account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
+    account.summoning['Bonuses'] = {}
 
     for color_name, color_dict in summoning_dict.items():
         if color_name in summoning_regular_match_colors:
@@ -3889,6 +3890,11 @@ def _parse_w6_summoning_battles(account, raw_battles):
                 elif this_battle['RewardType'].startswith('<x'):
                     this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
                 account.summoning['BattleDetails'][color_name][battle_index + 1] = this_battle
+                if this_battle['RewardType'] not in account.summoning['Bonuses']:
+                    account.summoning['Bonuses'][this_battle['RewardType']] = {'Value': 0, 'Max': 0}
+                account.summoning['Bonuses'][this_battle['RewardType']]['Value'] += this_battle['RewardBaseValue'] * this_battle['Defeated']
+                account.summoning['Bonuses'][this_battle['RewardType']]['Max'] += this_battle['RewardBaseValue']
+    #logger.debug(f"Base Regular Bonuses: {account.summoning['Bonuses']}")
 
 def _parse_w6_summoning_battles_endless(account):
     account.summoning['Endless Bonuses'] = {}

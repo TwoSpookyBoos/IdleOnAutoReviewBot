@@ -71,25 +71,14 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     }
 
 #Multi Group A
-    red8beat = session_data.account.summoning['Battles']['Red'] >= 8
-    cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
+    summoning = session_data.account.summoning
+    summoning_shiny = summoning['Bonuses']['<x Shiny EXP']
     sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Red8: "
-              f"+{1.88 * red8beat}/1.88{'' if red8beat else '. Not yet beaten.'}",
-        picture_class='citringe',
-        progression=int(red8beat),
-        goal=1
+        label=f"{{{{Summoning Bonuses|#summoning}}}}: Shiny EXP",
+        picture_class="summoning",
+        progression=f"{summoning_shiny['Value']:,.3f}",
+        goal=EmojiType.INFINITY.value
     ))
-    sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Cyan13: "
-              f"+{3.45 * cyan13beat}/3.45{'' if cyan13beat else '. Not yet beaten.'}",
-        picture_class="minichief-spirit",
-        progression=int(cyan13beat),
-        goal=1
-    ))
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        sps_adviceDict[mga].append(advice)
-    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']

@@ -648,6 +648,11 @@ SummonEnemies = ["mushG frogG Copper Iron poopSmall Plat Void Starfire branch be
 
 # Maps to the RewardID, 1 indexed because Lava, so placeholder made for [0]
 summoningRewards = ['Unknown'] + [entry.replace('_', ' ') for entry in SummonEnemies[6]]
+# Replace two '+{% for World 7' with uniq name
+index = summoningRewards.index('+{% for World 7')
+summoningRewards[index] = '+{% for World 7 #1'
+index = summoningRewards.index('+{% for World 7')
+summoningRewards[index] = '+{% for World 7 #2'
 # summoningRewards = [
 #     "Unknown",
 #     # Normal Rewards
@@ -760,50 +765,54 @@ summoning_endless_challenge_types = [
 ]
 if len(SummonEnemies[12]) > len(summoning_endless_challenge_types):
     logger.warning(f"Endless Summoning Challenge Types out of sync.")
-summoning_endlessDict = {
-    0: {'RewardID': summoningRewards[21], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[4]},
-    1: {'RewardID': summoningRewards[22], 'RewardQTY': 3, 'Challenge': summoning_endless_challenge_types[5]},
-    2: {'RewardID': summoningRewards[23], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[1]},
-    3: {'RewardID': summoningRewards[24], 'RewardQTY': 12, 'Challenge': summoning_endless_challenge_types[6]},
-    4: {'RewardID': summoningRewards[25], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[4]},
-    5: {'RewardID': summoningRewards[27], 'RewardQTY': 7, 'Challenge': summoning_endless_challenge_types[0]},
-    6: {'RewardID': summoningRewards[23], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[5]},
-    7: {'RewardID': summoningRewards[22], 'RewardQTY': 4, 'Challenge': summoning_endless_challenge_types[6]},
-    8: {'RewardID': summoningRewards[24], 'RewardQTY': 15, 'Challenge': summoning_endless_challenge_types[7]},
-    9: {'RewardID': summoningRewards[29], 'RewardQTY': 10, 'Challenge': summoning_endless_challenge_types[8]},
-    10: {'RewardID': summoningRewards[25], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[3]},
-    11: {'RewardID': summoningRewards[26], 'RewardQTY': 4, 'Challenge': summoning_endless_challenge_types[10]},
-    12: {'RewardID': summoningRewards[24], 'RewardQTY': 18, 'Challenge': summoning_endless_challenge_types[2]},
-    13: {'RewardID': summoningRewards[23], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[9]},
-    14: {'RewardID': summoningRewards[22], 'RewardQTY': 4, 'Challenge': summoning_endless_challenge_types[7]},
-    15: {'RewardID': summoningRewards[32], 'RewardQTY': 3, 'Challenge': summoning_endless_challenge_types[1]},
-    16: {'RewardID': summoningRewards[30], 'RewardQTY': 20, 'Challenge': summoning_endless_challenge_types[6]},
-    17: {'RewardID': summoningRewards[31], 'RewardQTY': 25, 'Challenge': summoning_endless_challenge_types[5]},
-    18: {'RewardID': summoningRewards[25], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[2]},
-    19: {'RewardID': summoningRewards[24], 'RewardQTY': 20, 'Challenge': summoning_endless_challenge_types[8]},
-    20: {'RewardID': summoningRewards[26], 'RewardQTY': 5, 'Challenge': summoning_endless_challenge_types[3]},
-    21: {'RewardID': summoningRewards[29], 'RewardQTY': 30, 'Challenge': summoning_endless_challenge_types[4]},
-    22: {'RewardID': summoningRewards[24], 'RewardQTY': 24, 'Challenge': summoning_endless_challenge_types[10]},
-    23: {'RewardID': summoningRewards[22], 'RewardQTY': 4, 'Challenge': summoning_endless_challenge_types[6]},
-    24: {'RewardID': summoningRewards[21], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[1]},
-    25: {'RewardID': summoningRewards[23], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[7]},
-    26: {'RewardID': summoningRewards[31], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[2]},
-    27: {'RewardID': summoningRewards[28], 'RewardQTY': 35, 'Challenge': summoning_endless_challenge_types[0]},
-    28: {'RewardID': summoningRewards[27], 'RewardQTY': 9, 'Challenge': summoning_endless_challenge_types[6]},
-    29: {'RewardID': summoningRewards[24], 'RewardQTY': 26, 'Challenge': summoning_endless_challenge_types[3]},
-    30: {'RewardID': summoningRewards[26], 'RewardQTY': 5, 'Challenge': summoning_endless_challenge_types[5]},
-    31: {'RewardID': summoningRewards[22], 'RewardQTY': 5, 'Challenge': summoning_endless_challenge_types[8]},
-    32: {'RewardID': summoningRewards[30], 'RewardQTY': 40, 'Challenge': summoning_endless_challenge_types[9]},
-    33: {'RewardID': summoningRewards[25], 'RewardQTY': 1, 'Challenge': summoning_endless_challenge_types[4]},
-    34: {'RewardID': summoningRewards[29], 'RewardQTY': 45, 'Challenge': summoning_endless_challenge_types[6]},
-    35: {'RewardID': summoningRewards[28], 'RewardQTY': 50, 'Challenge': summoning_endless_challenge_types[2]},
-    36: {'RewardID': summoningRewards[23], 'RewardQTY': 2, 'Challenge': summoning_endless_challenge_types[1]},
-    37: {'RewardID': summoningRewards[26], 'RewardQTY': 6, 'Challenge': summoning_endless_challenge_types[5]},
-    38: {'RewardID': summoningRewards[24], 'RewardQTY': 30, 'Challenge': summoning_endless_challenge_types[10]},
-    39: {'RewardID': summoningRewards[32], 'RewardQTY': 3, 'Challenge': summoning_endless_challenge_types[8]},
-}
+summoning_endlessDict = {}
+summoning_endless_reward_index = [int(i) for i in SummonEnemies[9]]
+summoning_endless_reward_qty = [int(i) for i in SummonEnemies[10]]
+summoning_endless_challenge_index = [int(i) for i in SummonEnemies[11]]
+for index in range(0, 40):
+    summoning_endlessDict[index] = {
+        'RewardID': summoningRewards[summoning_endless_reward_index[index]],
+        'RewardQTY': summoning_endless_reward_qty[index],
+        'Challenge': summoning_endless_challenge_types[summoning_endless_challenge_index[index]]
+    }
 summoning_battle_counts_dict = {k: len(v) for k, v in summoning_dict.items()}
 summoning_battle_counts_dict['Normal'] = sum(summoning_battle_counts_dict.values())
+summoning_bonus_img = {
+    # Regular
+    '<x Total DMG': 'summoning-total-dmg',
+    '<x Jade Gain': 'summoning-jade',
+    '<x All Essence': 'summoning',
+    '<x Farming SPD': 'farming',
+    '<x Artifact Find': 'sailing',
+    '+{ Lab Con Range': 'laboratory',
+    '<x Sneak EXP': 'sneaking',
+    '<x Sigil SPD': 'sigils',
+    '<x Farming EXP': 'farming',
+    '+{% Drop Rate': 'vault-upgrade-18',
+    '<x Crop EVO': 'farming',
+    '+{% AFK Gains': 'summoning-afk',
+    '+{% Skill EXP': 'summoning-skill-exp',
+    '<x Construct SPD': 'construction',
+    '<x Skill Effncy.': 'summoning-skill-eff',
+    '<x Cooking SPD': 'cooking',
+    '<x Gaming Bits': 'gaming',
+    '<x Shiny EXP': 'breeding',
+    '+{% All Stat': 'summoning-all-stat',
+    '+{ Library Max': 'library',
+    # Endless
+    '+{ Stamp LV/day': 'summoning-stamp',
+    '+{% Villager EXP': 'summoning-village-exp',
+    '+{% Ballot Bonus': 'summoning-ballot',
+    '+{% Class EXP': 'summoning-class-exp',
+    '+{ Equinox Max LV': 'equinox',
+    '<x Meal Bonuses': 'cooking',
+    '<x Amber Gain': 'summoning-amber',
+    '+{% Monument AFK': 'summoning-monument-afk',
+    '<x Winner Bonuses': 'endless-summoning',
+    '+{% for World 7 #1': 'placeholder',
+    '+{% for World 7 #2': 'placeholder',
+    '<x Spelunk POW': 'summoning-spelunking-pow'
+}
 
 # Last pulled from code in v2.37
 EmperorBon = [

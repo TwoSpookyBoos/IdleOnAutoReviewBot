@@ -105,28 +105,17 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
 
     #Summoning Sources
-    summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{max_summoning_book_levels}"
+    summoning = session_data.account.summoning
+    summoning_library = summoning['Bonuses']['+{ Library Max']
+    summoningSubgroup = f"Summoning: +{summoning_library['Value']}/{summoning_library['Max']}"
     bookLevelAdvices[summoningSubgroup] = []
-    cyan14 = session_data.account.summoning['BattleDetails']['Cyan'][14]
     bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"{{{{Summoning|#summoning}}}} match Cyan14: "
-              f"+{cyan14['RewardBaseValue'] * cyan14['Defeated']}/{cyan14['Description']}",
-        picture_class=cyan14['Image'],
-        progression=1 if cyan14['Defeated'] else 0,
-        goal=1
+        label=f"{{{{ Summoning Bonuses|#summoning }}}}: Library Max: "
+              f"+{summoning_library['Value']}",
+        picture_class="summoning",
+        progression=summoning_library['Value'],
+        goal=summoning_library['Max']
     ))
-    teal9 = session_data.account.summoning['BattleDetails']['Teal'][9]
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"{{{{Summoning|#summoning}}}} match Teal9: "
-              f"+{teal9['RewardBaseValue'] * teal9['Defeated']}/{teal9['Description']}",
-        picture_class=teal9['Image'],
-        progression=1 if teal9['Defeated'] else 0,
-        goal=1
-    ))
-
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        bookLevelAdvices[summoningSubgroup].append(advice)
-    bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryLibrary'])
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:

@@ -340,13 +340,14 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     return value_ag
 
 def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
+    summoning_evo = session_data.account.summoning['Bonuses']['<x Crop EVO']
     #Create subgroup labels
     alch = f"Alchemy: {farming['Evo']['Alch Multi']:.3f}x"
     stamp = f"Stamps: {farming['Evo']['Stamp Multi']:.3f}x"
     meals = f"Meals: {farming['Evo']['Meals Multi']:.3f}x"
     farm = f"Markets: {farming['Evo']['Farm Multi']:.3g}x"
     lr = f"Land Ranks: {farming['Evo']['LR Multi']:,.3f}x"
-    summon = f"Summoning: {farming['Evo']['Summon Multi']:,.3f}x"
+    summon = f"Summoning: {summoning_evo['Value']:,.3f}x"
     ss = f"Star Sign: {farming['Evo']['SS Multi']:.3f}x"
     lamp = f"Lamp Wish: {farming['Evo']['Wish Multi']:.3f}x"
     misc = f"Misc: {farming['Evo']['Misc Multi']:.3f}x"
@@ -492,25 +493,12 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
     ))
 
 #SUMMONING
-    #Battles
-    for color, battlesList in farming['Evo']['Summ Battles'].items():
-        for battle in battlesList:
-            beat = session_data.account.summoning['Battles'][color] >= battle
-            evo_advices[summon].append(Advice(
-                label=f"Summoning match {color}{battle}: "
-                      f"{beat * session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
-                      f"/{session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
-                      f"{'.<br>Not yet beaten.' if not beat else ''}",
-                picture_class=session_data.account.summoning["BattleDetails"][color][battle]['Image'],
-                progression=int(session_data.account.summoning['Battles'][color] >= battle),
-                goal=1
-            ))
-
-    #Winner Bonus Increases
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        evo_advices[summon].append(advice)
-    evo_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
-
+    evo_advices[summon].append(Advice(
+        label=f"{{{{Summoning Bonuses|#summoning}}}}: Crop EVO",
+        picture_class="summoning",
+        progression=f"{summoning_evo['Value']:,.3f}",
+        goal=EmojiType.INFINITY.value
+    ))
 #Star Sign
     evo_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
     evo_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
@@ -639,9 +627,10 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
     return evo_ag
 
 def getSpeedAdviceGroup(farming) -> AdviceGroup:
+    summoning_speed = session_data.account.summoning['Bonuses']['<x Farming SPD']
     # Create subgroup labels
     total = f"Total: {farming['Speed']['Total Multi']:,.3f}x"
-    summon = f"Summoning: {farming['Speed']['Summon Multi']:,.3f}x"
+    summon = f"Summoning: {summoning_speed['Value']:,.3f}x"
     vm = f"Vial + Day Market: {farming['Speed']['VM Multi']:,.3f}x"
     nm = f"Night Market: {farming['Speed']['NM Multi']:,.3f}x"
     speed_advices = {
@@ -657,24 +646,12 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
         picture_class='crop-scientist'
     ))
 #Summoning
-    #Battles
-    for color, battlesList in farming['Speed']['Summ Battles'].items():
-        for battle in battlesList:
-            beat = session_data.account.summoning['Battles'][color] >= battle
-            speed_advices[summon].append(Advice(
-                label=f"Summoning match {color}{battle}: "
-                      f"{beat * session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
-                      f"/{session_data.account.summoning['BattleDetails'][color][battle]['RewardBaseValue']}"
-                      f"{'.<br>Not yet beaten.' if not beat else ''}",
-                picture_class=session_data.account.summoning["BattleDetails"][color][battle]['Image'],
-                progression=int(session_data.account.summoning['Battles'][color] >= battle),
-                goal=1
-            ))
-    # Winner Bonus Increases
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        speed_advices[summon].append(advice)
-    speed_advices[summon].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
-
+    speed_advices[summon].append(Advice(
+        label=f"{{{{Summoning Bonuses|#summoning}}}}: Farming SPD",
+        picture_class="summoning",
+        progression=f"{summoning_speed['Value']:,.3f}",
+        goal=EmojiType.INFINITY.value
+    ))
 #Vial and Market
     # Vial
     speed_advices[vm].append(Advice(
