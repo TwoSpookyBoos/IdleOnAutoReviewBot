@@ -407,7 +407,7 @@ class Character:
                 if difficulty != "Total":
                     if len(enemies) > 0:
                         difficulties[difficulty] = sorted(
-                            enemies, key=lambda item: item[2], reverse=True
+                            enemies, key=lambda item: item[1], reverse=True
                         )
 
     def setDivinityStyle(self, styleName: str):
