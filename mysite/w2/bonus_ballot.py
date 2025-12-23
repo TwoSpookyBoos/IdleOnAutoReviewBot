@@ -4,7 +4,7 @@ from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_companion_advice
+from models.models_util import get_companion_advice, get_summoning_bonus_advice
 from utils.logging import get_logger
 
 
@@ -77,12 +77,7 @@ def getBallotMultiAdviceGroup():
                 progression=int(rvb['Owned']),
                 goal=1
             ),
-            Advice(
-                label=f"Endless {{{{ Summoning|#summoning}}}}: +{endless}%",
-                picture_class='endless-summoning',
-                progression=session_data.account.summoning['Battles']['Endless'],
-                goal=EmojiType.INFINITY.value
-            ),
+            get_summoning_bonus_advice('+{% Ballot Bonus', endless=True),
             mashed_potato_advice
         ]
     }

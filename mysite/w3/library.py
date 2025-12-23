@@ -12,6 +12,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab, session_data
 from models.models import Character
+from models.models_util import get_summoning_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import \
@@ -108,14 +109,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     summoning = session_data.account.summoning
     summoning_library = summoning['Bonuses']['+{ Library Max']
     summoningSubgroup = f"Summoning: +{summoning_library['Value']}/{summoning_library['Max']}"
+
     bookLevelAdvices[summoningSubgroup] = []
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"{{{{ Summoning Bonuses|#summoning }}}}: Library Max: "
-              f"+{summoning_library['Value']}",
-        picture_class="summoning",
-        progression=summoning_library['Value'],
-        goal=summoning_library['Max']
-    ))
+    bookLevelAdvices[summoningSubgroup].append(get_summoning_bonus_advice('+{ Library Max'))
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:

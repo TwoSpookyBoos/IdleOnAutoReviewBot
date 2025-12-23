@@ -11,7 +11,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
-from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
+from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
@@ -554,15 +554,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus += cake_beanstalk_value
 
     # Summoning - Bonuses
-    summoning = session_data.account.summoning
-    summoning_drop_rate = summoning['Bonuses']['+{% Drop Rate']
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{Summoning Bonuses|#summoning}}}}: Drop Rate",
-        picture_class='summoning',
-        progression=f"{summoning_drop_rate['Value']:,.3f}",
-        goal=EmojiType.INFINITY.value
-    ))
-    world_6_bonus += summoning_drop_rate['Value']
+    drop_rate_aw_advice[w6].append(get_summoning_bonus_advice('+{% Drop Rate'))
+    world_6_bonus += session_data.account.summoning['Bonuses']['+{% Drop Rate']['Value']
 
     emperor_bonus = session_data.account.emperor['Bonuses'][11]
     drop_rate_aw_advice[w6].append(Advice(

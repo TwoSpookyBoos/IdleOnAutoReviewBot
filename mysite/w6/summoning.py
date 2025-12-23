@@ -2,13 +2,14 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue, EmojiType
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_gem_shop_purchase_advice
+from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice
 from utils.logging import get_logger
 
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_regular_match_colors, summoning_bonus_img
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
+from utils.number_formatting import round_and_trim
 
 logger = get_logger(__name__)
 
@@ -93,8 +94,8 @@ def getBonusesAdviceGroup() -> AdviceGroup:
     emperor = account.emperor
 
     regular = 'Regular Battles Bonuses'
-    endless = 'Endless Battles Bonuses'
-    bonus_multi = f"Bonuses Multi: {summoning['WinnerBonusesMultiRest']:.3f}x"
+    endless = f"Endless Battles Bonuses {summoning['Battles']['Endless']}/{EmojiType.INFINITY.value}"
+    bonus_multi = f"Bonuses Multi: {round_and_trim(summoning['WinnerBonusesMultiRest'])}x"
     bonuses_advice = {
         regular: [],
         endless: [],
@@ -102,28 +103,20 @@ def getBonusesAdviceGroup() -> AdviceGroup:
     }
 
     for name, bonus in summoning['Bonuses'].items():
-        bonuses_advice[regular].append(Advice(
-            label=f"{make_description(name, bonus['Value'])}",
-            picture_class=summoning_bonus_img.get(name, 'placeholder'),
-            progression=f"{bonus['Value']:,.3f}",
-            goal=f"{bonus['Max']:,.3f}"
-        ))
+        bonuses_advice[regular].append(
+            get_summoning_bonus_advice(
+                bonus_name=name, link_to_section=False,
+                picture_class=summoning_bonus_img.get(name, 'placeholder')
+            )
+        )
 
-    for name, value in summoning['Endless Bonuses'].items():
-        bonuses_advice[endless].append(Advice(
-            label=f"{make_description(name, value)}",
-            picture_class=summoning_bonus_img.get(name, 'placeholder'),
-            progression=f"{bonus['Value']:,.3f}",
-            goal=f"{bonus['Max']:,.3f}"
-        ))
-
-    # Find next 'Winner Bonuses' battle
-    next_winner_bonus = summoning['Battles']['Endless'] + 1
-    endless_battles = summoning['BattleDetails']['Endless']
-    while next_winner_bonus < summoning['Battles']['Endless'] + 20:
-        if endless_battles[next_winner_bonus]['RewardType'] == '<x Winner Bonuses':
-            break
-        next_winner_bonus += 1
+    for name in summoning['Endless Bonuses']:
+        bonuses_advice[endless].append(
+            get_summoning_bonus_advice(
+                bonus_name=name, endless=True, link_to_section=False,
+                picture_class=summoning_bonus_img.get(name, 'placeholder')
+            )
+        )
 
     bonuses_advice[bonus_multi].append(Advice(
         label=f"{{{{Emperor Showdowns|#emperor}}}}: {emperor['Bonuses'][8]['Description']}"
@@ -132,12 +125,9 @@ def getBonusesAdviceGroup() -> AdviceGroup:
         progression=emperor['Bonuses'][8]['Wins'],
         goal=EmojiType.INFINITY.value
     ))
-    bonuses_advice[bonus_multi].append(Advice(
-        label=f"Endless Battle",
-        picture_class='endless-summoning',
-        progression=summoning['Battles']['Endless'],
-        goal=next_winner_bonus
-    ))
+    bonuses_advice[bonus_multi].append(
+        get_summoning_bonus_advice(bonus_name='<x Winner Bonuses', endless=True, link_to_section=False)
+    )
     bonuses_advice[bonus_multi].append(Advice(
         label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: 1.3x",
         picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
@@ -204,13 +194,6 @@ def getBonusesAdviceGroup() -> AdviceGroup:
         informational=True
     )
     return bonuses_ag
-
-def make_description(name: str, value: float) -> str:
-    if name.startswith('+{'):
-        return name.replace('{', f"{int(value)}")
-    elif name.startswith('<x'):
-        return name.replace('<', f"{value:,.3f}")
-    return name
 
 def getUpgradesAdviceGroup() -> AdviceGroup:
     sources = 'Available Doublers and their Sources'
@@ -339,10 +322,10 @@ def getSummoningAdviceSection() -> AdviceSection:
     summoning_AdviceGroupDict = {}
     summoning_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     summoning_AdviceGroupDict['Regular'] = get_regular_battles_advicegroup()
-    summoning_AdviceGroupDict['Bonuses'] = getBonusesAdviceGroup()
-    summoning_AdviceGroupDict['Upgrades'] = getUpgradesAdviceGroup()
     summoning_AdviceGroupDict['Endless'] = getEndlessAdviceGroup()
+    summoning_AdviceGroupDict['Bonuses'] = getBonusesAdviceGroup()
     summoning_AdviceGroupDict['Summoning Stones'] = getSummoningStoneAdviceGroup()
+    summoning_AdviceGroupDict['Upgrades'] = getUpgradesAdviceGroup()
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

@@ -3,7 +3,7 @@ import copy
 from consts.consts_idleon import lavaFunc
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_upgrade_vault_advice
+from models.models_util import get_upgrade_vault_advice, get_summoning_bonus_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
@@ -71,14 +71,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     }
 
 #Multi Group A
-    summoning = session_data.account.summoning
-    summoning_shiny = summoning['Bonuses']['<x Shiny EXP']
-    sps_adviceDict[mga].append(Advice(
-        label=f"{{{{Summoning Bonuses|#summoning}}}}: Shiny EXP",
-        picture_class="summoning",
-        progression=f"{summoning_shiny['Value']:,.3f}",
-        goal=EmojiType.INFINITY.value
-    ))
+    sps_adviceDict[mga].append(get_summoning_bonus_advice('<x Shiny EXP'))
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']

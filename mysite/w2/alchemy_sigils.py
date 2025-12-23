@@ -8,8 +8,9 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 
 from models.models import AdviceGroup, Advice, AdviceSection, session_data
-from models.models_util import get_gem_shop_purchase_advice
+from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.number_formatting import round_and_trim
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -51,9 +52,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mga_label = f"Multi Group A: {mga:.3f}x"
 
     # Multi Group B = Summoning Winner Bonuses
-    summoning = session_data.account.summoning
-    summoning_speed = summoning['Bonuses']['<x Sigil SPD']
-    mgb_label = f"Summoning: {summoning_speed['Value']:,.3f}x"
+    mgb = session_data.account.summoning['Bonuses']['<x Sigil SPD']['Value']
+    mgb_label = f"Summoning: {round_and_trim(mgb)}x"
 
     # Multi Group C = Tuttle Vial
     tuttle_vial_multi = ValueToMulti(session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value'])
@@ -79,7 +79,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mge = ValueToMulti(ab43['Value'])
     mge_label = f"Multi Group E: {mge:.3f}x"
 
-    total_multi = max(1, mga * summoning_speed['Value'] * mgc * mgd * mge)
+    total_multi = max(1, mga * mgb * mgc * mgd * mge)
 
     speed_Advice = {
         mga_label: [],
@@ -131,12 +131,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
-    speed_Advice[mgb_label].append(Advice(
-        label=f"{{{{Summoning Bonuses|#summoning}}}}: Sigil SPD",
-        picture_class="summoning",
-        progression=f"{summoning_speed['Value']:,.3f}",
-        goal=EmojiType.INFINITY.value
-    ))
+    speed_Advice[mgb_label].append(get_summoning_bonus_advice('<x Sigil SPD'))
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(
