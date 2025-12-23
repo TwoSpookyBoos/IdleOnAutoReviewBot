@@ -35,5 +35,11 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "columns": 3,
         "rows": 3,
         "num_sprites": 1
+    },
+    "sprite-673-33.png": {
+        "base_file_name": "Whallamus",
+        "columns": 4,
+        "rows": 4,
+        "num_sprites": 1
     }
 }
