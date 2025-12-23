@@ -302,13 +302,15 @@ def _calculate_w6_summoning_winner_bonuses(account):
         #unit="x"
     )
     # Not Library
-    account.summoning['WinnerBonusesMultiRest'] = max(1, player_mga * player_mgb * player_mgc_rest)
-    account.summoning['WinnerBonusesMultiMaxRest'] = max(1, max_mga * max_mgb * max_mgc_rest)
+    account.summoning['WinnerBonusesMulti'] = {}
+    account.summoning['WinnerBonusesMulti']['Value'] = max(1, player_mga * player_mgb * player_mgc_rest)
+    account.summoning['WinnerBonusesMulti']['MultiGroup'] = (player_mga, player_mgb, player_mgc_rest)
+    account.summoning['WinnerBonusesMulti']['MultiGroupMax'] = (max_mga, max_mgb, max_mgc_rest)
 
 def _calculate_w6_summoning_regular_bonuses(account):
     # Dependency: _calculate_w6_summoning_winner_bonuses
     bonus_list = account.summoning['Bonuses']
-    win_multi = account.summoning['WinnerBonusesMultiRest']
+    win_multi = account.summoning['WinnerBonusesMulti']['Value']
     for bonus_name, bonus_value in bonus_list.items():
         bonus = bonus_list[bonus_name]
         if bonus_name == '+{ Library Max':
@@ -331,10 +333,10 @@ def _calculate_w6_summoning_endless_bonuses(account):
             if bonus_name.startswith('<x'):
                 account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(
                     account.summoning['Endless Bonuses'][bonus_name]
-                    * account.summoning['WinnerBonusesMultiRest']
+                    * account.summoning['WinnerBonusesMulti']['Value']
                 )
             else:
-                account.summoning['Endless Bonuses'][bonus_name] *= account.summoning['WinnerBonusesMultiRest']
+                account.summoning['Endless Bonuses'][bonus_name] *= account.summoning['WinnerBonusesMulti']['Value']
         elif bonus_name in summoning_rewards_that_dont_multiply_base_value and bonus_name.startswith('<x'):
             account.summoning['Endless Bonuses'][bonus_name] = ValueToMulti(account.summoning['Endless Bonuses'][bonus_name])
     #logger.debug(f"Final Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")

@@ -2,7 +2,7 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue, EmojiType
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice
+from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_summoning_bonus_advice
 from utils.logging import get_logger
 
 from consts.consts_w5 import max_sailing_artifact_level
@@ -91,19 +91,16 @@ def get_regular_battles_advicegroup() -> AdviceGroup:
 def getBonusesAdviceGroup() -> AdviceGroup:
     account = session_data.account
     summoning = account.summoning
-    emperor = account.emperor
 
     regular = 'Regular Battles Bonuses'
     endless = f"Endless Battles Bonuses {summoning['Battles']['Endless']}/{EmojiType.INFINITY.value}"
-    bonus_multi = f"Bonuses Multi: {round_and_trim(summoning['WinnerBonusesMultiRest'])}x"
-    bonuses_advice = {
+    bonuses_advices = {
         regular: [],
         endless: [],
-        bonus_multi: []
     }
 
     for name, bonus in summoning['Bonuses'].items():
-        bonuses_advice[regular].append(
+        bonuses_advices[regular].append(
             get_summoning_bonus_advice(
                 bonus_name=name, link_to_section=False,
                 picture_class=summoning_bonus_img.get(name, 'placeholder')
@@ -111,70 +108,90 @@ def getBonusesAdviceGroup() -> AdviceGroup:
         )
 
     for name in summoning['Endless Bonuses']:
-        bonuses_advice[endless].append(
+        bonuses_advices[endless].append(
             get_summoning_bonus_advice(
                 bonus_name=name, endless=True, link_to_section=False,
                 picture_class=summoning_bonus_img.get(name, 'placeholder')
             )
         )
 
-    bonuses_advice[bonus_multi].append(Advice(
+    for advice_list in bonuses_advices.values():
+        for advice in advice_list:
+            advice.mark_advice_completed()
+
+    bonuses_ag = AdviceGroup(
+        tier='',
+        pre_string='Bonuses',
+        advices=bonuses_advices,
+        informational=True
+    )
+    return bonuses_ag
+
+def getBonusesMultiAdviceGroup() -> AdviceGroup:
+    account = session_data.account
+    summoning = account.summoning
+
+    (player_mga, player_mgb, player_mgc) = summoning['WinnerBonusesMulti']['MultiGroup']
+    (_, max_mgb, _) = summoning['WinnerBonusesMulti']['MultiGroupMax']
+    mga = f"Multi Group A: {round_and_trim(player_mga)}x"
+    mgb = f"Multi Group B: {round_and_trim(player_mgb)}x"
+    mgc = f"Multi Group C: {round_and_trim(player_mgc)}x"
+    summary = 'Summary'
+    multi_advices = {
+        summary: [],
+        mga: [], mgb: [], mgc: [],
+    }
+
+    # Multi Group A: Pristine Charm - Crystal Comb
+    multi_advices[mga].append(Advice(
+        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: 1.3x",
+        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
+        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
+        goal=1
+    ))
+
+    # Multi Group B: Gem Shop - King of all Winners
+    multi_advices[mgb].append(get_gem_shop_purchase_advice(
+        purchase_name='King Of All Winners',
+        link_to_section=True,
+        secondary_label=f": {round_and_trim(player_mgb)}/{round_and_trim(max_mgb)}x"
+    ))
+
+    # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
+    emperor = account.emperor
+    multi_advices[mgc].append(Advice(
         label=f"{{{{Emperor Showdowns|#emperor}}}}: {emperor['Bonuses'][8]['Description']}"
               f"<br>{emperor['Bonuses'][8]['Scaling']}",
         picture_class='the-emperor',
         progression=emperor['Bonuses'][8]['Wins'],
         goal=EmojiType.INFINITY.value
     ))
-    bonuses_advice[bonus_multi].append(
-        get_summoning_bonus_advice(bonus_name='<x Winner Bonuses', endless=True, link_to_section=False)
+    multi_advices[mgc].append(
+        get_summoning_bonus_advice('<x Winner Bonuses', endless=True, link_to_section=False)
     )
-    bonuses_advice[bonus_multi].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: 1.3x",
-        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
-        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
-        goal=1
-    ))
-    max_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['MaxLevel'])
-    player_mgb = ValueToMulti(10 * account.gemshop['Purchases']['King Of All Winners']['Owned'])
-    bonuses_advice[bonus_multi].append(get_gem_shop_purchase_advice(
-        purchase_name='King Of All Winners',
-        link_to_section=True,
-        secondary_label=f": {round(player_mgb, 1):g}/{round(max_mgb, 1):g}x"
-    ))
-    winz_lantern_post_string = (
-        '' if account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']
-        else '. Unlocked from {{ Jade Emporium|#sneaking }}'
-    )
-    bonuses_advice[bonus_multi].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: The Winz Lantern: "
-              f"{1 + (.25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])}/{1 + (.25 * max_sailing_artifact_level)}x"
-              f"{winz_lantern_post_string}",
-        picture_class="the-winz-lantern",
-        progression=account.sailing['Artifacts']['The Winz Lantern']['Level'],
-        goal=max_sailing_artifact_level
-    ))
-    bonuses_advice[bonus_multi].append(Advice(
+    multi_advices[mgc].append(get_sailing_artifact_advice('The Winz Lantern'))
+    multi_advices[mgc].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
               f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",
         picture_class="merit-5-4",
         progression=account.merits[5][4]["Level"],
         goal=account.merits[5][4]["MaxLevel"]
     ))
-    bonuses_advice[bonus_multi].append(Advice(
+    multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Spectre Stars: "
               f"+{int(account.achievements['Spectre Stars']['Complete'])}/1%",
         picture_class="spectre-stars",
         progression=int(account.achievements['Spectre Stars']['Complete']),
         goal=1
     ))
-    bonuses_advice[bonus_multi].append(Advice(
+    multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Regalis My Beloved: "
               f"+{int(account.achievements['Regalis My Beloved']['Complete'])}/1%",
         picture_class="regalis-my-beloved",
         progression=account.summoning['SanctuaryTotal'] if not account.achievements['Regalis My Beloved']['Complete'] else 360,
         goal=360
     ))
-    bonuses_advice[bonus_multi].append(Advice(
+    multi_advices[mgc].append(Advice(
         label=f"{{{{Armor Set|#armor-sets}}}}: Godshard Set: "
               f"+{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']), 1):g}"
               f"/{round(account.armor_sets['Sets']['GODSHARD SET']['Base Value'], 1):g}%",
@@ -183,14 +200,24 @@ def getBonusesAdviceGroup() -> AdviceGroup:
         goal=1
     ))
 
-    for advice_list in bonuses_advice.values():
+    # Summary
+    multi_advices[summary].append(Advice(
+        label=f"Regular Battles Bonuses Multi: {round_and_trim(summoning['WinnerBonusesMulti']['Value'])}x",
+        picture_class='summoning'
+    ))
+    multi_advices[summary].append(Advice(
+        label=f"Library Max Bonus Multi: {round_and_trim(summoning['WinnerBonusesMultiLibrary'])}x",
+        picture_class='library'
+    ))
+
+    for advice_list in multi_advices.values():
         for advice in advice_list:
             advice.mark_advice_completed()
 
     bonuses_ag = AdviceGroup(
         tier='',
-        pre_string='Bonuses',
-        advices=bonuses_advice,
+        pre_string='Sources of Bonuses Multi',
+        advices=multi_advices,
         informational=True
     )
     return bonuses_ag
@@ -324,6 +351,7 @@ def getSummoningAdviceSection() -> AdviceSection:
     summoning_AdviceGroupDict['Regular'] = get_regular_battles_advicegroup()
     summoning_AdviceGroupDict['Endless'] = getEndlessAdviceGroup()
     summoning_AdviceGroupDict['Bonuses'] = getBonusesAdviceGroup()
+    summoning_AdviceGroupDict['Bonuses Multi'] = getBonusesMultiAdviceGroup()
     summoning_AdviceGroupDict['Summoning Stones'] = getSummoningStoneAdviceGroup()
     summoning_AdviceGroupDict['Upgrades'] = getUpgradesAdviceGroup()
 
