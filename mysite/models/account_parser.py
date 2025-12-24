@@ -3967,6 +3967,7 @@ def _parse_w7(account):
     _parse_advice_for_money(account)
     _parse_w7_spelunk_cave_bonuses(account)
     _parse_w7_coral_reef(account)
+    _parse_w7_legend_talents(account)
 
 def _parse_advice_for_money(account):
     # Dependencies: None
@@ -4030,3 +4031,9 @@ def _parse_w7_coral_reef(account):
     for index, coral_data in enumerate(account.coral_reef['Reef Corals'].values()):
         coral_data['Unlocked'] = bool(safer_index(unlocked_reef_corals, index, False))
         coral_data['Level'] = safer_index(coral_levels, index, 0)
+
+def _parse_w7_legend_talents(account):
+    # Dependencies: None
+    legend_talents_levels = safer_index(safe_loads(account.raw_data.get('Spelunk', [])), 18, [])
+    for index, talent_data in enumerate(account.legend_talents['Talents'].values()):
+        talent_data['Level'] = safer_index(legend_talents_levels, index, 0)

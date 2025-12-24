@@ -2593,6 +2593,7 @@ def _calculate_w1_statues(account):
 def _calculate_w7(account):
     _calculate_w7_advice_for_money(account)
     _calculate_w7_coral_reef(account)
+    _calculate_w7_legend_talents(account)
 
 def _calculate_w7_advice_for_money(account):
     for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():
@@ -2606,3 +2607,32 @@ def _calculate_w7_advice_for_money(account):
 def _calculate_w7_coral_reef(account):
     for coral_details in account.coral_reef['Reef Corals'].values():
         coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))
+
+def _calculate_w7_legend_talents(account):
+    for legend_name, legend_details in account.legend_talents['Talents'].items():
+        legend_details['Value'] = legend_details['Base Value'] * legend_details['Level']
+        next_value = legend_details['Base Value'] * (legend_details['Level'] + 1)
+        if '{' in legend_details['Description']:
+            legend_details['Description'] = legend_details['Description'].replace('{', f"{legend_details['Value']}")
+        if '}' in legend_details['Description']:
+            legend_details['Description'] = legend_details['Description'].replace('}', f"{ValueToMulti(legend_details['Value'])}")
+        if '$' in legend_details['Description']:
+            if legend_name == 'Double Aint Enough':
+                legend_details['Description'] = legend_details['Description'].replace('$', f"{2 + legend_details['Value'] / 100}")
+            elif legend_name == 'Super Talent Points':
+                legend_details['Description'] = legend_details['Description'].replace('$', f"{50 + account.legend_talents['Talents']['Super Duper Talents']['Value']}")
+            elif legend_name == 'Inevitable Builder':
+                legend_details['Description'] = legend_details['Description'].replace(' for a total bonus speed of $x', '')
+            elif legend_name == "6 O'Clock Crystals":
+                legend_details['Description'] = legend_details['Description'].replace('$ ', '')
+            else:
+                legend_details['Description'] = legend_details['Description'].replace('$', f"{legend_details['Value']}")
+        if '{' in legend_details['Bonus']:
+            legend_details['Bonus'] = legend_details['Bonus'].replace('{', f"{next_value}")
+        if '}' in legend_details['Bonus']:
+            legend_details['Bonus'] = legend_details['Bonus'].replace('}', f"{ValueToMulti(next_value)}")
+        if '$' in legend_details['Bonus']:
+            if legend_name == 'Double Aint Enough':
+                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{2 + next_value / 100}")
+            else:
+                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{next_value}")
