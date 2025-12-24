@@ -3,7 +3,7 @@ import copy
 from consts.consts_idleon import lavaFunc
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_upgrade_vault_advice
+from models.models_util import get_upgrade_vault_advice, get_summoning_bonus_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
@@ -71,25 +71,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     }
 
 #Multi Group A
-    red8beat = session_data.account.summoning['Battles']['Red'] >= 8
-    cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
-    sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Red8: "
-              f"+{1.88 * red8beat}/1.88{'' if red8beat else '. Not yet beaten.'}",
-        picture_class='citringe',
-        progression=int(red8beat),
-        goal=1
-    ))
-    sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Cyan13: "
-              f"+{3.45 * cyan13beat}/3.45{'' if cyan13beat else '. Not yet beaten.'}",
-        picture_class="minichief-spirit",
-        progression=int(cyan13beat),
-        goal=1
-    ))
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        sps_adviceDict[mga].append(advice)
-    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
+    sps_adviceDict[mga].append(get_summoning_bonus_advice('<x Shiny EXP'))
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']

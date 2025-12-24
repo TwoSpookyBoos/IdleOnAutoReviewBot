@@ -11,7 +11,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
-from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
+from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
@@ -554,34 +554,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus += cake_beanstalk_value
 
     # Summoning - Bonuses
-    summoning_battles = session_data.account.summoning['Battles']
-    yellow_3_drop_rate = 7 if summoning_battles['Yellow'] >= 3 else 0
-    blue_9_drop_rate = 10.5 if summoning_battles['Blue'] >= 9 else 0
-    purple_12_drop_rate = 17.5 if summoning_battles['Purple'] >= 12 else 0
-    red_13_drop_rate = 35 if summoning_battles['Red'] >= 13 else 0
-    summoning_drop_rate_base = yellow_3_drop_rate + blue_9_drop_rate + purple_12_drop_rate + red_13_drop_rate
-    endless_summon_bonus_multi = .03 * ((floor(summoning_battles['Endless'] / 40) * 2) + (1 if summoning_battles['Endless'] % 40 > 16 else 0))
-    other_summon_bonus_multi = (
-        (.01 if session_data.account.achievements['Regalis My Beloved']['Complete'] else 0)
-        + (.01 if session_data.account.achievements['Spectre Stars']['Complete'] else 0)
-        + (.25 * session_data.account.sailing['Artifacts']['The Winz Lantern']['Level'])
-        + (.01 * session_data.account.merits[5][4]['Level'])
-    )
-    pristine_charm_summon_bonus_multi = 1.3 if session_data.account.sneaking['PristineCharms']['Crystal Comb']['Obtained'] else 1
-    # The bonuses from endless summoning and everything else, except the pristine charm are addative. The charm is a multi
-    total_summon_bonus_multi = (1 + endless_summon_bonus_multi + other_summon_bonus_multi) * pristine_charm_summon_bonus_multi
-    summoning_drop_rate_value = round(summoning_drop_rate_base * total_summon_bonus_multi, 1)
-    summoning_drop_rate_max_base = 7 + 10.5 + 17.5 + 35
-    summoning_drop_rate_max_modded = round(summoning_drop_rate_max_base * total_summon_bonus_multi, 1)
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Summoning Bonuses|#summoning }}}}- Drop Rate:"
-              f"<br>+{summoning_drop_rate_value:g}/{summoning_drop_rate_max_modded:g}% Drop Rate"
-              f"{f'<br>Note: Max value can be increased with Endless Summoning wins' if summoning_drop_rate_value >= summoning_drop_rate_max_base else ''}",
-        picture_class='summoning',
-        progression=summoning_battles['Endless'],
-        goal=EmojiType.INFINITY.value
-    ))
-    world_6_bonus += summoning_drop_rate_value
+    drop_rate_aw_advice[w6].append(get_summoning_bonus_advice('+{% Drop Rate'))
+    world_6_bonus += session_data.account.summoning['Bonuses']['+{% Drop Rate']['Value']
 
     emperor_bonus = session_data.account.emperor['Bonuses'][11]
     drop_rate_aw_advice[w6].append(Advice(

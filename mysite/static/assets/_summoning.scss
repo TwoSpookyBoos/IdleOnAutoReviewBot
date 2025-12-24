@@ -116,6 +116,22 @@ $summoning-upgrades: (
     summoning-upgrade-81: img('data/SumUpgIc81.png'),
 );
 
+$summoning-bonuses: (
+    summoning-amber: img('data/CaveAmber0.png'),
+    summoning-jade: img('wiki/Jade_Coin.png'),
+    summoning-monument-afk: img('wiki/Monument_AFK.png'),
+    summoning-spelunking-pow: img('data/CaveTool0.png'),
+    summoning-ballot: img('wiki/Voter_Slime.gif'),
+    summoning-village-exp: img('wiki/Opal.png'),
+    summoning-class-exp: img('data/VoteBon15.png'),
+    summoning-stamp: img('data/EventShopBuy1.png'),
+    summoning-afk: img('data/VaultUpg23.png'),
+    summoning-all-stat: img('data/VoteBon2.png'),
+    summoning-skill-exp: img('data/MeritBon10.png'),
+    summoning-total-dmg: img('data/VoteBon0.png'),
+    summoning-skill-eff: img('data/VoteBon7.png'),
+);
+
 $summoning-etc: (
     summoning-table: img('Summoning_Table.png')
 );
@@ -123,4 +139,5 @@ $summoning-etc: (
 $all-summoning: map-merge($summoning-familiars, $summoning-stones);
 $all-summoning: map-merge($all-summoning, $summoning-essences);
 $all-summoning: map-merge($all-summoning, $summoning-upgrades);
+$all-summoning: map-merge($all-summoning, $summoning-bonuses);
 $all-summoning: map-merge($all-summoning, $summoning-etc);

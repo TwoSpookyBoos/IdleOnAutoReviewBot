@@ -12,6 +12,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab, session_data
 from models.models import Character
+from models.models_util import get_summoning_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import \
@@ -105,28 +106,12 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
 
     #Summoning Sources
-    summoningSubgroup = f"Summoning Winner Bonus: +{session_data.account.library['SummoningSum']}/{max_summoning_book_levels}"
-    bookLevelAdvices[summoningSubgroup] = []
-    cyan14 = session_data.account.summoning['BattleDetails']['Cyan'][14]
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"{{{{Summoning|#summoning}}}} match Cyan14: "
-              f"+{cyan14['RewardBaseValue'] * cyan14['Defeated']}/{cyan14['Description']}",
-        picture_class=cyan14['Image'],
-        progression=1 if cyan14['Defeated'] else 0,
-        goal=1
-    ))
-    teal9 = session_data.account.summoning['BattleDetails']['Teal'][9]
-    bookLevelAdvices[summoningSubgroup].append(Advice(
-        label=f"{{{{Summoning|#summoning}}}} match Teal9: "
-              f"+{teal9['RewardBaseValue'] * teal9['Defeated']}/{teal9['Description']}",
-        picture_class=teal9['Image'],
-        progression=1 if teal9['Defeated'] else 0,
-        goal=1
-    ))
+    summoning = session_data.account.summoning
+    summoning_library = summoning['Bonuses']['+{ Library Max']
+    summoningSubgroup = f"Summoning: +{summoning_library['Value']}/{summoning_library['Max']}"
 
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        bookLevelAdvices[summoningSubgroup].append(advice)
-    bookLevelAdvices[summoningSubgroup].append(session_data.account.summoning['WinnerBonusesSummaryLibrary'])
+    bookLevelAdvices[summoningSubgroup] = []
+    bookLevelAdvices[summoningSubgroup].append(get_summoning_bonus_advice('+{ Library Max'))
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:
