@@ -156,3 +156,15 @@ def get_event_shop_advice(bonus_name: str) -> Advice:
         goal=1 if bonus['Owned'] else bonus['Cost'],
         resource='event-point' if not bonus['Owned'] else '',
     )
+
+def get_legend_talent_advice(talent_name: str, link_to_section: bool = True) -> Advice:
+    talent = session_data.account.legend_talents['Talents'][talent_name]
+    link_to_section_text = f'{{{{ Legend Talent|#legend-talents }}}} - ' if link_to_section else ''
+    next_level_text = f"<br>Next Lv: {talent['Bonus']}" if talent['Level'] < talent['Max Level'] else ''
+    advice = Advice(
+        label=f"{link_to_section_text}{talent_name}: {talent['Description']}{next_level_text}",
+        picture_class=talent['Image'],
+        progression=talent['Level'],
+        goal=talent['Max Level'],
+    )
+    return advice
