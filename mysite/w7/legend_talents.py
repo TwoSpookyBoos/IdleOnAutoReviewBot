@@ -4,7 +4,7 @@ from models.models_util import get_legend_talent_advice
 
 def get_legend_talents_info_group() -> AdviceGroup:
     sorted_talents = dict(sorted(session_data.account.legend_talents['Talents'].items(), key=lambda c: c[1]['Display Order']))
-    advices = [get_legend_talent_advice(talent_name) for talent_name in sorted_talents.keys()]
+    advices = [get_legend_talent_advice(talent_name, False) for talent_name in sorted_talents.keys()]
 
     for advice in advices:
         advice.mark_advice_completed()
