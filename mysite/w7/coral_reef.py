@@ -3,7 +3,7 @@ from consts.consts_w2 import max_vial_level
 
 from models.models import AdviceSection, AdviceGroup, Advice, Card, session_data
 
-from models.models_util import get_coral_reef_advice, get_companion_advice, get_gem_shop_purchase_advice
+from models.models_util import get_coral_reef_advice, get_companion_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
 
 
 def get_corals_info_group() -> AdviceGroup:
@@ -97,12 +97,11 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(scale_on_ice_advice)
     multi_group_d_value += scale_on_ice_value
 
-    # TODO: Legend Talent
-    legend_talent_advice = Advice(
-        label="Legend Talent (WIP)",
-        picture_class="coming-soon"
-    )
-    multi_group_d_advice.append(legend_talent_advice )
+    legend_talent = session_data.account.legend_talents['Talents']['Coral Restoration']
+    legend_talent_value = legend_talent['Value']
+    legend_talent_advice = get_legend_talent_advice('Coral Restoration')
+    multi_group_d_advice.append(legend_talent_advice)
+    multi_group_d_value += legend_talent_value
 
     coral_arcade = session_data.account.arcade[57]
     coral_arcade_value = coral_arcade['Value']
