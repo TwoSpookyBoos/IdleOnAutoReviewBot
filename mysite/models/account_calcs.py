@@ -31,6 +31,7 @@ from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
+from utils.number_formatting import round_and_trim
 
 logger = get_logger(__name__)
 
@@ -52,6 +53,7 @@ def _calculate_wave_1(account):
     _calculate_w6_summoning_regular_bonuses(account)
     _calculate_w6_summoning_endless_bonuses(account)
     _calculate_w4_tome(account)
+    _calculate_w7_legend_talents(account)
 
 def _calculate_caverns_majiks(account):
     alt_pocket_div = {
@@ -915,6 +917,7 @@ def _calculate_w1_starsigns(account):
 
 
 def _calculate_w1_stamps(account):
+    # Dependency: _calculate_w7_legend_talents
     # `"StampDoubler" == d` in source. Last Updated in v2.43 Nov 6
     account.exalted_stamp_multi = ValueToMulti(
         100 #base
@@ -929,7 +932,7 @@ def _calculate_w1_stamps(account):
         # TODO: + Gaming Palette Bonus
         # TODO: + Exotic Market Bonus
         # TODO: + Spelunk Bonus
-        # TODO: + Legend Talent Bonus
+        + account.legend_talents['Talents']['Wowa Woowa']['Value']
     )
 
     for stamp_name, stamp in account.stamps.items():
@@ -946,9 +949,11 @@ def _calculate_w1_stamps(account):
             continue
 
 def _calculate_w1_owl_bonuses(account):
+    # Dependency: _calculate_w7_legend_talents
     bonuses_of_orion_num = len(owl_bonuses_of_orion)
     bonuses_of_orion_owned = account.owl['BonusesOfOrion']
     megafeathers_owned = account.owl['MegaFeathersOwned']
+    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Furry Friends Forever']['Value'])
     megafeather_mod = 0
     if megafeathers_owned >= 10:
         megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
@@ -968,7 +973,7 @@ def _calculate_w1_owl_bonuses(account):
             bonus_num_unlocked = (floor(bonuses_of_orion_owned/bonuses_of_orion_num) + (1 if (bonuses_of_orion_owned % bonuses_of_orion_num) > bonus_index else 0))
         else:
             bonus_num_unlocked = 0
-        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod
+        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod * legend_talent_multi
         account.owl['Bonuses'][bonus_name] = {
             'BaseValue': bonus_base,
             'NumUnlocked': bonus_num_unlocked,
@@ -1068,11 +1073,10 @@ def _calculate_w2_postOffice(account):
         + account.postOffice['Miscellaneous']
         + account.postOffice['Upgrade Vault']
     )
-    
+
 def _calculate_w2_ballot(account):
-    # + (n._customBlock_Summoning("WinBonus", 22, 0)
-    # + n._customBlock_Companions(19)))))
-    # Last verified as of v2.34
+    # Dependency: _calculate_w7_legend_talents
+    # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
     account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
         + account.caverns['Majiks']['Voter Integrity']['Value']
@@ -1080,6 +1084,8 @@ def _calculate_w2_ballot(account):
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * has_companion('Mashed Potato'))
+        + (40 * has_companion('Crystal Cuttlefish'))
+        + account.legend_talents['Talents']['Democracy FTW']['Value']
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
@@ -1888,10 +1894,13 @@ def _calculate_caverns_the_harp(account):
     account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
 
 def _calculate_caverns_jar_collectibles(account):
+    # Dependency: _calculate_w7_legend_talents
+    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Whats in your Jar?']['Value'])
     for collectible_name, collectible_details in account.caverns['Collectibles'].items():
         try:
             account.caverns['Collectibles'][collectible_name]['Value'] = (
                 collectible_details['Level'] * collectible_details['ScalingValue']
+                * legend_talent_multi
             )
             if '{' in collectible_details['Description']:
                 scaling_note = (
@@ -1899,13 +1908,13 @@ def _calculate_caverns_jar_collectibles(account):
                     f"{'%' if '%' in collectible_details['Description'] else ''} per level"
                 )
                 account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
-                    '{', f"{account.caverns['Collectibles'][collectible_name]['Value']}"
+                    '{', f"{round_and_trim(account.caverns['Collectibles'][collectible_name]['Value'])}"
                 )
 
             elif '}' in collectible_details['Description']:
-                scaling_note = f"<br>{ValueToMulti(account.caverns['Collectibles'][collectible_name]['ScalingValue']) - 1:.2f} per level"
+                scaling_note = f"<br>{round_and_trim(ValueToMulti(account.caverns['Collectibles'][collectible_name]['ScalingValue']) - 1)} per level"
                 account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
-                    '}', f"{ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value'])}"
+                    '}', f"{round_and_trim(ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value']))}"
                 )
             else:
                 scaling_note = ''
@@ -2593,7 +2602,6 @@ def _calculate_w1_statues(account):
 def _calculate_w7(account):
     _calculate_w7_advice_for_money(account)
     _calculate_w7_coral_reef(account)
-    _calculate_w7_legend_talents(account)
 
 def _calculate_w7_advice_for_money(account):
     for bonus_name, bonus_details in account.advice_for_money['Upgrades'].items():

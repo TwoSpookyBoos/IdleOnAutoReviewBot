@@ -3,6 +3,7 @@ from math import ceil
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.models_util import get_legend_talent_advice
 from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
 
@@ -59,12 +60,14 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
     c_stats = 'Cavern Stats'
     rupies_stats = 'Rupies Stats'
     collectible_stats = f'Collectibles: {total_collectible_levels} total levels'
+    collectible_multi = 'Collectibles bonus Multi'
     jar_stats = 'Jar Stats'
     cavern_advice = {
         c_stats: [],
         rupies_stats: [],
         jar_stats: [],
         collectible_stats: [],
+        collectible_multi: [],
     }
 
 # Cavern Stats
@@ -145,6 +148,12 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
             informational=True
         ) for collectible_name, collectible_values in collectibles.items()  # if collectible_values['Description'] != 'Boosts a future cavern... futuuure..!'
     ]
+
+    cavern_advice[collectible_multi].append(get_legend_talent_advice('Whats in your Jar?'))
+
+    for subgroup in cavern_advice:
+        for advice in cavern_advice[subgroup]:
+            advice.mark_advice_completed()
 
     cavern_ag = AdviceGroup(
         tier='',

@@ -11,7 +11,7 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
-from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice
+from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
@@ -44,6 +44,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     w4 = 'World 4'
     w5 = 'World 5'
     w6 = 'World 6'
+    w7 = 'World 7'
     special = 'Special bonuses'
     drop_rate_aw_advice = {
         general: [],
@@ -54,6 +55,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         w4: [],
         w5: [],
         w6: [],
+        w7: [],
         special: []
     }
 
@@ -569,6 +571,16 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     drop_rate_aw_advice[f"{w6} - +{round(world_6_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w6)
 
+    # World 7
+    #########################################
+    world_7_bonus = 0
+
+    # Legend Talents: Greatest Drop Party Ever
+    drop_rate_aw_advice[w7].append(get_legend_talent_advice('Greatest Drop Party Ever'))
+    world_7_bonus += session_data.account.legend_talents['Talents']['Greatest Drop Party Ever']['Value']
+
+    drop_rate_aw_advice[f"{w7} - +{round(world_7_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w7)
+
     # Special bonuses. Dependent on character-specific bonuses as they are applied afterwards
     #########################################
     drop_rate_aw_advice[special].append(Advice(
@@ -743,6 +755,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if card.cardset == 'Events':
             events_cardset.append(card)
 
+    legend_talent_multi = ValueToMulti(session_data.account.legend_talents['Talents']['Flopping a Full House']['Value'])
     for index, character in enumerate(session_data.account.all_characters):
         # Drop Rate from LUK
         dr_from_luk_advice: list[Advice] = []
@@ -779,6 +792,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
                 if (equipped_slot == 0 and "Omega Nanochip" in character.equipped_card_doublers) or (equipped_slot == 7 and "Omega Motherboard" in character.equipped_card_doublers):
                     starting_note = f'(DOUBLED {EmojiType.CHECK.value}{EmojiType.CHECK.value}) '
             card_advice.append(card.getAdvice(optional_character=character, optional_starting_note=starting_note, optional_ending_note=end_note))
+        card_bonus *= legend_talent_multi
+        card_advice.append(get_legend_talent_advice('Flopping a Full House'))
 
         # Card Sets - Bosses n Nightmares
         cardset_advice: list[Advice] = []
