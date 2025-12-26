@@ -4,7 +4,7 @@ from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import EmojiType
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_companion_advice, get_summoning_bonus_advice
+from models.models_util import get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
 from utils.logging import get_logger
 
 
@@ -51,6 +51,7 @@ def getBallotMultiAdviceGroup():
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
     _, mashed_potato_advice = get_companion_advice('Mashed Potato')
+    _, crystal_cuttlefish_advice = get_companion_advice('Crystal Cuttlefish')
     multis_advice = {
         f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
             Advice(
@@ -78,7 +79,9 @@ def getBallotMultiAdviceGroup():
                 goal=1
             ),
             get_summoning_bonus_advice('+{% Ballot Bonus', endless=True),
-            mashed_potato_advice
+            mashed_potato_advice,
+            crystal_cuttlefish_advice,
+            get_legend_talent_advice('Democracy FTW')
         ]
     }
 

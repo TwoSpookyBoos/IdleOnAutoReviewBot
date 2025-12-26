@@ -179,7 +179,7 @@ def getGemstonePercent(gemstone_name: str, gemstone_value: float):
 
 max_farming_crops = 230  # Last verified as of 2.26 Death Bringer
 max_farming_value = 10000  # Last verified as of 2.21 The Fixening
-max_land_rank_level = 11  #Base 1 + 10 from Grimoire
+max_land_rank_level = 41  #Base 1 + 10 from Grimoire + 30 from Legend Talents: Extended Database
 landrank_dict = {
     0: {'Name': 'Evolution Boost', 'UnlockLevel': 1, 'Value': 250},
     1: {'Name': 'Production Boost', 'UnlockLevel': 5, 'Value': 5},

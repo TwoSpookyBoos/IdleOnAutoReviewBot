@@ -5,9 +5,11 @@ from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 
 from models.models import AdviceSection, AdviceGroup, Advice, Card, Character, session_data
-from models.models_util import get_sailing_artifact_advice
+from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_legend_talent_advice
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
+from utils.number_formatting import round_and_trim
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
@@ -171,6 +173,7 @@ def get_sailing_progression_tier_advicegroups():
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def get_sailing_speed_advicegroup() -> AdviceGroup:
+    # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
     # Multi Group A -- Purrmep Minor Link, Cards, Bubble
     purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'))
     purrmep_base_max_minor_bonus = 50
@@ -254,7 +257,15 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     ) / 125
     multi_group_e = round(multi_group_e, 2)
 
-    multi_total = round(multi_group_a * multi_group_b * multi_group_c * multi_group_d * multi_group_e, 2)
+    # Multi Group F -- Davey Jones Bonus + Legend Talents
+    # "DaveyJonesBonus" in source. Last updated in v2.49 Dec 24 2025
+    multi_group_f = ValueToMulti(
+        50 * session_data.account.gemshop['Purchases']['Davey Jones Training']['Owned']
+        + session_data.account.legend_talents['Talents']['Davey Jones Returns']['Value']
+    )
+    multi_group_f = round_and_trim(multi_group_f)
+
+    multi_total = round(multi_group_a * multi_group_b * multi_group_c * multi_group_d * multi_group_e * multi_group_f, 2)
 
     speed_advices = {
         f'Total: {multi_total}x': [
@@ -356,6 +367,10 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=int(c_shanti_minor['Unlocked']),
                 goal=1
             )
+        ],
+        f'Multi Group F: {multi_group_f}x': [
+            get_gem_shop_purchase_advice(purchase_name='Davey Jones Training', link_to_section=True),
+            get_legend_talent_advice('Davey Jones Returns')
         ]
     }
 

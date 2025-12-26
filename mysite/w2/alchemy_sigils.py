@@ -8,7 +8,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 
 from models.models import AdviceGroup, Advice, AdviceSection, session_data
-from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice
+from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice, get_legend_talent_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import pl
@@ -30,6 +30,7 @@ def get_chilled_yarn_multi(artifact_level: int) -> int:
         return get_max_chilled_yarn_multi()
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
+    # "SigilBonusSpeed" in source. Last updated in v2.49 Dec 24 2025
     # Multi Group A = several
     peapod_values = sigils_dict['Pea Pod']['Values']
     player_peapod_value = (
@@ -79,7 +80,11 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mge = ValueToMulti(ab43['Value'])
     mge_label = f"Multi Group E: {mge:.3f}x"
 
-    total_multi = max(1, mga * mgb * mgc * mgd * mge)
+    # Multi Group F = Legend Talents
+    mgf = ValueToMulti(session_data.account.legend_talents['Talents']['Big Sig Fig']['Value'])
+    mgf_label = f"Multi Group F: {round_and_trim(mgf)}x"
+
+    total_multi = max(1, mga * mgb * mgc * mgd * mge * mgf)
 
     speed_Advice = {
         mga_label: [],
@@ -87,6 +92,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         mgc_label: [],
         mgd_label: [],
         mge_label: [],
+        mgf_label: [],
     }
 
     # Multi Group A
@@ -159,6 +165,9 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         goal=arcade_max_level + 1,
         resource=ab43['Material'],
     ))
+
+    # Multi Group F
+    speed_Advice[mgf_label].append(get_legend_talent_advice('Big Sig Fig'))
 
     for group_name in speed_Advice:
         for advice in speed_Advice[group_name]:
