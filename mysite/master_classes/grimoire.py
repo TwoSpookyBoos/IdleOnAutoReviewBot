@@ -3,6 +3,8 @@ from math import ceil
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.w2 import get_arcade_advice
+
 from utils.all_talentsDict import all_talentsDict
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
@@ -13,7 +15,6 @@ from consts.consts_autoreview import (
 )
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import grimoire_bones_list
-from consts.consts_w2 import arcade_max_level
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -137,7 +138,6 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     ]
 
     mge_label = f"Bone Multi Group E: {grimoire['Bone Calc']['mge']:.2f}x"
-    ab40 = session_data.account.arcade[40]
     currency_advices[mge_label] = []
     bop = grimoire['Upgrades']["Bones o' Plenty"]
     currency_advices[mge_label].append(Advice(
@@ -167,13 +167,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         goal=bh['Max Level'],
         resource=bh['Bone Image']
     ))
-    currency_advices[mge_label].append(Advice(
-        label=f"Arcade Bonus 40: {ab40['Display']}",
-        picture_class=ab40['Image'],
-        progression=ab40['Level'],
-        goal=arcade_max_level + 1,
-        resource=ab40['Material'],
-    ))
+    currency_advices[mge_label].append(get_arcade_advice(40))
 
     lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
     lab_jewel_active = lab_jewel['Enabled']

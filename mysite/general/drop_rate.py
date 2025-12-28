@@ -1,7 +1,4 @@
 from consts.progression_tiers import true_max_tiers
-
-from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset, \
-    session_data
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
@@ -11,7 +8,12 @@ from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
+
+from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset, \
+    session_data
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
@@ -216,18 +218,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         _, reindeer_advice = get_companion_advice('Spirit Reindeer')
         drop_rate_aw_advice[w2].append(reindeer_advice)
 
-    drop_rate_arcade = session_data.account.arcade[27]
-    drop_rate_arcade_value = drop_rate_arcade['Value']
-    drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Arcade|#arcade }}}}- Drop Rate:"
-              f"<br>+{drop_rate_arcade_value:g}/{drop_rate_arcade['MaxValue']:g}% Drop Rate"
-              f"{missing_companion_data_txt}",
-        picture_class=drop_rate_arcade['Image'],
-        progression=drop_rate_arcade['Level'],
-        resource='arcade-gold-ball',
-        goal=101
-    ))
-    world_2_bonus += drop_rate_arcade_value
+    drop_rate_aw_advice[w2].append(get_arcade_advice(27))
+    world_2_bonus += session_data.account.arcade[27]['Value']
 
     # Obols - Family - Drop Rate
     obols_family_drop_rate = session_data.account.obols['BonusTotals'].get('Total%_DROP_CHANCE', 0)

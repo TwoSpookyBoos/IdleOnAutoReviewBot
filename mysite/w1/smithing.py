@@ -3,10 +3,11 @@ import math
 
 from models.models import Advice, AdviceGroup, AdviceSection, session_data
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
-from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
 from models.models_util import get_upgrade_vault_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import pl
@@ -76,15 +77,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices['Scaling Sources'].append(session_data.account.stamps['Forge Stamp'].get_advice())
 
     #Arcade Bonus 26 gives Forge Ore Capacity
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"{{{{Arcade|#arcade}}}} Bonus: "
-              f"{round(session_data.account.arcade[26]['Value'], 2):g}/"
-              f"{session_data.account.arcade[26]['MaxValue']:.0f}%",
-        picture_class=session_data.account.arcade[26]['Image'],
-        progression=session_data.account.arcade[26]['Level'],
-        goal=arcade_max_level+1,
-        resource=session_data.account.arcade[26]['Material']
-    ))
+    cap_Advices['Scaling Sources'].append(get_arcade_advice(26))
 
     #Cosmos > IdleOn Majik #2 Beeg Beeg Forge
     majik_beeg_forge = session_data.account.caverns['Majiks']['Beeg Beeg Forge']

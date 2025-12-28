@@ -4,6 +4,8 @@ from consts.consts_idleon import lavaFunc
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_upgrade_vault_advice, get_summoning_bonus_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
@@ -13,7 +15,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
-from consts.consts_w2 import maxable_critter_vials_list, max_vial_level, arcade_max_level
+from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -674,12 +676,7 @@ def getPetDamageAdviceGroup():
                 progression=int(power_bowower_star_sign['Unlocked']),
                 goal=1
             ),
-            Advice(
-                label=f'{{{{ Arcade Bonus|#arcade}}}} - Pet Damage: +{pet_damage_arcade_bonus_bonus:.2f}%',
-                picture_class=pet_damage_arcade_bonus['Image'],
-                progression=pet_damage_arcade_bonus['Level'],
-                goal=arcade_max_level
-            ),
+            get_arcade_advice(30),
             get_upgrade_vault_advice('Pet Punchies')
         ]
     }

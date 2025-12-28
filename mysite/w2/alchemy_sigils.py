@@ -3,12 +3,14 @@ from collections import defaultdict
 from consts.consts_autoreview import ValueToMulti, EmojiType, break_you_best, build_subgroup_label
 from consts.consts_idleon import lavaFunc
 from consts.consts_w1 import stamp_maxes
-from consts.consts_w2 import max_sigil_level, max_vial_level, arcade_max_level, sigils_dict
+from consts.consts_w2 import max_sigil_level, max_vial_level, sigils_dict
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 
 from models.models import AdviceGroup, Advice, AdviceSection, session_data
 from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice, get_legend_talent_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import pl
@@ -158,13 +160,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     ))
 
     # Multi Group E
-    speed_Advice[mge_label].append(Advice(
-        label=f"Arcade Bonus 43: {ab43['Display']}",
-        picture_class=ab43['Image'],
-        progression=ab43['Level'],
-        goal=arcade_max_level + 1,
-        resource=ab43['Material'],
-    ))
+    speed_Advice[mge_label].append(get_arcade_advice(43))
 
     # Multi Group F
     speed_Advice[mgf_label].append(get_legend_talent_advice('Big Sig Fig'))

@@ -3,6 +3,8 @@ import math
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_companion_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
@@ -11,7 +13,7 @@ from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgrou
 from consts.consts_idleon import skill_index_list, lavaFunc
 from consts.consts_w5 import goldrelic_multis_dict
 from consts.consts_w3 import max_printer_sample_rate
-from consts.consts_w2 import max_vial_level, arcade_max_level
+from consts.consts_w2 import max_vial_level
 from consts.progression_tiers import sampling_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -106,15 +108,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
         goal=1
     ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"{{{{Arcade|#arcade}}}} Bonus: "
-              f"{session_data.account.arcade[5]['Value']:.2f}/"
-              f"{session_data.account.arcade[5]['MaxValue']:.0f}%",
-        picture_class=session_data.account.arcade[5]['Image'],
-        progression=session_data.account.arcade[5]['Level'],
-        goal=arcade_max_level + 1,
-        resource=session_data.account.arcade[5]['Material']
-    ))
+    psr_Advices[account_subgroup].append(get_arcade_advice(5))
     psr_Advices[account_subgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
         picture_class='saharan-skull',

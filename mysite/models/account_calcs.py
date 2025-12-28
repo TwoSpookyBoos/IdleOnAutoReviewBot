@@ -349,9 +349,6 @@ def _calculate_w2_arcade(account):
             max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
             * max(1, 2 * has_companion('Spirit Reindeer'))
         )
-        account.arcade[upgrade_index]['Display'] = (
-            f"+{account.arcade[upgrade_index]['Value']:.2f}{upgrade_details['Display Type']} {upgrade_details['Stat']}"
-        )
 
 def _calculate_w4_tome(account):
     raw_tome_pcts = account.raw_data.get('serverVars', {}).get('TomePct')
