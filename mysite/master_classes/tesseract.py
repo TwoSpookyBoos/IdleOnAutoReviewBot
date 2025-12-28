@@ -3,10 +3,8 @@ from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
 from consts.progression_tiers import true_max_tiers
-
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.advice.w2 import get_arcade_advice
-
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.text_formatting import notateNumber
@@ -157,6 +155,8 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     mgb_label = f"Tachyon Multi Group B: {tesseract['Tachyon Calc']['mgb']:.2f}x"
 
     emperor_tachyon_bonus = session_data.account.emperor['Bonuses'][6]
+    tachyon_bubble = session_data.account.alchemy_bubbles['Tachyon Bubble']
+
     currency_advices[mgb_label] = [
         Advice(
             label=f"{{{{Emperor Showdowns|#emperor}}}}: {emperor_tachyon_bonus['Description']}"
@@ -164,6 +164,13 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
             picture_class='the-emperor',
             progression=emperor_tachyon_bonus['Wins'],
             goal=EmojiType.INFINITY.value
+        ),
+        Advice(
+            label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Tachyon Bubble: +{round_and_trim(tachyon_bubble['BaseValue'])}/250%",
+            picture_class='tachyon-bubble',
+            resource=tachyon_bubble['Material'],
+            progression=tachyon_bubble['Level'],
+            goal=max_NBLB
         )
     ]
 
@@ -201,6 +208,19 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         progression=int(has_arcanist_pack) if not missing_bundle_data else 'IDK',
         goal=1
     )]
+
+    mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract['Tachyon Calc']['mgf'])}x"
+    vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
+    currency_advices[mgf_label] = [Advice(
+        label=f"{{{{ Vial|#vials }}}}: Paper Pint: +{round_and_trim(vial['Value'])}%",
+        picture_class='spelunking-chapter-3',
+        progression=vial['Level'],
+        goal=max_vial_level
+    )]
+
+    mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract['Tachyon Calc']['mgg'])}x"
+    _, ballonfish_advice = get_companion_advice('Balloonfish')
+    currency_advices[mgg_label] = [ballonfish_advice]
 
     for subgroup in currency_advices:
         for advice in currency_advices[subgroup]:

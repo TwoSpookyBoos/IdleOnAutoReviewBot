@@ -375,6 +375,7 @@ def _calculate_wave_2(account):
     _calculate_master_classes(account)
     _calculate_w1(account)
     _calculate_w2(account)
+    _calculate_master_classes_tesseract_tachyon_sources(account)
     _calculate_w3(account)
     _calculate_w4(account)
     _calculate_w5(account)
@@ -575,7 +576,6 @@ def _calculate_master_classes(account):
     # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
     _calculate_master_classes_compass_upgrades(account)
     _calculate_master_classes_compass_dust_sources(account)
-    _calculate_master_classes_tesseract_tachyon_sources(account)
 
 def _calculate_master_classes_grimoire_upgrades(account):
     grimoire_multi = ValueToMulti(
@@ -747,6 +747,7 @@ def _calculate_master_classes_tesseract_upgrades(account):
             )
 
 def _calculate_master_classes_tesseract_tachyon_sources(account):
+    # Dependency: _calculate_w2_vials(account)
     # _customBlock_ArcaneType: "ExtraTachyon" == d
     tesseract_preset_level = 100
     backup_energy_preset_level = 100
@@ -782,10 +783,15 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
             + account.labJewels['Eternal Energy Jewel']['Value'] * account.labJewels['Eternal Energy Jewel']['Owned']
             + account.arcade[50]['Value']
         ),
-        'mgb': account.emperor['Bonuses'][6]['Total Value'],
+        'mgb': ValueToMulti(
+            MultiToValue(account.emperor['Bonuses'][6]['Total Value'])
+            + account.alchemy_bubbles['Tachyon Bubble']['BaseValue']
+        ),
         'mgc': 1 + 0.3 * account.sneaking['PristineCharms']['Mystery Fizz']['Obtained'],
         'mgd': ValueToMulti(backup_energy_bonus_value),
-        'mge': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned']
+        'mge': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned'],
+        'mgf': ValueToMulti(account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]['Value']),
+        'mgg': 4 * has_companion('Balloonfish'),
     }
     account.tesseract['Tachyon Calc']['Total'] = prod(account.tesseract['Tachyon Calc'].values())
 
