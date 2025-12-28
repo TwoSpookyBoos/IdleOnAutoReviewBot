@@ -141,7 +141,7 @@ def getAchievementStatus(achievementName):
             case 'Effervess Enthusiess':
                 return notateNumber('Match', min(5000000, session_data.account.all_assets.get('Tree13').amount), 0, 'K'), '5000K', 'effervescent-logs'
             case 'Summoning GM':
-                return min(58, session_data.account.summoning['Battles']['NormalTotal']), 58, ''
+                return min(58, session_data.account.summoning['Battles']['RegularTotal']), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
                 return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''
