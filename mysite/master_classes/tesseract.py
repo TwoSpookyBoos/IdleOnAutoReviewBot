@@ -1,12 +1,14 @@
-
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
+from consts.consts_w2 import max_NBLB, max_vial_level
 from consts.progression_tiers import true_max_tiers
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.advice.w2 import get_arcade_advice
+from models.models_util import get_companion_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
+from utils.number_formatting import round_and_trim
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -84,7 +86,6 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
             tesseract_preset_level = arcane_cultist.current_preset_talents.get(str(tesseract_talent_index), 0)
         if arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0) > tesseract_preset_level:
             tesseract_preset_level = arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0)
-
 
     mga_label = f"Tachyon Multi Group A: {tesseract['Tachyon Calc']['mga']:.2f}x"
     currency_advices[mga_label] = []
