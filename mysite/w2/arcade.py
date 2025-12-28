@@ -1,8 +1,9 @@
-from consts.consts_w2 import arcade_max_level
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from models.models_util import get_companion_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.logging import get_logger
 
 
@@ -24,13 +25,7 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
 
     _, reindeer_advice = get_companion_advice('Spirit Reindeer')
     arcade_Advices['Bonuses'] = [reindeer_advice] + [
-        Advice(
-            label=f"Bonus {bonus_name}: {bonus_details['Display']}",
-            picture_class=bonus_details['Image'],
-            progression=bonus_details['Level'],
-            goal=arcade_max_level,
-            resource=bonus_details['Material'],
-        ) for bonus_name, bonus_details in session_data.account.arcade.items()
+        get_arcade_advice(bonus_index, False) for bonus_index in session_data.account.arcade
     ]
 
     for subgroup in arcade_Advices:

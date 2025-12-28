@@ -2,16 +2,12 @@
 from consts.consts_autoreview import EmojiType
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import tesseract_tachyon_list
-from consts.consts_w2 import arcade_max_level, max_vial_level, max_NBLB
 from consts.progression_tiers import true_max_tiers
-
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_companion_advice
-
+from models.advice.w2 import get_arcade_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.text_formatting import notateNumber
-from utils.number_formatting import round_and_trim
 
 logger = get_logger(__name__)
 
@@ -154,14 +150,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         goal=1
     ))
 
-    arcade_bonus = session_data.account.arcade[50]
-    currency_advices[mga_label].append(Advice(
-        label=f"Arcade Bonus 50: {arcade_bonus['Display']}",
-        picture_class=arcade_bonus['Image'],
-        progression=arcade_bonus['Level'],
-        goal=arcade_max_level + 1,
-        resource=arcade_bonus['Material'],
-    ))
+    currency_advices[mga_label].append(get_arcade_advice(50))
 
     mgb_label = f"Tachyon Multi Group B: {tesseract['Tachyon Calc']['mgb']:.2f}x"
 

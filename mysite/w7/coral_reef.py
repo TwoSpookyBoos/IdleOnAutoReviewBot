@@ -2,9 +2,8 @@ from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_w2 import max_vial_level
 
 from models.models import AdviceSection, AdviceGroup, Advice, Card, session_data
-
 from models.models_util import get_coral_reef_advice, get_companion_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
-
+from models.advice.w2 import get_arcade_advice
 
 def get_corals_info_group() -> AdviceGroup:
     coral_advice: list[Advice] = [
@@ -103,17 +102,8 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(legend_talent_advice)
     multi_group_d_value += legend_talent_value
 
-    coral_arcade = session_data.account.arcade[57]
-    coral_arcade_value = coral_arcade['Value']
-    coral_arcade_advice = Advice(
-        label=f"{{{{ Arcade|#arcade }}}} - Daily Corals: +{coral_arcade_value:.2f}/{coral_arcade['MaxValue']:g}%",
-        picture_class=coral_arcade['Image'],
-        progression=coral_arcade['Level'],
-        resource='arcade-gold-ball',
-        goal=101,
-    )
-    multi_group_d_advice.append(coral_arcade_advice)
-    multi_group_d_value += coral_arcade_value
+    multi_group_d_advice.append(get_arcade_advice(57))
+    multi_group_d_value += session_data.account.arcade[57]['Value']
 
     coral_conservationism = session_data.account.sneaking['JadeEmporium']['Coral Conservationism']
     coral_conservationism_value = 20 * int(coral_conservationism['Obtained'])

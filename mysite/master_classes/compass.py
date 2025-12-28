@@ -1,6 +1,8 @@
 from consts.progression_tiers import true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.w2 import get_arcade_advice
+
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
 
@@ -10,7 +12,6 @@ from consts.consts_autoreview import (
 )
 from consts.consts_idleon import lavaFunc
 from consts.consts_master_classes import compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_medallions
-from consts.consts_w2 import arcade_max_level
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -242,14 +243,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         progression=compass_preset_level,
         goal=session_data.account.library['MaxBookLevel']
     ))
-    ab47 = session_data.account.arcade[47]
-    currency_advices[mgf_label].append(Advice(
-        label=f"Arcade Bonus 47: {ab47['Display']}",
-        picture_class=ab47['Image'],
-        progression=ab47['Level'],
-        goal=arcade_max_level + 1,
-        resource=ab47['Material'],
-    ))
+    currency_advices[mgf_label].append(get_arcade_advice(47))
 
     lab_jewel = session_data.account.labJewels['North Winds Jewel']
     lab_jewel_active = lab_jewel['Enabled']
