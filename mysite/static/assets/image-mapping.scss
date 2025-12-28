@@ -127,11 +127,13 @@ $id-map: map-merge($id-map, $all-summoning);
 @import "clam";
 @import "coral";
 @import "spelunking";
+@import "legend-talents";
 
 $id-map: map-merge($id-map, $all-advice-for-money);
 $id-map: map-merge($id-map, $all-clam);
 $id-map: map-merge($id-map, $all-coral);
 $id-map: map-merge($id-map, $all-spelunking);
+$id-map: map-merge($id-map, $all-legend-talents);
 
 
 @each $class, $link in $id-map {

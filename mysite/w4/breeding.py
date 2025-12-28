@@ -3,7 +3,9 @@ import copy
 from consts.consts_idleon import lavaFunc
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_upgrade_vault_advice
+from models.models_util import get_upgrade_vault_advice, get_summoning_bonus_advice
+from models.advice.w2 import get_arcade_advice
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
@@ -13,7 +15,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
-from consts.consts_w2 import maxable_critter_vials_list, max_vial_level, arcade_max_level
+from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -71,25 +73,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     }
 
 #Multi Group A
-    red8beat = session_data.account.summoning['Battles']['Red'] >= 8
-    cyan13beat = session_data.account.summoning['Battles']['Cyan'] >= 13
-    sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Red8: "
-              f"+{1.88 * red8beat}/1.88{'' if red8beat else '. Not yet beaten.'}",
-        picture_class='citringe',
-        progression=int(red8beat),
-        goal=1
-    ))
-    sps_adviceDict[mga].append(Advice(
-        label=f"Summoning match Cyan13: "
-              f"+{3.45 * cyan13beat}/3.45{'' if cyan13beat else '. Not yet beaten.'}",
-        picture_class="minichief-spirit",
-        progression=int(cyan13beat),
-        goal=1
-    ))
-    for advice in session_data.account.summoning['WinnerBonusesAdvice']:
-        sps_adviceDict[mga].append(advice)
-    sps_adviceDict[mga].extend(session_data.account.summoning['WinnerBonusesSummaryRest'])
+    sps_adviceDict[mga].append(get_summoning_bonus_advice('<x Shiny EXP'))
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
@@ -692,12 +676,7 @@ def getPetDamageAdviceGroup():
                 progression=int(power_bowower_star_sign['Unlocked']),
                 goal=1
             ),
-            Advice(
-                label=f'{{{{ Arcade Bonus|#arcade}}}} - Pet Damage: +{pet_damage_arcade_bonus_bonus:.2f}%',
-                picture_class=pet_damage_arcade_bonus['Image'],
-                progression=pet_damage_arcade_bonus['Level'],
-                goal=arcade_max_level
-            ),
+            get_arcade_advice(30),
             get_upgrade_vault_advice('Pet Punchies')
         ]
     }

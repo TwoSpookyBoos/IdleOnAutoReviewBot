@@ -9,7 +9,7 @@ from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
 
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice
+from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
@@ -323,6 +323,8 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         label=f"{{{{Event Shop|#event-shop}}}}: Extra Exaltedness: +{extra_exaltedness_value * extra_exaltedness['Owned']}/{extra_exaltedness_value}%",
         picture_class='event-shop-18'
     ))
+
+    exalted_advice[boni].append(get_legend_talent_advice('Wowa Woowa'))
 
     tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
 
