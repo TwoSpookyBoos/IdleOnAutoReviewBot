@@ -12,7 +12,7 @@ from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_guild_bonus_advice
+from models.advice.generators.general import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 

@@ -11,7 +11,7 @@ from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
 from consts.consts_w4 import cooking_close_enough
-from models.models_util import get_upgrade_vault_advice
+from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 

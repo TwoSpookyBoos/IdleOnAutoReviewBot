@@ -4,7 +4,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_companion_advice
+from models.advice.generators.general import get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 from utils.logging import get_logger

@@ -5,7 +5,9 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_summoning_bonus_advice
+from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.advice.generators.w5 import get_sailing_artifact_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 
 from consts.consts_w5 import max_sailing_artifact_level

@@ -4,8 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 
 from utils.number_formatting import round_and_trim
-from utils.logging import get_logger
-logger = get_logger(__name__)
 
 def get_arcade_advice(bonus_index: int, link_to_section: bool = True) -> Advice:
     bonus = session_data.account.arcade[bonus_index]

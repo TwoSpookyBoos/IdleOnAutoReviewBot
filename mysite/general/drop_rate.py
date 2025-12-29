@@ -16,7 +16,9 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
+from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.advice.generators.w7 import get_legend_talent_advice
+from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list

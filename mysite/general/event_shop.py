@@ -2,7 +2,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_event_shop_advice
+from models.advice.generators.w1 import get_event_shop_advice
 from utils.logging import get_logger
 
 

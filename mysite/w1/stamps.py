@@ -12,7 +12,8 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
+from models.advice.generators.w7 import get_legend_talent_advice
+from models.advice.generators.general import get_guild_bonus_advice, get_gem_shop_purchase_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 

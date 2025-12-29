@@ -7,7 +7,7 @@ from models.models import Assets
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.models_util import get_upgrade_vault_advice
+from models.advice.generators.general import get_upgrade_vault_advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 

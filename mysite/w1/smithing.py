@@ -7,7 +7,7 @@ from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
-from models.models_util import get_upgrade_vault_advice
+from models.advice.generators.general import get_upgrade_vault_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot

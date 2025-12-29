@@ -15,7 +15,7 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.character import Character
-from models.models_util import get_summoning_bonus_advice
+from models.advice.generators.w6 import get_summoning_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import \

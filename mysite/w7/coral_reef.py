@@ -6,7 +6,8 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.models_util import get_coral_reef_advice, get_companion_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
+from models.advice.generators.w7 import get_coral_reef_advice, get_legend_talent_advice
+from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 def get_corals_info_group() -> AdviceGroup:

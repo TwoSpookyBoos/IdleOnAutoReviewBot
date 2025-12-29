@@ -6,7 +6,7 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.models_util import get_legend_talent_advice
+from models.advice.generators.w7 import get_legend_talent_advice
 from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
 

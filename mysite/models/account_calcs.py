@@ -26,7 +26,7 @@ from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, \
     summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
-from models.models_util import get_upgrade_vault_advice
+from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
