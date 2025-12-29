@@ -1,4 +1,4 @@
-from models.models import Asset
+from models.general.assets import Asset
 from utils.safer_data_handling import safe_loads, safer_convert
 
 

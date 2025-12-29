@@ -3,7 +3,7 @@ from consts.consts_general import inventory_bags_dict, storage_chests_dict, inve
     inventory_slots_max_usable_without_bundles, storage_chests_item_slots_max
 from models.general.session_data import session_data
 
-from models.models import Assets
+from models.general.assets import Assets
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup

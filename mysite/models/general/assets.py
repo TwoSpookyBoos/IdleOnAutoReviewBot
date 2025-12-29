@@ -1,10 +1,10 @@
 from typing import Union
 
-from consts.consts_general import greenstack_amount, gstackable_codenames, gstackable_codenames_expected, quest_items_codenames, \
-    greenstack_item_difficulty_groups
-from utils.text_formatting import getItemCodeName, getItemDisplayName
+from consts.consts_general import greenstack_amount, greenstack_item_difficulty_groups, gstackable_codenames, \
+    gstackable_codenames_expected, quest_items_codenames
+from utils.text_formatting import getItemDisplayName, getItemCodeName
 
-# TODO: move Assets to their own file too once Nevar is merged
+
 class Asset:
     def __init__(self, codename: Union[str, "Asset"], amount: float, name: str = "", **stats):
         if isinstance(codename, Asset):
@@ -87,6 +87,7 @@ class Asset:
     @property
     def progression(self) -> int:
         return self.amount * 100 // greenstack_amount
+
 
 class Assets(dict):
     def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
@@ -212,4 +213,3 @@ class Assets(dict):
     @property
     def quest_items_missed(self) -> set[Asset]:
         return self.quest_items.difference(self.quest_items_gstacked)
-

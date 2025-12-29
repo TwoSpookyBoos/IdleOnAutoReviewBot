@@ -65,7 +65,7 @@ from consts.consts_w6 import (
 )
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
-from models.models import Assets
+from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
 from models.general.cards import Card

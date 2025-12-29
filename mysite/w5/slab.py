@@ -1,4 +1,5 @@
 from consts.progression_tiers import true_max_tiers
+from models.general.assets import Asset
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice

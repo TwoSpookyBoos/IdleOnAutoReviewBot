@@ -10,7 +10,7 @@ from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_ma
 from consts.consts_w1 import starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
 from models.general.session_data import session_data
 
-from models.models import Asset
+from models.general.assets import Asset
 from models.general.character import Character
 from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
 from models.advice.advice import Advice
