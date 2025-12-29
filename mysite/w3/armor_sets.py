@@ -88,11 +88,11 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
             all_armors = []
             for item_codename in details['Armor']:
                 if item_codename != 'none':
-                    display_name = getItemDisplayName(item_codename)
+                    item = session_data.account.all_assets.get(item_codename)
                     all_armors.append(Advice(
-                        label=display_name,
-                        picture_class=display_name,
-                        progression=min(1, session_data.account.all_assets.get(item_codename).amount),
+                        label=item.name,
+                        picture_class=item.image,
+                        progression=min(1, item.amount),
                         goal=1
                     ))
             obtained_armors = sum([1 for advice in all_armors if int(advice.progression) > 0])
@@ -101,11 +101,11 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
             all_tools = []
             for item_codename in details['Tools']:
                 if item_codename != 'none':
-                    display_name = getItemDisplayName(item_codename)
+                    item = session_data.account.all_assets.get(item_codename)
                     all_tools.append(Advice(
-                        label=display_name,
-                        picture_class=display_name,
-                        progression=min(1, session_data.account.all_assets.get(item_codename).amount),
+                        label=item.name,
+                        picture_class=item.image,
+                        progression=min(1, item.amount),
                         goal=1
                     ))
             obtained_tools = sum([1 for advice in all_tools if int(advice.progression) > 0])
@@ -114,11 +114,11 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
             all_weapons = []
             for item_codename in details['Weapons']:
                 if item_codename != 'none':
-                    display_name = getItemDisplayName(item_codename)
+                    item = session_data.account.all_assets.get(item_codename)
                     all_weapons.append(Advice(
-                        label=display_name,
-                        picture_class=display_name,
-                        progression=min(1, session_data.account.all_assets.get(item_codename).amount),
+                        label=item.name,
+                        picture_class=item.image,
+                        progression=min(1, item.amount),
                         goal=1
                     ))
             obtained_weapons = sum([1 for advice in all_weapons if int(advice.progression) > 0])

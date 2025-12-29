@@ -1,6 +1,6 @@
 from consts.progression_tiers import true_max_tiers
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.models import AdviceSection, AdviceGroup, Advice, Asset, session_data
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 
@@ -39,28 +39,30 @@ def getSlabProgressionTierAdviceGroups():
         item_displayname = getItemDisplayName(item_codename)
         if item_codename not in session_data.account.registered_slab:
             # If the item is an Asset, meaning in storage, character inventory, or worn by a character
-            if session_data.account.stored_assets.get(item_codename).amount > 0:
+            item = session_data.account.stored_assets.get(item_codename)
+            if item.amount > 0:
                 sources = ", ".join([
                     char.character_name for char in session_data.account.all_characters
-                    if item_displayname in char.equipment.inventory
+                    if item_codename in char.equipment.inventory
                 ])
                 sources = 'In Storage' if not sources else f"Inventory of {sources}"
                 slab_AdviceDict['Storage'].append(Advice(
                     label=f"{item_displayname} ({sources})",
-                    picture_class=item_displayname,
+                    picture_class=item.image,
                     progression=0,
                     goal=1
                 ))
                 continue
             elif session_data.account.worn_assets.get(item_codename).amount > 0:
+                item = session_data.account.worn_assets.get(item_codename)
                 sources = ", ".join([
                     char.character_name for char in session_data.account.all_characters
-                    if item_displayname in char.equipment.equips
-                    or item_displayname in char.equipment.tools
+                    if item_codename in char.equipment.equips
+                    or item_codename in char.equipment.tools
                 ])
                 slab_AdviceDict['Storage'].append(Advice(
                     label=f"{item_displayname} (Equipped by {sources})",
-                    picture_class=item_displayname,
+                    picture_class=item.image,
                     progression=0,
                     goal=1
                 ))
@@ -127,10 +129,11 @@ def getSlabProgressionTierAdviceGroups():
                 if anvilTab not in slab_AdviceDict["Anvil"]:
                     slab_AdviceDict["Anvil"][anvilTab] = []
                 if item_codename in anvilTabList:
+                    item = Asset(item_codename, 0)
                     slab_AdviceDict["Anvil"][anvilTab].append(Advice(
-                        label=item_displayname,
-                        picture_class=item_displayname,
-                        progression=0,
+                        label=item.name,
+                        picture_class=item.image,
+                        progression=item.amount,
                         goal=1
                     ))
                     break
