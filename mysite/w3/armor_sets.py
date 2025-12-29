@@ -1,11 +1,8 @@
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import armor_sets_progressionTiers, true_max_tiers
-
 from models.models import AdviceSection, AdviceGroup, Advice, session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
-
-from consts.consts_autoreview import break_you_best, build_subgroup_label
-from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
 
@@ -81,6 +78,7 @@ def getSetAlertExclusions():
 
 def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     sets_Advices = {}
+    smithy_unlocked = session_data.account.armor_sets['Unlocked']
 
     for name, details in player_sets.items():
         if not details['Owned']:
@@ -95,7 +93,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                         progression=min(1, item.amount),
                         goal=1
                     ))
-            obtained_armors = sum([1 for advice in all_armors if int(advice.progression) > 0])
+            obtained_armors = sum([int(advice.progression) > 0 for advice in all_armors])
 
             # Tools
             all_tools = []
@@ -108,9 +106,9 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                         progression=min(1, item.amount),
                         goal=1
                     ))
-            obtained_tools = sum([1 for advice in all_tools if int(advice.progression) > 0])
+            obtained_tools = sum([int(advice.progression) > 0 for advice in all_tools])
 
-            # Tools
+            # Weapons
             all_weapons = []
             for item_codename in details['Weapons']:
                 if item_codename != 'none':
@@ -121,7 +119,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                         progression=min(1, item.amount),
                         goal=1
                     ))
-            obtained_weapons = sum([1 for advice in all_weapons if int(advice.progression) > 0])
+            obtained_weapons = sum([int(advice.progression) > 0 for advice in all_weapons])
 
             sets_Advices[name] = {
                 f"Required Armor: {obtained_armors}/{len(details['Armor'])}": all_armors,
@@ -134,7 +132,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
                 obtained_armors >= len(details['Armor'])
                 and obtained_tools >= details['Required Tools']
                 and obtained_weapons >= details['Required Weapons']
-                and session_data.account.armor_sets['Unlocked']
+                and smithy_unlocked
                 and name not in getSetAlertExclusions()
             ):
                 session_data.account.alerts_Advices['World 3'].append(Advice(

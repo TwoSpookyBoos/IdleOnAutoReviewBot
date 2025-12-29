@@ -1250,7 +1250,7 @@ class Asset:
 
     def __image__(self, codename: str, name: str) -> str:
         # codename == 'WorshipSkull11' and codename == 'WorshipSkull12' has same name.
-        # Name used in picture_class processed by "kebab" than clash with each other.
+        # Name used in picture_class processed by "kebab" that clash with each other.
         if codename == 'WorshipSkull12':
             return 'prehistoric-skull'
         return name
