@@ -1,4 +1,6 @@
-from models.models import AdviceSection, AdviceGroup, session_data
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 
 from models.models_util import get_legend_talent_advice
 

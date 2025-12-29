@@ -1,14 +1,17 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_general import inventory_slots_max_usable
 from consts.consts_item_data import ITEM_DATA
-from consts.consts_w1 import unavailable_stamps_list, stamps_exalt_recommendations, stamp_types
+from consts.w1.stamps import stamp_types, unavailable_stamps_list, stamps_exalt_recommendations
 from consts.consts_w2 import max_vial_level, max_sigil_level
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_guild_bonus_advice, get_gem_shop_purchase_advice, get_legend_talent_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot

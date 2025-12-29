@@ -1,9 +1,11 @@
 import math
 import time
 from consts.progression_tiers import true_max_tiers
-from consts.consts_autoreview import EmojiType
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
 from utils.logging import get_logger
 

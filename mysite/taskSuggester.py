@@ -9,7 +9,9 @@ from config import app
 from consts.consts_autoreview import versions_patches, lowest_accepted_version
 
 from models.custom_exceptions import UsernameBanned, VeryOldDataException
-from models.models import AdviceWorld, WorldName, Account, session_data
+from models.general.session_data import session_data
+from models.advice.advice_world import AdviceWorld, WorldName
+from models.general.account import Account
 from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username

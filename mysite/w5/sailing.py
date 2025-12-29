@@ -1,10 +1,14 @@
 from collections import defaultdict
 
-from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 
-from models.models import AdviceSection, AdviceGroup, Advice, Card, Character, session_data
+from models.general.character import Character
+from models.general.cards import Card
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_legend_talent_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot

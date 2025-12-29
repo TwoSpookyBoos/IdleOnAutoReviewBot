@@ -9,7 +9,8 @@ from consts.consts_caverns import (
 )
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
     greenstack_amount
-from consts.consts_idleon import lavaFunc, base_crystal_chance
+from consts.idleon.consts_idleon import base_crystal_chance
+from consts.idleon.lava_func import lava_func
 from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
@@ -24,7 +25,7 @@ from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, \
     summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
 from consts.progression_tiers import owl_bonuses_of_orion
-from models.models import Advice
+from models.advice.advice import Advice
 from models.models_util import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
@@ -630,7 +631,7 @@ def _calculate_master_classes_grimoire_bone_sources(account):
         grimoire_preset_level = max(grimoire_preset_level, db.current_preset_talents.get('196', 0), db.secondary_preset_talents.get('196', 0))
         tombstone_preset_level = max(tombstone_preset_level, db.current_preset_talents.get('198', 0), db.secondary_preset_talents.get('198', 0))
 
-    grimoire_percent = lavaFunc(
+    grimoire_percent = lava_func(
         funcType=all_talentsDict[196]['funcX'],
         level=grimoire_preset_level,
         x1=all_talentsDict[196]['x1'],
@@ -689,7 +690,7 @@ def _calculate_master_classes_compass_dust_sources(account):
             ww_preset_level = ww.current_preset_talents.get('421', 0)
         if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
             ww_preset_level = ww.secondary_preset_talents.get('421', 0)
-    compass_percent = lavaFunc(
+    compass_percent = lava_func(
         funcType=all_talentsDict[421]['funcX'],
         level=ww_preset_level,
         x1=all_talentsDict[421]['x1'],
@@ -759,14 +760,14 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
         tesseract_preset_level = max(tesseract_preset_level, ac.current_preset_talents.get(str(tesseract_talent_index), 0), ac.secondary_preset_talents.get(str(tesseract_talent_index), 0))
         backup_energy_preset_level = max(backup_energy_preset_level, ac.current_preset_talents.get(str(backup_energy_talent_index), 0), ac.secondary_preset_talents.get(str(backup_energy_talent_index), 0))
 
-    tesseract_talent_bonus_value = lavaFunc(
+    tesseract_talent_bonus_value = lava_func(
         funcType=all_talentsDict[tesseract_talent_index]['funcX'],
         level=tesseract_preset_level,
         x1=all_talentsDict[tesseract_talent_index]['x1'],
         x2=all_talentsDict[tesseract_talent_index]['x2'],
     )
 
-    backup_energy_bonus_value = lavaFunc(
+    backup_energy_bonus_value = lava_func(
         funcType=all_talentsDict[backup_energy_talent_index]['funcX'],
         level=backup_energy_talent_index,
         x1=all_talentsDict[backup_energy_talent_index]['x1'],
@@ -2033,7 +2034,7 @@ def _calculate_w6_farming_land_ranks(account):
             db.secondary_preset_talents.get('207', 0) + db.total_bonus_talent_levels
         )
 
-    dank_rank_multi = max(1, lavaFunc(
+    dank_rank_multi = max(1, lava_func(
         funcType=all_talentsDict[207]['funcX'],
         level=highest_dank_rank_level,
         x1=all_talentsDict[207]['x1'],
@@ -2413,7 +2414,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         if char.class_name == 'Elemental Sorcerer':
             try:
                 #TODO: Move one-off talent value calculation
-                family_guy_bonus = lavaFunc(
+                family_guy_bonus = lava_func(
                     'decay',
                     char.max_talents_over_books + char.max_talents.get('374', 0),
                     40,
@@ -2451,13 +2452,13 @@ def _calculate_general_crystal_spawn_chance(account):
     )
 
     for char in account.all_characters:
-        cmon_out_crystals_multi = max(1, ValueToMulti(lavaFunc(
+        cmon_out_crystals_multi = max(1, ValueToMulti(lava_func(
             'decay',
             char.max_talents_over_books if char.max_talents.get("26", 0) > 0 else 0,  #This is an assumption that Cmon Out Crystals is max booked
             300,
             100
         )))
-        crystals_4_dayys_multi = max(1, ValueToMulti(lavaFunc(
+        crystals_4_dayys_multi = max(1, ValueToMulti(lava_func(
             'decay',
             char.max_talents.get("619", 0),
             174,
@@ -2510,7 +2511,7 @@ def _calculate_class_unique_kill_stacks(account):
         account.class_kill_talents[talent_name]['x1'] = all_talentsDict[talent_details['Talent Number']]['x1']
         account.class_kill_talents[talent_name]['x2'] = all_talentsDict[talent_details['Talent Number']]['x2']
         account.class_kill_talents[talent_name]['Highest Preset Level'] = max(talent_levels, default=0)
-        account.class_kill_talents[talent_name]['Talent Value'] = lavaFunc(
+        account.class_kill_talents[talent_name]['Talent Value'] = lava_func(
             funcType=account.class_kill_talents[talent_name]['funcType'],
             level=account.class_kill_talents[talent_name]['Highest Preset Level'],
             x1=account.class_kill_talents[talent_name]['x1'],
@@ -2528,7 +2529,7 @@ def _calculate_wave_4(account):
 
 def _calculate_w1_statues(account):
     voodoo_statufication_multi = [
-        lavaFunc(
+        lava_func(
             all_talentsDict[56]['funcX'],
             char.max_talents.get('56', 0),
             all_talentsDict[56]['x1'],

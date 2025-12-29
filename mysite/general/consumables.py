@@ -1,8 +1,12 @@
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import inventory_bags_dict, storage_chests_dict, inventory_slots_max_usable, inventory_accountwide_bags, \
     inventory_slots_max_usable_without_bundles, storage_chests_item_slots_max
+from models.general.session_data import session_data
 
-from models.models import AdviceGroup, Advice, AdviceSection, Assets, session_data
+from models.models import Assets
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_upgrade_vault_advice
 from utils.text_formatting import pl
 from utils.logging import get_logger

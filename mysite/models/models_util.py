@@ -1,9 +1,10 @@
 # These functions will eventually be moved to their own respective models once we introduce more types/classes
 from consts.consts_autoreview import EmojiType
-from consts.consts_idleon import companions_data
+from consts.idleon.consts_idleon import companions_data
 from consts.consts_w5 import max_sailing_artifact_level
+from models.general.session_data import session_data
 
-from models.models import Advice, session_data
+from models.advice.advice import Advice
 
 from utils.misc.has_companion import has_companion
 from utils.number_formatting import round_and_trim

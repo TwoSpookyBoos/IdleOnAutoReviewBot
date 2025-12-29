@@ -1,8 +1,14 @@
-from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import armor_sets_progressionTiers, true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.general.session_data import session_data
+
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
+
+from consts.consts_autoreview import break_you_best, build_subgroup_label
+from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
 

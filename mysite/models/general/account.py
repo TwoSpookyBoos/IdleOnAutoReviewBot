@@ -1,0 +1,85 @@
+import copy
+
+from consts.consts_autoreview import lowest_accepted_version
+from consts.w1.stamps import stamp_types
+from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
+from models.custom_exceptions import VeryOldDataException
+from models.w1.stamps import Stamps
+from utils.safer_data_handling import safe_loads, safer_get
+from utils.text_formatting import InputType
+from flask import g
+
+
+def session_singleton(cls):
+    def getinstance(*args, **kwargs):
+        if not hasattr(g, "account"):
+            return cls(*args, **kwargs)
+        return g.account
+
+    return getinstance
+
+@session_singleton
+class Account:
+
+    def __init__(self, json_data, source_string: InputType):
+        self.raw_data = safe_loads(json_data)
+        self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
+        if self.version < lowest_accepted_version:
+            raise VeryOldDataException(self.version)
+        self.data_source = source_string.value
+        self.alerts_Advices = {
+            'General': [],
+            'World 1': [],
+            'World 2': [],
+            'World 3': [],
+            'World 4': [],
+            'World 5': [],
+            'The Caverns Below': [],
+            'World 6': []
+        }
+        #General
+        self.inventory = {
+            'Characters Missing Bags': {},
+            'Account Wide Inventory': {},
+            'Account Wide Inventory Slots Owned': 0,
+            'Account Wide Inventory Slots Max': 0,
+        }
+        self.gemshop = {
+            'Purchases': {},
+            'Bundle Data Present': None,
+            'Bundles': {}
+        }
+        self.storage = {
+            'Used Chests': [],
+            'Used Chests Slots': 0,
+            'Missing Chests': [],
+            'Missing Chests Slots': 0,
+            'Other Storage': {},
+            'Other Slots Owned': 0,
+            'Other Slots Max': 0,
+            'Total Slots Owned': 0,
+            'Total Slots Max': 0
+        }
+        #W1
+        self.stamps: Stamps = Stamps()
+        self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
+        self.basketball = {
+            'Upgrades': {}
+        }
+        self.darts = {
+            'Upgrades': {}
+        }
+        #W7
+        self.spelunk = {
+            'Cave Bonuses': {},
+        }
+        self.coral_reef = {
+            'Town Corals': 0,
+            'Reef Corals': copy.deepcopy(coral_reef_bonuses)
+        }
+        self.legend_talents = {
+            'Talents': copy.deepcopy(legend_talents_bonuses)
+        }
+        self.advice_for_money = {
+            'Upgrades': {},
+        }

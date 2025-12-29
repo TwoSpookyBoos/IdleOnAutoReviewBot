@@ -2,8 +2,12 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
 from consts.consts_w5 import get_vendor_name
 from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, Assets, session_data
+from models.models import Assets
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
 

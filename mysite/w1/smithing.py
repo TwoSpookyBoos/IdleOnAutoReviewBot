@@ -1,12 +1,14 @@
 import math
 
-
-from models.models import Advice, AdviceGroup, AdviceSection, session_data
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
 from models.models_util import get_upgrade_vault_advice
-from models.advice.w2 import get_arcade_advice
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert

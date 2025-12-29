@@ -1,25 +1,29 @@
 from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import ValueToMulti, EmojiType
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
 from consts.consts_w6 import max_farming_crops, max_land_rank_level
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
-from consts.consts_w1 import stamp_maxes, starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
+from consts.consts_w1 import starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
+from models.general.session_data import session_data
 
-from models.models import Advice, AdviceGroup, AdviceSection, TabbedAdviceGroup, TabbedAdviceGroupTab, Character, Asset, \
-    session_data
+from models.models import Asset
+from models.general.character import Character
+from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice, get_summoning_bonus_advice, get_legend_talent_advice
-from models.advice.w2 import get_arcade_advice
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
-from math import floor
 
 
 logger = get_logger(__name__)
@@ -29,7 +33,6 @@ infinite_star_sign_shiny_base = 2
 
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     companion_data_missing = not session_data.account.companions['Companion Data Present']
-    missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!' if companion_data_missing else ''
     bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if bundle_data_missing else ''
     passive_drop_rate_cards = [
@@ -583,7 +586,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Siege Breaker - Talents -  Archlord of the Pirates
     sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
     goal_string = notateNumber('Basic', 1e6, 2)
-    sb_talent_bonus_max = lavaFunc(sb_talent['funcType'], approx_max_talent_level_non_es_non_star, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
+    sb_talent_bonus_max = lava_func(sb_talent['funcType'], approx_max_talent_level_non_es_non_star, sb_talent['x1'], sb_talent['x2']) * sb_talent['Kill Stacks']
     sb_talent_multi = ValueToMulti(sb_talent['Total Value'])
     drop_rate_aw_advice[special].append(Advice(
         label=f"Siege Breaker talent- Archlord of the Pirates:"
@@ -919,7 +922,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         nplb_name = 'Non Predatory Loot Box'
         nplb = next(b for b in po_box_dict.values() if b['Name'] == nplb_name)
-        nplb_dr_max_value = lavaFunc(
+        nplb_dr_max_value = lava_func(
             funcType=nplb['1_funcType'],
             level=nplb['Max Level'],
             x1=nplb['1_x1'],
@@ -942,13 +945,13 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         midas_minded_name = 'Midas Minded'
         midas_minded_data = next(p for p in prayers_dict.values() if p['Name'] == midas_minded_name)
-        midas_minded_bonus_max = lavaFunc(
+        midas_minded_bonus_max = lava_func(
             funcType=midas_minded_data['bonus_funcType'],
             level=midas_minded_data['MaxLevel'],
             x1=midas_minded_data['bonus_x1'],
             x2=midas_minded_data['bonus_x2']
         )
-        midas_minded_curse_max = lavaFunc(
+        midas_minded_curse_max = lava_func(
             funcType=midas_minded_data['curse_funcType'],
             level=midas_minded_data['MaxLevel'],
             x1=midas_minded_data['curse_x1'],
@@ -1029,13 +1032,13 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         bbs_index = 655
         boss_battle_spillover = all_talentsDict[bbs_index]
         char_boss_battle_spillover_level = character.current_preset_talents.get(str(bbs_index), 0)
-        boss_battle_spillover_value_per_tier = lavaFunc(
+        boss_battle_spillover_value_per_tier = lava_func(
             funcType=boss_battle_spillover['funcX'],
             level=char_boss_battle_spillover_level,
             x1=boss_battle_spillover['x1'],
             x2=boss_battle_spillover['x2']
         )
-        boss_battle_spillover_value_per_tier_max = lavaFunc(
+        boss_battle_spillover_value_per_tier_max = lava_func(
             funcType=boss_battle_spillover['funcX'],
             level=100,
             x1=boss_battle_spillover['x1'],
@@ -1061,13 +1064,13 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             char_robbinghood_level = character.current_preset_talents.get(str(robbinghood_index), 0)
             if char_robbinghood_level > 0:
                 char_robbinghood_level += character.total_bonus_talent_levels
-            robbinghood_value = lavaFunc(
+            robbinghood_value = lava_func(
                 funcType=robbinghood['funcX'],
                 level=char_robbinghood_level,
                 x1=robbinghood['x1'],
                 x2=robbinghood['x2']
             )
-            robbinghood_value_max = lavaFunc(
+            robbinghood_value_max = lava_func(
                 funcType=robbinghood['funcX'],
                 level=character.max_talents_over_books,
                 x1=robbinghood['x1'],
@@ -1090,13 +1093,13 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             char_looty_booty_level = character.current_preset_talents.get(str(looty_booty_index), 0)
             if char_looty_booty_level > 0:
                 char_looty_booty_level += character.total_bonus_talent_levels
-            looty_booty_value = lavaFunc(
+            looty_booty_value = lava_func(
                 funcType=looty_booty['funcX'],
                 level=char_looty_booty_level,
                 x1=looty_booty['x1'],
                 x2=looty_booty['x2']
             )
-            looty_booty_value_max = lavaFunc(
+            looty_booty_value_max = lava_func(
                 funcType=looty_booty['funcX'],
                 level=character.max_talents_over_books,
                 x1=looty_booty['x1'],

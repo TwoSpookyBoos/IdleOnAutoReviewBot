@@ -1,13 +1,16 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_idleon import max_characters
+from consts.idleon.consts_idleon import max_characters
 from consts.consts_w2 import max_vial_level
 from consts.consts_w4 import max_meal_level
 from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, \
     getRequiredCropNumber
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_summoning_bonus_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot

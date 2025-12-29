@@ -1,5 +1,8 @@
-
-from models.models import AdviceSection, AdviceGroup, Advice, TabbedAdviceGroup, TabbedAdviceGroupTab, session_data
+from models.general.session_data import session_data
+from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.logging import get_logger

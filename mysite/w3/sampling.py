@@ -1,16 +1,19 @@
 import math
 
-
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from models.models_util import get_companion_advice
-from models.advice.w2 import get_arcade_advice
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.safer_data_handling import safer_get
 from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
 from utils.logging import get_logger
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
-from consts.consts_idleon import skill_index_list, lavaFunc
+from consts.idleon.consts_idleon import skill_index_list
+from consts.idleon.lava_func import lava_func
 from consts.consts_w5 import goldrelic_multis_dict
 from consts.consts_w3 import max_printer_sample_rate
 from consts.consts_w2 import max_vial_level
@@ -50,7 +53,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
     account_sum += session_data.account.achievements['Saharan Skull']['Complete']
     #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
-    star_talent_one_point = lavaFunc('bigBase', 1, 10, 0.075)
+    star_talent_one_point = lava_func('bigBase', 1, 10, 0.075)
     account_sum += star_talent_one_point
 
     account_subgroup = f'Account-Wide: +{account_sum:.2f}%'
@@ -124,11 +127,11 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Character-Specific
     character_sum = 0.0
-    star_talent_diff_to_max = lavaFunc('bigBase', 100, 10, 0.075) - star_talent_one_point
+    star_talent_diff_to_max = lava_func('bigBase', 100, 10, 0.075) - star_talent_one_point
     character_sum += star_talent_diff_to_max
-    po_box_max = lavaFunc('decay', 400, 5, 200)
+    po_box_max = lava_func('decay', 400, 5, 200)
     character_sum += po_box_max
-    squire_super_samples_max_book = lavaFunc('decay', session_data.account.library['MaxBookLevel'], 9, 75)
+    squire_super_samples_max_book = lava_func('decay', session_data.account.library['MaxBookLevel'], 9, 75)
     character_subgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squire_super_samples_max_book:.2f}% for Squires"
     psr_Advices[character_subgroup] = []
     psr_Advices[character_subgroup].append(Advice(
@@ -269,7 +272,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         if dk.secondary_preset_talents.get("178", 0) >= best_kotr_preset_level:
             best_kotr_preset_level = dk.secondary_preset_talents.get("178", 0) + levels_above_max
 
-    talent_value = lavaFunc('decay', best_kotr_preset_level, 5, 150)
+    talent_value = lava_func('decay', best_kotr_preset_level, 5, 150)
     orb_kills = session_data.account.class_kill_talents['King of the Remembered']['Kills']
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))

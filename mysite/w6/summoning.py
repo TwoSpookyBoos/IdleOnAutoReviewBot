@@ -1,7 +1,10 @@
-from consts.consts_autoreview import ValueToMulti, MultiToValue, EmojiType
+from consts.consts_autoreview import MultiToValue, EmojiType
 from consts.progression_tiers import true_max_tiers
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_summoning_bonus_advice
 from utils.logging import get_logger
 
