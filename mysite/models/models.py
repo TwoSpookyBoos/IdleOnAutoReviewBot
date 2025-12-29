@@ -1234,17 +1234,26 @@ class Asset:
             self.name: str = codename.name
             self.codename: str = codename.codename
             self.amount: float = codename.amount
+            self.image: str = self.__image__(codename.codename, codename.name)
             self.quest: str = codename.quest
             self.quest_giver: str = codename.quest_giver
         else:
             self.name: str = name if name else getItemDisplayName(codename)
             self.codename: str = codename if codename else getItemCodeName(name)
             self.amount: float = amount
+            self.image: str = self.__image__(codename, self.name)
             self.quest: str = ""
             self.quest_giver: str = ""
             self.stats = {}
             self.set_stats(stats)
             pass
+
+    def __image__(self, codename: str, name: str) -> str:
+        # codename == 'WorshipSkull11' and codename == 'WorshipSkull12' has same name.
+        # Name used in picture_class processed by "kebab" that clash with each other.
+        if codename == 'WorshipSkull12':
+            return 'prehistoric-skull'
+        return name
 
     def set_stats(self, stats: dict):
         wanted_stats = {
