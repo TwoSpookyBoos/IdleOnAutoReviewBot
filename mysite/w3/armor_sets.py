@@ -8,7 +8,6 @@ from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label
-from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
 

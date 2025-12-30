@@ -10,7 +10,6 @@ from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_regular_match_colors, summoning_bonus_img
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber
