@@ -1,7 +1,9 @@
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-
-from models.models_util import get_darts_advice
+from models.advice.generators.w1 import get_darts_advice
 
 
 def get_upgrade_info_group():

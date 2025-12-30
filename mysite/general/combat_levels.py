@@ -1,7 +1,10 @@
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.progression_tiers import combatLevels_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceGroup, Advice, AdviceSection, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
 

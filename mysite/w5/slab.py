@@ -1,13 +1,17 @@
 from consts.progression_tiers import true_max_tiers
+from models.general.assets import Asset
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, Asset, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.text_formatting import getItemDisplayName, pl
 from utils.logging import get_logger
 
 from consts.consts_autoreview import (
     break_you_best
 )
-from consts.consts_idleon import max_characters
+from consts.idleon.consts_idleon import max_characters
 from consts.consts_w5 import SlabItemSort, dungeon_drops_list, max_dungeon_weapons_available, dungeon_weapons_list, \
     max_dungeon_armors_available, dungeon_armors_dict, max_dungeon_jewelry_available, dungeon_jewelry_dict, reclaimable_quest_items, slab_quest_rewards_all_chars, \
     slab_quest_rewards_once, vendor_items, vendor_unlock_item, anvil_items, anvil_tabs

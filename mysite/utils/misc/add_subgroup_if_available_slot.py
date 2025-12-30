@@ -1,4 +1,4 @@
-from models.models import session_data
+from models.general.session_data import session_data
 
 
 def add_subgroup_if_available_slot(dictionary: dict, subgroup_label):

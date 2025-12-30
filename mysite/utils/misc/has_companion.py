@@ -1,6 +1,6 @@
 
-from consts.consts_idleon import companions_data
-from models.models import session_data
+from consts.idleon.consts_idleon import companions_data
+from models.general.session_data import session_data
 
 from utils.logging import get_logger
 

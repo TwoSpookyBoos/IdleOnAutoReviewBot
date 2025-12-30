@@ -1,4 +1,4 @@
-from consts.consts_idleon import NinjaInfo
+from consts.idleon.consts_idleon import NinjaInfo
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName

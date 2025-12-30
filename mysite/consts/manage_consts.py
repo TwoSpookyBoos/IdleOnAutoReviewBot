@@ -5,7 +5,7 @@
 from consts import consts_w2, progression_tiers
 from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars
 from consts.consts_item_data import ITEM_DATA
-from consts.consts_w1 import stamp_maxes, unavailable_stamps_list
+from consts.w1.stamps import unavailable_stamps_list, stamp_maxes
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
 from consts.progression_tiers import stamps_progressionTiers, vials_progressionTiers, true_max_tiers, greenstack_progressionTiers, combatLevels_progressionTiers

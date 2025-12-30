@@ -1,11 +1,15 @@
-from consts.consts_autoreview import ValueToMulti, MultiToValue, EmojiType
+from consts.consts_autoreview import MultiToValue, EmojiType
 from consts.progression_tiers import true_max_tiers
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_summoning_bonus_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
+from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.advice.generators.w5 import get_sailing_artifact_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w6 import summoning_doubler_recommendations, summoning_stone_boss_damage_function, summoning_stone_boss_hp_function, summoning_stone_names, summoning_regular_match_colors, summoning_bonus_img
 from consts.consts_caverns import getSummoningDoublerPtsCost
 from utils.text_formatting import notateNumber

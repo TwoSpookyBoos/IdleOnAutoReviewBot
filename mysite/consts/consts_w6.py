@@ -3,7 +3,8 @@ import re
 from collections import defaultdict
 from decimal import Decimal
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_idleon import lavaFunc, NinjaInfo, RANDOlist
+from consts.idleon.consts_idleon import NinjaInfo, RANDOlist
+from consts.idleon.lava_func import lava_func
 from consts.consts_monster_data import decode_monster_name
 from utils.safer_data_handling import safer_math_pow
 from utils.number_formatting import parse_number
@@ -148,7 +149,7 @@ def getMoissaniteValue(moissaniteLevel: int):
 def getGemstoneBoostedValue(gemstone_value: float, moissanite_value: float, talent_level: int):
     if moissanite_value > 0:
         moissanite_multi = ValueToMulti(moissanite_value)
-        talent_level_multi = lavaFunc('decayMulti', max(0, talent_level), 3, 300)
+        talent_level_multi = lava_func('decayMulti', max(0, talent_level), 3, 300)
         boostedValue = gemstone_value * moissanite_multi * talent_level_multi
         return boostedValue
     else:

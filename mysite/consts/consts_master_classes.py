@@ -1,4 +1,4 @@
-from consts.consts_idleon import RANDOlist
+from consts.idleon.consts_idleon import RANDOlist
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 

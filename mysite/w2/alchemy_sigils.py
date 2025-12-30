@@ -1,15 +1,20 @@
 from collections import defaultdict
 
-from consts.consts_autoreview import ValueToMulti, EmojiType, break_you_best, build_subgroup_label
-from consts.consts_idleon import lavaFunc
-from consts.consts_w1 import stamp_maxes
+from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
+from consts.idleon.lava_func import lava_func
+from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_sigil_level, max_vial_level, sigils_dict
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceGroup, Advice, AdviceSection, session_data
-from models.models_util import get_gem_shop_purchase_advice, get_summoning_bonus_advice, get_legend_talent_advice
-from models.advice.w2 import get_arcade_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.advice.generators.w7 import get_legend_talent_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.number_formatting import round_and_trim
@@ -42,7 +47,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
 
     player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
-    goal_sigil_stamp_value = lavaFunc('decay', stamp_maxes['Sigil Stamp'], 40, 150)
+    goal_sigil_stamp_value = lava_func('decay', stamp_maxes['Sigil Stamp'], 40, 150)
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
 
     mga = ValueToMulti(

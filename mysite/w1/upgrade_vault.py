@@ -1,8 +1,11 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import vault_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_upgrade_vault_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.general import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 

@@ -1,5 +1,5 @@
 from consts.consts_autoreview import EmojiType
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
 from utils.logging import get_consts_logger
 from utils.number_formatting import parse_number
 
@@ -1037,7 +1037,7 @@ guild_bonuses_dict = {
         # _: bonus[9],
         # _: bonus[10],
         # _: bonus[11],
-        'Max Value': lavaFunc(bonus[6], int(bonus[7]), int(bonus[4]), int(bonus[5]))
+        'Max Value': lava_func(bonus[6], int(bonus[7]), int(bonus[4]), int(bonus[5]))
     }
     for bonus in guild_bonuses_info
 }

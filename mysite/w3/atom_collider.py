@@ -4,8 +4,11 @@ from consts.consts_w5 import snail_max_possible_rank
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.text_formatting import pl

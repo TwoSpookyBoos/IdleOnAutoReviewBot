@@ -1,5 +1,5 @@
 import math
-from consts.consts_idleon import NinjaInfo
+from consts.idleon.consts_idleon import NinjaInfo
 from utils.safer_data_handling import safer_math_pow
 from utils.number_formatting import parse_number
 from utils.text_formatting import kebab

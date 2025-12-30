@@ -11,7 +11,7 @@ from flask import request, g as session_data
 
 from consts.consts_general import cardset_identifiers, cardset_names, getBaseClass, getSubclass, getEliteClass, \
     getMasterClass
-from consts.consts_idleon import getAllSkillLevelsDict, getHumanReadableClasses, max_characters
+from consts.idleon.consts_idleon import getAllSkillLevelsDict, getHumanReadableClasses, max_characters
 from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
 from utils.logging import get_logger

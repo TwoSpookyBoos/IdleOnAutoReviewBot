@@ -5,7 +5,10 @@ from consts.consts_caverns import max_cavern, caverns_villagers, caverns_enginee
     caverns_measurement_percent_goals, getMaxEngineerLevel
 from consts.progression_tiers import true_max_tiers
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 from utils.logging import get_logger
 
 #villagers_progressionTiers,

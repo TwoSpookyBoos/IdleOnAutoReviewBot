@@ -1,7 +1,9 @@
 from math import ceil
 
-
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert
 from utils.misc.has_companion import has_companion
