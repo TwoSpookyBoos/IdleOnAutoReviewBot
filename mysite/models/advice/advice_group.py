@@ -113,7 +113,11 @@ class AdviceGroup(AdviceBase):
         if isinstance(self.advices, list):
             self.advices = [value for value in self.advices if value]
         if isinstance(self.advices, dict):
-            self.advices = {key: value for key, value in self.advices.items() if value}
+            self.advices = {
+                key: filtered_advice_list
+                for key, advice_list in self.advices.items()
+                if (filtered_advice_list := [v for v in advice_list if v])
+            }
 
     def sort_advices(self, reverseBool):
         if 'default' in self.advices:

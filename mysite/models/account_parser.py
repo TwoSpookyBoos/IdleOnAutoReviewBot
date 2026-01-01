@@ -53,7 +53,7 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, gfood_codes, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
+    jade_emporium, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_regular_match_colors,
@@ -3515,7 +3515,6 @@ def _parse_w6_sneaking(account):
     account.sneaking = {
         "PristineCharms": {},
         "Gemstones": {},
-        'Beanstalk': {},
         "JadeEmporium": {},
         'CurrentMastery': safer_get(account.raw_optlacc_dict, 231, 0),
         'MaxMastery': safer_get(account.raw_optlacc_dict, 232, 0),
@@ -3526,7 +3525,6 @@ def _parse_w6_sneaking(account):
     _parse_w6_pristine_charms(account, raw_ninja_list)
     _parse_w6_gemstones(account)
     _parse_w6_jade_emporium(account, raw_ninja_list)
-    _parse_w6_beanstalk(account, raw_ninja_list)
 
 def _parse_w6_pristine_charms(account, raw_ninja_list):
     raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
@@ -3576,23 +3574,6 @@ def _parse_w6_jade_emporium(account, raw_ninja_list):
         except:
             continue
 
-def _parse_w6_beanstalk(account, raw_ninja_list):
-    raw_beanstalk_list = raw_ninja_list[104] if raw_ninja_list else []
-    if not raw_beanstalk_list:
-        logger.warning(f"Beanstalk data not present{', as expected' if account.version < 200 else ''}.")
-    for gfoodIndex, gfoodName in enumerate(gfood_codes):
-        try:
-            account.sneaking['Beanstalk'][gfoodName] = {
-                'Name': getItemDisplayName(gfoodName),
-                'Beanstacked': raw_beanstalk_list[gfoodIndex] > 0,
-                'SuperBeanstacked': raw_beanstalk_list[gfoodIndex] > 1,
-            }
-        except:
-            account.sneaking['Beanstalk'][gfoodName] = {
-                'Name': getItemDisplayName(gfoodName),
-                'Beanstacked': False,
-                'SuperBeanstacked': False,
-            }
 
 def _parse_w6_farming(account):
     account.farming = {
