@@ -11,6 +11,7 @@ class SpritesheetDefinition(TypedDict):
     columns: int
     rows: int
     num_sprites: Optional[int] # if there are trailing empty slots in the sprite sheet, limit the amount of files generated
+    gif: bool  # collect all num_sprites to gif
 
 
 sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
@@ -28,18 +29,21 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "base_file_name": "SummoningStone",
         "columns": 3,
         "rows": 3,
-        "num_sprites": 7
+        "num_sprites": 7,
+        "gif": False
     },
     "sprite-84-101.png": {
         "base_file_name": "HumbleHugh",
         "columns": 3,
         "rows": 3,
-        "num_sprites": 1
+        "num_sprites": 7,
+        "gif": True
     },
     "sprite-673-33.png": {
         "base_file_name": "Whallamus",
         "columns": 4,
         "rows": 4,
-        "num_sprites": 1
+        "num_sprites": 14,
+        "gif": True
     }
 }
