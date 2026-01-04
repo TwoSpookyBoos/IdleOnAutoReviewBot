@@ -1,10 +1,14 @@
 import copy
 
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.models_util import get_upgrade_vault_advice, get_summoning_bonus_advice
-from models.advice.w2 import get_arcade_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.advice.generators.general import get_upgrade_vault_advice
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
@@ -600,7 +604,7 @@ def getPetDamageAdviceGroup():
                 highest_arena_spirit_goal_level = char.max_talents_over_books
         except:
             continue
-    arena_spirit_talent_bonus = lavaFunc(arena_spirit_talent['funcY'], highest_arena_spirit_level, arena_spirit_talent['y1'], arena_spirit_talent['y2'])
+    arena_spirit_talent_bonus = lava_func(arena_spirit_talent['funcY'], highest_arena_spirit_level, arena_spirit_talent['y1'], arena_spirit_talent['y2'])
 
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
     power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30

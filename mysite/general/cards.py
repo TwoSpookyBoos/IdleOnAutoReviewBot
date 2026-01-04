@@ -2,14 +2,17 @@ from collections import defaultdict
 
 from consts.consts_autoreview import break_you_best, ValueToMulti
 from consts.consts_general import star_tiers, max_card_stars
-from consts.consts_idleon import lavaFunc
-from consts.consts_w1 import stamp_maxes
+from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import max_vial_level, obols_max_bonuses_dict
 from consts.consts_w3 import approx_max_talent_level_star_talents
 from consts.progression_tiers import true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, Card, session_data
-from models.models_util import get_guild_bonus_advice
+from models.general.cards import Card
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.general import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
@@ -42,7 +45,7 @@ def getCardDropChanceAdviceGroup(groups):
     cardiovascular_max_level = 100
 
     cardiovascular_dict_entry = all_talentsDict[cardiovascular_id]
-    cardiovascular_bonus = ValueToMulti(lavaFunc(cardiovascular_dict_entry['funcX'], cardiovascular_max_level, cardiovascular_dict_entry['x1'], cardiovascular_dict_entry['x2']))
+    cardiovascular_bonus = ValueToMulti(lava_func(cardiovascular_dict_entry['funcX'], cardiovascular_max_level, cardiovascular_dict_entry['x1'], cardiovascular_dict_entry['x2']))
     cardiovascular_bonus = round(cardiovascular_bonus, 2)
 
     multi_group_b = cardiovascular_bonus
@@ -71,7 +74,7 @@ def getCardDropChanceAdviceGroup(groups):
 
     # JMAN ONLY
     cards_galore_talent = all_talentsDict[28]
-    cards_galore_talent_bonus = lavaFunc(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
+    cards_galore_talent_bonus = lava_func(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
 
     guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
     guild_bonus_bonus = guild_bonus['Value']

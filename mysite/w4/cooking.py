@@ -1,6 +1,9 @@
 from consts.progression_tiers import true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import Advice, AdviceGroup, AdviceSection, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, AdviceType

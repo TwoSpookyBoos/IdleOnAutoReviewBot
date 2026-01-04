@@ -1,9 +1,7 @@
-import math
-
 from consts.generated.monster_data import monster_data
+from models.general.session_data import session_data
 
 from utils.number_formatting import parse_number
-from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -277,7 +275,6 @@ def getHumanReadableClasses(classNumber):
 
 
 def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
-    from models.models import session_data
     if isinstance(desiredSkill, str):
         try:
             return session_data.account.all_skills[desiredSkill]
@@ -291,26 +288,3 @@ def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
             logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
             return empty_skill_list
 
-def lavaFunc(funcType: str, level: int, x1: int | float, x2: int | float, roundResult=False):
-    match funcType:
-        case 'add':
-            if x2 != 0:
-                result = (((x1 + x2) / x2 + 0.5 * (level - 1)) / (x1/x2)) * level * x1
-            else:
-                result = level * x1
-        case 'decay':
-            result = (level * x1) / (level + x2)
-        case 'intervalAdd':
-            result = x1 + math.floor(level / x2)
-        case 'decayMulti':
-            result = 1 + (level * x1) / (level + x2)
-        case 'bigBase':
-            result = x1 + x2 * level
-        case 'pow':
-            result = safer_math_pow(x1, level)
-        case _:
-            result = 0
-    if roundResult:
-        return round(result)
-    else:
-        return result
