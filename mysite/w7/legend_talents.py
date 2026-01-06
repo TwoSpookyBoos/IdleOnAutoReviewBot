@@ -36,7 +36,7 @@ def get_legend_talents_section():
         name='Legend Talents',
         tier='',
         header='Legend Talents',
-        picture='extracted_sprites/Whallamus0.png',
+        picture='extracted_sprites/Whallamus.gif',
         groups=groups,
         informational=True,
         unrated=True,

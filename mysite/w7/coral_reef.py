@@ -185,7 +185,7 @@ def get_coral_reef_section():
         name='Coral Reef',
         tier='',
         header='Coral Reef',
-        picture='extracted_sprites/HumbleHugh0.png',
+        picture='extracted_sprites/HumbleHugh.gif',
         groups=groups,
         informational=True,
         unrated=True,
