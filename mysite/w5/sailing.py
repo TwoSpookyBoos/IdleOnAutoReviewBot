@@ -426,7 +426,7 @@ def get_sailing_advicesection() -> AdviceSection:
     #Generate AdviceGroup
     sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = get_sailing_progression_tier_advicegroups()
     sailing_AdviceGroupDict['SailingSpeed'] = get_sailing_speed_advicegroup()
-    sailing_AdviceGroupDict['Artifacts'] = get_sailing_artifacts_advicegroup()
+    sailing_AdviceGroupDict['Artifacts Info'] = get_sailing_artifacts_advicegroup()
 
     # Generate AdviceSection
     tier_section = f'{overall_SectionTier}/{max_tier}'

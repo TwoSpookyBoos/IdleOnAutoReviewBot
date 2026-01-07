@@ -2597,7 +2597,7 @@ def _parse_w5_slab(account):
     account.registered_slab = safe_loads(account.raw_data.get("Cards1", []))
 
 def _parse_w5_sailing(account):
-    account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
+    account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'Islands Discovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
     raw_sailing_list = safe_loads(safe_loads(account.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
     if not raw_sailing_list:
         logger.warning(f"Sailing data not present")
@@ -2623,7 +2623,7 @@ def _parse_w5_sailing(account):
                 'NormalTreasure': island_values_dict['NormalTreasure'],
                 'RareTreasure': island_values_dict['RareTreasure']
             }
-    account.sailing['IslandsDiscovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
+    account.sailing['Islands Discovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
     #Artifacts
     for artifact_index, artifact_values_dict in sailing_artifacts_dict.items():
         try:
