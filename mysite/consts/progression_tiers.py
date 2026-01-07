@@ -1633,16 +1633,16 @@ divinity_progressionTiers = {
 sailing_progressionTiers = {
     0: {},
     1: {
-        'IslandsDiscovered': 1,
-        'CaptainsAndBoats': 3,
+        'Islands Discovered': 1,
+        'Captains And Boats': 3,
         'Artifacts': {
             'Moai Head': 1,
             'Fauxory Tusk': 1
         }
     },
     2: {
-        'IslandsDiscovered': 4,
-        'CaptainsAndBoats': 5,
+        'Islands Discovered': 4,
+        'Captains And Boats': 5,
         'Artifacts': {
             'Gold Relic': 1,
             '10 AD Tablet': 2,
@@ -1650,8 +1650,8 @@ sailing_progressionTiers = {
         }
     },
     3: {
-        'IslandsDiscovered': 5,
-        'CaptainsAndBoats': 9,
+        'Islands Discovered': 5,
+        'Captain And Boats': 9,
         'Artifacts': {
             'Maneki Kat': 1,
             'Ruble Cuble': 1,
@@ -1664,23 +1664,23 @@ sailing_progressionTiers = {
         }
     },
     4: {
-        'IslandsDiscovered': 6,
-        'CaptainsAndBoats': 10,
+        'Islands Discovered': 6,
+        'Captain And Boats': 10,
         'Artifacts': {
             'Amberite': 2,
             'Gold Relic': 2,
         }
     },
     5: {
-        'IslandsDiscovered': 7,
-        'CaptainsAndBoats': 11,
+        'Islands Discovered': 7,
+        'Captain And Boats': 11,
         'Artifacts': {
             'Jade Rock': 2,
         }
     },
     6: {
-        'IslandsDiscovered': 8,
-        'CaptainsAndBoats': 12,
+        'Islands Discovered': 8,
+        'Captain And Boats': 12,
         'Artifacts': {
             'Triagulon': 1,
             'Billcye Tri': 1,
@@ -1692,29 +1692,29 @@ sailing_progressionTiers = {
         }
     },
     7: {
-        'IslandsDiscovered': 9,
-        'CaptainsAndBoats': 13,
+        'Islands Discovered': 9,
+        'Captain And Boats': 13,
         'Artifacts': {
             'Fury Relic': 2,
         },
     },
     8: {
-        'IslandsDiscovered': 12,
-        'CaptainsAndBoats': 15,
+        'Islands Discovered': 12,
+        'Captain And Boats': 15,
         'Artifacts': {
             'Crystal Steak': 2,
         }
     },
     9: {
-        'IslandsDiscovered': 14,
-        'CaptainsAndBoats': 17,
+        'Islands Discovered': 14,
+        'Captain And Boats': 17,
         'Artifacts': {
             'Socrates': 2,
         }
     },
     10: {
-        'IslandsDiscovered': 15,
-        'CaptainsAndBoats': 19,
+        'Islands Discovered': 15,
+        'Captain And Boats': 19,
         'Artifacts': {
             'Cloud Urn': 1,
             'Weatherbook': 1,
@@ -1723,7 +1723,7 @@ sailing_progressionTiers = {
         }
     },
     11: {
-        'CaptainsAndBoats': 20,
+        'Captain And Boats': 20,
         'Artifacts': {
             'Fauxory Tusk': 3,
             '10 AD Tablet': 3,

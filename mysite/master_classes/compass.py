@@ -1,7 +1,10 @@
 from consts.progression_tiers import true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.advice.w2 import get_arcade_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
@@ -10,7 +13,7 @@ from consts.consts_autoreview import (
     # compass_progressionTiers, break_you_best, infinity_string,
     ValueToMulti, EmojiType
 )
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
 from consts.consts_master_classes import compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_medallions
 from utils.text_formatting import notateNumber
 
@@ -187,7 +190,7 @@ def getCompassCurrenciesAdviceGroup(compass):
             ww_index = ww.character_index
             eternal_hunt_preset_level = ww.secondary_preset_talents.get('423', 0)
     bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
-    ww_per_stack = lavaFunc(
+    ww_per_stack = lava_func(
         funcType='decay',
         level=eternal_hunt_preset_level + bonus_talent_levels,
         x1=3,
@@ -228,7 +231,7 @@ def getCompassCurrenciesAdviceGroup(compass):
             ww_index = ww.character_index
             compass_preset_level = ww.secondary_preset_talents.get('421', 0)
     bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
-    compass_percent = lavaFunc(
+    compass_percent = lava_func(
         funcType='decay',
         level=compass_preset_level + bonus_talent_levels,
         x1=150,

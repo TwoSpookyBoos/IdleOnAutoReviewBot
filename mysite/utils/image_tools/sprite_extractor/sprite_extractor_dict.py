@@ -1,4 +1,4 @@
-from typing import Dict, TypedDict, Optional
+from typing import Dict, TypedDict, Optional, NotRequired
 
 # a dict to specify which symbol of the font sheet should be parsed.
 # Key: the index of the symbol.
@@ -11,6 +11,7 @@ class SpritesheetDefinition(TypedDict):
     columns: int
     rows: int
     num_sprites: Optional[int] # if there are trailing empty slots in the sprite sheet, limit the amount of files generated
+    as_gif: NotRequired[bool]
 
 
 sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
@@ -34,12 +35,14 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "base_file_name": "HumbleHugh",
         "columns": 3,
         "rows": 3,
-        "num_sprites": 1
+        "num_sprites": 7,
+        "as_gif": True
     },
     "sprite-673-33.png": {
         "base_file_name": "Whallamus",
         "columns": 4,
         "rows": 4,
-        "num_sprites": 1
+        "num_sprites": 14,
+        "as_gif": True
     }
 }

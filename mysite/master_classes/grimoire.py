@@ -1,9 +1,12 @@
 from math import ceil
 
 from consts.progression_tiers import true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
-from models.advice.w2 import get_arcade_advice
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.advice.generators.w2 import get_arcade_advice
 
 from utils.all_talentsDict import all_talentsDict
 from utils.safer_data_handling import safer_math_log
@@ -13,7 +16,7 @@ from consts.consts_autoreview import (
     # grimoire_progressionTiers, break_you_best, infinity_string,
     ValueToMulti, EmojiType,
 )
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
 from consts.consts_master_classes import grimoire_bones_list
 from utils.text_formatting import notateNumber
 
@@ -190,7 +193,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         if db.secondary_preset_talents.get('198', 0) > tombstone_preset_level:
             tombstone_preset_level = db.secondary_preset_talents.get('198', 0)
 
-    tombstone_per_stack = lavaFunc(
+    tombstone_per_stack = lava_func(
         funcType=all_talentsDict[198]['funcX'],
         level=tombstone_preset_level,
         x1=all_talentsDict[198]['x1'],

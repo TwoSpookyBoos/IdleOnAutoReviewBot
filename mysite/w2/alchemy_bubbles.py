@@ -6,8 +6,11 @@ from consts.consts_w2 import min_NBLB, max_NBLB, at_risk_basic_bubbles, atrisk_a
 from consts.consts_w4 import cooking_close_enough
 from consts.consts_w6 import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-from models.models import AdviceGroup, Advice, AdviceSection, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
 

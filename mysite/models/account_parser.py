@@ -4,7 +4,8 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import ValueToMulti, items_codes_and_names
-from consts.consts_idleon import lavaFunc, companions_data, max_characters
+from consts.idleon.consts_idleon import companions_data, max_characters
+from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
@@ -18,11 +19,12 @@ from consts.consts_master_classes import (
 )
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    bribes_dict, starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
+    starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions,
-    stamp_types
+    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions
 )
+from consts.w1.stamps import stamp_types
+from consts.w1.bribes import bribes_dict
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
     arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
@@ -63,7 +65,11 @@ from consts.consts_w6 import (
 )
 from models.general.models_consumables import Bag, StorageChest
 from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
-from models.models import Character, buildMaps, EnemyWorld, Card, Assets, Stamp
+from models.general.assets import Assets
+from models.general.enemies import EnemyWorld, buildMaps
+from models.general.character import Character
+from models.general.cards import Card
+from models.w1.stamps import Stamp
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_index
 from utils.logging import get_logger
@@ -431,7 +437,7 @@ def _parse_family_bonuses(account):
                     account.family_bonuses[className]['Level'] = char.combat_level
     for className in account.family_bonuses.keys():
         try:
-            account.family_bonuses[className]['Value'] = lavaFunc(
+            account.family_bonuses[className]['Value'] = lava_func(
                 family_bonuses_dict[className]['funcType'],
                 account.family_bonuses[className]['Level'] - min(family_bonuses_dict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
                 family_bonuses_dict[className]['x1'],
@@ -536,7 +542,7 @@ def _parse_general_guild_bonuses(account):
             guild_bonus_level = 0
         account.guild_bonuses[bonus_name] = {
             'Level': guild_bonus_level,
-            'Value': lavaFunc(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
+            'Value': lava_func(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
             'Max Level': bonus['Max Level'],
             'Max Value': bonus['Max Value'],
             'Image': bonus['Image'],
@@ -1232,7 +1238,7 @@ def _parse_w1_stamps(account):
                 max_level=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0),
                 delivered=safer_convert(raw_stamp_max_dict.get(stamp_definition.code_name, 0), 0) > 0,
                 stamp_type=stamp_type,
-                value=lavaFunc(
+                value=lava_func(
                     stamp_definition.stamp_bonus.scaling_type,
                     stamp_level,
                     stamp_definition.stamp_bonus.x1,
@@ -1388,7 +1394,7 @@ def _parse_w2_vials(account):
         try:
             account.alchemy_vials[getReadableVialNames(vial_index)] = {
                 'Level': cleaner_alchemy_vials[vial_index],
-                'BaseValue': lavaFunc(
+                'BaseValue': lava_func(
                     vials_dict[vial_index]['funcType'],
                     cleaner_alchemy_vials[vial_index],
                     vials_dict[vial_index]['x1'],
@@ -1497,7 +1503,7 @@ def _parse_w2_bubbles(account):
                         'CauldronIndex': cauldronIndex,
                         'BubbleIndex': bubbleIndex,
                         'Level': all_raw_bubbles[cauldronIndex][bubbleIndex],
-                        'BaseValue': lavaFunc(
+                        'BaseValue': lava_func(
                             bubbles_dict[cauldronIndex][bubbleIndex]['funcType'],
                             all_raw_bubbles[cauldronIndex][bubbleIndex],
                             bubbles_dict[cauldronIndex][bubbleIndex]['x1'],
@@ -1566,7 +1572,7 @@ def _parse_w2_arcade(account):
         try:
             account.arcade[upgrade_index] = {
                 'Level': raw_arcade_upgrades[upgrade_index],
-                'Value': lavaFunc(
+                'Value': lava_func(
                     upgrade_details['funcType'],
                     min(arcade_max_level, raw_arcade_upgrades[upgrade_index]),
                     upgrade_details['x1'],
@@ -1575,7 +1581,7 @@ def _parse_w2_arcade(account):
                 'MaxValue':(
                     2  #Cosmic
                     * 2  #Reindeer Companion
-                    * lavaFunc(
+                    * lava_func(
                         upgrade_details['funcType'],
                         arcade_max_level,
                         upgrade_details['x1'],
@@ -1596,7 +1602,7 @@ def _parse_w2_arcade(account):
             logger.warning(f"Arcade Gold Ball Bonus Parse error at upgrade_index {upgrade_index}: {e}. Defaulting to 0")
             account.arcade[upgrade_index] = {
                 'Level': 0,
-                'Value': lavaFunc(
+                'Value': lava_func(
                     upgrade_details['funcType'],
                     0,
                     upgrade_details['x1'],
@@ -1605,7 +1611,7 @@ def _parse_w2_arcade(account):
                 'MaxValue':(
                     2  #Cosmic
                     * 2  #Reindeer Companion
-                    * lavaFunc(
+                    * lava_func(
                         upgrade_details['funcType'],
                         arcade_max_level,
                         upgrade_details['x1'],
@@ -2078,7 +2084,7 @@ def _parse_w3_prayers(account):
         }
         try:
             account.prayers[prayerValuesDict['Name']]['Level'] = int(raw_prayers_list[prayerIndex])
-            account.prayers[prayerValuesDict['Name']]['BonusValue'] = lavaFunc(
+            account.prayers[prayerValuesDict['Name']]['BonusValue'] = lava_func(
                 prayerValuesDict['bonus_funcType'],
                 account.prayers[prayerValuesDict['Name']]['Level'],
                 prayerValuesDict['bonus_x1'],
@@ -2089,7 +2095,7 @@ def _parse_w3_prayers(account):
                 f"{prayerValuesDict['bonus_post']}"
                 f" {prayerValuesDict['bonus_stat']}"
             )
-            account.prayers[prayerValuesDict['Name']]['CurseValue'] = lavaFunc(
+            account.prayers[prayerValuesDict['Name']]['CurseValue'] = lava_func(
                 prayerValuesDict['curse_funcType'],
                 account.prayers[prayerValuesDict['Name']]['Level'],
                 prayerValuesDict['curse_x1'],
@@ -2591,7 +2597,7 @@ def _parse_w5_slab(account):
     account.registered_slab = safe_loads(account.raw_data.get("Cards1", []))
 
 def _parse_w5_sailing(account):
-    account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'IslandsDiscovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
+    account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'Islands Discovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
     raw_sailing_list = safe_loads(safe_loads(account.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
     if not raw_sailing_list:
         logger.warning(f"Sailing data not present")
@@ -2617,7 +2623,7 @@ def _parse_w5_sailing(account):
                 'NormalTreasure': island_values_dict['NormalTreasure'],
                 'RareTreasure': island_values_dict['RareTreasure']
             }
-    account.sailing['IslandsDiscovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
+    account.sailing['Islands Discovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
     #Artifacts
     for artifact_index, artifact_values_dict in sailing_artifacts_dict.items():
         try:
@@ -3675,19 +3681,19 @@ def _parse_w6_farming_crop_depot(account):
             'ScalingType': bonusDetails['funcType'],
             'ScalingNumber': bonusDetails['x1'],
             'Unlocked': account.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
-            'BaseValue': lavaFunc(
+            'BaseValue': lava_func(
                 bonusDetails['funcType'],
                 account.farming['CropsUnlocked'] if bonusIndex != 7 else max(0, account.farming['CropsUnlocked'] - 100),
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
-            'BaseValuePlus1': lavaFunc(
+            'BaseValuePlus1': lava_func(
                 bonusDetails['funcType'],
                 min(max_farming_crops, account.farming['CropsUnlocked'] + 1) if bonusIndex != 7 else min(max_farming_crops - 100, account.farming['CropsUnlocked'] + 1),
                 bonusDetails['x1'],
                 bonusDetails['x2']
             ),
-            'MaxValue': lavaFunc(
+            'MaxValue': lava_func(
                 bonusDetails['funcType'],
                 max_farming_crops,
                 bonusDetails['x1'],

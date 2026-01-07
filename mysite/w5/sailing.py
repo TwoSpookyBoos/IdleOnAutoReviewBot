@@ -1,11 +1,17 @@
 from collections import defaultdict
 
-from consts.consts_w1 import stamp_maxes
 from consts.consts_w2 import max_vial_level, max_NBLB
 from consts.consts_w3 import totems_max_wave
 
-from models.models import AdviceSection, AdviceGroup, Advice, Card, Character, session_data
-from models.models_util import get_gem_shop_purchase_advice, get_sailing_artifact_advice, get_legend_talent_advice
+from models.general.character import Character
+from models.general.cards import Card
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
+from models.advice.generators.w5 import get_sailing_artifact_advice
+from models.advice.generators.w7 import get_legend_talent_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
@@ -420,7 +426,7 @@ def get_sailing_advicesection() -> AdviceSection:
     #Generate AdviceGroup
     sailing_AdviceGroupDict, overall_SectionTier, max_tier, true_max = get_sailing_progression_tier_advicegroups()
     sailing_AdviceGroupDict['SailingSpeed'] = get_sailing_speed_advicegroup()
-    sailing_AdviceGroupDict['Artifacts'] = get_sailing_artifacts_advicegroup()
+    sailing_AdviceGroupDict['Artifacts Info'] = get_sailing_artifacts_advicegroup()
 
     # Generate AdviceSection
     tier_section = f'{overall_SectionTier}/{max_tier}'

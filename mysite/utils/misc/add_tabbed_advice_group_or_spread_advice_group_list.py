@@ -1,5 +1,6 @@
-
-from models.models import TabbedAdviceGroup, AdviceGroup, session_data
+from models.general.session_data import session_data
+from models.advice.advice_group_tabbed import TabbedAdviceGroup
+from models.advice.advice_group import AdviceGroup
 
 
 def add_tabbed_advice_group_or_spread_advice_group_list(src: dict, target: TabbedAdviceGroup, tabbed_key_name: str):

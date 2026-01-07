@@ -1,5 +1,7 @@
-
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.general.session_data import session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w3 import conditional_prayers, ignorable_prayers
 from consts.progression_tiers import prayers_progressionTiers, true_max_tiers

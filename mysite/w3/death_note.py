@@ -1,11 +1,13 @@
 from math import floor
 from consts.consts_autoreview import break_you_best
-from consts.consts_idleon import current_world
+from consts.idleon.consts_idleon import current_world
 from consts.consts_w3 import apoc_names_list, apoc_difficulty_name_list, dn_delays, dn_skull_value_to_name_dict, getDNKillRequirement
 from consts.progression_tiers import deathNote_progressionTiers, true_max_tiers
+from models.general.session_data import session_data
 
-
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 

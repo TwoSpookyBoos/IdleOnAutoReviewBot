@@ -1,6 +1,9 @@
-from models.models import AdviceSection, AdviceGroup, session_data
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 
-from models.models_util import get_legend_talent_advice
+from models.advice.generators.w7 import get_legend_talent_advice
+
 
 def get_legend_talents_info_group() -> AdviceGroup:
     sorted_talents = dict(sorted(session_data.account.legend_talents['Talents'].items(), key=lambda c: c[1]['Display Order']))
@@ -33,7 +36,7 @@ def get_legend_talents_section():
         name='Legend Talents',
         tier='',
         header='Legend Talents',
-        picture='extracted_sprites/Whallamus0.png',
+        picture='extracted_sprites/Whallamus.gif',
         groups=groups,
         informational=True,
         unrated=True,

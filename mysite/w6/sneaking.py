@@ -1,7 +1,10 @@
-from consts.consts_idleon import lavaFunc
+from consts.idleon.lava_func import lava_func
 from consts.progression_tiers import true_max_tiers
 
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
+from models.general.session_data import session_data
 from utils.logging import get_logger
 
 
@@ -21,7 +24,7 @@ def getSneakingProgressionTiersAdviceGroups():
     tier_Sneaking = 0
 
     # Assess Gemstones
-    talent_level_multi = lavaFunc('decayMulti', max(0, session_data.account.sneaking['Highest Current Generational Gemstones']), 3, 300)
+    talent_level_multi = lava_func('decayMulti', max(0, session_data.account.sneaking['Highest Current Generational Gemstones']), 3, 300)
     sneaking_AdviceDict["Gemstones"].append(Advice(
         label=f"Wind Walker Tab 5: Generational Gemstones: {talent_level_multi:.4f}x"
               f"<br>Highest currently specced talent level shown to the right",

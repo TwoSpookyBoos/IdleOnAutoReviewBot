@@ -1,6 +1,6 @@
 import re
 from consts.generated.raw_item_data import raw_item_data
-from models.models import ItemDefinition, StampItemDefinition, ItemDefinitions, StampBonus
+from models.general.item_definitions import StampBonus, ItemDefinition, StampItemDefinition, ItemDefinitions
 from utils.generate_data_dict import generate_data_dict
 from utils.number_formatting import parse_number
 from utils.logging import get_consts_logger

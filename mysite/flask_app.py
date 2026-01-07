@@ -9,7 +9,7 @@ from flask import g, render_template, request, redirect, Response, send_from_dir
 
 import consts.consts_autoreview
 import consts.consts_general
-import consts.consts_idleon
+import consts.idleon.consts_idleon
 import consts.consts_item_data
 import consts.consts_monster_data
 import consts.consts_w1
@@ -35,7 +35,7 @@ from models.custom_exceptions import (
     DataTooLong,
     VeryOldDataException
 )
-from models.models import AdviceWorld
+from models.advice.advice_world import AdviceWorld
 from utils.data_formatting import HeaderData
 from utils.logging import (
     ResponseCache,

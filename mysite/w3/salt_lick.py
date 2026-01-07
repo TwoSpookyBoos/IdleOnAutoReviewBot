@@ -1,8 +1,10 @@
 from consts.consts_autoreview import break_you_best
 from consts.progression_tiers import salt_lick_progression_tiers, true_max_tiers
+from models.general.session_data import session_data
 
-
-from models.models import AdviceSection, AdviceGroup, Advice, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.text_formatting import pl
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:

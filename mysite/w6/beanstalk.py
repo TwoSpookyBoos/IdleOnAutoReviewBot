@@ -1,8 +1,11 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w6 import gfood_codes, BEANSTACK_GOAL, SUPER_BEANSTACK_GOAL, gfood_data
 from consts.progression_tiers import true_max_tiers, beanstalk_progressionTiers
+from models.general.session_data import session_data
 
-from models.models import AdviceSection, Advice, AdviceGroup, session_data
+from models.advice.advice import Advice
+from models.advice.advice_section import AdviceSection
+from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import getItemDisplayName
 
