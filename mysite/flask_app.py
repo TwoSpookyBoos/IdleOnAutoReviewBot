@@ -174,8 +174,9 @@ def results() -> Response | str:
         response = error, 500
 
     except JSONDecodeError as e:
-        dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
-        error = e.msg_display.format(dirname)
+        # dirname = create_and_populate_log_files(e.data, headerData, str(e), name_or_data, e)
+        # error = e.msg_display.format(dirname)
+        error = e.msg_display
         response = error, 400
 
     except WtfDataException as e:
