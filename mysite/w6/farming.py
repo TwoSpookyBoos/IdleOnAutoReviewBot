@@ -183,9 +183,7 @@ def getNightMarketAdviceGroup(farming) -> AdviceGroup:
     return nm_ag
 
 def getNightMarketCost(name, first_level, last_level=0):
-    cost_multi = (
-        max(.001, session_data.account.emperor['Bonuses'][2]['Total Value'])
-    )
+    cost_multi = max(.001, session_data.account.emperor["cheaper Farming Upgrades"].value)
     total_cost = 0
     upgrade = session_data.account.farming['MarketUpgrades'][name]
     if first_level > last_level:
@@ -1129,13 +1127,7 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
     cost_Advices = []
 
     cost_Advices.append(
-        Advice(
-            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][2]['Description']}"
-                  f"<br>{session_data.account.emperor['Bonuses'][2]['Scaling']}",
-            picture_class='the-emperor',
-            progression=session_data.account.emperor['Bonuses'][2]['Wins'],
-            goal=EmojiType.INFINITY.value
-        )
+        session_data.account.emperor["cheaper Farming Upgrades"].get_bonus_advice()
     )
 
     for advice in cost_Advices:

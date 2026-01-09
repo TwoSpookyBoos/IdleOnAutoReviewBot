@@ -6,6 +6,7 @@ from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
@@ -73,6 +74,7 @@ class Account:
         }
         # W6
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
+        self.emperor: Emperor = Emperor(self.raw_data)
         #W7
         self.spelunk = {
             'Cave Bonuses': {},

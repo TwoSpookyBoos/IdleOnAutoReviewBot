@@ -224,13 +224,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
 
     mgg_label = f"Bone Multi Group G: {grimoire['Bone Calc']['mgg']:.2f}x"
     currency_advices[mgg_label] = [
-        Advice(
-            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][1]['Description']}"
-                  f"<br>{session_data.account.emperor['Bonuses'][1]['Scaling']}",
-            picture_class='the-emperor',
-            progression=session_data.account.emperor['Bonuses'][1]['Wins'],
-            goal=EmojiType.INFINITY.value
-        )
+        session_data.account.emperor["Deathbringer Extra Bones"].get_bonus_advice()
     ]
 
     for subgroup in currency_advices:

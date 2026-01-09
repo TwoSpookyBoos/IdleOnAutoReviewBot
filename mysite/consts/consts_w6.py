@@ -748,11 +748,3 @@ summoning_bonus_img = {
     '+{% for World 7 #2': 'placeholder',
     '<x Spelunk POW': 'summoning-spelunking-pow'
 }
-
-# Last pulled from code in v2.37
-EmperorBon = [
-    "}x_Ninja_Stealth }x_Deathbringer_Extra_Bones $%_cheaper_Farming_Upgrades +{_Opals }x_Windwalker_Extra_Dust +{%_Equinox_Bar_Fill_Rate }x_Arcane_Cultist_Extra_Tachyons }x_Gaming_Bit_gain }x_Summoning_Winner_Bonuses +{%_something_World_7ish +{%_something_World_7ish +{%_Drop_Rate".split(" "),
-    "30 5 20 1 5 15 5 50 1 5 5 10".split(" "),
-    "0 1 0 2 1 4 0 2 4 3 1 0 2 4 5 0 1 2 4 0 6 5 4 2 7 0 1 3 5 4 11 8 0 7 6 9 2 1 7 10 4 5 7 6 0 2 11 1".split(" ")
-]
-emperor_bonus_images = ['sneaking', 'grimoire-bone-0', 'farming', 'opal', 'compass-dust-0', 'equinox-mirror', 'tesseract-tachyon-0', 'gaming', 'summoning', 'placeholder', 'placeholder', 'drop-rate']
