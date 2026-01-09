@@ -541,15 +541,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drop_rate_aw_advice[w6].append(get_summoning_bonus_advice('+{% Drop Rate'))
     world_6_bonus += session_data.account.summoning['Bonuses']['+{% Drop Rate']['Value']
 
-    emperor_bonus = session_data.account.emperor['Bonuses'][11]
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{Emperor Showdowns|#emperor}}}}- Drop Rate:"
-              f"<br>{session_data.account.emperor['Bonuses'][11]['Description']} ({session_data.account.emperor['Bonuses'][11]['Scaling']})",
-        picture_class='the-emperor',
-        progression=session_data.account.emperor['Bonuses'][11]['Wins'],
-        goal=EmojiType.INFINITY.value
-    ))
-    world_6_bonus += emperor_bonus['Total Value']
+    emperor_bonus = session_data.account.emperor["Drop Rate"]
+    drop_rate_aw_advice[w6].append(emperor_bonus.get_bonus_advice())
+    world_6_bonus += emperor_bonus.value
 
     drop_rate_aw_advice[f"{w6} - +{round(world_6_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w6)
 

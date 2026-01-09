@@ -1,35 +1,19 @@
-from consts.consts_autoreview import EmojiType
 from consts.progression_tiers import true_max_tiers
 
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
+from models.w6.emperor import Emperor
 
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def getBonusesAdviceGroup(player_emperor: dict) -> AdviceGroup:
+def getBonusesAdviceGroup(player_emperor: Emperor) -> AdviceGroup:
     bonus_Advices = {
-        'Currencies': [
-            Advice(
-                label=f"Daily Attempts: {player_emperor['Daily Attempts']}"
-                      f"<br>Current Attempts: {player_emperor['Remaining Attempts']}/{player_emperor['Max Attempts']}",
-                picture_class='lifetime-tickets',
-                completed=True
-            )
-        ],
-        'Bonuses': [
-            Advice(
-                label=f"{bonus_details['Description']}"
-                      f"<br>{bonus_details['Scaling']}",
-                picture_class=bonus_details['Image'],
-                progression=bonus_details['Wins'],
-                goal=EmojiType.INFINITY.value
-            ) for bonus_name, bonus_details in player_emperor['Bonuses'].items()
-        ]
+        "Currencies": [player_emperor.get_currency_advice()],
+        "Bonuses": [bonus.get_bonus_advice(False) for bonus in player_emperor.values()],
     }
 
     for label in bonus_Advices:
@@ -45,22 +29,12 @@ def getBonusesAdviceGroup(player_emperor: dict) -> AdviceGroup:
     )
     bonus_ag.remove_empty_subgroups()
     return bonus_ag
-def getShowdownsAdviceGroup(player_emperor: dict) -> AdviceGroup:
 
-    sd_Advices = [
-        Advice(
-            label=f"Showdown {sd_number}"
-                  f"<br>HP: {details[0]}"
-                  f"<br>Reward: {details[1]}",
-            picture_class=details[2],
-            progression=session_data.account.emperor['Last Showdown'],
-            goal=sd_number
-        ) for sd_number, details in session_data.account.emperor['Upcoming'].items()
-    ]
 
+def getShowdownsAdviceGroup(player_emperor: Emperor) -> AdviceGroup:
+    sd_Advices = player_emperor.get_upcoming_figths_advice()
     for advice in sd_Advices:
         advice.mark_advice_completed()
-
     sd_ag = AdviceGroup(
         tier='',
         pre_string='Upcoming Showdowns',
@@ -70,7 +44,8 @@ def getShowdownsAdviceGroup(player_emperor: dict) -> AdviceGroup:
     sd_ag.remove_empty_subgroups()
     return sd_ag
 
-def getProgressionTiersAdviceGroup(player_emperor: dict) -> tuple[AdviceGroup, int, int, int]:
+
+def getProgressionTiersAdviceGroup(player_emperor: Emperor) -> tuple[AdviceGroup, int, int, int]:
     emperor_Advices = {
         'Tiers': {},
     }
