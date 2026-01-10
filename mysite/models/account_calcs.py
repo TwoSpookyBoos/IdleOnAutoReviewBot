@@ -23,7 +23,7 @@ from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_b
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.consts_w6 import max_farming_value, getGemstoneBoostedValue, \
-    summoning_rewards_that_dont_multiply_base_value, EmperorBon, emperor_bonus_images
+    summoning_rewards_that_dont_multiply_base_value
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
 from models.advice.generators.general import get_upgrade_vault_advice
@@ -152,85 +152,14 @@ def _calculate_w3_armor_sets(account):
                 '}', f"{account.armor_sets['Sets'][set_name]['Total Value']:.2f}"
             )
 
-def getEmperorHealth(showdowns_completed: int) -> str:
-    # _customBlock_Thingies -> if ("Boss6HP" == d)
-    # Last updated in v2.48 Giftmas Event (December 8, 2025).
-    hp = 135e12 * safer_math_pow(1.54, showdowns_completed)
-    hp_string = notateNumber('Basic', hp, 2)
-    return hp_string
-
 def _calculate_w6_emperor(account):
     # Dependency: _calculate_master_classes_tesseract_upgrades, sneaking, _calculate_w2_arcade, gemshop
-    account.emperor['Max Attempts'] = (
-        5  #base
-        + (5 * account.sneaking['JadeEmporium']['Emperor Season Pass']['Obtained'])
-        + (6 * account.gemshop['Purchases']['Lifetime Tickets']['Owned'])
+    account.emperor.calculate_max_attempt(
+        account.gemshop, account.sneaking['JadeEmporium']
     )
-    emperor_bonus_multi = ValueToMulti(
-        account.arcade[51]['Value']
-        + MultiToValue(account.tesseract['Upgrades']['Vicar of the Emperor']['Total Value'])
-    )
+    account.emperor.calculate_bonus_multi(account.arcade, account.tesseract)
+    account.emperor.calculate_bonuses()
 
-    for bonus_index, bonus_values in account.emperor['Bonuses'].items():
-        if '{' in bonus_values['Bonus Type']:
-            account.emperor['Bonuses'][bonus_index]['Scaling'] = (
-                f"+{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}"
-                f"{'%' if bonus_index != 3 else ''} per level")
-            account.emperor['Bonuses'][bonus_index]['Total Value'] = floor(
-                account.emperor['Bonuses'][bonus_index]['Wins']
-                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
-                * emperor_bonus_multi
-            )
-            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
-                '{', f"{account.emperor['Bonuses'][bonus_index]['Total Value']:.0f}"
-            )
-        if '}' in bonus_values['Bonus Type']:
-            account.emperor['Bonuses'][bonus_index]['Scaling'] = (
-                f"+{ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win']) - 1:.2f}x per level"
-            )
-            account.emperor['Bonuses'][bonus_index]['Total Value'] = ValueToMulti(floor(
-                account.emperor['Bonuses'][bonus_index]['Wins']
-                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
-                * emperor_bonus_multi
-            ))
-            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
-                '}', f"{account.emperor['Bonuses'][bonus_index]['Total Value']:.2f}"
-            )
-        if '$' in bonus_values['Bonus Type']:
-            account.emperor['Bonuses'][bonus_index]['Scaling'] = ''
-            value = floor(
-                account.emperor['Bonuses'][bonus_index]['Wins']
-                * account.emperor['Bonuses'][bonus_index]['Value Per Win']
-                * emperor_bonus_multi
-            )
-            account.emperor['Bonuses'][bonus_index]['Total Value'] = 1 - (value / (value + 100))
-            account.emperor['Bonuses'][bonus_index]['Description'] = bonus_values['Bonus Type'].replace(
-                '$', f"{(1 - account.emperor['Bonuses'][bonus_index]['Total Value'])*100:.2f}"
-            )
-
-    bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
-    fight_map = [int(value) for value in EmperorBon[2]]
-
-    for i in range(0, 20):
-        next_showdown = account.emperor['Last Showdown'] + i
-        fight_map_index = next_showdown % 48
-        bonus_type = bonus_types[fight_map[fight_map_index]]
-        bonus_index = bonus_types.index(bonus_type)
-
-        if '}' in bonus_type:
-            scaling = bonus_type.replace('}', f"+{ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win']) - 1:.2f}")
-        elif '$' in bonus_type:
-            scaling = bonus_type.replace('$', f"{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}")
-        elif '{' in bonus_type:
-            scaling = bonus_type.replace('{', f"{account.emperor['Bonuses'][bonus_index]['Value Per Win']:.0f}")
-        else:
-            scaling = ''
-
-        account.emperor['Upcoming'][next_showdown + 1] = [
-            getEmperorHealth(next_showdown),
-            scaling,
-            emperor_bonus_images[bonus_types.index(bonus_type)]
-        ]
 
 def _calculate_w6_summoning_winner_bonuses(account):
     # _customBlock_Summoning -> if ("WinBonus" == e)
@@ -266,7 +195,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + 1  # int(account.achievements['Regalis My Beloved'])
         + account.summoning['Endless Bonuses']['<x Winner Bonuses']
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
-        + MultiToValue(account.emperor['Bonuses'][8]['Total Value'])  # Technically infinite
+        + account.emperor["Summoning Winner Bonuses"].value  # Technically infinite
     )
     max_mgc_library = ValueToMulti(
         # 19 == t ? Library bonus's index
@@ -284,7 +213,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + int(account.achievements['Regalis My Beloved']['Complete'])
         + account.summoning['Endless Bonuses']['<x Winner Bonuses']
         + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
-        + MultiToValue(account.emperor['Bonuses'][8]['Total Value'])
+        + account.emperor["Summoning Winner Bonuses"].value
     )
     player_mgc_library = ValueToMulti(
         (25 * account.sailing['Artifacts']['The Winz Lantern']['Level'])
@@ -650,7 +579,7 @@ def _calculate_master_classes_grimoire_bone_sources(account):
             + account.labJewels['Deadly Wrath Jewel']['Value'] * account.labJewels['Deadly Wrath Jewel']['Enabled']
         ),
         'mgf': 1,
-        'mgg': account.emperor['Bonuses'][1]['Total Value']
+        'mgg': ValueToMulti(account.emperor["Deathbringer Extra Bones"].value)
     }
     account.grimoire['Bone Calc']['Total'] = prod(account.grimoire['Bone Calc'].values())
 
@@ -720,7 +649,7 @@ def _calculate_master_classes_compass_dust_sources(account):
             + account.compass['Upgrades']['Abomination Slayer XXX']['Total Value']
             + account.compass['Upgrades']['Abomination Slayer XXXIV']['Total Value']
         ),
-        'mgg': account.emperor['Bonuses'][4]['Total Value']
+        'mgg': ValueToMulti(account.emperor["Windwalker Extra Dust"].value)
     }
     account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
 
@@ -785,7 +714,7 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
             + account.arcade[50]['Value']
         ),
         'mgb': ValueToMulti(
-            MultiToValue(account.emperor['Bonuses'][6]['Total Value'])
+            account.emperor["Arcane Cultist Extra Tachyons"].value
             + account.alchemy_bubbles['Tachyon Bubble']['BaseValue']
         ),
         'mgc': 1 + 0.3 * account.sneaking['PristineCharms']['Mystery Fizz']['Obtained'],

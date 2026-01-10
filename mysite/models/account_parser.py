@@ -57,8 +57,7 @@ from consts.consts_w6 import (
     market_upgrade_details,
     crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_regular_match_colors,
-    summoning_dict, summoning_endlessDict, EmperorBon,
-    emperor_bonus_images, summoning_stone_locations,
+    summoning_dict, summoning_endlessDict, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
     summoning_stone_boss_base_damage, jade_emporium_order, pristine_charms_dict,
     summoning_regular_battles
@@ -3509,7 +3508,6 @@ def _parse_w6(account):
     _parse_w6_sneaking(account)
     _parse_w6_farming(account)
     _parse_w6_summoning(account)
-    _parse_w6_emperor(account)
 
 def _parse_w6_sneaking(account):
     account.sneaking = {
@@ -3922,33 +3920,6 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
         except Exception as e:
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
-
-def _parse_w6_emperor(account):
-    bonus_types = [value.replace('_', ' ') for value in EmperorBon[0]]
-    bonus_values = [int(value) for value in EmperorBon[1]]
-    fight_map = [int(value) for value in EmperorBon[2]]
-
-    account.emperor = {
-        'Last Showdown': safer_convert(safer_get(account.raw_optlacc_dict, 369, 0), 0),
-        'Daily Attempts': 1 + safer_convert(safer_get(account.raw_optlacc_dict, 382, 0), 0),
-        'Remaining Attempts': 1 - safer_convert(safer_get(account.raw_optlacc_dict, 370, 0), 0),
-        'Bonuses': {
-            bonus_index: {  #Normally I'd put bonus_type here, but Lava's list contains duplicate placeholder names
-                'Bonus Type': bonus_type,
-                'Wins': 0,
-                'Value Per Win': bonus_values[bonus_index],
-                'Total Value': 0,
-                'Image': emperor_bonus_images[bonus_index],
-            } for bonus_index, bonus_type in enumerate(bonus_types)
-        },
-        'Upcoming': {}
-    }
-
-    for running_total in range(0, account.emperor['Last Showdown']):
-        fight_map_index = running_total % 48
-        bonus_index = fight_map[fight_map_index]
-        account.emperor['Bonuses'][bonus_index]['Wins'] += 1
-        # logger.debug(f"Completed Fight {running_total + 1} rewards {ValueToMulti(account.emperor['Bonuses'][bonus_index]['Value Per Win'])} {account.emperor['Bonuses'][bonus_index]['Bonus Type']}")
 
 def _parse_w7(account):
     _parse_advice_for_money(account)
