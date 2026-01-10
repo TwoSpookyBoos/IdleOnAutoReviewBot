@@ -2526,6 +2526,7 @@ def _calculate_class_unique_kill_stacks(account):
 def _calculate_wave_4(account):
     # Mostly stuff that relies on Talent Level calculations that happen in Wave 3
     _calculate_w1_statues(account)
+    _calculate_w6_beanstalk(account)
 
 def _calculate_w1_statues(account):
     voodoo_statufication_multi = [
@@ -2602,6 +2603,15 @@ def _calculate_w1_statues(account):
             picture_class='town-marble'
         )
     ]
+
+
+def _calculate_w6_beanstalk(account):
+    # Dependency: Emporium
+    emporium = account.sneaking["JadeEmporium"]
+    account.beanstalk.calculate_unlocked_tier(emporium)
+    account.beanstalk.calculate_golden_food_multi()
+    account.beanstalk.calculate_bonuses()
+
 
 def _calculate_w7(account):
     _calculate_w7_advice_for_money(account)

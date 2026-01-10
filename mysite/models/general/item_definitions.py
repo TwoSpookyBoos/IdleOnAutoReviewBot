@@ -7,6 +7,8 @@ class ItemDefinition:
     name: str
     code_name: str
     type: str
+    description: str
+    amount: float | int | None
 
 @dataclass
 class StampBonus:
