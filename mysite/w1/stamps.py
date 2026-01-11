@@ -75,12 +75,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
 
     # Stamps
-    capacity_Advices['Stamps'].append(Advice(
-        label="{{ Jade Emporium|#sneaking }}: Level Exemption",
-        picture_class="level-exemption",
-        progression=1 if session_data.account.sneaking['JadeEmporium']['Level Exemption']['Obtained'] else 0,
-        goal=1
-    ))
+    capacity_Advices['Stamps'].append(
+        session_data.account.sneaking.emporium['Level Exemption'].get_obtained_advice()
+    )
     capacity_Advices['Stamps'].append(Advice(
         label=f"Lab: Certified Stamp Book: "
               f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
@@ -93,13 +90,11 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     #     label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
     #     picture_class="pure-opal-navette",
     # ))
-    capacity_Advices['Stamps'].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] else '1'}/1.25x",
-        picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
-        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
-        goal=1
-    ))
+    capacity_Advices['Stamps'].append(
+        session_data.account.sneaking.pristine_charms[
+            'Liqorice Rolle'
+        ].get_obtained_advice()
+    )
     for cap_stamp in ITEM_DATA.get_capacity_stamps():
         capacity_Advices['Stamps'].append(session_data.account.stamps[cap_stamp.name].get_advice(link_to_section=False))
 
@@ -234,12 +229,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         progression=session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['PrechargeLevel'],
         goal=max_sigil_level
     ))
-    costReduction_Advices['Uncapped'].append(Advice(
-        label="{{ Jade Emporium|#sneaking }}: Ionized Sigils",
-        picture_class='ionized-sigils',
-        progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
-        goal=1
-    ))
+    costReduction_Advices['Uncapped'].append(
+        session_data.account.sneaking.emporium['Ionized Sigils'].get_obtained_advice()
+    )
     costReduction_Advices['Uncapped'].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",
         picture_class='chilled-yarn',
@@ -276,7 +268,6 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     compass = session_data.account.compass
     gemshop = session_data.account.gemshop['Purchases']
     atom_collider = session_data.account.atom_collider
-    pc = session_data.account.sneaking['PristineCharms']
 
     exalted_advice[boni].append(Advice(
         label=f"Total Exalted Bonus: {session_data.account.exalted_stamp_multi:.2f}x",
@@ -297,12 +288,9 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         goal=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'],
         resource='particles'
     ))
-    exalted_advice[boni].append(Advice(
-        label=f"{{{{Pristine Charm|#sneaking}}}}: Jellypick: +{20 * pc['Jellypick']['Obtained']}/20%",
-        picture_class='jellypick',
-        progression=int(pc['Jellypick']['Obtained']),
-        goal=1
-    ))
+    exalted_advice[boni].append(
+        session_data.account.sneaking.pristine_charms['Jellypick'].get_obtained_advice()
+    )
     emp_set = session_data.account.armor_sets['Sets']['EMPEROR SET']
     exalted_advice[boni].append(Advice(
         label=f"{{{{Armor Set|#armor-sets}}}}: Emperor Set: {emp_set['Description']}",

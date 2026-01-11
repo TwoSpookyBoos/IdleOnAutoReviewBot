@@ -23,7 +23,7 @@ def getCritterName(input_number):
         return f'UnknownCritter-{input_number}'
 
 def getUnlockedCritterStatus():
-    if session_data.account.sneaking['JadeEmporium']["New Critter"]['Obtained']:
+    if session_data.account.sneaking.emporium["New Critter"].obtained:
         return [
             12,  # Index of the highest unlocked critter
             max_trapping_critter_types,  # Index of the highest critter possible

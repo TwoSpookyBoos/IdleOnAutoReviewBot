@@ -1,5 +1,4 @@
 from consts.generated.monster_data import monster_data
-from models.general.session_data import session_data
 
 from utils.number_formatting import parse_number
 from utils.logging import get_consts_logger
@@ -272,19 +271,3 @@ def getAllSkillLevelsDict(inputJSON, playerCount):
 
 def getHumanReadableClasses(classNumber):
     return classes_dict.get(classNumber, f"Unknown class: {classNumber}")
-
-
-def getSpecificSkillLevelsList(desiredSkill: str | int) -> list[int]:
-    if isinstance(desiredSkill, str):
-        try:
-            return session_data.account.all_skills[desiredSkill]
-        except:
-            logger.exception(f"Could not retrieve skill data for {desiredSkill}")
-            return empty_skill_list
-    elif isinstance(desiredSkill, int):
-        try:
-            return session_data.account.all_skills[skill_index_list[desiredSkill]]
-        except:
-            logger.exception(f"Could not find Index for desiredSkill of {desiredSkill}")
-            return empty_skill_list
-
