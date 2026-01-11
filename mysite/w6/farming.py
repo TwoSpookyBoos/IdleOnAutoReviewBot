@@ -405,13 +405,11 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
-    evo_advices[stamp].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{max(1, 1.25 * session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'])}/1.25x",
-        picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
-        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
-        goal=1
-    ))
+    evo_advices[stamp].append(
+        session_data.account.sneaking.pristine_charms[
+            'Liqorice Rolle'
+        ].get_obtained_advice()
+    )
     evo_advices[stamp].append(session_data.account.stamps['Crop Evo Stamp'].get_advice())
 
 #Meals
@@ -717,13 +715,9 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
         goal=f"{farming['MarketUpgrades']['More Beenz']['MaxLevel']:.0f}",
     ))
     #Emporium - Deal Sweetening
-    bm_advices[mgb].append(Advice(
-        label=f"{{{{ Jade Emporium|#sneaking }}}}: Deal Sweetening: "
-              f"+{25 * session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained']}/25%",
-        picture_class='deal-sweetening',
-        progression=int(session_data.account.sneaking['JadeEmporium']['Deal Sweetening']['Obtained']),
-        goal=1
-    ))
+    bm_advices[mgb].append(
+        session_data.account.sneaking.emporium['Deal Sweetening'].get_obtained_advice()
+    )
     #Achievement - Crop Flooding
     bm_advices[mgb].append(Advice(
         label=f"W6 Achievement: Crop Flooding: "
@@ -819,14 +813,12 @@ def getOGAdviceGroup(farming):
         progression=farming['LandRankDatabase']['Overgrowth Superboost']['Level']
     ))
 
-#Pristine Charm
-    og_advices[pristine].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Taffy Disc: "
-              f"{ValueToMulti(50 * session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained']):.2f}/1.50x",
-        picture_class=session_data.account.sneaking['PristineCharms']['Taffy Disc']['Image'],
-        progression=int(session_data.account.sneaking['PristineCharms']['Taffy Disc']['Obtained']),
-        goal=1
-    ))
+    # Pristine Charm
+    og_advices[pristine].append(
+        session_data.account.sneaking.pristine_charms[
+            'Taffy Disc'
+        ].get_obtained_advice()
+    )
 
     for category in og_advices.values():
         for advice in category:
@@ -1168,7 +1160,7 @@ def getFarmingAdviceSection():
         farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
     if farming['Mama Trolls Unlocked']:
         farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
-    if session_data.account.sneaking['JadeEmporium']['Crop Depot Scientist']['Obtained']:
+    if session_data.account.sneaking.emporium['Crop Depot Scientist'].obtained:
         farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
     farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
     farming_AdviceGroupDict['Night'] = getNightMarketAdviceGroup(farming)

@@ -8,6 +8,7 @@ from models.advice.advice import Advice
 from models.w1.stamps import Stamps
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
+from models.w6.sneaking import Sneaking
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
@@ -73,9 +74,10 @@ class Account:
             'Upgrades': {}
         }
         # W6
+        self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
-        #W7
+        # W7
         self.spelunk = {
             'Cave Bonuses': {},
         }
@@ -95,3 +97,21 @@ class Account:
     ):
         advice_list = [item for item in advice_list if item is not None]
         self.alerts_Advices[group_name].extend(advice_list)
+
+    def get_current_max_talent(self, name: str) -> int:
+        """
+        Get the max level of characters talents from their current preset set.
+
+        :param name: talent name.
+        :returns: Max talent level or 0.
+        """
+        if name == "Generational Gemstones":
+            return max(
+                [
+                    talent_level + char.total_bonus_talent_levels
+                    for char in self.wws
+                    if (talent_level := char.current_preset_talents.get("432", 0)) > 0
+                ],
+                default=0,
+            )
+        return 0

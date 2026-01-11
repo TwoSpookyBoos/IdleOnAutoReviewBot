@@ -53,13 +53,13 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
+    max_farming_crops, landrank_dict,
     market_upgrade_details,
-    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
+    crop_depot_dict, summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_regular_match_colors,
     summoning_dict, summoning_endlessDict, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, jade_emporium_order, pristine_charms_dict,
+    summoning_stone_boss_base_damage,
     summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
@@ -3505,72 +3505,8 @@ def _parse_caverns_the_temple(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 def _parse_w6(account):
-    _parse_w6_sneaking(account)
     _parse_w6_farming(account)
     _parse_w6_summoning(account)
-
-def _parse_w6_sneaking(account):
-    account.sneaking = {
-        "PristineCharms": {},
-        "Gemstones": {},
-        "JadeEmporium": {},
-        'CurrentMastery': safer_get(account.raw_optlacc_dict, 231, 0),
-        'MaxMastery': safer_get(account.raw_optlacc_dict, 232, 0),
-    }
-    raw_ninja_list = safe_loads(account.raw_data.get("Ninja", []))
-    if not raw_ninja_list:
-        logger.warning(f"Sneaking data not present{', as expected' if account.version < 200 else ''}.")
-    _parse_w6_pristine_charms(account, raw_ninja_list)
-    _parse_w6_gemstones(account)
-    _parse_w6_jade_emporium(account, raw_ninja_list)
-
-def _parse_w6_pristine_charms(account, raw_ninja_list):
-    raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-    for index, (pristine_charm_name, pristine_charm_data) in enumerate(pristine_charms_dict.items()):
-        try:
-            account.sneaking["PristineCharms"][pristine_charm_name] = {
-                'Obtained': bool(raw_pristine_charms_list[index]),
-                'Image': pristine_charm_data['Image'],
-                'Bonus': pristine_charm_data['Bonus'],
-            }
-        except:
-            account.sneaking["PristineCharms"][pristine_charm_name] = {
-                'Obtained': False,
-                'Image': pristine_charm_data['Image'],
-                'Bonus': pristine_charm_data['Bonus'],
-            }
-
-def _parse_w6_gemstones(account):
-    for gemstone_name, gemstone_values in sneaking_gemstones_dict.items():
-        level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
-        account.sneaking['Gemstones'][gemstone_name] = {
-            'Level': level,
-            'Stat': gemstone_values['Stat'],
-            'MaxValue': gemstone_values['Max Value'],
-            'BaseValue': getGemstoneBaseValue(gemstone_name, level),
-            'BoostedValue': 0.0,
-            'Percent': 0
-        }
-        account.sneaking['Gemstones'][gemstone_name]['Percent'] = getGemstonePercent(
-            gemstone_name,
-            account.sneaking['Gemstones'][gemstone_name]['BaseValue']
-        )
-
-def _parse_w6_jade_emporium(account, raw_ninja_list):
-    try:
-        raw_emporium_purchases = list(raw_ninja_list[102][9])
-    except:
-        raw_emporium_purchases = [""]
-    for index in jade_emporium_order:
-        try:
-            upgrade = jade_emporium[index]
-            account.sneaking['JadeEmporium'][upgrade['Name']] = {
-                'Obtained': upgrade['CodeString'] in raw_emporium_purchases,
-                'Bonus': upgrade['Bonus'],
-                'Image': upgrade['Name']
-            }
-        except:
-            continue
 
 
 def _parse_w6_farming(account):
@@ -3659,7 +3595,7 @@ def _parse_w6_farming_crop_depot(account):
             'Image': bonusDetails['Image'],
             'ScalingType': bonusDetails['funcType'],
             'ScalingNumber': bonusDetails['x1'],
-            'Unlocked': account.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
+            'Unlocked': account.sneaking.emporium[bonusDetails['EmporiumUnlockName']].obtained,
             'BaseValue': lava_func(
                 bonusDetails['funcType'],
                 account.farming['CropsUnlocked'] if bonusIndex != 7 else max(0, account.farming['CropsUnlocked'] - 100),

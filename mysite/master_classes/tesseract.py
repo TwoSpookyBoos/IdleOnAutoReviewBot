@@ -173,15 +173,10 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     ]
 
     mgc_label = f"Bone Multi Group C: {tesseract['Tachyon Calc']['mgc']:.2f}x"
-    mystery_fizz = session_data.account.sneaking['PristineCharms']['Mystery Fizz']
     currency_advices[mgc_label] = [
-        Advice(
-            label=f"{{{{Sneaking|#sneaking}}}}: Pristine Charm: Mystery Fizz"
-                  f"<br>{mystery_fizz['Bonus']}",
-            picture_class=mystery_fizz['Image'],
-            progression=int(mystery_fizz['Obtained']),
-            goal=1
-        )
+        session_data.account.sneaking.pristine_charms[
+            'Mystery Fizz'
+        ].get_obtained_advice()
     ]
 
     mgd_label = f"Tachyon Multi Group D: {tesseract['Tachyon Calc']['mgd']:.2f}x"
