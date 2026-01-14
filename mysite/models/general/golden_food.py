@@ -59,7 +59,7 @@ class GoldenFood:
             .replace("[", bonus)
             .strip()
         )
-        label += f"{self.name}: {description}"
+        label += f"{self.name}:<br>{description}"
         return Advice(
             label=label, picture_class=self.name, progression=self.amount, goal=goal
         )
