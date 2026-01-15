@@ -6,6 +6,7 @@ from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
@@ -74,6 +75,7 @@ class Account:
             'Upgrades': {}
         }
         # W6
+        self.farming: Farming = Farming(self.raw_data)
         self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
@@ -105,13 +107,19 @@ class Account:
         :param name: talent name.
         :returns: Max talent level or 0.
         """
+        char_list = []
+        talent_num = "-1"
         if name == "Generational Gemstones":
-            return max(
-                [
-                    talent_level + char.total_bonus_talent_levels
-                    for char in self.wws
-                    if (talent_level := char.current_preset_talents.get("432", 0)) > 0
-                ],
-                default=0,
-            )
-        return 0
+            char_list = self.wws
+            talent_num = "432"
+        elif name == "Dank Rank":
+            char_list = self.dbs
+            talent_num = "207"
+        return max(
+            [
+                talent_level + char.total_bonus_talent_levels
+                for char in char_list
+                if (talent_level := char.current_preset_talents.get(talent_num, 0)) > 0
+            ],
+            default=0,
+        )

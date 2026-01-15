@@ -7,7 +7,7 @@ from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import achievement_categories
-from consts.consts_w6 import max_farming_crops
+from consts.w6.farming import max_farming_crops
 from consts.consts_w2 import max_po_box_before_myriad
 from consts.progression_tiers import achievements_progressionTiers, true_max_tiers
 from utils.text_formatting import notateNumber
@@ -41,7 +41,7 @@ def getAchievementExclusions() -> set[str]:
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
-        or session_data.account.farming['CropsUnlocked'] >= max_farming_crops * 0.75
+        or session_data.account.farming.crops.unlocked >= max_farming_crops * 0.75
     ):
         exclusionsSet.add('Lucky Harvest')
     try:
@@ -66,7 +66,7 @@ def getAchievementStatus(achievementName):
             case 'Cool Score!':
                 return notateNumber('Match', min(2500000, session_data.account.colo_scores[3]), 0, 'K'), '2500K', ''
             case 'Doctor Repellant':
-                return min(10000, int(session_data.account.farming['Crops'].get(0, 0))), 10000, 'apple-crop'
+                return min(10000, int(session_data.account.farming.crops.get(0, 0))), 10000, 'apple-crop'
             case 'Good Plate':
                 return min(11, max([meal['Level'] for meal in session_data.account.meals.values()], default=0)), 11, ''
             case 'Bonsai Bonanza':
@@ -133,7 +133,7 @@ def getAchievementStatus(achievementName):
                 return min(300, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 300, 'sailing-ship-tier-6'
             #W6
             case 'Big Time Land Owner':
-                return min(27, session_data.account.farming['Total Plots']), 27, ''
+                return min(27, session_data.account.farming.total_plots), 27, ''
             case 'Best Bloomie':
                 return min(12, session_data.account.summoning['SanctuaryTotal']), 12, ''
             case 'Regalis My Beloved':

@@ -16,7 +16,6 @@ from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
-from consts.consts_w6 import max_farming_crops
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
 from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
@@ -89,16 +88,9 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     ))
 
 #Multi Group C
-    sps_adviceDict[mgc].append(Advice(
-        label=f"Total Farming crops discovered: {session_data.account.farming['CropsUnlocked']}/{max_farming_crops}",
-        picture_class='crop-depot',
-        progression=session_data.account.farming['CropsUnlocked'],
-        goal=max_farming_crops
-    ))
-    sps_adviceDict[mgc].append(Advice(
-        label=f"{{{{Science Crayon|#farming}}}} Total: {session_data.account.farming['Depot'][5]['Value']:,.2f}",
-        picture_class=session_data.account.farming['Depot'][5]['Image'],
-    ))
+    sps_adviceDict[mgc].append(
+        session_data.account.farming.depot["Crayon"].get_bonus_advice()
+    )
     sps_adviceDict[mgc].append(Advice(
         label=f"Lab Jewel: Emerald Ulthurite",
         picture_class='emerald-ulthurite',
