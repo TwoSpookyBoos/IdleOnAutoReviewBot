@@ -22,7 +22,7 @@ def getProgressionTiersAdviceSections():
 
     beanstalk = session_data.account.beanstalk
     deposit_tier_advice = {}
-    alert = set()
+    alert = []
 
     for tier_number, requirements in beanstalk_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
@@ -98,7 +98,7 @@ def process_progression_deposit_tier(
                 account_amount = account_items.get(golden_food_code).amount
                 advice_group[subgroup_label].append(
                     deposited.next_tier_progress_advice(account_amount))
-                alert.add(deposited.alert_advice(account_amount))
+                alert.append(deposited.alert_advice(account_amount))
 
 
 def getGoldFoodBonusAdviceSections() -> AdviceGroup:
