@@ -2132,34 +2132,48 @@ beanstalk_progressionTiers = {
     0: {},
     1: {
         '10k': [
-            'PeanutG', 'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5',
-            'FoodG7', 'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12'
+            'Golden Peanut', 'Golden Jam', 'Golden Kebabs', 'Golden Meat Pie',
+            'Golden Nomwich', 'Golden Ham', 'Golden Ribs', 'Golden Cheese',
+            'Golden Grilled Cheese Nomwich', 'Golden Hampter Gummy Candy',
+            'Golden Nigiri', 'Golden Dumpling'
         ]
     },
     2: {
         '10k': [
-             'FoodG6', 'FoodG13'  #Bread and Cakes
+             'Golden Bread', 'Golden Cake'
         ],
-        'SuperBeanstack Purchased': True,
+        'Tier Unlocked': 2,
     },
     3: {
         '100k': [
-            'PeanutG', 'FoodG1', 'FoodG2', 'FoodG3', 'FoodG5', 'FoodG7',
-            'FoodG8', 'FoodG9', 'FoodG10', 'FoodG11', 'FoodG12'
+            'Golden Peanut', 'Golden Jam', 'Golden Kebabs', 'Golden Meat Pie',
+            'Golden Ham', 'Golden Ribs', 'Golden Cheese',
+            'Golden Grilled Cheese Nomwich', 'Golden Hampter Gummy Candy',
+            'Golden Nigiri', 'Golden Dumpling'
         ]
     },
     4: {
         '100k': [
-            'FoodG13'  #Cakes
+            'Golden Cake'
         ]
     },
     5: {
         '10k': [
-            'ButterBar', 'FoodG4'
+            'Butter Bar', 'Golden Nomwich'
         ],
         '100k': [
-            'ButterBar', 'FoodG4', 'FoodG6'
+            'Butter Bar', 'Golden Nomwich', 'Golden Bread'
         ]
+    },
+    6: {
+        '1M': [
+            'Golden Peanut', 'Butter Bar', 'Golden Jam', 'Golden Kebabs',
+            'Golden Meat Pie', 'Golden Nomwich', 'Golden Ham', 'Golden Bread',
+            'Golden Ribs', 'Golden Cheese', 'Golden Grilled Cheese Nomwich',
+            'Golden Hampter Gummy Candy', 'Golden Nigiri', 'Golden Dumpling',
+            'Golden Cake', 'Golden Saltwater Taffy'
+        ],
+        'Tier Unlocked': 3,
     },
 }
 

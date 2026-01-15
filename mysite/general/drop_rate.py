@@ -533,24 +533,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         ))
 
     # Sneaking - Beanstalk - Golden Cake
-    beanstack_requirements = [0, '10K', '100K']
-    cake_beanstalk = session_data.account.sneaking['Beanstalk']['FoodG13']
-    cake_beanstalk_level = int(cake_beanstalk['Beanstacked']) + int(cake_beanstalk['SuperBeanstacked'])
-    if cake_beanstalk_level == 2:
-        cake_beanstalk_value = 6.67
-    elif cake_beanstalk_level == 1:
-        cake_beanstalk_value = 4.59
-    else:
-        cake_beanstalk_value = 0
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Beanstalk|#beanstalk }}}}- Golden Cake:"
-              f"<br>+{cake_beanstalk_value}/6.67% base Drop Rate from {beanstack_requirements[cake_beanstalk_level]} deposited"
-              f"<br>Note: Further increased by Golden Food bonuses",
-        picture_class='golden-cake',
-        progression=cake_beanstalk_level,
-        goal=2
-    ))
-    world_6_bonus += cake_beanstalk_value
+    cake_beanstalk = session_data.account.beanstalk['Golden Cake']
+    drop_rate_aw_advice[w6].append(cake_beanstalk.get_bonus_advice())
+    world_6_bonus += cake_beanstalk.bonus_value
 
     # Summoning - Bonuses
     drop_rate_aw_advice[w6].append(get_summoning_bonus_advice('+{% Drop Rate'))

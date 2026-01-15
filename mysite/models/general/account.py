@@ -4,7 +4,9 @@ from consts.consts_autoreview import lowest_accepted_version
 from consts.w1.stamps import stamp_types
 from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
+from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.beanstalk import Beanstalk
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
@@ -69,6 +71,8 @@ class Account:
         self.darts = {
             'Upgrades': {}
         }
+        # W6
+        self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         #W7
         self.spelunk = {
             'Cave Bonuses': {},
@@ -83,3 +87,9 @@ class Account:
         self.advice_for_money = {
             'Upgrades': {},
         }
+
+    def add_alert_list(
+        self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]
+    ):
+        advice_list = [item for item in advice_list if item is not None]
+        self.alerts_Advices[group_name].extend(advice_list)

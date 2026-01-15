@@ -135,8 +135,8 @@ def get_sailing_progression_tier_advicegroups():
             # Golden Hampters
             if (
                 #If Golden Hampters are not 10k Beanstacked and the player has a Chocolatey Chip to active farm them
-                'Beanstacked' in requirements and
-                not session_data.account.sneaking.get('Beanstalk', {}).get('FoodG10', {}).get('Beanstacked', False)
+                'Beanstacked' in requirements
+                and session_data.account.beanstalk["Golden Hampter Gummy Candy"].tier < 1
                 and session_data.account.labChips.get('Chocolatey Chip', 0) > 0
                 and session_data.account.highest_world_reached >= 6
                 and tier_Artifacts >= tier_number - 1

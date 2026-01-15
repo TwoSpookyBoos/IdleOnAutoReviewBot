@@ -460,11 +460,10 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
 
         total_gold_cakes = session_data.account.all_assets.get('FoodG13').amount
+        beanstalk_unlocked_tier = session_data.account.beanstalk.unlocked_tier
+        cake_beanstalk_tier = session_data.account.beanstalk['Golden Cake'].tier
 
-        if (
-            session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']
-            and not session_data.account.sneaking['Beanstalk']['FoodG13']['Beanstacked']
-        ):
+        if beanstalk_unlocked_tier > 0 and cake_beanstalk_tier == 0:
             consumables.append(Advice(
                 label=f"Candy materials to Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',
@@ -472,10 +471,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 progression=notateNumber("Match", total_gold_cakes, 2, "K"),
                 goal="10K"
             ))
-        elif (
-            session_data.account.sneaking['JadeEmporium']["Supersized Gold Beanstacking"]['Obtained']
-            and not session_data.account.sneaking['Beanstalk']['FoodG13']['SuperBeanstacked']
-        ):
+        elif beanstalk_unlocked_tier > 1 and cake_beanstalk_tier == 1:
             consumables.append(Advice(
                 label=f"Candy materials to Super Beanstack Golden Cakes in {{{{ The Beanstalk|#beanstalk }}}}",
                 picture_class='golden-cake',

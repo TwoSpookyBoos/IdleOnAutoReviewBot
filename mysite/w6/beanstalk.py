@@ -1,99 +1,123 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
-from consts.consts_w6 import gfood_codes, BEANSTACK_GOAL, SUPER_BEANSTACK_GOAL, gfood_data
 from consts.progression_tiers import true_max_tiers, beanstalk_progressionTiers
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
+
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.text_formatting import getItemDisplayName
+from utils.text_formatting import getItemCodeName
 
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def get_food_advice_label(food_code):
-    food_name = getItemDisplayName(food_code)
-    return f"{food_name}: {gfood_data[food_name]['Source']}"
-
 def getProgressionTiersAdviceSections():
-    beanstalk_advice = {
-        'Tiers': {}
-    }
-
-    optional_tiers = 1
+    optional_tiers = 2
     true_max = true_max_tiers['Beanstalk']
     max_tier = true_max - optional_tiers
     tier_stacks = 0
 
-    super_beanstack_bought = session_data.account.sneaking['JadeEmporium']['Supersized Gold Beanstacking']['Obtained']
-
-    # Assets contains totals from Storage and inventories
-    gold_foods = dict.fromkeys(gfood_codes, 0)
-    for gfood in gfood_codes:
-        gold_foods[gfood] += session_data.account.all_assets.get(gfood).amount
+    beanstalk = session_data.account.beanstalk
+    deposit_tier_advice = {}
+    alert = []
 
     for tier_number, requirements in beanstalk_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
-        #10k
-        for gold_food in requirements.get('10k', []):
-            if not session_data.account.sneaking['Beanstalk'][gold_food]['Beanstacked']:
-                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
-                if subgroup_label in beanstalk_advice['Tiers']:
-                    beanstalk_advice['Tiers'][subgroup_label].append(Advice(
-                        label=f"10k: {get_food_advice_label(gold_food)}",
-                        picture_class=getItemDisplayName(gold_food),
-                        progression=f"{min(1000, int(gold_foods[gold_food]) / BEANSTACK_GOAL) :.02%}",
-                        goal="100%",
-                        resource=gfood_data.get(getItemDisplayName(gold_food), {"Resource Image": ""})["Resource Image"]
-                    ))
+        # 10k
+        process_progression_deposit_tier(
+            requirements.get('10k', []), 0, deposit_tier_advice, subgroup_label, alert
+        )
 
-        #SuperBeanstack purchased
-        if requirements.get('SuperBeanstack Purchased', False):
-            if not super_beanstack_bought:
-                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
-                if subgroup_label in beanstalk_advice['Tiers']:
-                    beanstalk_advice['Tiers'][subgroup_label].append(Advice(
-                        label=f"Purchase \"Supersized Gold Beanstacking\" from the Jade Emporium",
-                        picture_class=session_data.account.sneaking['JadeEmporium']['Supersized Gold Beanstacking']['Image'],
-                        progression=0,
-                        goal=1
-                    ))
+        # SuperBeanstack purchased
+        if requirements.get('Tier Unlocked', 0) == 2 and beanstalk.unlocked_tier < 2:
+            add_subgroup_if_available_slot(deposit_tier_advice, subgroup_label)
+            if subgroup_label in deposit_tier_advice:
+                deposit_tier_advice[subgroup_label].append(Advice(
+                    label="Purchase \"Supersized Gold Beanstacking\" from the Jade Emporium",
+                    picture_class=session_data.account.sneaking['JadeEmporium']['Supersized Gold Beanstacking']['Image'],
+                    progression=0,
+                    goal=1
+                ))
 
         # 100k
-        for gold_food in requirements.get('100k', []):
-            if not session_data.account.sneaking['Beanstalk'][gold_food]['SuperBeanstacked']:
-                add_subgroup_if_available_slot(beanstalk_advice['Tiers'], subgroup_label)
-                if subgroup_label in beanstalk_advice['Tiers']:
-                    beanstalk_advice['Tiers'][subgroup_label].append(Advice(
-                        label=f"100k: {get_food_advice_label(gold_food)}",
-                        picture_class=getItemDisplayName(gold_food),
-                        progression=f"{min(1000, int(gold_foods[gold_food]) / SUPER_BEANSTACK_GOAL) :.02%}",
-                        goal="100%",
-                        resource=gfood_data.get(getItemDisplayName(gold_food), {"Resource Image": ""})["Resource Image"]
-                    ))
+        process_progression_deposit_tier(
+            requirements.get('100k', []), 1, deposit_tier_advice, subgroup_label, alert
+        )
+
+        # Upgrade from Urie Quest
+        if requirements.get('Tier Unlocked', 0) == 3 and beanstalk.unlocked_tier < 3:
+            add_subgroup_if_available_slot(deposit_tier_advice, subgroup_label)
+            if subgroup_label in deposit_tier_advice:
+                deposit_tier_advice[subgroup_label].append(Advice(
+                    label='Complete Urie quest in World 7 and upgrade Beanstalk',
+                    picture_class='urie',
+                    progression=0,
+                    goal=1
+                ))
+
+        # 1M
+        process_progression_deposit_tier(
+            requirements.get('1M', []), 2, deposit_tier_advice, subgroup_label, alert
+        )
 
         # Final tier check
-        if subgroup_label not in beanstalk_advice['Tiers'] and tier_stacks == tier_number - 1:
+        if subgroup_label not in deposit_tier_advice and tier_stacks == tier_number - 1:
             tier_stacks = tier_number
+
+    session_data.account.add_alert_list('World 6', alert)
 
     overall_section_tier = min(true_max, tier_stacks)
     beanstalk_advice_group = {}
     tier_advice_group = AdviceGroup(
         tier=overall_section_tier,
         pre_string='Deposit Golden Foods to the Beanstalk',
-        advices=beanstalk_advice['Tiers'],
+        advices=deposit_tier_advice,
     )
     tier_advice_group.remove_empty_subgroups()
     beanstalk_advice_group['Tiers'] = tier_advice_group
     return beanstalk_advice_group, overall_section_tier, max_tier, true_max
 
 
+def process_progression_deposit_tier(
+    requirement, current_tier, advice_group, subgroup_label, alert
+):
+    # Assets contains totals from Storage and inventories
+    account_items = session_data.account.all_assets
+    beanstalk = session_data.account.beanstalk
+    for golden_food_name in requirement:
+        deposited = beanstalk[golden_food_name]
+        if deposited.tier == current_tier:
+            add_subgroup_if_available_slot(advice_group, subgroup_label)
+            if subgroup_label in advice_group:
+                golden_food_code = getItemCodeName(golden_food_name)
+                # TODO: change account_items to use name instead code
+                account_amount = account_items.get(golden_food_code).amount
+                advice_group[subgroup_label].append(
+                    deposited.next_tier_progress_advice(account_amount))
+                alert.append(deposited.alert_advice(account_amount))
+
+
+def getGoldFoodBonusAdviceSections() -> AdviceGroup:
+    food_list_advice = [
+        deposited.get_bonus_advice(False)
+        for deposited in session_data.account.beanstalk.values()
+    ]
+    for advice in food_list_advice:
+        advice.mark_advice_completed()
+    return AdviceGroup(
+        tier='',
+        pre_string='Golden Food Bonus',
+        advices=food_list_advice,
+        informational=True
+    )
+
+
 def getBeanstalkAdviceSection() -> AdviceSection:
-    if not session_data.account.sneaking['JadeEmporium']["Gold Food Beanstalk"]['Obtained']:
+    if session_data.account.beanstalk.unlocked_tier < 1:
         return AdviceSection(
             name='Beanstalk',
             tier='',
@@ -103,6 +127,7 @@ def getBeanstalkAdviceSection() -> AdviceSection:
         )
     # Generate AdviceGroups
     beanstalk_AdviceGroups, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceSections()
+    beanstalk_AdviceGroups['Gold Food'] = getGoldFoodBonusAdviceSections()
 
     # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

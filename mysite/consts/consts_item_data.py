@@ -172,6 +172,8 @@ for item_code, item in raw_item_data.items():
     name = item['Name']
     code_name = item['Code (Name)']
     _type = item['Type']
+    description = item.get('Description', '')
+    amount = item.get('Amount', None)
 
     if 'Stamp Bonus' in item:
         stamp_bonus = item['Stamp Bonus']
@@ -179,6 +181,8 @@ for item_code, item in raw_item_data.items():
             name=name,
             code_name=code_name,
             type=_type,
+            description=description,
+            amount=amount,
             stamp_bonus=StampBonus(
                 effect=stamp_bonus['Effect'],
                 code_material=stamp_bonus['Code (Material)'],
@@ -192,4 +196,6 @@ for item_code, item in raw_item_data.items():
         name=name,
         code_name=code_name,
         type=_type,
+        description=description,
+        amount=amount,
     )
