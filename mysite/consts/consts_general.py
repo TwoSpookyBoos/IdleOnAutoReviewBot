@@ -331,7 +331,7 @@ expected_stackables = {
         'Critter9A', 'Critter10A', 'Critter11A',  #ShinyCritter2
         'Soul1', 'Soul2', 'Soul3', 'Soul4', 'Soul5', 'Soul6', 'Soul7', 'Soul8',  #WorshipSouls
         'CopperBar', 'IronBar', 'GoldBar', 'PlatBar', 'DementiaBar', 'VoidBar', 'LustreBar',  #SmeltedBars1
-        'StarfireBar', 'DreadloBar', 'MarbleBar', 'GodshardBar',  #SmeltedBars2
+        'StarfireBar', 'DreadloBar', 'MarbleBar', 'GodshardBar', 'PrehistriumBar',  #SmeltedBars2
         'Bullet', 'BulletB', 'FoodMining1', 'FoodFish1', 'FoodCatch1', 'Peanut',  #Crafted1
         'Quest68', 'Bullet3', 'FoodChoppin1', 'EquipmentSmithingTabs2', 'EquipmentSmithingTabs3',  #Crafted2
         'PeanutG',  #Gold Peanut Crafted
