@@ -60,7 +60,7 @@ sneaking_gemstones_dict = {
         'Stat': gemstones_bonuses[index].replace('_', ' ').replace('@ ', '').replace('{}%', '').replace('+}%', '').replace('{}', '').replace('$%', '').strip(),
         'Base Value': parse_number(base_value, 0),
         'Scaling Value': parse_number(scaling_value, 0),
-        'Max Value': parse_number(base_value + scaling_value, 0),
+        'Max Value': parse_number(base_value, 0) + parse_number(scaling_value, 0),
         'Gem Index': index,
         'OptlAcc Index': 233 + index
     }
