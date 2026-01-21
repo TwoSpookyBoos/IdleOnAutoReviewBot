@@ -159,7 +159,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                     if subgroup_label in statues_AdviceDict['Tiers']:
                         statues_AdviceDict['Tiers'][subgroup_label].append(Advice(
                             label=f"Level up {statue_name}{farm_details}",
-                            picture_class=statue_name,
+                            picture_class=statue_details["Image"],
                             progression=statue_details['Level'],
                             goal=requirements['SpecificLevels'][statue_name],
                             resource=farm_resource
