@@ -548,13 +548,13 @@ statues_progressionTiers = {
     0: {},
     1: {"SpecificLevels": {
         "Power Statue": 20, "Speed Statue": 20, "Mining Statue": 20, "Feasty Statue": 20, "Health Statue": 20, "Lumberbob Statue": 20,
-        "Ol Reliable Statue": 20, "Exp Book Statue": 20, "Anvil Statue": 20, "Cauldron Statue": 20,
+        "Ol Reliable Statue": 20, "Exp Statue": 20, "Anvil Statue": 20, "Cauldron Statue": 20,
         "Beholder Statue": 20,
         "Pecunia Statue": 20, "Mutton Statue": 20, "Egg Statue": 20,
     },},
     2: {"MinStatueTypeNumber": 1, "MinStatueType": "Gold", 'SpecificTypes': [
         'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Kachow Statue', 'Lumberbob Statue',
-        'Thicc Skin Statue', 'Oceanman Statue', 'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Thicc Skin Statue', 'Oceanman Statue', 'Ol Reliable Statue', 'Exp Statue', 'Anvil Statue', 'Cauldron Statue',
         'Beholder Statue', 'Bullseye Statue',
         'Box Statue', 'Twosoul Statue', 'EhExPee Statue', 'Seesaw Statue',
         'Pecunia Statue', 'Mutton Statue', 'Egg Statue',
@@ -563,7 +563,7 @@ statues_progressionTiers = {
     ],},
     3: {"MinStatueTypeNumber": 2, "MinStatueType": "Onyx", 'SpecificTypes': [
         'Power Statue', 'Speed Statue', 'Mining Statue', 'Feasty Statue', 'Health Statue', 'Lumberbob Statue',
-        'Ol Reliable Statue', 'Exp Book Statue', 'Anvil Statue', 'Cauldron Statue',
+        'Ol Reliable Statue', 'Exp Statue', 'Anvil Statue', 'Cauldron Statue',
         'Beholder Statue',
         'Pecunia Statue', 'Mutton Statue', 'Egg Statue'
     ],},
@@ -579,7 +579,7 @@ statues_progressionTiers = {
     ],},
     6: {'SpecificLevels': {
         'Power Statue': 40, 'Speed Statue': 40, 'Mining Statue': 40, 'Feasty Statue': 40, 'Health Statue': 40, 'Lumberbob Statue': 40,
-        'Oceanman Statue': 40, 'Ol Reliable Statue': 40, 'Exp Book Statue': 40, 'Anvil Statue': 40, 'Cauldron Statue': 40,
+        'Oceanman Statue': 40, 'Ol Reliable Statue': 40, 'Exp Statue': 40, 'Anvil Statue': 40, 'Cauldron Statue': 40,
         'Beholder Statue': 40, 'Box Statue': 40, 'Twosoul Statue': 40, 'Seesaw Statue': 40, 'EhExPee Statue': 40,
         'Pecunia Statue': 40, 'Mutton Statue': 40, 'Egg Statue': 40,
         'Battleaxe Statue': 40, 'Spiral Statue': 40, 'Boat Statue': 40,
