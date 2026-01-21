@@ -162,14 +162,9 @@ def getBonusesMultiAdviceGroup() -> AdviceGroup:
     ))
 
     # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
-    emperor = account.emperor
-    multi_advices[mgc].append(Advice(
-        label=f"{{{{Emperor Showdowns|#emperor}}}}: {emperor['Bonuses'][8]['Description']}"
-              f"<br>{emperor['Bonuses'][8]['Scaling']}",
-        picture_class='the-emperor',
-        progression=emperor['Bonuses'][8]['Wins'],
-        goal=EmojiType.INFINITY.value
-    ))
+    multi_advices[mgc].append(
+        account.emperor["Summoning Winner Bonuses"].get_bonus_advice()
+    )
     multi_advices[mgc].append(
         get_summoning_bonus_advice('<x Winner Bonuses', endless=True, link_to_section=False)
     )
