@@ -159,7 +159,7 @@ def main(inputData, source_string, runType="web"):
         ],
         sections_6 := [
             farming.getFarmingAdviceSection(),
-            summoning.getSummoningAdviceSection(),
+            summoning.get_section(),
             sneaking.getSneakingAdviceSection(),
             beanstalk.getBeanstalkAdviceSection(),
             emperor.getEmperorAdviceSection()

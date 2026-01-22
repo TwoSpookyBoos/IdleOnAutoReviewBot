@@ -3,7 +3,7 @@ from collections import defaultdict
 from math import floor
 from flask import g
 
-from consts.consts_autoreview import ValueToMulti, items_codes_and_names
+from consts.consts_autoreview import items_codes_and_names
 from consts.idleon.consts_idleon import companions_data, max_characters
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
@@ -51,14 +51,6 @@ from consts.consts_caverns import (
     harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
-)
-from consts.consts_w6 import (
-    summoning_sanctuary_counts, summoning_upgrades,
-    max_summoning_upgrades, summoning_regular_match_colors,
-    summoning_dict, summoning_endlessDict, summoning_stone_locations,
-    summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage,
-    summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
@@ -181,7 +173,6 @@ def _parse_wave_1(account, run_type):
     _parse_w4(account)
     _parse_w5(account)
     _parse_caverns(account)
-    _parse_w6(account)
     _parse_w7(account)
 
 def _parse_switches(account):
@@ -3501,186 +3492,6 @@ def _parse_caverns_the_temple(account, raw_caverns_list):
     except:
         account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
-def _parse_w6(account):
-    _parse_w6_summoning(account)
-
-
-def _parse_w6_summoning(account):
-    account.summoning = {}
-    raw_summoning_list = safe_loads(account.raw_data.get('Summon', []))
-    if not raw_summoning_list:
-        logger.warning(f"Summoning data not present{', as expected' if account.version < 200 else ''}.")
-    while len(raw_summoning_list) < 5:
-        raw_summoning_list.append([])
-
-    # Summoning Upgrade doublers
-    raw_caverns_list = safe_loads(account.raw_data.get('Holes', []))
-    try:
-        raw_doubled_upgrades = [int(entry) for entry in raw_caverns_list[28] if int(entry) >= 0]
-        account.summoning['Doublers Spendable'] = len(raw_caverns_list[28])
-    except:
-        raw_doubled_upgrades = []
-        account.summoning['Doublers Spendable'] = 30
-    account.summoning['Doubled Upgrades'] = len(raw_doubled_upgrades)
-
-    # raw_summoning_list[0] = Upgrades
-    account.summoning['Upgrades'] = {}
-    if raw_summoning_list[0]:
-        raw_upgrades = raw_summoning_list[0]
-    else:
-        raw_upgrades = [0] * max_summoning_upgrades
-    while len(raw_upgrades) < max_summoning_upgrades:
-        raw_upgrades.append(0)
-    for upg_index, upg_details in enumerate(summoning_upgrades):
-        upg_name = upg_details[3].replace('_', ' ')
-        locked_behind_index = int(upg_details[9])
-        try:
-            account.summoning['Upgrades'][upg_name] = {
-                'Image': f'summoning-upgrade-{upg_index}',
-                'Level': raw_upgrades[upg_index],
-                'MaxLevel': int(upg_details[8]),
-                'UpgradeIndex': upg_index,
-                'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_regular_match_colors[int(upg_details[2])],
-                'LockedBehindIndex': locked_behind_index,
-                'LockedBehindName': summoning_upgrades[locked_behind_index][3].replace('_', ' '),
-                'Unlocked': locked_behind_index < 0
-            }
-        except:
-            logger.exception(f"Summoning Upgrade problemo")
-            account.summoning['Upgrades'][upg_name] = {
-                'Image': f'summoning-upgrade-{upg_index}',
-                'Level': 0,
-                'MaxLevel': int(upg_details[8]),
-                'UpgradeIndex': upg_index,
-                'Doubled': upg_index in raw_doubled_upgrades,
-                'Color': summoning_regular_match_colors[int(upg_details[2])],
-                'LockedBehindIndex': locked_behind_index,
-                'LockedBehindName': summoning_upgrades[int(upg_details[10])][3].replace('_', ' '),
-                'Unlocked': locked_behind_index < 0
-            }
-
-    for upg_name, upg_details in account.summoning['Upgrades'].items():
-        if not account.summoning['Upgrades'][upg_name]['Unlocked']:
-            account.summoning['Upgrades'][upg_name]['Unlocked'] = (
-                #Check if own level is greater than 0
-                account.summoning['Upgrades'][upg_name]['Level'] > 0
-                #or the level of the upgrade it was locked behind having at least 1 level into it
-                or account.summoning['Upgrades'][summoning_upgrades[upg_details['LockedBehindIndex']][3].replace('_', ' ')]['Level'] >= 1
-            )
-
-    # raw_summoning_list[1] = List of codified names of enemies from battles won
-    account.summoning["Battles"] = {}
-    account.summoning["BattleDetails"] = {}
-    for color in summoning_dict:
-        account.summoning["BattleDetails"][color] = {}
-    _parse_w6_summoning_battles(account, raw_summoning_list[1])
-
-    # Endless Summoning
-    account.summoning["BattleDetails"]['Endless'] = {}
-    _parse_w6_summoning_battles_endless(account)
-
-    # raw_summoning_list[2] looks to be essence owned
-    # raw_summoning_list[3] I have no idea what this is
-
-    # raw_summoning_list[4] = list[int] familiars in the Sanctuary, starting with Slime in [0], Vrumbi in [1], etc.
-    account.summoning['SanctuaryTotal'] = 0
-    _parse_w6_summoning_sanctuary(account, raw_summoning_list[4])
-
-    # Used later to create a list of Advices for Winner Bonuses. Can be added directly into an AdviceGroup as the advices attribute
-    account.summoning['WinnerBonusesAdvice'] = []
-
-    account.summoning['Summoning Stones'] = {}
-    raw_kr_best = safe_loads(account.raw_data.get('KRbest', {}))
-    if raw_kr_best:
-        for color_index in range(len(summoning_regular_match_colors)):
-            color = summoning_regular_match_colors[color_index]
-            # TODO: remove this if/continue once the Teal Summoning Stone exists
-            if color == "Teal":
-                continue
-            wins = safer_get(raw_kr_best, f'SummzTrz{color_index}', 0)
-            account.summoning['Summoning Stones'][color] = {
-                'Wins': wins,
-                'Location': summoning_stone_locations[color_index],
-                'Base HP': int(summoning_stone_boss_base_hp[color_index]),
-                'Base DMG': int(summoning_stone_boss_base_damage[color_index]),
-                'StoneImage': summoning_stone_stone_images[color_index],
-                'BossImage': summoning_stone_boss_images[color_index]
-            }
-
-def _parse_w6_summoning_battles(account, raw_battles):
-    safe_battles = [safer_convert(battle, '') for battle in raw_battles]
-    regular_battles = [battle for battle in safe_battles if battle in summoning_regular_battles]
-    account.summoning['Battles']['RegularTotal'] = len(regular_battles)
-    account.summoning['AllRegularBattlesWon'] = len(regular_battles) >= len(summoning_regular_battles)
-    # Endless doesn't follow the same structure as the once-only battles
-    account.summoning['Battles']['Endless'] = safer_get(account.raw_optlacc_dict, 319, 0)
-    account.summoning['Bonuses'] = {}
-
-    for color_name, color_dict in summoning_dict.items():
-        if color_name in summoning_regular_match_colors:
-            account.summoning['Battles'][color_name] = sum([battle_values_dict['EnemyID'] in raw_battles for battle_values_dict in color_dict.values()])
-            for battle_index, battle_values_dict in color_dict.items():
-                this_battle = {
-                    'Defeated': battle_values_dict['EnemyID'] in raw_battles,
-                    'Image': battle_values_dict['Image'],
-                    'RewardType': battle_values_dict['RewardID'],
-                    'RewardQTY': battle_values_dict['RewardQTY'],
-                    'RewardBaseValue': battle_values_dict['RewardQTY'] * 3.5,
-                    'OpponentName': battle_values_dict['OpponentName']
-                }
-                if this_battle['RewardType'].startswith('+{ '):
-                    this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
-                elif this_battle['RewardType'].startswith('+{%'):
-                    this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
-                elif this_battle['RewardType'].startswith('<x'):
-                    this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
-                account.summoning['BattleDetails'][color_name][battle_index + 1] = this_battle
-                if this_battle['RewardType'] not in account.summoning['Bonuses']:
-                    account.summoning['Bonuses'][this_battle['RewardType']] = {'Value': 0, 'Max': 0}
-                account.summoning['Bonuses'][this_battle['RewardType']]['Value'] += this_battle['RewardBaseValue'] * this_battle['Defeated']
-                account.summoning['Bonuses'][this_battle['RewardType']]['Max'] += this_battle['RewardBaseValue']
-    #logger.debug(f"Base Regular Bonuses: {account.summoning['Bonuses']}")
-
-def _parse_w6_summoning_battles_endless(account):
-    account.summoning['Endless Bonuses'] = {}
-    true_battle_index = 0
-    while true_battle_index < max(40, account.summoning['Battles']['Endless'] + 20):
-        image_index = min(4, true_battle_index // 20)
-        endless_enemy_index = true_battle_index % 40
-        this_battle = {
-            'Defeated': true_battle_index < account.summoning['Battles']['Endless'],
-            'Image': summoning_dict['Endless'][image_index]['Image'],
-            'RewardType': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardID', 'Unknown'),
-            'Challenge': summoning_endlessDict.get(endless_enemy_index, {}).get('Challenge', 'Unknown'),
-            # 'RewardQTY': summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0),
-            'RewardBaseValue': (
-                summoning_endlessDict.get(endless_enemy_index, {}).get('RewardQTY', 0)
-            )
-        }
-        if this_battle['RewardType'].startswith('+{ '):
-            this_battle['Description'] = this_battle['RewardType'].replace('+{ ', f"+{this_battle['RewardBaseValue']} ")
-        elif this_battle['RewardType'].startswith('+{%'):
-            this_battle['Description'] = this_battle['RewardType'].replace('{', f"{this_battle['RewardBaseValue']}")
-        elif this_battle['RewardType'].startswith('<x'):
-            this_battle['Description'] = this_battle['RewardType'].replace('<', f"{round(ValueToMulti(this_battle['RewardBaseValue']), 4):g}")
-        account.summoning['BattleDetails']['Endless'][true_battle_index + 1] = this_battle
-        if this_battle['RewardType'] not in account.summoning['Endless Bonuses']:
-            account.summoning['Endless Bonuses'][this_battle['RewardType']] = 0
-        account.summoning['Endless Bonuses'][this_battle['RewardType']] += this_battle['RewardBaseValue'] * this_battle['Defeated']
-        # logger.debug(f"Endless {true_battle_index + 1}: {account.summoning['BattleDetails']['Endless'][true_battle_index + 1]}")
-        true_battle_index += 1
-    # logger.debug(f"Base Endless Bonuses after {account.summoning['Battles']['Endless']} wins: {account.summoning['Endless Bonuses']}")
-
-def _parse_w6_summoning_sanctuary(account, rawSanctuary):
-    # [2,3,2,1,1,0,0,0,0,0,0,0,0,0]
-    while len(rawSanctuary) < 14:
-        rawSanctuary.append(0)
-    for index, value in enumerate(summoning_sanctuary_counts):
-        try:
-            account.summoning['SanctuaryTotal'] += value * safer_convert(rawSanctuary[index], 0)
-        except Exception as e:
-            logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
 
 def _parse_w7(account):
     _parse_w7_coral_reef(account)

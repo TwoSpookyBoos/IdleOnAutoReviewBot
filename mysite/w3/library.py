@@ -15,7 +15,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.character import Character
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import \
@@ -108,13 +107,11 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         goal=10
     ))
 
-    #Summoning Sources
-    summoning = session_data.account.summoning
-    summoning_library = summoning['Bonuses']['+{ Library Max']
-    summoningSubgroup = f"Summoning: +{summoning_library['Value']}/{summoning_library['Max']}"
-
+    # Summoning Sources
+    summoning_bonus = session_data.account.summoning.bonuses["Library Max"]
+    summoningSubgroup = f"Summoning: +{summoning_bonus.value}/{summoning_bonus.max_value}"
     bookLevelAdvices[summoningSubgroup] = []
-    bookLevelAdvices[summoningSubgroup].append(get_summoning_bonus_advice('+{ Library Max'))
+    bookLevelAdvices[summoningSubgroup].append(summoning_bonus.get_bonus_advice())
 
     for group_name in bookLevelAdvices:
         for advice in bookLevelAdvices[group_name]:

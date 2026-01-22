@@ -770,7 +770,7 @@ class Farming:
             * evo_multi["Meals Multi"]
             * evo_multi["Farm Multi"]
             * evo_multi["LR Multi"]
-            * account.summoning["Bonuses"]["<x Crop EVO"]["Value"]
+            * account.summoning.bonuses["Crop EVO"].as_multi
             * evo_multi["SS Multi"]
             * evo_multi["Misc Multi"]
             * evo_multi["Wish Multi"]
@@ -790,7 +790,7 @@ class Farming:
         speed_multi["NM Multi"] = self.market["Speed Gmo"].as_multi
         # Total
         speed_multi["Total Multi"] = (
-            account.summoning["Bonuses"]["<x Farming SPD"]["Value"]
+            account.summoning.bonuses["Farming SPD"].as_multi
             * speed_multi["VM Multi"]
             * speed_multi["NM Multi"]
         )

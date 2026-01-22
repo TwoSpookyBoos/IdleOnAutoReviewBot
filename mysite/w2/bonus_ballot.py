@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_companion_advice
 from utils.logging import get_logger
@@ -50,7 +49,7 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 
 def getBallotMultiAdviceGroup():
     e_vr = session_data.account.equinox_bonuses['Voter Rights']
-    endless = session_data.account.summoning['Endless Bonuses']['+{% Ballot Bonus']
+    summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
     voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
@@ -82,7 +81,7 @@ def getBallotMultiAdviceGroup():
                 progression=int(rvb['Owned']),
                 goal=1
             ),
-            get_summoning_bonus_advice('+{% Ballot Bonus', endless=True),
+            summoning_bonus.get_bonus_advice(),
             mashed_potato_advice,
             crystal_cuttlefish_advice,
             get_legend_talent_advice('Democracy FTW')
