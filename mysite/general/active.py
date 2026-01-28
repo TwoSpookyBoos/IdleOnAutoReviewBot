@@ -233,7 +233,7 @@ def getLongTermAdviceList() -> list[Advice]:
         longterm.append(Advice(
             label=f"Lab jail until 2100 total Lab levels for W6 jewels 🙁"
                   f"<br>Note: You probably want to link to Goat and level Divinity at the same time"
-                  f"{'<br>Also: Buy Laboratory Bling from Jade Emporium' if not session_data.account.sneaking['JadeEmporium']['Laboratory Bling']['Obtained'] else ''}",
+                  f"{'<br>Also: Buy Laboratory Bling from Jade Emporium' if not session_data.account.sneaking.emporium['Laboratory Bling'].obtained else ''}",
             picture_class='Laboratory Bling',
             resource='laboratory',
             progression=sum(session_data.account.all_skills.get("Laboratory", [0])),

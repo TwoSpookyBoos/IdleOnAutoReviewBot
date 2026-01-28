@@ -187,17 +187,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         ))
     # Pristine Charm- Liqorice Rolle
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    has_liqorice_rolle = session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']
-    if not has_liqorice_rolle:
+    liqorice_rolle = session_data.account.sneaking.pristine_charms['Liqorice Rolle']
+    if not liqorice_rolle.obtained:
         golden_sixes_buffs.append('Pristine Charm')
-        drop_rate_aw_advice[w1].append(Advice(
-            label="Pristine Charms- Liqorice Rolle:"
-                  f"<br>{1.25 if has_liqorice_rolle else 1}/1.25x Non Misc Stamp Bonuses"
-                  "<br>Note: improves the stamp below",
-            picture_class='liqorice-rolle',
-            progression=int(has_liqorice_rolle),
-            goal=1
-        ))
+        drop_rate_aw_advice[w1].append(liqorice_rolle.get_obtained_advice())
     # Stamps - Golden Sixes
     golden_sixes_stamp = session_data.account.stamps['Golden Sixes Stamp']
     if not golden_sixes_stamp.exalted:
@@ -580,7 +573,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Rift - Sneak Mastery 1
-    sneak_mastery_level = session_data.account.sneaking['MaxMastery']
+    sneak_mastery_level = session_data.account.sneaking.unlocked_mastery
     sneak_mastery_value = 30 if (sneak_mastery_level > 0) else 0
     drop_rate_aw_advice[special].append(Advice(
         label=f"{{{{ Rift|#rift }}}}- Sneaking Mastery:"
@@ -609,15 +602,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Sneaking - Pristine Charm - Cotton Candy
-    cotton_candy_obtained = session_data.account.sneaking['PristineCharms']['Cotton Candy']['Obtained']
-    cotton_candy_multi = 1.15 if cotton_candy_obtained else 1
-    drop_rate_aw_advice[special].append(Advice(
-        label=f"{{{{ Pristine Charms|#sneaking }}}}- Cotton Candy:"
-              f"<br>{cotton_candy_multi}/1.15x Drop Rate MULTI",
-        picture_class='cotton-candy-charm',
-        progression=int(cotton_candy_obtained),
-        goal=1
-    ))
+    cotton_candy = session_data.account.sneaking.pristine_charms["Cotton Candy"]
+    cotton_candy_multi = cotton_candy.value
+    drop_rate_aw_advice[special].append(cotton_candy.get_obtained_advice())
 
     drop_rate_aw_advice[special].append(Advice(
         label=f"Character-specific: Drop Rate MULTI from Equipment. See character-specific sections",

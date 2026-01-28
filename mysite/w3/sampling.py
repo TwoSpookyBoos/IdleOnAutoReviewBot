@@ -104,13 +104,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
         goal=1
     ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Liqorice Rolle: "
-              f"{'1.25/1.25x<br>(Already applied to Stamps above)' if session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained'] else '1/1.25x'}",
-        picture_class=session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Image'],
-        progression=int(session_data.account.sneaking['PristineCharms']['Liqorice Rolle']['Obtained']),
-        goal=1
-    ))
+    psr_Advices[account_subgroup].append(
+        session_data.account.sneaking.pristine_charms['Liqorice Rolle'].get_obtained_advice()
+    )
     psr_Advices[account_subgroup].append(get_arcade_advice(5))
     psr_Advices[account_subgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
@@ -277,8 +273,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 
-    charm_multi = 1.25
-    charm_multi_active = charm_multi if session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained'] else 1
+    lolly_flower = session_data.account.sneaking.pristine_charms['Lolly Flower']
+    charm_multi_active = ValueToMulti(lolly_flower.value)
 
     ballot_active = session_data.account.ballot['CurrentBuff'] == 11
     if ballot_active:
@@ -378,12 +374,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=compass_moon_of_print_max_days
     ))
 
-    po_Advices[aw_label].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Lolly Flower: {charm_multi_active}/{charm_multi}x",
-        picture_class=session_data.account.sneaking['PristineCharms']['Lolly Flower']['Image'],
-        progression=int(session_data.account.sneaking['PristineCharms']['Lolly Flower']['Obtained']),
-        goal=1
-    ))
+    po_Advices[aw_label].append(lolly_flower.get_obtained_advice())
 
     po_Advices[aw_label].append(Advice(
         label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"

@@ -147,12 +147,9 @@ def getBonusesMultiAdviceGroup() -> AdviceGroup:
     }
 
     # Multi Group A: Pristine Charm - Crystal Comb
-    multi_advices[mga].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: 1.3x",
-        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
-        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
-        goal=1
-    ))
+    multi_advices[mga].append(
+        account.sneaking.pristine_charms['Crystal Comb'].get_obtained_advice()
+    )
 
     # Multi Group B: Gem Shop - King of all Winners
     multi_advices[mgb].append(get_gem_shop_purchase_advice(
