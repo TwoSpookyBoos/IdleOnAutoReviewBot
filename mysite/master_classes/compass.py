@@ -273,13 +273,7 @@ def getCompassCurrenciesAdviceGroup(compass):
 
     mgg_label = f"Dust Multi Group G: {compass['Dust Calc']['mgg']:.2f}x"
     currency_advices[mgg_label] = [
-        Advice(
-            label=f"{{{{Emperor Showdowns|#emperor}}}}: {session_data.account.emperor['Bonuses'][4]['Description']}"
-                  f"<br>{session_data.account.emperor['Bonuses'][4]['Scaling']}",
-            picture_class='the-emperor',
-            progression=session_data.account.emperor['Bonuses'][4]['Wins'],
-            goal=EmojiType.INFINITY.value
-        )
+        session_data.account.emperor["Windwalker Extra Dust"].get_bonus_advice()
     ]
 
     for subgroup in currency_advices:

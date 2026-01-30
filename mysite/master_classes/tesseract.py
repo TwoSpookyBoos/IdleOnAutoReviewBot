@@ -158,17 +158,11 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     mgb_label = f"Tachyon Multi Group B: {tesseract['Tachyon Calc']['mgb']:.2f}x"
 
-    emperor_tachyon_bonus = session_data.account.emperor['Bonuses'][6]
+    emperor_tachyon_bonus = session_data.account.emperor["Arcane Cultist Extra Tachyons"]
     tachyon_bubble = session_data.account.alchemy_bubbles['Tachyon Bubble']
 
     currency_advices[mgb_label] = [
-        Advice(
-            label=f"{{{{Emperor Showdowns|#emperor}}}}: {emperor_tachyon_bonus['Description']}"
-                  f"<br>{emperor_tachyon_bonus['Scaling']}",
-            picture_class='the-emperor',
-            progression=emperor_tachyon_bonus['Wins'],
-            goal=EmojiType.INFINITY.value
-        ),
+        emperor_tachyon_bonus.get_bonus_advice(),
         Advice(
             label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Tachyon Bubble: +{round_and_trim(tachyon_bubble['BaseValue'])}/250%",
             picture_class='tachyon-bubble',
