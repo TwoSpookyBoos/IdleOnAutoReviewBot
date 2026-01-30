@@ -182,11 +182,15 @@ def notateNumber(inputType: str, inputValue: float | Decimal, decimals=2, overri
                 if 'e+' in matchString:
                     overrideCharacter = matchString.split('e+')[-1]
                 elif matchString[-1].isalpha():
-                    overrideCharacter = matchString[-1]
+                    overrideCharacter = matchString[-1].upper()
                 else:
                     overrideCharacter = ''
             if overrideCharacter and overrideCharacter.isalpha():
-                result = f"{(inputValue / Decimal(stringToDecimal[overrideCharacter.upper()])):.{decimals}f}{overrideCharacter.upper()}"
+                edge_value = stringToDecimal[overrideCharacter]
+                if inputValue < edge_value:
+                    result = notateNumber('Basic', inputValue, decimals)
+                else:
+                    result = f"{(inputValue / Decimal(edge_value)):.{decimals}f}{overrideCharacter}"
             elif overrideCharacter and overrideCharacter.isdigit():
                 result = f"{(inputValue / Decimal(f'1e{overrideCharacter}')):.{decimals}f}e+{overrideCharacter}"
             else:
