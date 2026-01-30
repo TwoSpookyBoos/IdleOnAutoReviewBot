@@ -17,22 +17,6 @@ def get_advice_for_money_advice(upgrade_name: str, link_to_section: bool = True)
     )
 
 
-def get_spelunking_cavern_bonus_advice(bonus_index: int, link_to_section: bool = True) -> Advice:
-    if bonus_index not in session_data.account.spelunk['Cave Bonuses']:
-        logger.warning(f"bonus_index {bonus_index} not found in session_data.account.spelunk['Cave Bonuses']. Returning generic Advice.")
-
-    bonus = session_data.account.spelunk['Cave Bonuses'].get(bonus_index, {})
-    link_to_section_text = f'{{{{ Spelunking|#spelunking }}}} - ' if link_to_section else ''
-    advice = Advice(
-        label=f"{link_to_section_text}{bonus.get('CaveName', 'UnknownCave')}: {bonus.get('Description', f'UnknownBonus{bonus_index}')}",
-        picture_class=bonus.get('Image', ''),
-        progression=int(bonus.get('Owned', False)),
-        goal=1,
-        resource=bonus.get('Resource', ''),
-    )
-    return advice
-
-
 def get_coral_reef_advice(coral_name: str) -> Advice:
     upgrade = session_data.account.coral_reef['Reef Corals'][coral_name]
     unlock_or_upgrade_text = 'Level up' if upgrade['Unlocked'] else "Unlock"
