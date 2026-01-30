@@ -138,13 +138,9 @@ def getCompassCurrenciesAdviceGroup(compass):
 
     mgc_label = f"Dust Multi Group C: {compass['Dust Calc']['mgc']:.2f}x"
     currency_advices[mgc_label] = [
-        Advice(
-            label=f"{{{{Sneaking|#sneaking}}}}: Pristine Charm: Twinkle Taffy"
-                  f"<br>{session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Bonus']}",
-            picture_class=session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Image'],
-            progression=int(session_data.account.sneaking['PristineCharms']['Twinkle Taffy']['Obtained']),
-            goal=1
-        )
+        session_data.account.sneaking.pristine_charms[
+            'Twinkle Taffy'
+        ].get_obtained_advice()
     ]
 
     mgd_label = f"Dust Multi Group D: {compass['Dust Calc']['mgd']:.2f}x"

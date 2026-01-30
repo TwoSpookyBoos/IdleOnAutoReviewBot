@@ -32,7 +32,7 @@ def generateShrineLevelingAlerts():
 
     shrine_world_tour_active = session_data.account.labBonuses['Shrine World Tour']['Enabled']
     reached_world_6 = session_data.account.highest_world_reached >= 6
-    has_collective_bargaining_agreement = session_data.account.sneaking['JadeEmporium']['Shrine Collective Bargaining Agreement']['Obtained']
+    has_collective_bargaining_agreement = session_data.account.sneaking.emporium['Shrine Collective Bargaining Agreement'].obtained
     xp_reset_warning = '' if reached_world_6 and has_collective_bargaining_agreement else f'<br>{EmojiType.WARNING.value} Moving this shrine will lose xp progress for the current level!'
 
     for char in session_data.account.safe_characters:

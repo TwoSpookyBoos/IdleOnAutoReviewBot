@@ -199,15 +199,15 @@ def getSigilsProgressionTiersAdviceGroup():
     # Assess Tiers
     for tier_number, requirements in sigils_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
-        if 'Ionized Sigils' in requirements.get('Other', {}) and not session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']:
+        if (
+            "Ionized Sigils" in requirements.get("Other", {})
+            and not session_data.account.sneaking.emporium["Ionized Sigils"].obtained
+        ):
             add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
             if subgroup_label in sigils_Advices['Sigils']:
-                sigils_Advices['Sigils'][subgroup_label].append(Advice(
-                    label=f"{{{{ Jade Emporium|#sneaking }}}}: Purchase Ionized Sigils to unlock Red sigils",
-                    picture_class='ionized-sigils',
-                    progression=int(session_data.account.sneaking['JadeEmporium']['Ionized Sigils']['Obtained']),
-                    goal=1
-                ))
+                sigils_Advices['Sigils'][subgroup_label].append(
+                    session_data.account.sneaking.emporium['Ionized Sigils'].get_obtained_advice()
+                )
         # Unlock new Sigils
         for requiredSigil, requiredLevel in requirements.get('Unlock', {}).items():
             if player_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
