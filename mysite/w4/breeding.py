@@ -14,6 +14,7 @@ from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_
 from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
+from utils.number_formatting import number_to_roman
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w6 import max_farming_crops
@@ -156,26 +157,52 @@ def getBreedabilityAdviceGroup():
         key=lambda pet: pet[1]['BreedabilityDays'],
         reverse=True
     )
-    total_7s = 0
+    max_heart_level = len(breedabilityDaysList)
+    total_pet = len(sorted_breedability)
+    total_by_heart = {
+        f"breedability-heart-{index}": 0 for index in range(0, max_heart_level)
+    }
     achievement_7s = 0
     for pet in sorted_breedability:
-        total_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] else 0
         achievement_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] and pet[1]['World'] != 4 else 0
+        total_by_heart[pet[1]['BreedabilityHeart']] += 1
+    for heart_level, heart in enumerate(total_by_heart.keys()):
+        if total_by_heart[heart] > 0:
+            # Found lowest breedability heart
+            break
+    if heart_level > 6:
+        # On 7 level or higher
+        if total_by_heart[heart] == total_pet and heart_level < max_heart_level:
+            # All pet at lowest level, move target one step ahead (if have that step)
+            heart_level = heart_level + 1
+            heart = f"breedability-heart-{heart_level}"
+    else:
+        # Start goal is 7 level
+        heart_level = 7
+        heart = f"breedability-heart-7"
+    target = breedabilityDaysList[heart_level]
+    for pet in sorted_breedability:
         b_advices.append(Advice(
             label=f"W{pet[1]['World']} {pet[0]}"
                   f"<br>Breedability Multi: {pet[1]['BreedabilityMulti']:.3f}x"
-                  f"<br>Heart VII: {notateNumber('Match', pet[1]['BreedabilityDays'], 0, 'K' if pet[1]['BreedabilityDays'] >= 1000 else '')} / "
-                  f"{notateNumber('Match', breedabilityDaysList[-4], 0, 'K')}",
+                  f"<br>Heart {number_to_roman(heart_level)}: "
+                  f"{notateNumber('Match', pet[1]['BreedabilityDays'], 0, 'K' if pet[1]['BreedabilityDays'] >= 1000 else '')} / "
+                  f"{notateNumber('Match', target, 0, 'K')}",
             picture_class=pet[0],
-            progression=f"{min(1, pet[1]['BreedabilityDays'] / breedabilityDaysList[-4]):.2%}",
+            progression=f"{min(1, pet[1]['BreedabilityDays'] / target):.2%}",
             goal='100%',
             resource=pet[1]['BreedabilityHeart']
         ))
     b_advices.insert(0, Advice(
-        label=f"Total Heart VII+ pets: {total_7s}/{len(sorted_breedability)}",
-        picture_class='breedability-heart-7',
-        progression=total_7s,
-        goal=len(sorted_breedability),
+        label=f"Total Heart {number_to_roman(heart_level)}+ pets: {total_by_heart[heart]}/{total_pet}",
+        picture_class=heart,
+        progression=sum(
+            [
+                total_by_heart[f"breedability-heart-{level}"]
+                for level in range(heart_level, max_heart_level)
+            ]
+        ),
+        goal=total_pet,
     ))
     b_advices.insert(1, Advice(
         label=f"I LOVE These Pets achievement: {achievement_7s}/15",
@@ -186,10 +213,10 @@ def getBreedabilityAdviceGroup():
 
     for advice in b_advices:
         advice.mark_advice_completed()
-    
+
     b_ag = AdviceGroup(
         tier='',
-        pre_string="Breedability Multi and Heart VII Progress",
+        pre_string="Breedability Multi and Heart Progress",
         post_string=(
             f"Note: W4 pets don't count toward the achievement {EmojiType.FROWN.value}"
             if not session_data.account.achievements['I LOVE These Pets']['Complete'] else
