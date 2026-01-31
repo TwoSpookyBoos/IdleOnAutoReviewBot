@@ -8,7 +8,7 @@ from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.consts_general import gem_shop_optlacc_dict
 from consts.idleon.consts_idleon import current_world, max_characters
-from consts.consts_w6 import max_farming_crops
+from consts.w6.farming import max_farming_crops
 from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
 from consts.consts_w4 import cooking_close_enough, breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
@@ -89,7 +89,7 @@ def try_exclude_Gaming(exclusionLists):
         session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
         or session_data.account.gaming['FertilizerValue'] >= 420
         or session_data.account.gaming['FertilizerSpeed'] >= 500
-        or session_data.account.farming['CropsUnlocked'] >= max_farming_crops * 0.75
+        or session_data.account.farming.crops.unlocked >= max_farming_crops * 0.75
     ):
         for sublist in exclusionLists:
             sublist.append('Golden Sprinkler')
@@ -137,7 +137,7 @@ def try_exclude_IvoryBubbleCauldrons(exclusionLists):
             sublist.append('Ivory Bubble Cauldrons')
 
 def try_exclude_Farming(exclusionLists):
-    if session_data.account.farming['CropsUnlocked'] >= max_farming_crops:
+    if session_data.account.farming.crops.unlocked >= max_farming_crops:
         for sublist in exclusionLists:
             sublist.append('Instagrow Generator')
             sublist.append('Plot of Land')

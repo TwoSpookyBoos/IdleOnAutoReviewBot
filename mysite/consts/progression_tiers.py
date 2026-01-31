@@ -1873,7 +1873,7 @@ farming_progressionTiers = {
         'Crops Unlocked': 19,  #Total number of crops is 19 for Overgrowth to be purchasable
         'Suggestions': {
             'EvoChance': [4, 4.5],
-            'CropIndex': [11, 29]  #11 = Basic/Lime, 29 = Earthy/Avocado
+            'CropIndex': [10, 28]  #10 = Basic/Lime, 28 = Earthy/Avocado
         },
         'Night Market': {
             'Overgrowth': 1,
@@ -1891,7 +1891,7 @@ farming_progressionTiers = {
         'Crops Unlocked': 61,  #Total number of crops is 61 for Land Ranks to be purchasable
         'Suggestions': {
             'EvoChance': [325, 335],
-            'CropIndex': [21, 41, 55, 72],  #21 = Basic/Golden Blueberry, 41 = Earthy/Lettuce, 55 = Bulbo/Pink Daisy, 72 = Sushi/11
+            'CropIndex': [20, 40, 54, 71],  #20 = Basic/Golden Blueberry, 40 = Earthy/Lettuce, 54 = Bulbo/Pink Daisy, 71 = Sushi/11
         },
         'Night Market': {
             'Land Rank': 1,
@@ -1934,8 +1934,8 @@ farming_progressionTiers = {
         'Suggestions': {
             'EvoChance': [1e12, 10e12],
             'Speed': [8, 20],
-            'CropIndex': [46, 61, 84, 104, 119],  #46 = Earthy/Gold Sliced Tomato, 61 = Bulbo/Golden Tulip, 84 = Sushi/Max, 104 = Mushie/20, 119 = Normal Glassy/Onigiri
-            'Stacks': ['Evolution', 'Speed'],
+            'CropIndex': [45, 60, 83, 103, 118],  #45 = Earthy/Gold Sliced Tomato, 60 = Bulbo/Golden Tulip, 83 = Sushi/Max, 103 = Mushie/20, 118 = Normal Glassy/Onigiri
+            'Stacks': ['Evolution Gmo', 'Speed Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 30,  # 1.24x
@@ -1968,8 +1968,8 @@ farming_progressionTiers = {
             'EvoChance': [1e16, 1e18],
             'Speed': [30, 40],
             'OG': [2.5, 6.25],  #Guarantees 2x OG at 2.5 OG, guarantees 4x OG
-            'CropIndex': [107, 123],  #107 = Mushie/Final, 122 = Red Glassy/Mango
-            'Stacks': ['Evolution', 'Speed'],
+            'CropIndex': [106, 122],  #106 = Mushie/Final, 121 = Red Glassy/Mango
+            'Stacks': ['Evolution Gmo', 'Speed Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 40,  #1.32x
@@ -1986,8 +1986,8 @@ farming_progressionTiers = {
         'Suggestions': {
             'EvoChance': [1e22, 5e22],
             'Speed': [30, 40],
-            'CropIndex': [126],  #126 at end of 1k stacking, before 100k stacking
-            'Stacks': ['Evolution', 'Speed', 'Value'],
+            'CropIndex': [125],  #125 at end of 1k stacking, before 100k stacking
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo'],
             'No Trade': "Do not complete a Bean trade! Start back at Apples and stack to 100k of each crop"
         },
         #'Night Market': {},
@@ -2029,8 +2029,8 @@ farming_progressionTiers = {
             'EvoChance': [1e23, 5e23],
             'Speed': [250, 400],
             'OG': [6.25, 15.625],
-            'CropIndex': [127],
-            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+            'CropIndex': [126],
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo', 'Super Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 65,  #1.52x
@@ -2051,7 +2051,7 @@ farming_progressionTiers = {
             },
         },
         'Suggestions': {
-            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo', 'Super Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 88,  #1.70x
@@ -2064,7 +2064,7 @@ farming_progressionTiers = {
         'Crops Unlocked': 160,
         'Suggestions': {
             'EvoChance': [1e66, 1e68],
-            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo', 'Super Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 125,  #2.00x
@@ -2084,7 +2084,7 @@ farming_progressionTiers = {
         },
         'Suggestions': {
             'EvoChance': [1e91, 1e93],
-            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo', 'Super Gmo'],
         },
         'Night Market': {
             'Evolution Gmo': 187,  #2.50x
@@ -2106,7 +2106,7 @@ farming_progressionTiers = {
     10: {
         'Crops Unlocked': 230,
         'Suggestions': {
-            'Stacks': ['Evolution', 'Speed', 'Value', 'Super'],
+            'Stacks': ['Evolution Gmo', 'Speed Gmo', 'Value Gmo', 'Super Gmo'],
         },
         'Day Market': {
             'Stronger Vines': 220,  #440%

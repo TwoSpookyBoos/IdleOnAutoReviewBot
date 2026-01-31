@@ -22,7 +22,8 @@ from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, build
 from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
-from consts.consts_w6 import max_farming_value, summoning_rewards_that_dont_multiply_base_value
+from consts.consts_w6 import summoning_rewards_that_dont_multiply_base_value
+from consts.w6.farming import max_farming_value
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
 from models.advice.generators.general import get_upgrade_vault_advice
@@ -1443,9 +1444,9 @@ def _calculate_caverns_measurements_multis(account):
             }
         elif entry_index == 1:  #Crops Found
             account.caverns['MeasurementMultis'][clean_entry_name] = {
-                'Raw': account.farming['CropsUnlocked'],
-                'PrettyRaw': f"{account.farming['CropsUnlocked']:,}",
-                'Prepped': account.farming['CropsUnlocked'] / 14  # In the source code, this is when 99 = i
+                'Raw': account.farming.crops.unlocked,
+                'PrettyRaw': f"{account.farming.crops.unlocked:,}",
+                'Prepped': account.farming.crops.unlocked / 14  # In the source code, this is when 99 = i
             }
         elif entry_index == 2:  #Account Lv
             sum_combat_levels = sum(account.all_skills['Combat']) or 0
@@ -1924,7 +1925,7 @@ def _calculate_w6(account):
 
 
 def _calculate_w6_sneaking_gemstones(account):
-    # TODO: Move to Talent class and calculate as Talent.as_multi
+    # TODO: Move to Talent class and calculate by Talent.as_multi
     generational_gemstones_level = account.get_current_max_talent("Generational Gemstones")
     gemstone_multi = lava_func("decayMulti", max(0, generational_gemstones_level), 3, 300)
     account.sneaking.calculate_gemstones_values(
@@ -1937,254 +1938,62 @@ def _calculate_w6_farming(account):
     _calculate_w6_farming_land_ranks(account)
     _calculate_w6_farming_crop_depot(account)
     _calculate_w6_farming_markets(account)
-    _calculate_w6_farming_crop_value(account)
+    account.farming.calculate_crop_value_multi(account.ballot)
     _calculate_w6_farming_crop_evo(account)
-    _calculate_w6_farming_crop_speed(account)
-    _calculate_w6_farming_bean_bonus(account)
-    _calculate_w6_farming_og(account)
+    account.farming.calculate_crop_speed(account)
+    account.farming.calculate_bean_bonus(account)
+    account.farming.calculate_og(account)
+
 
 def _calculate_w6_farming_land_ranks(account):
-    highest_dank_rank_level = 0
-    for db in account.dbs:
-        highest_dank_rank_level = max(
-            highest_dank_rank_level,
-            db.current_preset_talents.get('207', 0) + db.total_bonus_talent_levels,
-            db.secondary_preset_talents.get('207', 0) + db.total_bonus_talent_levels
-        )
+    # TODO: Move to Talent class and calculate by Talent.as_multi
+    dank_rank_level = account.get_current_max_talent("Dank Rank")
+    dank_rank_multi = lava_func(
+        all_talentsDict[207]['funcX'],
+        dank_rank_level,
+        all_talentsDict[207]['x1'],
+        all_talentsDict[207]['x2']
+    )
+    account.farming.calculate_land_rank_bonus(dank_rank_multi)
 
-    dank_rank_multi = max(1, lava_func(
-        funcType=all_talentsDict[207]['funcX'],
-        level=highest_dank_rank_level,
-        x1=all_talentsDict[207]['x1'],
-        x2=all_talentsDict[207]['x2'],
-    ))
-
-    for upgrade_name, upgrade_details in account.farming['LandRankDatabase'].items():
-        if upgrade_details['Index'] % 5 != 4:
-            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
-                dank_rank_multi
-                * ((1.7 * upgrade_details['BaseValue'] * upgrade_details['Level']) / (upgrade_details['Level'] + 80))
-            )
-        else:
-            account.farming['LandRankDatabase'][upgrade_name]['Value'] = (
-                dank_rank_multi
-                * upgrade_details['BaseValue']
-                * upgrade_details['Level']
-            )
 
 def _calculate_w6_farming_crop_depot(account):
+    # Dependency: Lab, Grimoire, Emporium
     lab_multi = ValueToMulti(
         (account.labBonuses['Depot Studies PhD']['Value'] + account.labJewels['Pure Opal Rhombol']['Value']) * account.labBonuses['Depot Studies PhD']['Enabled']
     )
     grimoire_multi = account.grimoire['Upgrades']['Superior Crop Research']['Total Value']  #Grimoire 22: Superior Crop Research already a Multi
-    for bonusName, bonusDetails in account.farming['Depot'].items():
-        account.farming['Depot'][bonusName]['Value'] = account.farming['Depot'][bonusName]['BaseValue'] * lab_multi * grimoire_multi
-        account.farming['Depot'][bonusName]['ValuePlus1'] = account.farming['Depot'][bonusName]['BaseValuePlus1'] * lab_multi * grimoire_multi
+    account.farming.calculate_crop_depot_bonus(
+        lab_multi, grimoire_multi, account.sneaking.emporium
+    )
+
 
 def _calculate_w6_farming_markets(account):
-    super_multi_current_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * account.farming['CropStacks']['Super Gmo'])
-    #super_multi_max_stacks = ValueToMulti(account.farming['MarketUpgrades']['Super Gmo']['Value'] * max_farming_crops)
-    #logger.debug(f"models._calculate_w6_farming_day_market super_multi = {super_multi}")
-    for name, details in account.farming['MarketUpgrades'].items():
-        try:
-            if "}" in details['Description']:  #Multiplicative
-                val = ValueToMulti(details['Value'])
-                account.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("}", f"{val:.3g}")
-            else:
-                account.farming['MarketUpgrades'][name]['Description'] = details['Description'].replace("{", f"{details['Value']:g}")
-            if name in account.farming['CropStacks']:
-                if name == 'Super Gmo':
-                    account.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks
-                    account.farming['MarketUpgrades'][name]['Description'] += (
-                        f".<br>{account.farming['CropStacks'][name]} stacks = "
-                        f"{super_multi_current_stacks:,.4g}x"
-                    )
-                elif name == 'Evolution Gmo':
-                    account.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * safer_math_pow(ValueToMulti(details['Value']), account.farming['CropStacks'][name])
-                    account.farming['MarketUpgrades'][name]['Description'] += (
-                        f".<br>{account.farming['CropStacks'][name]} stacks = "
-                        f"{account.farming['MarketUpgrades'][name]['StackedValue']:,.4g}x"
-                    )
-                else:
-                    account.farming['MarketUpgrades'][name]['StackedValue'] = super_multi_current_stacks * (ValueToMulti(details['Value'] * account.farming['CropStacks'][name]))
-                    account.farming['MarketUpgrades'][name]['Description'] += (
-                        f".<br>{account.farming['CropStacks'][name]} stacks = "
-                        f"{account.farming['MarketUpgrades'][name]['StackedValue']:,.5g}x"
-                    )
-        except:
-            logger.exception(f"Exception substituting value for {name}")
-            continue
-
-def _calculate_w6_farming_crop_value(account):
-    #if ("CropsBonusValue" == e)
-    #return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
-    account.farming['Value'] = {}
-    account.farming['Value']['Doubler Multi'] = floor(ValueToMulti(account.farming['MarketUpgrades']['Product Doubler']['Value']))
-    account.farming['Value']['Mboost Sboost Multi'] = ValueToMulti(
-        account.farming['LandRankDatabase']['Production Megaboost']['Value'] + account.farming['LandRankDatabase']['Production Superboost']['Value']
+    # Dependency: Gemshop, Merit
+    bought_plot = (
+        account.gemshop['Purchases']['Plot Of Land']['Owned']
+        + min(3, account.merits[5][2]['Level'])
     )
-    account.farming['Value']['Value GMO Current'] = account.farming['MarketUpgrades']['Value Gmo']['StackedValue']
+    account.farming.calculate_market_bonus(bought_plot)
 
-    #Calculate with the Min Plot Rank
-    account.farming['Value']['Pboost Ballot Multi Min'] = ValueToMulti(
-        (account.farming['LandRankDatabase']['Production Boost']['Value']) * account.farming.get('LandRankMinPlot', 0)  #Value of PBoost * Lowest Plot Rank
-        + (account.ballot['Buffs'][29]['Value'] * int(account.ballot['CurrentBuff'] == 29))  #Plus value of Ballot Buff * Active status
-    )
-    account.farming['Value']['BeforeCapMin'] = round(
-        max(1, account.farming['Value']['Doubler Multi'])  #end of max
-        * account.farming['Value']['Mboost Sboost Multi']
-        * account.farming['Value']['Pboost Ballot Multi Min']
-        * account.farming['Value']['Value GMO Current']
-        )  #end of round
-
-    #Now calculate with the Max Plot Rank
-    account.farming['Value']['Pboost Ballot Multi Max'] = ValueToMulti(
-        (account.farming['LandRankDatabase']['Production Boost']['Value']) * account.farming.get('LandRankMaxPlot', 0)  # Value of PBoost * Highest Plot Rank
-        + (account.ballot['Buffs'][29]['Value'] * int(account.ballot['CurrentBuff'] == 29))  # Plus value of Ballot Buff * Active status
-    )
-    account.farming['Value']['BeforeCapMax'] = round(
-        max(1, account.farming['Value']['Doubler Multi'])  # end of max
-        * account.farming['Value']['Mboost Sboost Multi']
-        * account.farming['Value']['Pboost Ballot Multi Max']
-        * account.farming['Value']['Value GMO Current']
-    )  # end of round
-    account.farming['Value']['FinalMin'] = min(max_farming_value, account.farming['Value']['BeforeCapMin'])
-    account.farming['Value']['FinalMax'] = min(max_farming_value, account.farming['Value']['BeforeCapMax'])
-    #logger.debug(f"models._calculate_w6_farming_crop_value CropValue BEFORE cap = {account.farming['Value']['BeforeCap']}")
-    #logger.debug(f"models._calculate_w6_farming_crop_value CropValue AFTER cap = {account.farming['Value']['Final']}")
 
 def _calculate_w6_farming_crop_evo(account):
-    #Dependency: _calculate_w6_summoning_regular_bonuses
+    # Dependency: _calculate_w6_summoning_regular_bonuses
     # Alchemy
-    account.farming['Mama Trolls Unlocked'] = False
-    account.farming['Evo'] = {}
-    account.farming['Evo']['Maps Opened'] = 0
+    farming = account.farming
+    map_opened = 0
+    mama_trolls_map_open = False
     for char in account.all_characters:
         for mapIndex in range(251, 264):  # Clearing the fake portal at Samurai Guardians doesn't count
             try:
                 if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
-                    account.farming['Evo']['Maps Opened'] += 1
-                    if mapIndex == 257 and not account.farming['Mama Trolls Unlocked']:
-                        account.farming['Mama Trolls Unlocked'] = True
+                    map_opened += 1
+                    mama_trolls_map_open = mama_trolls_map_open or mapIndex == 257
             except:
                 continue
-    account.farming['Evo']['Cropius Final Value'] = account.farming['Evo']['Maps Opened'] * account.alchemy_bubbles['Cropius Mapper']['BaseValue']
-    account.farming['Evo']['Vial Value'] = account.alchemy_vials['Flavorgil (Caulifish)']['Value']
-    account.farming['Evo']['Alch Multi'] = (
-        ValueToMulti(account.farming['Evo']['Cropius Final Value'])
-        * ValueToMulti(
-            account.alchemy_bubbles['Crop Chapter']['BaseValue']
-            * max(0, floor((account.tome['Total Points'] - 5000) / 2000))
-        )
-        * ValueToMulti(account.farming['Evo']['Vial Value'])
-    )
-    # Stamp
-    account.farming['Evo']['Stamp Multi'] = ValueToMulti(account.stamps['Crop Evo Stamp'].total_value)
-    # Meals
-    account.farming['Evo']['Nyan Stacks'] = ceil((max(account.all_skills['Summoning'], default=0) + 1) / 50)
-    account.farming['Evo']['Meals Multi'] = (
-        ValueToMulti(account.meals['Bill Jack Pepper']['Value'])
-        * ValueToMulti(account.meals['Nyanborgir']['Value'] * account.farming['Evo']['Nyan Stacks'])
-    )
-    # Markets
-    account.farming['Evo']['Farm Multi'] = ValueToMulti(account.farming['MarketUpgrades']['Biology Boost']['Value']) * account.farming['MarketUpgrades']['Evolution Gmo']['StackedValue']
-    # Land Ranks
-    account.farming['Evo']['LR Multi'] = (
-            ValueToMulti(account.farming['LandRankDatabase']['Evolution Boost']['Value'] * account.farming['LandRankMinPlot'])
-            * ValueToMulti(account.farming['LandRankDatabase']['Evolution Megaboost']['Value'])
-            * ValueToMulti(account.farming['LandRankDatabase']['Evolution Superboost']['Value'])
-            * ValueToMulti(account.farming['LandRankDatabase']['Evolution Ultraboost']['Value'])
-    )
-    # Starsign
-    account.farming['Evo']['Starsign Final Value'] = (
-            3 * account.star_signs['Cropiovo Minor']['Unlocked']
-            * max(account.all_skills['Farming'], default=0)
-            * account.star_sign_extras['SilkrodeNanoMulti']
-            * account.star_sign_extras['SeraphMulti']
-    )
-    account.farming['Evo']['SS Multi'] = ValueToMulti(account.farming['Evo']['Starsign Final Value'])
-    # Misc
-    account.farming['Evo']['Total Farming Levels'] = sum(account.all_skills['Farming'])
-    account.farming['Evo']['Skill Mastery Bonus Bool'] = account.rift['SkillMastery'] and account.farming['Evo']['Total Farming Levels'] >= 300
-    account.farming['Evo']['Ballot Active'] = account.ballot['CurrentBuff'] == 29
-    if account.farming['Evo']['Ballot Active']:
-        account.farming['Evo']['Ballot Status'] = "is Active"
-    elif not account.farming['Evo']['Ballot Active'] and account.ballot['CurrentBuff'] != 0:
-        account.farming['Evo']['Ballot Status'] = "is Inactive"
-    else:
-        account.farming['Evo']['Ballot Status'] = "status is not available in provided data"
-    account.farming['Evo']['Ballot Multi Max'] = ValueToMulti(account.ballot['Buffs'][29]['Value'])
-    account.farming['Evo']['Ballot Multi Current'] = max(1, account.farming['Evo']['Ballot Multi Max'] * account.farming['Evo']['Ballot Active'])
-    account.farming['Evo']['Misc Multi'] = (
-            ValueToMulti(5 * account.achievements["Lil' Overgrowth"]['Complete'])
-            * account.killroy_skullshop['Crop Multi']
-            * ValueToMulti(15 * account.farming['Evo']['Skill Mastery Bonus Bool'] * account.rift['SkillMastery'])
-            * account.farming['Evo']['Ballot Multi Current']
-    )
-    account.farming['Evo']['Wish Multi'] = ValueToMulti(account.caverns['Caverns']['The Lamp']['WishTypes'][8]['BonusList'][0])
-    # subtotal doesn't include Crop Chapter
-    account.farming['Evo']['Subtotal Multi'] = (
-        account.farming['Evo']['Alch Multi']
-        * account.farming['Evo']['Stamp Multi']
-        * account.farming['Evo']['Meals Multi']
-        * account.farming['Evo']['Farm Multi']
-        * account.farming['Evo']['LR Multi']
-        * account.summoning['Bonuses']['<x Crop EVO']['Value']
-        * account.farming['Evo']['SS Multi']
-        * account.farming['Evo']['Misc Multi']
-        * account.farming['Evo']['Wish Multi']
-    )
+    farming.magic_bean_unlocked = mama_trolls_map_open
+    account.farming.calculate_crop_evo_multi(map_opened, account)
 
-def _calculate_w6_farming_crop_speed(account):
-    #Dependency: _calculate_w6_summoning_regular_bonuses
-    account.farming['Speed'] = {}
-    # Vial and Day Market
-    account.farming['Speed']['Vial Value'] = account.alchemy_vials['Ricecakorade (Rice Cake)']['Value']
-    account.farming['Speed']['VM Multi'] = ValueToMulti(account.farming['Speed']['Vial Value'] + account.farming['MarketUpgrades']['Nutritious Soil']['Value'])
-    # Night Market
-    account.farming['Speed']['NM Multi'] = account.farming['MarketUpgrades']['Speed Gmo']['StackedValue']
-    # Total
-    account.farming['Speed']['Total Multi'] = (
-        account.summoning['Bonuses']['<x Farming SPD']['Value']
-        * account.farming['Speed']['VM Multi']
-        * account.farming['Speed']['NM Multi']
-    )
-
-def _calculate_w6_farming_bean_bonus(account):
-    account.farming['Bean'] = {}
-    account.farming['Bean']['mga'] = ValueToMulti(account.farming['MarketUpgrades']['More Beenz']['Value'])
-    account.farming['Bean']['mgb'] = ValueToMulti(
-        account.sneaking.emporium['Deal Sweetening'].value
-        + (5 * account.achievements['Crop Flooding']['Complete'])
-    )
-    account.farming['Bean']['Total Multi'] = account.farming['Bean']['mga'] * account.farming['Bean']['mgb']
-
-def _calculate_w6_farming_og(account):
-    # Fun calculations
-    account.farming['OG'] = {}
-    account.farming['OG']['Ach Multi'] = ValueToMulti(15 * account.achievements['Big Time Land Owner']['Complete'])
-    account.farming['OG']['Starsign Final Value'] = (
-            15 * account.star_signs['O.G. Signalais']['Unlocked']
-            * account.star_sign_extras['SilkrodeNanoMulti']
-            * account.star_sign_extras['SeraphMulti']
-    )
-    account.farming['OG']['SS Multi'] = ValueToMulti(account.farming['OG']['Starsign Final Value'])
-    account.farming['OG']['NM Multi'] = ValueToMulti(account.farming['MarketUpgrades']['Og Fertilizer']['Value'])
-    account.farming['OG']['Merit Multi'] = ValueToMulti(2 * account.merits[5][2]['Level'])
-    account.farming['OG']['LR Multi'] = (ValueToMulti(
-        account.farming['LandRankDatabase']['Overgrowth Boost']['Value']
-        + account.farming['LandRankDatabase']['Overgrowth Megaboost']['Value']
-        + account.farming['LandRankDatabase']['Overgrowth Superboost']['Value']
-    ))
-    account.farming['OG']['Pristine Multi'] = ValueToMulti(account.sneaking.pristine_charms['Taffy Disc'].value)
-    account.farming['OG']['Total Multi'] = (
-            account.farming['OG']['Ach Multi']
-            * account.farming['OG']['SS Multi']
-            * account.farming['OG']['NM Multi']
-            * account.farming['OG']['Merit Multi']
-            * account.farming['OG']['LR Multi']
-            * account.farming['OG']['Pristine Multi']
-    )
 
 def _calculate_w6_summoning(account):
     _calculate_w6_summoning_doublers(account)
@@ -2525,8 +2334,7 @@ def _calculate_w1_statues(account):
 
 def _calculate_w6_beanstalk(account):
     # Dependency: Emporium
-    emporium = account.sneaking.emporium
-    account.beanstalk.calculate_unlocked_tier(emporium)
+    account.beanstalk.calculate_unlocked_tier(account.sneaking.emporium)
     account.beanstalk.calculate_golden_food_multi()
     account.beanstalk.calculate_bonuses()
 

@@ -5,7 +5,7 @@ from consts.w1.stamps import stamp_types, unavailable_stamps_list, stamps_exalt_
 from consts.consts_w2 import max_vial_level, max_sigil_level
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.consts_w6 import max_farming_crops
+from consts.w6.farming import max_farming_crops
 from consts.progression_tiers import stamps_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
 
@@ -56,7 +56,7 @@ def getStampExclusions() -> dict[str, bool]:
         exclusionsDict['Summoner Stone Stamp'] = True if not session_data.account.stamps['Summoner Stone Stamp'].delivered else False
         exclusionsDict['Void Axe Stamp'] = True if not session_data.account.stamps['Void Axe Stamp'].delivered else False
 
-    if session_data.account.farming['CropsUnlocked'] >= max_farming_crops:
+    if session_data.account.farming.crops.unlocked >= max_farming_crops:
         exclusionsDict['Crop Evo Stamp'] = True
 
     return exclusionsDict
