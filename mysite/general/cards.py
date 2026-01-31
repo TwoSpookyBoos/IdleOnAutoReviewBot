@@ -247,7 +247,7 @@ def getCardsAdviceSection() -> AdviceSection:
     player_max_card_stars = (
         4
         + (1 * session_data.account.rift['RubyCards'])
-        + (1 * session_data.account.spelunk['Cave Bonuses'][2]['Owned'])
+        + (1 * session_data.account.spelunk.cave["Rustbelt 03"].bonus_obtained)
     )
 
     groups = list()

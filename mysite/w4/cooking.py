@@ -228,12 +228,15 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     # If any sources of max plate levels are missing
     if session_data.account.cooking['PlayerMissingPlateUpgrades']:
         for missingUpgrade in session_data.account.cooking['PlayerMissingPlateUpgrades']:
-            cooking_Advices['PlateLevels'].append(Advice(
-                label=missingUpgrade[0],
-                picture_class=missingUpgrade[1],
-                progression=missingUpgrade[2],
-                goal=missingUpgrade[3]
-            ))
+            if isinstance(missingUpgrade, Advice):
+                cooking_Advices['PlateLevels'].append(missingUpgrade)
+            else:
+                cooking_Advices['PlateLevels'].append(Advice(
+                    label=missingUpgrade[0],
+                    picture_class=missingUpgrade[1],
+                    progression=missingUpgrade[2],
+                    goal=missingUpgrade[3]
+                ))
 
     for advice in cooking_Advices['NextTier']:
         advice.mark_advice_completed()

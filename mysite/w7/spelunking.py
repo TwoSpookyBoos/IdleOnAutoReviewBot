@@ -3,15 +3,15 @@ from consts.progression_tiers import true_max_tiers
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.w7 import get_spelunking_cavern_bonus_advice
 from utils.logging import get_logger
-
 
 logger = get_logger(__name__)
 
+
 def get_cave_bonuses_advicegroup() -> AdviceGroup:
     cb_Advices = [
-        get_spelunking_cavern_bonus_advice(index, False) for index in session_data.account.spelunk['Cave Bonuses'].keys()
+        cave.get_bonus_advice(False)
+        for cave in session_data.account.spelunk.cave.values()
     ]
 
     for advice in cb_Advices:
