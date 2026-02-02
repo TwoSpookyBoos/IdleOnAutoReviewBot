@@ -10,6 +10,7 @@ from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
 from models.w7.spelunk import Spelunk
+from models.w7.clam_work import ClamWork
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
@@ -90,6 +91,7 @@ class Account:
         self.advice_for_money = {
             'Upgrades': {},
         }
+        self.clam_work = ClamWork(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

@@ -177,3 +177,11 @@ class AdviceGroup(AdviceBase):
                 for value in self.advices.values():
                     for advice in value:
                         advice.update_optional(self.optional)
+
+    def mark_advice_completed(self):
+        if isinstance(self.advices, list):
+            [advice.mark_advice_completed() for advice in self.advices]
+        elif isinstance(self.advices, dict):
+            for advice_list in self.advices.values():
+                if isinstance(advice_list, list):
+                    [advice.mark_advice_completed() for advice in advice_list]
