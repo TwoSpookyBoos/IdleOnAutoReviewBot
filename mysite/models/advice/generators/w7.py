@@ -1,20 +1,7 @@
-from consts.consts_autoreview import EmojiType
 from models.advice.advice import Advice
 from models.general.session_data import session_data
 from utils.logging import get_logger
 logger = get_logger(__name__)
-
-def get_advice_for_money_advice(upgrade_name: str, link_to_section: bool = True) -> tuple[int | float, Advice]:
-    upgrade = session_data.account.advice_for_money['Upgrades'][upgrade_name]
-    link_to_section_text = f'{{{{ Advice For Money|#advice-for-money }}}} - ' if link_to_section else ''
-    return upgrade['Value'], Advice(
-        label=f"{link_to_section_text}{upgrade_name}:"
-              f"<br>{upgrade['Effect']}",
-        picture_class=f"advice-for-money-{upgrade['Index']}",
-        resource='coins',
-        goal=EmojiType.INFINITY.value,
-        progression=upgrade['Level']
-    )
 
 
 def get_coral_reef_advice(coral_name: str) -> Advice:

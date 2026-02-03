@@ -11,6 +11,7 @@ from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
 from models.w7.spelunk import Spelunk
+from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
@@ -90,9 +91,7 @@ class Account:
         self.legend_talents = {
             'Talents': copy.deepcopy(legend_talents_bonuses)
         }
-        self.advice_for_money = {
-            'Upgrades': {},
-        }
+        self.advice_fish = AdviceFish(self.raw_data)
         self.clam_work = ClamWork(self.raw_data)
 
     def add_alert_list(
