@@ -41,7 +41,7 @@ class BeanstalkDeposit(GoldenFood):
             progress = notateNumber("Basic", next_tier_require, 0)
             goal = "Deposit"
         else:
-            goal = notateNumber("Basic", next_tier_require, 0)
+            goal = notateNumber("Match", next_tier_require, 0, "K")
             progress = notateNumber("Match", amount, matchString=goal)
         golden_food_info = golden_food_data.get(self.name, {})
         resource = golden_food_info.get("Resource Image", "placeholder")
