@@ -32,8 +32,9 @@ class Salt:
             self.consumption_of_previous_salt: int = session_data.account.refinery[salt_name]['PreviousSaltConsumption']
             self.next_salt_consumption: int = session_data.account.refinery[salt_name]['NextSaltConsumption']
             self.next_salt_cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['NextSaltCyclesPerSynthCycle']
-            self.output: int = int(floor(min(refinery_max_powerpercycle, safer_math_pow(self.salt_rank, 1.3) * (2 if has_companion('Panda') else 1)))) * self.cycles_per_Synthesis_cycle
-            self.output_maxed = self.output >= refinery_max_powerpercycle
+            self._output_per_cycle: int = int(floor(min(refinery_max_powerpercycle, safer_math_pow(self.salt_rank, 1.3) * (2 if has_companion('Panda') else 1))))
+            self.output: int = self._output_per_cycle * self.cycles_per_Synthesis_cycle
+            self.output_maxed = self._output_per_cycle >= refinery_max_powerpercycle
             if next_salt_rank != 0:
                 self.consumed: int = int(floor(safer_math_pow(next_salt_rank, self.salt_consumption_scaling)) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
             else:
