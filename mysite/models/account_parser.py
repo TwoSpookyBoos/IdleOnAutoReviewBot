@@ -3694,8 +3694,10 @@ def _parse_w6_summoning(account):
     raw_caverns_list = safe_loads(account.raw_data.get('Holes', []))
     try:
         raw_doubled_upgrades = [int(entry) for entry in raw_caverns_list[28] if int(entry) >= 0]
+        account.summoning['Doublers Spendable'] = len(raw_caverns_list[28])
     except:
         raw_doubled_upgrades = []
+        account.summoning['Doublers Spendable'] = 30
     account.summoning['Doubled Upgrades'] = len(raw_doubled_upgrades)
 
     # raw_summoning_list[0] = Upgrades
