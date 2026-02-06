@@ -1,40 +1,27 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.idleon.consts_idleon import max_characters
 from consts.consts_w2 import max_vial_level
 from consts.consts_w4 import max_meal_level
-from consts.consts_w6 import max_farming_crops, max_farming_value, landrank_dict, crop_dict, getCropEvoChance, \
-    getRequiredCropNumber
+from consts.idleon.consts_idleon import max_characters
+from consts.idleon.w6.farming import landrank_list
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
+from consts.w6.farming import max_farming_crops, max_farming_value, crop_evo_breakpoint_list
+
 from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.w6 import get_summoning_bonus_advice
+from models.w6.farming import Farming
+
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.safer_data_handling import safer_math_pow
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import pl, notateNumber
 
 logger = get_logger(__name__)
 
-def getLandRankImage(level: int) -> str:
-    if level >= 100:
-        return 'landrank-7'
-    elif level >= 75:
-        return 'landrank-6'
-    elif level >= 50:
-        return 'landrank-5'
-    elif level >= 25:
-        return 'landrank-4'
-    elif level >= 10:
-        return 'landrank-3'
-    elif level >= 5:
-        return 'landrank-2'
-    else:
-        return 'landrank-1'
 
 def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     lab_note = f"<br>Note: Defaulted ON. Sorry {EmojiType.FROWN.value}"
@@ -95,28 +82,10 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
             progression=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Level'],
             goal=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Max Level'],
         ),
-        Advice(
-            label=f"Total Crops Discovered: {farming['CropsUnlocked']}/{max_farming_crops}",
-            picture_class='crop-depot',
-            progression=farming['CropsUnlocked'],
-            goal=max_farming_crops
-        ),
+        farming.crops.get_discovery_advice()
     ]
-    for bonusIndex, bonusDetails in farming['Depot'].items():
-        if bonusDetails['ScalingType'] == 'pow':
-            scaling_label = f"{bonusDetails['ScalingNumber']}x {bonusDetails['BonusString']} per crop discovered, multiplicative"
-            if bonusDetails['ValuePlus1'] > bonusDetails['Value']:
-                scaling_label += f".<br>Next crop would increase total by {bonusDetails['ValuePlus1'] - bonusDetails['Value']:,.3f}"
-        else:
-            scaling_label = (f"+{bonusDetails['ScalingNumber']}{'%' if bonusDetails['BonusString'] != 'Base Critters' else ''}"
-                             f" {bonusDetails['BonusString']} per crop discovered, additive")
-
-        cd_advices.append(Advice(
-            label=f"{scaling_label}"
-                  f"{'<br>Unlock via {{ Jade Emporium|#sneaking }}' if not bonusDetails['Unlocked'] else ''}",
-            picture_class=bonusDetails['Image'],
-            progression=f"{bonusDetails['Value']:,.2f}"
-        ))
+    for bonus in farming.depot.values():
+        cd_advices.append(bonus.get_bonus_advice(False))
 
     for advice in cd_advices:
         advice.mark_advice_completed()
@@ -130,67 +99,46 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
 
     return cd_ag
 
-def getDayMarketAdviceGroup(farming) -> AdviceGroup:
-    dm = {name:details for name, details in farming['MarketUpgrades'].items() if details['MarketType'] == 'Day'}
-    dm_advices = [
-        Advice(
-            label=f"{name}: {details['Description']}" + (
-                  f"<br>Next level's crop: "
-                  f"{crop_dict.get(getRequiredCropNumber(name, min(details['MaxLevel'], details['Level'] + 1)), {}).get('Name', '')}"
-                  if details['Level'] < details['MaxLevel'] else ''
-            ),
-            picture_class='day-market',
-            progression=details['Level'],
-            goal=details['MaxLevel'],
-            resource=(
-                crop_dict.get(getRequiredCropNumber(name, details['Level'] + 1), {}).get('Image', '')
-                if details['Level'] < details['MaxLevel'] else ''
-            )
-        )
-        for name, details in dm.items()]
+def getMarketAdviceGroup(farming) -> AdviceGroup:
+    advice_section = {
+        "Day Market": [
+            upgrade.get_bonus_advice(True)
+            for upgrade in farming.market.values()
+            if upgrade.is_day
+        ],
+        "Night Market": [
+            upgrade.get_bonus_advice(True)
+            for upgrade in farming.market.values()
+            if not upgrade.is_day
+        ],
+    }
 
-    for advice in dm_advices:
-        advice.mark_advice_completed()
+    for advice_list in advice_section.values():
+        for advice in advice_list:
+            advice.mark_advice_completed()
 
     dm_ag = AdviceGroup(
         tier='',
-        pre_string='Day Market upgrades',
-        advices=dm_advices,
+        pre_string='Market upgrades',
+        advices=advice_section,
         informational=True
     )
     return dm_ag
 
-def getNightMarketAdviceGroup(farming) -> AdviceGroup:
-    nm = {name:details for name, details in farming['MarketUpgrades'].items() if details['MarketType'] == 'Night'}
-    nm_advices = [
-        Advice(
-            label=f"{name}: {details['Description']}",
-            picture_class='night-market',
-            progression=details['Level'],
-            goal=details['MaxLevel']
-        )
-        for name, details in nm.items()]
 
-    for advice in nm_advices:
+def getRankDatabaseAdviceGroup(farming) -> AdviceGroup:
+    advice_list = [
+        upgrade.get_bonus_advice(False) for upgrade in farming.land_rank.values()
+    ]
+    for advice in advice_list:
         advice.mark_advice_completed()
-
-    nm_ag = AdviceGroup(
+    return AdviceGroup(
         tier='',
-        pre_string='Night Market upgrades',
-        advices=nm_advices,
+        pre_string='Rank Database',
+        advices=advice_list,
         informational=True
     )
-    return nm_ag
 
-def getNightMarketCost(name, first_level, last_level=0):
-    cost_multi = max(.001, session_data.account.emperor["cheaper Farming Upgrades"].value)
-    total_cost = 0
-    upgrade = session_data.account.farming['MarketUpgrades'][name]
-    if first_level > last_level:
-        last_level = first_level-1
-    for level in range(first_level, last_level):
-        total_cost += floor(upgrade['BaseCost'] * safer_math_pow(upgrade['CostIncrement'], level)) * cost_multi
-    return floor(total_cost) if 1e8 > total_cost else total_cost
 
 def val_m_s_boost(megaboost, superboost):
     return ValueToMulti(
@@ -203,13 +151,13 @@ def val_boost(minrank, b):
 
 def getValueLRSuggies(farming):
     #names = ['Boost', 'Megaboost', 'Superboost']
-    min_lr = max(farming['LandRankMinPlot'], floor(0.8 * farming['LandRankMinPlot']))
-    value = farming['Value']['Doubler Multi']
-    available_points = farming['LandRankTotalRanks']
+    min_lr = max(farming.land_rank.min_level, floor(0.8 * farming.land_rank.max_level))
+    value = farming.multi['Value']['Doubler Multi']
+    available_points = farming.land_rank.total_level
     currently_invested = sum([
-        farming['LandRankDatabase']['Production Boost']['Level'],
-        farming['LandRankDatabase']['Production Megaboost']['Level'],
-        farming['LandRankDatabase']['Production Superboost']['Level']
+        farming.land_rank['Production Boost'].level,
+        farming.land_rank['Production Megaboost'].level,
+        farming.land_rank['Production Superboost'].level
     ])
     upgrades = [0, 0, 0]
     while value < max_farming_value and sum(upgrades) < available_points:
@@ -228,7 +176,7 @@ def getEvoLRSuggies(farming):
     pass
 
 def getCropValueAdviceGroup(farming) -> AdviceGroup:
-    val = farming['Value']
+    val = farming.multi['Value']
     mga = f"Multi Group A: {val['Doubler Multi']:.2f}x"
     mgb = f"Multi Group B: {val['Mboost Sboost Multi']:.2f}x"
     mgc = f"Multi Group C: {val['Pboost Ballot Multi Min']:.2f}x to {val['Pboost Ballot Multi Max']:.2f}x"
@@ -247,52 +195,30 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     #MGA
     value_advices[mga].append(Advice(
         label=f"Highest full 100 Product Doubler reached for guarantee: "
-              f"{(farming['MarketUpgrades']['Product Doubler']['Value'] // 100) * 100:.0f}%",
+              f"{(farming.market['Product Doubler'].value // 100) * 100:.0f}%",
         picture_class='day-market',
-        progression=f"{farming['MarketUpgrades']['Product Doubler']['Value']:.0f}",
+        progression=f"{farming.market['Product Doubler'].value:.0f}",
         goal=400,
         unit='%'
     ))
 
     #MGB
     #optimal_upgrades = getValueLRSuggies(farming) if farming['LandRankTotalRanks'] >= 5 else [-1, -1, -1]
-    value_advices[mgb].append(Advice(
-        label=f"Production Megaboost: +{farming['LandRankDatabase']['Production Megaboost']['Value']:.3f}%"
-              f"{'<br>Unlocked at 250 total land ranks' if farming['LandRankTotalRanks'] < 250 else ''}",
-        picture_class='production-megaboost',
-        progression=farming['LandRankDatabase']['Production Megaboost']['Level'],
-        #goal=optimal_upgrades[1] if optimal_upgrades[1] >= 0 else ''
-    ))
-    value_advices[mgb].append(Advice(
-        label=f"Production Superboost: +{farming['LandRankDatabase']['Production Superboost']['Value']:.3f}%"
-              f"{'<br>Unlocked at 1750 total land ranks' if farming['LandRankTotalRanks'] < 1750 else ''}",
-        picture_class='production-superboost',
-        progression=farming['LandRankDatabase']['Production Superboost']['Level'],
-        #goal=optimal_upgrades[2] if optimal_upgrades[2] >= 0 else ''
-    ))
+    # TODO: use optimal level as level_goal=optimal_upgrades[1] if # optimal_upgrades[1] >= 0 else None
+    value_advices[mgb].append(
+        farming.land_rank['Production Megaboost'].get_bonus_advice(False)
+    )
+    # TODO: use optimal level as level_goal=optimal_upgrades[2] if # optimal_upgrades[2] >= 0 else None
+    value_advices[mgb].append(
+        farming.land_rank['Production Superboost'].get_bonus_advice(False)
+    )
 
     #MGC
-    min_lr = max(farming['LandRankMinPlot'], floor(0.8 * farming['LandRankMinPlot']))
-    if farming['LandRankMinPlot'] < floor(0.8 * farming['LandRankMinPlot']):
-        llr_note = '80% of Max'
-    else:
-        llr_note = 'Lowest'
-    value_advices[mgc].append(Advice(
-        label=f"{llr_note} Land Rank: {min_lr}",
-        picture_class=getLandRankImage(min_lr),
-    ))
-    value_advices[mgc].append(Advice(
-        label=f"Highest Land Rank: {farming['LandRankMaxPlot']}",
-        picture_class=getLandRankImage(farming['LandRankMaxPlot']),
-    ))
-    value_advices[mgc].append(Advice(
-        label=f"Production Boost: +{farming['LandRankDatabase']['Production Boost']['Value']:,.3f}% per land rank."
-              f"<br>Total on Lowest: +{farming['LandRankDatabase']['Production Boost']['Value'] * farming['LandRankMinPlot']:.3f}%"
-              f"<br>Total on Highest: +{farming['LandRankDatabase']['Production Boost']['Value'] * farming['LandRankMaxPlot']:.3f}%",
-        picture_class='production-boost',
-        progression=farming['LandRankDatabase']['Production Boost']['Level'],
-        #goal=optimal_upgrades[0] if optimal_upgrades[0] >= 0 else ''
-    ))
+    # TODO: use optimal level optimal_upgrades[0] if optimal_upgrades[0] >= 0 else None
+    value_advices[mgc].extend(
+        farming.land_rank.get_bonus_with_land_rank_advice("Production Boost")
+    )
+
     ballot_active = session_data.account.ballot['CurrentBuff'] == 29
     if ballot_active:
         ballot_status = "is Active"
@@ -310,12 +236,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         goal=1
     ))
 
-    value_advices[mgd].append(Advice(
-        label=f"Night Market Value GMO: {farming['MarketUpgrades']['Value Gmo']['Description']}",
-        picture_class='night-market',
-        progression=farming['MarketUpgrades']['Value Gmo']['Level'],
-        goal=farming['MarketUpgrades']['Value Gmo']['MaxLevel']
-    ))
+    value_advices[mgd].append(farming.market['Value Gmo'].get_bonus_advice())
 
     #Final
     value_advices[final].append(Advice(
@@ -342,19 +263,20 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     )
     return value_ag
 
-def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
+def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGroup:
     summoning_evo = session_data.account.summoning['Bonuses']['<x Crop EVO']['Value']
+    evo_multi = farming.multi['Evo']
     #Create subgroup labels
-    alch = f"Alchemy: {farming['Evo']['Alch Multi']:.3f}x"
-    stamp = f"Stamps: {farming['Evo']['Stamp Multi']:.3f}x"
-    meals = f"Meals: {farming['Evo']['Meals Multi']:.3f}x"
-    farm = f"Markets: {farming['Evo']['Farm Multi']:.3g}x"
-    lr = f"Land Ranks: {farming['Evo']['LR Multi']:,.3f}x"
+    alch = f"Alchemy: {evo_multi['Alch Multi']:.3f}x"
+    stamp = f"Stamps: {evo_multi['Stamp Multi']:.3f}x"
+    meals = f"Meals: {evo_multi['Meals Multi']:.3f}x"
+    farm = f"Markets: {evo_multi['Farm Multi']:.3g}x"
+    lr = f"Land Ranks: {evo_multi['LR Multi']:,.3f}x"
     summon = f"Summoning: {round_and_trim(summoning_evo)}x"
-    ss = f"Star Sign: {farming['Evo']['SS Multi']:.3f}x"
-    lamp = f"Lamp Wish: {farming['Evo']['Wish Multi']:.3f}x"
-    misc = f"Misc: {farming['Evo']['Misc Multi']:.3f}x"
-    total = f"Total Evo Chance: {farming['Evo']['Subtotal Multi']:.3g}x"
+    ss = f"Star Sign: {evo_multi['SS Multi']:.3f}x"
+    lamp = f"Lamp Wish: {evo_multi['Wish Multi']:.3f}x"
+    misc = f"Misc: {evo_multi['Misc Multi']:.3f}x"
+    total = f"Total Evo Chance: {evo_multi['Subtotal Multi']:.3g}x"
     evo_advices = {
         total: [],
         alch: [],
@@ -371,8 +293,8 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
 #Bubbles
 
     evo_advices[alch].append(Advice(
-        label=f"Cropius Mapper: {farming['Evo']['Maps Opened']}/{max_characters * (len(session_data.account.enemy_maps[6]) - 1)} maps"
-              f"<br>Total value: {farming['Evo']['Cropius Final Value']:.3f}%",
+        label=f"Cropius Mapper: {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.enemy_maps[6]) - 1)} maps"
+              f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
         progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
         goal=EmojiType.INFINITY.value,
@@ -391,7 +313,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
 #Vial
     evo_advices[alch].append(Advice(
         label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {farming['Evo']['Vial Value']:.2f}%",
+              f"<br>Total Value after multis: {evo_multi['Vial Value']:.2f}%",
         picture_class="caulifish",
         progression=session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Level'],
         goal=max_vial_level
@@ -422,76 +344,42 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
 
     evo_advices[meals].append(Advice(
         label=f"Highest Summoning level: {max(session_data.account.all_skills['Summoning'], default=0)}"
-              f"<br>Provides a {farming['Evo']['Nyan Stacks']}x multi to Nyanborgir",
+              f"<br>Provides a {evo_multi['Nyan Stacks']}x multi to Nyanborgir",
         picture_class='summoning'
     ))
     evo_advices[meals].append(Advice(
         label=f"{{{{ Meal|#cooking }}}}: Nyanborgir: {session_data.account.meals['Nyanborgir']['Description']}"
-              f"<br>After {farming['Evo']['Nyan Stacks']} Summoning Level stack{pl(farming['Evo']['Nyan Stacks'])}:"
-              f" {session_data.account.meals['Nyanborgir']['Value'] * farming['Evo']['Nyan Stacks']:,.3f}%",
+              f"<br>After {evo_multi['Nyan Stacks']} Summoning Level stack{pl(evo_multi['Nyan Stacks'])}:"
+              f" {session_data.account.meals['Nyanborgir']['Value'] * evo_multi['Nyan Stacks']:,.3f}%",
         picture_class=session_data.account.meals['Nyanborgir']['Image'],
         progression=session_data.account.meals['Nyanborgir']['Level'],
         goal=max_meal_level
     ))
 
 #Day Market
-    evo_advices[farm].append(Advice(
-        label=f"Day Market: Biology Boost: {farming['MarketUpgrades']['Biology Boost']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Biology Boost']['BonusPerLevel'] * farming['MarketUpgrades']['Biology Boost']['MaxLevel']}%",
-        picture_class="day-market",
-        progression=farming['MarketUpgrades']['Biology Boost']['Level'],
-        goal=farming['MarketUpgrades']['Biology Boost']['MaxLevel']
-    ))
+    evo_advices[farm].append(
+        farming.market['Biology Boost'].get_bonus_advice()
+    )
 
 #Night Market
-    evo_advices[farm].append(Advice(
-        label=f"Night Market: Super Gmo: {farming['MarketUpgrades']['Super Gmo']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Super Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Super Gmo']['MaxLevel']}%"
-              f"<br>{farming['CropStacks']['Super Gmo']} stacks = {farming['MarketUpgrades']['Super Gmo']['StackedValue']}x",
-        picture_class="night-market",
-        progression=farming['MarketUpgrades']['Super Gmo']['Level'],
-        goal=farming['MarketUpgrades']['Super Gmo']['MaxLevel']
-    ))
-    evo_advices[farm].append(Advice(
-        label=f"Night Market: Evolution Gmo: {farming['MarketUpgrades']['Evolution Gmo']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Evolution Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Evolution Gmo']['MaxLevel']}%"
-              f"<br>{farming['CropStacks']['Evolution Gmo']} stacks = {farming['MarketUpgrades']['Evolution Gmo']['StackedValue']:.3g}x",
-        picture_class="night-market",
-        progression=farming['MarketUpgrades']['Evolution Gmo']['Level'],
-        goal=farming['MarketUpgrades']['Evolution Gmo']['MaxLevel']
-    ))
+    evo_advices[farm].append(farming.market['Super Gmo'].get_bonus_advice())
+    evo_advices[farm].append(
+        farming.market['Evolution Gmo'].get_bonus_advice()
+    )
 
 #LAND RANKS
-    evo_advices[lr].append(Advice(
-        label=f"Lowest Land Rank: {farming['LandRankMinPlot']}",
-        picture_class=getLandRankImage(farming['LandRankMinPlot']),
-    ))
-    evo_advices[lr].append(Advice(
-        label=f"Highest Land Rank: {farming['LandRankMaxPlot']}",
-        picture_class=getLandRankImage(farming['LandRankMaxPlot']),
-    ))
-    evo_advices[lr].append(Advice(
-        label=f"Evolution Boost: +{farming['LandRankDatabase']['Evolution Boost']['Value']:.3f}% per land rank."
-              f"<br>Total on Lowest: +{farming['LandRankDatabase']['Evolution Boost']['Value'] * farming['LandRankMinPlot']:,.3f}%"
-              f"<br>Total on Highest: +{farming['LandRankDatabase']['Evolution Boost']['Value'] * farming['LandRankMaxPlot']:,.3f}%",
-        picture_class='evolution-boost',
-        progression=farming['LandRankDatabase']['Evolution Boost']['Level']
-    ))
-    evo_advices[lr].append(Advice(
-        label=f"Evolution Megaboost: +{farming['LandRankDatabase']['Evolution Megaboost']['Value']:,.3f}%",
-        picture_class='evolution-megaboost',
-        progression=farming['LandRankDatabase']['Evolution Megaboost']['Level']
-    ))
-    evo_advices[lr].append(Advice(
-        label=f"Evolution Superboost: +{farming['LandRankDatabase']['Evolution Superboost']['Value']:,.3f}%",
-        picture_class='evolution-superboost',
-        progression=farming['LandRankDatabase']['Evolution Superboost']['Level']
-    ))
-    evo_advices[lr].append(Advice(
-        label=f"Evolution Ultraboost: +{farming['LandRankDatabase']['Evolution Ultraboost']['Value']:,.3f}%",
-        picture_class='evolution-ultraboost',
-        progression=farming['LandRankDatabase']['Evolution Ultraboost']['Level']
-    ))
+    evo_advices[lr].extend(
+        farming.land_rank.get_bonus_with_land_rank_advice("Evolution Boost")
+    )
+    evo_advices[lr].append(
+        farming.land_rank["Evolution Megaboost"].get_bonus_advice(False)
+    )
+    evo_advices[lr].append(
+        farming.land_rank["Evolution Superboost"].get_bonus_advice(False)
+    )
+    evo_advices[lr].append(
+        farming.land_rank['Evolution Ultraboost'].get_bonus_advice(False)
+    )
 
 #SUMMONING
     evo_advices[summon].append(get_summoning_bonus_advice('<x Crop EVO'))
@@ -505,7 +393,7 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
 
     evo_advices[ss].append(Advice(
         label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor']['Unlocked']:.0f}/3% per farming level."
-              f"<br>Total Value if doubled: {farming['Evo']['Starsign Final Value']:,.3f}%",
+              f"<br>Total Value if doubled: {evo_multi['Starsign Final Value']:,.3f}%",
         picture_class='cropiovo-minor',
         progression=int(session_data.account.star_signs['Cropiovo Minor']['Unlocked']),
         goal=1
@@ -544,70 +432,38 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
     ))
     # Account-wide total farming levels of 200 needed to unlock the bonus
     evo_advices[misc].append(Advice(
-        label=f"Skill Mastery at 200 Farming: +{1.15 * farming['Evo']['Skill Mastery Bonus Bool'] * session_data.account.rift['SkillMastery']}/1.15x",
+        label=f"Skill Mastery at 200 Farming: +{1.15 * evo_multi['Skill Mastery Bonus Bool'] * session_data.account.rift['SkillMastery']}/1.15x",
         picture_class='farming',
-        progression=farming['Evo']['Total Farming Levels'],
+        progression=evo_multi['Total Farming Levels'],
         goal=200
     ))
 
     evo_advices[misc].append(Advice(
-        label=f"Weekly Ballot: {farming['Evo']['Ballot Multi Current']:.3f}/{farming['Evo']['Ballot Multi Max']:.3f}x"
-              f"<br>(Buff {farming['Evo']['Ballot Status']})",
+        label=f"Weekly Ballot: {evo_multi['Ballot Multi Current']:.3f}/{evo_multi['Ballot Multi Max']:.3f}x"
+              f"<br>(Buff {evo_multi['Ballot Status']})",
         picture_class='ballot-29',
-        progression=int(farming['Evo']['Ballot Active']),
+        progression=int(evo_multi['Ballot Active']),
         goal=1
     ))
 
 #Total
-    final_crops = {}
-    for k, v in {
-        1: 21,
-        2: 46,
-        3: 61,
-        4: 84,
-        5: 107,
-        6: 120,
-        7: 130,
-        8: 140,
-        9: 150,
-        10:160,
-        11:170,
-        12:180,
-        13:190,
-        14:200,
-        15:210,
-        16:220,
-        17:230
-    }.items():
-        final_crops[k] = [crop_dict[v]['SeedName'], ceil(1 / getCropEvoChance(v)), crop_dict[v]['Image']]
-    subtotal_final_glassy_percent = farming['Evo']['Subtotal Multi'] / final_crops[max(final_crops.keys())][1]
-    final_glassy_completed = subtotal_final_glassy_percent >= 1
-    if final_glassy_completed:
-        first_failed_goal = final_crops[max(final_crops.keys())][1]
-        first_failed_key = max(final_crops.keys())
-        prog_percent = min(1, farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]) * 100
-        evo_advices[total].append(Advice(
-            label=f"Final {final_crops[first_failed_key][0]} chance"
-                  f"<br>{first_failed_goal:.3g} for 100% chance",
-            picture_class=final_crops[first_failed_key][2],
-            progression=f"{round(prog_percent, 2):g}",
-            #goal=f"{first_failed_goal:.3g}"
-        ))
-    else:
-        #Find the first crop with a failed requirement
-        for k, v in final_crops.items():
-            if farming['Evo']['Subtotal Multi'] < v[1]:
-                first_failed_key = k
-                first_failed_goal = v[1]
-                prog_percent = farming['Evo']['Subtotal Multi'] / final_crops[first_failed_key][1]
-                evo_advices[total].append(Advice(
-                    label=f"Final {v[0]} chance"
-                          f"<br>{first_failed_goal:.3g} for 100% chance",
-                    picture_class=v[2],
-                    progression=f"{min(1, prog_percent):.2%}",
-                    goal="100%"
-                ))
-                break
+    first_crop_index = crop_evo_breakpoint_list[0]
+    target_evo_crop = (
+        first_crop_index, ceil(1 / farming.crops.evo_chance(first_crop_index))
+    )
+    for crop_index in crop_evo_breakpoint_list[1:]:
+        crop_evo_chance = ceil(1 / farming.crops.evo_chance(crop_index))
+        if evo_multi['Subtotal Multi'] > crop_evo_chance:
+            # Found crop for that we have enough evo chance, use previous as
+            # target
+            break
+        target_evo_crop = crop_index, crop_evo_chance
+    if target_evo_crop is not None:
+        crop_index, crop_evo_chance = target_evo_crop
+        precent = evo_multi['Subtotal Multi'] / crop_evo_chance
+        evo_advices[total].append(
+            farming.crops.get_crop_evo_advice(crop_index, crop_evo_chance, precent)
+        )
 
     for category in evo_advices.values():
         for advice in category:
@@ -618,17 +474,18 @@ def getEvoChanceAdviceGroup(farming, highest_farming_level) -> AdviceGroup:
         pre_string='Sources of Crop Evolution Chance',
         advices=evo_advices,
         informational=True,
-        completed=session_data.account.farming['CropsUnlocked'] >= max_farming_crops
+        completed=session_data.account.farming.crops.unlocked >= max_farming_crops
     )
     return evo_ag
+
 
 def getSpeedAdviceGroup(farming) -> AdviceGroup:
     summoning_speed = session_data.account.summoning['Bonuses']['<x Farming SPD']['Value']
     # Create subgroup labels
-    total = f"Total: {farming['Speed']['Total Multi']:,.3f}x"
+    total = f"Total: {farming.multi['Speed']['Total Multi']:,.3f}x"
     summon = f"Summoning: {round_and_trim(summoning_speed)}x"
-    vm = f"Vial + Day Market: {farming['Speed']['VM Multi']:,.3f}x"
-    nm = f"Night Market: {farming['Speed']['NM Multi']:,.3f}x"
+    vm = f"Vial + Day Market: {farming.multi['Speed']['VM Multi']:,.3f}x"
+    nm = f"Night Market: {farming.multi['Speed']['NM Multi']:,.3f}x"
     speed_advices = {
         total: [],
         summon: [],
@@ -638,7 +495,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 #Advices
 #Total
     speed_advices[total].append(Advice(
-        label=f"Farming Speed Multi: {farming['Speed']['Total Multi']:,.3f}x",
+        label=f"Farming Speed Multi: {farming.multi['Speed']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 #Summoning
@@ -647,36 +504,18 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     # Vial
     speed_advices[vm].append(Advice(
         label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {farming['Speed']['Vial Value']:.2f}%",
+              f"<br>Total Value after multis: {farming.multi['Speed']['Vial Value']:.2f}%",
         picture_class="rice-cake",
         progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],
         goal=max_vial_level
     ))
     # Day Market
-    speed_advices[vm].append(Advice(
-        label=f"Day Market: Nutritious Soil: {farming['MarketUpgrades']['Nutritious Soil']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Nutritious Soil']['BonusPerLevel'] * farming['MarketUpgrades']['Biology Boost']['MaxLevel']}%",
-        picture_class="day-market",
-        progression=farming['MarketUpgrades']['Nutritious Soil']['Level'],
-        goal=farming['MarketUpgrades']['Nutritious Soil']['MaxLevel']
-    ))
+    speed_advices[vm].append(
+        farming.market['Nutritious Soil'].get_bonus_advice()
+    )
 #Night Market
-    speed_advices[nm].append(Advice(
-        label=f"Night Market: Super Gmo: {farming['MarketUpgrades']['Super Gmo']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Super Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Super Gmo']['MaxLevel']}%"
-              f"<br>{farming['CropStacks']['Super Gmo']} stacks = {farming['MarketUpgrades']['Super Gmo']['StackedValue']}x",
-        picture_class="night-market",
-        progression=farming['MarketUpgrades']['Super Gmo']['Level'],
-        goal=farming['MarketUpgrades']['Super Gmo']['MaxLevel']
-    ))
-    speed_advices[nm].append(Advice(
-        label=f"Night Market: Speed Gmo: {farming['MarketUpgrades']['Speed Gmo']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Evolution Gmo']['BonusPerLevel'] * farming['MarketUpgrades']['Speed Gmo']['MaxLevel']}%"
-              f"<br>{farming['CropStacks']['Speed Gmo']} stacks = {farming['MarketUpgrades']['Speed Gmo']['StackedValue']:.4g}x",
-        picture_class="night-market",
-        progression=farming['MarketUpgrades']['Speed Gmo']['Level'],
-        goal=farming['MarketUpgrades']['Speed Gmo']['MaxLevel']
-    ))
+    speed_advices[nm].append(farming.market['Super Gmo'].get_bonus_advice())
+    speed_advices[nm].append(farming.market['Speed Gmo'].get_bonus_advice())
 
     for category in speed_advices.values():
         for advice in category:
@@ -692,9 +531,9 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 
 def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     # Create subgroup labels
-    total = f"Total: {farming['Bean']['Total Multi']:.2f}x"
-    mga = f"Day Market: {farming['Bean']['mga']:.2f}x"
-    mgb = f"Emporium + Achievement: {farming['Bean']['mgb']:.2f}x"
+    total = f"Total: {farming.multi['Bean']['Total Multi']:.2f}x"
+    mga = f"Day Market: {farming.multi['Bean']['mga']:.2f}x"
+    mgb = f"Emporium + Achievement: {farming.multi['Bean']['mgb']:.2f}x"
     bm_advices = {
         total: [],
         mga: [],
@@ -703,17 +542,12 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
 
     #Total
     bm_advices[total].append(Advice(
-        label=f"Magic Beans Bonus: {farming['Bean']['Total Multi']:,.3f}x",
+        label=f"Magic Beans Bonus: {farming.multi['Bean']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 
     #Day Market - More Beenz
-    bm_advices[mga].append(Advice(
-        label=f"More Beenz: {farming['MarketUpgrades']['More Beenz']['Description']}",
-        picture_class='day-market',
-        progression=f"{farming['MarketUpgrades']['More Beenz']['Level']:.0f}",
-        goal=f"{farming['MarketUpgrades']['More Beenz']['MaxLevel']:.0f}",
-    ))
+    bm_advices[mga].append(farming.market['More Beenz'].get_bonus_advice())
     #Emporium - Deal Sweetening
     bm_advices[mgb].append(
         session_data.account.sneaking.emporium['Deal Sweetening'].get_obtained_advice()
@@ -741,13 +575,13 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
 
 def getOGAdviceGroup(farming):
     # Create subgroup labels
-    total = f"Total: {farming['OG']['Total Multi']:,.3f}x"
-    nm = f"Night Market: {farming['OG']['NM Multi']:.3f}x"
-    lr = f"Land Rank Total: {farming['OG']['LR Multi']:,.3f}x"
-    ss = f"Star Sign: {farming['OG']['SS Multi']:.2f}x"
-    ach = f"Achievement: {farming['OG']['Ach Multi']:.2f}x"
-    merit = f"Merit: {farming['OG']['Merit Multi']:.2f}x"
-    pristine = f"Pristine Charm: {farming['OG']['Pristine Multi']:.2f}x"
+    total = f"Total: {farming.multi['OG']['Total Multi']:,.3f}x"
+    nm = f"Night Market: {farming.multi['OG']['NM Multi']:.3f}x"
+    lr = f"Land Rank Total: {farming.multi['OG']['LR Multi']:,.3f}x"
+    ss = f"Star Sign: {farming.multi['OG']['SS Multi']:.2f}x"
+    ach = f"Achievement: {farming.multi['OG']['Ach Multi']:.2f}x"
+    merit = f"Merit: {farming.multi['OG']['Merit Multi']:.2f}x"
+    pristine = f"Pristine Charm: {farming.multi['OG']['Pristine Multi']:.2f}x"
 
     og_advices = {
         total: [],
@@ -760,7 +594,7 @@ def getOGAdviceGroup(farming):
     }
 #Total
     og_advices[total].append(Advice(
-        label=f"Overgrowth Chance: {farming['OG']['Total Multi']:,.3f}x",
+        label=f"Overgrowth Chance: {farming.multi['OG']['Total Multi']:,.3f}x",
         picture_class='crop-scientist'
     ))
 #Achievement- Big Time Land Owner = 1.15x
@@ -776,19 +610,13 @@ def getOGAdviceGroup(farming):
     og_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     og_advices[ss].append(Advice(
         label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']:.0f}/15%."
-              f"<br>Total Value if doubled: {farming['OG']['Starsign Final Value']:.3f}%",
+              f"<br>Total Value if doubled: {farming.multi['OG']['Starsign Final Value']:.3f}%",
         picture_class='og-signalais',
         progression=int(session_data.account.star_signs['O.G. Signalais']['Unlocked']),
         goal=1
     ))
 #Night Market
-    og_advices[nm].append(Advice(
-        label=f"Night Market: OG Fertilizer: {farming['MarketUpgrades']['Og Fertilizer']['Value']:.0f}/"
-              f"{farming['MarketUpgrades']['Og Fertilizer']['BonusPerLevel'] * farming['MarketUpgrades']['Og Fertilizer']['MaxLevel']}%",
-        picture_class="night-market",
-        progression=farming['MarketUpgrades']['Og Fertilizer']['Level'],
-        goal=farming['MarketUpgrades']['Og Fertilizer']['MaxLevel']
-    ))
+    og_advices[nm].append(farming.market['Og Fertilizer'].get_bonus_advice())
 #Merit
     og_advices[merit].append(Advice(
         label=f"W6 Taskboard Merit: +{2 * session_data.account.merits[5][2]['Level']}/30%",
@@ -797,21 +625,15 @@ def getOGAdviceGroup(farming):
         goal=15
     ))
 #Land Rank
-    og_advices[lr].append(Advice(
-        label=f"Overgrowth Boost: +{farming['LandRankDatabase']['Overgrowth Boost']['Value']:,.3f}%",
-        picture_class='overgrowth-boost',
-        progression=farming['LandRankDatabase']['Overgrowth Boost']['Level']
-    ))
-    og_advices[lr].append(Advice(
-        label=f"Overgrowth Megaboost: +{farming['LandRankDatabase']['Overgrowth Megaboost']['Value']:,.3f}%",
-        picture_class='overgrowth-megaboost',
-        progression=farming['LandRankDatabase']['Overgrowth Megaboost']['Level']
-    ))
-    og_advices[lr].append(Advice(
-        label=f"Overgrowth Superboost: +{farming['LandRankDatabase']['Overgrowth Superboost']['Value']:,.3f}%",
-        picture_class='overgrowth-superboost',
-        progression=farming['LandRankDatabase']['Overgrowth Superboost']['Level']
-    ))
+    og_advices[lr].append(
+        farming.land_rank['Overgrowth Boost'].get_bonus_advice(False)
+    )
+    og_advices[lr].append(
+        farming.land_rank['Overgrowth Megaboost'].get_bonus_advice(False)
+    )
+    og_advices[lr].append(
+        farming.land_rank['Overgrowth Superboost'].get_bonus_advice(False)
+    )
 
     # Pristine Charm
     og_advices[pristine].append(
@@ -834,17 +656,17 @@ def getOGAdviceGroup(farming):
 
 def getLRExclusions(farming, highestFarmingSkillLevel):
     exclusions = []
-    if farming['LandRankTotalRanks'] >= 1400:
-        exclusions.extend([v['Name'] for v in landrank_dict.values() if not v['Name'].startswith('Seed')])
+    if farming.land_rank.total_level >= 1400:
+        exclusions.extend([v['Name'] for v in landrank_list if not v['Name'].startswith('Seed')])
     else:
-        if max_farming_crops-1 in farming['Crops']:
-            exclusions.extend([v['Name'] for v in landrank_dict.values() if v['Name'].startswith('Evolution')])
-        if farming['Value']['FinalMin'] >= max_farming_value/100:
-            exclusions.extend([v['Name'] for v in landrank_dict.values() if v['Name'].startswith('Production')])
-        if farming['LandRankMinPlot'] >= 120:
-            exclusions.extend([v['Name'] for v in landrank_dict.values() if v['Name'].startswith('Soil Exp')])
+        if max_farming_crops - 1 in farming.crops:
+            exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Evolution')])
+        if farming.multi['Value']['FinalMin'] >= max_farming_value/100:
+            exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Production')])
+        if farming.land_rank.min_level >= 120:
+            exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Soil Exp')])
         if highestFarmingSkillLevel >= 300:
-            exclusions.extend([v['Name'] for v in landrank_dict.values() if v['Name'].startswith('Farmtastic')])
+            exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Farmtastic')])
     #logger.debug(f"Land Rank Exclusions: {exclusions}")
     return exclusions
 
@@ -861,6 +683,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
     multis = ['Evolution Gmo', 'Og Fertilizer']
     one_point_landranks = ['Seed of Stealth', 'Seed of Loot', 'Seed of Damage', 'Seed of Stats']
     lr_exclusions = getLRExclusions(farming, highest_farming_level)
+    cost_multi = max(.001, session_data.account.emperor["cheaper Farming Upgrades"].value)
 
     #Assess Tiers
     for tier_number, requirements in farming_progressionTiers.items():
@@ -880,135 +703,89 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
                 ))
 
         # Unlock Crops
-        if farming['CropsUnlocked'] < requirements.get('Crops Unlocked', 0):
+        require_crop_unlock = requirements.get('Crops Unlocked', 0)
+        if farming.crops.unlocked < require_crop_unlock:
             add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
             if subgroup_label in farming_Advices['Tiers']:
                 advice_types_added.add('Crops Unlocked')
-                shortby = requirements.get('Crops Unlocked', 0) - farming['CropsUnlocked']
-                farming_Advices['Tiers'][subgroup_label].append(Advice(
-                    label=f"Unlock {shortby} more crop type{pl(shortby)}",
-                    picture_class='crop-depot',
-                    progression=farming['CropsUnlocked'],
-                    goal=requirements.get('Crops Unlocked', 0)
-                ))
+                farming_Advices['Tiers'][subgroup_label].append(
+                    farming.crops.get_unlock_advice(require_crop_unlock)
+                )
 
         # Stats
         if 'Stats' in requirements:
             requiredStats = requirements['Stats']
             if 'Value' in requiredStats:
-                if farming['Value']['FinalMin'] < requiredStats['Value']:
+                if farming.multi['Value']['FinalMin'] < requiredStats['Value']:
                     add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         advice_types_added.add('Value Stat')
                         farming_Advices['Tiers'][subgroup_label].append(Advice(
                             label=f"Reach {requiredStats['Value']}x total Value",
                             picture_class='',
-                            progression=f"{farming['Value']['FinalMin']:.0f}",
+                            progression=f"{farming.multi['Value']['FinalMin']:.0f}",
                             goal=requiredStats['Value']
                         ))
 
-        #Day Market
+        # Day Market
+        # TODO: calculate all market cost and show total of each crop after
         for r_name, r_level in requirements.get('Day Market', {}).items():
-            if farming['MarketUpgrades'][r_name]['Level'] < r_level:
+            if farming.market[r_name].level < r_level:
                 add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                 if subgroup_label in farming_Advices['Tiers']:
                     advice_types_added.add('Day Market')
-                    material_crop_number = getRequiredCropNumber(r_name, r_level)
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label=f"{r_name}: "
-                              f"{farming['MarketUpgrades'][r_name]['Value']:.4g}/{farming['MarketUpgrades'][r_name]['BonusPerLevel'] * r_level:.4g}"
-                              f"{'%' if r_name != 'Land Plots' else ''}"
-                              f"<br>Final level's crop: {crop_dict.get(material_crop_number, {}).get('Name', '')}",
-                        picture_class='day-market',
-                        progression=farming['MarketUpgrades'][r_name]['Level'],
-                        goal=r_level,
-                        resource=crop_dict.get(material_crop_number, {}).get('Image', '')
-                    ))
+                    _, target_advice = farming.market[r_name].get_target_bonus(r_level, cost_multi)
+                    farming_Advices['Tiers'][subgroup_label].append(target_advice)
 
         # Land Ranks - Database Upgrades
         lr_this_tier = []
         for set_number, set_requirements in requirements.get('Land Ranks', {}).items():
             for r_name, r_level in set_requirements.items():
-                if farming['LandRankDatabase'][r_name]['Level'] < r_level and r_name not in lr_exclusions:
+                if farming.land_rank[r_name].level < r_level and r_name not in lr_exclusions:
                     add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
-                        if r_name in one_point_landranks:
-                            current = farming['LandRankDatabase'][r_name]['Value']
-                            target = farming['LandRankDatabase'][r_name]['BaseValue']
-                        else:
-                            current = farming['LandRankDatabase'][r_name]['Value']
-                            target = (1.7 * farming['LandRankDatabase'][r_name]['BaseValue'] * r_level) / (r_level + 80)
-                        lr_this_tier.append([r_name, r_level, current, target])
+                        upgrade = farming.land_rank[r_name]
+                        lr_this_tier.append([upgrade, r_level])
 
         for lrIndex, lrAdvice in enumerate(lr_this_tier):
             if lrIndex+1 < len(lr_this_tier):
                 safe_to_add = lr_this_tier[lrIndex][0] != lr_this_tier[lrIndex+1][0]
                 if safe_to_add:
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label=f"{lrAdvice[0]}: {lrAdvice[2]:.4g}/{lrAdvice[3]:.4g}%",
-                        picture_class=lrAdvice[0],
-                        progression=farming['LandRankDatabase'][lrAdvice[0]]['Level'],
-                        goal=lrAdvice[1]
-                    ))
+                    farming_Advices['Tiers'][subgroup_label].append(
+                        lrAdvice[0].get_bonus_advice(False, lrAdvice[1])
+                    )
             else:
-                farming_Advices['Tiers'][subgroup_label].append(Advice(
-                    label=f"{lrAdvice[0]}: {lrAdvice[2]:.4g}/{lrAdvice[3]:.4g}%",
-                    picture_class=lrAdvice[0],
-                    progression=farming['LandRankDatabase'][lrAdvice[0]]['Level'],
-                    goal=lrAdvice[1]
-                ))
+                farming_Advices['Tiers'][subgroup_label].append(
+                    lrAdvice[0].get_bonus_advice(False, lrAdvice[1])
+                )
 
         # Suggestions
         if subgroup_label in farming_Advices['Tiers']:
             if requirements.get('Suggestions', {}):
                 suggies = requirements['Suggestions']
-                if 'Evolution' in suggies.get('Stacks', []):
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label='Evolution GMO stacks (200 crops)',
-                        picture_class='night-market',
-                        progression=session_data.account.farming['CropStacks']['Evolution Gmo'],
-                        goal=requirements['Crops Unlocked'],
-                    ))
-                if 'Speed' in suggies.get('Stacks', []):
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label='Speed GMO stacks (1k crops)',
-                        picture_class='night-market',
-                        progression=session_data.account.farming['CropStacks']['Speed Gmo'],
-                        goal=requirements['Crops Unlocked'],
-                    ))
-                if 'Value' in suggies.get('Stacks', []):
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label='Value GMO stacks (10k crops)',
-                        picture_class='night-market',
-                        progression=session_data.account.farming['CropStacks']['Value Gmo'],
-                        goal=requirements['Crops Unlocked'],
-                    ))
-                if 'Super' in suggies.get('Stacks', []):
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label='Super GMO stacks (100k crops)',
-                        picture_class='night-market',
-                        progression=session_data.account.farming['CropStacks']['Super Gmo'],
-                        goal=requirements['Crops Unlocked'],
-                    ))
+                for name in suggies.get('Stacks', []):
+                    farming_Advices['Tiers'][subgroup_label].append(
+                        session_data.account.farming.crops.get_stack_progress_advice(name, requirements['Crops Unlocked'])
+                    )
                 if 'Speed' in suggies:
-                    if farming['Speed']['Total Multi'] < suggies['Speed'][1]:
+                    if farming.multi['Speed']['Total Multi'] < suggies['Speed'][1]:
                         farming_Advices['Tiers'][subgroup_label].append(Advice(
                             label=f"Suggestion: {suggies['Speed'][0]} to {suggies['Speed'][1]}x Speed",
                             picture_class='crop-scientist',
-                            progression=f"{farming['Speed']['Total Multi']:.2f}" if farming['Speed']['Total Multi'] < 10 else f"{farming['Speed']['Total Multi']:.0f}",
+                            progression=f"{farming.multi['Speed']['Total Multi']:.2f}" if farming.multi['Speed']['Total Multi'] < 10 else f"{farming.multi['Speed']['Total Multi']:.0f}",
                             goal=f"{suggies['Speed'][1]}"
                         ))
                 if 'OG' in suggies:
-                    if farming['OG']['Total Multi'] < suggies['OG'][1]:
+                    if farming.multi['OG']['Total Multi'] < suggies['OG'][1]:
                         farming_Advices['Tiers'][subgroup_label].append(Advice(
                             label=f"Suggestion: {suggies['OG'][0]} to {suggies['OG'][1]}x Overgrowth",
                             picture_class='crop-scientist',
-                            progression=f"{farming['OG']['Total Multi']:.2f}" if farming['OG']['Total Multi'] < 10 else f"{farming['OG']['Total Multi']:.0f}",
+                            progression=f"{farming.multi['OG']['Total Multi']:.2f}" if farming.multi['OG']['Total Multi'] < 10 else f"{farming.multi['OG']['Total Multi']:.0f}",
                             goal=f"{suggies['OG'][1]}"
                         ))
                 if 'Crops Unlocked' in advice_types_added:
                     if 'EvoChance' in suggies:
-                        if farming['Evo']['Subtotal Multi'] < suggies['EvoChance'][1]:
+                        if farming.multi['Evo']['Subtotal Multi'] < suggies['EvoChance'][1]:
                             low_target = notateNumber(
                                 'Basic',
                                 suggies['EvoChance'][0],
@@ -1024,8 +801,8 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
                                 picture_class='crop-scientist',
                                 progression=notateNumber(
                                     'Match',
-                                    farming['Evo']['Subtotal Multi'],
-                                    2 if farming['Evo']['Subtotal Multi'] < 10 else 0,
+                                    farming.multi['Evo']['Subtotal Multi'],
+                                    2 if farming.multi['Evo']['Subtotal Multi'] < 10 else 0,
                                     '',
                                     target
                                 ),
@@ -1033,14 +810,10 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
                             ))
                     if 'CropIndex' in suggies:
                         for cropIndex in suggies['CropIndex']:
-                            if cropIndex-1 not in farming['Crops']:
-                                crop = crop_dict.get(cropIndex, {'Name': f"UnknownCrop{cropIndex}", 'Image': '', 'SeedName': 'UnknownSeed', 'SeedCropIndex': 0})
-                                farming_Advices['Tiers'][subgroup_label].append(Advice(
-                                    label=f"Suggestion: {crop['Name']} ({crop['SeedName']} #{crop['SeedCropIndex']})",
-                                    picture_class=crop['Image'],
-                                    progression=farming['CropCountsPerSeed'][crop['SeedName'] if not crop['SeedName'].endswith('Glassy') else 'Glassy'],
-                                    goal=crop['SeedCropIndex']
-                                ))
+                            farming_Advices['Tiers'][subgroup_label].append(
+                                farming.crops.get_crop_unlock_advice(cropIndex)
+                            )
+
                 if 'No Trade' in suggies:
                     farming_Advices['Tiers'][subgroup_label].append(Advice(
                         label=suggies['No Trade'],
@@ -1053,26 +826,11 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         total_magic_bean_cost = 0
         total_nm_entries = 0
         for r_name, r_level in requirements.get('Night Market', {}).items():
-            if farming['MarketUpgrades'][r_name]['Level'] < r_level:
+            if farming.market[r_name].level < r_level:
                 add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                 if subgroup_label in farming_Advices['Tiers']:
-                    if r_name in multis:
-                        current = ValueToMulti(farming['MarketUpgrades'][r_name]['Value'])
-                        target = ValueToMulti(farming['MarketUpgrades'][r_name]['BonusPerLevel'] * r_level)
-                    else:
-                        current = farming['MarketUpgrades'][r_name]['Value']
-                        target = farming['MarketUpgrades'][r_name]['BonusPerLevel'] * r_level
-                    upgrade_cost = getNightMarketCost(r_name, farming['MarketUpgrades'][r_name]['Level'], r_level)
-                    farming_Advices['Tiers'][subgroup_label].append(Advice(
-                        label=f"{r_name}: "
-                              f"{current:.4g}/{target:.4g}"
-                              f"{'x' if r_name in multis else '%' if r_name != 'Overgrowth' and r_name != 'Land Rank' else ''}"
-                              f"<br>Total Magic Bean cost: {upgrade_cost:,}",
-                        picture_class='night-market',
-                        progression=farming['MarketUpgrades'][r_name]['Level'],
-                        goal=r_level,
-                        resource='magic-bean'
-                    ))
+                    upgrade_cost, target_advice = farming.market[r_name].get_target_bonus(r_level, cost_multi)
+                    farming_Advices['Tiers'][subgroup_label].append(target_advice)
                     total_magic_bean_cost += upgrade_cost
                     total_nm_entries += 1
         if total_nm_entries > 1:
@@ -1080,7 +838,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
             farming_Advices['Tiers'][subgroup_label].append(Advice(
                 label='Grand Total Magic Bean Cost remaining in this Tier',
                 picture_class='magic-bean',
-                progression=f"{notateNumber('Match', farming['MagicBeans'], 2, '', target)}",  #Does not include the value of their current trade
+                progression=f"{notateNumber('Match', farming.magic_beans, 2, '', target)}",  #Does not include the value of their current trade
                 goal=target,
                 resource='magic-bean'
             ))
@@ -1104,6 +862,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         if subgroup_label not in farming_Advices['Tiers'] and tier_All == tier_number - 1:
             tier_All = tier_number
 
+
     #Generate AdviceGroups
     farming_AdviceGroups = {}
     farming_AdviceGroups['Tiers'] = AdviceGroup(
@@ -1111,6 +870,7 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         pre_string='Continue Farming',
         advices=farming_Advices['Tiers'],
     )
+    farming_AdviceGroups['Tiers'].remove_empty_subgroups()
     overall_SectionTier = min(true_max, tier_All)
     return farming_AdviceGroups, overall_SectionTier, max_tier, true_max
 
@@ -1149,21 +909,20 @@ def getFarmingAdviceSection():
         return farming_AdviceSection
 
     farming = session_data.account.farming
-
     #Generate AdviceGroups
     farming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(farming, highest_farming_level)
     farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming, highest_farming_level)
     farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
-    if farming['MarketUpgrades']['Overgrowth']['Level'] >= 1:
+    if farming.market['Overgrowth'].level >= 1:
         farming_AdviceGroupDict['OG'] = getOGAdviceGroup(farming)
-    if farming['LandRankTotalRanks'] >= 1:
+    if farming.land_rank.total_level >= 1:
         farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
-    if farming['Mama Trolls Unlocked']:
+    if farming.magic_bean_unlocked:
         farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
     if session_data.account.sneaking.emporium['Crop Depot Scientist'].obtained:
         farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
-    farming_AdviceGroupDict['Day'] = getDayMarketAdviceGroup(farming)
-    farming_AdviceGroupDict['Night'] = getNightMarketAdviceGroup(farming)
+    farming_AdviceGroupDict['Market'] = getMarketAdviceGroup(farming)
+    farming_AdviceGroupDict['Rank'] = getRankDatabaseAdviceGroup(farming)
     farming_AdviceGroupDict['Cost'] = getCostDiscountAdviceGroup(farming)
 
     #Generate AdviceSection

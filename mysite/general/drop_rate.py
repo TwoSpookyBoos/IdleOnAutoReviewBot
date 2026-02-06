@@ -2,7 +2,6 @@ from consts.progression_tiers import true_max_tiers
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
-from consts.consts_w6 import max_farming_crops, max_land_rank_level
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.consts_w4 import rift_rewards_dict, shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
@@ -459,7 +458,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # World 6
     #########################################
-    world_6_bonus = 0
+    world_6_bonus = 0.0
 
     # Achievements - Big Big Hampter
     big_hampter_completed = session_data.account.achievements['Big Big Hampter']['Complete']
@@ -486,33 +485,14 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus += summoning_gm_value
 
     # Farming - Crop Depot - Highlighter
-    crops_unlocked = session_data.account.farming['CropsUnlocked']
-    highlighter = session_data.account.farming['Depot'][7]
-    highlighter_value = highlighter['Value']
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Farming Crop Depot|#farming }}}}- Highlighter:"
-              f"<br>+{round(highlighter_value, 1):g}% Drop Rate"
-              f"{'<br>Note: Value only increases after 100 crops found' if (crops_unlocked <= 100) else ''}",
-        picture_class=highlighter['Image'],
-        progression=crops_unlocked,
-        goal=max_farming_crops
-    ))
-    world_6_bonus += highlighter_value
+    highlighter = session_data.account.farming.depot["Highlighter"]
+    drop_rate_aw_advice[w6].append(highlighter.get_bonus_advice())
+    world_6_bonus += highlighter.value
 
     # Farming - Land Rank - Seed of Loot
-    # Will show additional info if the player does not have the current max number of available land rank levels
-    seed_of_loot_land_rank = session_data.account.farming['LandRankDatabase']['Seed of Loot']
-    seed_of_loot_value = seed_of_loot_land_rank['BaseValue'] * seed_of_loot_land_rank['Level']
-    seed_of_loot_value_max = seed_of_loot_land_rank['BaseValue'] * max_land_rank_level
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Land Ranks|#farming }}}}- Seed of Loot:"
-              f"<br>+{seed_of_loot_value}/{seed_of_loot_value_max}% Drop Rate"
-              f"{f'<br>Note: Increase Land Rank max with Death Bringer {{{{ Grimoire|#the-grimoire }}}}' if seed_of_loot_land_rank['Level'] < max_land_rank_level else ''}",
-        picture_class='seed-of-loot',
-        progression=seed_of_loot_land_rank['Level'],
-        goal=max_land_rank_level
-    ))
-    world_6_bonus += seed_of_loot_value
+    seed_of_loot_land_rank = session_data.account.farming.land_rank['Seed of Loot']
+    drop_rate_aw_advice[w6].append(seed_of_loot_land_rank.get_bonus_advice())
+    world_6_bonus += seed_of_loot_land_rank.value
 
     secret_set = session_data.account.armor_sets['Sets']['SECRET SET']
     if not secret_set['Owned']:
