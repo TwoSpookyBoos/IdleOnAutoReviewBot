@@ -2530,6 +2530,7 @@ def _calculate_w6_beanstalk(account):
 
 
 def _calculate_w7(account):
+    account.spelunk.calculate_lore_bonus(account.sailing["Artifacts"]["Pointagon"])
     _calculate_w7_advice_for_money(account)
     _calculate_w7_coral_reef(account)
 

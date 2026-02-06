@@ -1,8 +1,15 @@
 from consts.progression_tiers import true_max_tiers
 
-from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
+from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
+from models.advice.advice_section import AdviceSection
+from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.general.session_data import session_data
+
+from utils.number_formatting import round_and_trim
+from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import (
+    add_tabbed_advice_group_or_spread_advice_group_list,
+)
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -25,6 +32,41 @@ def get_cave_bonuses_advicegroup() -> AdviceGroup:
     )
     cb_AdviceGroup.remove_empty_subgroups()
     return cb_AdviceGroup
+
+
+def get_lore_bonuses_tabbed() -> TabbedAdviceGroup:
+    lb_tabbed = {
+        name: (
+            TabbedAdviceGroupTab(chapter[0].resource, name),
+            AdviceGroup(
+                tier="",
+                pre_string=name,
+                advices=[bonus.get_bonus_advice(False) for bonus in chapter],
+                informational=True,
+            ),
+        )
+        for name, chapter in session_data.account.spelunk.lore.items()
+    }
+    lb_tabbed["LoreBonusMulti"] = (
+        TabbedAdviceGroupTab("", "Lore Bonus Multi"),
+        get_lore_multi_advicegroup(),
+    )
+    return TabbedAdviceGroup(lb_tabbed)
+
+
+def get_lore_multi_advicegroup() -> AdviceGroup:
+    spelunk = session_data.account.spelunk
+    total = f"Total Bonus Multi: {round_and_trim(spelunk.lore_multi)}x"
+    mga = f"Multi Group A: {round_and_trim(spelunk.lore_multi)}x"
+    lb_Advices = {total: [], mga: [get_sailing_artifact_advice("Pointagon")]}
+    for advice_list in lb_Advices.values():
+        for advice in advice_list:
+            advice.mark_advice_completed()
+    lb_AdviceGroup = AdviceGroup(
+        tier="", pre_string="Lore Bonus Multi", advices=lb_Advices, informational=True
+    )
+    return lb_AdviceGroup
+
 
 def get_progression_tiers_advicegroup() -> tuple[AdviceGroup, int, int, int]:
     spelunking_Advices = {
@@ -68,6 +110,10 @@ def get_spelunking_advicesection() -> AdviceSection:
     spelunking_AdviceGroupDict = {}
     spelunking_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = get_progression_tiers_advicegroup()
     spelunking_AdviceGroupDict['CaveBonuses'] = get_cave_bonuses_advicegroup()
+    lore_bonuses_tabbed = get_lore_bonuses_tabbed()
+    add_tabbed_advice_group_or_spread_advice_group_list(
+        spelunking_AdviceGroupDict, lore_bonuses_tabbed, "Lore Bonuses"
+    )
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
