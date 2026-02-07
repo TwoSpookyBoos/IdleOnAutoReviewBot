@@ -48,7 +48,7 @@ def get_lore_bonuses_tabbed() -> TabbedAdviceGroup:
         for name, chapter in session_data.account.spelunk.lore.items()
     }
     lb_tabbed["LoreBonusMulti"] = (
-        TabbedAdviceGroupTab("", "Lore Bonus Multi"),
+        TabbedAdviceGroupTab("multi", "Lore Bonus Multi"),
         get_lore_multi_advicegroup(),
     )
     return TabbedAdviceGroup(lb_tabbed)
