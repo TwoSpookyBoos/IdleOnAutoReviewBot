@@ -129,7 +129,7 @@ $id-map: map-merge($id-map, $all-summoning);
 @import "spelunking";
 @import "legend-talents";
 @import "gallery";
-@import "merit";
+@import "meritocracy";
 
 $id-map: map-merge($id-map, $all-advice-fish);
 $id-map: map-merge($id-map, $all-clam);
@@ -137,7 +137,7 @@ $id-map: map-merge($id-map, $all-coral);
 $id-map: map-merge($id-map, $all-spelunking);
 $id-map: map-merge($id-map, $all-legend-talents);
 $id-map: map-merge($id-map, $all-gallery);
-$id-map: map-merge($id-map, $merit);
+$id-map: map-merge($id-map, $meritocracy);
 
 
 @each $class, $link in $id-map {

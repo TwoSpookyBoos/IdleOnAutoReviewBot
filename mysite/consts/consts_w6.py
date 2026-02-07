@@ -172,7 +172,7 @@ summoning_bonus_img = {
     '+{% Drop Rate': 'vault-upgrade-18',
     '<x Crop EVO': 'farming',
     '+{% AFK Gains': 'summoning-afk',
-    '+{% Skill EXP': 'summoning-skill-exp',
+    '+{% Skill EXP': 'meritocracy-10',
     '<x Construct SPD': 'construction',
     '<x Skill Effncy.': 'summoning-skill-eff',
     '<x Cooking SPD': 'cooking',
