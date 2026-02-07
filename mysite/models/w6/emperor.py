@@ -153,3 +153,12 @@ class Emperor(dict[str, EmperorBonus]):
             picture_class="lifetime-tickets",
             completed=True,
         )
+
+    def get_ticket_alert(self) -> Advice | None:
+        if self.max_attempts > self.daily_attempts + self.attempts:
+            return None
+        return Advice(
+            label="{{Emperor Showdown|#emperor}} - next daily tickets will be lost",
+            picture_class="emperor",
+            resource="lifetime-tickets",
+        )
