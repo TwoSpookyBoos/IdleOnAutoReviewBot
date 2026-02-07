@@ -12,11 +12,13 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
+from models.advice.advice_group_tabbed import TabbedAdviceGroup, TabbedAdviceGroupTab
 from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.w6.farming import Farming
 
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
+from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import pl, notateNumber
 
@@ -99,31 +101,57 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
 
     return cd_ag
 
-def getMarketAdviceGroup(farming) -> AdviceGroup:
-    advice_section = {
-        "Day Market": [
-            upgrade.get_bonus_advice(True)
-            for upgrade in farming.market.values()
-            if upgrade.is_day
-        ],
-        "Night Market": [
-            upgrade.get_bonus_advice(True)
-            for upgrade in farming.market.values()
-            if not upgrade.is_day
-        ],
+
+def get_market_bonuses_tabbed() -> TabbedAdviceGroup:
+    farming = session_data.account.farming
+    mb_tabbed = {
+        "Day Market": (
+            TabbedAdviceGroupTab("day-market", "Day Market"),
+            AdviceGroup(
+                tier="",
+                pre_string="Day Market",
+                advices=[
+                    upgrade.get_bonus_advice(show_cost=True)
+                    for upgrade in farming.market.values()
+                    if upgrade.is_day
+                ],
+                informational=True,
+            ),
+        ),
+        "Night Market": (
+            TabbedAdviceGroupTab("night-market", "Night Market"),
+            AdviceGroup(
+                tier="",
+                pre_string="Night Market",
+                advices=[
+                    upgrade.get_bonus_advice(show_cost=True)
+                    for upgrade in farming.market.values()
+                    if not upgrade.is_day
+                ],
+                informational=True,
+            ),
+        ),
     }
-
-    for advice_list in advice_section.values():
-        for advice in advice_list:
-            advice.mark_advice_completed()
-
-    dm_ag = AdviceGroup(
-        tier='',
-        pre_string='Market upgrades',
-        advices=advice_section,
-        informational=True
+    if session_data.account.spelunk.caves["Blushpit"].bonus_obtained:
+        mb_tabbed["Exotic Market"] = (
+            TabbedAdviceGroupTab("exotic-market", "Exotic Market"),
+            AdviceGroup(
+                tier="",
+                pre_string="Exotic Market",
+                advices=[
+                    upgrade.get_bonus_advice(link_to_section=False)
+                    for upgrade in farming.exotic_market.values()
+                ],
+                informational=True,
+            ),
+        )
+    mb_tabbed["Cost Discount"] = (
+        TabbedAdviceGroupTab("merit-14", "Cost Discount"),
+        getCostDiscountAdviceGroup(farming),
     )
-    return dm_ag
+    for (_, advice_group) in mb_tabbed.values():
+        advice_group.mark_advice_completed()
+    return TabbedAdviceGroup(mb_tabbed)
 
 
 def getRankDatabaseAdviceGroup(farming) -> AdviceGroup:
@@ -460,9 +488,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         target_evo_crop = crop_index, crop_evo_chance
     if target_evo_crop is not None:
         crop_index, crop_evo_chance = target_evo_crop
-        precent = evo_multi['Subtotal Multi'] / crop_evo_chance
+        percent = evo_multi['Subtotal Multi'] / crop_evo_chance
         evo_advices[total].append(
-            farming.crops.get_crop_evo_advice(crop_index, crop_evo_chance, precent)
+            farming.crops.get_crop_evo_advice(crop_index, crop_evo_chance, percent)
         )
 
     for category in evo_advices.values():
@@ -876,22 +904,19 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
 
 
 def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
-    cost_Advices = []
-
-    cost_Advices.append(
-        session_data.account.emperor["cheaper Farming Upgrades"].get_bonus_advice()
-    )
-
-    for advice in cost_Advices:
-        advice.mark_advice_completed()
-
+    cost_Advices = {
+        "Day and Night Market Discount": [
+            session_data.account.emperor["cheaper Farming Upgrades"].get_bonus_advice()
+        ]
+    }
     cost_ag = AdviceGroup(
         tier='',
-        pre_string='Sources of Cost Discount for Day and Night Market',
+        pre_string='Sources of Cost Discount',
         advices=cost_Advices,
         informational=True
     )
     cost_ag.remove_empty_subgroups()
+    cost_ag.mark_advice_completed()
     return cost_ag
 
 
@@ -921,9 +946,11 @@ def getFarmingAdviceSection():
         farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
     if session_data.account.sneaking.emporium['Crop Depot Scientist'].obtained:
         farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
-    farming_AdviceGroupDict['Market'] = getMarketAdviceGroup(farming)
+    market_bonus_tabbed = get_market_bonuses_tabbed()
+    add_tabbed_advice_group_or_spread_advice_group_list(
+        farming_AdviceGroupDict, market_bonus_tabbed, "Market"
+    )
     farming_AdviceGroupDict['Rank'] = getRankDatabaseAdviceGroup(farming)
-    farming_AdviceGroupDict['Cost'] = getCostDiscountAdviceGroup(farming)
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

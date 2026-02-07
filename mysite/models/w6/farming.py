@@ -1,10 +1,12 @@
 from math import floor, ceil
 from functools import cached_property
 
-from consts.consts_autoreview import ValueToMulti
+from consts.consts_autoreview import ValueToMulti, EmojiType
+from consts.general.common import percent_break_point
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w6.farming import (
     market_info,
+    exotic_market_info,
     crop_depot_list,
     landrank_list,
     seed_dict,
@@ -135,15 +137,15 @@ class Crops(dict[int, float]):
             return 0.3
 
     def get_crop_evo_advice(
-        self, crop_index: int, needed_evo: float, complete_precent: float
+        self, crop_index: int, needed_evo: float, complete_percent: float
     ) -> Advice:
         crop_info = crop_dict[crop_index]
         crop_name = crop_info["Name"]
         return Advice(
             label=f"{crop_name} chance<br>{needed_evo:.3g} for 100% chance",
             picture_class=crop_info.get("Image", crop_name),
-            progression=f"{min(complete_precent, 1):.2%}",
-            goal="100%" if complete_precent < 1 else "",
+            progression=f"{min(complete_percent, 1):.2%}",
+            goal="100%" if complete_percent < 1 else "",
         )
 
 
@@ -291,8 +293,7 @@ class MarketUpgrade:
             progress += f"/{_display_value(is_multi, self.max_value)}"
             if show_cost:
                 if self.is_day:
-                    crop_info = crop_dict[self._get_upgrade_crop_index()]
-                    resource = crop_info.get("Image", crop_info["Name"])
+                    resource = _get_crop_image(self._get_upgrade_crop_index())
                 else:
                     resource = "magic-bean"
         label += self._template.replace("{", progress).replace("}", progress)
@@ -346,8 +347,7 @@ class MarketUpgrade:
         label += self._template.replace("{", progress).replace("}", progress)
         if self.is_day:
             upgrade_cost = None
-            crop_info = crop_dict[self._get_upgrade_crop_index()]
-            resource = crop_info.get("Image", crop_info["Name"])
+            resource = _get_crop_image(self._get_upgrade_crop_index())
         else:
             upgrade_cost = self._get_cost(cost_multi, target_level)
             label += f"<br>Total cost: {upgrade_cost:,}"
@@ -359,6 +359,91 @@ class MarketUpgrade:
             goal=target_level,
             resource=resource,
         )
+
+
+def _get_crop_image(crop_index: int) -> str:
+    crop_info = crop_dict[crop_index]
+    return crop_info.get("Image", crop_info["Name"])
+
+
+class ExoticMarketUpgrade:
+    def __init__(self, level: int, info: dict):
+        self.level = level
+        self.name = info["Name"]
+        self._template = info["Description"]
+        self._crop_index = info["CostCropIndex"]
+        self._coefficient = info["Coefficient"]
+        self._scaling_type = info["ScalingType"]
+        self.value = 0
+        self._max_value = None
+
+    def calculate_bonus(self):
+        # "ExoticBonusQTY" in source. Last update 2.48 Giftmas Event
+        match self._scaling_type:
+            case 1:
+                self.value = self._coefficient * self.level / (self.level + 1000)
+                self._max_value = self._coefficient
+            case 0:
+                self.value = self._coefficient * self.level
+            case _:
+                logger.warning(
+                    f"Unknown scaling type ({self._scaling_type})"
+                    f" of exotic upgrade '{self.name}'"
+                )
+
+    def get_bonus_advice(self, link_to_section: bool = True) -> Advice:
+        label = ""
+        if link_to_section:
+            label += "{{Exotic Market|#farming }} - "
+        label += f"{self.name}:<br>"
+        is_multi = "}" in self._template
+        value = f"{_display_value(is_multi, self.value)}"
+        if self._max_value is not None:
+            value += f"/{_display_value(is_multi, self._max_value)}"
+        bonus = (
+            self._template.replace("{", value).replace("}", value).replace("$", value)
+        )
+        if not link_to_section:
+            label += f"Level {self.level}: {bonus}"
+            if self._max_value is not None:
+                current_percent = self.value / self._max_value
+                progress = f"{current_percent:.2%}"
+                goal = "100%"
+                for percent in percent_break_point:
+                    if current_percent < percent:
+                        next_level, next_bonus = self._get_percent_info(percent)
+                        label += (
+                            f"<br>Next Breakpoint:"
+                            f"<br>Level {next_level} ({percent:.0%}): {next_bonus}"
+                        )
+                        break
+            else:
+                progress = "Linear"
+                goal = EmojiType.INFINITY.value
+                label += f"<br>+{self._coefficient} per level"
+        else:
+            label += bonus
+            progress = self.level
+            goal = EmojiType.INFINITY.value
+        return Advice(
+            label=label,
+            picture_class=_get_crop_image(self._crop_index),
+            progression=progress,
+            goal=goal,
+        )
+
+    def _get_percent_info(self, percent: float) -> tuple[int, str] | None:
+        if percent >= 1.0 or percent < 0 or self._max_value is None:
+            return None
+        is_multi = "}" in self._template
+        next_value = f"{_display_value(is_multi, self._max_value * percent)}"
+        next_bonus = self._template.replace("{", next_value).replace("}", next_value)
+        match self._scaling_type:
+            case 1:
+                next_level = int(1000 * percent / (1 - percent))
+                return next_level, next_bonus
+            case _:
+                return None
 
 
 class LandRankUpgrade:
@@ -479,6 +564,8 @@ class Farming:
         if not raw_market:
             logger.warning("Farming Markets data not present.")
         self._parse_markets(raw_market)
+        self.exotic_market: dict[str, ExoticMarketUpgrade] = {}
+        self._parse_exotic_markets(raw_market)
         self.magic_beans = parse_number(raw_market[1])
         self.magic_bean_unlocked = False
         raw_landrank_info = safe_loads(raw_data.get("FarmRank", []))
@@ -509,6 +596,12 @@ class Farming:
             upgrade = MarketUpgrade(level, upgrade_info, index < 8)
             self.market[upgrade.name] = upgrade
 
+    def _parse_exotic_markets(self, raw_market: list):
+        for index, upgrade_info in enumerate(exotic_market_info):
+            level = raw_market[index + 20]
+            upgrade = ExoticMarketUpgrade(level, upgrade_info)
+            self.exotic_market[upgrade.name] = upgrade
+
     def calculate_land_rank_bonus(self, multi: float):
         for upgrade in self.land_rank.values():
             upgrade.calculate_bonus(multi)
@@ -528,6 +621,10 @@ class Farming:
                 continue
             bonus.calculate_bonus(self.crops.stack, super_gmo.as_multi)
         self.total_plots = 1 + self.market["Land Plots"].level + bought_plot
+
+    def calculate_exotic_market_bonus(self):
+        for bonus in self.exotic_market.values():
+            bonus.calculate_bonus()
 
     def calculate_crop_value_multi(self, ballot: dict):
         # if ("CropsBonusValue" == e)

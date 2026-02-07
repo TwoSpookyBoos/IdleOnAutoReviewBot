@@ -1973,6 +1973,7 @@ def _calculate_w6_farming_markets(account):
         + min(3, account.merits[5][2]['Level'])
     )
     account.farming.calculate_market_bonus(bought_plot)
+    account.farming.calculate_exotic_market_bonus()
 
 
 def _calculate_w6_farming_crop_evo(account):
