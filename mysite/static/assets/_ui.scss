@@ -35,7 +35,8 @@ $ui-misc: (
     greenstack: img('wiki/Greenstack.png'),
     ui-talents: img('UI/UIbuttons2.png'),
     ui-inventory-bag-0: img('data/UIinventoryTabs1.png'),
-    coming-soon: img('wiki/Coming_Soon.png')
+    coming-soon: img('wiki/Coming_Soon.png'),
+    multi: img('data/multi_z.png'),
 );
 
 $all-ui: map-merge($ui-quick-ref, $ui-misc);
