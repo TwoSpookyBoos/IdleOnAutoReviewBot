@@ -123,7 +123,7 @@ $id-map: map-merge($id-map, $all-farming);
 $id-map: map-merge($id-map, $all-summoning);
 
 //W7
-@import "advice_for_money";
+@import "advice_fish";
 @import "clam";
 @import "coral";
 @import "spelunking";
@@ -131,7 +131,7 @@ $id-map: map-merge($id-map, $all-summoning);
 @import "gallery";
 @import "merit";
 
-$id-map: map-merge($id-map, $all-advice-for-money);
+$id-map: map-merge($id-map, $all-advice-fish);
 $id-map: map-merge($id-map, $all-clam);
 $id-map: map-merge($id-map, $all-coral);
 $id-map: map-merge($id-map, $all-spelunking);

@@ -61,7 +61,6 @@ from consts.consts_w6 import (
     summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
-from consts.idleon.w7.spelunk import Spelunky
 from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
@@ -3684,32 +3683,8 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
 
 def _parse_w7(account):
-    _parse_advice_for_money(account)
     _parse_w7_coral_reef(account)
     _parse_w7_legend_talents(account)
-
-def _parse_advice_for_money(account):
-    # Dependencies: None
-    advice_for_money_upgrade_data = Spelunky[18]
-    try:
-        advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
-    except:
-        advice_for_money_account_data = []
-
-    for index, (upgrade_data, upgrade_level) in enumerate(zip(advice_for_money_upgrade_data, advice_for_money_account_data)):
-        name, description_and_effect, bonus, cost,  _ = upgrade_data.split(',')
-        name = name.replace('_', ' ')
-        description, effect = description_and_effect.split('@')
-        description = description.replace('_', ' ').strip()
-        effect = effect.replace('_', ' ').strip()
-        account.advice_for_money['Upgrades'][name] = {
-            'Description': description,
-            'Effect': effect,
-            'Level': int(upgrade_level),
-            'Bonus': int(bonus),
-            'Cost': int(cost),
-            'Index': index,
-        }
 
 
 def _parse_w7_coral_reef(account):
