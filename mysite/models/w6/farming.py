@@ -610,6 +610,11 @@ class Farming:
         self, lab_multi: float, grimoire_multi: float, emporium: dict[str, Emporium]
     ):
         total_multi = lab_multi * grimoire_multi
+        self.multi["Depot"] = {
+            "Lab": lab_multi,
+            "Grimoire": grimoire_multi,
+            "Total": total_multi,
+        }
         for bonus in self.depot.values():
             bonus.calculate_bonus(total_multi, self.crops.unlocked, emporium)
 
