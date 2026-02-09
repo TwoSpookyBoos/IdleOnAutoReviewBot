@@ -210,7 +210,7 @@ class Depot:
         progress = f"{_display_value(is_multi, self.value)}"
         # Show X/Y if bonus not maxed
         if self.max_value is not None:
-            progress = f"/{_display_value(is_multi, self.max_value)}"
+            progress += f"/{_display_value(is_multi, self.max_value)}"
         label += self._template.replace("{", progress).replace("}", progress)
         if not link_to_section and self.max_value is not None:
             # Bonus not maxed and showed in section, add scaling info
@@ -610,6 +610,11 @@ class Farming:
         self, lab_multi: float, grimoire_multi: float, emporium: dict[str, Emporium]
     ):
         total_multi = lab_multi * grimoire_multi
+        self.multi["Depot"] = {
+            "Lab": lab_multi,
+            "Grimoire": grimoire_multi,
+            "Total": total_multi,
+        }
         for bonus in self.depot.values():
             bonus.calculate_bonus(total_multi, self.crops.unlocked, emporium)
 

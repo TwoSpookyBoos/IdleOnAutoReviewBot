@@ -25,9 +25,7 @@ from utils.text_formatting import pl, notateNumber
 logger = get_logger(__name__)
 
 
-def getCropDepotAdviceGroup(farming) -> AdviceGroup:
-    lab_note = f"<br>Note: Defaulted ON. Sorry {EmojiType.FROWN.value}"
-
+def get_depot_tabbed(farming) -> TabbedAdviceGroup:
     navette_value = session_data.account.labJewels['Pure Opal Navette']['Value'] * session_data.account.labJewels['Pure Opal Navette']['Enabled']
     navette_max = session_data.account.labJewels['Pure Opal Navette']['BaseValue']
 
@@ -42,9 +40,13 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
     studies_max = ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['BaseValue'])
     studies_enhanced_max_value = session_data.account.labBonuses['Depot Studies PhD']['BaseValue']
 
-    lab_multi = max(1, ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value))
-    lab_max = max(1, ValueToMulti(studies_enhanced_max_value + rhombol_enhanced_max))
-    cd_advices = [
+    lab_multi = round_and_trim(farming.multi["Depot"]["Lab"])
+    lab_max = round_and_trim(ValueToMulti(studies_enhanced_max_value + rhombol_enhanced_max))
+
+    multi_advices: dict[str, list[Advice]] = {}
+    total_multi = round_and_trim(farming.multi["Depot"]["Total"])
+    multi_advices[f"Crop Depot Bonuses Multi: {total_multi}"] = []
+    multi_advices[f"Multi Group A: {lab_multi}"] = [
         Advice(
             label=f"Lab Jewel: Pure Opal Navette: Increases the value of Spelunker Obol by +{navette_value/100:.1f}/{navette_max/100:.1f}"
                   f"<br>(Yes, this jewel is bugged)",
@@ -71,35 +73,47 @@ def getCropDepotAdviceGroup(farming) -> AdviceGroup:
             goal=1
         ),
         Advice(
-            label=f"Final Lab multi: {lab_multi:.2f}/{lab_max:.2f}x"
-                  f"{lab_note}",
+            label=f"Final Lab multi: {lab_multi}/{lab_max}x"
+                  f"<br>Note: Defaulted ON. Sorry {EmojiType.FROWN.value}",
             picture_class='laboratory',
-            progression=f"{lab_multi:.2f}",
-            goal=f"{lab_max:.2f}"
+            progression=f"{lab_multi}",
+            goal=f"{lab_max}"
         ),
+    ]
+    grimoire_multi = round_and_trim(farming.multi["Depot"]["Grimoire"])
+    multi_advices[f"Multi Group B: {grimoire_multi}"] = [
         Advice(
             label=f"{{{{ Grimoire|#the-grimoire}}}}: Superior Crop Research: "
-                  f"{round(session_data.account.grimoire['Upgrades']['Superior Crop Research']['Total Value'], 2):g}/3x",
+                  f"{grimoire_multi}/4x",
             picture_class=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Image'],
             progression=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Level'],
             goal=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Max Level'],
         ),
-        farming.crops.get_discovery_advice()
     ]
-    for bonus in farming.depot.values():
-        cd_advices.append(bonus.get_bonus_advice(False))
-
-    for advice in cd_advices:
-        advice.mark_advice_completed()
-
-    cd_ag = AdviceGroup(
-        tier='',
-        pre_string='Crop Depot bonuses',
-        advices=cd_advices,
-        informational=True
-    )
-
-    return cd_ag
+    cd_tabbed = {
+        "Crop Depot Bonuses": (
+            TabbedAdviceGroupTab("crop-scientist", "Crop Depot Bonuses"),
+            AdviceGroup(
+                tier="",
+                pre_string="Crop Depot Bonuses",
+                advices=[farming.crops.get_discovery_advice()]
+                + [bonus.get_bonus_advice(False) for bonus in farming.depot.values()],
+                informational=True,
+            ),
+        ),
+        "Crop Depot Bonuses Multi": (
+            TabbedAdviceGroupTab("multi", "Crop Depot Bonuses Multi"),
+            AdviceGroup(
+                tier="",
+                pre_string="Crop Depot Bonuses Multi",
+                advices=multi_advices,
+                informational=True,
+            ),
+        ),
+    }
+    for (_, advice_group) in cd_tabbed.values():
+        advice_group.mark_advice_completed()
+    return TabbedAdviceGroup(cd_tabbed)
 
 
 def get_market_bonuses_tabbed() -> TabbedAdviceGroup:
@@ -492,11 +506,6 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         evo_advices[total].append(
             farming.crops.get_crop_evo_advice(crop_index, crop_evo_chance, percent)
         )
-
-    for category in evo_advices.values():
-        for advice in category:
-            advice.mark_advice_completed()
-
     evo_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Crop Evolution Chance',
@@ -504,6 +513,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         informational=True,
         completed=session_data.account.farming.crops.unlocked >= max_farming_crops
     )
+    evo_ag.mark_advice_completed()
     return evo_ag
 
 
@@ -544,17 +554,13 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
 #Night Market
     speed_advices[nm].append(farming.market['Super Gmo'].get_bonus_advice())
     speed_advices[nm].append(farming.market['Speed Gmo'].get_bonus_advice())
-
-    for category in speed_advices.values():
-        for advice in category:
-            advice.mark_advice_completed()
-
     speed_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Farming Speed',
         advices=speed_advices,
         informational=True
     )
+    speed_ag.mark_advice_completed()
     return speed_ag
 
 def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
@@ -588,17 +594,13 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
         progression=int(session_data.account.achievements['Crop Flooding']['Complete']),
         goal=1
     ))
-
-    for category in bm_advices.values():
-        for advice in category:
-            advice.mark_advice_completed()
-
     bm_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Magic Bean Bonus',
         advices=bm_advices,
         informational=True
     )
+    bm_ag.mark_advice_completed()
     return bm_ag
 
 def getOGAdviceGroup(farming):
@@ -669,17 +671,13 @@ def getOGAdviceGroup(farming):
             'Taffy Disc'
         ].get_obtained_advice()
     )
-
-    for category in og_advices.values():
-        for advice in category:
-            advice.mark_advice_completed()
-
     og_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Overgrowth',
         advices=og_advices,
         informational=True
     )
+    og_ag.mark_advice_completed()
     return og_ag
 
 def getLRExclusions(farming, highestFarmingSkillLevel):
@@ -920,6 +918,34 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
     return cost_ag
 
 
+def get_farming_multi_tabbed() -> TabbedAdviceGroup:
+    highest_farming_level = max(session_data.account.all_skills['Farming'])
+    farming = session_data.account.farming
+    fm_tabbed = {
+        "Crop Evolution": (
+            TabbedAdviceGroupTab("grimoire-upgrade-14", "Crop Evolution"),
+            getEvoChanceAdviceGroup(farming, highest_farming_level),
+        ),
+        "Farming Speed": (
+            TabbedAdviceGroupTab("basic-seed-gif", "Farming Speed"),
+            getSpeedAdviceGroup(farming),
+        ),
+    }
+    if farming.market['Overgrowth'].level >= 1:
+        fm_tabbed["Overgrowth"] = (
+            TabbedAdviceGroupTab("farming-og", "Overgrowth"),
+            getOGAdviceGroup(farming),
+        )
+    if farming.land_rank.total_level >= 1:
+        fm_tabbed["Crop Value"] = (
+            TabbedAdviceGroupTab("ballot-29", "Crop Value"),
+            getCropValueAdviceGroup(farming),
+        )
+    for (_, advice_group) in fm_tabbed.values():
+        advice_group.mark_advice_completed()
+    return TabbedAdviceGroup(fm_tabbed)
+
+
 def getFarmingAdviceSection():
     highest_farming_level = max(session_data.account.all_skills['Farming'])
     if highest_farming_level < 1:
@@ -934,23 +960,25 @@ def getFarmingAdviceSection():
         return farming_AdviceSection
 
     farming = session_data.account.farming
-    #Generate AdviceGroups
+    # Generate AdviceGroups
     farming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(farming, highest_farming_level)
-    farming_AdviceGroupDict['Evo'] = getEvoChanceAdviceGroup(farming, highest_farming_level)
-    farming_AdviceGroupDict['Speed'] = getSpeedAdviceGroup(farming)
-    if farming.market['Overgrowth'].level >= 1:
-        farming_AdviceGroupDict['OG'] = getOGAdviceGroup(farming)
-    if farming.land_rank.total_level >= 1:
-        farming_AdviceGroupDict['Value'] = getCropValueAdviceGroup(farming)
+    farming_multi_tabbed = get_farming_multi_tabbed()
+    add_tabbed_advice_group_or_spread_advice_group_list(
+        farming_AdviceGroupDict, farming_multi_tabbed, "FarmingMulti"
+    )
     if farming.magic_bean_unlocked:
         farming_AdviceGroupDict['Bean'] = getBeanMultiAdviceGroup(farming)
     if session_data.account.sneaking.emporium['Crop Depot Scientist'].obtained:
-        farming_AdviceGroupDict['Depot'] = getCropDepotAdviceGroup(farming)
+        crop_depot_tabbed = get_depot_tabbed(farming)
+        add_tabbed_advice_group_or_spread_advice_group_list(
+            farming_AdviceGroupDict, crop_depot_tabbed, "Depot"
+        )
     market_bonus_tabbed = get_market_bonuses_tabbed()
     add_tabbed_advice_group_or_spread_advice_group_list(
         farming_AdviceGroupDict, market_bonus_tabbed, "Market"
     )
-    farming_AdviceGroupDict['Rank'] = getRankDatabaseAdviceGroup(farming)
+    if farming.land_rank.total_level >= 1:
+        farming_AdviceGroupDict['Rank'] = getRankDatabaseAdviceGroup(farming)
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
