@@ -2344,6 +2344,7 @@ def _calculate_w7(account):
     account.advice_fish.calculate_bonuses()
     _calculate_w7_coral_reef(account)
     account.meritocracy.calculate_bonuses()
+    account.gallery.calculate_bonuses(account)
 
 
 def _calculate_w7_coral_reef(account):

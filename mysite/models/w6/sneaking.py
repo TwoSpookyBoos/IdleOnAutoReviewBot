@@ -109,7 +109,6 @@ class Emporium:
         self.value = self._get_bouns_value()
 
     def _get_bouns_value(self) -> int:
-
         if not self.obtained:
             return 0
         match self.name:
@@ -123,7 +122,7 @@ class Emporium:
                 # (5 * m._customBlock_Ninja("EmporiumBonus", 39, 0) in source
                 return 5
             case _:
-                return 0
+                return 1
 
     def get_obtained_advice(self, link_to_section: bool = True):
         label = ""
