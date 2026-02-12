@@ -2342,6 +2342,7 @@ def _calculate_w7(account):
     account.spelunk.calculate_lore_bonus(account.sailing["Artifacts"]["Pointagon"])
     account.advice_fish.calculate_bonuses()
     _calculate_w7_coral_reef(account)
+    account.meritocracy.calculate_bonuses()
 
 
 def _calculate_w7_coral_reef(account):
