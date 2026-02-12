@@ -292,6 +292,7 @@ $farming-ui: (
     night-market: img('data/FarmStT1.png'),
     crop-depot: img('data/FarmStT2.png'),
     exotic-market: img('data/FarmStT3.png'),
+    farming-og: img('extracted_sprites/farming_og.png'),
 );
 
 $all-farming: map-merge($seed-gifs, $all-crops);
