@@ -53,17 +53,14 @@ from consts.consts_caverns import (
     caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.consts_w6 import (
-    jade_emporium, sneaking_gemstones_dict, max_farming_crops, landrank_dict,
-    market_upgrade_details,
-    crop_depot_dict, getGemstoneBaseValue, getGemstonePercent, summoning_sanctuary_counts, summoning_upgrades,
+    summoning_sanctuary_counts, summoning_upgrades,
     max_summoning_upgrades, summoning_regular_match_colors,
     summoning_dict, summoning_endlessDict, summoning_stone_locations,
     summoning_stone_boss_images, summoning_stone_stone_images, summoning_stone_boss_base_hp,
-    summoning_stone_boss_base_damage, jade_emporium_order, pristine_charms_dict,
+    summoning_stone_boss_base_damage,
     summoning_regular_battles
 )
 from models.general.models_consumables import Bag, StorageChest
-from consts.consts_w7 import Spelunky, spelunking_cave_bonus_descriptions, spelunking_cave_names
 from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
@@ -3505,246 +3502,8 @@ def _parse_caverns_the_temple(account, raw_caverns_list):
         account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 def _parse_w6(account):
-    _parse_w6_sneaking(account)
-    _parse_w6_farming(account)
     _parse_w6_summoning(account)
 
-def _parse_w6_sneaking(account):
-    account.sneaking = {
-        "PristineCharms": {},
-        "Gemstones": {},
-        "JadeEmporium": {},
-        'CurrentMastery': safer_get(account.raw_optlacc_dict, 231, 0),
-        'MaxMastery': safer_get(account.raw_optlacc_dict, 232, 0),
-    }
-    raw_ninja_list = safe_loads(account.raw_data.get("Ninja", []))
-    if not raw_ninja_list:
-        logger.warning(f"Sneaking data not present{', as expected' if account.version < 200 else ''}.")
-    _parse_w6_pristine_charms(account, raw_ninja_list)
-    _parse_w6_gemstones(account)
-    _parse_w6_jade_emporium(account, raw_ninja_list)
-
-def _parse_w6_pristine_charms(account, raw_ninja_list):
-    raw_pristine_charms_list = raw_ninja_list[107] if raw_ninja_list else []
-    for index, (pristine_charm_name, pristine_charm_data) in enumerate(pristine_charms_dict.items()):
-        try:
-            account.sneaking["PristineCharms"][pristine_charm_name] = {
-                'Obtained': bool(raw_pristine_charms_list[index]),
-                'Image': pristine_charm_data['Image'],
-                'Bonus': pristine_charm_data['Bonus'],
-            }
-        except:
-            account.sneaking["PristineCharms"][pristine_charm_name] = {
-                'Obtained': False,
-                'Image': pristine_charm_data['Image'],
-                'Bonus': pristine_charm_data['Bonus'],
-            }
-
-def _parse_w6_gemstones(account):
-    for gemstone_name, gemstone_values in sneaking_gemstones_dict.items():
-        level = safer_get(account.raw_optlacc_dict, gemstone_values['OptlAcc Index'], 0)
-        account.sneaking['Gemstones'][gemstone_name] = {
-            'Level': level,
-            'Stat': gemstone_values['Stat'],
-            'MaxValue': gemstone_values['Max Value'],
-            'BaseValue': getGemstoneBaseValue(gemstone_name, level),
-            'BoostedValue': 0.0,
-            'Percent': 0
-        }
-        account.sneaking['Gemstones'][gemstone_name]['Percent'] = getGemstonePercent(
-            gemstone_name,
-            account.sneaking['Gemstones'][gemstone_name]['BaseValue']
-        )
-
-def _parse_w6_jade_emporium(account, raw_ninja_list):
-    try:
-        raw_emporium_purchases = list(raw_ninja_list[102][9])
-    except:
-        raw_emporium_purchases = [""]
-    for index in jade_emporium_order:
-        try:
-            upgrade = jade_emporium[index]
-            account.sneaking['JadeEmporium'][upgrade['Name']] = {
-                'Obtained': upgrade['CodeString'] in raw_emporium_purchases,
-                'Bonus': upgrade['Bonus'],
-                'Image': upgrade['Name']
-            }
-        except:
-            continue
-
-
-def _parse_w6_farming(account):
-    account.farming = {
-        'MagicBeans': 0,
-        'Crops': {},
-        'CropCountsPerSeed': {
-            'Basic': 0,
-            'Earthy': 0,
-            'Bulbo': 0,
-            'Sushi': 0,
-            'Mushie': 0,
-            'Glassy': 0,
-        },
-        "CropsUnlocked": 0,
-        "MarketUpgrades": {},
-        "CropStacks": {
-            "Evolution Gmo": 0,  # 200
-            "Speed Gmo": 0,  # 1,000
-            "Exp Gmo": 0,  # 2,500
-            "Value Gmo": 0,  # 10,000
-            "Super Gmo": 0  # 100,000
-        },
-        'LandRankDatabase': {},
-        'Depot': {},
-    }
-
-    raw_farmcrop_dict = safe_loads(account.raw_data.get("FarmCrop", {}))
-    if not raw_farmcrop_dict:
-        logger.warning(f"Farming Crop data not present{', as expected' if account.version < 200 else ''}.")
-    _parse_w6_farming_crops(account, raw_farmcrop_dict)
-    _parse_w6_farming_crop_depot(account)
-
-    raw_farmupg_list = safe_loads(account.raw_data.get("FarmUpg", []))
-    if not raw_farmupg_list:
-        logger.warning(f"Farming Markets data not present{', as expected' if account.version < 200 else ''}.")
-    _parse_w6_farming_markets(account, raw_farmupg_list)
-
-    raw_farmrank_list = safe_loads(account.raw_data.get("FarmRank"))
-    if raw_farmrank_list is None:
-        logger.warning(f"Farming Land Rank Database data not present{', as expected' if account.version < 219 else ''}.")
-        raw_farmrank_list = [0] * 36
-    _parse_w6_farming_land_ranks(account, raw_farmrank_list)
-
-    account.farming['Total Plots'] = (
-        1
-        + account.farming['MarketUpgrades']['Land Plots']['Level']
-        + account.gemshop['Purchases']['Plot Of Land']['Owned']
-        + min(3, account.merits[5][2]['Level'])
-    )
-
-def _parse_w6_farming_crops(account, rawCrops):
-    for cropIndexStr, cropAmountOwned in rawCrops.items():
-        try:
-            account.farming["CropsUnlocked"] += 1  # Once discovered, crops will always appear in this dict.
-            if int(cropIndexStr) < 21:
-                account.farming['CropCountsPerSeed']['Basic'] += 1
-            elif int(cropIndexStr) < 46:
-                account.farming['CropCountsPerSeed']['Earthy'] += 1
-            elif int(cropIndexStr) < 61:
-                account.farming['CropCountsPerSeed']['Bulbo'] += 1
-            elif int(cropIndexStr) < 84:
-                account.farming['CropCountsPerSeed']['Sushi'] += 1
-            elif int(cropIndexStr) < 107:
-                account.farming['CropCountsPerSeed']['Mushie'] += 1
-            else:
-                account.farming['CropCountsPerSeed']['Glassy'] += 1
-            account.farming['Crops'][int(cropIndexStr)] = float(cropAmountOwned)
-            if float(cropAmountOwned) >= 200:
-                account.farming["CropStacks"]["Evolution Gmo"] += 1
-            if float(cropAmountOwned) >= 1000:
-                account.farming["CropStacks"]["Speed Gmo"] += 1
-            if float(cropAmountOwned) >= 2500:
-                account.farming["CropStacks"]["Exp Gmo"] += 1
-            if float(cropAmountOwned) >= 10000:
-                account.farming["CropStacks"]["Value Gmo"] += 1
-            if float(cropAmountOwned) >= 100000:
-                account.farming["CropStacks"]["Super Gmo"] += 1
-        except:
-            continue
-
-def _parse_w6_farming_crop_depot(account):
-    for bonusIndex, bonusDetails in crop_depot_dict.items():
-        account.farming['Depot'][bonusIndex] = {
-            'BonusString': bonusDetails['BonusString'],
-            'Image': bonusDetails['Image'],
-            'ScalingType': bonusDetails['funcType'],
-            'ScalingNumber': bonusDetails['x1'],
-            'Unlocked': account.sneaking['JadeEmporium'][bonusDetails['EmporiumUnlockName']]['Obtained'],
-            'BaseValue': lava_func(
-                bonusDetails['funcType'],
-                account.farming['CropsUnlocked'] if bonusIndex != 7 else max(0, account.farming['CropsUnlocked'] - 100),
-                bonusDetails['x1'],
-                bonusDetails['x2']
-            ),
-            'BaseValuePlus1': lava_func(
-                bonusDetails['funcType'],
-                min(max_farming_crops, account.farming['CropsUnlocked'] + 1) if bonusIndex != 7 else min(max_farming_crops - 100, account.farming['CropsUnlocked'] + 1),
-                bonusDetails['x1'],
-                bonusDetails['x2']
-            ),
-            'MaxValue': lava_func(
-                bonusDetails['funcType'],
-                max_farming_crops,
-                bonusDetails['x1'],
-                bonusDetails['x2']
-            ),
-            'Value': 0,
-            'ValuePlus1': 0,
-        }
-
-def _parse_w6_farming_markets(account, rawMarkets):
-    try:
-        account.farming['MagicBeans'] = int(float(rawMarkets[1]))
-    except:
-        pass
-    for marketUpgradeIndex, marketUpgrade in enumerate(market_upgrade_details):
-        try:
-            account.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
-                'Level': rawMarkets[marketUpgradeIndex + 2],
-                'Description': marketUpgrade[1].replace('_', ' '),
-                'Value': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),
-                'StackedValue': rawMarkets[marketUpgradeIndex + 2] * float(marketUpgrade[8]),  # Updated later in calculate function
-                'UpgradesAtSameCrop': int(marketUpgrade[2]),
-                'CropTypeValue': float(marketUpgrade[3]),
-                'BaseCost': int(marketUpgrade[4]),
-                'CostIncrement': float(marketUpgrade[5]),
-                'UnlockRequirement': int(marketUpgrade[6]),
-                'MaxLevel': int(marketUpgrade[7]),
-                'BonusPerLevel': float(marketUpgrade[8]),
-                'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
-            }
-        except:
-            account.farming["MarketUpgrades"][marketUpgrade[0].replace('_', ' ').title()] = {
-                'Level': 0,
-                'Description': marketUpgrade[1].replace('_', ' '),
-                'Value': 0,
-                'StackedValue': 0,  # Updated later in calculate function
-                'UpgradesAtSameCrop': marketUpgrade[2],
-                'CropTypeValue': marketUpgrade[3],
-                'BaseCost': marketUpgrade[4],
-                'CostIncrement': marketUpgrade[5],
-                'UnlockRequirement': marketUpgrade[6],
-                'MaxLevel': marketUpgrade[7],
-                'BonusPerLevel': marketUpgrade[8],
-                'MarketType': 'Day' if marketUpgradeIndex < 8 else 'Night'
-            }
-
-def _parse_w6_farming_land_ranks(account, rawRanks):
-    try:
-        account.farming['LandRankPlotRanks'] = rawRanks[0]
-        account.farming['LandRankTotalRanks'] = sum(rawRanks[0])
-        account.farming['LandRankMinPlot'] = min([v for v in rawRanks[0] if v > 0], default=0)
-        account.farming['LandRankMaxPlot'] = max(rawRanks[0], default=0)
-    except:
-        account.farming['LandRankPlotRanks'] = [0] * 36
-        account.farming['LandRankTotalRanks'] = 0
-        account.farming['LandRankMinPlot'] = 0
-        account.farming['LandRankMaxPlot'] = 0
-    for upgradeIndex, upgradeValuesDict in landrank_dict.items():
-        try:
-            account.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                'Level': rawRanks[2][upgradeIndex],
-                'BaseValue': upgradeValuesDict['Value'],
-                'Value': 0,  #Updated in account_calcs._calculate_w6_farming_land_ranks()
-                'Index': upgradeIndex
-            }
-        except:
-            account.farming['LandRankDatabase'][upgradeValuesDict['Name']] = {
-                'Level': 0,
-                'BaseValue': upgradeValuesDict['Value'],
-                'Value': 0,
-                'Index': upgradeIndex
-            }
 
 def _parse_w6_summoning(account):
     account.summoning = {}
@@ -3758,8 +3517,10 @@ def _parse_w6_summoning(account):
     raw_caverns_list = safe_loads(account.raw_data.get('Holes', []))
     try:
         raw_doubled_upgrades = [int(entry) for entry in raw_caverns_list[28] if int(entry) >= 0]
+        account.summoning['Doublers Spendable'] = len(raw_caverns_list[28])
     except:
         raw_doubled_upgrades = []
+        account.summoning['Doublers Spendable'] = 30
     account.summoning['Doubled Upgrades'] = len(raw_doubled_upgrades)
 
     # raw_summoning_list[0] = Upgrades
@@ -3922,61 +3683,9 @@ def _parse_w6_summoning_sanctuary(account, rawSanctuary):
             logger.warning(f"Summoning Sanctuary Parse error at index {index}: {e}. Not adding anything.")
 
 def _parse_w7(account):
-    _parse_advice_for_money(account)
-    _parse_w7_spelunk_cave_bonuses(account)
     _parse_w7_coral_reef(account)
     _parse_w7_legend_talents(account)
 
-def _parse_advice_for_money(account):
-    # Dependencies: None
-    advice_for_money_upgrade_data = Spelunky[18]
-    try:
-        advice_for_money_account_data = safe_loads(account.raw_data.get('Spelunk', []))[11]
-    except:
-        advice_for_money_account_data = []
-
-    for index, (upgrade_data, upgrade_level) in enumerate(zip(advice_for_money_upgrade_data, advice_for_money_account_data)):
-        name, description_and_effect, bonus, cost,  _ = upgrade_data.split(',')
-        name = name.replace('_', ' ')
-        description, effect = description_and_effect.split('@')
-        description = description.replace('_', ' ').strip()
-        effect = effect.replace('_', ' ').strip()
-        account.advice_for_money['Upgrades'][name] = {
-            'Description': description,
-            'Effect': effect,
-            'Level': int(upgrade_level),
-            'Bonus': int(bonus),
-            'Cost': int(cost),
-            'Index': index,
-        }
-
-def _parse_w7_spelunk_cave_bonuses(account):
-    # Dependencies: None
-    # Get Player JSON values for Cave Bonuses in raw_spelunk[0]
-    raw_cave_bonuses = safe_loads(account.raw_data.get('Spelunk', []))[0]
-
-    # Convert the expected list into a dictionary
-    if raw_cave_bonuses and isinstance(raw_cave_bonuses, list):
-        try:
-            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate(raw_cave_bonuses)}
-        except:
-            player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
-    else:
-        logger.warning(f"Spelunk[0] sucked. Replacing with a placeholder list of 0s.")
-        player_cave_bonuses = {index: parse_number(entry) for index, entry in enumerate([0] * len(spelunking_cave_bonus_descriptions))}
-
-    # Populate account.spelunk['Cave Bonuses']
-    for index, description in spelunking_cave_bonus_descriptions.items():
-        #Filter out Lava's placeholders, currently Name9 - Name15
-        this_cave_name = spelunking_cave_names.get(index, f'UnknownCave{index}')
-        if not this_cave_name.startswith('Name'):
-            account.spelunk['Cave Bonuses'][index] = {
-                'Description': description,
-                'Owned': bool(player_cave_bonuses.get(index, 0)),
-                'CaveName': this_cave_name,
-                'Image': f'spelunking-boss-{index}',
-                'Resource': f'spelunking-cavern-{index}'
-            }
 
 def _parse_w7_coral_reef(account):
     # Dependencies: None

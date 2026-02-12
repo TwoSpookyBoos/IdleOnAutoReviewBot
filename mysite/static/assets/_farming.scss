@@ -16,7 +16,7 @@ $all-crops: (
     strawberry: img('wiki/FarmCrop4.png'),
     bananas: img('wiki/FarmCrop5.png'),
     blueberry: img('wiki/FarmCrop6.png'),
-    red-grapes: img('wiki/FarmCrop7.png'),
+    brown-grapes: img('wiki/FarmCrop7.png'),
     red-pear: img('wiki/FarmCrop8.png'),
     pineapple: img('wiki/FarmCrop9.png'),
     lime: img('wiki/FarmCrop10.png'),
@@ -253,6 +253,7 @@ $crop-depot: (
     depot-crayon: img('customized/CropDepotPen5.png'),
     depot-paintbrush: img('customized/CropDepotPen6.png'),
     depot-highlighter: img('customized/CropDepotPen7.png'),
+    depot-fancy-pen: img('customized/CropDepotPen8.png'),
 );
 
 $landranks: (
@@ -287,9 +288,10 @@ $landranks: (
 
 $farming-ui: (
     magic-bean: img('wiki/FarmCropBean.png'),
-    day-market: img('wiki/Day_Market.png'),
-    night-market: img('wiki/Night_Market.png'),
-    crop-depot: img('wiki/Crop_Depot.png'),
+    day-market: img('data/FarmStT0.png'),
+    night-market: img('data/FarmStT1.png'),
+    crop-depot: img('data/FarmStT2.png'),
+    exotic-market: img('data/FarmStT3.png'),
 );
 
 $all-farming: map-merge($seed-gifs, $all-crops);

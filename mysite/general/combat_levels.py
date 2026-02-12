@@ -61,7 +61,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
             image_name = 'silver-obol-of-pop-pop'
         elif 'Tome' in next_tier[2]:
             image_name = 'blue-tome-pages'
-        elif 'Advice For Money' in next_tier[2]:
+        elif 'Advice Fish' in next_tier[2]:
             image_name = 'big-fish'
     except:
         pass
@@ -92,7 +92,8 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         goal = 500
 
     else:
-        advice_PersonalLevels = f"Your family class level is {total_combat_level}. The last reward was back at 5k. Still... Pretty neat :)"
+        last_account_reward_level = combatLevels_progressionTiers[-1][1]
+        advice_PersonalLevels = f"Your family class level is {total_combat_level}. The last reward was back at {last_account_reward_level}. Still... Pretty neat :)"
         goal = EmojiType.INFINITY.value
 
     lvlup_advices = [

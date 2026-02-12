@@ -85,7 +85,10 @@ def getEmperorAdviceSection() -> AdviceSection:
 
     player_emperor = session_data.account.emperor
 
-    #Generate Alert Advice
+    # Generate Alert Advice
+    session_data.account.add_alert_list(
+        "World 6", [session_data.account.emperor.get_ticket_alert()]
+    )
 
     #Generate AdviceGroups
     emperor_AdviceGroupDict = {}

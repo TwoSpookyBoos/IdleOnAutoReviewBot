@@ -4,7 +4,7 @@ from consts.consts_autoreview import build_subgroup_label, break_you_best
 from consts.consts_w2 import min_NBLB, max_NBLB, at_risk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
     bubble_cauldron_color_list, nblb_skippable, nblb_max_index
 from consts.consts_w4 import cooking_close_enough
-from consts.consts_w6 import max_farming_crops
+from consts.w6.farming import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
 
@@ -17,7 +17,7 @@ from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_
 def getBubbleExclusions():
     exclusionsList = []
     #If all crops owned or Evolution GMO is level 10+, exclude the requirement for Cropius Mapper
-    if session_data.account.farming['CropsUnlocked'] >= max_farming_crops or session_data.account.farming['MarketUpgrades']['Evolution Gmo']['Level'] > 20:
+    if session_data.account.farming.crops.unlocked >= max_farming_crops or session_data.account.farming.market['Evolution Gmo'].level > 20:
         exclusionsList.append('Cropius Mapper')
 
     #If cooking is nearly finished, exclude Diamond Chef

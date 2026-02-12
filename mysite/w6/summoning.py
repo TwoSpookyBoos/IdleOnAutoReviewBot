@@ -147,12 +147,9 @@ def getBonusesMultiAdviceGroup() -> AdviceGroup:
     }
 
     # Multi Group A: Pristine Charm - Crystal Comb
-    multi_advices[mga].append(Advice(
-        label=f"{{{{ Pristine Charm|#sneaking }}}}: Crystal Comb: 1.3x",
-        picture_class=account.sneaking['PristineCharms']['Crystal Comb']['Image'],
-        progression=int(account.sneaking['PristineCharms']['Crystal Comb']['Obtained']),
-        goal=1
-    ))
+    multi_advices[mga].append(
+        account.sneaking.pristine_charms['Crystal Comb'].get_obtained_advice()
+    )
 
     # Multi Group B: Gem Shop - King of all Winners
     multi_advices[mgb].append(get_gem_shop_purchase_advice(
@@ -222,22 +219,25 @@ def getBonusesMultiAdviceGroup() -> AdviceGroup:
     return bonuses_ag
 
 def getUpgradesAdviceGroup() -> AdviceGroup:
+    summoning = session_data.account.summoning
+    doublers_spent = summoning['Doubled Upgrades']
+    doublers_owned = summoning['Total Doublers Owned']
+    doublers_spendable = min(doublers_owned, summoning['Doublers Spendable'])
+
     sources = 'Available Doublers and their Sources'
     doublers = 'Recommended Upgrades to Double for Matches'
+    total = f"Total Doublers: {doublers_owned}"
     upgrades_advice = {
+        total: [],
         sources: [],
         doublers: []
     }
     upgrades_advice.update({f"{k} Upgrades":[] for k in summoning_regular_match_colors})
 
-    summoning = session_data.account.summoning
-    doublers_spent = summoning['Doubled Upgrades']
-    doublers_owned = summoning['Total Doublers Owned']
-
     #Generate Alert
-    if doublers_spent < doublers_owned:
+    if doublers_spent < doublers_spendable:
         session_data.account.alerts_Advices['World 6'].append(Advice(
-            label=f"{doublers_owned - doublers_spent} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
+            label=f"{doublers_spendable - doublers_spent} available {{{{ Summoning|#summoning }}}} Upgrade doublers",
             picture_class='summoning'
         ))
 
@@ -260,10 +260,10 @@ def getUpgradesAdviceGroup() -> AdviceGroup:
         goal=10
     ))
     upgrades_advice[sources].append(Advice(
-        label=f"{doublers_spent}/{doublers_owned} total doublers spent",
+        label=f"{doublers_spent}/{doublers_spendable} total doublers spent",
         picture_class='summoning',
         progression=doublers_spent,
-        goal=doublers_owned
+        goal=doublers_spendable,
     ))
 
     #Doubler Recommendations

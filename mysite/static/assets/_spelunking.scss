@@ -71,6 +71,12 @@ $spelunking-tools: (
     spelunking-tool-4: img('data/CaveTool4.png'),
 );
 
+$spelunking-shop-upgrade: (
+    spelunking-shop-upgrade-4: img('data/CaveShopUpg4.png'),
+    spelunking-shop-upgrade-5: img('data/CaveShopUpg5.png'),
+    spelunking-shop-upgrade-6: img('data/CaveShopUpg6.png'),
+);
+
 $spelunking-resources: (
     rockenstone: img('data/W7item0_x1.png'),  //TODO: Probably a sprite sheet to cut
     cave-gold-piece: img('data/CaveGoldPiece.png'),
@@ -81,4 +87,5 @@ $all-spelunking: map-merge($all-spelunking, $spelunking-cavern-bosses);
 $all-spelunking: map-merge($all-spelunking, $spelunking-ambers);
 $all-spelunking: map-merge($all-spelunking, $spelunking-elixirs);
 $all-spelunking: map-merge($all-spelunking, $spelunking-tools);
+$all-spelunking: map-merge($all-spelunking, $spelunking-shop-upgrade);
 $all-spelunking: map-merge($all-spelunking, $spelunking-resources);

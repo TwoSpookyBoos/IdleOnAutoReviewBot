@@ -9,6 +9,7 @@ from consts.idleon.w6.emperor import (
 from consts.w6.emperor import emperor_bonus_info
 
 from models.advice.advice import Advice
+from models.w6.sneaking import Emporium
 
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safer_convert, safer_index, safer_math_pow
@@ -89,11 +90,11 @@ class Emperor(dict[str, EmperorBonus]):
             bonus = EmperorBonus(bonus_index, wins[bonus_index])
             self[bonus.name] = bonus
 
-    def calculate_max_attempt(self, gemshop, emporium):
+    def calculate_max_attempt(self, gemshop, emporium: Emporium):
         # "MaxEmperorAttemptStack" in source. Last updated in v2.48
         self.max_attempts = (
             5  # Base
-            + (5 * emporium["Emperor Season Pass"]["Obtained"])
+            + emporium["Emperor Season Pass"].value
             + (6 * gemshop["Purchases"]["Lifetime Tickets"]["Owned"])
         )
 
@@ -151,4 +152,13 @@ class Emperor(dict[str, EmperorBonus]):
             f"<br>Current Attempts: {self.attempts}/{self.max_attempts}",
             picture_class="lifetime-tickets",
             completed=True,
+        )
+
+    def get_ticket_alert(self) -> Advice | None:
+        if self.max_attempts > self.daily_attempts + self.attempts:
+            return None
+        return Advice(
+            label="{{Emperor Showdown|#emperor}} - next daily tickets will be lost",
+            picture_class="emperor",
+            resource="lifetime-tickets",
         )

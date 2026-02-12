@@ -6,8 +6,13 @@ from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
+from models.w6.sneaking import Sneaking
+from models.w7.spelunk import Spelunk
+from models.w7.advice_fish import AdviceFish
+from models.w7.clam_work import ClamWork
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
@@ -73,12 +78,12 @@ class Account:
             'Upgrades': {}
         }
         # W6
+        self.farming: Farming = Farming(self.raw_data)
+        self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
-        #W7
-        self.spelunk = {
-            'Cave Bonuses': {},
-        }
+        # W7
+        self.spelunk = Spelunk(self.raw_data)
         self.coral_reef = {
             'Town Corals': 0,
             'Reef Corals': copy.deepcopy(coral_reef_bonuses)
@@ -86,12 +91,35 @@ class Account:
         self.legend_talents = {
             'Talents': copy.deepcopy(legend_talents_bonuses)
         }
-        self.advice_for_money = {
-            'Upgrades': {},
-        }
+        self.advice_fish = AdviceFish(self.raw_data)
+        self.clam_work = ClamWork(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]
     ):
         advice_list = [item for item in advice_list if item is not None]
         self.alerts_Advices[group_name].extend(advice_list)
+
+    def get_current_max_talent(self, name: str) -> int:
+        """
+        Get the max level of characters talents from their current preset set.
+
+        :param name: talent name.
+        :returns: Max talent level or 0.
+        """
+        char_list = []
+        talent_num = "-1"
+        if name == "Generational Gemstones":
+            char_list = self.wws
+            talent_num = "432"
+        elif name == "Dank Rank":
+            char_list = self.dbs
+            talent_num = "207"
+        return max(
+            [
+                talent_level + char.total_bonus_talent_levels
+                for char in char_list
+                if (talent_level := char.current_preset_talents.get(talent_num, 0)) > 0
+            ],
+            default=0,
+        )

@@ -41,7 +41,7 @@ class BeanstalkDeposit(GoldenFood):
             progress = notateNumber("Basic", next_tier_require, 0)
             goal = "Deposit"
         else:
-            goal = notateNumber("Basic", next_tier_require, 0)
+            goal = notateNumber("Match", next_tier_require, 0, "K")
             progress = notateNumber("Match", amount, matchString=goal)
         golden_food_info = golden_food_data.get(self.name, {})
         resource = golden_food_info.get("Resource Image", "placeholder")
@@ -93,9 +93,9 @@ class Beanstalk(dict[str, BeanstalkDeposit]):
         self.golden_food_multi = 1
 
     def calculate_unlocked_tier(self, emporium):
-        tier_1 = emporium["Gold Food Beanstalk"]
-        tier_2 = emporium["Supersized Gold Beanstacking"]
-        self.unlocked_tier += int(tier_1["Obtained"]) + int(tier_2["Obtained"])
+        tier_1 = emporium["Gold Food Beanstalk"].obtained
+        tier_2 = emporium["Supersized Gold Beanstacking"].obtained
+        self.unlocked_tier += int(tier_1) + int(tier_2)
 
     def calculate_golden_food_multi(self):
         # TODO: add calculate Golden Food Bonus Multi

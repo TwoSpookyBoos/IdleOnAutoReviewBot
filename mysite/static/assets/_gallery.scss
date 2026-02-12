@@ -1,0 +1,8 @@
+$gallery-slot: (
+    gallery-slot-1: img('data/GalleryPod1.png'),
+);
+
+$gallery-podium: (
+);
+
+$all-gallery: map-merge($gallery-slot, $gallery-podium);

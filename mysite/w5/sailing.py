@@ -113,7 +113,7 @@ def get_sailing_progression_tier_advicegroups():
                             goal=1
                         ))
             if 'Sovereign' in requirements:
-                if not session_data.account.sneaking['JadeEmporium']["Sovereign Artifacts"]['Obtained']:
+                if not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
@@ -123,7 +123,7 @@ def get_sailing_progression_tier_advicegroups():
                             goal=1
                         ))
             if 'ExtraLanterns' in requirements:
-                if not session_data.account.sneaking['JadeEmporium']['Brighter Lighthouse Bulb']['Obtained']:
+                if not session_data.account.sneaking.emporium['Brighter Lighthouse Bulb'].obtained:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(

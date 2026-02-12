@@ -36,12 +36,11 @@ def getProgressionTiersAdviceSections():
         if requirements.get('Tier Unlocked', 0) == 2 and beanstalk.unlocked_tier < 2:
             add_subgroup_if_available_slot(deposit_tier_advice, subgroup_label)
             if subgroup_label in deposit_tier_advice:
-                deposit_tier_advice[subgroup_label].append(Advice(
-                    label="Purchase \"Supersized Gold Beanstacking\" from the Jade Emporium",
-                    picture_class=session_data.account.sneaking['JadeEmporium']['Supersized Gold Beanstacking']['Image'],
-                    progression=0,
-                    goal=1
-                ))
+                deposit_tier_advice[subgroup_label].append(
+                    session_data.account.sneaking.emporium[
+                        "Supersized Gold Beanstacking"
+                    ].get_obtained_advice()
+                )
 
         # 100k
         process_progression_deposit_tier(
