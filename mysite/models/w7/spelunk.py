@@ -88,8 +88,10 @@ class LoreBonus:
                 for percent in percent_break_point:
                     if current_percent < percent:
                         next_level, next_bonus = self._get_percent_info(percent)
-                        label += f"<br>Level {next_level} ({percent:.0%}): "
-                        label += next_bonus
+                        label += (
+                            "<br>Next Breakpoint:"
+                            f"<br>Level {next_level} ({percent:.0%}): {next_bonus}"
+                        )
                         break
             else:
                 progress = "Linear"
