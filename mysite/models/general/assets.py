@@ -30,6 +30,15 @@ class Asset:
         # Name used in picture_class processed by "kebab" that clash with each other.
         if codename == 'WorshipSkull12':
             return 'prehistoric-skull'
+        # Simple image name for spelunking page
+        if codename == "Spelunking0":
+            return 'spelunking-chapter-1'
+        if codename == "Spelunking1":
+            return 'spelunking-chapter-2'
+        if codename == "Spelunking2":
+            return 'spelunking-chapter-3'
+        if codename == "Spelunking3":
+            return 'spelunking-chapter-4'
         return name
 
     def set_stats(self, stats: dict):
