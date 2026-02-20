@@ -9,6 +9,7 @@ logger = get_consts_logger(__name__)
 greenstack_item_difficulty_groups = {
     0: {  # The timegated tier
         "Vendor Shops": [
+            "FoodHealth1",
             "CraftMat3",  # W1 Cue Tape
             "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
             "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
@@ -108,7 +109,8 @@ greenstack_item_difficulty_groups = {
             "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"
         ],
         "Crystal Enemy Drops": [
-            "FoodPotMana1", "FoodPotMana2", "FoodPotGr1", "FoodPotOr2", "FoodHealth1", "FoodHealth3", "FoodHealth2", "Leaf1"
+            # FoodPotMana2 removed from all drop table
+            "FoodPotMana1", "FoodPotGr1", "FoodPotOr2", "Leaf1"
         ],
         "Other Skilling Resources": [
             "CraftMat11",
@@ -176,12 +178,12 @@ greenstack_item_difficulty_groups = {
             "Critter10", "Critter11"
         ],
         "Rare Drops": [
-            'Quest78'
+            'Quest78', "FoodHealth2", "FoodHealth3"
         ]
     },
     12: {
         "Missable Quest Items": [
-            "GoldricP1", "GoldricP2", "GoldricP3", "Quest21"
+            "GoldricP1", "GoldricP2", "GoldricP3", "Quest18", "Quest21",
         ],
         "Base Monster Materials": [
             "Sewers3"
@@ -190,7 +192,8 @@ greenstack_item_difficulty_groups = {
             "EquipmentStatues7", "EquipmentStatues3", "EquipmentStatues2", "EquipmentStatues4", "EquipmentStatues14",
         ],
         "Other Skilling Resources": [
-            "Peanut", "Quest68", "Bullet3", "FoodChoppin1"  #I really hate that the Slush Bucket is listed as Quest68
+            "Peanut", "Quest68", "Bullet3", "FoodChoppin1",  #I really hate that the Slush Bucket is listed as Quest68
+            "Quest13", "Spelunking0", "Spelunking1",
         ],
         "Rare Drops": [
             "FoodPotRe1"
@@ -214,7 +217,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "EquipmentSmithingTabs2",
             'EquipmentSmithingTabs3',
-            "PeanutG"
+            "PeanutG",
+            "Spelunking2",
         ],
         "Rare Drops": [
             "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
@@ -244,7 +248,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "Critter1A", "Critter2A", "Critter3A", "Critter4A", "Critter5A",
             "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A",
-            "Critter11A"
+            "Critter11A",
+            "Spelunking3",
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
@@ -261,6 +266,7 @@ missable_gstacks_dict = {
     "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
     "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
     "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy.", 'stiltzcho'],
+    "Loomi's Room Key":      ["Quest18",   "Loominadi",           "Loominadi: Rhyming is Key!",                       "https://idleon.wiki/wiki/Loomi's_Room_Key",      "Active ES or time candy.", 'loominadi'],
     "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy.", 'funguy'],
     "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy.", 'tp-pete'],
     "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy.", 'mutton'],
@@ -273,8 +279,9 @@ missable_gstacks_dict = {
 }
 expected_stackables = {
     'Missable Quest Items': [
-        'Quest3', 'Quest4', 'Quest7', 'Quest12', 'Quest21', 'Quest14', 'Quest22', 'Quest23', 'Quest24', 'GoldricP1', 'GoldricP2', 'GoldricP3',
-        'Quest32'
+        'Quest3', 'Quest4', 'Quest7', 'Quest12', 'Quest18', 'Quest21', 'Quest14',
+        'Quest22', 'Quest23', 'Quest24', 'GoldricP1', 'GoldricP2', 'GoldricP3',
+        'Quest32',
     ],
     'Base Monster Materials': [
         'Grasslands1', 'Grasslands2', 'Grasslands4', 'Grasslands3', 'Jungle1', 'Jungle2', 'Jungle3', 'Forest1', 'Forest2', 'Forest3', 'Sewers1',
@@ -290,7 +297,7 @@ expected_stackables = {
     ],
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
-        'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'FoodHealth1', 'FoodHealth3', 'FoodHealth2', 'Leaf1',  # W1
+        'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'Leaf1',  # W1
         'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2', 'StoneA2b',  # W2
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
@@ -334,12 +341,15 @@ expected_stackables = {
         'StarfireBar', 'DreadloBar', 'MarbleBar', 'GodshardBar', 'PrehistriumBar',  #SmeltedBars2
         'Bullet', 'BulletB', 'FoodMining1', 'FoodFish1', 'FoodCatch1', 'Peanut',  #Crafted1
         'Quest68', 'Bullet3', 'FoodChoppin1', 'EquipmentSmithingTabs2', 'EquipmentSmithingTabs3',  #Crafted2
+        'Quest13',
         'PeanutG',  #Gold Peanut Crafted
         'FoodTrapping1', 'FoodWorship1',  # Critter Numnums and Soulble Gum Crafted
         'Refinery1', 'Refinery2', 'Refinery3', 'Refinery4', 'Refinery5', 'Refinery6',
         'Ladle',
+        'Spelunking0', 'Spelunking1', 'Spelunking2', 'Spelunking3',
     ],
     'Vendor Shops': [
+        'FoodHealth1',
         'FoodHealth18', 'FoodHealth19', 'FoodHealth14', 'FoodHealth15', 'FoodHealth16', 'FoodHealth17',
         'FoodHealth12', 'FoodHealth13', 'FoodPotOr4', 'FoodPotGr4', 'FoodPotRe4',
         'FoodPotYe4', 'OilBarrel6', 'OilBarrel7', 'FoodHealth4', 'FoodHealth9', 'FoodHealth11', 'Quest19', 'CraftMat3',  # Sorted by daily quantity
@@ -347,6 +357,7 @@ expected_stackables = {
         'FoodPotRe2',  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     'Rare Drops': [
+        'FoodHealth2', 'FoodHealth3',
         # TODO: Move Statues to their corresponding Crystals
         'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
         'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues29', 'EquipmentStatues30',
@@ -368,7 +379,7 @@ expected_stackables = {
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
-        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest13', 'Quest16', 'Quest17', 'Quest18', 'Quest20', 'Quest25',
+        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest17', 'Quest20', 'Quest25',
         'Quest26', 'Quest27', 'Quest28', 'Quest29', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
         'Quest41', 'Quest42', 'Quest43', 'Quest44', 'Quest45', 'Quest46', 'Quest47', 'Quest48', 'Quest49', 'Quest50', 'Quest9',
         'Mayo', 'Trash', 'Trash2', 'Trash3',  # Treasure Hunt rewards
