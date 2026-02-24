@@ -277,7 +277,11 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         ))
     # Alchemy - Sigils - Trove
     trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
-    trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level] * chilled_yarn_multi
+    try:
+        trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level] * chilled_yarn_multi
+    except:
+        logger.error(f"Trove Sigil Level of {trove_sigil_level} not present in 'sigils_dict'. Defaulting to max_sigil_level of {max_sigil_level}")
+        trove_sigil_value = sigils_dict['Trove']['Values'][max_sigil_level] * chilled_yarn_max
     trove_sigil_value_max = sigils_dict['Trove']['Values'][max_sigil_level] * chilled_yarn_max
     drop_rate_aw_advice[w2].append(Advice(
         label=f"{{{{ Sigils|#sigils }}}}- Trove Sigil:"
