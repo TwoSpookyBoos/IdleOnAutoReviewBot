@@ -136,6 +136,8 @@ Spelunking0: Chapter One 'The Fear Within'
 Spelunking1: Chapter Two 'Decay Surrounds'
 Spelunking2: Chapter Three 'This is Gospel'
 Spelunking3: Chapter Four 'No Escape'
+Spelunking4: Chapter Five 'Sunken Plunder'
+Spelunking5: Chapter Six 'Kelp Primeval'
 EquipmentHats1: Farmer Brim
 EquipmentHats2: Royal Turban
 EquipmentHats3: Thief Hood
@@ -557,6 +559,7 @@ EquipmentGown2: Abyssal Robe
 EquipmentGown3: Evergreen Robe
 EquipmentGown4: Silkshard Robe
 EquipmentGown5: Corsair Uniform
+EquipmentGown6: Bulwark Armor
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1267,16 +1270,29 @@ w7A9: Demonflesh
 w7A10: Fishfork
 w7A11: Crabclaw
 w7A12: Guardian Mace
+w7B1: Eye of Koi
+w7B1b: Immaculate Eye
+w7B2: Bubble N Chains
+w7B3: Pirate Emblem I
+w7B4: Caviar
+w7B5: Jelly Cube
+w7B6: Tuft of Kelp
+w7B7: Mantacakes
+w7B8: Glowfish Tail
+w7B9: Ancient Scales
+w7B10: Magmaspike
+w7B11: Pirate Mark II
+w7B12: Pirate Mark III
 ClamPearl0: Clam Pearl
 ClamPearl1: Pure Pearl
 Coral1: Vibrant Coral
 Coral2: Glowing Coral
-Coral3: Neon Coral
-Coral4: Coral4
-Coral5: Coral5
-Coral6: Coral6
-Coral7: Coral7
-Coral8: Coral8
+Coral3: Char Coral,
+Coral4: Neon Coral
+Coral5: Aegean Coral
+Coral6: Gilded Coral
+Coral7: Twisted Coral
+Coral8: Eternal Coral
 GemP35: Hyper Obol Stack Square Edition
 ObolHyper0: Hyper Six Obol
 ObolHyper1: Hyper Pyre Obol
@@ -1998,6 +2014,7 @@ Quest111: Green Candle
 Quest112: Funny 2hr Slice
 Quest113: Giftmas Gift
 Quest114: Glimmerwick Candle
+Quest115: Half Finished Research Papers
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
