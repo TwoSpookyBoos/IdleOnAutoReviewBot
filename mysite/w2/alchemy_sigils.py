@@ -40,10 +40,18 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # "SigilBonusSpeed" in source. Last updated in v2.49 Dec 24 2025
     # Multi Group A = several
     peapod_values = sigils_dict['Pea Pod']['Values']
-    player_peapod_value = (
-            peapod_values[session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']]
-            * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
-    )
+    peapod_level = session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']
+    try:
+        player_peapod_value = (
+                peapod_values[peapod_level]
+                * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
+        )
+    except:
+        logger.error(f"Peapod Sigil Level of {peapod_level} not present in 'sigils_dict'. Defaulting to max_sigil_level of {max_sigil_level}")
+        player_peapod_value = (
+                peapod_values[max_sigil_level]
+                * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
+        )
     willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
 
     player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
