@@ -186,7 +186,7 @@ def getGStackAdviceSections():
                 Advice(
                     label=f"{item.name}"
                           f"{f' ({get_vendor_name(item.codename)})' if category == 'Vendor Shops' else ''}",
-                    picture_class=item.name,
+                    picture_class=item.image,
                     progression=item.progression,
                     goal=100,
                     unit="%"
