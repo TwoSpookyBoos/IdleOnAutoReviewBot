@@ -201,7 +201,7 @@ def _calculate_w6_summoning_winner_bonuses(account):
         + account.merits[5][4]['MaxLevel']  #World 6 Merit Shop
         + 1  #int(account.achievements['Spectre Stars'])
         + 1  #int(account.achievements['Regalis My Beloved'])
-        + MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value'])
+        + 15  # max value of account.armor_sets['Sets']['GODSHARD SET']
     )
 
     player_mgc_rest = ValueToMulti(
@@ -245,8 +245,9 @@ def _calculate_w6_summoning_regular_bonuses(account):
         bonus = bonus_list[bonus_name]
         if bonus_name == '+{ Library Max':
             libary_multi = account.summoning['WinnerBonusesMultiLibrary']
+            max_libary_multi = account.summoning['WinnerBonusesMultiMaxLibrary']
             bonus['Value'] = round(libary_multi * bonus['Value'])
-            bonus['Max'] = round(libary_multi * bonus['Max'])
+            bonus['Max'] = round(max_libary_multi * bonus['Max'])
         else:
             if bonus_name.startswith('<x'):
                 bonus['Value'] = ValueToMulti(bonus_list[bonus_name]['Value'] * win_multi)
