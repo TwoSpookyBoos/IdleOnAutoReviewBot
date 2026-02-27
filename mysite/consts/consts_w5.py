@@ -71,15 +71,15 @@ for artifact in sailing_artifacts_dict:
         if first_artifact_index <= artifact <= final_artifact_index:
             sailing_artifacts_dict[artifact]['Island'] = island_name
             break
-sailing_dict = {
-    index: {
+sailing_list = [
+    {
         'Name': entry[0],
         'NormalTreasure': f'sailing-treasure-{(index*2)-1}',
         'RareTreasure': f'sailing-treasure-{(index*2)}',
         'Distance': IslandInfo[index-1][1]
     }
     for index, entry in enumerate(sailing_islands_list, start=1)
-}
+]
 captain_buffs = ['Boat Speed', 'Loot Value', 'Cloud Discover Rate', 'Artifact Find Chance', 'Rare Chest Chance', 'None']
 goldrelic_multis_dict = {
     key: (value + 2 if key != 0 else value) for key, value in sailing_artifacts_dict[4]['Values'].items()
