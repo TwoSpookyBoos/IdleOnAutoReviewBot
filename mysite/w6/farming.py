@@ -146,7 +146,7 @@ def get_market_bonuses_tabbed() -> TabbedAdviceGroup:
             ),
         )
     mb_tabbed["Cost Discount"] = (
-        TabbedAdviceGroupTab("merit-14", "Cost Discount"),
+        TabbedAdviceGroupTab("meritocracy-14", "Cost Discount"),
         getCostDiscountAdviceGroup(farming),
     )
     for (_, advice_group) in mb_tabbed.values():
