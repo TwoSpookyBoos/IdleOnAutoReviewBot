@@ -166,18 +166,22 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         bestBMPresetLevel = 0
         # 59: {"Name": "Blood Marrow", "Tab": "Voidwalker"},
         # If Blood Marrow is not max booked, recommend booking it
+        # _customBlock_TalentCalc and if (59 == d) in source. Last update v2.492
+        # Math.min(1.012, 1 + k._customBlock_GetTalentNumber(1, 59) / 100)
+        # 1 + ((2.1 * level) / (level + 220) / 100) = 1.012 => level = 293.33
+        max_efficiency_level = 294
         # If Blood Marrow is not leveled on either preset, recommend leveling it
         for vman in vmans:
             # Book level
-            if vman.max_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']:
+            if vman.max_talents.get("59", 0) >= max_efficiency_level:
                 anyVWMaxBooked = True
             if vman.max_talents.get("59", 0) > bestBMBook:
                 bestBMBook = vman.max_talents.get("59", 0)
 
             # Preset level
             if (
-                vman.current_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
-                or vman.secondary_preset_talents.get("59", 0) >= session_data.account.library['MaxBookLevel']
+                vman.current_preset_talents.get("59", 0) >= max_efficiency_level
+                or vman.secondary_preset_talents.get("59", 0) >= max_efficiency_level
             ):
                 anyVWMaxLeveled = True
             if vman.current_preset_talents.get("59", 0) >= bestBMPresetLevel:
@@ -191,14 +195,14 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                     label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent max booked!",
                     picture_class="beginner-talent-book",
                     progression=bestBMBook,
-                    goal=session_data.account.library['MaxBookLevel']
+                    goal=max_efficiency_level
                 ))
             if not anyVWMaxLeveled:
                 session_data.account.alerts_Advices['World 4'].append(Advice(
                     label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent maxed in any presets!",
                     picture_class="talent-preset-1",
                     progression=bestBMPresetLevel,
-                    goal=session_data.account.library['MaxBookLevel']
+                    goal=max_efficiency_level
                 ))
 
     # If not all meals are maxed
