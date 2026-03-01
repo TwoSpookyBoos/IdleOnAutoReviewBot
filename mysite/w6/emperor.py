@@ -69,9 +69,20 @@ def getProgressionTiersAdviceGroup(player_emperor: Emperor) -> tuple[AdviceGroup
     overall_SectionTier = min(true_max, tier_Emperor)
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
+
 def getEmperorAdviceSection() -> AdviceSection:
-    #Check if player has reached this section
-    if session_data.account.highest_world_reached < 6:
+    # Check if player has reached this section
+    # If reach World 7+ => killed Emperor at least once
+    # If kill at least one Samurai => has access to boss
+    # If kill enough Minichief on 3+ character => portal to Samurai opened
+    if not (
+        session_data.account.highest_world_reached > 6 or
+        session_data.account.enemy_worlds[6].maps_dict[264].kill_count > 0 or
+        sum([
+            int(float(char.kill_dict.get(263, [1])[0])) <= 0
+            for char in session_data.account.all_characters
+        ]) > 2
+    ):
         emperor_AdviceSection = AdviceSection(
             name='Emperor',
             tier='Not Yet Evaluated',
