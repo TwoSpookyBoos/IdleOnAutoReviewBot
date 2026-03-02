@@ -1,5 +1,12 @@
 # Part of spelunk page item name
-chapter_name = ["The Fear Within", "Decay Surrounds", "This is Gospel", "No Escape"]
+chapter_name = [
+    "The Fear Within",
+    "Decay Surrounds",
+    "This is Gospel",
+    "No Escape",
+    "Sunken Plunder",
+    "Kelp Primeval",
+]
 chapter_bonus_img = [
     "spelunking",
     "spelunking",
@@ -17,4 +24,12 @@ chapter_bonus_img = [
     "spelunking",
     "spelunking-elixir-0",
     "spelunking-chapter-1",
+    "spelunking-shop-upgrade-43",
+    "spelunking-amber-0",
+    "spelunking-tool-0",
+    "placeholder",
+    "spelunking-tool-0",
+    "spelunking-amber-0",
+    "spelunking-shop-upgrade-5",
+    "placeholder",
 ]

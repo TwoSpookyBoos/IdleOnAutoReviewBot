@@ -266,7 +266,7 @@ missable_gstacks_dict = {
     "Ketchup Bottle":        ["Quest3",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Ketchup_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
     "Mustard Bottle":        ["Quest4",    "Picnic_Stowaway2",    "Picnic Stowaway: Beating Up Frogs for some Sauce", "https://idleon.wiki/wiki/Mustard_Bottle",        "Active ES or time candy.", 'picnic-stowaway'],
     "Strange Rock":          ["Quest7",    "Stiltzcho2",          "Stiltzcho: No Stone Unturned",                     "https://idleon.wiki/wiki/Strange_Rock",          "Active ES or time candy.", 'stiltzcho'],
-    "Loomi's Room Key":      ["Quest18",   "Loominadi",           "Loominadi: Rhyming is Key!",                       "https://idleon.wiki/wiki/Loomi's_Room_Key",      "Active ES or time candy.", 'loominadi'],
+    "Loomi's Room Key":      ["Quest18",   "Loominadi1",          "Loominadi: Rhyming is Key!",                       "https://idleon.wiki/wiki/Loomi's_Room_Key",      "Active ES or time candy.", 'loominadi'],
     "Time Thingy":           ["Quest21",   "Funguy3",             "Funguy: Partycrastination",                        "https://idleon.wiki/wiki/Time_Thingy",           "Active ES or time candy.", 'funguy'],
     "Employment Statistics": ["Quest14",   "TP_Pete2",            "TP Pete: The Rats are to Blame!",                  "https://idleon.wiki/wiki/Employment_Statistics", "Active ES or time candy.", 'tp-pete'],
     "Corporatube Sub":       ["Quest22",   "Mutton4",             "Mutton: 7 Figure Followers",                       "https://idleon.wiki/wiki/Corporatube_Sub",       "Active ES or time candy.", 'mutton'],

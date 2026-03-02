@@ -41,7 +41,7 @@ from consts.consts_w4 import (
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailing_dict, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
+    sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from consts.consts_caverns import (
@@ -2604,7 +2604,7 @@ def _parse_w5_sailing(account):
     except:
         account.sum_artifact_tiers = 0
     #Islands
-    for island_index, island_values_dict in sailing_dict.items():
+    for island_index, island_values_dict in enumerate(sailing_list):
         try:
             account.sailing['Islands'][island_values_dict['Name']] = {
                 'Unlocked': raw_sailing_list[0][island_index] == -1,
