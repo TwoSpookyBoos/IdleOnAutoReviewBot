@@ -1116,7 +1116,7 @@ raw_item_data = {
         "Code (Name)": "Critter6"
     },
     "Critter6A": {
-        "Name": "Eternal Lord of  The Undying Ember",
+        "Name": "Eternal Lord of The Undying Ember",
         "Sell Price": 3,
         "Code (Type)": "dCritters",
         "Type": "CRITTER",
@@ -34560,6 +34560,29 @@ raw_item_data = {
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentNametag31"
     },
+    "EquipmentNametag32": {
+        "Name": "Sweet Chocolate Nametag",
+        "Sell Price": 1,
+        "Code (Type)": "aNametag",
+        "Type": "NAMETAG",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 0,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_XP_FROM_MONSTERS",
+        "Misc 1 (Value)": 25,
+        "Misc 2 (Text)": "%_DROP_CHANCE",
+        "Misc 2 (Value)": 10,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentNametag32"
+    },
     "EquipmentNametagReplica0": {
         "Name": "Replica Nametag",
         "Sell Price": 500000000000,
@@ -35295,6 +35318,29 @@ raw_item_data = {
         "Misc 2 (Value)": 50,
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentNametagReplica31"
+    },
+    "EquipmentNametagReplica32": {
+        "Name": "Sweet Chocolate Nametag",
+        "Sell Price": 1,
+        "Code (Type)": "aNametag",
+        "Type": "REPLICA_NAMETAG",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 0,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_XP_FROM_MONSTERS",
+        "Misc 1 (Value)": 25,
+        "Misc 2 (Text)": "%_DROP_CHANCE",
+        "Misc 2 (Value)": 10,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentNametagReplica32"
     },
     "EquipmentHats31": {
         "Name": "Smitty's Bubble Blowing Hat",
@@ -36652,6 +36698,52 @@ raw_item_data = {
         "Misc 2 (Value)": 0,
         "Upgrade Slots Left": 5,
         "Code (Name)": "EquipmentHats127"
+    },
+    "EquipmentHats128": {
+        "Name": "Lovely Top Hat",
+        "Sell Price": 1,
+        "Code (Type)": "aHelmetMTX",
+        "Type": "PREMIUM_HELMET",
+        "Level Required (Craft)": 5,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 1,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_DAMAGE_MULTI",
+        "Misc 1 (Value)": 1,
+        "Misc 2 (Text)": "0",
+        "Misc 2 (Value)": 0,
+        "Upgrade Slots Left": 5,
+        "Code (Name)": "EquipmentHats128"
+    },
+    "EquipmentHats129": {
+        "Name": "Polkadot Beanie",
+        "Sell Price": 1,
+        "Code (Type)": "aHelmetMTX",
+        "Type": "PREMIUM_HELMET",
+        "Level Required (Craft)": 5,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 1,
+        "WIS": 0,
+        "LUK": 0,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_DROP_CHANCE",
+        "Misc 1 (Value)": 1,
+        "Misc 2 (Text)": "0",
+        "Misc 2 (Value)": 0,
+        "Upgrade Slots Left": 5,
+        "Code (Name)": "EquipmentHats129"
     },
     "CardsA0": {
         "Name": "CardsA0",
@@ -39128,5 +39220,5 @@ raw_item_data = {
         "Description": "slimeB",
         "Code (Name)": "CardsZ26"
     },
-    "_hash": "bc7994f49a6799fd447c172cc88bb443ab57f8b30722fbf52cdbbd3dd7ef816e"
+    "_hash": "bfe26418a3d07cd70bb28f2c5d7d598c26ea87c8a3b3e7b1e1ab9c668089fe4e"
 }

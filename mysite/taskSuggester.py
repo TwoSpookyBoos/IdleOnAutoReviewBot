@@ -31,6 +31,7 @@ from w7 import (
     legend_talents,
     clam_work,
     meritocracy,
+    gallery,
 )
 
 logger = get_logger(__name__)
@@ -170,6 +171,7 @@ def main(inputData, source_string, runType="web"):
             advice_fish.get_section(),
             clam_work.get_section(),
             meritocracy.get_section(),
+            gallery.get_section(),
         ]
     ]
 
