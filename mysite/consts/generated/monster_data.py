@@ -488,6 +488,42 @@ monster_data = {
     "w7a12": {
         "Name": "Coralcave Guardian"
     },
+    "w7b1": {
+        "Name": "Trench Fish"
+    },
+    "w7b2": {
+        "Name": "Boomy Mine"
+    },
+    "w7b3": {
+        "Name": "Pirate Underling"
+    },
+    "w7b4": {
+        "Name": "Eggroll"
+    },
+    "w7b5": {
+        "Name": "Jellofish"
+    },
+    "w7b6": {
+        "Name": "Kelpfish"
+    },
+    "w7b7": {
+        "Name": "Mantaray"
+    },
+    "w7b8": {
+        "Name": "Glowfish"
+    },
+    "w7b9": {
+        "Name": "Ancientfish"
+    },
+    "w7b10": {
+        "Name": "Magni Pufferfin"
+    },
+    "w7b11": {
+        "Name": "Pirate Deckhand"
+    },
+    "w7b12": {
+        "Name": "Dreadnaught Captain"
+    },
     "w7e1": {
         "Name": "Whallamus"
     },
@@ -653,6 +689,24 @@ monster_data = {
     "snakeY": {
         "Name": "Shell Snake"
     },
+    "snakeR": {
+        "Name": "Santa Snake"
+    },
+    "w6c2b": {
+        "Name": "Santas Little Helper"
+    },
+    "w4b4b": {
+        "Name": "Vanillie"
+    },
+    "w7b1b": {
+        "Name": "Koi Fish"
+    },
+    "w7b6b": {
+        "Name": "Neonscale"
+    },
+    "w7b3b": {
+        "Name": "Glimbo"
+    },
     "crabcakeB": {
         "Name": "Mr Blueberry"
     },
@@ -703,6 +757,18 @@ monster_data = {
     },
     "bubba": {
         "Name": "Bubba the Seal"
+    },
+    "bubbab": {
+        "Name": "Bubba Supreme"
+    },
+    "T1a": {
+        "Name": "Bronze Champion Ram"
+    },
+    "T1b": {
+        "Name": "Silver Champion Ram"
+    },
+    "T1c": {
+        "Name": "Gold Champion Ram"
     },
     "Copper": {
         "Name": "Copper"
@@ -962,6 +1028,12 @@ monster_data = {
     "Spelunking3": {
         "Name": "One Way Opening"
     },
+    "Spelunking4": {
+        "Name": "Plunder Cranny"
+    },
+    "Spelunking5": {
+        "Name": "Kelp Forest"
+    },
     "SpelunkingCard0": {
         "Name": "Fearful Tunnel"
     },
@@ -973,6 +1045,12 @@ monster_data = {
     },
     "SpelunkingCard3": {
         "Name": "One Way Opening"
+    },
+    "SpelunkingCard4": {
+        "Name": "Plunder Cranny"
+    },
+    "SpelunkingCard5": {
+        "Name": "Kelp Forest"
     },
     "ChestA1": {
         "Name": "Bronze Chest(W1)"
@@ -1097,5 +1175,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "10077ec037b60caa54567c6a9c47e555e3bfbfafac570f5447a42cb977961a6e"
+    "_hash": "1e614e783e9ba0cd43251a6620522bd3e508f8e049918dae1cf044ab51b5b08f"
 }

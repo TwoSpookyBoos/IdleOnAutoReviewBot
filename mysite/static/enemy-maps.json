@@ -103,6 +103,13 @@
     ["Pinpoint Summit", 309, "Spearfish", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Spearfish"],
     ["Middle of Nowhere", 310, "Demonblub", 500000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Demonblub"],
     ["Coralcave Outskirts", 311, "Coralcave Crab", 1000000000, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Coralcave-Crab"],
-    ["Coralcave Perimeter", 312, "Coralcave Guardian", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Coralcave-Guardian"]
+    ["Coralcave Perimeter", 312, "Coralcave Guardian", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Coralcave-Guardian"],
+    ["Deep End of the Koipond", 315, "Trench Fish", 2e6, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "trench-fish"],
+    ["Minefield", 316, "Boomy Mine", 6e6, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "boomy-mine"],
+    ["Pirate Upper Deck", 317, "Pirate Underling", 1e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-underling"],
+    ["Sushi Perimeter", 318, "Eggroll", 6e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "eggroll"],
+    ["Jellofish Fields", 319, "Jellofish", 125e6, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "jellofish"],
+    ["Where the Kelp Meets Trench", 320, "Kelpfish", 25e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "kelpfish"],
+    ["Pirate Mess Hall", 325, "Pirate Deckhand", 2e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-deckhand"]
   ]
 }
