@@ -169,7 +169,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         # _customBlock_TalentCalc and if (59 == d) in source. Last update v2.492
         # Math.min(1.012, 1 + k._customBlock_GetTalentNumber(1, 59) / 100)
         # 1 + ((2.1 * level) / (level + 220) / 100) = 1.012 => level = 293.33
-        max_efficiency_level = 294
+        max_efficiency_level = min(294, session_data.account.library['MaxBookLevel'])
         # If Blood Marrow is not leveled on either preset, recommend leveling it
         for vman in vmans:
             # Book level
