@@ -124,7 +124,7 @@ def getEquinoxProgressionTiersAdviceGroup():
     )
     equinox_AdviceGroupDict["Complete Dreams"].remove_empty_subgroups()
 
-    bonus_max_levels = session_data.account.summoning['Endless Bonuses'].get('+ Equinox Max LV', 0)
+    bonus_max_levels = session_data.account.summoning.bonuses["Equinox Max LV"].value
     equinox_AdviceGroupDict["BonusUpgrades"] = AdviceGroup(
         tier="",
         pre_string="Upgrade more Equinox Bonuses",

@@ -6,6 +6,7 @@ from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
@@ -14,6 +15,7 @@ from models.w7.spelunk import Spelunk
 from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
+from models.w7.gallery import Gallery
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
@@ -79,6 +81,7 @@ class Account:
             'Upgrades': {}
         }
         # W6
+        self.summoning: Summoning = Summoning(self.raw_data)
         self.farming: Farming = Farming(self.raw_data)
         self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
@@ -95,6 +98,7 @@ class Account:
         self.advice_fish = AdviceFish(self.raw_data)
         self.clam_work = ClamWork(self.raw_data)
         self.meritocracy = Meritocracy(self.raw_data)
+        self.gallery = Gallery(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

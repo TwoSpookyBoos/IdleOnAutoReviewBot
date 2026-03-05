@@ -20,8 +20,8 @@ logger = get_logger(__name__)
 class BeanstalkDeposit(GoldenFood):
 
     def __init__(self, golden_food_name: str, tier: int):
-        self.tier = tier
-        amount = golden_food_tier_require[tier]
+        self.tier = min(tier, golden_food_max_tier)
+        amount = golden_food_tier_require[self.tier]
         super().__init__(golden_food_name, amount)
 
     def calculate_bonus(self, golden_food_multi):

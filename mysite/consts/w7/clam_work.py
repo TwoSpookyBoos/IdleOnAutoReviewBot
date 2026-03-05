@@ -6,6 +6,6 @@ clam_bonus_img = [
     "legend-talents",
     "coral",
     "coral-0",
-    "codfrey",
+    "gallery",
     "summoning-class-exp",
 ]

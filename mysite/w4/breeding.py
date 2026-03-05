@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.advice.generators.general import get_upgrade_vault_advice
 from models.advice.generators.w2 import get_arcade_advice
 
@@ -77,7 +76,9 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     }
 
 #Multi Group A
-    sps_adviceDict[mga].append(get_summoning_bonus_advice('<x Shiny EXP'))
+    sps_adviceDict[mga].append(
+        session_data.account.summoning.bonuses["Shiny EXP"].get_bonus_advice()
+    )
 
 #Multi Group B
     lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
