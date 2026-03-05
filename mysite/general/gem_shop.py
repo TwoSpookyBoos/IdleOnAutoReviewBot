@@ -127,7 +127,7 @@ def try_exclude_ParallelVillagers(exclusionLists):
 
 def try_exclude_ShroomFamiliar(exclusionLists):
     #if Red is at least half-way finished, exclude
-    if session_data.account.summoning['Battles']['Red'] >= 8:
+    if session_data.account.summoning.regular.win["Red"] >= 8:
         for sublist in exclusionLists:
             sublist.append('Shroom Familiar')
 

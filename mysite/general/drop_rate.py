@@ -15,7 +15,6 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
@@ -515,8 +514,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus += cake_beanstalk.bonus_value
 
     # Summoning - Bonuses
-    drop_rate_aw_advice[w6].append(get_summoning_bonus_advice('+{% Drop Rate'))
-    world_6_bonus += session_data.account.summoning['Bonuses']['+{% Drop Rate']['Value']
+    summoinig_bonus = session_data.account.summoning.bonuses["Drop Rate"]
+    drop_rate_aw_advice[w6].append(summoinig_bonus.get_bonus_advice())
+    world_6_bonus += summoinig_bonus.value
 
     emperor_bonus = session_data.account.emperor["Drop Rate"]
     drop_rate_aw_advice[w6].append(emperor_bonus.get_bonus_advice())

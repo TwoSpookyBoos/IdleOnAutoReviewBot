@@ -6,6 +6,7 @@ from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.w1.stamps import Stamps
+from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
@@ -80,6 +81,7 @@ class Account:
             'Upgrades': {}
         }
         # W6
+        self.summoning: Summoning = Summoning(self.raw_data)
         self.farming: Farming = Farming(self.raw_data)
         self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)

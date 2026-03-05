@@ -13,7 +13,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_group_tabbed import TabbedAdviceGroup, TabbedAdviceGroupTab
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.w6.farming import Farming
 
 from utils.logging import get_logger
@@ -306,7 +305,8 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     return value_ag
 
 def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGroup:
-    summoning_evo = session_data.account.summoning['Bonuses']['<x Crop EVO']['Value']
+    summoning_bonus = session_data.account.summoning.bonuses["Crop EVO"]
+    summoning_evo = summoning_bonus.as_multi
     evo_multi = farming.multi['Evo']
     #Create subgroup labels
     alch = f"Alchemy: {evo_multi['Alch Multi']:.3f}x"
@@ -424,7 +424,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     )
 
 #SUMMONING
-    evo_advices[summon].append(get_summoning_bonus_advice('<x Crop EVO'))
+    evo_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Star Sign
     evo_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
     evo_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
@@ -518,7 +518,8 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 
 
 def getSpeedAdviceGroup(farming) -> AdviceGroup:
-    summoning_speed = session_data.account.summoning['Bonuses']['<x Farming SPD']['Value']
+    summoning_bonus = session_data.account.summoning.bonuses["Farming SPD"]
+    summoning_speed = summoning_bonus.as_multi
     # Create subgroup labels
     total = f"Total: {farming.multi['Speed']['Total Multi']:,.3f}x"
     summon = f"Summoning: {round_and_trim(summoning_speed)}x"
@@ -537,7 +538,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
         picture_class='crop-scientist'
     ))
 #Summoning
-    speed_advices[summon].append(get_summoning_bonus_advice('<x Farming SPD'))
+    speed_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Vial and Market
     # Vial
     speed_advices[vm].append(Advice(

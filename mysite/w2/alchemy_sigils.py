@@ -11,7 +11,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w6 import get_summoning_bonus_advice
 from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
@@ -68,7 +67,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mga_label = f"Multi Group A: {mga:.3f}x"
 
     # Multi Group B = Summoning Winner Bonuses
-    mgb = session_data.account.summoning['Bonuses']['<x Sigil SPD']['Value']
+    summoning_bonus = session_data.account.summoning.bonuses["Sigil SPD"]
+    mgb = summoning_bonus.as_multi
     mgb_label = f"Summoning: {round_and_trim(mgb)}x"
 
     # Multi Group C = Tuttle Vial
@@ -152,7 +152,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
-    speed_Advice[mgb_label].append(get_summoning_bonus_advice('<x Sigil SPD'))
+    speed_Advice[mgb_label].append(summoning_bonus.get_bonus_advice())
 
     # Multi Group C
     speed_Advice[mgc_label].append(Advice(
