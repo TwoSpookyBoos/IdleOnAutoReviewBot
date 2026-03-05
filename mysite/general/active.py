@@ -216,6 +216,9 @@ def getCardsAdviceList() -> list[Advice]:
         "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
+    if session_data.account.highest_world_reached >= 7:
+        all_cards["Drop Multi"] = ["Coralcave Guardian"]
+        all_cards["Gallery Bonus"] = ["Coralcave Crab"]
     card_advice_limit = 10
 
     for reason, cardnameList in all_cards.items():

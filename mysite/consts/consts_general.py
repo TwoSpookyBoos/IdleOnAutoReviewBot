@@ -186,6 +186,10 @@ greenstack_item_difficulty_groups = {
             "GoldricP1", "GoldricP2", "GoldricP3", "Quest18", "Quest21",
         ],
         "Base Monster Materials": [
+            # World 7 part 1
+            'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
+            # World 7 part 2
+            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B11',
             "Sewers3"
         ],
         "Crystal Enemy Drops": [
@@ -196,6 +200,8 @@ greenstack_item_difficulty_groups = {
             "Quest13", "Spelunking0", "Spelunking1",
         ],
         "Rare Drops": [
+            # World 7 part 1
+            'w7A6',
             "FoodPotRe1"
         ]
     },
@@ -250,14 +256,24 @@ greenstack_item_difficulty_groups = {
             "Critter6A", "Critter7A", "Critter8A", "Critter9A", "Critter10A",
             "Critter11A",
             "Spelunking3",
+            # World 7 part 2
+            'Spelunking4', 'Spelunking5',
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
             'DesertA1b',  #W2 Glass Shard
             'SnowA2a',  #W3 Yellow Snowflake
             'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell + Lost Batteries
-            'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5'  # W5 Rare Drops
-        ]
+            'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
+            # World 7 part 1
+            'Coral1', 'Coral2', 'Coral3',
+            # World 7 part 2
+            'Coral4', 'w7B1b',
+        ],
+        'Boss Drop': [
+            # Every day boss gem farm
+            'KrukPart', 'StoneA6',
+        ],
     }
 }
 missable_gstacks_dict = {
@@ -292,7 +308,9 @@ expected_stackables = {
         'GalaxyC3', 'GalaxyC4',  # W4
         'LavaA1', 'LavaA2', 'LavaA3', 'LavaA4', 'LavaA5', 'LavaB1', 'LavaB2', 'LavaB3', 'LavaB4', 'LavaB5', 'LavaB6', 'LavaC1', 'LavaC2',  # W5
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
-        'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A6', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
+        'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
+        # World 7 part 2
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B11',
         'Sewers3', 'Quest15', 'Hgg'  # Specialty Monster Materials
     ],
     'Crystal Enemy Drops': [
@@ -347,6 +365,8 @@ expected_stackables = {
         'Refinery1', 'Refinery2', 'Refinery3', 'Refinery4', 'Refinery5', 'Refinery6',
         'Ladle',
         'Spelunking0', 'Spelunking1', 'Spelunking2', 'Spelunking3',
+        # World 7 part 2
+        'Spelunking4', 'Spelunking5',
     ],
     'Vendor Shops': [
         'FoodHealth1',
@@ -367,11 +387,18 @@ expected_stackables = {
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
         'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg', 'Weight3',  #W4 Rare Drops
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
-        'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart', 'KrukPart2',  # Basic Efaunt material
+        'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart2',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
-        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar'  # Gold Foods
+        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar',  # Gold Foods
+        # World 7 part 1
+        'Coral1', 'Coral2', 'Coral3', 'w7A6',
+        # World 7 part 2
+        'Coral4', 'w7B1b',
+    ],
+    'Boss Drop': [
+        'KrukPart', 'StoneA6',
     ],
     'Cheater': [
         'BabaYagaETC', 'JobApplication',  # W1 Rare Drops

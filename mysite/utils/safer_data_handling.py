@@ -65,11 +65,32 @@ def safer_math_log(input_value, base):
     """
     if base == 'Lava' or base == 'lava' or base == 10:
         # When you see _customBlock_getLOG called in source code, use base='Lava' here
-        return math.log(max(input_value, 1)) / 2.30259
+        if isinstance(input_value, str):
+            try:
+                return math.log(max(float(input_value), 1)) / 2.30259
+            except:
+                logger.exception(f"Unable to perform safer_math_log({input_value} of type {type(input_value)},{base}). Returning 0.")
+                return 0
+        else:
+            try:
+                return math.log(max(input_value, 1)) / 2.30259
+            except:
+                return 0
     elif input_value <= 0:
         return 0
     else:
-        return math.log(input_value, base)
+        if isinstance(input_value, str):
+            try:
+                return math.log(float(input_value), base)
+            except:
+                logger.exception(f"Unable to perform safer_math_log({input_value} of type {type(input_value)},{base}). Returning 0.")
+                return 0
+        else:
+            try:
+                return math.log(input_value, base)
+            except:
+                logger.exception(f"Unable to perform safer_math_log({input_value} of type {type(input_value)},{base}). Returning 0.")
+                return 0
 
 def safer_index(array: list, index: int, default: T) -> T:
     try:
