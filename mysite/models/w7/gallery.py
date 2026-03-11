@@ -164,13 +164,19 @@ class Gallery:
     def _parse_trophy(self, raw_trophy_index_list: list[int]):
         all_trophy = []
         for trophy_info in ITEM_DATA.get_items_by_type("TROPHY"):
-            if trophy_info.name == "I Made This Game":
-                # "I Made This Game" Lava personal trophy
+            trophy = GalleryTrophy(trophy_info)
+            # "I Made This Game" Lava personal trophy
+            if (
+                trophy.name == "I Made This Game"
+                and trophy.index not in raw_trophy_index_list
+            ):
+                # Account don't have it, skip
                 continue
             self._bonuses_total[trophy_info.bonus.misc1.effect] = 0
             self._bonuses_total[trophy_info.bonus.misc2.effect] = 0
-            all_trophy.append(GalleryTrophy(trophy_info))
+            all_trophy.append(trophy)
         _trophy_by_index = {trophy.index: trophy for trophy in all_trophy}
+
         for trophy in all_trophy:
             if trophy.index not in raw_trophy_index_list:
                 # Trophy not in gallery
@@ -191,12 +197,17 @@ class Gallery:
     def _parse_nametag(self, raw_nametag_level: list[int]):
         all_nametag = []
         for nametag_info in ITEM_DATA.get_items_by_type("NAMETAG"):
-            if nametag_info.name == "Lava's Awesome Nametag":
-                # "Lava's Awesome Nametag" Lava personal nametag
+            nametag = GalleryNametag(nametag_info)
+            # "Lava's Awesome Nametag" Lava personal nametag
+            if (
+                nametag.name == "Lava's Awesome Nametag"
+                and safer_index(raw_nametag_level, nametag.index, 0) == 0
+            ):
+                # Account don't have it, skip
                 continue
             self._bonuses_total[nametag_info.bonus.misc1.effect] = 0
             self._bonuses_total[nametag_info.bonus.misc2.effect] = 0
-            all_nametag.append(GalleryNametag(nametag_info))
+            all_nametag.append(nametag)
         for nametag in all_nametag:
             level = safer_index(raw_nametag_level, nametag.index, 0)
             nametag.set_level(level)
@@ -279,7 +290,7 @@ class Gallery:
             nametag.add_bonus_to(self._bonuses_total)
 
     def get_bonus_advice(self, name: str):
-        (effect, value) = self.bonuses[name]
+        effect, value = self.bonuses[name]
         image = bonus_image.get(name, "placeholder")
         return Advice(label=f"{round_and_trim(value)}{effect}", picture_class=image)
 
