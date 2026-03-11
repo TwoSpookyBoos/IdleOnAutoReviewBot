@@ -69,7 +69,7 @@ $resources: (
     jumbo-shrimp: img('data/Fish11.png'),
     caulifish: img('data/Fish12.png'),
     equinox-fish: img('data/Fish13.png'),
-    trench-fish: img('data/Fish14.png'),
+    trenchfish: img('data/Fish14.png'),
     // Bugs
     fly: img('wiki/Fly.png'),
     butterfly: img('wiki/Butterfly.png'),
@@ -118,12 +118,15 @@ $resources: (
     breezy-soul: img('data/Soul7.png'),
     deepsea-soul: img('data/Soul8.png'),
     // Salts
-    redox-salts: img('wiki/Redox_Salts.png'),
-    explosive-salts: img('wiki/Explosive_Salts.png'),
-    spontaneity-salts: img('wiki/Spontaneity_Salts.png'),
-    dioxide-synthesis: img('wiki/Dioxide_Synthesis.png'),
-    purple-salt: img('wiki/Purple_Salt.png'),
-    nullo-salt: img('wiki/Nullo_Salt.png'),
+    redox-salts: img('data/Refinery1.png'),
+    explosive-salts: img('data/Refinery2.png'),
+    spontaneity-salts: img('data/Refinery3.png'),
+    dioxide-synthesis: img('data/Refinery4.png'),
+    purple-salt: img('data/Refinery5.png'),
+    nullo-salt: img('data/Refinery6.png'),
+    crosslink-salt: img('data/Refinery7.png'),
+    propagated-salt: img('data/Refinery8.png'),
+    anionic-salt: img('data/Refinery9.png'),
     // Anvil Items
     crimson-string: img('wiki/Crimson_String.png'),
     cue-tape: img('wiki/Cue_Tape.png'),
@@ -314,6 +317,16 @@ $monster-drops: (
     fishfork:           img('data/w7A10.png'),
     crabclaw:           img('data/w7A11.png'),
     guardian-mace:      img('data/w7A12.png'),
+
+    // W7 part 2
+    eye-of-koi: img('data/w7B1.png'),
+    bubble-n-chains: img('data/w7B2.png'),
+    pirate-emblem-i: img('data/w7B3.png'),
+    caviar: img('data/w7B4.png'),
+    jelly-cube: img('data/w7B5.png'),
+    tuft-of-kelp: img('data/w7B6.png'),
+    pirate-mark-ii: img('data/w7B11.png'),
+    immaculate-eye: img('data/w7B1b.png'),
 );
 
 
