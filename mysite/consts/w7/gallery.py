@@ -19,7 +19,7 @@ bonus_image = {
     "Crit Chance": "grimoire-upgrade-10",
     "Damage Bonus": "meritocracy-5",
     "Damage Multi": "meritocracy-5",
-    "Drop Chance": "vault-upgrade-18",
+    "Drop Rate": "vault-upgrade-18",
     "Drop Rate Multi": "vault-upgrade-18",
     "Fight Afk Gain": "vault-upgrade-23",
     "Fishin Efficincy": "ballot-8",

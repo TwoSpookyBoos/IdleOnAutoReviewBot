@@ -268,6 +268,8 @@ EquipmentHats126: Helper Elf Hat
 EquipmentHats127: Seal Team Skipper Hat
 EquipmentHats128: Lovely Top Hat
 EquipmentHats129: Polkadot Beanie
+EquipmentHats130: Leprechaun Hat
+EquipmentHats131: Lucky Ducky Brim
 EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
 TestObj14: Trojan Helmet
@@ -533,6 +535,7 @@ EquipmentRingsChat8: Lava Sez Buy More Gems
 EquipmentRingsChat9: HONK Ring
 EquipmentRingsChat10: Meteorite Ring
 EquipmentRingsChat11: Equinox Ring
+EquipmentRingsChat12: Tournament Ring
 EquipmentRingsFishing1: Shallow Watering
 EquipmentRingsFishing2: Oceanic Ring
 EquipmentRingsFishing3: Deepwater Trench Ring
@@ -1287,6 +1290,7 @@ w7B8: Glowfish Tail
 w7B9: Ancient Scales
 w7B10: Magmaspike
 w7B11: Pirate Mark II
+w7B11b: Pirate Anchor
 w7B12: Pirate Mark III
 ClamPearl0: Clam Pearl
 ClamPearl1: Pure Pearl
@@ -1604,6 +1608,8 @@ EquipmentNametag29: Reliquarium Nametag
 EquipmentNametag30: Cropfall Nametag
 EquipmentNametag31: Gingerbread Nametag
 EquipmentNametag32: Sweet Chocolate Nametag
+EquipmentNametag33: Pot of Gold Nametag
+EquipmentNametag34: Emerald Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1637,6 +1643,8 @@ EquipmentNametagReplica29: Reliquarium Nametag
 EquipmentNametagReplica30: Cropfall Nametag
 EquipmentNametagReplica31: Gingerbread Nametag
 EquipmentNametagReplica32: Sweet Chocolate Nametag
+EquipmentNametagReplica33: Pot of Gold Nametag
+EquipmentNametagReplica34: Emerald Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -2017,11 +2025,12 @@ Quest107: Arcane Fragment # for the Arcane Cultist
 Quest108: Stamina Battery
 Quest109: Cropfall Basket
 Quest110: Zenith Cluster
-Quest111: Green Candle
+Quest111: Lucky Candle
 Quest112: Funny 2hr Slice
 Quest113: Giftmas Gift
 Quest114: Glimmerwick Candle
 Quest115: Half Finished Research Papers
+Quest117: Edible Coin
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
