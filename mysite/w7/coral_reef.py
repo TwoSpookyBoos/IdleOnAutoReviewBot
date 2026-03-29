@@ -9,11 +9,13 @@ from models.general.session_data import session_data
 from models.advice.generators.w7 import get_coral_reef_advice, get_legend_talent_advice
 from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
+from utils.safer_data_handling import safer_convert
+
 
 def get_corals_info_group() -> AdviceGroup:
     coral_advice: list[Advice] = [
         Advice(
-            label=f"Town Corals: {int(session_data.account.coral_reef['Town Corals'])}",
+            label=f"Town Corals: {safer_convert(session_data.account.coral_reef['Town Corals'], 0)}",
             picture_class="coral"
         ), *[get_coral_reef_advice(name) for name in session_data.account.coral_reef['Reef Corals'].keys()]
     ]
