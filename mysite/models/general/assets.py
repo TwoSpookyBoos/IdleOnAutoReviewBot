@@ -194,14 +194,14 @@ class Assets(dict):
     @property
     def items_gstackable_tiered(self) -> dict[int, dict[str, list[Asset]]]:
         tiered = dict()
-
+        gstackable_expected = self.items_gstackable_expected
         for tier, categories in self.tiers.items():
             categorised = dict()
             for category, items in categories.items():
                 item_list = [
                     self.get(item)
                     for item in items
-                    if item in self.items_gstackable_expected
+                    if item in gstackable_expected
                     and self.get(item) not in self.quest_items_missed
                 ]
                 if item_list:
