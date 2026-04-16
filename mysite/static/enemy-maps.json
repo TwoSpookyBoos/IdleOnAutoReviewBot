@@ -110,6 +110,7 @@
     ["Sushi Perimeter", 318, "Eggroll", 6e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "eggroll"],
     ["Jellofish Fields", 319, "Jellofish", 125e6, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "jellofish"],
     ["Where the Kelp Meets Trench", 320, "Kelpfish", 25e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "kelpfish"],
+    ["Trench Precipice", 321, "Mantaray", 35e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "mantaray"],
     ["Pirate Mess Hall", 325, "Pirate Deckhand", 2e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-deckhand"]
   ]
 }
