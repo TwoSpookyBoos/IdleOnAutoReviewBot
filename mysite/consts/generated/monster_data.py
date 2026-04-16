@@ -674,6 +674,12 @@ monster_data = {
     "cropfallEvent1": {
         "Name": "Bort The Cornhusk"
     },
+    "luckEvent1": {
+        "Name": "Luckulyte"
+    },
+    "luckEvent2": {
+        "Name": "Potluck"
+    },
     "Blank0ramaFiller": {
         "Name": "Nightmare Amarok"
     },
@@ -681,7 +687,7 @@ monster_data = {
         "Name": "Ghost"
     },
     "slimeR": {
-        "Name": "Valentslime"
+        "Name": "Valenslime"
     },
     "sheepB": {
         "Name": "Floofie"
@@ -706,6 +712,12 @@ monster_data = {
     },
     "w7b3b": {
         "Name": "Glimbo"
+    },
+    "slugG": {
+        "Name": "Lucky Slug"
+    },
+    "PotG": {
+        "Name": "Potluck"
     },
     "crabcakeB": {
         "Name": "Mr Blueberry"
@@ -738,7 +750,7 @@ monster_data = {
         "Name": "Bunny"
     },
     "Pet7": {
-        "Name": "Mecho Mouse"
+        "Name": "Mechanical Mouse"
     },
     "Pet8": {
         "Name": "Panda"
@@ -1175,5 +1187,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "1e614e783e9ba0cd43251a6620522bd3e508f8e049918dae1cf044ab51b5b08f"
+    "_hash": "da9035abac3af0be5e867666106bdcb4ef3e1f80d61b7c247193be4df91d1cc7"
 }

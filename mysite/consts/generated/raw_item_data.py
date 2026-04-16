@@ -9549,6 +9549,29 @@ raw_item_data = {
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentCape18"
     },
+    "EquipmentCape19": {
+        "Name": "Dragonroll Mantlepiece",
+        "Sell Price": 1,
+        "Code (Type)": "aCape",
+        "Type": "CAPE",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 30,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 50,
+        "Defence": 10,
+        "Misc 1 (Text)": "%_MORE_KILLS",
+        "Misc 1 (Value)": 100,
+        "Misc 2 (Text)": "%_BIGGER_DAMAGE",
+        "Misc 2 (Value)": 100,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentCape19"
+    },
     "StampA1": {
         "Name": "Sword Stamp",
         "Sell Price": 500,
@@ -39426,5 +39449,5 @@ raw_item_data = {
         "Description": "slimeB",
         "Code (Name)": "CardsZ26"
     },
-    "_hash": "08d87aa70ed7ff5f8f718e487bb534837f02707d2eaf0267c8ce44474c5b5ea1"
+    "_hash": "ec4b79068272c5017086b2c1391549ee6a7c9748521f8421d172ada4c27d1513"
 }

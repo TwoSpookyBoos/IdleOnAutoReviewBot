@@ -189,7 +189,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 1
             'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
             # World 7 part 2
-            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B11',
+            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11',
             "Sewers3"
         ],
         "Crystal Enemy Drops": [
@@ -258,13 +258,18 @@ greenstack_item_difficulty_groups = {
             "Spelunking3",
             # World 7 part 2
             'Spelunking4', 'Spelunking5',
+            'Line13',
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
             'DesertA1b',  #W2 Glass Shard
             'SnowA2a',  #W3 Yellow Snowflake
             'GalaxyC1b', 'GalaxyA2b',  #W4 Pearler Shell + Lost Batteries
-            'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
+            # W4
+            'Line3', 'Line8', 'Line12',
+            'Weight3', 'Weight4', 'Weight7', 'Weight13',
+            # W5
+            'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5', 'Line4', 'Weight9',
             # World 7 part 1
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
@@ -272,7 +277,7 @@ greenstack_item_difficulty_groups = {
         ],
         'Boss Drop': [
             # Every day boss gem farm
-            'KrukPart', 'StoneA6',
+            'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
         ],
     }
 }
@@ -310,7 +315,7 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B11',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11',
         'Sewers3', 'Quest15', 'Hgg'  # Specialty Monster Materials
     ],
     'Crystal Enemy Drops': [
@@ -367,6 +372,7 @@ expected_stackables = {
         'Spelunking0', 'Spelunking1', 'Spelunking2', 'Spelunking3',
         # World 7 part 2
         'Spelunking4', 'Spelunking5',
+        'Line13',
     ],
     'Vendor Shops': [
         'FoodHealth1',
@@ -385,8 +391,12 @@ expected_stackables = {
         'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
         'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
-        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg', 'Weight3',  #W4 Rare Drops
-        'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5',  # W5 Rare Drops
+        # W4
+        'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',
+        'Line3', 'Line8', 'Line12',
+        'Weight3', 'Weight4', 'Weight7', 'Weight13',
+        # W5
+        'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5', 'Line4', 'Weight9',
         'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart2',  # Basic Efaunt material
         # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
@@ -398,7 +408,7 @@ expected_stackables = {
         'Coral4', 'w7B1b',
     ],
     'Boss Drop': [
-        'KrukPart', 'StoneA6',
+        'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
     ],
     'Cheater': [
         'BabaYagaETC', 'JobApplication',  # W1 Rare Drops
@@ -415,7 +425,7 @@ expected_stackables = {
         'FoodPotYe1', 'FoodPotYe3',  # EXP 1 and 3
         'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',  # Event Foods
         'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',  # Skilling Speed Pearls, EXP pearls
-        'Line1', 'Line2', 'Line3', 'Line4', 'Line5', 'Line6', 'Line7', 'Line8', 'Line9', 'Line10', 'Line11', 'Line12', 'Line13', 'Line14',  # Fishing Lines
+        'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line9', 'Line10', 'Line11', 'Line14',  # Fishing Lines
         'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
         'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9',  # Time Candies
         'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
@@ -622,9 +632,9 @@ card_raw_data = [
         ["SpelunkingCard0", "F41", "100", "+{%_Spelunking_EXP", "4"],
         ["SpelunkingCard1", "F42", "300", "+{%_Spelunking_Efficiency", "8"],
         ["SpelunkingCard2", "F43", "3000", "+{%_Spelunking_AFK_Gain", "2"],
-        ["SpelunkingCard3", "F48", "50000", "+{%_Spelunking_EXP", "8"],
-        ["Blank", "A0", "10", "+{%", "3"],
-        ["Blank", "A0", "10", "+{%", "3"],
+        ["SpelunkingCard3", "F48", "40000", "+{%_Spelunking_EXP", "8"],
+        ["SpelunkingCard4", "F49", "150000", "+{%_Spelunking_AFK_Gain", "2"],
+        ["SpelunkingCard5", "F50", "2500000", "+{%_Spelunking_EXP", "15"],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
@@ -698,10 +708,22 @@ card_raw_data = [
         ["w7a10", "J10", "150000", "+{%_Stamina_Regen_(Passive)", "2"],
         ["w7a11", "J11", "250000", "+{%_Gallery_Bonus_(Passive)", "1"],
         ["w7a12", "J12", "400000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b1", "J13", "100000", "+{%_Research_EXP_(Passive)", "1"],
+        ["w7b2", "J14", "300000", "+{%_Gaming_Bit_Multi_(Passive)", "20"],
+        ["w7b3", "J15", "500000", "+{%_Flaggy_Rate_Multi_(Passive)", "10"],
+        ["w7b4", "J16", "900000", "+{%_Research_EXP_(Passive)", "2"],
+        ["w7b5", "J17", "1500000", "+{%_Farming_EVO_Multi_(Passive)", "50"],
+        ["w7b6", "J18", "3500000", "+{%_Class_EXP_Multi", "5"],
+        ["w7b7", "J19", "6000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b8", "J20", "10000000", "+{%_Research_EXP_(Passive)", "3"],
+        ["w7b9", "J21", "20000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b10", "J22", "30000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b11", "J23", "20000000", "+{%_Research_AFK_gain_(Passive)", "1"],
+        ["w7b12", "J24", "100000000", "+{%_Drop_Rate_Multi", "1"],
         ["Crystal6", "J99", "2500000", "+{%_Damage_Multi_(Passive)", "1.5"],
-        ["Blank", "A0", "2500", "+{%_Base_HP", "1.5"],
-        ["Blank", "A0", "5000", "+{%_Base_HP", "4"],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
     ],
     [
         ["frogP", "X0", "1.5", "+{_Base_Dungeon_MP", "2"],
@@ -785,9 +807,9 @@ card_raw_data = [
         ["fallEvent1", "Y18", "3", "+{_Star_Talent_Pts_(Passive)", "4"],
         ["anni4Event1", "Y19", "4", "+{%_Drop_Rate_(Passive)", "2"],
         ["cropfallEvent1", "Y20", "6", "+{%_Gold_Food_Effect_(Passive)", "4"],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
+        ["xmasEvent4", "Y21", "1", "+{%_Catching_Away_Gains", "2"],
+        ["luckEvent1", "Y22", "5", "+{%_Drop_Rate_(Passive)", "3"],
+        ["luckEvent2", "Y23", "5", "+{%_Money_from_Monsters", "4"]
     ]
 ]
 
