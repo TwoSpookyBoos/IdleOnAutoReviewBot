@@ -680,6 +680,9 @@ monster_data = {
     "luckEvent2": {
         "Name": "Potluck"
     },
+    "anni5Event1": {
+        "Name": "IdleOn 5th Anniversary"
+    },
     "Blank0ramaFiller": {
         "Name": "Nightmare Amarok"
     },
@@ -703,6 +706,12 @@ monster_data = {
     },
     "w4b4b": {
         "Name": "Vanillie"
+    },
+    "w6b2b": {
+        "Name": "Wickerlight Spirit"
+    },
+    "w5b5b": {
+        "Name": "Smoke Devil"
     },
     "w7b1b": {
         "Name": "Koi Fish"
@@ -772,6 +781,9 @@ monster_data = {
     },
     "bubbab": {
         "Name": "Bubba Supreme"
+    },
+    "poppy": {
+        "Name": "Poppy"
     },
     "T1a": {
         "Name": "Bronze Champion Ram"
@@ -1187,5 +1199,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "da9035abac3af0be5e867666106bdcb4ef3e1f80d61b7c247193be4df91d1cc7"
+    "_hash": "0af483c00457aa6c61d6e46a0647d1734b653baa647b40dd65763f6551e8d2aa"
 }

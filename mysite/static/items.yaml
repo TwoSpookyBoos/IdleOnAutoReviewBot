@@ -270,6 +270,10 @@ EquipmentHats128: Lovely Top Hat
 EquipmentHats129: Polkadot Beanie
 EquipmentHats130: Leprechaun Hat
 EquipmentHats131: Lucky Ducky Brim
+EquipmentHats132: Time Traveler Top Hat
+EquipmentHats133: Native Headdress
+EquipmentHats134: Starry Hairpins
+EquipmentHats135: Blonde Hairpiece
 EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
 TestObj14: Trojan Helmet
@@ -559,6 +563,7 @@ EquipmentCape16: Timeless Watch
 EquipmentCape17: Gilded Emperor Wings
 EquipmentCape18: Chains of the Gilded Vaultguard
 EquipmentCape19: Dragonroll Mantlepiece
+EquipmentCape20: Beeg Egg
 EquipmentGown0: Pyromancer Robes
 EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
@@ -566,6 +571,7 @@ EquipmentGown3: Evergreen Robe
 EquipmentGown4: Silkshard Robe
 EquipmentGown5: Corsair Uniform
 EquipmentGown6: Bulwark Armor
+EquipmentGown7: Time Traveler Outfit
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1611,6 +1617,9 @@ EquipmentNametag31: Gingerbread Nametag
 EquipmentNametag32: Sweet Chocolate Nametag
 EquipmentNametag33: Pot of Gold Nametag
 EquipmentNametag34: Emerald Nametag
+EquipmentNametag35: 5th Anniversary IdleOn Nametag
+EquipmentNametag36: Wonderful 5th Year Nametag
+EquipmentNametag37: Grand Egg Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1646,6 +1655,9 @@ EquipmentNametagReplica31: Gingerbread Nametag
 EquipmentNametagReplica32: Sweet Chocolate Nametag
 EquipmentNametagReplica33: Pot of Gold Nametag
 EquipmentNametagReplica34: Emerald Nametag
+EquipmentNametagReplica35: 5th Anniversary IdleOn Nametag
+EquipmentNametagReplica36: Wonderful 5th Year Nametag
+EquipmentNametagReplica37: Grand Egg Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -2478,6 +2490,10 @@ CardsY17: Spring Splendor Card
 CardsY18: Falloween Pumpkin Card
 CardsY19: IdleOn 4th Anniversary Card
 CardsY20: Cropfall Card
+CardsY21: Big Ol Giftmas Box Card
+CardsY22: Luckulyte Card
+CardsY23: Potluck Card
+CardsY24: IdleOn 5th Anniversary Card
 CardsZ0: Baba Yaga Card
 CardsZ1: Dr Defecaus Card
 CardsZ2: Amarok Card
