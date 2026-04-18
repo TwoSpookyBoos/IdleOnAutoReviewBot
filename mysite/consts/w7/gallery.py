@@ -35,4 +35,7 @@ bonus_image = {
     "Skill Exp": "meritocracy-10",
     "Total Damage": "ballot-1",
     "Xp From Monsters": "meritocracy-27",
+    "Kills In World 6": "ballot-5",
+    "Kills In World 7": "ballot-5",
+    "Bigger Damage": "meritocracy-5",
 }
