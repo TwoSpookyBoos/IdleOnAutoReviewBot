@@ -1,10 +1,10 @@
 from consts.consts_autoreview import EmojiType
 from consts.idleon.lava_func import lava_func
-from utils.logging import get_consts_logger
+from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName
 
-logger = get_consts_logger(__name__)
+logger = get_logger(__name__)
 
 # Greenstacks
 greenstack_item_difficulty_groups = {

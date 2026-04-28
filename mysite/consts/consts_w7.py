@@ -1,9 +1,9 @@
 from consts.idleon.w7.spelunk import Spelunky
 
-from utils.logging import get_consts_logger
+from utils.logging import get_logger
 from utils.number_formatting import parse_number
 
-logger = get_consts_logger(__name__)
+logger = get_logger(__name__)
 
 # `CoralReef` in source. Last updated in v2.46 Dec 6
 CoralReef = ["Every_day_you_play,_your_Grind_Time_bubble_gets_+{_LVs 15 10 1.25 243 0 274 22 324 19 31 171 389 _".split(" "), "Orange... 1 10 1.5 300 332 63 400 300 20 0 400 400 _".split(" "), "Adds_a_new_bonus_to_your_Tome's_Epilogue_in_World_4,_which_goes_up_with_your_Tome_Score! 10 15 1.65 236 328 248 350 309 25 0 479 381 _".split(" "), "Adds_a_new_mini_'Ninja_Knowledge'_upgrade,_level_it_up_with_your_Jade! 12 10 1.55 263 611 270 647 325 24 0 789 384 _".split(" "), "The_Gallery_gives_+{%_higher_bonuses,_@_and_has_+}_more_slots_for_Trophies 10 40 1.5 290 0 13 24 95 28 13 164 189 _".split(" "), "Blue... 1 10 1.5 300 615 52 400 300 20 0 400 400 _".split(" ")]

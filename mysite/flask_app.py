@@ -7,6 +7,13 @@ from pathlib import Path
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
 
+from utils.logging import (
+    ResponseCache,
+    get_logger,
+    name_for_logging,
+    key_for_logging_cache,
+    # log_browser_data
+)
 import consts.consts_autoreview
 import consts.consts_general
 import consts.idleon.consts_idleon
@@ -36,13 +43,6 @@ from models.custom_exceptions import (
 )
 from models.advice.advice_world import AdviceWorld
 from utils.data_formatting import HeaderData
-from utils.logging import (
-    ResponseCache,
-    get_logger,
-    name_for_logging,
-    key_for_logging_cache,
-    # log_browser_data
-)
 from utils.template_filters import *
 from utils.text_formatting import (
     is_username,

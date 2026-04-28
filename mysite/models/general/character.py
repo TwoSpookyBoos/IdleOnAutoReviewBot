@@ -6,8 +6,8 @@ from consts.idleon.consts_idleon import current_world, expected_talents_dict
 from consts.idleon.lava_func import lava_func
 from models.general.equipment import Equipment
 from utils.number_formatting import parse_number
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 class Character:
     def __init__(

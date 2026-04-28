@@ -4,8 +4,8 @@ from consts.idleon.consts_idleon import NinjaInfo
 from utils.safer_data_handling import safer_math_log, safer_math_pow
 from utils.text_formatting import numberToLetter
 from utils.number_formatting import parse_number
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 # Passive Starsigns do not consume an Infinite Star Sign point and are the 3 big signs you can't align to.
 # Last updated in v2.43 Nov 10

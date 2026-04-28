@@ -2,8 +2,8 @@ from math import ceil
 from consts.consts_autoreview import ValueToMulti
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_math_pow
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 max_printer_sample_rate = 90
 arbitrary_shrine_goal = 32  # Last updated in v2.46 Nov 19

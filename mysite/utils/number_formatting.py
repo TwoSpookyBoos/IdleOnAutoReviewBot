@@ -1,7 +1,7 @@
 from consts.consts_autoreview import default_huge_number_replacement
-from utils.logging import get_consts_logger
+from utils.logging import get_logger
 
-logger = get_consts_logger(__name__)
+logger = get_logger(__name__)
 
 
 def round_and_trim(number: int | float, places: int = 2) -> int | float:
