@@ -223,6 +223,7 @@ $shimmerfin-deep: (
     eggroll-card: img('data/2CardsJ16.png'),
     jellofish-card: img('data/2CardsJ17.png'),
     kelpfish-card: img('data/2CardsJ18.png'),
+    mantaray-card: img('data/2CardsJ19.png'),
     pirate-deckhand-card: img('data/2CardsJ23.png'),
     crystal-cuttlefish-card: img('data/2CardsJ99.png'),
 );
@@ -306,6 +307,10 @@ $events: (
 	falloween-pumpkin-card: img('data/2CardsY18.png'),
 	idleon-4th-anniversary-card: img('data/2CardsY19.png'),
 	bort-the-cornhusk-card: img('data/2CardsY20.png'),
+  big-ol-giftmas-box-card: img('data/2CardsY21.png'),
+  luckulyte-card: img('data/2CardsY22.png'),
+  potluck-card: img('data/2CardsY23.png'),
+  idleOn-5th-anniversary-card: img('data/2CardsY24.png'),
 );
 
 $all-cards: map-merge($blunder-hills, $easy-resources);

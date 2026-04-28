@@ -674,6 +674,15 @@ monster_data = {
     "cropfallEvent1": {
         "Name": "Bort The Cornhusk"
     },
+    "luckEvent1": {
+        "Name": "Luckulyte"
+    },
+    "luckEvent2": {
+        "Name": "Potluck"
+    },
+    "anni5Event1": {
+        "Name": "IdleOn 5th Anniversary"
+    },
     "Blank0ramaFiller": {
         "Name": "Nightmare Amarok"
     },
@@ -681,7 +690,7 @@ monster_data = {
         "Name": "Ghost"
     },
     "slimeR": {
-        "Name": "Valentslime"
+        "Name": "Valenslime"
     },
     "sheepB": {
         "Name": "Floofie"
@@ -698,6 +707,12 @@ monster_data = {
     "w4b4b": {
         "Name": "Vanillie"
     },
+    "w6b2b": {
+        "Name": "Wickerlight Spirit"
+    },
+    "w5b5b": {
+        "Name": "Smoke Devil"
+    },
     "w7b1b": {
         "Name": "Koi Fish"
     },
@@ -706,6 +721,12 @@ monster_data = {
     },
     "w7b3b": {
         "Name": "Glimbo"
+    },
+    "slugG": {
+        "Name": "Lucky Slug"
+    },
+    "PotG": {
+        "Name": "Potluck"
     },
     "crabcakeB": {
         "Name": "Mr Blueberry"
@@ -738,7 +759,7 @@ monster_data = {
         "Name": "Bunny"
     },
     "Pet7": {
-        "Name": "Mecho Mouse"
+        "Name": "Mechanical Mouse"
     },
     "Pet8": {
         "Name": "Panda"
@@ -760,6 +781,9 @@ monster_data = {
     },
     "bubbab": {
         "Name": "Bubba Supreme"
+    },
+    "poppy": {
+        "Name": "Poppy"
     },
     "T1a": {
         "Name": "Bronze Champion Ram"
@@ -1175,5 +1199,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "1e614e783e9ba0cd43251a6620522bd3e508f8e049918dae1cf044ab51b5b08f"
+    "_hash": "0af483c00457aa6c61d6e46a0647d1734b653baa647b40dd65763f6551e8d2aa"
 }
