@@ -9,7 +9,8 @@ from consts.consts_autoreview import break_you_best, EmojiType
 from consts.consts_general import gem_shop_optlacc_dict
 from consts.idleon.consts_idleon import current_world, max_characters
 from consts.w6.farming import max_farming_crops
-from consts.consts_caverns import max_cavern, max_majiks, caverns_max_measurements, getMaxEngineerLevel
+from consts.caverns.cavern import max_cavern
+from consts.caverns.villager.minau import max_measurements
 from consts.consts_w4 import cooking_close_enough, breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
 
@@ -104,24 +105,24 @@ def try_exclude_Gaming(exclusionLists):
         pass
     
 def try_exclude_ConjurorPts(exclusionLists):
-    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= max_majiks - session_data.account.caverns['Villagers']['Cosmos']['Level']:
+    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= session_data.account.caverns_.villagers["Cosmos"].majiks.max_point - session_data.account.caverns_.villagers["Cosmos"].level:
         for sublist in exclusionLists:
             sublist.append('Conjuror Pts')
-    
+
 def try_exclude_ParallelVillagers(exclusionLists):
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] >= max_cavern:
+    if session_data.account.caverns_.villagers["Polonai"].level >= max_cavern:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Explorer')
-        
-    if session_data.account.caverns['Villagers']['Kaipu']['Level'] >= getMaxEngineerLevel():
+
+    if session_data.account.caverns_.villagers["Kaipu"].level >= session_data.account.caverns_.villagers["Kaipu"].max_useful_level:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Engineer')
-        
-    if session_data.account.caverns['Villagers']['Cosmos']['Level'] >= (max_majiks - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
+
+    if session_data.account.caverns_.villagers["Cosmos"].level >= (session_data.account.caverns_.villagers["Cosmos"].majiks.max_point - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Conjuror')
-        
-    if session_data.account.caverns['Villagers']['Minau']['Level'] >= caverns_max_measurements:
+
+    if session_data.account.caverns_.villagers["Minau"].level >= max_measurements:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Measurer')
 

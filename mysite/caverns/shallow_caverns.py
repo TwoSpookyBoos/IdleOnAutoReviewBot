@@ -86,17 +86,18 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
 
 # Bucket Stats
     for bucket_index, bucket_target in enumerate(buckets):
+        schematic = schematics[schematics_unlocking_buckets[bucket_index-1]]
         cavern_advice[b_stats].append(Advice(
             label=(
                 f"Bucket {bucket_index+1}: {'Collecting' if sediments_owned[bucket_target-1] > 0 else 'Unlocking next sediment'}"
                 f" {sediment_names[bucket_target] if sediments_owned[bucket_target-1] > 0 else ''}"
                 if bucket_index + 1 <= cavern['BucketsUnlocked'] else
                 f"Unlock Bucket {bucket_index+1} by purchasing <br>"
-                f"Schematic {schematics[schematics_unlocking_buckets[bucket_index-1]]['UnlockOrder']}:"
+                f"Schematic {schematic.unlock_order}:"
                 f" {schematics_unlocking_buckets[bucket_index-1]}"
             ),
-            picture_class=f"well-sediment-{bucket_target}" if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematics[schematics_unlocking_buckets[bucket_index-1]]['Image'],
-            resource='' if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematics[schematics_unlocking_buckets[bucket_index-1]]['Resource']
+            picture_class=f"well-sediment-{bucket_target}" if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematic.image,
+            resource='' if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematic.resource
         ))
 
 # Sediment Stats
@@ -106,7 +107,7 @@ def getWellAdviceGroup(schematics) -> AdviceGroup:
     ))
     cavern_advice[s_stats].append(Advice(
         label=f"Total expansions: {sum(sediment_levels)}"
-              f"<br>Total bonus: {sum(sediment_levels) * 20 * schematics['Expander Extravaganza']['Purchased']:,}%",
+              f"<br>Total bonus: {sum(sediment_levels) * 20 * schematics['Expander Extravaganza'].bought:,}%",
         picture_class='engineer-schematic-14'
     ))
     for sediment_index, sediment_value in enumerate(sediments_owned):
@@ -221,19 +222,19 @@ def getDenAdviceGroup(schematics) -> AdviceGroup:
 
 # Amplifier Stats
     for amp_name, amp_details in schematics_unlocking_amplifiers.items():
-        amp_unlocked = amp_details[1] == '' or schematics.get(amp_details[1], {}).get('Purchased', False)
+        amp_unlocked = amp_details[1] == '' or schematics[amp_details[1]].bought
         cavern_advice[a_stats].append(Advice(
             label=(
                 f"{amp_name}: {amp_details[0]}"
                 if amp_unlocked
                 else
                 f"Unlock Amplifier {int(amp_details[2][-1])+1} by purchasing"
-                f"<br>Schematic {schematics[amp_details[1]]['UnlockOrder']}: {amp_details[1]}"
+                f"<br>Schematic {schematics[amp_details[1]].unlock_order}: {amp_details[1]}"
             ),
             picture_class=amp_details[2],
             resource=(
                 '' if amp_unlocked
-                else schematics[amp_details[1]]['Resource']
+                else schematics[amp_details[1]].resource
             )
         ))
 
@@ -339,14 +340,8 @@ def getBraveryAdviceGroup(schematics) -> AdviceGroup:
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
-    mv = session_data.account.caverns['Majiks']['Monumental Vibes']
-    cavern_advice[b_stats].insert(0, Advice(
-        label=f"Monumental Vibes {{{{ Majik|#villagers }}}}: {mv['Description']}"
-              f"<br>(Already applied below)",
-        picture_class=f"{mv['MajikType']}-majik-{'un' if mv['Level'] == 0 else ''}purchased",
-        progression=mv['Level'],
-        goal=mv['MaxLevel']
-    ))
+    mv = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes']
+    cavern_advice[b_stats].insert(0, mv.get_advice())
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
@@ -474,7 +469,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getShallowCavernsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 1:
+    if session_data.account.caverns_.villagers["Polonai"].level < 1:
         shallow_caverns_AdviceSection = AdviceSection(
             name="Shallow Caverns",
             tier="Not Yet Evaluated",
@@ -489,7 +484,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    schematics = session_data.account.caverns['Schematics']
+    schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup(schematics)

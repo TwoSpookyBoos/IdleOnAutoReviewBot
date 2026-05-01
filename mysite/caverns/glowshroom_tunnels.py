@@ -42,20 +42,11 @@ def getHarpAdviceGroup(schematics):
     ))
 # Cavern FAQs
 # String Stats
-    string_is_strung = session_data.account.caverns['Majiks']['String is Strung']
-    cavern_advice[string_stats].append(Advice(
-        label=f"String is Strung {{{{ Cavern Majik|#villagers }}}}: {string_is_strung['Description']}",
-        picture_class=f"{string_is_strung['MajikType']}-majik-{'un' if string_is_strung['Level'] == 0 else ''}purchased",
-        progression=string_is_strung['Level'],
-        goal=string_is_strung['MaxLevel']
-    ))
+    string_is_strung = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['String is Strung']
+    cavern_advice[string_stats].append(string_is_strung.get_advice())
     for schematic_name in schematics_unlocking_harp_strings:
-        cavern_advice[string_stats].append(Advice(
-            label=f"Schematic {schematics[schematic_name]['UnlockOrder']}: {schematic_name}",
-            picture_class=schematics[schematic_name]['Image'],
-            progression=int(schematics[schematic_name]['Purchased']),
-            goal=1
-        ))
+        schematic = schematics[schematic_name]
+        cavern_advice[string_stats].append(schematic.get_advice())
 
 # Chord Stats
     cavern_advice[chord_stats] = [
@@ -65,7 +56,7 @@ def getHarpAdviceGroup(schematics):
                 f"<br>Strum Effect: {chord_details['Strum']}"
                 f"<br>LV Bonus: {chord_details['LVBonus']}"
                 if chord_details['Unlocked']
-                else f"Unlock {chord_letter} chord by purchasing Schematic {schematics[chord_details['UnlockedBy']]['UnlockOrder']}: {chord_details['UnlockedBy']}"
+                else f"Unlock {chord_letter} chord by purchasing Schematic {schematics[chord_details['UnlockedBy']].unlock_order}: {chord_details['UnlockedBy']}"
             ),
             picture_class=f"harp-chord-{chord_letter}",
             progression=chord_details['Level'],
@@ -350,14 +341,8 @@ def getJusticeAdviceGroup() -> AdviceGroup:
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
-    mv = session_data.account.caverns['Majiks']['Monumental Vibes']
-    cavern_advice[b_stats].insert(0, Advice(
-        label=f"Monumental Vibes {{{{ Majik|#villagers }}}}: {mv['Description']}"
-              f"<br>(Already applied below)",
-        picture_class=f"{mv['MajikType']}-majik-{'un' if mv['Level'] == 0 else ''}purchased",
-        progression=mv['Level'],
-        goal=mv['MaxLevel']
-    ))
+    mv = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes']
+    cavern_advice[b_stats].insert(0, mv.get_advice())
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
@@ -393,7 +378,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 6:
+    if session_data.account.caverns_.villagers["Polonai"].level < 6:
         glowshroom_tunnels_AdviceSection = AdviceSection(
             name="Glowshroom Tunnels",
             tier="Not Yet Evaluated",
@@ -408,7 +393,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    schematics = session_data.account.caverns['Schematics']
+    schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
     glowshroom_tunnels_AdviceGroupDict = {}
     glowshroom_tunnels_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Harp'] = getHarpAdviceGroup(schematics)

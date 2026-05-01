@@ -45,12 +45,12 @@ from consts.consts_w5 import (
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from consts.consts_caverns import (
-    getCavernResourceImage, caverns_cavern_names, caverns_villagers, caverns_engineer_schematics,
-    caverns_engineer_schematics_unlock_order, schematics_unlocking_harp_chords, max_buckets, sediment_bars, max_sediments, caverns_conjuror_majiks,
-    caverns_measurer_measurements, caverns_measurer_HI55, caverns_librarian_studies, monument_bonuses, bell_ring_bonuses, bell_clean_improvements,
+    caverns_cavern_names,
+    schematics_unlocking_harp_chords, max_buckets, sediment_bars, max_sediments,
+    monument_bonuses, bell_ring_bonuses, bell_clean_improvements,
     harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges, getVillagerEXPRequired, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
+    caverns_gambit_total_challenges, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
@@ -342,7 +342,16 @@ def _parse_general_gem_shop(account):
             'Section': details['Section'],
             'Subsection': details['Subsection'],
         }
-
+    raw_caverns_list: list[int] = safe_loads(account.raw_data.get('Holes', []))
+    parallel_villagers = safer_index(raw_caverns_list, 23, [0] * 10)
+    for villager in account.caverns_.villagers.values():
+        account.gemshop["Purchases"][f"Parallel Villagers {villager.role}"] = {
+            'Owned': parallel_villagers[villager.index],
+            'MaxLevel': 1,
+            'ItemCodename': 'GemP40',
+            'Section': 'Oddities',
+            'Subsection': 'Caverns'
+        }
     account.minigame_plays_daily = 5 + (4 * account.gemshop['Purchases']['Daily Minigame Plays']['Owned'])
 
 def _parse_general_gem_shop_optlacc(account):
@@ -2678,17 +2687,8 @@ def _parse_w5_divinity(account):
 
 def _parse_caverns(account):
     account.caverns = {
-        'Villagers': {},
-        'TotalOpalsInvested': 0,
         'Caverns': {},
         'CavernsUnlocked': 0,
-        'Schematics': {},
-        'TotalSchematics': 0,
-        'Majiks': {},
-        'TotalMajiks': 0,
-        'Measurements': {},
-        'Studies': {},
-        'TotalStudies': 0,
         'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
@@ -2696,12 +2696,8 @@ def _parse_caverns(account):
         logger.warning(f"Caverns data not present{', as expected' if account.version < 230 else ''}.")
     while len(raw_caverns_list) < 30:
         raw_caverns_list.append([0]*100)
-    _parse_caverns_villagers(account, raw_caverns_list[1], raw_caverns_list[2], raw_caverns_list[3], raw_caverns_list[23])
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
-    _parse_caverns_majiks(account, raw_caverns_list[4], raw_caverns_list[5], raw_caverns_list[6], raw_caverns_list[11])
-    _parse_caverns_schematics(account, raw_caverns_list[13])
-    _parse_caverns_measurements(account, raw_caverns_list[22])
-    _parse_caverns_studies(account, raw_caverns_list[26])
+
     _parse_caverns_biome1(account, raw_caverns_list)
     _parse_caverns_biome2(account, raw_caverns_list)
     _parse_caverns_biome3(account, raw_caverns_list)
@@ -2709,49 +2705,12 @@ def _parse_caverns(account):
     # for key in account.caverns:
     #     logger.debug(f"{key}: {account.caverns[key]}")
 
-def _parse_caverns_villagers(account, villager_levels, villager_exp, opals_invested, parallel_villagers):
-    for villager_index, villager_data in enumerate(caverns_villagers):
-        try:
-            account.caverns['Villagers'][villager_data['Name']] = {
-                'Unlocked': villager_levels[villager_index] > 0,
-                'UnlockedCavern': villager_data['UnlockedAtCavern'],
-                'Level': villager_levels[villager_index],
-                'Opals': opals_invested[villager_index],
-                'Title': f"{villager_data['Name']}, {villager_data['Role']}",
-                'VillagerNumber': villager_data['VillagerNumber'],
-                'LevelPercent': 100 * (float(villager_exp[villager_index]) / getVillagerEXPRequired(villager_index, villager_levels[villager_index], account.version)),
-            }
-            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
-                'Owned': parallel_villagers[villager_index],
-                'MaxLevel': 1,
-                'ItemCodename': 'GemP40',
-                'Section': 'Oddities',
-                'Subsection': 'Caverns'
-            }
-            account.caverns['TotalOpalsInvested'] += account.caverns['Villagers'][villager_data['Name']]['Opals']
-        except:
-            account.caverns['Villagers'][villager_data['Name']] = {
-                'Unlocked': villager_data['Name'] == 'Polonai',
-                'UnlockedCavern': villager_data['UnlockedAtCavern'],
-                'Level': 0,
-                'Opals': 0,
-                'Title': f"{villager_data['Name']}, {villager_data['Role']}",
-                'VillagerNumber': villager_data['VillagerNumber'],
-                'LevelPercent': 0,
-            }
-            account.gemshop['Purchases'][f"Parallel Villagers {villager_data['Role']}"] = {
-                'Owned': 0,
-                'MaxLevel': 1,
-                'ItemCodename': 'GemP40',
-                'Section': 'Oddities',
-                'Subsection': 'Caverns'
-            }
 
 def _parse_caverns_actual_caverns(account, opals_per_cavern):
     for cavern_index, cavern_name in caverns_cavern_names.items():
         try:
             account.caverns['Caverns'][cavern_name] = {
-                'Unlocked': account.caverns['Villagers']['Polonai']['Level'] >= cavern_index,
+                'Unlocked': account.caverns_.villagers["Polonai"].level >= cavern_index,
                 'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index - 1] or 0,
                 'Image': f'cavern-{cavern_index}',
                 'CavernNumber': cavern_index
@@ -2764,149 +2723,6 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
                 'CavernNumber': cavern_index
             }
 
-def _parse_caverns_majiks(account, hole_majiks, village_majiks, idleon_majiks, extras):
-    account.caverns['TotalMajiks'] = sum([sum(hole_majiks), sum(village_majiks), sum(idleon_majiks)])
-    raw_majiks: dict = {
-        'Hole': hole_majiks,
-        'Village': village_majiks,
-        'IdleOn': idleon_majiks
-    }
-    for majik_type, majiks in caverns_conjuror_majiks.items():
-        for majik_index, majik_data in enumerate(majiks):
-            try:
-                account.caverns['Majiks'][majik_data['Name']] = {
-                    'MajikType': majik_type,
-                    'MajikIndex': majik_index,
-                    'Level': int(raw_majiks[majik_type][majik_index]),
-                    'MaxLevel': majik_data['MaxLevel'],
-                    'Description': majik_data['Description'],
-                    # 'Value': 0  #Calculated later in _calculate_caverns_majiks
-                }
-            except:
-                account.caverns['Majiks'][majik_data['Name']] = {
-                    'MajikType': majik_type,
-                    'MajikIndex': majik_index,
-                    'Level': 0,
-                    'MaxLevel': majik_data['MaxLevel'],
-                    'Description': majik_data['Description'],
-                    # 'Value': 0  # Calculated later in _calculate_caverns_majiks
-                }
-    #Pocket Divinity
-    account.caverns['PocketDivinityLinks'] = []
-    try:
-        raw_pocket_div_links = [int(v) for v in extras[29:31] if v is not None]
-    except:
-        logger.exception(f"Could not cast Pocket Divinity link values to ints, or data isn't present. Defaulting to no links.")
-        #logger.debug(f"extras = {extras}")
-        raw_pocket_div_links = [-1, -1]
-    for entry_index, entry_value in enumerate(raw_pocket_div_links):
-        if int(entry_value) != -1 and entry_index < account.caverns['Majiks']['Pocket Divinity']['Level']:
-            if int(entry_value)+1 in divinity_divinities_dict:
-                account.caverns['PocketDivinityLinks'].append(divinity_divinities_dict[int(entry_value) + 1]['Name'])
-            else:
-                logger.exception(f"Pocket Divinity link value of {entry_value}+1 not found in consts.divinity_divinitiesDict")
-                account.caverns['PocketDivinityLinks'].append('')
-    #logger.debug(f"Pocket Divinity Links: {account.caverns['PocketDivinityLinks']}")
-
-def _parse_caverns_schematics(account, raw_schematics_list):
-    try:
-        account.caverns['TotalSchematics'] = sum(raw_schematics_list)
-    except:
-        logger.warning(f"Error summing raw_schematics_list")
-        account.caverns['TotalSchematics'] = 0
-        pass
-    for schematic_index, schematic_details in enumerate(caverns_engineer_schematics):
-        clean_name = schematic_details[0].replace("_", " ")
-        if clean_name == 'NameNameName':  #Placeholders added in v2.31 all share this name
-            continue
-        else:
-            resource_type = getCavernResourceImage(schematic_details[2])
-            try:
-                account.caverns['Schematics'][clean_name] = {
-                    'Purchased': raw_schematics_list[schematic_index] > 0,
-                    'Image': f'engineer-schematic-{schematic_index}',
-                    'Description': schematic_details[5].replace("_", " "),
-                    'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                    'Resource': resource_type
-                }
-            except:
-                try:
-                    #logger.warning(f"Error processing schematic {clean_name} at index {schematic_index}")
-                    account.caverns['Schematics'][clean_name] = {
-                        'Purchased': False,
-                        'Image': f'engineer-schematic-{schematic_index}',
-                        'Description': schematic_details[5].replace("_", " "),
-                        'UnlockOrder': caverns_engineer_schematics_unlock_order.index(schematic_index) + 1,
-                        'Resource': resource_type
-                    }
-                except:
-                    logger.exception(f"Error processing schematic {clean_name} at index {schematic_index}. Usually caused by HolesInfo[40] not being updated after new schematics were added!")
-                    account.caverns['Schematics'][clean_name] = {
-                        'Purchased': False,
-                        'Image': f'engineer-schematic-{schematic_index}',
-                        'Description': schematic_details[5].replace("_", " "),
-                        'UnlockOrder': 999,
-                        'Resource': resource_type
-                    }
-
-def _parse_caverns_measurements(account, raw_measurements_list):
-    for measurement_index, measurement_details in enumerate(caverns_measurer_measurements):
-        try:
-            hi55 = caverns_measurer_HI55[measurement_index]
-            tot = 'TOT' in hi55
-            hi55_after_split = safer_convert(hi55.split('TOT')[0], 1)
-        except:
-            logger.exception(f"Unable to read and split HolesInfo[55] for index {measurement_index}")
-            tot = False
-            hi55_after_split = 1
-        try:
-            account.caverns['Measurements'][measurement_index] = {
-                'Level': safer_convert(raw_measurements_list[measurement_index], 0),
-                'Unit': measurement_details[0],
-                'Description': measurement_details[1].strip(),
-                'ScalesWith': measurement_details[2],
-                'Image': f"measurement-{measurement_index}",
-                'Resource': measurement_details[3],
-                'MeasurementNumber': measurement_index + 1,
-                'TOT': tot,
-                'HI55': hi55_after_split
-            }
-        except:
-            account.caverns['Measurements'][measurement_index] = {
-                'Level': 0,
-                'Unit': measurement_details[0],
-                'Description': measurement_details[1].strip(),
-                'ScalesWith': measurement_details[2],
-                'Image': f"measurement-{measurement_index}",
-                'Resource': measurement_details[3],
-                'MeasurementNumber': measurement_index + 1,
-                'TOT': tot,
-                'HI55': hi55_after_split
-            }
-
-def _parse_caverns_studies(account, raw_studies_list):
-    for study_index, study_details in caverns_librarian_studies.items():
-        try:
-            account.caverns['TotalStudies'] += raw_studies_list[study_index]
-            account.caverns['Studies'][study_index] = {
-                'Level': raw_studies_list[study_index],
-                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
-                'CavernNumber': study_index+1,
-                'CavernName': caverns_cavern_names.get(study_index+1, f'UnknownCavern{study_index+1}'),
-                'Description': study_details[0],
-                'ScalingValue': study_details[1],
-                'Value': 0  #Fixed in account_calcs._calculate_caverns_studies()
-            }
-        except:
-            account.caverns['Studies'][study_index] = {
-                'Level': 0,
-                'MaxLevel': 999,  #Fixed in account_calcs._calculate_caverns_studies()
-                'CavernNumber': study_index + 1,
-                'CavernName': caverns_cavern_names.get(study_index + 1, f'UnknownCavern{study_index + 1}'),
-                'Description': study_details[0],
-                'ScalingValue': study_details[1],
-                'Value': 0
-            }
 
 def _parse_caverns_biome1(account, raw_caverns_list):
     _parse_caverns_the_well(account, raw_caverns_list)
@@ -3121,7 +2937,7 @@ def _parse_caverns_the_harp(account, raw_caverns_list):
         else:
             account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['UnlockedBy'] = schematics_unlocking_harp_chords[chord_index - 2]
             account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['Unlocked'] = (
-                account.caverns['Schematics'][schematics_unlocking_harp_chords[chord_index-2]]['Purchased']
+                account.caverns_.villagers["Kaipu"].schematics[schematics_unlocking_harp_chords[chord_index-2]].bought
             )
 
     try:
@@ -3155,7 +2971,7 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
         }
         try:
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = (
-                    account.caverns['Villagers']['Polonai']['Level'] >= 7
+                    account.caverns_.villagers["Polonai"].level >= 7
                     and account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] > wish_index
                 )
             account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = parse_number(raw_caverns_list[21][wish_index])
@@ -3407,7 +3223,7 @@ def _parse_caverns_gambit(account, raw_caverns_list):
         try:
             unlocked = (
                 True if schematics_unlocking_gambit_challenges[challenge_index] is None else
-                account.caverns['Schematics'][schematics_unlocking_gambit_challenges[challenge_index]]['Purchased']
+                account.caverns_.villagers["Kaipu"].schematics[schematics_unlocking_gambit_challenges[challenge_index]].bought
             )
         except:
             unlocked = False

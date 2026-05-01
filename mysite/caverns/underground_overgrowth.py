@@ -121,13 +121,7 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
 
 # Jar Stats
     jpl = schematics['Jar Production Line']
-    cavern_advice[jar_stats].append(Advice(
-        label=f"Schematic {jpl['UnlockOrder']}: Jar Production Line reduces the Create requirement for the next Jar in line"
-              f" based on the pow10 stacks of Jars destroyed. Simple speeds up Tall, which speeds up Ornate, etc.",
-        picture_class=jpl['Image'],
-        progression=int(jpl['Purchased']),
-        goal=1
-    ))
+    cavern_advice[jar_stats].append(jpl.get_advice())
     for jar_index, jar_details in jars.items():
         pow10_stacks = safer_math_log(jar_details['Destroyed'], 'Lava')
         cavern_advice[jar_stats].append(Advice(
@@ -279,14 +273,8 @@ def getWisdomAdviceGroup() -> AdviceGroup:
             unit='%' if bonus['ScalingValue'] > 30 else ''
         ) for bonus in bonuses.values()
     ]
-    mv = session_data.account.caverns['Majiks']['Monumental Vibes']
-    cavern_advice[b_stats].insert(0, Advice(
-        label=f"Monumental Vibes {{{{ Majik|#villagers }}}}: {mv['Description']}"
-              f"<br>(Already applied below)",
-        picture_class=f"{mv['MajikType']}-majik-{'un' if mv['Level'] == 0 else ''}purchased",
-        progression=mv['Level'],
-        goal=mv['MaxLevel']
-    ))
+    mv = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes']
+    cavern_advice[b_stats].insert(0, mv.get_advice())
 
     for subgroup in cavern_advice:
         for advice in cavern_advice[subgroup]:
@@ -490,7 +478,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 11:
+    if session_data.account.caverns_.villagers["Polonai"].level < 11:
         shallow_caverns_AdviceSection = AdviceSection(
             name="Shallow Caverns",
             tier="Not Yet Evaluated",
@@ -505,7 +493,7 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    schematics = session_data.account.caverns['Schematics']
+    schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getJarAdviceGroup(schematics)
