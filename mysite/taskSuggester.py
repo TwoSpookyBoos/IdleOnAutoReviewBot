@@ -32,6 +32,7 @@ from w7 import (
     clam_work,
     meritocracy,
     gallery,
+    zenith_market,
 )
 
 logger = get_logger(__name__)
@@ -172,6 +173,7 @@ def main(inputData, source_string, runType="web"):
             clam_work.get_section(),
             meritocracy.get_section(),
             gallery.get_section(),
+            zenith_market.get_zenith_market_section(),
         ]
     ]
 
