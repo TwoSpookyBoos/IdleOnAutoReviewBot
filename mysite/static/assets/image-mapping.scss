@@ -130,6 +130,7 @@ $id-map: map-merge($id-map, $all-summoning);
 @import "legend-talents";
 @import "gallery";
 @import "meritocracy";
+@import "zenith_market";
 
 $id-map: map-merge($id-map, $all-advice-fish);
 $id-map: map-merge($id-map, $all-clam);
@@ -138,6 +139,7 @@ $id-map: map-merge($id-map, $all-spelunking);
 $id-map: map-merge($id-map, $all-legend-talents);
 $id-map: map-merge($id-map, $all-gallery);
 $id-map: map-merge($id-map, $meritocracy);
+$id-map: map-merge($id-map, $zenith-market);
 
 
 @each $class, $link in $id-map {
