@@ -14,10 +14,9 @@ Click the button above, wait for the environment to be created
 
 ### The manual way
 Create and enable the virtual environment, and install the required packages.  
->Note that `coloredlogs` is commented in `mysite/requirements.txt`, as it doesn't work with the PythonAnywhere site. It's still needed for dev work though, so make sure it gets installed too, by uncommenting it. 
 
 _Preferably create the virtual environment somewhere under the project root. 
-`make test` command doesn't account for virtual environments located outside project scope_
+The `make test` command doesn't account for virtual environments located outside the project scope_
 
 #### Unix/MacOS:
 ``` bash
@@ -25,7 +24,7 @@ venv_dir="<venv/dir/name/here>"
 python -m venv "$venv_dir"
 source "$venv_dir"/bin/activate
 pip install --upgrade pip setuptools wheel
-pip install -r mysite/requirements/dev.txt
+pip install .[dev]
 ```
 #### Windows:
 ``` powershell
@@ -33,7 +32,7 @@ $venv_dir = "<venv/dir/name/here>"
 python -m venv "$venv_dir"
 "$venv_dir"/Scripts/Activate.ps1
 pip install --upgrade pip setuptools wheel
-pip install -r mysite/requirements/dev.txt
+pip install .[dev]
 ```
 <hr/>
 

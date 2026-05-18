@@ -2,11 +2,11 @@ FROM python:3.10.5
 
 WORKDIR /usr/src/app
 
-COPY mysite/requirements /tmp/requirements
+COPY ./ ./
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install .[dev]
 
-RUN pip install --no-cache-dir -r /tmp/requirements/dev.txt
-
-COPY mysite/ ./
+WORKDIR mysite
 
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=flask_app:app

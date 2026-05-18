@@ -1,8 +1,0 @@
-flask
-requests
-ua-parser
-babel
-pyyaml
-libsass
-json5
-pytest

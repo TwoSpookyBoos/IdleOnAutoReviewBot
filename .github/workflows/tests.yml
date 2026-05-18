@@ -13,8 +13,7 @@ jobs:
         python3 -m venv .venv
         source .venv/bin/activate
         pip install --upgrade pip setuptools wheel
-        pip install -r mysite/requirements.txt
-        pip install coloredlogs
+        pip install .[dev]
 
     - name: Run Tests
       working-directory: mysite
