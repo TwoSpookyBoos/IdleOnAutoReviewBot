@@ -65,8 +65,56 @@ $research-grid: (
   research-grid-o8: img('customized/ResearchGridO8.png')
 );
 
+$research-observations: (
+    observation-0: img('data/ResObj0.png'),
+    observation-1: img('data/ResObj1.png'),
+    observation-2: img('data/ResObj2.png'),
+    observation-3: img('data/ResObj3.png'),
+    observation-4: img('data/ResObj4.png'),
+    observation-5: img('data/ResObj5.png'),
+    observation-6: img('data/ResObj6.png'),
+    observation-7: img('data/ResObj7.png'),
+    observation-8: img('data/ResObj8.png'),
+    observation-9: img('data/ResObj9.png'),
+    observation-10: img('data/ResObj10.png'),
+    observation-11: img('data/ResObj11.png'),
+    observation-12: img('data/ResObj12.png'),
+    observation-13: img('data/ResObj13.png'),
+    observation-14: img('data/ResObj14.png'),
+    observation-15: img('data/ResObj15.png'),
+    observation-16: img('data/ResObj16.png'),
+    observation-17: img('data/ResObj17.png'),
+    observation-18: img('data/ResObj18.png'),
+    observation-19: img('data/ResObj19.png'),
+    observation-20: img('data/ResObj20.png'),
+    observation-21: img('data/ResObj21.png'),
+    observation-22: img('data/ResObj22.png'),
+    observation-23: img('data/ResObj23.png'),
+    observation-24: img('data/ResObj24.png'),
+    observation-25: img('data/ResObj25.png'),
+    observation-26: img('data/ResObj26.png'),
+    observation-27: img('data/ResObj27.png'),
+    observation-28: img('data/ResObj28.png'),
+    observation-29: img('data/ResObj29.png'),
+    observation-30: img('data/ResObj30.png'),
+    observation-31: img('data/ResObj31.png'),
+    observation-32: img('data/ResObj32.png'),
+    observation-33: img('data/ResObj33.png'),
+    observation-34: img('data/ResObj34.png'),
+    observation-35: img('data/ResObj35.png'),
+    observation-36: img('data/ResObj36.png'),
+    observation-37: img('data/ResObj37.png'),
+    observation-38: img('data/ResObj38.png'),
+    observation-39: img('data/ResObj39.png'),
+    observation-40: img('data/ResObj40.png'),
+    observation-41: img('data/ResObj41.png'),
+    observation-42: img('data/ResObj42.png'),
+    observation-43: img('data/ResObj43.png'),
+);
+
 $all-research: (
   research: img('data/ClassIcons61.png')
 );
 
 $all-research: map-merge($all-research, $research-grid);
+$all-research: map-merge($all-research, $research-observations);

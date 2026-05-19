@@ -17,6 +17,19 @@ def get_upgrade_info_group():
         informational=True
     )
 
+def get_observations_info_group():
+    advices = [
+        observation.get_advice()
+        for observation in session_data.account.research.observations.values()
+    ]
+    for advice in advices:
+        advice.mark_advice_completed()
+    return AdviceGroup(
+        pre_string="Observations",
+        advices=advices,
+        tier="",
+        informational=True
+    )
 
 def get_section():
     if session_data.account.highest_world_reached < 7:
@@ -28,7 +41,7 @@ def get_section():
             unreached=True,
         )
 
-    groups = [get_upgrade_info_group()]
+    groups = [get_upgrade_info_group(), get_observations_info_group()]
     return AdviceSection(
         name="Research",
         tier="",

@@ -1,9 +1,10 @@
 from consts.consts_autoreview import ValueToMulti
-from consts.idleon.w7.research import research_grid_upgrade_data, research_grid_row_size
+from consts.idleon.consts_idleon import MapDispName
+from consts.idleon.w7.research import research_grid_upgrade_data, research_grid_row_size, observation_data
 from models.advice.advice import Advice
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
 
 logger = get_logger(__name__)
 
@@ -73,12 +74,57 @@ class ResearchGrid(dict[str, ResearchGridUpgrade]):
     def calculate_bonuses(self):
         for upgrade in self.values():
             upgrade.calculate_bonus()
+
+
+class Observation:
+    def __init__(self,observation_raw_data: dict, index: int, unlocked: bool, level: int, xp:int):
+        self.name = observation_raw_data["Name"]
+        self.level_requirement = observation_raw_data["Level Requirement"]
+        self.description = observation_raw_data["Description"]
+        self.map = MapDispName[observation_raw_data["Map Index"]].replace("_", " ")
+        self.unlocked = bool(unlocked)
+        self.level = level
+        self.xp = round_and_trim(xp, 0)
+        self.xp_required = round_and_trim(
+            (2 + 0.7 * index)
+            * safer_math_pow(1.75 + index / 200, self.level, )
+            * (1 + safer_math_pow(index, 2) / 100)
+            + self.level
+        , 0)
+        self.image = f"observation-{index}"
+
+    def get_advice(self) -> Advice:
+        label = f"{self.name}"
+        if not self.unlocked:
+            label += f" ({self.map})<br>{self.description}"
+        else:
+            label += f"<br>Level {self.level}: {self.xp}/{self.xp_required} XP"
+        return Advice(
+            label=label,
+            picture_class=self.image,
+            progression=int(self.unlocked),
+            goal=1
+        )
+
+class Observations(dict[str, Observation]):
+    def __init__(self, raw_research_info: list):
+        observations_unlocked = safer_index(raw_research_info, 2, [])
+        observation_xp = safer_index(raw_research_info, 3, [])
+        observation_levels = safer_index(raw_research_info, 4, [])
+        for index, (unlocked, xp, level) in enumerate(zip(observations_unlocked, observation_xp, observation_levels)):
+            observation_raw_data = observation_data[index]
+            if observation_raw_data["Name"] == "Name":
+                continue
+            self[observation_raw_data["Name"]] = Observation(observation_raw_data, index, unlocked, level, xp)
+
+
 class Research:
     def __init__(self, raw_data: dict):
         raw_research_info = safe_loads(raw_data.get("Research", []))
         if not raw_research_info:
             logger.warning("Research data not present.")
         self.grid = ResearchGrid(raw_research_info)
+        self.observations = Observations(raw_research_info)
 
     def calculate_bonuses(self):
         self.grid.calculate_bonuses()
