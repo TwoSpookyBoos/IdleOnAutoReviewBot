@@ -1,3 +1,4 @@
+from models.advice.advice import Advice
 from models.general.session_data import session_data
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
@@ -31,6 +32,26 @@ def get_observations_info_group():
         informational=True
     )
 
+def get_posty_notes_info_group():
+    advices = [
+        Advice(
+            label="Note: New Posty Notes are unlocked every 10 Research levels",
+            picture_class="",
+        )
+    ]
+    advices += [
+        posty.get_advice()
+        for posty in session_data.account.research.posty_notes.values()
+    ]
+    for advice in advices:
+        advice.mark_advice_completed()
+    return AdviceGroup(
+        pre_string="Posty Notes",
+        advices=advices,
+        tier="",
+        informational=True
+    )
+
 def get_section():
     if session_data.account.highest_world_reached < 7:
         return AdviceSection(
@@ -41,7 +62,7 @@ def get_section():
             unreached=True,
         )
 
-    groups = [get_upgrade_info_group(), get_observations_info_group()]
+    groups = [get_upgrade_info_group(), get_observations_info_group(), get_posty_notes_info_group()]
     return AdviceSection(
         name="Research",
         tier="",

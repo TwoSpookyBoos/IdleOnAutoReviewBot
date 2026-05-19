@@ -1,10 +1,11 @@
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.consts_idleon import MapDispName
-from consts.idleon.w7.research import research_grid_upgrade_data, research_grid_row_size, observation_data
+from consts.idleon.w7.research import research_grid_upgrade_data, research_grid_row_size, observation_data, \
+    posty_notes_descriptions
 from models.advice.advice import Advice
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
+from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow, safer_get
 
 logger = get_logger(__name__)
 
@@ -118,13 +119,35 @@ class Observations(dict[str, Observation]):
             self[observation_raw_data["Name"]] = Observation(observation_raw_data, index, unlocked, level, xp)
 
 
+class PostyNote:
+    def __init__(self, index: int, description: str, research_level: int):
+        self.description = description
+        self.unlocked = research_level // 10 >= index + 1
+        self.image = f"posty-note-{index}"
+
+    def get_advice(self):
+        return Advice(
+            label=f"{self.description}",
+            picture_class=self.image,
+            progression=int(self.unlocked),
+            goal=1
+        )
+
+class PostyNotes(dict[str, PostyNote]):
+    def __init__(self, research_level: int):
+        for index, description in enumerate(posty_notes_descriptions):
+            self[str(index)] = PostyNote(index, description, research_level)
+
+
 class Research:
     def __init__(self, raw_data: dict):
+        research_level = safer_index(safer_get(raw_data, "Lv0_0", []), 20, 0)
         raw_research_info = safe_loads(raw_data.get("Research", []))
         if not raw_research_info:
             logger.warning("Research data not present.")
         self.grid = ResearchGrid(raw_research_info)
         self.observations = Observations(raw_research_info)
+        self.posty_notes = PostyNotes(research_level)
 
     def calculate_bonuses(self):
         self.grid.calculate_bonuses()

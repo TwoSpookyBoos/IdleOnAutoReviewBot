@@ -112,9 +112,27 @@ $research-observations: (
     observation-43: img('data/ResObj43.png'),
 );
 
+$research-posty-notes: (
+    posty-note-0: img('data/ResPosty0.png'),
+    posty-note-1: img('data/ResPosty1.png'),
+    posty-note-2: img('data/ResPosty2.png'),
+    posty-note-3: img('data/ResPosty3.png'),
+    posty-note-4: img('data/ResPosty4.png'),
+    posty-note-5: img('data/ResPosty5.png'),
+    posty-note-6: img('data/ResPosty6.png'),
+    posty-note-7: img('data/ResPosty7.png'),
+    posty-note-8: img('data/ResPosty8.png'),
+    posty-note-9: img('data/ResPosty9.png'),
+    posty-note-10: img('data/ResPosty10.png'),
+    posty-note-11: img('data/ResPosty11.png'),
+    posty-note-12: img('data/ResPosty12.png'),
+    posty-note-13: img('data/ResPosty13.png')
+);
+
 $all-research: (
   research: img('data/ClassIcons61.png')
 );
 
 $all-research: map-merge($all-research, $research-grid);
 $all-research: map-merge($all-research, $research-observations);
+$all-research: map-merge($all-research, $research-posty-notes);
