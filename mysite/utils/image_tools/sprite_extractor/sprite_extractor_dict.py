@@ -72,5 +72,11 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "rows": 4,
         "num_sprites": 14,
         "as_gif": True
+    },
+    "sprite-673-27.png": {
+        "base_file_name": "DancingCoral",
+        "columns": 3,
+        "rows": 3,
+        "num_sprites": 1
     }
 }
