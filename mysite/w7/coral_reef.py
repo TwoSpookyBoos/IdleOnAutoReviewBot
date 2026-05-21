@@ -33,7 +33,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     base_daily_corals = 10
 
     # Mult A
-    shellslug_multi, shellslug_advice = get_companion_advice('Shellslug', value_is_multi=True)
+    shellslug_multi, shellslug_advice = get_companion_advice('Shellslug')
 
     # Mult B
     coolral = session_data.account.event_points_shop['Bonuses']['Coolral']
