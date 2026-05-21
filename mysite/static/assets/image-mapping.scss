@@ -126,18 +126,22 @@ $id-map: map-merge($id-map, $all-summoning);
 @import "advice_fish";
 @import "clam";
 @import "coral";
-@import "spelunking";
-@import "legend-talents";
 @import "gallery";
+@import "legend-talents";
 @import "meritocracy";
+@import "research";
+@import "spelunking";
+@import "zenith_market";
 
 $id-map: map-merge($id-map, $all-advice-fish);
 $id-map: map-merge($id-map, $all-clam);
 $id-map: map-merge($id-map, $all-coral);
-$id-map: map-merge($id-map, $all-spelunking);
-$id-map: map-merge($id-map, $all-legend-talents);
 $id-map: map-merge($id-map, $all-gallery);
+$id-map: map-merge($id-map, $all-legend-talents);
+$id-map: map-merge($id-map, $all-research);
+$id-map: map-merge($id-map, $all-spelunking);
 $id-map: map-merge($id-map, $meritocracy);
+$id-map: map-merge($id-map, $zenith-market);
 
 
 @each $class, $link in $id-map {

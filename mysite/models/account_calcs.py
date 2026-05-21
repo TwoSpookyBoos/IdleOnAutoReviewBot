@@ -2223,6 +2223,8 @@ def _calculate_w7(account):
     _calculate_w7_coral_reef(account)
     account.meritocracy.calculate_bonuses()
     account.gallery.calculate_bonuses(account)
+    account.zenith_market.calculate_bonuses()
+    account.research.calculate_bonuses()
 
 
 def _calculate_w7_coral_reef(account):
