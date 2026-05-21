@@ -27,11 +27,14 @@ def get_upgrade_vault_advice(upgrade_name: str, link_to_section: bool = True, ad
     )
 
 
-def get_companion_advice(companion_name: str) -> tuple[int | float, Advice]:
+def get_companion_advice(companion_name: str, value_is_multi: bool = False) -> tuple[int | float, Advice]:
     companion_data_missing = not session_data.account.companions['Companion Data Present']
     missing_companion_data_txt = '<br>Note: Could be inaccurate. Companion data not found!' if companion_data_missing else ''
     companion = companions_data[companion_name]
-    return companion['Value'] * has_companion(companion_name), Advice(
+    companion_value = companion['Value'] * has_companion(companion_name)
+    if companion_value == 0 and value_is_multi:
+        companion_value = 1
+    return companion_value , Advice(
         label=f"Companions - {companion_name}:"
               f"<br>{companion['Description']}"
               f"{missing_companion_data_txt}",
