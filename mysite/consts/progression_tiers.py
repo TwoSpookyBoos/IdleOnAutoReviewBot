@@ -138,7 +138,9 @@ greenstack_progressionTiers = {
     2: {'Dream Number': 12, 'Required Stacks': 75},
     3: {'Dream Number': 29, 'Required Stacks': 200},
     4: {'Required Stacks': 250},
-    5: {'Required Stacks': 320}
+    5: {'Required Stacks': 300},
+    6: {'Required Stacks': 350},
+    7: {'Required Stacks': 400}
 }
 achievements_progressionTiers = {
     0: {},

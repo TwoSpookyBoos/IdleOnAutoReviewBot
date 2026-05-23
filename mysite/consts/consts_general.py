@@ -2,6 +2,7 @@ from consts.consts_autoreview import EmojiType
 from consts.idleon.lava_func import lava_func
 from utils.logging import get_consts_logger
 from utils.number_formatting import parse_number
+from utils.text_formatting import getItemDisplayName
 
 logger = get_consts_logger(__name__)
 
@@ -327,14 +328,14 @@ expected_stackables = {
         'FoodPotYe5', 'Leaf5',  # W5
         'Leaf6',  # W6
         'EquipmentStatues7', 'EquipmentStatues3', 'EquipmentStatues2', 'EquipmentStatues4', 'EquipmentStatues14',  # 'W1' statues, some in W1-W3
-        'EquipmentStatues1', 'EquipmentStatues5',  # Plausible but time consuming
+        'EquipmentStatues1', 'EquipmentStatues5',
         'EquipmentStatues10', 'EquipmentStatues12', 'EquipmentStatues13', 'EquipmentStatues8', 'EquipmentStatues11',  # W2 statues are all slower than Power/Health
         'rtt0', 'StoneZ1', 'StoneT1', 'StoneW1', 'StoneA1', 'StoneHelm1',  #W1 Slow drops = Town TP + Stones
         'StoneT2', 'StoneZ2',  'StoneW2', 'StoneA2',  # W2 upgrade stones and Mystery2
         'PureWater', 'EquipmentStatues18',  #W3 Slow drops = Distilled Water + EhExPee Statue
         'EquipmentStatues20', 'EquipmentStatues21', 'EquipmentStatues22',  # W4 Statues
         'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25', 'FoodG9', 'StoneZ3',  #W5 Slow drops = Golden W5 Sammy + Statues
-        # 'FoodG11', 'FoodG12'  #W6 gold foods
+        'FoodG11', 'FoodG12'  #W6 gold foods
     ],
     'Printable Skilling Resources': [
         'OakTree', 'BirchTree', 'JungleTree', 'ForestTree', 'ToiletTree', 'PalmTree', 'StumpTree', 'SaharanFoal',  # Logs1
@@ -388,8 +389,8 @@ expected_stackables = {
         'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
         'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues29', 'EquipmentStatues30',
         'EquipmentStatues31', 'EquipmentStatues32',
-        'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1',  # W1 Rare Drops
-        'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie',  # W2 Rare Drops
+        'Cutter', 'OilBarrel2', 'Sewers1b', 'TreeInterior1b', 'FoodPotRe2', 'FoodPotRe1', 'Key1',  # W1 Rare Drops
+        'DesertC2b', 'DesertA3b', 'DesertA1b', 'MidnightCookie', 'Key2',  # W2 Rare Drops
         'Quest78', 'SnowC4a', 'SnowB2a', 'SnowA2a', 'FoodHealth9', 'FoodPotMana3', 'FoodPotGr3', 'Key3',  # W3 Rare Drops
         # W4
         'GalaxyC1b', 'GalaxyA2b', 'Key4', 'PetEgg',
@@ -398,7 +399,6 @@ expected_stackables = {
         # W5
         'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5', 'Line4', 'Weight9',
         'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart2',  # Basic Efaunt material
-        # 'Key2',  # Efaunt key
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
         'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar',  # Gold Foods
@@ -450,9 +450,7 @@ for dg in greenstack_item_difficulty_groups:
 gstack_rated_not_expected = [item for item in gstacks_rated_items if item not in gstackable_codenames_expected]
 if len(gstack_rated_not_expected) > 0:
     logger.warning(f"{len(gstack_rated_not_expected)} Rated but not Expected Greenstacks found: {gstack_rated_not_expected}")
-gstack_expected_not_rated = [item for item in gstackable_codenames_expected if item not in gstacks_rated_items]
-if len(gstack_expected_not_rated) > 0:
-    logger.warning(f"{len(gstack_expected_not_rated)} Expected but not Rated Greenstacks found: {gstack_expected_not_rated}")
+gstack_expected_not_rated = {item:getItemDisplayName(item) for item in gstackable_codenames_expected if item not in gstacks_rated_items}
 gstack_unique_expected = set()
 gstack_duplicate_expected = set()
 for item_name in gstackable_codenames_expected:

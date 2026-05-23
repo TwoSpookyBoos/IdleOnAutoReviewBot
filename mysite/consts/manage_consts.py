@@ -3,7 +3,7 @@
 # instead of once per profile/data submit.
 
 from consts import consts_w2, progression_tiers
-from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars
+from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars, greenstack_item_difficulty_groups, gstack_expected_not_rated
 from consts.consts_item_data import ITEM_DATA
 from consts.w1.stamps import unavailable_stamps_list, stamp_maxes
 from consts.consts_w2 import max_maxable_vials
@@ -20,15 +20,24 @@ def finalize_consts():
     finalize_w2_vials()
 
 def finalize_general_greenstacks():
+    #Update consts_general.greenstack_item_difficulty_groups with a final group with all currently unclassified items
     try:
-        assert greenstack_progressionTiers[5]['Required Stacks'] == len(gstack_unique_expected)
+        next_tier = 1 + max(greenstack_item_difficulty_groups.keys())
+        greenstack_item_difficulty_groups[next_tier] = {"Needing to be properly tiered": list(gstack_expected_not_rated.keys())}
+        logger.debug(f"Successfully created additional GStack tier containing {len(gstack_expected_not_rated)} items: {greenstack_item_difficulty_groups[next_tier]}")
+    except Exception as e:
+        logger.exception(f"Failed to construct final GStacks tier")
+
+    #Log error if the GStack item counts are out of sync between dict and progressionTier
+    try:
+        assert greenstack_progressionTiers[max(greenstack_progressionTiers.keys())]['Required Stacks'] == len(gstack_unique_expected)
     except AssertionError:
         logger.error(
             f"Total number of Expected GStacks not in sync between "
-            f"tier {greenstack_progressionTiers[5]['Required Stacks']} and "
+            f"tier {greenstack_progressionTiers[max(greenstack_progressionTiers.keys())]['Required Stacks']} and "
             f"list {len(gstack_unique_expected)}"
         )
-        greenstack_progressionTiers[5]['Required Stacks'] = max(greenstack_progressionTiers[5]['Required Stacks'], len(gstack_unique_expected))
+        greenstack_progressionTiers[max(greenstack_progressionTiers.keys())]['Required Stacks'] = max(greenstack_progressionTiers[max(greenstack_progressionTiers.keys())]['Required Stacks'], len(gstack_unique_expected))
 
 def finalize_general_cards():
     try:
