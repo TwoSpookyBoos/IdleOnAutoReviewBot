@@ -326,7 +326,7 @@ expected_stackables = {
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
         'FoodPotYe5', 'Leaf5',  # W5
-        'Leaf6',  # W6
+        'Leaf6', 'StoneZ4',  # W6
         'EquipmentStatues7', 'EquipmentStatues3', 'EquipmentStatues2', 'EquipmentStatues4', 'EquipmentStatues14',  # 'W1' statues, some in W1-W3
         'EquipmentStatues1', 'EquipmentStatues5',
         'EquipmentStatues10', 'EquipmentStatues12', 'EquipmentStatues13', 'EquipmentStatues8', 'EquipmentStatues11',  # W2 statues are all slower than Power/Health
@@ -405,9 +405,10 @@ expected_stackables = {
         # World 7 part 1
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
-        'Coral4', 'w7B1b',
+        'Coral4', 'w7B1b', 'Quest110'
     ],
     'Boss Drop': [
+        'ExpBalloon1',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
     ],
     'Cheater': [
@@ -426,7 +427,7 @@ expected_stackables = {
         'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',  # Event Foods
         'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',  # Skilling Speed Pearls, EXP pearls
         'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line9', 'Line10', 'Line11', 'Line14',  # Fishing Lines
-        'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
+        'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
         'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9',  # Time Candies
         'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
         'Quest70', 'Quest71', 'Quest75', 'Gfoodcoupon', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags

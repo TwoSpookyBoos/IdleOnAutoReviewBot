@@ -18,6 +18,7 @@ $resources: (
     dreadlo-ore: img('wiki/Dreadlo_Ore.png'),
     godshard-ore: img('wiki/Godshard_Ore.png'),
     motherlode-ore: map-get($motherlode-resources, motherlode-ore),
+    prehistrium-ore: img('data/skill_resource/Prehistrium.png'),
     // Bars
     copper-bar: img('wiki/Copper_Bar.png'),
     iron-bar: img('wiki/Iron_Bar.png'),
@@ -30,6 +31,7 @@ $resources: (
     dreadlo-bar: img('wiki/Dreadlo_Bar.png'),
     marble-bar: img('wiki/Marble_Bar.png'),
     godshard-bar: img('wiki/Godshard_Bar.png'),
+    prehistrium-bar: img('data/skill_resource/PrehistriumBar.png'),
     // Logs
     oak-logs: img('wiki/Oak_Logs.png'),
     bleach-logs: img('wiki/Bleach_Logs.png'),
@@ -48,6 +50,7 @@ $resources: (
     bamboo-logs: img('wiki/Bamboo_Logs.png'),
     effervescent-logs: img('wiki/Effervescent_Logs.png'),
     everlog: img('wiki/Everlog.png'),
+    seaweed-logs: img('data/skill_resource/Tree14.png'),
     // Leaves
     grass-leaf: img('wiki/Grass_Leaf.png'),
     twisty-leaf: img('wiki/Twisty_Leaf.png'),
@@ -85,6 +88,7 @@ $resources: (
     ladybug: img('wiki/Ladybug.png'),
     firefly: img('wiki/Firefly.png'),
     fractal-fly: img('wiki/Fractal_Fly.png'),
+    litterbug: img('data/skill_resource/Bug15.png'),
     // Critters
     froge: map-get($world-contents, froge),
     poison-froge: img('wiki/Poison_Froge.png'),
@@ -1114,7 +1118,7 @@ $stamps: (
     atomic-stamp: img('data/StampC23.png'),
     cavern-resource-stamp: img('data/StampC24.png'),
     study-hall-stamp: img('data/StampC25.png'),
-    krunker-stamp: img('data/StampC26.png'),
+    kruker-stamp: img('data/StampC26.png'),
     corale-stamp: img('data/StampC27.png'),
 );
 
@@ -1201,7 +1205,7 @@ $misc: (
     urie-s-special-childhood-rock: img('data/Quest106.png'),
     stamina-battery: img('data/Quest108.png'),
     cropfall-basket: img('data/Quest109.png'),
-    zenith-crystal: img('data/Quest110.png')
+    zenith-cluster: img('data/Quest110.png')
 );
 
 $all-slab: map-merge($resources, $monster-drops);
