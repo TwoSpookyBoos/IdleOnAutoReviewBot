@@ -7,5 +7,5 @@ clam_bonus_img = [
     "coral",
     "coral-0",
     "gallery",
-    "summoning-class-exp",
+    "ballot-15",
 ]

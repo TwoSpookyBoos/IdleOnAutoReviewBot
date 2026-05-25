@@ -34,7 +34,7 @@ class ZenithMarketUpgrade:
         return Advice(
             label=f"{self.name}:<br>{description}",
             picture_class="zenith-market",
-            resource="zenith-crystal",
+            resource="zenith-cluster",
             progression=self.level,
             goal=self.max_level,
         )
