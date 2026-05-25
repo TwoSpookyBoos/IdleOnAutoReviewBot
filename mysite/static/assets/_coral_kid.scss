@@ -1,0 +1,12 @@
+@import "ballot";
+@import "coral";
+
+$coral-kid: (
+    coral-kid: img('extracted_sprites/CoralKid0.png'),
+    coral-kid-upgrade-0: img('data/DivGod10.png'),
+    coral-kid-upgrade-1: img('Divinity.png'),
+    coral-kid-upgrade-2: map-get($ballot, ballot-15),
+    coral-kid-upgrade-3: img('Divinity.png'),
+    coral-kid-upgrade-4: img('Divinity.png'),
+    coral-kid-upgrade-5: map-get($all-coral, coral)
+);

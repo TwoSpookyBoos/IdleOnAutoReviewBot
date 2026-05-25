@@ -35,6 +35,7 @@ from w7 import (
     zenith_market,
     research,
     dancing_coral,
+    coral_kid,
 )
 
 logger = get_logger(__name__)
@@ -177,6 +178,7 @@ def main(inputData, source_string, runType="web"):
             advice_fish.get_section(),
             zenith_market.get_zenith_market_section(),
             dancing_coral.get_dancing_coral_section(),
+            coral_kid.get_coral_kid_section(),
             clam_work.get_section(),
         ]
     ]
