@@ -1,0 +1,13 @@
+@import "ballot";
+@import "coral";
+@import "research";
+@import "spelunking";
+
+$dancing-coral: (
+    dancing-coral: img('extracted_sprites/DancingCoral0.png'),
+    dancing-coral-bonus-0: map-get($all-coral, coral),
+    dancing-coral-bonus-1: map-get($all-spelunking, spelunking-tool-0),
+    dancing-coral-bonus-2: map-get($all-spelunking, spelunking-amber-0),
+    dancing-coral-bonus-3: map-get($ballot, ballot-15),
+    dancing-coral-bonus-4: map-get($all-research, research)
+);

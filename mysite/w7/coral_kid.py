@@ -6,7 +6,7 @@ from models.general.session_data import session_data
 
 def get_bonuses_info_group() -> AdviceGroup:
     advices: list[Advice] = [
-        bonus.get_advice() for bonus in session_data.account.dancing_coral.values()
+        bonus.get_advice() for bonus in session_data.account.coral_kid.values()
     ]
 
     for advice in advices:
@@ -20,23 +20,23 @@ def get_bonuses_info_group() -> AdviceGroup:
     )
 
 
-def get_dancing_coral_section():
+def get_coral_kid_section():
     if session_data.account.highest_world_reached < 7:
-        dancing_coral_AdviceSection = AdviceSection(
-            name='Dancing Coral',
+        coral_kid_AdviceSection = AdviceSection(
+            name='Coral Kid',
             tier='Not Yet Evaluated',
-            header='Come back after finding the Dancing Coral in Barnacle Curb!',
-            picture='extracted_sprites/DancingCoral0.png',
+            header='Come back after finding the Coral Kid in Balloon Bay!',
+            picture='extracted_sprites/CoralKid0.png',
             unreached=True,
         )
-        return dancing_coral_AdviceSection
+        return coral_kid_AdviceSection
 
     groups = [get_bonuses_info_group()]
     return AdviceSection(
-        name='Dancing Coral',
+        name='Coral Kid',
         tier='',
-        header='Dancing Coral',
-        picture='extracted_sprites/DancingCoral0.png',
+        header='Coral Kid',
+        picture='extracted_sprites/CoralKid0.png',
         groups=groups,
         informational=True,
         unrated=True,

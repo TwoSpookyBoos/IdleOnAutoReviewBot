@@ -5,12 +5,16 @@ from models.general.session_data import session_data
 
 
 def get_upgrades_info_group() -> AdviceGroup:
-    upgrade_advice: list[Advice] = [
+    advices: list[Advice] = [
         upgrade.get_advice() for upgrade in session_data.account.zenith_market.values()
     ]
+
+    for advice in advices:
+        advice.mark_advice_completed()
+
     return AdviceGroup(
         pre_string='Upgrades',
-        advices=upgrade_advice,
+        advices=advices,
         tier='',
         informational=True
     )

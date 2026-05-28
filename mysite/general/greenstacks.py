@@ -257,7 +257,7 @@ def getGStackAdviceSections():
 
     #Equinox Dream Review
     overall_SectionTier = 0
-    optional_tiers = 2
+    optional_tiers = 4
     true_max = max(greenstack_progressionTiers.keys(), default=0)
     max_tier = true_max - optional_tiers
     dream_advice = {}

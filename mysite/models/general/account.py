@@ -11,6 +11,8 @@ from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
+from models.w7.coral_kid import CoralKid
+from models.w7.dancing_coral import DancingCoral
 from models.w7.research import Research
 from models.w7.spelunk import Spelunk
 from models.w7.advice_fish import AdviceFish
@@ -103,6 +105,8 @@ class Account:
         self.gallery = Gallery(self.raw_data)
         self.zenith_market = ZenithMarket(self.raw_data)
         self.research = Research(self.raw_data)
+        self.dancing_coral = DancingCoral(self.raw_data)
+        self.coral_kid = CoralKid(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

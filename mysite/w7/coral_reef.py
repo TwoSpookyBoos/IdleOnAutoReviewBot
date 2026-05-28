@@ -33,7 +33,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     base_daily_corals = 10
 
     # Mult A
-    shellslug_multi, shellslug_advice = get_companion_advice('Shellslug')
+    shellslug_multi, shellslug_advice = get_companion_advice('Shellslug', value_is_multi=True)
 
     # Mult B
     coolral = session_data.account.event_points_shop['Bonuses']['Coolral']
@@ -64,12 +64,10 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     )
     multi_group_d_advice.append(coral_kid_advice)
 
-    # TODO: Dancing Coral bonus
-    dancing_coral_advice = Advice(
-        label="Dancing Coral Bonus (WIP)",
-        picture_class="coming-soon"
-    )
+    dancing_coral_bonus = session_data.account.dancing_coral[0]
+    dancing_coral_advice = dancing_coral_bonus.get_advice()
     multi_group_d_advice.append(dancing_coral_advice)
+    multi_group_d_value += dancing_coral_bonus.value
 
     # TODO: Clamwork bonus
     clamwork_advice = Advice(
