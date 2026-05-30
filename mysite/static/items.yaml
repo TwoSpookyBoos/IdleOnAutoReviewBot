@@ -1302,6 +1302,7 @@ w7B10: Magmaspike
 w7B11: Pirate Mark II
 w7B11b: Pirate Anchor
 w7B12: Pirate Mark III
+w7B12b: Pirate Ship Figurine
 ClamPearl0: Clam Pearl
 ClamPearl1: Pure Pearl
 Coral1: Vibrant Coral
@@ -1661,6 +1662,9 @@ EquipmentNametagReplica34: Emerald Nametag
 EquipmentNametagReplica35: 5th Anniversary IdleOn Nametag
 EquipmentNametagReplica36: Wonderful 5th Year Nametag
 EquipmentNametagReplica37: Grand Egg Nametag
+EquipmentNametagReplica38: Bronze Tournament Border Nametag
+EquipmentNametagReplica39: Silver Tournament Border Nametag
+EquipmentNametagReplica40: Gold Tournament Border Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain

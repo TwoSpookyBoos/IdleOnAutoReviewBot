@@ -785,6 +785,9 @@ monster_data = {
     "poppy": {
         "Name": "Poppy"
     },
+    "fm_frog": {
+        "Name": "Abacus Frog"
+    },
     "T1a": {
         "Name": "Bronze Champion Ram"
     },
@@ -793,6 +796,15 @@ monster_data = {
     },
     "T1c": {
         "Name": "Gold Champion Ram"
+    },
+    "T2a": {
+        "Name": "Bronze Champion Troll"
+    },
+    "T2b": {
+        "Name": "Silver Champion Troll"
+    },
+    "T2c": {
+        "Name": "Gold Champion Troll"
     },
     "Copper": {
         "Name": "Copper"
@@ -1199,5 +1211,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "0af483c00457aa6c61d6e46a0647d1734b653baa647b40dd65763f6551e8d2aa"
+    "_hash": "e57aac19907cae70be0b995c134a74cc1e05975db67f1559b7a8427f18a02c5f"
 }
