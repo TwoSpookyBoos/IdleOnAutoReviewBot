@@ -1,7 +1,8 @@
 from typing import Union
 
-from consts.consts_general import greenstack_amount, greenstack_item_difficulty_groups, gstackable_codenames, \
-    gstackable_codenames_expected, quest_items_codenames
+from models.advice.advice import Advice
+from consts.consts_general import greenstack_amount
+from consts.consts_w5 import get_vendor_name
 from utils.text_formatting import getItemDisplayName, getItemCodeName
 
 
@@ -101,11 +102,21 @@ class Asset:
     def progression(self) -> int:
         return self.amount * 100 // greenstack_amount
 
+    def greenstask_advice(self, category: str) -> Advice:
+        vendor_suffix = (
+            f" ({get_vendor_name(self.codename)})" if category == "Vendor Shops" else ""
+        )
+        return Advice(
+            label=f"{self.name}{vendor_suffix}",
+            picture_class=self.image,
+            progression=self.progression,
+            goal=100,
+            unit="%"
+        )
+
 
 class Assets(dict):
     def __init__(self, assets: Union[dict[str, int], "Assets", None] = None):
-        self.tiers = greenstack_item_difficulty_groups
-
         if assets is None:
             assets = dict()
 
@@ -144,85 +155,3 @@ class Assets(dict):
 
     def get(self, item, default=None):
         return super().get(item, default if default else Asset(item, 0))
-
-    @property
-    def items_gstacked(self) -> dict[str, Asset]:
-        """Not used since it includes the "Cheater" group"""
-        return {asset.codename: asset for asset in self.values() if asset.greenstacked}
-
-    @property
-    def items_gstacked_expected(self) -> dict[str, Asset]:
-        return {
-            codename: asset
-            for codename, asset in self.items_gstacked.items()
-            if codename in gstackable_codenames
-        }
-
-    @property
-    def items_gstacked_cheater(self) -> dict[str, Asset]:
-        return {
-            codename: asset
-            for codename, asset in self.items_gstacked.items()
-            if codename not in gstackable_codenames_expected
-        }
-
-    @property
-    def items_gstacked_unprecedented(self) -> dict[str, Asset]:
-        return {
-            codename: asset
-            for codename, asset in self.items_gstacked.items()
-            if codename not in gstackable_codenames
-        }
-
-    @property
-    def items_gstackable(self) -> dict[str, Asset]:
-        """Not used since it includes the "Cheater" group"""
-        return {
-            codename: asset
-            for codename, asset in self.items()
-            if codename in gstackable_codenames and not asset.greenstacked
-        }
-
-    @property
-    def items_gstackable_expected(self) -> dict[str, Asset]:
-        return {
-            codename: asset
-            for codename, asset in self.items()
-            if codename in gstackable_codenames_expected and not asset.greenstacked
-        }
-
-    @property
-    def items_gstackable_tiered(self) -> dict[int, dict[str, list[Asset]]]:
-        tiered = dict()
-        gstackable_expected = self.items_gstackable_expected
-        for tier, categories in self.tiers.items():
-            categorised = dict()
-            for category, items in categories.items():
-                item_list = [
-                    self.get(item)
-                    for item in items
-                    if item in gstackable_expected
-                    and self.get(item) not in self.quest_items_missed
-                ]
-                if item_list:
-                    categorised[category] = sorted(item_list, key=lambda item: item.progression, reverse=True)
-            if categorised:
-                tiered["Timegated" if tier == 0 else tier] = categorised
-
-        return tiered
-
-    @property
-    def quest_items(self) -> set[Asset]:
-        return {self.get(codename) for codename in quest_items_codenames}
-
-    @property
-    def quest_items_gstacked(self) -> set[Asset]:
-        return {asset for asset in self.quest_items if asset.greenstacked}
-
-    @property
-    def quest_items_gstackable(self) -> set[Asset]:
-        return self.quest_items.difference(self.quest_items_gstacked)
-
-    @property
-    def quest_items_missed(self) -> set[Asset]:
-        return self.quest_items.difference(self.quest_items_gstacked)
