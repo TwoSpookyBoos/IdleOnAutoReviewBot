@@ -1,14 +1,14 @@
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_general import missable_gstacks_dict, gstack_unique_expected
-from consts.consts_w5 import get_vendor_name
 from consts.progression_tiers import greenstack_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
 
-from models.general.assets import Assets
+from models.general.assets import Assets, Asset
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
+from utils.text_formatting import getItemDisplayName
 
 
 logger = get_logger(__name__)
@@ -31,8 +31,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     true_max = true_max_tiers['Endangered Greenstacks']
     max_tier = true_max - optional_tiers
 
-    advice_ObtainedQuestGStacks = owned_stuff.quest_items_gstacked
-    advice_EndangeredQuestGStacks = list(owned_stuff.quest_items_gstackable)
+    greenstacks = session_data.account.greenstacks
+    collectedQuest = len(greenstacks.collected_quest_items)
     advice_MissedQuestGStacks = []
     questGStacks_AdviceDict = {
         "Endangered": [],
@@ -46,7 +46,9 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         if session_data.account.compiled_quests[name]['CompletedCount'] == session_data.account.character_count
     ]
 
-    for quest_item in list(advice_EndangeredQuestGStacks):
+    advice_EndangeredQuestGStacks = []
+    for quest_codename in greenstacks.expected_quest_items:
+        quest_item = owned_stuff.get(quest_codename) or Asset(quest_codename, 0)
         item_data = missable_gstacks_dict[quest_item.name]
         quest_codename = item_data[1]
         quest_item.quest = item_data[2]
@@ -54,7 +56,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
 
         if quest_codename in quests_completed_on_all_toons:
             advice_MissedQuestGStacks.append(quest_item)
-            advice_EndangeredQuestGStacks.remove(quest_item)
+        else:
+            advice_EndangeredQuestGStacks.append(quest_item)
 
     note = (
         "These items are only recommended for players trying to complete the "
@@ -64,8 +67,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
         "to clean up later!"
     )
 
-    already_missed = len(missable_gstacks_dict) - len(advice_ObtainedQuestGStacks) - len(advice_EndangeredQuestGStacks)
-    already_obtained = len(advice_ObtainedQuestGStacks)
+    already_missed = len(missable_gstacks_dict) - collectedQuest - len(advice_EndangeredQuestGStacks)
     still_obtainable = len(advice_EndangeredQuestGStacks)
     possible = len(missable_gstacks_dict)
 
@@ -76,8 +78,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
     else:
         header_alreadymissed = f""
 
-    if already_obtained > 0:
-        header_alreadyobtained = f"{'and ' if already_missed > 0 and still_obtainable == 0 else ''}already obtained {already_obtained}"
+    if collectedQuest > 0:
+        header_alreadyobtained = f"{'and ' if already_missed > 0 and still_obtainable == 0 else ''}already obtained {collectedQuest}"
     else:
         header_alreadyobtained = ""
 
@@ -90,7 +92,7 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
                          f"{',<br>' if header_alreadymissed != '' and header_alreadyobtained != '' else ''}{header_alreadyobtained}"
                          f"{header_missable}"
                          f" missable quest item Greenstacks."
-                         f"{break_you_best if already_obtained == possible else ''}"
+                         f"{break_you_best if collectedQuest == possible else ''}"
                          f"{'<br> Be sure NOT to turn in their quests until GStacking them' if still_obtainable > 0 else ''}")
 
     if len(advice_EndangeredQuestGStacks) > 0:
@@ -169,32 +171,41 @@ def getGStackAdviceSections():
     all_owned_stuff: Assets = session_data.account.stored_assets
     questGStacks_AdviceSection = getMissableGStacksAdviceSection(all_owned_stuff)
 
-    unprecedented_gstacks = all_owned_stuff.items_gstacked_unprecedented
-    if unprecedented_gstacks:
-        gstacks = [f"{gstack.name} ({gstack.codename})" for gstack in unprecedented_gstacks.values()]
-        logger.warning('Unexpected GStack(s): %s', gstacks)
+    greenstacks = session_data.account.greenstacks
+    unprecedented_list = [
+        (getItemDisplayName(codename), codename)
+        for codename in greenstacks.unprecedented
+    ]
+
+    unprecedented_gstacks_advice_list = [
+        Advice(label=name, picture_class=name) for name, _ in unprecedented_list
+    ]
+
+    if not unprecedented_gstacks_advice_list:
+        gstacks_str = ", ".join(
+            f"{name} ({codename})" for name, codename in unprecedented_list
+        )
+        logger.warning("Unexpected GStack(s): %s", gstacks_str)
 
     #Get count of max expected gstacks
     expectedStackablesCount = len(gstack_unique_expected)
-    expectedGStacksCount = len(all_owned_stuff.items_gstacked_expected)
-    remainingToDoGStacksByTier = all_owned_stuff.items_gstackable_tiered
+    collectedGStacksCount = greenstacks.count
 
     groups = list()
-    for tier, categories in remainingToDoGStacksByTier.items():
-        tier_subsection = {
-            category: [
-                Advice(
-                    label=f"{item.name}"
-                          f"{f' ({get_vendor_name(item.codename)})' if category == 'Vendor Shops' else ''}",
-                    picture_class=item.image,
-                    progression=item.progression,
-                    goal=100,
-                    unit="%"
-                )
-                for item in items
+    for tier, categories in greenstacks.expected_by_tier.items():
+        tier_subsection = {}
+        for category, codename_list in categories.items():
+            item_list = sorted(
+                [
+                    all_owned_stuff.get(codename) or Assets(codename, 0)
+                    for codename in codename_list
+                ],
+                key=lambda item: item.progression,
+                reverse=True,
+            )
+            tier_subsection[category] = [
+                item.greenstask_advice(category) for item in item_list
             ]
-            for category, items in categories.items()
-        }
         groups.append(
             AdviceGroup(
                 tier='',
@@ -208,42 +219,36 @@ def getGStackAdviceSections():
         tier='',
         pre_string="Curious... you also managed to greenstack these unprecedented items",
         post_string="Share your unyielding persistence with us, please!",
-        advices=[
-            Advice(
-                label=asset.name,
-                picture_class=asset.name
-            )
-            for codename, asset in all_owned_stuff.items_gstacked_unprecedented.items()
-        ],
+        advices=unprecedented_gstacks_advice_list,
         informational=True
     )
     groups.append(cheat_group)
 
-    tier = f"{expectedGStacksCount} out of max (realistic) {expectedStackablesCount}"
+    tier = f"{collectedGStacksCount} out of max (realistic) {expectedStackablesCount}"
     header = f"You currently have {tier} GStacks."
     show_limit = len(groups)
     if (
-        expectedGStacksCount >= greenstack_progressionTiers[3]['Required Stacks']
+        collectedGStacksCount >= greenstack_progressionTiers[3]['Required Stacks']
         or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[3]['Dream Number']}", False) == True
     ):
         header += f"{break_you_best} (until Lava adds further Dream tasks)<br>Other possible targets are still listed below."
         show_limit = 4
     elif (
-        expectedGStacksCount >= greenstack_progressionTiers[2]['Required Stacks']
+        collectedGStacksCount >= greenstack_progressionTiers[2]['Required Stacks']
         or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[2]['Dream Number']}", False) == True
     ):
         header += (f" Equinox Dream {greenstack_progressionTiers[3]['Dream Number']} requires {greenstack_progressionTiers[3]['Required Stacks']}."
                    f" Aim for items up through Difficulty Group 10!<br>Groups 11-14 are optional without much extra benefit to collecting than +1 GStack.")
         show_limit = 3
     elif (
-        expectedGStacksCount >= greenstack_progressionTiers[1]['Required Stacks']
+        collectedGStacksCount >= greenstack_progressionTiers[1]['Required Stacks']
         or equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[1]['Dream Number']}", False) == True
     ):
         header += (f" Equinox Dream {greenstack_progressionTiers[2]['Dream Number']} requires {greenstack_progressionTiers[2]['Required Stacks']}."
                    f" Aim for items up through Difficulty Group 4!<br>Continue buying those Timegated items too :)")
         show_limit = 2
     elif (
-        expectedGStacksCount < greenstack_progressionTiers[1]['Required Stacks']
+        collectedGStacksCount < greenstack_progressionTiers[1]['Required Stacks']
         and equinoxDreamsStatus.get(f"Dream{greenstack_progressionTiers[1]['Dream Number']}", False) == False
     ):
         header += (f" Equinox Dream {greenstack_progressionTiers[1]['Dream Number']} requires {greenstack_progressionTiers[1]['Required Stacks']}."
@@ -264,13 +269,13 @@ def getGStackAdviceSections():
     for tier_number, requirements in greenstack_progressionTiers.items():
         subgroup_name = build_subgroup_label(tier_number, max_tier)
         if not equinoxDreamsStatus.get(f"Dream{requirements.get('Dream Number', 29)}", False) or (
-                tier_number > max_tier and requirements['Required Stacks'] > expectedGStacksCount
+                tier_number > max_tier and requirements['Required Stacks'] > collectedGStacksCount
         ):
             dream_advice[subgroup_name] = [
                 Advice(
                     label=f"Collect {requirements['Required Stacks']} Greenstacks",
                     picture_class='greenstacks',
-                    progression=expectedGStacksCount,
+                    progression=collectedGStacksCount,
                     goal=requirements['Required Stacks']
                 )
             ]

@@ -407,11 +407,13 @@ expected_stackables = {
         # World 7 part 1
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
-        'Coral4', 'w7B1b', 'Quest110'
+        'Coral4', 'w7B1b', 'Quest110',
+        'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     ],
     'Boss Drop': [
         'BabaYagaETC',
         'ExpBalloon1',
+        'Meatloaf', 'Quest17', 'Quest29',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
     ],
     'Cheater': [
@@ -419,14 +421,14 @@ expected_stackables = {
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
-        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest17', 'Quest20', 'Quest25',
-        'Quest26', 'Quest27', 'Quest28', 'Quest29', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
+        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest20', 'Quest25',
+        'Quest26', 'Quest27', 'Quest28', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
         'Quest41', 'Quest42', 'Quest43', 'Quest44', 'Quest45', 'Quest46', 'Quest47', 'Quest48', 'Quest49', 'Quest50', 'Quest9',
         'Mayo', 'Trash', 'Trash2', 'Trash3',  # Treasure Hunt rewards
-        'Meatloaf', 'FoodHealth5',  #Small quantity foods
+        'FoodHealth5',  #Small quantity foods
         'BobJoePickle', 'BallJoePickle', 'BoneJoePickle',  #Pickles
         'FoodPotYe1', 'FoodPotYe3',  # EXP 1 and 3
-        'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',  # Event Foods
+        'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4',  # Event Foods
         'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',  # Skilling Speed Pearls, EXP pearls
         'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line9', 'Line10', 'Line11', 'Line14',  # Fishing Lines
         'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
