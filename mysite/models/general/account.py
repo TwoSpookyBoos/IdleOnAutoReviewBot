@@ -5,6 +5,7 @@ from consts.w1.stamps import stamp_types
 from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
+from models.general.greenstacks import GreenStacks
 from models.w1.stamps import Stamps
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
@@ -75,6 +76,7 @@ class Account:
             'Total Slots Owned': 0,
             'Total Slots Max': 0
         }
+        self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         #W1
         self.stamps: Stamps = Stamps()
         self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}

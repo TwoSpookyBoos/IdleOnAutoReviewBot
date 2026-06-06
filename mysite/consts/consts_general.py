@@ -190,7 +190,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 1
             'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
             # World 7 part 2
-            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11',
+            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11', 'w7B12',
             "Sewers3"
         ],
         "Crystal Enemy Drops": [
@@ -316,7 +316,7 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg'  # Specialty Monster Materials
     ],
     'Crystal Enemy Drops': [
@@ -374,6 +374,7 @@ expected_stackables = {
         # World 7 part 2
         'Spelunking4', 'Spelunking5',
         'Line13',
+        'ResetCompleted', 'ResetCompletedS',
     ],
     'Vendor Shops': [
         'FoodHealth1',
@@ -384,6 +385,7 @@ expected_stackables = {
         'FoodPotRe2',  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     'Rare Drops': [
+        'JobApplication',  # W1 Rare Drops
         'FoodHealth2', 'FoodHealth3',
         # TODO: Move Statues to their corresponding Crystals
         'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
@@ -401,30 +403,32 @@ expected_stackables = {
         'EfauntDrop1', 'EfauntDrop2', 'Chiz0', 'Chiz1', 'TrollPart', 'KrukPart2',  # Basic Efaunt material
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
-        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'FoodG15', 'ButterBar',  # Gold Foods
+        'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'ButterBar',  # Gold Foods
         # World 7 part 1
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
-        'Coral4', 'w7B1b', 'Quest110'
+        'Coral4', 'w7B1b', 'Quest110',
+        'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     ],
     'Boss Drop': [
+        'BabaYagaETC',
         'ExpBalloon1',
+        'Meatloaf', 'Quest17', 'Quest29',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
     ],
     'Cheater': [
-        'BabaYagaETC', 'JobApplication',  # W1 Rare Drops
         'EmpPart',  # W6 Boss Material
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
-        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest17', 'Quest20', 'Quest25',
-        'Quest26', 'Quest27', 'Quest28', 'Quest29', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
+        'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest20', 'Quest25',
+        'Quest26', 'Quest27', 'Quest28', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
         'Quest41', 'Quest42', 'Quest43', 'Quest44', 'Quest45', 'Quest46', 'Quest47', 'Quest48', 'Quest49', 'Quest50', 'Quest9',
         'Mayo', 'Trash', 'Trash2', 'Trash3',  # Treasure Hunt rewards
-        'Meatloaf', 'FoodHealth5',  #Small quantity foods
+        'FoodHealth5',  #Small quantity foods
         'BobJoePickle', 'BallJoePickle', 'BoneJoePickle',  #Pickles
         'FoodPotYe1', 'FoodPotYe3',  # EXP 1 and 3
-        'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',  # Event Foods
+        'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4',  # Event Foods
         'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',  # Skilling Speed Pearls, EXP pearls
         'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line9', 'Line10', 'Line11', 'Line14',  # Fishing Lines
         'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
@@ -433,8 +437,8 @@ expected_stackables = {
         'Quest70', 'Quest71', 'Quest75', 'Gfoodcoupon', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags
         'FoodHealth8', 'Quest69', 'Quest74',  # Unobtainables
         'EquipmentStatues6',  # Kachow
-        'ResetCompleted', 'ResetCompletedS', 'ClassSwap',
-        'ClassSwapB', 'ResetBox',
+        'ClassSwap', 'ClassSwapB', 'ResetBox',
+        'FoodG15',
     ]
 }
 greenstack_amount = 10 ** 7
@@ -490,7 +494,7 @@ cardset_names = [
     "Events",
 ]
 
-# `CardStuff` in source. Last updated in v2.43  Nov 10
+# `CardStuff` in source. Last updated in v2.507
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -718,8 +722,12 @@ card_raw_data = [
         ["w7b9", "J21", "20000000", "+{%_Drop_Rate_Multi", "1"],
         ["w7b10", "J22", "30000000", "+{%_Drop_Rate_Multi", "1"],
         ["w7b11", "J23", "20000000", "+{%_Research_AFK_gain_(Passive)", "1"],
-        ["w7b12", "J24", "100000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b12", "J24", "40000000", "+{%_Spelunk_Amber_(Passive)", "10"],
         ["Crystal6", "J99", "2500000", "+{%_Damage_Multi_(Passive)", "1.5"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
@@ -808,7 +816,15 @@ card_raw_data = [
         ["cropfallEvent1", "Y20", "6", "+{%_Gold_Food_Effect_(Passive)", "4"],
         ["xmasEvent4", "Y21", "1", "+{%_Catching_Away_Gains", "2"],
         ["luckEvent1", "Y22", "5", "+{%_Drop_Rate_(Passive)", "3"],
-        ["luckEvent2", "Y23", "5", "+{%_Money_from_Monsters", "4"]
+        ["luckEvent2", "Y23", "5", "+{%_Money_from_Monsters", "4"],
+        ["anni5Event1", "Y24", "6", "+{%_Gold_Food_Effect_(Passive)", "5"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
     ]
 ]
 
