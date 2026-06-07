@@ -557,6 +557,9 @@ class Farming:
         raw_crops = safe_loads(raw_data.get("FarmCrop", {}))
         if not raw_crops:
             logger.warning("Farming Crop data not present.")
+        for key, value in raw_crops.items():
+            if value is None:
+                raw_crops[key] = 0
         self._parse_crops(raw_crops)
         self._parse_crop_depot()
         self.market: dict[str, MarketUpgrade] = {}
