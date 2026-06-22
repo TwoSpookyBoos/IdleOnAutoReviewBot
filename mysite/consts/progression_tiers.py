@@ -953,10 +953,48 @@ vials_progressionTiers = {
         'Recommended': ['Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)'],
         'Notes': ''
     },
+    28: {
+        'Unlocked': 82,
+        'Maxed': 76,
+        'Recommended': [
+            "Sippy Seaweed (Seaweed Logs)", "Wriggle Water (Earl Tail)",
+            "Rocky Boba (Prehistrium Ore)", "Octosoda (Deepsea Soul)",
+            "Scale On Ice (Scaled Fragment)", "Trash Drank (Litterbug)",
+            "Crabomayse (Guardian Mace)"
+        ],
+        'Notes': ''
+    },
+    29: {
+        'Unlocked': 86,
+        'Maxed': 78,
+        'Recommended': [
+            "Chapter Chug (Chapter One 'The Fear Within')",
+            "Paper Pint (Chapter Three 'This is Gospel')"
+        ],
+        'Notes': ''
+    },
+    30: {
+        'Unlocked': 86,
+        'Maxed': 80,
+        'Recommended': [
+            'Shaved Ice (Purple Salt)', 'Pearl Seltzer (Pearler Shell)',
+            'Hampter Drippy (Hampter)'
+        ],
+        'Notes': ''
+    },
+    31: {
+        'Unlocked': 86,
+        'Maxed': 83,
+        'Recommended': [
+            "Shipinabottle (Pirate Ship Figurine)",
+            "Canteen Read (Chapter Six 'Kelp Primeval')"
+        ],
+        'Notes': ''
+    },
     # 28: {
     #     'Unlocked': 73,
     #     'Maxed': 73,
-    #     'Recommended': ['Poison Tincture (Poison Froge)', 'Shaved Ice (Purple Salt)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'],
+    #     'Recommended': ['Poison Tincture (Poison Froge)'],
     #     'Notes': 'Currently considered impossible'
     # },
     # 29: {
