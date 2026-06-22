@@ -181,7 +181,7 @@ def getGStackAdviceSections():
         Advice(label=name, picture_class=name) for name, _ in unprecedented_list
     ]
 
-    if not unprecedented_gstacks_advice_list:
+    if unprecedented_list:
         gstacks_str = ", ".join(
             f"{name} ({codename})" for name, codename in unprecedented_list
         )

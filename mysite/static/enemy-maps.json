@@ -111,6 +111,8 @@
     ["Jellofish Fields", 319, "Jellofish", 125e6, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "jellofish"],
     ["Where the Kelp Meets Trench", 320, "Kelpfish", 25e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "kelpfish"],
     ["Trench Precipice", 321, "Mantaray", 35e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "mantaray"],
-    ["Pirate Mess Hall", 325, "Pirate Deckhand", 2e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-deckhand"]
+    ["The Glowing Underbelly", 322, "Glowfish", 5e8, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "glowfish"],
+    ["Pirate Mess Hall", 325, "Pirate Deckhand", 2e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-deckhand"],
+    ["Dreadnaught Chamber", 326, "Dreadnaught Captain", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "dreadnaught-captain"]
   ]
 }
