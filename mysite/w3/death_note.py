@@ -74,7 +74,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
         'W6': '',
         'W7': '',
     }
-    optional_tiers = 2
+    optional_tiers = 3
     true_max = true_max_tiers['Death Note']
     max_tier = true_max - optional_tiers
     world_indexes = []
