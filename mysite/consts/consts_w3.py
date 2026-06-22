@@ -988,6 +988,7 @@ apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
 apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "Unfiltered"]
 apoc_difficulty_name_list = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+    'Basic W7 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
 ]
 dn_delays = {
