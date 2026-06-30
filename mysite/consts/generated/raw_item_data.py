@@ -27256,7 +27256,7 @@ raw_item_data = {
         "Name": "Glimmerwick Candle",
         "Sell Price": 100,
         "Code (Type)": "dQuest",
-        "Type": "EVENT_BOX",
+        "Type": "EVENT_WISH",
         "Level Required (Craft)": 15,
         "Description": "Hold down to make a wish. If it comes true, you will get a Top 0.1% Tome Nametag, just like you've always wanted!",
         "Code (Name)": "Quest114"
@@ -27278,6 +27278,24 @@ raw_item_data = {
         "Level Required (Craft)": 15,
         "Description": "Hold down to open! Contains a random Goldrush goodie, from gems to limited time Hats and Nametags!",
         "Code (Name)": "Quest117"
+    },
+    "Quest119": {
+        "Name": "Pet Bonus Token",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "AMAZING_ITEM",
+        "Level Required (Craft)": 15,
+        "Description": "Gives ANY pet bonus you want! Just the bonus, not the pet. Use this within the Trade Popup found by Double Clicking a player. If you get the pet later from buying or trading, your token is REFUNDED!",
+        "Code (Name)": "Quest119"
+    },
+    "Quest120": {
+        "Name": "Skeleton Key",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "EVENT_BOX",
+        "Level Required (Craft)": 15,
+        "Description": "Hold down to get a random reward added directly to your account! It could be a Prisma Fragment for Alchemy, Gold Balls for the Arcade Shop, or even Cosmic Balls to super boost your maxed out Arcade Shop bonuses!",
+        "Code (Name)": "Quest120"
     },
     "EquipmentSmithingTabs2": {
         "Name": "Anvil Tab 2",
@@ -32802,6 +32820,114 @@ raw_item_data = {
         "Description": "Hold down instantly gain 6 Hours of Sneaking Progress! Applies to all your ninja twins, so it doesn't matter who uses this.",
         "Code (Name)": "GemP30"
     },
+    "HoleGshape0": {
+        "Name": "Gooey Triangle",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape0"
+    },
+    "HoleGshape1": {
+        "Name": "Gooey Square",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape1"
+    },
+    "HoleGshape2": {
+        "Name": "Gooey Pentagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape2"
+    },
+    "HoleGshape3": {
+        "Name": "Gooey Hexagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape3"
+    },
+    "HoleGshape4": {
+        "Name": "Gooey Heptagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape4"
+    },
+    "HoleGshape5": {
+        "Name": "Gooey Nonagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape5"
+    },
+    "HoleGshape6": {
+        "Name": "Quartz Prismagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape6"
+    },
+    "HoleGshape7": {
+        "Name": "Quartz Cubigon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape7"
+    },
+    "HoleGshape8": {
+        "Name": "Quartz Pointagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape8"
+    },
+    "HoleGshape9": {
+        "Name": "Quartz Octergon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape9"
+    },
+    "HoleGshape10": {
+        "Name": "Quartz Nullagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape10"
+    },
+    "HoleGshape11": {
+        "Name": "Quartz Brillagon",
+        "Sell Price": 100,
+        "Code (Type)": "dQuest",
+        "Type": "DUNGEON_EVAPORATE",
+        "Level Required (Craft)": 15,
+        "Description": "Now now, you shouldn't be seeing this! I spray you with water bottle pss pss shoo!",
+        "Code (Name)": "HoleGshape11"
+    },
     "Trophy1": {
         "Name": "King of Food",
         "Sell Price": 10000,
@@ -34826,6 +34952,29 @@ raw_item_data = {
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentNametag37"
     },
+    "EquipmentNametag41": {
+        "Name": "All That Glitters Nametag",
+        "Sell Price": 1,
+        "Code (Type)": "aNametag",
+        "Type": "NAMETAG",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 50,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_XP_FROM_MONSTERS",
+        "Misc 1 (Value)": 250,
+        "Misc 2 (Text)": "%_CLASS_EXP_MULTI",
+        "Misc 2 (Value)": 50,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentNametag41"
+    },
     "EquipmentNametagReplica0": {
         "Name": "Replica Nametag",
         "Sell Price": 500000000000,
@@ -35768,6 +35917,29 @@ raw_item_data = {
         "Misc 2 (Value)": 0,
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentNametagReplica40"
+    },
+    "EquipmentNametagReplica41": {
+        "Name": "All That Glitters Nametag",
+        "Sell Price": 1,
+        "Code (Type)": "aNametag",
+        "Type": "REPLICA_NAMETAG",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 50,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_XP_FROM_MONSTERS",
+        "Misc 1 (Value)": 250,
+        "Misc 2 (Text)": "%_CLASS_EXP_MULTI",
+        "Misc 2 (Value)": 50,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentNametagReplica41"
     },
     "EquipmentHats31": {
         "Name": "Smitty's Bubble Blowing Hat",
@@ -37379,6 +37551,29 @@ raw_item_data = {
         "Upgrade Slots Left": 5,
         "Code (Name)": "EquipmentHats138"
     },
+    "EquipmentHats139": {
+        "Name": "Sun Hat",
+        "Sell Price": 1,
+        "Code (Type)": "aHelmetMTX",
+        "Type": "PREMIUM_HELMET",
+        "Level Required (Craft)": 5,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 0,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 0,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_CLASS_EXP_MULTI",
+        "Misc 1 (Value)": 1,
+        "Misc 2 (Text)": "0",
+        "Misc 2 (Value)": 0,
+        "Upgrade Slots Left": 5,
+        "Code (Name)": "EquipmentHats139"
+    },
     "CardsA0": {
         "Name": "CardsA0",
         "Sell Price": 1,
@@ -38846,6 +39041,15 @@ raw_item_data = {
         "Description": "caveC",
         "Code (Name)": "CardsH16"
     },
+    "CardsH17": {
+        "Name": "DONTFILL",
+        "Sell Price": 1,
+        "Code (Type)": "dCard",
+        "Type": "CARD",
+        "Level Required (Craft)": 2,
+        "Description": "caveD",
+        "Code (Name)": "CardsH17"
+    },
     "CardsI1": {
         "Name": "DONTFILL",
         "Sell Price": 1,
@@ -39881,5 +40085,5 @@ raw_item_data = {
         "Description": "slimeB",
         "Code (Name)": "CardsZ26"
     },
-    "_hash": "673382c68cd7829c637d7516f90214a174b945b7fb9e76b266c02f639edc2b87"
+    "_hash": "ed7361373c86351948c95b57a572fa4bca76dfa095a30db50fea8dec20c77fcb"
 }

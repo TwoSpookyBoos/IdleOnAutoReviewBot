@@ -277,6 +277,7 @@ EquipmentHats135: Blonde Hairpiece
 EquipmentHats136: Bronze Tournament Spike Hat
 EquipmentHats137: Silver Tournament Spike Hat
 EquipmentHats138: Gold Tournament Spike Hat
+EquipmentHats139: Sun Hat
 EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
 TestObj14: Trojan Helmet
@@ -1624,6 +1625,7 @@ EquipmentNametag34: Emerald Nametag
 EquipmentNametag35: 5th Anniversary IdleOn Nametag
 EquipmentNametag36: Wonderful 5th Year Nametag
 EquipmentNametag37: Grand Egg Nametag
+EquipmentNametag41: All That Glitters Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1665,6 +1667,7 @@ EquipmentNametagReplica37: Grand Egg Nametag
 EquipmentNametagReplica38: Bronze Tournament Border Nametag
 EquipmentNametagReplica39: Silver Tournament Border Nametag
 EquipmentNametagReplica40: Gold Tournament Border Nametag
+EquipmentNametagReplica41: All That Glitters Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
@@ -2051,6 +2054,8 @@ Quest113: Giftmas Gift
 Quest114: Glimmerwick Candle
 Quest115: Half Finished Research Papers
 Quest117: Edible Coin
+Quest119: Pet Bonus Token
+Quest120: Skeleton Key
 EquipmentSmithingTabs2: Anvil Tab II
 EquipmentSmithingTabs3: Anvil Tab III
 EquipmentSmithingTabs4: Anvil Tab IV
@@ -2438,6 +2443,7 @@ CardsH13: Tremor Wurm Card
 CardsH14: Magma Geode Card
 CardsH15: Gloomie Mushroom Card
 CardsH16: Ancient Golem Card
+CardsH17: Crystal Glunko Card
 CardsI1: Sprout Spirit Card
 CardsI2: Ricecake Card
 CardsI3: River Spirit Card

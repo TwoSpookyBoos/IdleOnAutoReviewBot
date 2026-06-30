@@ -190,7 +190,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 1
             'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
             # World 7 part 2
-            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11', 'w7B12',
+            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
             "Sewers3"
         ],
         "Crystal Enemy Drops": [
@@ -316,7 +316,7 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B11', 'w7B12',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg'  # Specialty Monster Materials
     ],
     'Crystal Enemy Drops': [
@@ -678,7 +678,15 @@ card_raw_data = [
         ["w5c2", "H13", "100", "+{%_All_Stat", "1"],
         ["caveB", "H15", "5000", "+{%_Villager_EXP_(Passive)", "4"],
         ["caveC", "H16", "10000", "+{%_Total_Drop_Rate_(Passive)", "4"],
-        ["Crystal4", "H14", "15", "+{%_Skill_Efficncy_(Passive)", "3"]
+        ["caveD", "H17", "1000000", "+{%_Total_Drop_Rate_(Passive)", "6"],
+        ["Crystal4", "H14", "15", "+{%_Skill_Efficncy_(Passive)", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["Blank", "A0", "10", "+{%_Base_HP", "3"]
     ],
     [
         ["w6a1", "I1", "50", "+{%_Total_Damage", "5"],

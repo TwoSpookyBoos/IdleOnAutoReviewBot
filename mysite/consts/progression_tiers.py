@@ -953,10 +953,48 @@ vials_progressionTiers = {
         'Recommended': ['Red Malt (Redox Salts)', 'Orange Malt (Explosive Salts)', 'Dreadnog (Dreadlo Bar)', 'Dabar Special (Godshard Bar)'],
         'Notes': ''
     },
+    28: {
+        'Unlocked': 82,
+        'Maxed': 76,
+        'Recommended': [
+            "Sippy Seaweed (Seaweed Logs)", "Wriggle Water (Earl Tail)",
+            "Rocky Boba (Prehistrium Ore)", "Octosoda (Deepsea Soul)",
+            "Scale On Ice (Scaled Fragment)", "Trash Drank (Litterbug)",
+            "Crabomayse (Guardian Mace)"
+        ],
+        'Notes': ''
+    },
+    29: {
+        'Unlocked': 86,
+        'Maxed': 78,
+        'Recommended': [
+            "Chapter Chug (Chapter One 'The Fear Within')",
+            "Paper Pint (Chapter Three 'This is Gospel')"
+        ],
+        'Notes': ''
+    },
+    30: {
+        'Unlocked': 86,
+        'Maxed': 80,
+        'Recommended': [
+            'Shaved Ice (Purple Salt)', 'Pearl Seltzer (Pearler Shell)',
+            'Hampter Drippy (Hampter)'
+        ],
+        'Notes': ''
+    },
+    31: {
+        'Unlocked': 86,
+        'Maxed': 83,
+        'Recommended': [
+            "Shipinabottle (Pirate Ship Figurine)",
+            "Canteen Read (Chapter Six 'Kelp Primeval')"
+        ],
+        'Notes': ''
+    },
     # 28: {
     #     'Unlocked': 73,
     #     'Maxed': 73,
-    #     'Recommended': ['Poison Tincture (Poison Froge)', 'Shaved Ice (Purple Salt)', 'Pearl Seltzer (Pearler Shell)', 'Hampter Drippy (Hampter)'],
+    #     'Recommended': ['Poison Tincture (Poison Froge)'],
     #     'Notes': 'Currently considered impossible'
     # },
     # 29: {
@@ -1243,7 +1281,9 @@ deathNote_progressionTiers = [
     [21, 20, 20, 20, 20, 20, 10,    0, 0,   73, 73, 73, 0, ""],
     [22, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, 80, ""],
     [23, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, 82, ""],
-    [24, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 85, ""]
+    [24, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 85, ""],
+    [25, 20, 20, 20, 20, 20, 20,   20, 0,  106, 106, 106, 106, ""], # Add W7 mob to zow, chow, meow, wow + skull tier
+    [26, 20, 20, 20, 20, 20, 20,   20, 0,  108, 108, 108, 108, ""]  # Max zow, chow, meow, wow
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],

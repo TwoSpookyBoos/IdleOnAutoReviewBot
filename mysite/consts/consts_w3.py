@@ -980,7 +980,7 @@ apocable_map_index_dict = {
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
     5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
     6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264],
-    7: [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 315, 316, 317, 318, 319, 320, 321, 325]
+    7: [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 315, 316, 317, 318, 319, 320, 321, 322, 325, 326]
 }
 dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
 dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])
@@ -988,6 +988,7 @@ apoc_amounts_list = [100000, 1000000, 100000000, 1000000000, 1000000000000]
 apoc_names_list = ["ZOW", "CHOW", "MEOW", "WOW", "Unfiltered"]
 apoc_difficulty_name_list = [
     'Basic W1 Enemies', 'Basic W2 Enemies', 'Basic W3 Enemies', 'Basic W4 Enemies', 'Basic W5 Enemies', 'Basic W6 Enemies',
+    'Basic W7 Enemies',
     'Easy Extras', 'Medium Extras', 'Difficult Extras', 'Insane', 'Impossible'
 ]
 dn_delays = {

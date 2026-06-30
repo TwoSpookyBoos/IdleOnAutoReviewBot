@@ -447,7 +447,7 @@ monster_data = {
         "Name": "Ancient Golem"
     },
     "caveD": {
-        "Name": "Shimmer Glunko"
+        "Name": "Crystal Glunko"
     },
     "reindeer": {
         "Name": "Spirit Reindeer"
@@ -787,6 +787,9 @@ monster_data = {
     },
     "fm_frog": {
         "Name": "Abacus Frog"
+    },
+    "fm_goose": {
+        "Name": "Bin Goosey"
     },
     "T1a": {
         "Name": "Bronze Champion Ram"
@@ -1211,5 +1214,5 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
-    "_hash": "e57aac19907cae70be0b995c134a74cc1e05975db67f1559b7a8427f18a02c5f"
+    "_hash": "580e89e980c63f3ad06c731279af24c478fd947347f4a9c568bf224b4271be14"
 }

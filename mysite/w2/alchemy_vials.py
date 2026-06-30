@@ -19,7 +19,7 @@ def getVialsProgressionTiersAdviceGroup():
         'Maxed Vials': {},
         'Vials to max next (preserves Greenstacks)': []
     }
-    optional_tiers = 1
+    optional_tiers = 3
     true_max = true_max_tiers['Vials']
     max_tier = true_max - optional_tiers
     max_advices_per_group = session_data.account.max_subgroups * 3

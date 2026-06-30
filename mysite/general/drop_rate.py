@@ -38,7 +38,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     passive_drop_rate_cards = [
         'Domeo Magmus',
         'Ancient Golem',
-        'IdleOn 4th Anniversary'
+        'Crystal Glunko',
+        'IdleOn 4th Anniversary',
+        'Luckulyte'
     ]
 
     general = 'General'
