@@ -564,6 +564,13 @@ def getDaysToNextShinyLevel(days: float) -> float:
             return 0
 
 
+# "2ndMulti" in source is BreedabilityMulti:
+#    BreedabilityMulti(days) = log(max(1, pow(days + 1, 0.725))
+# "PetBrd" + in source: how heart number calculate from BreedabilityMulti:
+#    Math.min(9, Math.floor(Math.pow(BreedabilityMulti - 1, 0.8)))
+#    HeartNumber(BreedabilityMulti) = min(9, floor((BreedabilityMulti - 1) ^ 0.8)
+#    BreedabilityMulti(HeartNumber) = 1 + HeartNumber ^ 1.25
+#    days(HeartNumber) = e ^ (days ^ 1.25 / 0.725) - 1
 breedabilityDaysList = [
     0.0000,
     2.9722,
@@ -576,7 +583,7 @@ breedabilityDaysList = [
     114686626.8729,
     2177232407.5082,
 ]
-breedabilityHearts = [1 + safer_math_pow(x, 1.25) for x in range(0, 10)]
+breedabilityHearts = [1 + safer_math_pow(x, 1.25) for x in range(0, 11)]
 
 
 def getBreedabilityMultiFromDays(days: float) -> float:
