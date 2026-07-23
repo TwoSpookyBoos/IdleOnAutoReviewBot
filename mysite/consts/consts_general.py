@@ -317,7 +317,10 @@ expected_stackables = {
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
         'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
-        'Sewers3', 'Quest15', 'Hgg'  # Specialty Monster Materials
+        'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
+        'StoneT1eb', 'StoneAeB', 'StoneWeb',
+        'Gfoodcoupon', 'Line9', 'Line14',
+        'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',
     ],
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
@@ -414,7 +417,8 @@ expected_stackables = {
         'BabaYagaETC',
         'ExpBalloon1',
         'Meatloaf', 'Quest17', 'Quest29',
-        'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
+        'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
+        'Quest41',
     ],
     'Cheater': [
         'EmpPart',  # W6 Boss Material
@@ -423,18 +427,18 @@ expected_stackables = {
         'PureWater2',  # Alchemy Dense water
         'Quest1', 'Quest2', 'Quest5', 'Quest6', 'Quest8', 'Quest10', 'Quest11', 'Quest16', 'Quest20', 'Quest25',
         'Quest26', 'Quest27', 'Quest28', 'Quest30', 'Quest31', 'Quest33', 'Quest34', 'Quest36', 'Quest37', 'Quest38', 'Quest39', 'Quest40',
-        'Quest41', 'Quest42', 'Quest43', 'Quest44', 'Quest45', 'Quest46', 'Quest47', 'Quest48', 'Quest49', 'Quest50', 'Quest9',
+        'Quest42', 'Quest43', 'Quest44', 'Quest45', 'Quest46', 'Quest47', 'Quest48', 'Quest49', 'Quest50', 'Quest9',
         'Mayo', 'Trash', 'Trash2', 'Trash3',  # Treasure Hunt rewards
         'FoodHealth5',  #Small quantity foods
         'BobJoePickle', 'BallJoePickle', 'BoneJoePickle',  #Pickles
         'FoodPotYe1', 'FoodPotYe3',  # EXP 1 and 3
         'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4',  # Event Foods
         'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',  # Skilling Speed Pearls, EXP pearls
-        'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line9', 'Line10', 'Line11', 'Line14',  # Fishing Lines
+        'Line1', 'Line2', 'Line5', 'Line6', 'Line7', 'Line10', 'Line11',  # Fishing Lines
         'ExpBalloon2', 'ExpBalloon3',  # Experience Balloons
         'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9',  # Time Candies
         'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
-        'Quest70', 'Quest71', 'Quest75', 'Gfoodcoupon', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags
+        'Quest70', 'Quest71', 'Quest75', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags
         'FoodHealth8', 'Quest69', 'Quest74',  # Unobtainables
         'EquipmentStatues6',  # Kachow
         'ClassSwap', 'ClassSwapB', 'ResetBox',
