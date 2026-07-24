@@ -1512,7 +1512,7 @@ filter_never = [
     #Consumables
     'PremiumGem', 'Quest71', 'ExpBalloon1', 'ExpBalloon2', 'ExpBalloon3',
     'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9', 'Timecandy10',
-    'SilverPen', 'PetEgg', 'Ladle',
+    'PetEgg', 'Ladle',
     'FoodEvent1', 'FoodEvent2', 'FoodEvent3', 'FoodEvent4', 'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     'Pearl1', 'Pearl2', 'Pearl3', 'Pearl4', 'Pearl5', 'Pearl6',
     'DungCredits1', 'DungCredits2',
