@@ -1206,52 +1206,16 @@ post_office_progression_tiers = {
 
 ###WORLD 3 PROGRESSION TIERS###
 salt_lick_progression_tiers = {
-    1: {
-        'Upgrade': 'Obol Storage',
-        'Level': 8,
-        'Material': 'Froge'
-    },
-    2: {
-        'Upgrade': 'Printer Sample Size',
-        'Level': 20,
-        'Material': 'Redox Salts'
-    },
-    3: {
-        'Upgrade': 'Max Book',
-        'Level': 10,
-        'Material': 'Spontaneity Salts'
-    },
-    4: {
-        'Upgrade': 'TD Points',
-        'Level': 10,
-        'Material': 'Dioxide Synthesis'
-    },
-    5: {
-        'Upgrade': 'Multikill',
-        'Level': 10,
-        'Material': 'Purple Salt'
-    },
-    6: {
-        'Upgrade': 'EXP',
-        'Level': 100,
-        'Material': 'Dune Soul'
-    },
-    7: {
-        'Upgrade': 'Alchemy Liquids',
-        'Level': 100,
-        'Material': 'Mousey'
-    },
-    8: {
-        'Upgrade': 'Damage',
-        'Level': 250,
-        'Material': 'Pingy'
-    },
-    9: {
-        'Upgrade': 'Refinery Speed',
-        'Level': 100,
-        'Material': 'Explosive Salts'
-    },
-
+    1: {'Upgrade': 'Obol Storage', 'Level': 8},
+    2: {'Upgrade': 'Printer Sample Size', 'Level': 20},
+    3: {'Upgrade': 'Max Book', 'Level': 10},
+    4: {'Upgrade': 'TD Points', 'Level': 10},
+    5: {'Upgrade': 'Multikill', 'Level': 10},
+    6: {'Upgrade': 'EXP', 'Level': 100},
+    7: {'Upgrade': 'Alchemy Liquids', 'Level': 100},
+    8: {'Upgrade': 'Damage', 'Level': 250},
+    9: {'Upgrade': 'Refinery Speed', 'Level': 100},
+    10: {'Upgrade': 'Cooking Mastery', 'Level': 100},
 }
 deathNote_progressionTiers = [
     # 0-4 int tier. int w1LowestSkull, int w2LowestSkull, int w3LowestSkull, int w4LowestSkull,

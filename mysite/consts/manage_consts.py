@@ -5,6 +5,7 @@
 from consts import consts_w2, progression_tiers
 from consts.consts_general import gstack_unique_expected, cardset_names, max_card_stars, greenstack_item_difficulty_groups, gstack_expected_not_rated
 from consts.consts_item_data import ITEM_DATA
+from consts.consts_w5 import filter_only_after_gstack, filter_never
 from consts.w1.stamps import unavailable_stamps_list, stamp_maxes
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
@@ -18,6 +19,7 @@ def finalize_consts():
     finalize_general_combat_levels()
     finalize_w1_stamps()
     finalize_w2_vials()
+    finalize_w5_item_filters()
 
 def finalize_general_greenstacks():
     #Update consts_general.greenstack_item_difficulty_groups with a final group with all currently unclassified items
@@ -97,6 +99,7 @@ def finalize_w1_stamps():
     stamps_progressionTiers[max(stamps_progressionTiers)]['Stamps']['Specific'] = {stamp: stamp_maxes.get(stamp, 0) for stamp in remaining_stamps}
     logger.debug(f"Successfully updated Stamp Tier {max(stamps_progressionTiers)}")
 
+
 def finalize_w2_vials():
     try:
         assert max_maxable_vials == vials_progressionTiers[true_max_tiers['Vials']]['Maxed']
@@ -108,6 +111,11 @@ def finalize_w2_vials():
         )
         consts_w2.max_maxable_vials = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])
         vials_progressionTiers[true_max_tiers['Vials']]['Maxed'] = max(max_maxable_vials, vials_progressionTiers[true_max_tiers['Vials']]['Maxed'])
+
+def finalize_w5_item_filters():
+    duplicate_entries = [entry for entry in filter_only_after_gstack if entry in filter_never]
+    if len(duplicate_entries) > 0:
+        logger.error(f"Duplicate consts_w5 filter entries found in filter_never and filter_only_after_gstack: {duplicate_entries}")
 
 
 finalize_consts()
