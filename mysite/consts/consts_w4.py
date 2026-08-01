@@ -39,7 +39,15 @@ def get_final_combat_level_required_for_tome() -> int:
 
 
 max_cooking_tables = 10  # Last updated in v2.46 Nov 29
-max_meal_plate_level = 170  # Last updated in v2.523 Aug 1
+max_meal_plate_level = (  # 160  # Last updated in v2.523 Aug 1
+    30  #base max level
+    + (10 * 6)  #Causticolumn artifact gives 10 levels and has 6 tiers, base through Transcendent
+    + 10  #Papa Blob's Quality Guarantee in Jade Emporium
+    + 10  #Chef Geustloaf's Cutting Edge Philosophy in Jade Emporium
+    + 20  #Supreme Head Chef Status upgrade within The Grimoire
+    + 30  #Defeat the Boss of the Lunarheim Cave within Spelunking
+)
+    
 max_cooking_ribbon = 23  # Last updated in v2.46 Nov 29
 cooking_close_enough = 300  # Last updated in v2.46 Nov 29
 #`MealINFO = function ()` in source. Last updated in v2.46 Nov 29
