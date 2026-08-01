@@ -218,7 +218,7 @@ class Placements(dict):
         TRAPPING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,         true_max_tiers[TRAPPING], 99],
         EQUINOX:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,         true_max_tiers[EQUINOX], 99],
         BREEDING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,         true_max_tiers[BREEDING], 99],
-        COOKING:            [0,     0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      4,  5,  6,      7,  7,  8,      12,          true_max_tiers[COOKING], 99],
+        COOKING:            [0,     0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      4,  5,  6,      7,  7,  8,      12,         true_max_tiers[COOKING], 99],
         RIFT:               [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,         true_max_tiers[RIFT], 99],
         DIVINITY:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  3,  5,      7,  8,  9,      10, 11, 12,     12,         true_max_tiers[DIVINITY], 99],
         SAILING:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  2,  3,      5,  7,  9,      11, 14, 16,     18,         true_max_tiers[SAILING], 99],

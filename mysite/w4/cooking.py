@@ -1,4 +1,5 @@
-from consts.progression_tiers import true_max_tiers
+from consts.idleon.consts_idleon import max_characters
+from consts.progression_tiers import true_max_tiers, cooking_progressionTiers
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice
@@ -6,230 +7,229 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
-from consts.consts_autoreview import break_you_best, AdviceType
+from consts.consts_autoreview import break_you_best, AdviceType, build_subgroup_label
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, cooking_close_enough, meal_counts_by_world
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
+def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
     cooking_Advices = {
-        'NextTier': [],
+        'Tiers': {},
         'CurrentTier': [],
         'PlateLevels': [],
     }
     cooking_AdviceGroupDict = {}
     tier_Cooking = 0
-    # TODO: Really ought to be structured into proper tiers.. What were you smoking when you made this?
     optional_tiers = 1
     true_max = true_max_tiers['Cooking']
     max_tier = true_max - optional_tiers
     vmans = session_data.account.vmans
-    atom_fluoride_unlocked = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
+    challenge_account = session_data.account.no_beginners
+    atom_fluoride_level = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level']
     dchef_level = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
     cooking = session_data.account.cooking
+    spice_images_by_world = {
+        4: 'nebulon-mantle-spice',
+        5: 'wurm-catacombs-spice',
+        6: 'dharma-mesa-spice',
+        7: 'murky-trenches-spice',
+        8: ''
+    }
 
     # Assess Tiers
-    if highestCookingSkillLevel >= 1:
-        tier_Cooking = 1
-    if tier_Cooking == 1 and dchef_level >= 15:
-        tier_Cooking = 2
-    if tier_Cooking == 2 and len(vmans) > 0:
-        tier_Cooking = 3
-    if tier_Cooking == 3 and atom_fluoride_unlocked and cooking['PlayerTotalMealLevels'] >= 500:
-        tier_Cooking = 4
-    if tier_Cooking == 4 and cooking['MealsUnlockedByWorld'][4] >= meal_counts_by_world[4]:
-        tier_Cooking = 5
-    if tier_Cooking == 5 and cooking['MealsUnlockedByWorld'][5] >= meal_counts_by_world[5]:
-        tier_Cooking = 6
-    if tier_Cooking == 6 and cooking['MealsUnlockedByWorld'][6] >= meal_counts_by_world[6]:
-        tier_Cooking = 7
-    if tier_Cooking == 7 and cooking['MealsUnlockedByWorld'][7] >= meal_counts_by_world[7]:
-        tier_Cooking = 8
-    if tier_Cooking == 8 and cooking['MealsUnlockedByWorld'][8] >= meal_counts_by_world[8]:
-        tier_Cooking = 9
-    if tier_Cooking == 9 and cooking['MealsUnder30'] <= 0:
-        tier_Cooking = 10
-    if tier_Cooking == 10 and cooking['PlayerMaxPlateLvl'] >= max_meal_plate_level:
-        tier_Cooking = 11
-    if cooking['MaxRemainingMeals'] < cooking_close_enough:
-        tier_Cooking = 12
-    if cooking['MaxRemainingMeals'] == 0:
-        tier_Cooking = 13
+    for tier_number, requirements in cooking_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
 
-    # Generate NextTier Advice
-    # 0) if cooking isn't unlocked yet
-    if tier_Cooking == 0:
-        cooking_Advices['NextTier'].append(Advice(
-            label="Unlock the Cooking skill in World 4 town",
-            picture_class='cooking',
-            progression=highestCookingSkillLevel,
-            goal=1
-        ))
+        #Cooking level
+        if highest_cooking_skill_level < requirements.get('CookingLevel', 0):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label="Unlock the Cooking skill in World 4 town",
+                    picture_class='cooking',
+                    progression=highest_cooking_skill_level,
+                    goal=1
+                ))
 
-    # 1) if cooking is unlocked at least
-    elif tier_Cooking == 1:
-        cooking_Advices['NextTier'].append(Advice(
-            label="Unlock and level Diamond Chef bubble",
-            picture_class="diamond-chef",
-            progression=dchef_level,
-            goal=15
-        ))
+        #Diamond Chef level
+        if dchef_level < requirements.get('DiamondChef', 0):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label="Unlock and level Diamond Chef bubble to at least 15",
+                    picture_class='diamond-chef',
+                    progression=dchef_level,
+                    goal=15
+                ))
 
-    # 2) if Diamond Chef owned and level 15+, Speed meal or Fastest to 11.
-    elif tier_Cooking == 2:
-        if len(vmans) == 0:
-            cooking_Advices['NextTier'].append(Advice(
-                label="Unlock a Voidwalker",
-                picture_class="voidwalker-icon"
-            ))
+        #Voidwalker created or troll/challenge account with no beginners
+        if len(vmans) == 0 and not challenge_account:
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label="Unlock a Voidwalker",
+                    picture_class="voidwalker-icon"
+                ))
 
-    # 3) if Vman:
-    elif tier_Cooking == 3:
-        cooking_Advices['NextTier'].append(Advice(
-            label="Unlock Fluoride - Void Plate Chef in the {{Atom Collider|#atom-collider}} from W3 Construction skill",
-            picture_class='fluoride'
-        ))
-        if cooking['PlayerTotalMealLevels'] < 500:
-            cooking_Advices['NextTier'].append(Advice(
-                label="Reach 500+ total meal levels",
-                picture_class=session_data.account.meals['Turkey of Thank']['Image'],
-                progression=cooking['PlayerTotalMealLevels'],
-                goal=500
-            ))
+        #Fluoride atom level
+        if atom_fluoride_level < requirements.get('Fluoride', 0):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label="Unlock Fluoride - Void Plate Chef in the {{Atom Collider|#atom-collider}} from W3 Construction skill",
+                    picture_class='fluoride'
+                ))
 
-    # 4) if Atom Collider Fluoride upgrade owned and total plates over 500, but not all W4 meals unlocked:
-    elif tier_Cooking == 4:
-        if cooking['MealsUnlockedByWorld'][4] < meal_counts_by_world[4]:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Unlock the remaining {meal_counts_by_world[4] - cooking['MealsUnlocked']} W4 meal"
-                      f"{pl(meal_counts_by_world[4] - cooking['MealsUnlockedByWorld'][4])}",
-                picture_class='nebulon-mantle-spice'
-            ))
+        #Total meal plate levels
+        if cooking['PlayerTotalMealLevels'] < requirements.get('TotalMealLevels', 0):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Reach {requirements.get('TotalMealLevels', 0)}+ total meal levels",
+                    picture_class=session_data.account.meals['Turkey of Thank']['Image'],
+                    progression=cooking['PlayerTotalMealLevels'],
+                    goal=requirements.get('TotalMealLevels', 0)
+                ))
 
-    # 5) if all W4 meals unlocked, but not all W5:
-    elif tier_Cooking == 5:
-        if cooking['MealsUnlockedByWorld'][5] < meal_counts_by_world[5]:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Unlock the remaining {meal_counts_by_world[5] - cooking['MealsUnlocked']} W5 meal"
-                      f"{pl(meal_counts_by_world[5] - cooking['MealsUnlockedByWorld'][5])}",
-                picture_class='wurm-catacombs-spice'
-            ))
+        #Unlock all meals per world
+        if requirements.get('AllMealsUnlockedByWorld', 0) > 0:
+            world_number = requirements['AllMealsUnlockedByWorld']
+            if cooking['MealsUnlockedByWorld'][world_number] < meal_counts_by_world[world_number]:
+                add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+                if subgroup_label in cooking_Advices['Tiers']:
+                    cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                        label=f"Unlock the remaining {meal_counts_by_world[world_number] - cooking['MealsUnlockedByWorld'][world_number]} W{world_number} meal"
+                              f"{pl(meal_counts_by_world[world_number] - cooking['MealsUnlockedByWorld'][world_number])}",
+                        picture_class=spice_images_by_world.get(world_number, ''),
+                        progression=cooking['MealsUnlockedByWorld'][world_number],
+                        goal=meal_counts_by_world[world_number]
+                    ))
 
-    # 6) if all W5 meals unlocked, but not all W6:
-    elif tier_Cooking == 6:
-        if cooking['MealsUnlockedByWorld'][6] < meal_counts_by_world[6]:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Unlock the remaining {meal_counts_by_world[6] - cooking['MealsUnlocked']} W6 meal"
-                      f"{pl(meal_counts_by_world[6] - cooking['MealsUnlockedByWorld'][6])}",
-                picture_class='dharma-mesa-spice'
-            ))
+        # Unlocked meals under 11
+        if cooking['UnlockedMealsUnder11'] > requirements.get('UnlockedMealsUnder11', 9999999999999):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Level up the remaining {cooking['UnlockedMealsUnder11']} meal"
+                          f"{pl(cooking['UnlockedMealsUnder11'])} to 11+ for Diamond Chef",
+                    picture_class='diamond-chef',
+                    progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder11'],
+                    goal=cooking['MealsUnlocked']
+                ))
 
-    # 7) if all W6 meals unlocked, but not all W7:
-    elif tier_Cooking == 7:
-        if cooking['MealsUnlockedByWorld'][7] < meal_counts_by_world[7]:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Unlock the remaining {meal_counts_by_world[7] - cooking['MealsUnlocked']} W7 meal"
-                      f"{pl(meal_counts_by_world[7] - cooking['MealsUnlockedByWorld'][7])}",
-                picture_class='dharma-mesa-spice'
-            ))
+        # All meals under 11
+        if cooking['MealsUnder11'] > requirements.get('TotalMealsUnder11', 9999999999999):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Level up the remaining {cooking['MealsUnder11']} meal"
+                          f"{pl(cooking['MealsUnder11'])} to 11+ for Diamond Chef",
+                    picture_class='diamond-chef',
+                    progression=max_meal_count - cooking['MealsUnder11'],
+                    goal=max_meal_count
+                ))
 
-    # 8) if all W7 meals unlocked, but not all W8:
-    elif tier_Cooking == 8:
-        if cooking['MealsUnlockedByWorld'][8] < meal_counts_by_world[8]:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Unlock the remaining {meal_counts_by_world[8] - cooking['MealsUnlocked']} W8 meal"
-                      f"{pl(meal_counts_by_world[8] - cooking['MealsUnlockedByWorld'][8])}",
-                picture_class='dharma-mesa-spice'
-            ))
+        #Unlocked meals under 30
+        if cooking['UnlockedMealsUnder30'] > requirements.get('UnlockedMealsUnder30', 9999999999999):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Level up the remaining {cooking['UnlockedMealsUnder30']} meal"
+                          f"{pl(cooking['UnlockedMealsUnder30'])} to 30+ for Fluoride",
+                    picture_class='fluoride',
+                    progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder30'],
+                    goal=cooking['MealsUnlocked']
+                ))
 
-    # 9) All W8 meals unlocked, but not all 11+ for Diamond Chef and 30+ for Flouride
-    elif tier_Cooking == 9:
-        if session_data.account.cooking['MealsUnder11'] > 0:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Level up the remaining {session_data.account.cooking['MealsUnder11']} unlocked "
-                      f"{pl(session_data.account.cooking['MealsUnder11'], 'meal', 'meals')} to 11+ for Diamond Chef",
-                picture_class="diamond-chef",
-                progression=session_data.account.cooking['MealsUnlocked'] - session_data.account.cooking['MealsUnder11'],
-                goal=session_data.account.cooking['MealsUnlocked']
-            ))
-        if session_data.account.cooking['MealsUnder30'] > 0:
-            cooking_Advices['NextTier'].append(Advice(
-                label=f"Level up the remaining {session_data.account.cooking['MealsUnder30']} unlocked "
-                      f"{pl(session_data.account.cooking['MealsUnder30'], 'meal', 'meals')} to 30+ for Fluoride",
-                picture_class="fluoride",
-                progression=session_data.account.cooking['MealsUnlocked'] - session_data.account.cooking['MealsUnder30'],
-                goal=session_data.account.cooking['MealsUnlocked']
-            ))
+        #All meals under 30
+        if cooking['MealsUnder30'] > requirements.get('TotalMealsUnder30', 9999999999999):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Level up the remaining {cooking['MealsUnder30']} meal"
+                          f"{pl(cooking['MealsUnder30'])} to 30+ for Fluoride",
+                    picture_class='fluoride',
+                    progression=max_meal_count - cooking['MealsUnder30'],
+                    goal=max_meal_count
+                ))
 
-    # 10) All meals unlocked, all meals 30+, but max plate level is not unlocked yet
-    elif tier_Cooking == 10:
-        cooking_Advices['NextTier'].append(Advice(
-            label=f"Unlock max level {max_meal_plate_level} plates",
-            picture_class=session_data.account.meals['Turkey of Thank']['Image'],
-            progression=cooking['PlayerMaxPlateLvl'],
-            goal=max_meal_plate_level
-        ))
+        #Max plate level for meals
+        if cooking['PlayerMaxPlateLvl'] < requirements.get('MaxPlateLevel', 0):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Unlock max level {max_meal_plate_level} plates",
+                    picture_class=session_data.account.meals['Turkey of Thank']['Image'],
+                    progression=cooking['PlayerMaxPlateLvl'],
+                    goal=max_meal_plate_level
+                ))
 
-    # 11) All basics + max plate levels
-    #elif tier_Cooking == 11:
-    else:
-        cooking_Advices['NextTier'].append(Advice(
-            label=f"Finish all {max_meal_count} meals to level {max_meal_plate_level}"
-                  f"<br>{cooking['CurrentRemainingMeals']} remaining levels = "
-                  f"{cooking['NMLBDays']} NMLB triggers to go!",
-            picture_class=session_data.account.meals['Turkey of Thank']['Image'],
-            progression=cooking['PlayerTotalMealLevels'],
-            goal=max_meal_count * max_meal_plate_level,
-        ))
+        #MaxRemainingMeals
+        if cooking['MaxRemainingMeals'] > requirements.get('MaxRemainingMeals', 9999999999999):
+            add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
+            if subgroup_label in cooking_Advices['Tiers']:
+                cooking_Advices['Tiers'][subgroup_label].append(Advice(
+                    label=f"Finish all {max_meal_count} meals to level {max_meal_plate_level}"
+                          f"<br>{cooking['CurrentRemainingMeals']} remaining levels = "
+                          f"{cooking['NMLBDays']} NMLB triggers to go!",
+                    picture_class=session_data.account.meals['Turkey of Thank']['Image'],
+                    progression=cooking['PlayerTotalMealLevels'],
+                    goal=max_meal_count * max_meal_plate_level,
+                ))
+
+        # Final tier check
+        if subgroup_label not in cooking_Advices['Tiers'] and tier_Cooking == tier_number - 1:
+            tier_Cooking = tier_number
 
     # Generate CurrentTier Advice
     if session_data.account.cooking['MealsUnlocked'] < max_meal_count:
-        cooking_Advices["CurrentTier"].append(Advice(
-            label="Work on unlocking all meals. Breakdowns by world below",
+        cooking_Advices['CurrentTier'].append(Advice(
+            label='Work on unlocking all meals. This may mean pushing maps and Breeding progress to unlock new spices!',
             picture_class='taste-test',
-            progression=session_data.account.cooking['MealsUnlocked'],
+            progression=cooking['MealsUnlocked'],
             goal=max_meal_count,
         ))
     for world in range(0, 9):
         if session_data.account.highest_world_reached >= world and cooking['MealsUnlockedByWorld'][world] < meal_counts_by_world[world]:
-            cooking_Advices["CurrentTier"].append(Advice(
+            cooking_Advices['CurrentTier'].append(Advice(
                 label=f"Unlock All W{world} Meals",
                 picture_class='taste-test',
                 progression=cooking['MealsUnlockedByWorld'][world],
                 goal=meal_counts_by_world[world],
             ))
 
-    if cooking['UnlockedMealsUnder11'] > 0 and tier_Cooking >= 2:
-        cooking_Advices["CurrentTier"].append(Advice(
-            label="All unlocked plates to 11 for Diamond Chef",
-            picture_class="diamond-chef",
+    if cooking['UnlockedMealsUnder11'] > 0 and dchef_level >= 1:
+        cooking_Advices['CurrentTier'].append(Advice(
+            label="Level all unlocked plates to 11+ for Diamond Chef bonus",
+            picture_class='diamond-chef',
             progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder11'],
             goal=cooking['MealsUnlocked'],
         ))
-    if cooking['UnlockedMealsUnder30'] > 0 and tier_Cooking >= 3 and atom_fluoride_unlocked:
-        cooking_Advices["CurrentTier"].append(Advice(
-            label="All unlocked plates to 30 for Fluoride",
+    if cooking['UnlockedMealsUnder30'] > 0 and atom_fluoride_level > 0:
+        cooking_Advices['CurrentTier'].append(Advice(
+            label="All unlocked plates to 30+ for Fluoride bonus",
             picture_class='fluoride',
             progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder30'],
             goal=cooking['MealsUnlocked'],
         ))
     if tier_Cooking <= 3:
-        cooking_Advices["CurrentTier"].append(Advice(
+        cooking_Advices['CurrentTier'].append(Advice(
             label="All +% Meal Cooking Speed meals (Egg, Corndog, Cabbage, etc.)",
             picture_class=session_data.account.meals['Egg']['Image'],
             completed=False
         ))
 
     if tier_Cooking < 4:
-        cooking_Advices["CurrentTier"].append(Advice(
+        cooking_Advices['CurrentTier'].append(Advice(
             label="Any fast meal to level (5% of your Daily Ladles or less)",
             picture_class='blood-marrow',
             completed=False
         ))
     # Elif they have Voidwalker and meals still to level, replace the generic "any faster meal" with the more specific Vman Blood Marrow note
     elif 4 <= tier_Cooking < max_tier:
-        cooking_Advices["CurrentTier"].append(Advice(
+        cooking_Advices['CurrentTier'].append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class='blood-marrow',
             completed=False
@@ -287,7 +287,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
 
         if tier_Cooking < max_tier:
             if current_remainingMeals != max_remainingMeals:
-                cooking_Advices["CurrentTier"].append(Advice(
+                cooking_Advices['CurrentTier'].append(Advice(
                     label=f"{AdviceType.INFO.value} - Current possible: {cooking['MealsUnlocked']}/{max_meal_count} meals, "
                           f"{current_maxMealLevel}/{max_meal_plate_level} plate levels"
                           f"<br>{current_remainingMeals} meal levels = {cooking['NMLBDays']} NMLB triggers to go!",
@@ -296,7 +296,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                     goal=cooking['MealsUnlocked'] * current_maxMealLevel,
                 ))
 
-            cooking_Advices["CurrentTier"].append(Advice(
+            cooking_Advices['CurrentTier'].append(Advice(
                 label=f"{AdviceType.INFO.value} - Total Meal Levels ({max_remainingMeals:,} levels to go!)",
                 picture_class=session_data.account.meals['Turkey of Thank']['Image'],
                 progression=cooking['PlayerTotalMealLevels'],
@@ -316,14 +316,11 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
                     goal=missingUpgrade[3]
                 ))
 
-    for advice in cooking_Advices['NextTier']:
-        advice.mark_advice_completed()
-
     # Generate Advice Groups
-    cooking_AdviceGroupDict['NextTier'] = AdviceGroup(
+    cooking_AdviceGroupDict['Tiers'] = AdviceGroup(
         tier=tier_Cooking,
-        pre_string='To unlock the next set of Meal Priorities' if tier_Cooking < max_tier else 'Max all Meals',
-        advices=cooking_Advices['NextTier']
+        pre_string='Progress Cooking',
+        advices=cooking_Advices['Tiers']
     )
 
     cooking_AdviceGroupDict['CurrentTier'] = AdviceGroup(

@@ -39,6 +39,7 @@ def session_singleton(cls):
 class Account:
 
     def __init__(self, json_data, source_string: InputType):
+
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
         if self.version < lowest_accepted_version:
@@ -84,6 +85,7 @@ class Account:
         self.jmans = []
         self.maestros = []
         self.vmans = []
+        self.no_beginners = False  #Indicates an account has created all characters and none can/went down the Secret Class path
 
         self.barbs = []
         self.bbs = []

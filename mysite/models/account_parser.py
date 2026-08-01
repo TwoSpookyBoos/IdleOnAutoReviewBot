@@ -252,6 +252,7 @@ def _parse_characters(account, run_type):
     account.all_skills = perSkillDict
     account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", {})) for i in range(account.character_count)]
     account.max_toon_count = max(max_characters, character_count)  # OPTIMIZE: find a way to read this from somewhere
+
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
@@ -259,6 +260,7 @@ def _parse_character_class_lists(account):
     account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
     account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
     account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
+    account.no_beginners = len(account.beginners) == 0 and account.character_count >= account.max_toon_count
 
     account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
     account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
