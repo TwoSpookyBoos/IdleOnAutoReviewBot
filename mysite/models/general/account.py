@@ -1,6 +1,7 @@
 import copy
 
 from consts.consts_autoreview import lowest_accepted_version
+from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
 from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
 from models.custom_exceptions import VeryOldDataException
@@ -54,6 +55,7 @@ class Account:
             'World 6': []
         }
         #General
+        self.highest_world_reached = 1
         self.inventory = {
             'Characters Missing Bags': {},
             'Account Wide Inventory': {},
@@ -77,6 +79,25 @@ class Account:
             'Total Slots Max': 0
         }
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
+        #Class lists
+        self.beginners = []
+        self.jmans = []
+        self.maestros = []
+        self.vmans = []
+
+        self.barbs = []
+        self.bbs = []
+        self.dbs = []
+        self.dks = []
+
+        self.mages = []
+        self.bubos = []
+        self.sorcs = []
+        self.acs = []
+
+        self.wws = []
+        self.sbs = []
+
         #W1
         self.stamps: Stamps = Stamps()
         self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
@@ -86,12 +107,31 @@ class Account:
         self.darts = {
             'Upgrades': {}
         }
+
+        # W4
+        self.cooking = {
+            'MealsUnlocked': 0,
+            'MealsUnlockedByWorld': {i:0 for i in range(0,9)},
+            'UnlockedMealsUnder11': 0,
+            'UnlockedMealsUnder30': 0,
+            'MealsUnder11': 0,
+            'MealsUnder30': 0,
+            'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
+            'PlayerTotalMealLevels': 0,
+            'MaxTotalMealLevels': max_meal_count * max_meal_plate_level,
+            'PlayerMissingPlateUpgrades': [],
+            'Tables': [],
+            'TablesOwned': 0
+        }
+        self.meals = {}
+
         # W6
         self.summoning: Summoning = Summoning(self.raw_data)
         self.farming: Farming = Farming(self.raw_data)
         self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
+
         # W7
         self.spelunk = Spelunk(self.raw_data)
         self.coral_reef = {

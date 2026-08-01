@@ -2239,7 +2239,7 @@ true_max_tiers = {
 
     # World 4
     'Breeding': max(breeding_progressionTiers.keys()),
-    'Cooking': 6+1,  #TODO
+    'Cooking': 12+1,  #TODO
     'Rift': max(rift_progressionTiers.keys()),
 
     # World 5
