@@ -99,6 +99,8 @@ $ribbons: (
     meal-ribbon-21: img('data/Ribbon20.png'),
     meal-ribbon-22: img('data/Ribbon21.png'),
     meal-ribbon-23: img('data/Ribbon22.png'),
+    meal-ribbon-24: img('data/Ribbon23.png'),
+    meal-ribbon-25: img('data/Ribbon24.png')
 );
 
 $all-cooking: map-merge($meals, $ribbons);
