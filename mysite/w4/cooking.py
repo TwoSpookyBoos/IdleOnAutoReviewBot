@@ -25,7 +25,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
     true_max = true_max_tiers['Cooking']
     max_tier = true_max - optional_tiers
     vmans = session_data.account.vmans
-    atom_fluoride = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
+    atom_fluoride_unlocked = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level'] >= 1
     dchef_level = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
     cooking = session_data.account.cooking
 
@@ -36,7 +36,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
         tier_Cooking = 2
     if tier_Cooking == 2 and len(vmans) > 0:
         tier_Cooking = 3
-    if tier_Cooking == 3 and atom_fluoride and cooking['PlayerTotalMealLevels'] >= 500:
+    if tier_Cooking == 3 and atom_fluoride_unlocked and cooking['PlayerTotalMealLevels'] >= 500:
         tier_Cooking = 4
     if tier_Cooking == 4 and cooking['MealsUnlockedByWorld'][4] >= meal_counts_by_world[4]:
         tier_Cooking = 5
@@ -207,7 +207,7 @@ def getCookingProgressionTiersAdviceGroups(highestCookingSkillLevel):
             progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder11'],
             goal=cooking['MealsUnlocked'],
         ))
-    if cooking['UnlockedMealsUnder30'] > 0 and tier_Cooking >= 3:
+    if cooking['UnlockedMealsUnder30'] > 0 and tier_Cooking >= 3 and atom_fluoride_unlocked:
         cooking_Advices["CurrentTier"].append(Advice(
             label="All unlocked plates to 30 for Fluoride",
             picture_class='fluoride',
