@@ -168,14 +168,12 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
                           f"{cooking['NMLBDays']} NMLB triggers to go!",
                     picture_class=session_data.account.meals['Turkey of Thank']['Image'],
                     progression=cooking['PlayerTotalMealLevels'],
-                    goal=max_meal_count * max_meal_plate_level,
+                    goal=cooking['MaxRemainingMeals']
                 ))
 
         # Final tier check
         if subgroup_label not in cooking_Advices['Tiers'] and tier_Cooking == tier_number - 1:
             tier_Cooking = tier_number
-
-    
 
     # Generate Advice Groups
     cooking_AdviceGroupDict['Tiers'] = AdviceGroup(
@@ -183,9 +181,6 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
         pre_string='Progress Cooking',
         advices=cooking_Advices['Tiers']
     )
-
-    
-
 
     overall_SectionTier = min(true_max, tier_Cooking)
     return cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max
