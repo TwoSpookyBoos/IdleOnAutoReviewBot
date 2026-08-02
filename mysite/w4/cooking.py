@@ -160,15 +160,21 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
 
         #MaxRemainingMeals
         if cooking['MaxRemainingMeals'] > requirements.get('MaxRemainingMeals', 9999999999999):
+            good_enough_note = (
+                f"<br>Note: This goal is reduced {cooking_close_enough:,} below the true max level to account "
+                f"for when ladle generation cannot keep up with meal level costs. You can probably let NMLB "
+                f"coast until more Cooking Speed becomes available later."\
+                if requirements.get('MaxRemainingMeals', 9999999999999) != 0 else '')
             add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
             if subgroup_label in cooking_Advices['Tiers']:
                 cooking_Advices['Tiers'][subgroup_label].append(Advice(
                     label=f"Finish all {max_meal_count} meals to level {max_meal_plate_level}"
-                          f"<br>{cooking['CurrentRemainingMeals']} remaining levels = "
-                          f"{cooking['NMLBDays']} NMLB triggers to go!",
+                          f"<br>{cooking['CurrentRemainingMeals']:,} remaining levels = "
+                          f"{cooking['NMLBDays']} NMLB triggers to go!"
+                          f"{good_enough_note}",
                     picture_class=session_data.account.meals['Turkey of Thank']['Image'],
                     progression=cooking['PlayerTotalMealLevels'],
-                    goal=cooking['MaxRemainingMeals']
+                    goal=max(0, cooking['MaxTotalMealLevels'] - requirements.get('MaxRemainingMeals', 9999999999999))
                 ))
 
         # Final tier check
