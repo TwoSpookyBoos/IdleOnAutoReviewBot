@@ -1,4 +1,3 @@
-from consts.idleon.consts_idleon import max_characters
 from consts.progression_tiers import true_max_tiers, cooking_progressionTiers
 from models.general.session_data import session_data
 
@@ -14,22 +13,15 @@ from utils.text_formatting import pl
 
 logger = get_logger(__name__)
 
-def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
+def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking, dchef_level, vmans, challenge_account, atom_fluoride_level):
     cooking_Advices = {
-        'Tiers': {},
-        'CurrentTier': [],
-        'PlateLevels': [],
+        'Tiers': {}
     }
     cooking_AdviceGroupDict = {}
     tier_Cooking = 0
     optional_tiers = 1
     true_max = true_max_tiers['Cooking']
     max_tier = true_max - optional_tiers
-    vmans = session_data.account.vmans
-    challenge_account = session_data.account.no_beginners
-    atom_fluoride_level = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level']
-    dchef_level = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
-    cooking = session_data.account.cooking
     spice_images_by_world = {
         4: 'nebulon-mantle-spice',
         5: 'wurm-catacombs-spice',
@@ -183,9 +175,51 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
         if subgroup_label not in cooking_Advices['Tiers'] and tier_Cooking == tier_number - 1:
             tier_Cooking = tier_number
 
+    
+
+    # Generate Advice Groups
+    cooking_AdviceGroupDict['Tiers'] = AdviceGroup(
+        tier=tier_Cooking,
+        pre_string='Progress Cooking',
+        advices=cooking_Advices['Tiers']
+    )
+
+    
+
+
+    overall_SectionTier = min(true_max, tier_Cooking)
+    return cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max
+
+
+def getCookingMealsAdviceGroup() -> AdviceGroup:
+    meals_advice = [
+        Advice(
+            label=f"{meal_name}: {meal_values['Description']}"
+                  f"<br>Tier {meal_values['RibbonTier']} Ribbon = {meal_values['RibbonMulti']:.3f}x multi",
+            picture_class=meal_values['Image'],
+            progression=meal_values['Level'],
+            goal=max_meal_plate_level,
+            resource=f"meal-ribbon-{meal_values['RibbonTier']}",
+            informational=True
+        ) for meal_name, meal_values in session_data.account.meals.items()
+    ]
+    for advice in meals_advice:
+        advice.mark_advice_completed()
+
+    meals_ag = AdviceGroup(
+        tier='',
+        pre_string='All Meal levels and ribbons',
+        advices=meals_advice,
+        informational=True
+    )
+    return meals_ag
+
+
+def getCurrentTierStrategyAdviceGroup(cooking, dchef_level, atom_fluoride_level, tier_Cooking, max_tier, vmans):
+    currenttier_Advices = []
     # Generate CurrentTier Advice
     if session_data.account.cooking['MealsUnlocked'] < max_meal_count:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label='Work on unlocking all meals. This may mean pushing maps and Breeding progress to unlock new spices!',
             picture_class='taste-test',
             progression=cooking['MealsUnlocked'],
@@ -193,7 +227,7 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
         ))
     for world in range(0, 9):
         if session_data.account.highest_world_reached >= world and cooking['MealsUnlockedByWorld'][world] < meal_counts_by_world[world]:
-            cooking_Advices['CurrentTier'].append(Advice(
+            currenttier_Advices.append(Advice(
                 label=f"Unlock All W{world} Meals",
                 picture_class='taste-test',
                 progression=cooking['MealsUnlockedByWorld'][world],
@@ -201,35 +235,35 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
             ))
 
     if cooking['UnlockedMealsUnder11'] > 0 and dchef_level >= 1:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label="Level all unlocked plates to 11+ for Diamond Chef bonus",
             picture_class='diamond-chef',
             progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder11'],
             goal=cooking['MealsUnlocked'],
         ))
     if cooking['UnlockedMealsUnder30'] > 0 and atom_fluoride_level > 0:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label="All unlocked plates to 30+ for Fluoride bonus",
             picture_class='fluoride',
             progression=cooking['MealsUnlocked'] - cooking['UnlockedMealsUnder30'],
             goal=cooking['MealsUnlocked'],
         ))
     if tier_Cooking <= 3:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label="All +% Meal Cooking Speed meals (Egg, Corndog, Cabbage, etc.)",
             picture_class=session_data.account.meals['Egg']['Image'],
             completed=False
         ))
 
     if tier_Cooking < 4:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label="Any fast meal to level (5% of your Daily Ladles or less)",
             picture_class='blood-marrow',
             completed=False
         ))
     # Elif they have Voidwalker and meals still to level, replace the generic "any faster meal" with the more specific Vman Blood Marrow note
     elif 4 <= tier_Cooking < max_tier:
-        cooking_Advices['CurrentTier'].append(Advice(
+        currenttier_Advices.append(Advice(
             label="Any! Voidwalker's Blood Marrow buff scales with EVERY meal level!",
             picture_class='blood-marrow',
             completed=False
@@ -254,8 +288,8 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
 
             # Preset level
             if (
-                vman.current_preset_talents.get('59', 0) >= max_efficiency_level
-                or vman.secondary_preset_talents.get('59', 0) >= max_efficiency_level
+                    vman.current_preset_talents.get('59', 0) >= max_efficiency_level
+                    or vman.secondary_preset_talents.get('59', 0) >= max_efficiency_level
             ):
                 anyVWMaxLeveled = True
             if vman.current_preset_talents.get('59', 0) >= bestBMPresetLevel:
@@ -287,7 +321,7 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
 
         if tier_Cooking < max_tier:
             if current_remainingMeals != max_remainingMeals:
-                cooking_Advices['CurrentTier'].append(Advice(
+                currenttier_Advices.append(Advice(
                     label=f"{AdviceType.INFO.value} - Current possible: {cooking['MealsUnlocked']}/{max_meal_count} meals, "
                           f"{current_maxMealLevel}/{max_meal_plate_level} plate levels"
                           f"<br>{current_remainingMeals} meal levels = {cooking['NMLBDays']} NMLB triggers to go!",
@@ -296,72 +330,46 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level):
                     goal=cooking['MealsUnlocked'] * current_maxMealLevel,
                 ))
 
-            cooking_Advices['CurrentTier'].append(Advice(
+            currenttier_Advices.append(Advice(
                 label=f"{AdviceType.INFO.value} - Total Meal Levels ({max_remainingMeals:,} levels to go!)",
                 picture_class=session_data.account.meals['Turkey of Thank']['Image'],
                 progression=cooking['PlayerTotalMealLevels'],
                 goal=max_meal_count * max_meal_plate_level,
             ))
 
+    currenttier_ag = AdviceGroup(
+        tier='',
+        pre_string='Meal priorities for your current tier',
+        advices=currenttier_Advices,
+        informational=True
+    )
+    currenttier_ag.remove_empty_subgroups()
+    return currenttier_ag
+
+
+def getPlateLevelsAdviceGroup(cooking):
+    platelevels_Advices = []
     # If any sources of max plate levels are missing
     if cooking['PlayerMissingPlateUpgrades']:
         for missingUpgrade in cooking['PlayerMissingPlateUpgrades']:
             if isinstance(missingUpgrade, Advice):
-                cooking_Advices['PlateLevels'].append(missingUpgrade)
+                platelevels_Advices.append(missingUpgrade)
             else:
-                cooking_Advices['PlateLevels'].append(Advice(
+                platelevels_Advices.append(Advice(
                     label=missingUpgrade[0],
                     picture_class=missingUpgrade[1],
                     progression=missingUpgrade[2],
                     goal=missingUpgrade[3]
                 ))
 
-    # Generate Advice Groups
-    cooking_AdviceGroupDict['Tiers'] = AdviceGroup(
-        tier=tier_Cooking,
-        pre_string='Progress Cooking',
-        advices=cooking_Advices['Tiers']
-    )
-
-    cooking_AdviceGroupDict['CurrentTier'] = AdviceGroup(
-        tier='',
-        pre_string='Meal priorities for your current tier',
-        advices=cooking_Advices['CurrentTier'],
-        informational=True
-    )
-
-    cooking_AdviceGroupDict['PlateLevels'] = AdviceGroup(
+    platelevels_ag = AdviceGroup(
         tier='',
         pre_string='Remaining sources of max plate levels',
-        advices=cooking_Advices["PlateLevels"],
+        advices=platelevels_Advices,
         informational=True
     )
-    overall_SectionTier = min(true_max, tier_Cooking)
-    return cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max
-
-
-def getCookingMealsAdviceGroup() -> AdviceGroup:
-    meals_advice = [
-        Advice(
-            label=f"{meal_name}: {meal_values['Description']}"
-                  f"<br>Tier {meal_values['RibbonTier']} Ribbon = {meal_values['RibbonMulti']:.3f}x multi",
-            picture_class=meal_values['Image'],
-            progression=meal_values['Level'],
-            goal=max_meal_plate_level,
-            resource=f"meal-ribbon-{meal_values['RibbonTier']}",
-            informational=True
-        ) for meal_name, meal_values in session_data.account.meals.items()
-    ]
-    for advice in meals_advice:
-        advice.mark_advice_completed()
-
-    meals_ag = AdviceGroup(
-        tier='',
-        pre_string='All Meal levels and ribbons',
-        advices=meals_advice,
-        informational=True
-    )
-    return meals_ag
+    platelevels_ag.remove_empty_subgroups()
+    return platelevels_ag
 
 
 def getCookingAdviceSection() -> AdviceSection:
@@ -377,8 +385,18 @@ def getCookingAdviceSection() -> AdviceSection:
         )
         return cooking_AdviceSection
 
+    vmans = session_data.account.vmans
+    challenge_account = session_data.account.no_beginners
+    atom_fluoride_level = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level']
+    dchef_level = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
+    cooking = session_data.account.cooking
+
     #Generate AdviceGroup
-    cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level)
+    cooking_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getCookingProgressionTiersAdviceGroups(
+        highest_cooking_skill_level, cooking, dchef_level, vmans, challenge_account, atom_fluoride_level)
+    cooking_AdviceGroupDict['CurrentTier'] = getCurrentTierStrategyAdviceGroup(
+        cooking, dchef_level, atom_fluoride_level, overall_SectionTier, max_tier, vmans)
+    cooking_AdviceGroupDict['PlateLevels'] = getPlateLevelsAdviceGroup(cooking)
     cooking_AdviceGroupDict['AllMeals'] = getCookingMealsAdviceGroup()
 
     # Generate AdviceSection
