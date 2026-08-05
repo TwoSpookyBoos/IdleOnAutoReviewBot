@@ -19,7 +19,7 @@ from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_
 from consts.consts_w1 import statues_dict
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
-from consts.consts_w4 import tomepct, max_meal_count, max_meal_level, max_nblb_bubbles, max_cooking_ribbon
+from consts.consts_w4 import tomepct, max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.progression_tiers import owl_bonuses_of_orion
@@ -1094,13 +1094,14 @@ def _calculate_w4_cooking_max_plate_levels(account):
     # Sailing Artifact Increases
     causticolumn_level = account.sailing['Artifacts'].get('Causticolumn', {}).get('Level', 0)
     account.cooking['PlayerMaxPlateLvl'] += 10 * int(causticolumn_level)
+    # https://idleon.wiki/wiki/Sailing#Artifacts
     if causticolumn_level < 1:
         account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Base Causticolumn", "causticolumn", 0, 1))
     if causticolumn_level < 2:
-        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", "causticolumn", 0, 1))
+        account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", 'causticolumn', 0, 1))
     if causticolumn_level < 3:
         if account.rift['EldritchArtifacts']:
-            account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", "causticolumn", 0, 1))
+            account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", 'causticolumn', 0, 1))
         else:
             account.cooking['PlayerMissingPlateUpgrades'].append((
                 "{{ Artifact|#sailing }}: Eldritch Causticolumn. Eldritch Artifacts are unlocked by completing {{ Rift|#rift }} 30",
@@ -1112,7 +1113,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
         if account.sneaking.emporium["Sovereign Artifacts"].obtained:
             account.cooking['PlayerMissingPlateUpgrades'].append((
                 "{{ Artifact|#sailing }}: Sovereign Causticolumn",
-                "causticolumn",
+                'causticolumn',
                 0,
                 1
             ))
@@ -1123,13 +1124,30 @@ def _calculate_w4_cooking_max_plate_levels(account):
                 0,
                 1
             ))
+    if causticolumn_level < 5:
+        # TODO: Verify if player has upgrade from first Spelunking Cave
+        account.cooking['PlayerMissingPlateUpgrades'].append((
+            "{{ Artifact|#sailing }}: Omnipotent Causticolumn. Omnipotent Artifacts unlock from the first Spelunking Cave",
+            'causticolumn',  #'omnipotent-artifacts',
+            0,
+            1
+        ))
+    if causticolumn_level < 6:
+        # TODO: Verify if player has upgrade from Research
+        account.cooking['PlayerMissingPlateUpgrades'].append((
+            "{{ Artifact|#sailing }}: Transcendent Causticolumn. Transcendent Artifacts unlock from Research",
+            'causticolumn',  #'transcendent-artifacts',
+            0,
+            1
+        ))
+
     # Jade Emporium Increases
     if account.sneaking.emporium["Papa Blob's Quality Guarantee"].obtained:
         account.cooking['PlayerMaxPlateLvl'] += 10
     else:
         account.cooking['PlayerMissingPlateUpgrades'].append((
             "Purchase \"Papa Blob's Quality Guarantee\" from {{ Jade Emporium|#sneaking }}",
-            "papa-blobs-quality-guarantee",
+            "papa-blob-s-quality-guarantee",
             0,
             1
         ))
@@ -1138,10 +1156,11 @@ def _calculate_w4_cooking_max_plate_levels(account):
     else:
         account.cooking['PlayerMissingPlateUpgrades'].append((
             "Purchase \"Chef Geustloaf's Cutting Edge Philosophy\" from {{ Jade Emporium|#sneaking }}",
-            "chef-geustloafs-cutting-edge-philosophy",
+            "chef-geustloaf-s-cutting-edge-philosophy",
             0,
             1
         ))
+
     # Grimoire Increases
     account.cooking['PlayerMaxPlateLvl'] += account.grimoire['Upgrades']['Supreme Head Chef Status']['Level']
     if account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'] < account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']:
@@ -1151,6 +1170,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'],  #progress
             account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
         ))
+
     # Spelunking Increases
     bonus_cave = account.spelunk.caves["Lunarheim"]
     if bonus_cave.bonus_obtained:
@@ -1161,9 +1181,9 @@ def _calculate_w4_cooking_max_plate_levels(account):
         )
 
     account.cooking['CurrentRemainingMeals'] = account.cooking['MaxTotalMealLevels'] - account.cooking['PlayerTotalMealLevels']
-    account.cooking['MaxRemainingMeals'] = (max_meal_count * max_meal_level) - account.cooking['PlayerTotalMealLevels']
+    account.cooking['MaxRemainingMeals'] = (max_meal_count * max_meal_plate_level) - account.cooking['PlayerTotalMealLevels']
     account.cooking['NMLBDays'] = sum([
-        ceil((max_meal_level - meal_details['Level']) / 3) for meal_details in account.meals.values()
+        ceil((max_meal_plate_level - meal_details['Level']) / 3) for meal_details in account.meals.values()
     ])
 
 def _calculate_w4_jewel_multi(account):

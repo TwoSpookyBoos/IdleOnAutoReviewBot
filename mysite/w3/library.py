@@ -6,7 +6,7 @@ from consts.idleon.consts_idleon import expected_talents_dict, current_world
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, max_overall_book_levels, \
     library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
-from consts.consts_w4 import max_meal_level, cooking_close_enough
+from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
@@ -219,7 +219,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
         label=f"{{{{ Meal|#cooking }}}}: Fortune Cookie: {session_data.account.meals['Fortune Cookie']['Description']}",
         picture_class=session_data.account.meals['Fortune Cookie']['Image'],
         progression=session_data.account.meals['Fortune Cookie']['Level'],
-        goal=max_meal_level
+        goal=max_meal_plate_level
     ))
 
     # Atom

@@ -1,4 +1,5 @@
 from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
 from utils.logging import get_consts_logger
 logger = get_consts_logger(__name__)
 
@@ -1619,6 +1620,22 @@ rift_progressionTiers = {
     10: [50, "101T",        240],
     11: [55, "528T",        240],
 }
+cooking_progressionTiers = {
+    0: {},
+    1: {'CookingLevel': 1},
+    2: {'DiamondChef': 15},
+    3: {'Voidwalker': True},
+    4: {'Fluoride': 1, 'TotalMealLevels': 500},
+    5: {'AllMealsUnlockedByWorld': 4},
+    6: {'AllMealsUnlockedByWorld': 5},
+    7: {'AllMealsUnlockedByWorld': 6},
+    8: {'AllMealsUnlockedByWorld': 7},
+    9: {'AllMealsUnlockedByWorld': 8},
+    10: {'TotalMealsUnder11': 0, 'TotalMealsUnder30': 0},
+    11: {'MaxPlateLevel': max_meal_plate_level},
+    12: {'MaxRemainingMeals': cooking_close_enough},
+    13: {'MaxRemainingMeals': 0}
+}
 
 ###WORLD 5 PROGRESSION TIERS###
 divinity_progressionTiers = {
@@ -2239,7 +2256,7 @@ true_max_tiers = {
 
     # World 4
     'Breeding': max(breeding_progressionTiers.keys()),
-    'Cooking': 6+1,  #TODO
+    'Cooking': max(cooking_progressionTiers.keys()),
     'Rift': max(rift_progressionTiers.keys()),
 
     # World 5

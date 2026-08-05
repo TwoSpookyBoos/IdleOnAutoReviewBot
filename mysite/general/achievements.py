@@ -135,15 +135,15 @@ def getAchievementStatus(achievementName):
             case 'Big Time Land Owner':
                 return min(27, session_data.account.farming.total_plots), 27, ''
             case 'Best Bloomie':
-                return min(12, session_data.account.summoning['SanctuaryTotal']), 12, ''
+                return min(12, session_data.account.summoning.sanctuary_count), 12, ''
             case 'Regalis My Beloved':
-                return min(360, session_data.account.summoning['SanctuaryTotal']), 360, ''
+                return min(360, session_data.account.summoning.sanctuary_count), 360, ''
             case "Scorin' the Ladies":
                 return notateNumber('Match', min(250000, session_data.account.all_assets.get('Bug12').amount), 0, 'K'), '250K', 'ladybug'
             case 'Effervess Enthusiess':
                 return notateNumber('Match', min(5000000, session_data.account.all_assets.get('Tree13').amount), 0, 'K'), '5000K', 'effervescent-logs'
             case 'Summoning GM':
-                return min(58, session_data.account.summoning['Battles']['RegularTotal']), 58, ''
+                return min(58, session_data.account.summoning.regular.total_win), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
                 return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''

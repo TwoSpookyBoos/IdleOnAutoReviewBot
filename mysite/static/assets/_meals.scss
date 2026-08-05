@@ -1,5 +1,5 @@
 $meals: (
-	turkey-a-la-thank-meal:     img('data/CookingMB0.png'),
+	turkey-of-thank-meal:       img('data/CookingMB0.png'),
 	egg-meal:                   img('data/CookingMB1.png'),
 	salad-meal:                 img('data/CookingMB2.png'),
 	pie-meal:                   img('data/CookingMB3.png'),
@@ -7,13 +7,13 @@ $meals: (
 	spaghetti-meal:             img('data/CookingMB5.png'),
 	corn-meal:                  img('data/CookingMB6.png'),
 	garlic-bread-meal:          img('data/CookingMB7.png'),
-	garlicless-bread-meal:      img('data/CookingMB8.png'),
+	garlicles-bread-meal:       img('data/CookingMB8.png'),
 	pizza-meal:                 img('data/CookingMB9.png'),
 	apple-meal:                 img('data/CookingMB10.png'),
 	pancakes-meal:              img('data/CookingMB11.png'),
 	corndog-meal:               img('data/CookingMB12.png'),
 	cabbage-meal:               img('data/CookingMB13.png'),
-	potato-pea-pastry-meal:     img('data/CookingMB14.png'),
+	potato-p-pastry-meal:       img('data/CookingMB14.png'),
 	dango-meal:                 img('data/CookingMB15.png'),
 	sourish-fish-meal:          img('data/CookingMB16.png'),
 	octoplop-meal:              img('data/CookingMB17.png'),
@@ -31,7 +31,7 @@ $meals: (
 	durian-fruit-meal:          img('data/CookingMB29.png'),
 	orange-meal:                img('data/CookingMB30.png'),
 	bunt-cake-meal:             img('data/CookingMB31.png'),
-	chocolate-truffle-meal:     img('data/CookingMB32.png'),
+	chocala-truffle-meal:       img('data/CookingMB32.png'),
 	leek-meal:                  img('data/CookingMB33.png'),
 	fortune-cookie-meal:        img('data/CookingMB34.png'),
 	pretzel-meal:               img('data/CookingMB35.png'),
@@ -48,7 +48,7 @@ $meals: (
 	pumpkin-meal:               img('data/CookingMB46.png'),
 	cotton-candy-meal:          img('data/CookingMB47.png'),
 	massive-fig-meal:           img('data/CookingMB48.png'),
-	head-chef-geustloaf-meal:   img('data/CookingMB49.png'),
+	chef-geustloaf-meal:        img('data/CookingMB49.png'),
 	kiwi-fruit-meal:            img('data/CookingMB50.png'),
 	popped-corn-meal:           img('data/CookingMB51.png'),
 	double-cherry-meal:         img('data/CookingMB52.png'),
@@ -59,10 +59,10 @@ $meals: (
 	seasoned-marrow-meal:       img('data/CookingMB57.png'),
 	sticky-bun-meal:            img('data/CookingMB58.png'),
 	frazzleberry-meal:          img('data/CookingMB59.png'),
-	misterloin-steak-meal:      img('data/CookingMB60.png'),
+	mrloin-steak-meal:          img('data/CookingMB60.png'),
 	large-pohayoh-meal:         img('data/CookingMB61.png'),
-	bill-jack-pepper-meal:      img('data/CookingMB62.png'),
-	burned-marshmallow-meal:    img('data/CookingMB63.png'),
+	bill-jack-pep-meal:         img('data/CookingMB62.png'),
+	burned-mello-meal:          img('data/CookingMB63.png'),
 	yumi-peachring-meal:        img('data/CookingMB64.png'),
 	plumpcakes-meal:            img('data/CookingMB65.png'),
 	nyanborgir-meal:            img('data/CookingMB66.png'),
@@ -70,6 +70,9 @@ $meals: (
 	woahtermelon-meal:          img('data/CookingMB68.png'),
 	cookies-meal:               img('data/CookingMB69.png'),
 	singing-seed-meal:          img('data/CookingMB70.png'),
+	tasty-treat-meal:           img('data/CookingMB71.png'),
+	giga-chip-meal:             img('data/CookingMB72.png'),
+	divorce-cake-meal:          img('data/CookingMB73.png'),
 );
 
 $ribbons: (
@@ -96,6 +99,8 @@ $ribbons: (
     meal-ribbon-21: img('data/Ribbon20.png'),
     meal-ribbon-22: img('data/Ribbon21.png'),
     meal-ribbon-23: img('data/Ribbon22.png'),
+    meal-ribbon-24: img('data/Ribbon23.png'),
+    meal-ribbon-25: img('data/Ribbon24.png')
 );
 
 $all-cooking: map-merge($meals, $ribbons);

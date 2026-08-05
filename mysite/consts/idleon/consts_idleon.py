@@ -30,7 +30,7 @@ pearlable_skills_list = [
 ]
 
 current_world = 7
-max_characters = 10
+max_characters = 11
 
 expected_talents_dict = {
     'Beginner': [

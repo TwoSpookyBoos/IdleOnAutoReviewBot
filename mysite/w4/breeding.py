@@ -17,7 +17,7 @@ from utils.number_formatting import number_to_roman
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
+from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
 from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
@@ -682,13 +682,13 @@ def getPetDamageAdviceGroup():
                 label=f'{{{{ Meal|#cooking }}}} - Croissant: +{croissant_meal_bonus:.2f}%',
                 picture_class=croissant_meal['Image'],
                 progression=croissant_meal['Level'],
-                goal=max_meal_level
+                goal=max_meal_plate_level
             ),
             Advice(
                 label=f'{{{{ Meal|#cooking }}}} - Wedding Cake: +{wedding_cake_meal_bonus:.2f}%',
                 picture_class=wedding_cake_meal['Image'],
                 progression=wedding_cake_meal['Level'],
-                goal=max_meal_level
+                goal=max_meal_plate_level
             ),
             Advice(
                 label=f'Beast Master Talent passive- Arena Spirit: +{arena_spirit_talent_bonus:.2f}%',
