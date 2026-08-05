@@ -12,7 +12,7 @@ def get_upgrade_info_group():
             label="The shop is located in the Valley of the Beans (Bored Beans)",
             picture_class="bored-bean",
         ),
-        *[get_basketball_advice(index, link_to_section=False)[1] for index in session_data.account.basketball['Upgrades'].keys()]
+        *[get_basketball_advice(index, link_to_section=False)[1] for index in session_data.account.basketball.upgrades.keys()]
     ]
     return AdviceGroup(
         pre_string='Upgrades',

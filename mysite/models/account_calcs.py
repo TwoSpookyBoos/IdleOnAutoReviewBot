@@ -615,7 +615,8 @@ def _calculate_w1(account):
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     _calculate_w1_owl_bonuses(account)
-    _calculate_w1_minigames(account)
+    account.basketball.calculate()
+    account.darts.calculate()
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -795,25 +796,6 @@ def _calculate_w1_owl_bonuses(account):
             'NumUnlocked': bonus_num_unlocked,
             'Value': safer_convert(bonus_value, 0)
         }
-
-def _calculate_w1_minigames(account):
-    _calculate_w1_basketball(account)
-    _calculate_w1_darts(account)
-
-def _calculate_w1_basketball(account):
-    for upgrade in account.basketball['Upgrades'].values():
-        if '{' in upgrade['Description']:
-            upgrade['Value'] = upgrade['Level']
-            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
-
-def _calculate_w1_darts(account):
-    for upgrade in account.darts['Upgrades'].values():
-        if '{' in upgrade['Description']:
-            upgrade['Value'] = upgrade['Level']
-            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
-        elif '}' in upgrade['Description']:
-            upgrade['Value'] = ValueToMulti(upgrade['Level'])
-            upgrade['Description'] = upgrade['Description'].replace('}', str(upgrade['Value']))
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)

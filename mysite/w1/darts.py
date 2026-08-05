@@ -12,7 +12,7 @@ def get_upgrade_info_group():
             label="The shop is located in Winding Willows (Baby Boa)",
             picture_class="baby-boa",
         ),
-        *[get_darts_advice(index, link_to_section=False)[1] for index in session_data.account.darts['Upgrades'].keys()]
+        *[get_darts_advice(index, link_to_section=False)[1] for index in session_data.account.darts.upgrades.keys()]
     ]
     return AdviceGroup(
         pre_string='Upgrades',
