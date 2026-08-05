@@ -204,8 +204,6 @@ def getCookingMealsAdviceGroup() -> AdviceGroup:
             informational=True
         ) for meal_name, meal_values in session_data.account.meals.items()
     ]
-    for advice in meals_advice:
-        advice.mark_advice_completed()
 
     meals_ag = AdviceGroup(
         tier='',
@@ -213,6 +211,7 @@ def getCookingMealsAdviceGroup() -> AdviceGroup:
         advices=meals_advice,
         informational=True
     )
+    meals_ag.mark_advice_completed()
     return meals_ag
 
 
