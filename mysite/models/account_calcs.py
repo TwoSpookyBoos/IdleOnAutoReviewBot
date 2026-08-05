@@ -801,10 +801,7 @@ def _calculate_w1_minigames(account):
     _calculate_w1_darts(account)
 
 def _calculate_w1_basketball(account):
-    for upgrade in account.basketball['Upgrades'].values():
-        if '{' in upgrade['Description']:
-            upgrade['Value'] = upgrade['Level']
-            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
+    account.basketball.calculate()
 
 def _calculate_w1_darts(account):
     for upgrade in account.darts['Upgrades'].values():
