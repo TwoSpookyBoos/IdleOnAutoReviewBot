@@ -615,7 +615,8 @@ def _calculate_w1(account):
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     _calculate_w1_owl_bonuses(account)
-    _calculate_w1_minigames(account)
+    account.basketball.calculate()
+    account.darts.calculate()
 
 def _calculate_w1_upgrade_vault(account):
     vault_multi = [
@@ -795,16 +796,6 @@ def _calculate_w1_owl_bonuses(account):
             'NumUnlocked': bonus_num_unlocked,
             'Value': safer_convert(bonus_value, 0)
         }
-
-def _calculate_w1_minigames(account):
-    _calculate_w1_basketball(account)
-    _calculate_w1_darts(account)
-
-def _calculate_w1_basketball(account):
-    account.basketball.calculate()
-
-def _calculate_w1_darts(account):
-    account.darts.calculate()
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
