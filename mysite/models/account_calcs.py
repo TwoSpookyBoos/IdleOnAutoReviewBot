@@ -804,13 +804,7 @@ def _calculate_w1_basketball(account):
     account.basketball.calculate()
 
 def _calculate_w1_darts(account):
-    for upgrade in account.darts['Upgrades'].values():
-        if '{' in upgrade['Description']:
-            upgrade['Value'] = upgrade['Level']
-            upgrade['Description'] = upgrade['Description'].replace('{', str(upgrade['Value']))
-        elif '}' in upgrade['Description']:
-            upgrade['Value'] = ValueToMulti(upgrade['Level'])
-            upgrade['Description'] = upgrade['Description'].replace('}', str(upgrade['Value']))
+    account.darts.calculate()
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)

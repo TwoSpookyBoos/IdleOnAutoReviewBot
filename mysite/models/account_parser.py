@@ -21,7 +21,7 @@ from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, darts_upgrade_descriptions
+    statue_type_count, get_statue_type_index_from_name
 )
 from consts.w1.stamps import stamp_types
 from consts.w1.bribes import bribes_dict
@@ -1068,7 +1068,6 @@ def _parse_w1(account):
     _parse_w1_stamps(account)
     _parse_w1_owl(account)
     _parse_w1_statues(account)
-    _parse_w1_minigames(account)
 
 def _parse_w1_upgrade_vault(account):
     account.vault = {
@@ -1323,18 +1322,6 @@ def _parse_w1_statues(account):
         if account.statues[statueDetails['Name']]['TypeNumber'] >= statue_type_count:
             account.maxed_statues += 1
 
-
-def _parse_w1_minigames(account):
-    _parse_w1_darts(account)
-
-def _parse_w1_darts(account):
-    # skip the first item in the array because that's just the default shop text, not an upgrade description
-    for index, description in enumerate(darts_upgrade_descriptions[1:]):
-        account.darts['Upgrades'][index] = {
-            'Level': safer_get(account.raw_optlacc_dict, 435 + index, 0),
-            'Description': description.replace('_', ' '),
-            'Image': f'darts-upgrade-{index + 1}'
-        }
 
 def _parse_w2(account):
     _parse_w2_vials(account)
