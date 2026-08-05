@@ -10,6 +10,7 @@ from models.general.greenstacks import GreenStacks
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
+from models.w3.salt_lick import SaltLick
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
@@ -107,6 +108,9 @@ class Account:
         self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
         self.basketball: Basketball = Basketball(self.raw_data)
         self.darts: Darts = Darts(self.raw_data)
+
+        # W3
+        self.saltlick: SaltLick = SaltLick(self.raw_data)
 
         # W4
         self.cooking = {

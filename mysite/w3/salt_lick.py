@@ -1,5 +1,4 @@
 from consts.consts_autoreview import break_you_best
-from consts.consts_w3 import salt_lick_name_list, salt_lick_list
 from consts.progression_tiers import salt_lick_progression_tiers, true_max_tiers
 from models.general.session_data import session_data
 
@@ -14,16 +13,16 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     true_max = true_max_tiers['Salt Lick']
     max_tier = true_max - optional_tiers
     sum_maxed_upgrades = 0
-    player_salt_lick = session_data.account.saltlick
+    player_salt_lick = session_data.account.saltlick.upgrades
 
     # Assess tiers
     for tier_number, requirements in salt_lick_progression_tiers.items():
-        if player_salt_lick[requirements['Upgrade']] < requirements['Level']:
-            upgrade_index = salt_lick_name_list.index(requirements['Upgrade'])
+        upgrade = player_salt_lick[requirements['Upgrade']]
+        if upgrade.level < requirements['Level']:
             saltlick_Advices.append(Advice(
-                label=requirements['Upgrade'],
-                picture_class=getItemDisplayName(salt_lick_list[upgrade_index]['material']),
-                progression=player_salt_lick[requirements['Upgrade']],
+                label=upgrade.name,
+                picture_class=getItemDisplayName(upgrade.material),
+                progression=upgrade.level,
                 goal=requirements['Level']
             ))
         else:

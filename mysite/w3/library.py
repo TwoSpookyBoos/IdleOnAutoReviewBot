@@ -101,9 +101,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     bookLevelAdvices[scalingSubgroup].append(Advice(
         label=f"{{{{Salt Lick|#salt-lick }}}}: "
-              f"+{2 * session_data.account.saltlick.get('Max Book', 0)}/20",
+              f"+{2 * session_data.account.saltlick.upgrades['Max Book'].level}/20",
         picture_class="salt-lick",
-        progression=session_data.account.saltlick.get('Max Book', 0),
+        progression=session_data.account.saltlick.upgrades['Max Book'].level,
         goal=10
     ))
 
