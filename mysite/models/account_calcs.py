@@ -1907,7 +1907,7 @@ def _calculate_w3_library_max_book_levels(account):
     account.library['ScalingSum'] = (
         0
         + 2 * account.merits[2][2]['Level']
-        + 2 * account.saltlick.get('Max Book', 0)
+        + 2 * account.saltlick.upgrades['Max Book'].level
     )
     account.library['MaxBookLevel'] = (
         100 + account.library['StaticSum'] + account.library['ScalingSum']

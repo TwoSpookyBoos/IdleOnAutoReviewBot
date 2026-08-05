@@ -31,7 +31,7 @@ from consts.consts_w2 import (
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
-    collider_storage_limit_list, prayers_dict, salt_lick_name_list, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
+    collider_storage_limit_list, prayers_dict, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
     apocable_map_index_dict,
     apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict, totems_list
 )
@@ -1713,7 +1713,6 @@ def _parse_w3(account):
     _parse_w3_shrines(account)
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
-    _parse_w3_saltlick(account)
     _parse_w3_armor_sets(account)
     _parse_w3_worship(account)
 
@@ -2074,15 +2073,6 @@ def _parse_w3_prayers(account):
             )
         except:
             pass
-
-def _parse_w3_saltlick(account):
-    account.saltlick = {}
-    raw_saltlick_list = safe_loads(account.raw_data.get("SaltLick"))
-    for saltlickIndex, saltlickName in enumerate(salt_lick_name_list):
-        try:
-            account.saltlick[saltlickName] = int(raw_saltlick_list[saltlickIndex])
-        except:
-            account.saltlick[saltlickName] = 0
 
 def _parse_w3_armor_sets(account):
     account.armor_sets = {

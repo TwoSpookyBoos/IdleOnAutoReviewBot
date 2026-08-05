@@ -43,7 +43,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value']
     account_sum += vialBonus
     account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
-    account_sum += 0.5 * session_data.account.saltlick.get('Printer Sample Size', 0)
+    account_sum += 0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro']['Value']
     stample_value = session_data.account.stamps['Stample Stamp'].total_value
@@ -75,9 +75,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psr_Advices[account_subgroup].append(Advice(
         label=f"{{{{ Salt Lick|#salt-lick }}}} bonus: "
-              f"+{round(0.5 * session_data.account.saltlick['Printer Sample Size'], 2):g}/10%",
+              f"+{round(0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level, 2):g}/10%",
         picture_class='salt-lick',
-        progression=session_data.account.saltlick['Printer Sample Size'],
+        progression=session_data.account.saltlick.upgrades['Printer Sample Size'].level,
         goal=20
     ))
     psr_Advices[account_subgroup].append(Advice(
