@@ -21,7 +21,7 @@ from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name, basketball_upgrade_descriptions, darts_upgrade_descriptions
+    statue_type_count, get_statue_type_index_from_name
 )
 from consts.w1.stamps import stamp_types
 from consts.w1.bribes import bribes_dict
@@ -36,7 +36,7 @@ from consts.consts_w3 import (
     apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict, totems_list
 )
 from consts.consts_w4 import (
-    max_cooking_tables, max_meal_count, max_meal_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
+    max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
     max_breeding_territories, slot_unlock_waves_list, territory_names, breeding_upgrades_dict, breeding_genetics_list, breeding_shiny_bonus_list, breeding_species_dict,
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
@@ -252,6 +252,7 @@ def _parse_characters(account, run_type):
     account.all_skills = perSkillDict
     account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", {})) for i in range(account.character_count)]
     account.max_toon_count = max(max_characters, character_count)  # OPTIMIZE: find a way to read this from somewhere
+
     _parse_character_class_lists(account)
 
 def _parse_character_class_lists(account):
@@ -259,6 +260,7 @@ def _parse_character_class_lists(account):
     account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
     account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
     account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
+    account.no_beginners = len(account.beginners) == 0 and account.character_count >= account.max_toon_count
 
     account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
     account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
@@ -1068,7 +1070,6 @@ def _parse_w1(account):
     _parse_w1_stamps(account)
     _parse_w1_owl(account)
     _parse_w1_statues(account)
-    _parse_w1_minigames(account)
 
 def _parse_w1_upgrade_vault(account):
     account.vault = {
@@ -1323,28 +1324,6 @@ def _parse_w1_statues(account):
         if account.statues[statueDetails['Name']]['TypeNumber'] >= statue_type_count:
             account.maxed_statues += 1
 
-
-def _parse_w1_minigames(account):
-    _parse_w1_basketball(account)
-    _parse_w1_darts(account)
-
-def _parse_w1_basketball(account):
-    # skip the first item in the array because that's just the default shop text, not an upgrade description
-    for index, description in enumerate(basketball_upgrade_descriptions[1:]):
-        account.basketball['Upgrades'][index] = {
-            'Level': safer_get(account.raw_optlacc_dict, 419 + index, 0),
-            'Description': description.replace('_', ' '),
-            'Image': f'basketball-upgrade-{index + 1}'
-        }
-
-def _parse_w1_darts(account):
-    # skip the first item in the array because that's just the default shop text, not an upgrade description
-    for index, description in enumerate(darts_upgrade_descriptions[1:]):
-        account.darts['Upgrades'][index] = {
-            'Level': safer_get(account.raw_optlacc_dict, 435 + index, 0),
-            'Description': description.replace('_', ' '),
-            'Image': f'darts-upgrade-{index + 1}'
-        }
 
 def _parse_w2(account):
     _parse_w2_vials(account)
@@ -2158,15 +2137,6 @@ def _parse_w4(account):
     _parse_w4_tome(account)
 
 def _parse_w4_cooking(account):
-    account.cooking = {
-        'MealsUnlocked': 0,
-        'MealsUnder11': 0,
-        'MealsUnder30': 0,
-        'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
-        'PlayerTotalMealLevels': 0,
-        'MaxTotalMealLevels': max_meal_count * max_meal_level,
-        'PlayerMissingPlateUpgrades': []
-    }
     _parse_w4_cooking_tables(account)
     _parse_w4_cooking_meals(account)
     _parse_w4_cooking_ribbons(account)
@@ -2193,7 +2163,6 @@ def _parse_w4_cooking_meals(account):
         while len(raw_meals_list[0]) < max_meal_count:
             raw_meals_list[0].append(0)
 
-    account.meals = {}
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     for index, details in cooking_meal_dict.items():
         account.meals[details['Name']] = {
@@ -2202,13 +2171,19 @@ def _parse_w4_cooking_meals(account):
             'BaseValue': details['BaseValue'],
             'Effect': details['Effect'],
             'Index': index,
-            'Image': details['Image']
+            'Image': details['Image'],
+            'World': details['World']
         }
 
     account.cooking['PlayerTotalMealLevels'] = sum([details['Level'] for details in account.meals.values()])
     account.cooking['MealsUnlocked'] = sum([details['Level'] > 0 for details in account.meals.values()])
+    for meal in account.meals.values():
+        account.cooking['MealsUnlockedByWorld'][meal['World']] += meal['Level'] > 0
+    account.cooking['UnlockedMealsUnder11'] = sum([0 < details['Level'] < 11 for details in account.meals.values()])
+    account.cooking['UnlockedMealsUnder30'] = sum([0 < details['Level'] < 30 for details in account.meals.values()])
     account.cooking['MealsUnder11'] = sum([details['Level'] < 11 for details in account.meals.values()])
     account.cooking['MealsUnder30'] = sum([details['Level'] < 30 for details in account.meals.values()])
+
 
 def _parse_w4_cooking_ribbons(account):
     raw_ribbons = safe_loads(account.raw_data.get('Ribbon', []))

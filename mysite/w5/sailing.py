@@ -20,7 +20,7 @@ from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import max_nblb_bubbles, max_meal_level
+from consts.consts_w4 import max_nblb_bubbles, max_meal_plate_level
 from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -347,7 +347,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",
                 picture_class=popped_corn['Image'],
                 progression=popped_corn['Level'],
-                goal=max_meal_level
+                goal=max_meal_plate_level
             ),
             Advice(
                 label=f"{{{{ Vial|#vials }}}}: Oj Jooce: +{oj_jooce_vial['Value']:.2f}%",

@@ -705,7 +705,7 @@ class Farming:
             (max(account.all_skills["Summoning"], default=0) + 1) / 50
         )
         evo_multi["Meals Multi"] = (
-            ValueToMulti(account.meals["Bill Jack Pepper"]["Value"])
+            ValueToMulti(account.meals['Bill Jack Pep']['Value'])
             # TODO: move to meal bonus calculate
             * ValueToMulti(
                 account.meals["Nyanborgir"]["Value"] * evo_multi["Nyan Stacks"]
