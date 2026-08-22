@@ -57,7 +57,7 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
                 ))
 
         #Voidwalker created or troll/challenge account with no beginners
-        if len(vmans) == 0 and not challenge_account:
+        if requirements.get('Voidwalker', False) and len(vmans) == 0 and not challenge_account:
             add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
             if subgroup_label in cooking_Advices['Tiers']:
                 cooking_Advices['Tiers'][subgroup_label].append(Advice(
