@@ -1,5 +1,4 @@
 import math
-from consts.consts_autoreview import ValueToMulti
 from utils.safer_data_handling import safer_convert, safer_math_pow
 from utils.number_formatting import parse_number
 from utils.logging import get_logger
@@ -24,59 +23,6 @@ for index, raw_name in enumerate(HolesInfo[68]):
 schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp', 'Multitudinal Harp', 'Sumptuous Harp']
 schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
 
-monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.31
-monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
-released_monuments = 3  #Don't increase this without implementing a _parse_ function in models first
-monument_layer_rewards = {
-    monument_names[0]: {
-        monument_hours[0]: {'Description': 'Story Minigame unlocked with 3 Swords', 'Image': 'monument-basic-sword'},
-        monument_hours[1]: {'Description': '+2 additional Swords', 'Image': 'monument-basic-sword'},
-        monument_hours[2]: {'Description': 'You can Re-Throw 5 swords per story', 'Image': 'engineer-schematic-40'},
-        monument_hours[3]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
-        monument_hours[4]: {'Description': 'You get 1 Retelling per story', 'Image': 'measurement-1'},
-        monument_hours[5]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
-        monument_hours[6]: {'Description': '+10 Re-Throws per story', 'Image': 'engineer-schematic-40'},
-        monument_hours[7]: {'Description': '+1 additional Sword', 'Image': 'monument-basic-sword'},
-    },
-    monument_names[1]: {
-        monument_hours[0]: {'Description': 'Story Minigame unlocked with Coins', 'Image': 'justice-coin-1'},
-        monument_hours[1]: {'Description': 'Start with +1 Mental Health', 'Image': 'justice-currency-2'},
-        monument_hours[2]: {'Description': 'You can dismiss 1 case per story', 'Image': 'justice-currency-5'},
-        monument_hours[3]: {'Description': 'Start with 1.5x more Coins', 'Image': 'justice-coin-2'},
-        monument_hours[4]: {'Description': '+1 Mental Health and Dismissal', 'Image': 'justice-currency-6'},
-        monument_hours[5]: {'Description': 'Start with +7 Popularity', 'Image': 'justice-currency-4'},
-        monument_hours[6]: {'Description': 'Start with 3x more Coins', 'Image': 'justice-coin-3'},
-        monument_hours[7]: {'Description': '+2 Mental Health and Dismissals', 'Image': 'justice-currency-6'},
-    },
-    monument_names[2]: {
-        monument_hours[0]: {'Description': f'Start with # Attempts', 'Image': 'wisdom-attempts'},
-        monument_hours[1]: {'Description': f'Get +2 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
-        monument_hours[2]: {'Description': f'1st attempt each Board reveals row', 'Image': 'wisdom-row'},
-        monument_hours[3]: {'Description': f'Start with 4 Insta Matches per story', 'Image': 'wisdom-instamatch'},
-        monument_hours[4]: {'Description': f'+4 additional Starting Attempts', 'Image': 'wisdom-attempts'},
-        monument_hours[5]: {'Description': f'4th attempt each Board reveals square', 'Image': 'wisdom-square'},
-        monument_hours[6]: {'Description': f'Get +1 Attempts per Board Clear', 'Image': 'wisdom-attempts'},
-        monument_hours[7]: {'Description': f'+5 additional Insta Matches', 'Image': 'wisdom-instamatch'},
-    },
-}
-monument_bonuses_clean_descriptions = [d.replace('|', ' ').replace('_', ' ') for d in HolesInfo[32]]
-monument_bonuses_scaling = [int(v) for v in HolesInfo[37]]
-monument_bonuses = {monument_names[entry]: {} for entry in range(0, released_monuments+1)}
-
-#Layer rewards are in HolesInfo[31], but I wanted to clean up the display a bit
-justice_monument_currencies = ['Mental Health', 'Coins', 'Popularity', 'Dismissals']
-for i in range(0, 10 * released_monuments):  #Final number is excluded in range. 10 for Bravery, 10 for Justice
-    monument_name = monument_names[i // 10]
-    try:
-        monument_bonuses[monument_name][i] = {
-            'Description': monument_bonuses_clean_descriptions[i],
-            'ScalingValue': monument_bonuses_scaling[i],
-            'ValueType': 'Percent' if '{' in monument_bonuses_clean_descriptions[i] else 'Multi' if '}' in monument_bonuses_clean_descriptions[i] else 'Flat',
-            'Image': f"{monument_name.lower().replace(' ', '-').replace('-monument', '')}-bonus-{i}",
-        }
-    except Exception as e:
-        logger.exception(f"Couldn't parse {monument_name} bonus {i}: {e}")
-        continue
 
 bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7', 'jar-rupie-0', 'temple-torch']
 bell_ring_bonuses = {}
@@ -174,14 +120,6 @@ caverns_gambit_pts_for_doublers = [
     217536654301, 370604474083, 631377165616, 1075640347430, 1832505545065,
     3121932512775, 5318653818304, 9061079418982, 15436831018131, 26298826096055
 ]
-
-
-def getMonumentOpalChance(current_opals: int, opal_bonus_value: float = 1):
-    result = (
-        min(0.5, safer_math_pow(0.5, current_opals))
-        * ValueToMulti(opal_bonus_value)
-    )
-    return result
 
 
 def getBellExpRequired(bell_index, current_uses: int):

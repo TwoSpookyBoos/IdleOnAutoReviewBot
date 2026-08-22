@@ -1,9 +1,12 @@
 from typing import Literal, overload
 
+from models.caverns.caves.bravery_monument import BraveryMonument
 from models.caverns.caves.cavern import Cavern
+from models.caverns.caves.justice_monument import JusticeMonument
 from models.caverns.caves.skilling_cavern import SkillingCavern
 from models.caverns.caves.the_den import TheDen
 from models.caverns.caves.the_well import TheWell
+from models.caverns.caves.wisdom_monument import WisdomMonument
 
 
 class Caves(dict[str, Cavern]):
@@ -31,6 +34,9 @@ class Caves(dict[str, Cavern]):
             resource_type="Logs",
             resource_skill="Chopping",
         ),
+        "bravery_monument": BraveryMonument,
+        "justice_monument": JusticeMonument,
+        "wisdom_monument": WisdomMonument,
     }
 
     def __init__(self, raw_caverns_list: list):
@@ -49,6 +55,12 @@ class Caves(dict[str, Cavern]):
     def __getitem__(
         self, key: Literal["Motherlode", "The Hive", "Evertree"]
     ) -> SkillingCavern: ...
+    @overload
+    def __getitem__(self, key: Literal["Bravery Monument"]) -> BraveryMonument: ...
+    @overload
+    def __getitem__(self, key: Literal["Justice Monument"]) -> JusticeMonument: ...
+    @overload
+    def __getitem__(self, key: Literal["Wisdom Monument"]) -> WisdomMonument: ...
     @overload
     def __getitem__(self, key: str) -> Cavern: ...
     def __getitem__(self, key: str) -> Cavern:

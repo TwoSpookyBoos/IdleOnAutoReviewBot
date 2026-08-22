@@ -8,8 +8,8 @@ from models.general.session_data import session_data
 from utils.logging import get_logger
 
 # from consts.consts import glowshroom_tunnels_progressionTiers, break_you_best, ValueToMulti
-from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, monument_layer_rewards, justice_monument_currencies, harp_notes, \
-    getMonumentOpalChance, getHarpNoteUnlockCost
+from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, harp_notes, \
+    getHarpNoteUnlockCost
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -226,95 +226,14 @@ def getGrottoAdviceGroup():
     return cavern_ag
 
 def getJusticeAdviceGroup() -> AdviceGroup:
-    c_stats = "Cavern Stats"
-    curr_stats = 'Currency Stats'
-    l_stats = 'Layer Stats'
-    b_stats = 'Bonuses Stats'
-    cavern_advice = {
-        c_stats: [],
-        l_stats: [],
-        curr_stats: [],
-        b_stats: []
-    }
-
-    cavern_name = caverns_cavern_names[10]
-    monument_index = 1
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-    layer_rewards = monument_layer_rewards[cavern_name]
-    bonuses = cavern['Bonuses']
-
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- AFK here to gain Monument Hours that empower your Rulings within the Story minigame",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource='bravery-bonus-8'
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Chance for next Opal: {getMonumentOpalChance(cavern['OpalsFound'], bonuses[5 + 10 * monument_index]['Value']):.2%}",
-        picture_class='monument-basic-chest',
-    ))
-
-# Currency Stats
-    cavern_advice[curr_stats] = [
-        Advice(
-            label=f"{cavern[currency_name]}/{cavern[f'Max {currency_name}']} starting {currency_name}",
-            picture_class=f'justice-currency-{currency_index + 2}',
-            progression=cavern[currency_name],
-            goal=cavern[f'Max {currency_name}']
-        ) for currency_index, currency_name in enumerate(justice_monument_currencies)
-    ]
-
-# Layer Stats
-    cavern_advice[l_stats] = [
-        Advice(
-            label=f"{hour_requirement:,} hour bonus: {layer_reward['Description']}",
-            picture_class=layer_reward['Image'],
-            progression=cavern['Hours'],
-            goal=hour_requirement
-        ) for hour_requirement, layer_reward in layer_rewards.items()
-    ]
-
-    cavern_advice[l_stats].insert(0, Advice(
-        label=f"Monument Hours: {cavern['Hours']:,.0f}",
-        picture_class='justice-bonus-19'
-    ))
-
-# Bonuses Stats
-    cavern_advice[b_stats] = [
-        Advice(
-            label=(
-                f"Level {bonus['Level']}: {bonus['Description']}"
-                f"<br>{bonus['BaseValue']:.2f}/{bonus['ScalingValue']} max from Levels"
-                if bonus['ScalingValue'] > 30 else
-                f"Level {bonus['Level']}: {bonus['Description']}"
-                f"<br>+{bonus['ScalingValue'] if '%' in bonus['Description'] else '0.' if bonus['ScalingValue'] >= 10 else '0.0'}"
-                f"{'' if '%' in bonus['Description'] else bonus['ScalingValue']}"
-                f"{'%' if '%' in bonus['Description'] else 'x'} "
-                f"per level before multis"
-            ),
-            picture_class=bonus['Image'],
-            progression=f"{(bonus['BaseValue'] / bonus['ScalingValue']) * 100:.2f}" if bonus['ScalingValue'] > 30 else 'Linear',
-            goal=100 if bonus['ScalingValue'] > 30 else EmojiType.INFINITY.value,
-            unit='%' if bonus['ScalingValue'] > 30 else ''
-        ) for bonus in bonuses.values()
-    ]
-    mv = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes']
-    cavern_advice[b_stats].insert(0, mv.get_advice())
-
-    for subgroup in cavern_advice:
-        for advice in cavern_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    cavern = session_data.account.caverns_.caves['Justice Monument']
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True
     )
+    cavern_ag.mark_advice_completed()
     return cavern_ag
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:

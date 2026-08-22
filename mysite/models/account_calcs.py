@@ -1,10 +1,9 @@
-from math import ceil, floor, log2, prod
+from math import ceil, floor, prod
 
-from consts.consts_autoreview import ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
+from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
 from consts.consts_caverns import (
     caverns_cavern_names, schematics_unlocking_harp_strings,
     schematics_unlocking_harp_chords,
-    monument_names, released_monuments, monument_bonuses,
     getBellImprovementBonus
 )
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
@@ -1212,184 +1211,10 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
     _calculate_caverns_jar_collectibles(account)
-    _calculate_caverns_monuments(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
     _calculate_caverns_gambit(account)
 
-
-def _calculate_caverns_monuments(account):
-    cosmos_value = (account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes'].value - 1) * 100
-    for monument_index, monument_name in enumerate(monument_names):
-        if monument_index < released_monuments:
-            # The 9th bonus multiplies other bonuses, but not itself. Must be calculated first.
-            ninth = account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]
-            ninth_value = (
-                0.1 * ceil(
-                    (ninth['Level'] / (250 + ninth['Level']))
-                    * 10
-                    * ninth['ScalingValue']
-                )
-            )
-            try:
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = ValueToMulti(ninth_value)
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = ninth_value
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
-                    account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace(
-                        '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value']:,.3f}")
-                )
-            except:
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Value'] = 1
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['BaseValue'] = 0
-                account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'] = (
-                    account.caverns['Caverns'][monument_name]['Bonuses'][9 + (10 * monument_index)]['Description'].replace('}', '1')
-                )
-            for bonus_index, bonus_details in monument_bonuses[monument_name].items():
-                if bonus_index % 10 != 9:
-                    if bonus_details['ScalingValue'] < 30:
-                        base_result = (
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
-                            * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                        )
-                        final_result = base_result * ValueToMulti(cosmos_value + ninth_value)
-                    else:
-                        base_result = (
-                            0.1 * ceil(
-                                (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
-                                 / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
-                                * 10
-                                * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                            )
-                        )
-                        final_result = (
-                            0.1 * ceil(
-                                (account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']
-                                 / (250 + account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']))
-                                * 10
-                                * account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['ScalingValue']
-                                * ValueToMulti(cosmos_value + ninth_value)
-                            )
-                        )
-                    if bonus_details['ValueType'] == 'Percent':
-                        try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = final_result
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '{', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.2f}")
-                            )
-                        except:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 0
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('{', '0')
-                            )
-                    elif bonus_details['ValueType'] == 'Multi':
-                        try:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = ValueToMulti(final_result)
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = base_result
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace(
-                                    '}', f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value']:,.3f}")
-                            )
-                        except:
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Value'] = 1
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['BaseValue'] = 0
-                            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'] = (
-                                account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description'].replace('}', '1')
-                            )
-                # logger.debug(f"{monument_name} Bonus {bonus_index}: "
-                #              f"Level {account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Level']} = "
-                #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
-    _calculate_caverns_monuments_bravery(account)
-    _calculate_caverns_monuments_justice(account)
-
-def _calculate_caverns_monuments_bravery(account):
-    monument_name = 'Bravery Monument'
-    account.caverns['Caverns'][monument_name]['Sword Count'] = (
-        min(
-            9,
-            3  # Starting amount
-            + (2 * (account.caverns['Caverns'][monument_name]['Hours'] >= 80))
-            + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 750))
-            + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 5000))
-            + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 24000))
-        )
-    )
-    account.caverns['Caverns'][monument_name]['Max Swords'] = (
-            min(9, 3 + 2 + 1 + 1 + 1)
-    )
-    account.caverns['Caverns'][monument_name]['Sword Min'] = (
-        3
-        + (1 * floor(account.caverns['Caverns'][monument_name]['Hours'] / 6) * account.caverns_.villagers["Kaipu"].schematics['The Story Changes Over Time...'].bought)
-    )
-    account.caverns['Caverns'][monument_name]['Sword Max'] = (
-        (25 + (10 * floor(account.caverns['Caverns'][monument_name]['Hours'] / 6)
-               * account.caverns_.villagers["Kaipu"].schematics['The Story Changes Over Time...'].bought))
-        * ValueToMulti(account.caverns_.villagers["Minau"].measurements[1].value)
-    )
-    account.caverns['Caverns'][monument_name]['Rethrows'] = (
-        0
-        + (5 * (account.caverns['Caverns'][monument_name]['Hours'] >= 300))
-        + (10 * (account.caverns['Caverns'][monument_name]['Hours'] >= 10000))
-    )
-    account.caverns['Caverns'][monument_name]['Max Rethrows'] = (
-        5 + 10
-    )
-    account.caverns['Caverns'][monument_name]['Retellings'] = (
-        1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 2000)
-    )
-    account.caverns['Caverns'][monument_name]['Max Retellings'] = (
-        1
-    )
-
-def _calculate_caverns_monuments_justice(account):
-    monument_name = 'Justice Monument'
-    account.caverns['Caverns'][monument_name]['Mental Health'] = (
-        1  #Starting amount
-        + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 80))
-        + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 2000))
-        + (2 * (account.caverns['Caverns'][monument_name]['Hours'] >= 24000))
-    )
-    account.caverns['Caverns'][monument_name]['Max Mental Health'] = (
-        1 + 1 + 1 + 2
-    )
-    if account.caverns['Caverns'][monument_name]['Hours'] > 0:
-        schematic_bonus = (
-            log2(account.caverns['Caverns'][monument_name]['Hours'])
-            * account.caverns_.villagers["Kaipu"].schematics['Compound Interest'].bought
-        )
-    else:
-        #log2(0) throws a ValueError
-        schematic_bonus = 0
-    account.caverns['Caverns'][monument_name]['Coins'] = round(
-        (
-            5  #Starting amount
-            + schematic_bonus
-        )
-        * (
-            1
-            + (0.5 * (account.caverns['Caverns'][monument_name]['Hours'] >= 750))
-            + (1.5 * (account.caverns['Caverns'][monument_name]['Hours'] >= 10000))
-        )
-    )
-    account.caverns['Caverns'][monument_name]['Max Coins'] = EmojiType.INFINITY.value
-    account.caverns['Caverns'][monument_name]['Popularity'] = (
-        3  #Starting amount
-        + (7 * (account.caverns['Caverns'][monument_name]['Hours'] >= 5000))
-    )
-    account.caverns['Caverns'][monument_name]['Max Popularity'] = (
-        0 + 10
-    )
-    account.caverns['Caverns'][monument_name]['Dismissals'] = (
-        0
-        + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 300))
-        + (1 * (account.caverns['Caverns'][monument_name]['Hours'] >= 2000))
-        + (2 * (account.caverns['Caverns'][monument_name]['Hours'] >= 24000))
-    )
-    account.caverns['Caverns'][monument_name]['Max Dismissals'] = (
-        0 + 1 + 1 + 2
-    )
 
 def _calculate_caverns_the_bell(account):
     cavern_name = 'The Bell'
@@ -1472,7 +1297,7 @@ def _calculate_caverns_gambit(account):
         account.caverns_.villagers["Minau"].measurements[13].value  # Measurement
         + account.caverns_.villagers["Bolaia"].studies[13].value  # + Gambit Study bonus
         + (10 * account.caverns_.villagers["Kaipu"].schematics['The Sicilian'].bought)  # + The Sicilian schematic
-        + account.caverns['Caverns']['Wisdom Monument']['Bonuses'][27]['Value']  # + Wisdom Monument bonus
+        + account.caverns_.caves['Wisdom Monument'].bonuses['Gambit Points'].value  # + Wisdom Monument bonus
         + account.caverns['Collectibles']['Deep Blue Square']['Value']
         + account.caverns['Collectibles']['Murky Fabrege Egg']['Value']
     )

@@ -47,7 +47,7 @@ from consts.consts_w5 import (
 from consts.consts_caverns import (
     caverns_cavern_names,
     schematics_unlocking_harp_chords,
-    monument_bonuses, bell_ring_bonuses, bell_clean_improvements,
+    bell_ring_bonuses, bell_clean_improvements,
     harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
     caverns_gambit_total_challenges, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
@@ -2726,44 +2726,7 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome1(account, raw_caverns_list):
-    _parse_caverns_bravery_monument(account, raw_caverns_list)
     _parse_caverns_the_bell(account, raw_caverns_list)
-
-def _parse_caverns_bravery_monument(account, raw_caverns_list):
-    monument_name = 'Bravery Monument'
-    monument_index = 0
-
-    # Layer Data
-    try:
-        account.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['Hours'] = 0
-    try:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = 0
-
-    # Setup Bonuses
-    account.caverns['Caverns'][monument_name]['Bonuses'] = {}
-    for bonus_index, bonus_details in monument_bonuses[monument_name].items():
-        try:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': raw_caverns_list[15][bonus_index],
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
-        except:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': 0,
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
 
 def _parse_caverns_the_bell(account, raw_caverns_list):
     cavern_name = 'The Bell'
@@ -2853,7 +2816,6 @@ def _parse_caverns_the_bell(account, raw_caverns_list):
 def _parse_caverns_biome2(account, raw_caverns_list):
     _parse_caverns_the_lamp(account, raw_caverns_list)
     _parse_caverns_grotto(account, raw_caverns_list)
-    _parse_caverns_justice_monument(account, raw_caverns_list)
     _parse_caverns_the_harp(account, raw_caverns_list)
 
 def _parse_caverns_the_harp(account, raw_caverns_list):
@@ -2969,45 +2931,8 @@ def _parse_caverns_grotto(account, raw_caverns_list):
         100 * (1 - (account.caverns['Caverns'][cavern_name]['PlayerKills'] / account.caverns['Caverns'][cavern_name]['KillsRequired']))
     )
 
-def _parse_caverns_justice_monument(account, raw_caverns_list):
-    monument_name = 'Justice Monument'
-    monument_index = 1
-
-    # Layer Data
-    try:
-        account.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['Hours'] = 0
-    try:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = 0
-
-    # Setup Bonuses
-    account.caverns['Caverns'][monument_name]['Bonuses'] = {}
-    for bonus_index, bonus_details in monument_bonuses[monument_name].items():
-        try:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': raw_caverns_list[15][bonus_index],
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
-        except:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': 0,
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
-
 def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
-    _parse_caverns_wisdom_monument(account, raw_caverns_list)
     _parse_caverns_gambit(account, raw_caverns_list)
     _parse_caverns_the_temple(account, raw_caverns_list)
 
@@ -3080,42 +3005,6 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     # for collectible_name in account.caverns['Collectibles']:
     #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
     #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
-
-def _parse_caverns_wisdom_monument(account, raw_caverns_list):
-    monument_name = caverns_cavern_names[13]
-    monument_index = 2
-
-    # Layer Data
-    try:
-        account.caverns['Caverns'][monument_name]['Hours'] = int(raw_caverns_list[14][0 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['Hours'] = 0
-    try:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = int(raw_caverns_list[14][1 + 2 * monument_index])
-    except:
-        account.caverns['Caverns'][monument_name]['LayersCleared'] = 0
-
-    # Setup Bonuses
-    account.caverns['Caverns'][monument_name]['Bonuses'] = {}
-    for bonus_index, bonus_details in monument_bonuses[monument_name].items():
-        try:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': raw_caverns_list[15][bonus_index],
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
-        except:
-            account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index] = {
-                'Level': 0,
-                'Description': bonus_details['Description'],
-                'ScalingValue': bonus_details['ScalingValue'],
-                'ValueType': bonus_details['ValueType'],
-                'Image': bonus_details['Image'],
-                'Value': 0,  # Calculated later in _calculate_caverns_monuments()
-            }
 
 def _parse_caverns_gambit(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[14]

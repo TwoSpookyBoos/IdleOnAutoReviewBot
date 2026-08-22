@@ -443,17 +443,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_5_bonus += sanctum_of_loot_schematic.value
 
     # Caverns - Wisdom Monument
-    wisdom_drop_rate_index = 26
-    wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
-    wisdom_monument_drop_rate_value = wisdom_monument_drop_rate['Value']
-    drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Cavern 13|#underground-overgrowth }}}}- Wisdom Monument:"
-              f"<br>+{round(wisdom_monument_drop_rate_value, 1):g}% Drop Rate",
-        picture_class='cavern-13',
-        progression=wisdom_monument_drop_rate['Level'],
-        goal=EmojiType.INFINITY.value
-    ))
-    world_5_bonus += wisdom_monument_drop_rate_value
+    wisdom_monument_drop_rate = session_data.account.caverns_.caves['Wisdom Monument'].bonuses['Player Drop Rate']
+    drop_rate_aw_advice[w5].append(wisdom_monument_drop_rate.get_bonus_advice())
+    world_5_bonus += wisdom_monument_drop_rate.value
 
     drop_rate_aw_advice[f"{w5} - +{round(world_5_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w5)
 
