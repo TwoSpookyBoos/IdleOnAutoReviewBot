@@ -9,7 +9,7 @@ from utils.logging import get_logger
 
 # from consts.consts import glowshroom_tunnels_progressionTiers, break_you_best, ValueToMulti
 from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, monument_layer_rewards, justice_monument_currencies, harp_notes, \
-    getMotherlodeEfficiencyRequired, getMonumentOpalChance, getHarpNoteUnlockCost
+    getMonumentOpalChance, getHarpNoteUnlockCost
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -150,53 +150,14 @@ def getLampAdviceGroup():
     )
     return cavern_ag
 
-def getMotherlodeAdviceGroup():
-    c_stats = "Cavern Stats"
-    l_stats = 'Layer Stats'
-    cavern_advice = {
-        c_stats: [],
-        l_stats: []
-    }
-
-    cavern_name = caverns_cavern_names[8]
-    resource_type = 'Bugs'
-    resource_skill = 'Catching'
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Use your characters to collect {resource_type} while {resource_skill} and break Layers to collect Opals",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource=resource_skill
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-
-# Layer Stats
-    cavern_advice[l_stats].append(Advice(
-        label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required: "
-              f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
-        picture_class=resource_skill
-    ))
-    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
-    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
-    cavern_advice[l_stats].append(Advice(
-        label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: {notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
-        picture_class=f'motherlode-{resource_type}',
-        progression=f"{min(100, 100 * (cavern['ResourcesCollected'] / resource_required)):.1f}",
-        goal=100,
-        unit='%'
-    ))
-
-    cavern_ag = AdviceGroup(
+def getHiveAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['The Hive']
+    return AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True,
-        picture_class=f"cavern-{cavern['CavernNumber']}"
     )
-    return cavern_ag
 
 def getGrottoAdviceGroup():
     c_stats = "Cavern Stats"
@@ -398,7 +359,7 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     glowshroom_tunnels_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Harp'] = getHarpAdviceGroup(schematics)
     glowshroom_tunnels_AdviceGroupDict['The Lamp'] = getLampAdviceGroup()
-    glowshroom_tunnels_AdviceGroupDict['The Hive'] = getMotherlodeAdviceGroup()
+    glowshroom_tunnels_AdviceGroupDict['The Hive'] = getHiveAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['Grotto'] = getGrottoAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['Justice Monument'] = getJusticeAdviceGroup()
 

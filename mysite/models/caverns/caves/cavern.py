@@ -9,12 +9,13 @@ class Cavern(ABC):
     def __init__(self, name: str, cavern_number: int):
         self.name = name
         self.cavern_number = cavern_number
-        self._image = f"cavern-{cavern_number}"
+        self.image = f"cavern-{cavern_number}"
         self.opals_found: int = 0
 
     @cached_property
     def unlocked(self) -> bool:
         from models.general.session_data import session_data
+
         polonai_level = session_data.account.caverns_.villagers["Polonai"].level
         return polonai_level >= self.cavern_number
 
@@ -34,12 +35,12 @@ class Cavern(ABC):
     def objective_advice(self, objective: str, **kwargs: Any) -> Advice:
         return Advice(
             label=f"Objective- {objective}",
-            picture_class=self._image,
+            picture_class=self.image,
             **kwargs,
         )
 
     def opals_found_advice(self) -> Advice:
         return Advice(
             label=f"Total Opals Found: {self.opals_found}",
-            picture_class='opal',
+            picture_class="opal",
         )

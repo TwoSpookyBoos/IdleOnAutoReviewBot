@@ -186,11 +186,6 @@ caverns_gambit_pts_for_doublers = [
 ]
 
 
-def getMotherlodeEfficiencyRequired(layers_destroyed: int):
-    result = math.ceil(9000 * safer_math_pow(1.8, layers_destroyed))
-    return result
-
-
 def getDenOpalRequirement(current_opals: int):
     result = 12 * (150 + (30 + current_opals) * current_opals) * safer_math_pow(1.5, current_opals)
     return round(result)

@@ -2726,22 +2726,9 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome1(account, raw_caverns_list):
-    _parse_caverns_motherlode(account, raw_caverns_list)
     _parse_caverns_the_den(account, raw_caverns_list)
     _parse_caverns_bravery_monument(account, raw_caverns_list)
     _parse_caverns_the_bell(account, raw_caverns_list)
-
-def _parse_caverns_motherlode(account, raw_caverns_list):
-    cavern_name = 'Motherlode'
-    motherlode_offset = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0.0)
-    except:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
 def _parse_caverns_the_den(account, raw_caverns_list):
     try:
@@ -2872,7 +2859,6 @@ def _parse_caverns_the_bell(account, raw_caverns_list):
 
 def _parse_caverns_biome2(account, raw_caverns_list):
     _parse_caverns_the_lamp(account, raw_caverns_list)
-    _parse_caverns_the_hive(account, raw_caverns_list)
     _parse_caverns_grotto(account, raw_caverns_list)
     _parse_caverns_justice_monument(account, raw_caverns_list)
     _parse_caverns_the_harp(account, raw_caverns_list)
@@ -2971,18 +2957,6 @@ def _parse_caverns_the_lamp(account, raw_caverns_list):
                 account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
                     '~', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
-def _parse_caverns_the_hive(account, raw_caverns_list):
-    cavern_name = 'The Hive'
-    motherlode_offset = 2
-    try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
-
 def _parse_caverns_grotto(account, raw_caverns_list):
     cavern_name = 'Grotto'
     try:
@@ -3040,7 +3014,6 @@ def _parse_caverns_justice_monument(account, raw_caverns_list):
 
 def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
-    _parse_caverns_evertree(account, raw_caverns_list)
     _parse_caverns_wisdom_monument(account, raw_caverns_list)
     _parse_caverns_gambit(account, raw_caverns_list)
     _parse_caverns_the_temple(account, raw_caverns_list)
@@ -3114,18 +3087,6 @@ def _parse_caverns_the_jar(account, raw_caverns_list):
     # for collectible_name in account.caverns['Collectibles']:
     #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
     #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
-
-def _parse_caverns_evertree(account, raw_caverns_list):
-    cavern_name = caverns_cavern_names[12]
-    motherlode_offset = 4
-    try:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = safer_convert(raw_caverns_list[11][0 + motherlode_offset], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['ResourcesCollected'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = safer_convert(raw_caverns_list[11][1 + motherlode_offset], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['LayersDestroyed'] = 0
 
 def _parse_caverns_wisdom_monument(account, raw_caverns_list):
     monument_name = caverns_cavern_names[13]

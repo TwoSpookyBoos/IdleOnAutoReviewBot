@@ -11,7 +11,7 @@ from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
 
 from consts.consts_autoreview import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
-from consts.consts_caverns import caverns_cavern_names, monument_layer_rewards, caverns_jar_rupies, getMotherlodeEfficiencyRequired, getMonumentOpalChance
+from consts.consts_caverns import caverns_cavern_names, monument_layer_rewards, caverns_jar_rupies, getMonumentOpalChance
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -160,53 +160,14 @@ def getJarAdviceGroup(schematics) -> AdviceGroup:
     )
     return cavern_ag
 
-def getMotherlodeAdviceGroup():
-    c_stats = "Cavern Stats"
-    l_stats = 'Layer Stats'
-    cavern_advice = {
-        c_stats: [],
-        l_stats: []
-    }
-
-    cavern_name = caverns_cavern_names[12]
-    resource_type = 'Logs'
-    resource_skill = 'Chopping'
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Use your characters to collect {resource_type} while {resource_skill} and break Layers to collect Opals",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource=resource_skill
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-
-# Layer Stats
-    cavern_advice[l_stats].append(Advice(
-        label=f"Layer {cavern['LayersDestroyed']+1} {resource_skill} Efficiency Required: "
-              f"{notateNumber('Basic', getMotherlodeEfficiencyRequired(cavern['LayersDestroyed']), 1)}",
-        picture_class=resource_skill
-    ))
-    cavern_advice[l_stats].append(session_data.account.caverns['MotherlodeResourceDiscountAdvice'])
-    resource_required = session_data.account.caverns['Caverns'][cavern_name]['ResourcesRemaining']
-    cavern_advice[l_stats].append(Advice(
-        label=f"{resource_type} remaining to break Layer {cavern['LayersDestroyed'] + 1}: "
-              f"{notateNumber('Basic', resource_required - cavern['ResourcesCollected'], 1)}",
-        picture_class=f'motherlode-{resource_type}',
-        progression=f"{min(100, 100 * (cavern['ResourcesCollected'] / resource_required)):.1f}",
-        goal=100,
-        unit='%'
-    ))
-
-    cavern_ag = AdviceGroup(
+def getEvertreeAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['Evertree']
+    return AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True,
     )
-    return cavern_ag
 
 def getWisdomAdviceGroup() -> AdviceGroup:
     c_stats = 'Cavern Stats'
@@ -497,7 +458,7 @@ def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getJarAdviceGroup(schematics)
-    shallow_caverns_AdviceGroupDict['Evertree'] = getMotherlodeAdviceGroup()
+    shallow_caverns_AdviceGroupDict['Evertree'] = getEvertreeAdviceGroup()
     shallow_caverns_AdviceGroupDict['Wisdom'] = getWisdomAdviceGroup()
     shallow_caverns_AdviceGroupDict['Gambit'] = getGambitAdviceGroup()
     shallow_caverns_AdviceGroupDict['Temple'] = getTempleAdviceGroup()

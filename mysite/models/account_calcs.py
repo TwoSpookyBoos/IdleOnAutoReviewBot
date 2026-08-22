@@ -1213,7 +1213,6 @@ def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
     _calculate_caverns_jar_collectibles(account)
     _calculate_caverns_monuments(account)
-    _calculate_caverns_motherlode_layers(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
     _calculate_caverns_gambit(account)
@@ -1304,25 +1303,6 @@ def _calculate_caverns_monuments(account):
                 #              f"{account.caverns['Caverns'][monument_name]['Bonuses'][bonus_index]['Description']}")
     _calculate_caverns_monuments_bravery(account)
     _calculate_caverns_monuments_justice(account)
-
-def _calculate_caverns_motherlode_layers(account):
-    collectible_bonus = account.caverns['Collectibles']['Amethyst Heartstone']['Value']
-    account.caverns['MotherlodeResourceDiscount'] = ValueToMulti(
-        collectible_bonus
-        + (account.caverns_.villagers["Bolaia"].studies[1].value * account.caverns['Caverns']['Motherlode']['LayersDestroyed'])
-        + (account.caverns_.villagers["Bolaia"].studies[7].value * account.caverns['Caverns']['The Hive']['LayersDestroyed'])
-        + (account.caverns_.villagers["Bolaia"].studies[11].value * account.caverns['Caverns']['Evertree']['LayersDestroyed'])
-        # Trench not implemented as of v2.31
-        # + (account.caverns['Studies'][]['Value'] * account.caverns['Caverns']['The Trench']['LayersDestroyed'])
-    )
-    account.caverns['MotherlodeResourceDiscountAdvice'] = Advice(
-        label=f"Resource Divisor from Amethyst Heartstone Collectible + Bolaia Studies: {account.caverns['MotherlodeResourceDiscount']:.3f}",
-        picture_class='bolaia'
-    )
-
-    for cavern_name in ['Motherlode', 'The Hive', 'Evertree']:
-        base_requirement = ceil(200 * safer_math_pow(2.2, 1 + account.caverns['Caverns'][cavern_name]['LayersDestroyed']))
-        account.caverns['Caverns'][cavern_name]['ResourcesRemaining'] = base_requirement / max(1, account.caverns['MotherlodeResourceDiscount'])
 
 def _calculate_caverns_monuments_bravery(account):
     monument_name = 'Bravery Monument'
