@@ -1,5 +1,5 @@
 import math
-from consts.consts_autoreview import ValueToMulti, default_huge_number_replacement
+from consts.consts_autoreview import ValueToMulti
 from utils.safer_data_handling import safer_convert, safer_math_pow
 from utils.number_formatting import parse_number
 from utils.logging import get_logger
@@ -21,7 +21,6 @@ caverns_cavern_names = {
 }
 for index, raw_name in enumerate(HolesInfo[68]):
     caverns_cavern_names[index+1] = caverns_cavern_name_overrides.get(raw_name, raw_name.replace('_', ' ').title())
-schematics_unlocking_buckets = ['2nd Bucket!', '3rd Bucket!', '4th Bucket!', 'Five Nights at Bucket', '6th Bucket!', '7rth Barckot?!', 'Last Bucket!', '9th Bucket!', 'Bucket Finale!']
 schematics_unlocking_amplifiers = {
     'Bigger Bite': ['Hounds have higher base attack', '', 'den-amplifier-0'],
     'Elusive Instinct': ['Hounds require additional Accuracy', 'Green Amplifier', 'den-amplifier-1'],
@@ -34,10 +33,6 @@ schematics_unlocking_amplifiers = {
 }
 schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp', 'Multitudinal Harp', 'Sumptuous Harp']
 schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
-max_buckets = 1 + len(schematics_unlocking_buckets)
-sediment_names = ['Gravel', 'Goldust', 'Redstone', 'Mythril', 'Cobaltine', 'Brunite', 'Freezium', 'Sweetium', 'Rad Coral', 'Hyper Coral']
-sediment_bars = [int(float(v)) for v in HolesInfo[21]]
-max_sediments = len(sediment_names)
 
 monument_hours = [int(h) for h in HolesInfo[30]]  #[1, 80, 300, 750, 2000, 5000, 10000, 24000] as of 2.31
 monument_names = [f"{monument_name} Monument" for monument_name in HolesInfo[41]]
@@ -189,29 +184,6 @@ caverns_gambit_pts_for_doublers = [
     217536654301, 370604474083, 631377165616, 1075640347430, 1832505545065,
     3121932512775, 5318653818304, 9061079418982, 15436831018131, 26298826096055
 ]
-
-
-def getSedimentBarRequirement(sediment_index, sediment_level):
-    try:
-        result = 100 * safer_math_pow(1.5, sediment_level) * ValueToMulti(sediment_bars[sediment_index])
-    except OverflowError:
-        logger.exception(f"Overflow error calculating SedimentBarRequirement given {sediment_index = } and {sediment_level = }. Returning {default_huge_number_replacement}.")
-        result = default_huge_number_replacement
-    return result
-
-
-def getWellOpalTrade(holes_11_9):
-    # From looking at data, holes_11_9 is just the number of previously completed trades. Maybe it changes higher up at some point
-    if holes_11_9 == 1:
-        return 6
-    elif holes_11_9 == 2:
-        return 60
-    else:
-        result = (
-            (1 + (3 * holes_11_9) + safer_math_pow(holes_11_9, 2))
-            * safer_math_pow(3.5 + holes_11_9 / 10, holes_11_9)
-        )
-        return math.ceil(result) if 1e9 > result else math.floor(result)
 
 
 def getMotherlodeEfficiencyRequired(layers_destroyed: int):

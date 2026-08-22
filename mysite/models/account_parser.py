@@ -46,12 +46,13 @@ from consts.consts_w5 import (
 )
 from consts.consts_caverns import (
     caverns_cavern_names,
-    schematics_unlocking_harp_chords, max_buckets, sediment_bars, max_sediments,
+    schematics_unlocking_harp_chords,
     monument_bonuses, bell_ring_bonuses, bell_clean_improvements,
     harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
     caverns_gambit_total_challenges, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
+from consts.caverns.caves.the_well import max_sediments
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
@@ -2725,39 +2726,10 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome1(account, raw_caverns_list):
-    _parse_caverns_the_well(account, raw_caverns_list)
     _parse_caverns_motherlode(account, raw_caverns_list)
     _parse_caverns_the_den(account, raw_caverns_list)
     _parse_caverns_bravery_monument(account, raw_caverns_list)
     _parse_caverns_the_bell(account, raw_caverns_list)
-
-def _parse_caverns_the_well(account, raw_caverns_list):
-    account.caverns['Caverns']['The Well']['BucketTargets'] = []
-    for i in range(0, max_buckets):
-        try:
-            account.caverns['Caverns']['The Well']['BucketTargets'].append(safer_convert(raw_caverns_list[10][i], 0))
-        except IndexError:
-            account.caverns['Caverns']['The Well']['BucketTargets'].append(0)
-
-    account.caverns['Caverns']['The Well']['SedimentsOwned'] = []
-    account.caverns['Caverns']['The Well']['SedimentLevels'] = []
-    for i in range(0, max_sediments):
-        try:
-            account.caverns['Caverns']['The Well']['SedimentsOwned'].append(safer_convert(raw_caverns_list[9][i], sediment_bars[i] * -1))
-        except IndexError:
-            account.caverns['Caverns']['The Well']['SedimentsOwned'].append(sediment_bars[i] * -1)
-        try:
-            account.caverns['Caverns']['The Well']['SedimentLevels'].append(safer_convert(raw_caverns_list[8][i], 0))
-        except IndexError:
-            account.caverns['Caverns']['The Well']['SedimentLevels'].append(0)
-
-    try:
-        account.caverns['Caverns']['The Well']['BarExpansion'] = raw_caverns_list[11][10]
-    except:
-        account.caverns['Caverns']['The Well']['BarExpansion'] = False
-
-    # From looking at data, holes_11_9 is just the number of previously completed trades. Maybe it changes higher up at some point /shrug
-    account.caverns['Caverns']['The Well']['Holes-11-9'] = safer_convert(raw_caverns_list[11][9], 0)
 
 def _parse_caverns_motherlode(account, raw_caverns_list):
     cavern_name = 'Motherlode'

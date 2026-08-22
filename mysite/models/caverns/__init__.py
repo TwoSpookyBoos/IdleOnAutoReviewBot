@@ -1,7 +1,7 @@
+from models.caverns.caves import Caves
 from models.caverns.villagers import Villagers
-
-from utils.safer_data_handling import safe_loads, safer_get
 from utils.logging import get_logger
+from utils.safer_data_handling import safe_loads, safer_get
 
 logger = get_logger(__name__)
 
@@ -15,3 +15,4 @@ class Caverns:
             raw_caverns_list.append([0] * 100)
         game_version = safer_get(raw_data, 'DoOnceREAL', 0.00)
         self.villagers: Villagers = Villagers(raw_caverns_list, game_version)
+        self.caves: Caves = Caves(raw_caverns_list)

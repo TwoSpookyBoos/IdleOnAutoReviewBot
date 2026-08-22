@@ -2,7 +2,7 @@ from math import ceil, floor, log2, prod
 
 from consts.consts_autoreview import ValueToMulti, EmojiType, MultiToValue, default_huge_number_replacement
 from consts.consts_caverns import (
-    caverns_cavern_names, schematics_unlocking_buckets, schematics_unlocking_harp_strings,
+    caverns_cavern_names, schematics_unlocking_harp_strings,
     schematics_unlocking_harp_chords,
     monument_names, released_monuments, monument_bonuses,
     getBellImprovementBonus
@@ -1212,21 +1212,12 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
     _calculate_caverns_jar_collectibles(account)
-    _calculate_caverns_the_well(account)
     _calculate_caverns_monuments(account)
     _calculate_caverns_motherlode_layers(account)
     _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
     _calculate_caverns_gambit(account)
 
-
-def _calculate_caverns_the_well(account):
-    account.caverns['Caverns']['The Well']['BucketsUnlocked'] = 1 + sum(
-        [
-            1 for schematic_name in schematics_unlocking_buckets if account.caverns_.villagers["Kaipu"].schematics[schematic_name].bought
-        ]
-    )
-    account.caverns['Caverns']['The Well']['Buckets'] = safe_loads(account.raw_data.get('Holes', {}))
 
 def _calculate_caverns_monuments(account):
     cosmos_value = (account.caverns_.villagers["Cosmos"].majiks.hole['Monumental Vibes'].value - 1) * 100

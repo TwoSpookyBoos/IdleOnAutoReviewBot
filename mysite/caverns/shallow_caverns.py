@@ -10,8 +10,8 @@ from models.general.session_data import session_data
 from utils.logging import get_logger
 
 # from consts.consts import shallow_caverns_progressionTiers, break_you_best, ValueToMulti
-from consts.consts_caverns import schematics_unlocking_buckets, schematics_unlocking_amplifiers, sediment_names, max_sediments, monument_layer_rewards, \
-    getSedimentBarRequirement, getWellOpalTrade, getMotherlodeEfficiencyRequired, getDenOpalRequirement, getMonumentOpalChance
+from consts.consts_caverns import schematics_unlocking_amplifiers, monument_layer_rewards, \
+    getMotherlodeEfficiencyRequired, getDenOpalRequirement, getMonumentOpalChance
 from utils.safer_data_handling import safer_math_pow
 from utils.text_formatting import notateNumber
 
@@ -46,101 +46,14 @@ def getTemplateCavernAdviceGroup(schematics) -> AdviceGroup:
     )
     return cavern_ag
 
-def getWellAdviceGroup(schematics) -> AdviceGroup:
-    cavern_name = 'The Well'
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-    buckets = cavern['BucketTargets']
-    sediments_owned = cavern['SedimentsOwned']
-    sediment_levels = cavern['SedimentLevels']
-
-    c_stats = "Cavern Stats"
-    b_stats = "Bucket Stats"
-    s_stats = "Sediment Stats"
-    cavern_advice = {
-        c_stats: [],
-        b_stats: [],
-        s_stats: [],
-    }
-
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Use buckets to collect Sediment",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource='well-bucket',
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-    opal_trade_cost = getWellOpalTrade(cavern['Holes-11-9'])
-    #opal_trades_list = [notateNumber('Basic', getWellOpalTrade(i), 1) for i in range(0, 100)]
-    opal_trade_progress = 100 * (sediments_owned[0] / opal_trade_cost)
-    cavern_advice[c_stats].append(Advice(
-        label=f"Next Opal trade: {notateNumber('Basic', opal_trade_cost, 2)} Gravel",
-        picture_class='bucketlyte',
-        resource='well-sediment-0',
-        progression=f"{min(100,opal_trade_progress):.1f}{'+' if opal_trade_progress > 100 else ''}",
-        goal=100,
-        unit='%'
-    ))
-
-# Bucket Stats
-    for bucket_index, bucket_target in enumerate(buckets):
-        schematic = schematics[schematics_unlocking_buckets[bucket_index-1]]
-        cavern_advice[b_stats].append(Advice(
-            label=(
-                f"Bucket {bucket_index+1}: {'Collecting' if sediments_owned[bucket_target-1] > 0 else 'Unlocking next sediment'}"
-                f" {sediment_names[bucket_target] if sediments_owned[bucket_target-1] > 0 else ''}"
-                if bucket_index + 1 <= cavern['BucketsUnlocked'] else
-                f"Unlock Bucket {bucket_index+1} by purchasing <br>"
-                f"Schematic {schematic.unlock_order}:"
-                f" {schematics_unlocking_buckets[bucket_index-1]}"
-            ),
-            picture_class=f"well-sediment-{bucket_target}" if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematic.image,
-            resource='' if bucket_index + 1 <= cavern['BucketsUnlocked'] else schematic.resource
-        ))
-
-# Sediment Stats
-    cavern_advice[s_stats].append(Advice(
-        label=f"Expand Full Bars: {'On' if session_data.account.caverns['Caverns']['The Well']['BarExpansion'] else 'Off'}",
-        picture_class='engineer-schematic-13'
-    ))
-    cavern_advice[s_stats].append(Advice(
-        label=f"Total expansions: {sum(sediment_levels)}"
-              f"<br>Total bonus: {sum(sediment_levels) * 20 * schematics['Expander Extravaganza'].bought:,}%",
-        picture_class='engineer-schematic-14'
-    ))
-    for sediment_index, sediment_value in enumerate(sediments_owned):
-        if sediment_index < max_sediments:  # There are lots of placeholders in sediments_owned, so stay within bounds of max_sediments
-            target = getSedimentBarRequirement(sediment_index, sediment_levels[sediment_index])
-            if target >= 1e9:
-                target_str = notateNumber('Basic', target, 2)
-                sedi_owned = notateNumber('Basic', sediment_value, 2)
-            else:
-                target_str = f"{target:,.0f}"
-                sedi_owned = f"{sediment_value:,}"
-            cavern_advice[s_stats].append(Advice(
-                label=(
-                    f"{sediment_names[sediment_index]}: {sediment_levels[sediment_index]} expansions"
-                    f"<br>{sedi_owned} owned"
-                    f"<br>{target_str} to expand"
-                    if sediment_value >= 0 else
-                    f"Clear the rock layer to discover {sediment_names[sediment_index]}!"
-                ),
-                picture_class=f"well-sediment-{sediment_index}",
-                resource='well-sediment-rock-layer' if sediment_value < 0 else '',
-                progression=0 if sediment_value < 0 else f"{100 * (sediment_value / target):.1f}",
-                goal=100,
-                unit='%'
-            ))
-
-    cavern_ag = AdviceGroup(
+def getWellAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['The Well']
+    return AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True
     )
-    return cavern_ag
 
 def getMotherlodeAdviceGroup(schematics):
     c_stats = "Cavern Stats"
@@ -487,7 +400,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
     shallow_caverns_AdviceGroupDict = {}
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
     shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['Bravery Monument'] = getBraveryAdviceGroup(schematics)
