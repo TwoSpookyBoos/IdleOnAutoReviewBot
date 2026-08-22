@@ -2726,15 +2726,8 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome1(account, raw_caverns_list):
-    _parse_caverns_the_den(account, raw_caverns_list)
     _parse_caverns_bravery_monument(account, raw_caverns_list)
     _parse_caverns_the_bell(account, raw_caverns_list)
-
-def _parse_caverns_the_den(account, raw_caverns_list):
-    try:
-        account.caverns['Caverns']['The Den']['HighScore'] = round(float(raw_caverns_list[11][8]))
-    except:
-        account.caverns['Caverns']['The Den']['HighScore'] = 0
 
 def _parse_caverns_bravery_monument(account, raw_caverns_list):
     monument_name = 'Bravery Monument'

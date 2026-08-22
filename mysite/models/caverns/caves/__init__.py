@@ -2,23 +2,34 @@ from typing import Literal, overload
 
 from models.caverns.caves.cavern import Cavern
 from models.caverns.caves.skilling_cavern import SkillingCavern
+from models.caverns.caves.the_den import TheDen
 from models.caverns.caves.the_well import TheWell
 
 
 class Caves(dict[str, Cavern]):
     _CAVE_TYPES = {
         "the_well": TheWell,
+        "the_den": TheDen,
         "motherlode": lambda: SkillingCavern(
-            name="Motherlode", cavern_number=2, offset=0,
-            resource_type="Ore", resource_skill="Mining",
+            name="Motherlode",
+            cavern_number=2,
+            offset=0,
+            resource_type="Ore",
+            resource_skill="Mining",
         ),
         "the_hive": lambda: SkillingCavern(
-            name="The Hive", cavern_number=8, offset=2,
-            resource_type="Bugs", resource_skill="Catching",
+            name="The Hive",
+            cavern_number=8,
+            offset=2,
+            resource_type="Bugs",
+            resource_skill="Catching",
         ),
         "evertree": lambda: SkillingCavern(
-            name="Evertree", cavern_number=12, offset=4,
-            resource_type="Logs", resource_skill="Chopping",
+            name="Evertree",
+            cavern_number=12,
+            offset=4,
+            resource_type="Logs",
+            resource_skill="Chopping",
         ),
     }
 
@@ -32,6 +43,8 @@ class Caves(dict[str, Cavern]):
 
     @overload
     def __getitem__(self, key: Literal["The Well"]) -> TheWell: ...
+    @overload
+    def __getitem__(self, key: Literal["The Den"]) -> TheDen: ...
     @overload
     def __getitem__(
         self, key: Literal["Motherlode", "The Hive", "Evertree"]

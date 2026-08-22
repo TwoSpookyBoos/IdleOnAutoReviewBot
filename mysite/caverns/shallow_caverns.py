@@ -10,8 +10,7 @@ from models.general.session_data import session_data
 from utils.logging import get_logger
 
 # from consts.consts import shallow_caverns_progressionTiers, break_you_best, ValueToMulti
-from consts.consts_caverns import schematics_unlocking_amplifiers, monument_layer_rewards, \
-    getDenOpalRequirement, getMonumentOpalChance
+from consts.consts_caverns import monument_layer_rewards, getMonumentOpalChance
 from utils.safer_data_handling import safer_math_pow
 from utils.text_formatting import notateNumber
 
@@ -65,62 +64,14 @@ def getMotherlodeAdviceGroup() -> AdviceGroup:
     )
     return cavern_ag
 
-def getDenAdviceGroup(schematics) -> AdviceGroup:
-    c_stats = "Cavern Stats"
-    a_stats = 'Amplifier Stats'
-    cavern_advice = {
-        c_stats: [],
-        a_stats: []
-    }
-
-    cavern_name = 'The Den'
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Fight increasingly difficult Dawgs, using Amplifiers to increase score",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource='dawg-den-dawgs'
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-    next_opal_score = getDenOpalRequirement(cavern['OpalsFound'])
-    cavern_advice[c_stats].append(Advice(
-        label=f"High Score: {cavern['HighScore']:,}"
-              f"<br>Next Opal:  {next_opal_score:,}",
-        picture_class='my-first-trophy',
-        progression=f"{100 * (cavern['HighScore']/next_opal_score):.1f}",
-        goal=100,
-        unit='%'
-    ))
-
-# Amplifier Stats
-    for amp_name, amp_details in schematics_unlocking_amplifiers.items():
-        amp_unlocked = amp_details[1] == '' or schematics[amp_details[1]].bought
-        cavern_advice[a_stats].append(Advice(
-            label=(
-                f"{amp_name}: {amp_details[0]}"
-                if amp_unlocked
-                else
-                f"Unlock Amplifier {int(amp_details[2][-1])+1} by purchasing"
-                f"<br>Schematic {schematics[amp_details[1]].unlock_order}: {amp_details[1]}"
-            ),
-            picture_class=amp_details[2],
-            resource=(
-                '' if amp_unlocked
-                else schematics[amp_details[1]].resource
-            )
-        ))
-
-    cavern_ag = AdviceGroup(
+def getDenAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['The Den']
+    return AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True
     )
-    return cavern_ag
 
 def getBraveryAdviceGroup(schematics) -> AdviceGroup:
     c_stats = "Cavern Stats"
@@ -365,7 +316,7 @@ def getShallowCavernsAdviceSection() -> AdviceSection:
     shallow_caverns_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
     shallow_caverns_AdviceGroupDict['The Well'] = getWellAdviceGroup()
     shallow_caverns_AdviceGroupDict['Motherlode'] = getMotherlodeAdviceGroup()
-    shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup(schematics)
+    shallow_caverns_AdviceGroupDict['The Den'] = getDenAdviceGroup()
     shallow_caverns_AdviceGroupDict['Bravery Monument'] = getBraveryAdviceGroup(schematics)
     shallow_caverns_AdviceGroupDict['The Bell'] = getBellAdviceGroup(schematics)
 

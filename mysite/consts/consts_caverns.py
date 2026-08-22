@@ -21,16 +21,6 @@ caverns_cavern_names = {
 }
 for index, raw_name in enumerate(HolesInfo[68]):
     caverns_cavern_names[index+1] = caverns_cavern_name_overrides.get(raw_name, raw_name.replace('_', ' ').title())
-schematics_unlocking_amplifiers = {
-    'Bigger Bite': ['Hounds have higher base attack', '', 'den-amplifier-0'],
-    'Elusive Instinct': ['Hounds require additional Accuracy', 'Green Amplifier', 'den-amplifier-1'],
-    'Canine Recovery': ['Hounds regenerate HP', 'Pink Amplifier', 'den-amplifier-2'],
-    'Bigger Bow Wow': ['Chance to spawn BIG Hounds with additional HP and DMG', 'Yellow Amplifier', 'den-amplifier-3'],
-    'Doggo EMP Effect': ["Player's attacks cost higher MP", 'Cyan Amplifier', 'den-amplifier-4'],
-    'Cursed Howl': ['Hounds have a chance to cause more Fear', 'Purple Amplifier', 'den-amplifier-5'],
-    'Den Despair': ['Fear bar starts partially filled', 'White Amplifier', 'den-amplifier-6'],
-    'Fast and Deadly': ['Hounds cause Fear faster', 'Dark Amplifier', 'den-amplifier-7'],
-}
 schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp', 'Multitudinal Harp', 'Sumptuous Harp']
 schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
 
@@ -184,11 +174,6 @@ caverns_gambit_pts_for_doublers = [
     217536654301, 370604474083, 631377165616, 1075640347430, 1832505545065,
     3121932512775, 5318653818304, 9061079418982, 15436831018131, 26298826096055
 ]
-
-
-def getDenOpalRequirement(current_opals: int):
-    result = 12 * (150 + (30 + current_opals) * current_opals) * safer_math_pow(1.5, current_opals)
-    return round(result)
 
 
 def getMonumentOpalChance(current_opals: int, opal_bonus_value: float = 1):
