@@ -216,8 +216,16 @@ class Gallery:
                 self.missing.nametag.append(nametag)
 
     def calculate_bonuses(self, account: "Account"):
-        # TODO "GalleryBonusMulti" in source
+        # TODO other "GalleryBonusMulti" sources in source
         gallery_multi = 1.0
+        if account.highest_world_reached >= 7 and any(
+            "Silkrode Motherboard" in character.equipped_lab_chips
+            for character in account.all_characters
+        ):
+            # As of W7, Silkrode Motherboard no longer doubles the equipped Trophy's own
+            # stat - it instead gives a flat +10% Gallery Bonus Multi (patch notes: "The Lab
+            # Chip that doubled your trophy now gives +10% gallery bonus once you reach W7").
+            gallery_multi += 0.10
         self._calculate_trophy_bonuses(account, gallery_multi)
         self._calculate_nametag_bonuses(gallery_multi)
         for key, value in self._bonuses_total.items():

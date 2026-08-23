@@ -31,6 +31,39 @@ logger = get_logger(__name__)
 drop_rate_shiny_base = 1
 infinite_star_sign_shiny_base = 2
 
+def get_gallery_item_advice() -> list[Advice]:
+    # Itemized Trophies/Nametags, account-wide (Gallery, not equip)
+    # An item in both stat dicts (e.g. Deadbones Nametag) becomes one row, two stat lines.
+    gallery = session_data.account.gallery
+    trophies_in_gallery = {t.name for t in gallery.podium if t} | {t.name for t in gallery.inventory}
+    nametags_in_gallery = {name for name, tag in gallery.nametag.items() if tag.level > 0}
+
+    items: dict[str, dict] = {}
+    order = []
+    for stat, stat_human_readable_format in (('DropRate', 'Drop Rate'), ('DropRateMulti', 'Drop Rate Multi')):
+        for name, data in equipment_by_bonus_dict[stat].items():
+            if data['Type'] not in ('Trophy', 'Nametag'):
+                continue
+            misc1, misc2 = data.get('Misc1', {}), data.get('Misc2', {})
+            value = (misc1.get('Bonus') == stat) * misc1.get('Value', 0) + (misc2.get('Bonus') == stat) * misc2.get('Value', 0)
+            if name not in items:
+                items[name] = {'type': data['Type'], 'image': data['Image'], 'lines': []}
+                order.append(name)
+            items[name]['lines'].append(f"+{value}% {stat_human_readable_format}")
+
+    advices = []
+    for name in order:
+        item = items[name]
+        in_gallery = name in (trophies_in_gallery if item['type'] == 'Trophy' else nametags_in_gallery)
+        advices.append(Advice(
+            label=f"{name}:" + ''.join(f"<br>{line}" for line in item['lines']),
+            picture_class=item['image'],
+            progression=int(in_gallery),
+            goal=1
+        ))
+    return advices
+
+
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     companion_data_missing = not session_data.account.companions['Companion Data Present']
     bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
@@ -52,6 +85,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     w5 = 'World 5'
     w6 = 'World 6'
     w7 = 'World 7'
+    gallery_group = 'World 7 - Gallery'
     special = 'Special bonuses'
     drop_rate_aw_advice = {
         general: [],
@@ -63,6 +97,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         w5: [],
         w6: [],
         w7: [],
+        gallery_group: [],
         special: []
     }
 
@@ -534,7 +569,22 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drop_rate_aw_advice[w7].append(get_legend_talent_advice('Greatest Drop Party Ever'))
     world_7_bonus += session_data.account.legend_talents['Talents']['Greatest Drop Party Ever']['Value']
 
+    # Gallery - Trophies & Nametags
+    gallery_unlocked = session_data.account.highest_world_reached >= 7
+    gallery_drop_rate_value = 0
+    gallery_drop_rate_multi_value = 0
+    if gallery_unlocked:
+        gallery = session_data.account.gallery
+        drop_rate_aw_advice[gallery_group].extend(get_gallery_item_advice())
+        gallery_drop_rate_value = gallery.bonuses['Drop Rate'][1]
+        gallery_drop_rate_multi_value = gallery.bonuses['Drop Rate Multi'][1]
+        world_7_bonus += gallery_drop_rate_value
+
     drop_rate_aw_advice[f"{w7} - +{round(world_7_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w7)
+    drop_rate_aw_advice[
+        f"{gallery_group} - +{round(gallery_drop_rate_value, 1)}% Drop Rate, "
+        f"x{round(ValueToMulti(gallery_drop_rate_multi_value), 2)} Drop Rate Multi"
+    ] = drop_rate_aw_advice.pop(gallery_group)
 
     # Special bonuses. Dependent on character-specific bonuses as they are applied afterwards
     #########################################
@@ -608,7 +658,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         for advice in drop_rate_aw_advice[subgroup]:
             advice.mark_advice_completed()
 
-    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus
+    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus + world_7_bonus
     account_wide_advice_group = AdviceGroup(
         tier='',
         pre_string=f"Account wide sources of Drop Rate (+{round(total_flat_value, 1)}%)",
@@ -616,6 +666,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         advices=drop_rate_aw_advice,
         informational=True,
     )
+    account_wide_advice_group.remove_empty_subgroups()
 
     account_wide_bonuses = {
         'total_flat_value': total_flat_value,
@@ -623,7 +674,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         'sneak_mastery_value': sneak_mastery_value,
         'island_explorer_multi': island_explorer_multi,
         'cotton_candy_multi': cotton_candy_multi,
-        'mallay_multi': mallay_multi
+        'mallay_multi': mallay_multi,
+        'gallery_drop_rate_multi': ValueToMulti(gallery_drop_rate_multi_value)
     }
 
     return account_wide_advice_group, account_wide_bonuses
@@ -1104,6 +1156,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         final_value *= account_wide_bonuses['cotton_candy_multi']
         final_value *= equipment_multi_bonus_as_mult
         final_value *= account_wide_bonuses['mallay_multi']
+        final_value *= account_wide_bonuses['gallery_drop_rate_multi']
 
         for subgroup in character_specific_advice.values():
             for advice in subgroup:
@@ -1196,8 +1249,25 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
     motherboard_equipped = "Silkrode Motherboard" in character.equipped_lab_chips
     software_equipped = "Silkrode Software" in character.equipped_lab_chips
     processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
+    # Gallery moves these account-wide
+    gallery_unlocked = session_data.account.highest_world_reached >= 7
+
+    if stat == 'DropRate':
+        # Equipping the chip is per-character even though its effect is account-wide
+        equipment_advice.setdefault(advice_group_prefix + 'Trophy', []).append(Advice(
+            label=(
+                "Lab Chips - Silkrode Motherboard<br>+10% Trophy Gallery Bonus Multi"
+                if gallery_unlocked else
+                "Lab Chips - Silkrode Motherboard<br>Doubles Misc. Bonuses of equipped Trophy"
+            ),
+            picture_class='silkrode-motherboard',
+            progression=int(motherboard_equipped),
+            goal=1
+        ))
 
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
+        if gallery_unlocked and equipment_data['Type'] in ('Trophy', 'Nametag'):
+            continue
         is_keychain = equipment_data['Type'] == 'Keychain'
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
@@ -1252,15 +1322,6 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
             continue
         if slot not in equipment_advice.keys():
             equipment_advice[slot] = []
-
-        if "Trophy" in slot:
-            equipment_advice[slot].append(Advice(
-                label=f"Lab Chips - Silkrode Motherboard"
-                      f"<br>Doubles Misc. Bonuses of equipped Trophy",
-                picture_class='silkrode-motherboard',
-                progression=int(motherboard_equipped),
-                goal=1
-            ))
 
         if "Keychain" in slot:
             equipment_advice[slot].append(Advice(
