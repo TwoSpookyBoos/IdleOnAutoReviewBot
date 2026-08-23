@@ -86,6 +86,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     w6 = 'World 6'
     w7 = 'World 7'
     gallery_group = 'World 7 - Gallery'
+    companion_group = 'Companions'
     special = 'Special bonuses'
     drop_rate_aw_advice = {
         general: [],
@@ -98,6 +99,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         w6: [],
         w7: [],
         gallery_group: [],
+        companion_group: [],
         special: []
     }
 
@@ -145,16 +147,6 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
     general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
-
-    # Companions - Crystal Custard
-    crystal_custard_value, crystal_custard_advice = get_companion_advice('Crystal Custard')
-    drop_rate_aw_advice[general].append(crystal_custard_advice)
-    general_bonus += crystal_custard_value
-
-    # Companions - Quenchie
-    quenchie_value, quenchie_advice = get_companion_advice('Quenchie')
-    drop_rate_aw_advice[general].append(quenchie_advice)
-    general_bonus += quenchie_value
 
     # Gem Shop - Deathbringer Pack
     has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
@@ -586,6 +578,52 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         f"x{round(ValueToMulti(gallery_drop_rate_multi_value), 2)} Drop Rate Multi"
     ] = drop_rate_aw_advice.pop(gallery_group)
 
+    # Companions
+    #########################################
+    companion_bonus = 0
+
+    # Companions - Crystal Custard
+    crystal_custard_value, crystal_custard_advice = get_companion_advice('Crystal Custard')
+    drop_rate_aw_advice[companion_group].append(crystal_custard_advice)
+    companion_bonus += crystal_custard_value
+
+    # Companions - Quenchie
+    quenchie_value, quenchie_advice = get_companion_advice('Quenchie')
+    drop_rate_aw_advice[companion_group].append(quenchie_advice)
+    companion_bonus += quenchie_value
+
+    # Companions - Santa Snake (also gives a separate 1.01x Drop Rate Multi, not modeled in companions_data)
+    santa_snake_value, santa_snake_advice = get_companion_advice('Santa Snake')
+    drop_rate_aw_advice[companion_group].append(santa_snake_advice)
+    companion_bonus += santa_snake_value
+    santa_snake_multi = 1.01 if has_companion('Santa Snake') else 1.0
+
+    # Companions - Clammie
+    clammie_value, clammie_advice = get_companion_advice('Clammie')
+    drop_rate_aw_advice[companion_group].append(clammie_advice)
+    companion_bonus += clammie_value
+
+    # Companions - Lucky Slug
+    lucky_slug_value, lucky_slug_advice = get_companion_advice('Lucky Slug')
+    drop_rate_aw_advice[companion_group].append(lucky_slug_advice)
+    companion_bonus += lucky_slug_value
+
+    # Companions - Mama Troll (also gives a separate 1.50x Drop Rate Multi, not modeled in companions_data)
+    mama_troll_value, mama_troll_advice = get_companion_advice('Mama Troll')
+    drop_rate_aw_advice[companion_group].append(mama_troll_advice)
+    companion_bonus += mama_troll_value
+    mama_troll_multi = 1.50 if has_companion('Mama Troll') else 1.0
+
+    # Companions - Glunko The Massive (Drop Rate Multi only - Value covers unrelated stats)
+    _, glunko_massive_advice = get_companion_advice('Glunko The Massive')
+    drop_rate_aw_advice[companion_group].append(glunko_massive_advice)
+    glunko_massive_multi = 1.50 if has_companion('Glunko The Massive') else 1.0
+
+    # Companions - Crystal Glunko (Drop Rate Multi only - Value covers unrelated stats)
+    _, crystal_glunko_advice = get_companion_advice('Crystal Glunko')
+    drop_rate_aw_advice[companion_group].append(crystal_glunko_advice)
+    crystal_glunko_multi = 1.30 if has_companion('Crystal Glunko') else 1.0
+
     # Special bonuses. Dependent on character-specific bonuses as they are applied afterwards
     #########################################
     drop_rate_aw_advice[special].append(Advice(
@@ -649,7 +687,12 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Companions - Mallay
     mallay_multi, mallay_advice = get_companion_advice('Mallay')
-    drop_rate_aw_advice[special].append(mallay_advice)
+    drop_rate_aw_advice[companion_group].append(mallay_advice)
+
+    companion_multi = mallay_multi * santa_snake_multi * mama_troll_multi * glunko_massive_multi * crystal_glunko_multi
+    drop_rate_aw_advice[
+        f"{companion_group} - +{round(companion_bonus, 1)}% Drop Rate, x{round(companion_multi, 2)} Drop Rate Multi"
+    ] = drop_rate_aw_advice.pop(companion_group)
 
     # Still need to pop to keep the order, even if we don't change the key/label
     drop_rate_aw_advice[special] = drop_rate_aw_advice.pop(special)
@@ -658,7 +701,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         for advice in drop_rate_aw_advice[subgroup]:
             advice.mark_advice_completed()
 
-    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus + world_7_bonus
+    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus + world_7_bonus + companion_bonus
     account_wide_advice_group = AdviceGroup(
         tier='',
         pre_string=f"Account wide sources of Drop Rate (+{round(total_flat_value, 1)}%)",
@@ -674,7 +717,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         'sneak_mastery_value': sneak_mastery_value,
         'island_explorer_multi': island_explorer_multi,
         'cotton_candy_multi': cotton_candy_multi,
-        'mallay_multi': mallay_multi,
+        'companion_multi': companion_multi,
         'gallery_drop_rate_multi': ValueToMulti(gallery_drop_rate_multi_value)
     }
 
@@ -1155,7 +1198,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         # TODO: Arcane Cultist Map-specific Bonus
         final_value *= account_wide_bonuses['cotton_candy_multi']
         final_value *= equipment_multi_bonus_as_mult
-        final_value *= account_wide_bonuses['mallay_multi']
+        final_value *= account_wide_bonuses['companion_multi']
         final_value *= account_wide_bonuses['gallery_drop_rate_multi']
 
         for subgroup in character_specific_advice.values():

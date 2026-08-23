@@ -84,5 +84,26 @@ sprite_extractor_dict: Dict[str, FontDefinition | SpritesheetDefinition] = {
         "columns": 4,
         "rows": 3,
         "num_sprites": 1
+    },
+    "image_00251.png": {
+        "base_file_name": "SantaSnake",
+        "columns": 5,
+        "rows": 5,
+        "num_sprites": 5,
+        "as_gif": True
+    },
+    "image_00278.png": {
+        "base_file_name": "LuckySlug",
+        "columns": 5,
+        "rows": 5,
+        "num_sprites": 5,
+        "as_gif": True
+    },
+    "image_00290.png": {
+        "base_file_name": "CrystalGlunko",
+        "columns": 6,
+        "rows": 6,
+        "num_sprites": 6,
+        "as_gif": True
     }
 }
