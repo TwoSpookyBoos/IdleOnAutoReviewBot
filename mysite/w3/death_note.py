@@ -420,7 +420,7 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         groups=deathnote_AdviceGroupDict.values(),
         note=(
             "Important! Since you already have 2+ Blood Berserkers, you must complete Super CHOWs and WOWs"
-            " with your 2nd regardless of the platform you play on."
+            " with the last one in your character roster, regardless of the platform you play on."
         ) if len(session_data.account.bbCharactersIndexList) > 1 else ''
     )
 
