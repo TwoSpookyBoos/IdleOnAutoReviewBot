@@ -2,8 +2,7 @@ from math import ceil, floor, prod
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
 from consts.consts_caverns import (
-    caverns_cavern_names, schematics_unlocking_harp_strings,
-    schematics_unlocking_harp_chords,
+    caverns_cavern_names,
 )
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
     greenstack_amount
@@ -1210,27 +1209,8 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
     _calculate_caverns_jar_collectibles(account)
-    _calculate_caverns_the_harp(account)
     _calculate_caverns_gambit(account)
 
-
-def _calculate_caverns_the_harp(account):
-    cavern_name = 'The Harp'
-    account.caverns['Caverns'][cavern_name]['Strings'] = (
-        1
-        + sum([1 for schematic in schematics_unlocking_harp_strings if account.caverns_.villagers["Kaipu"].schematics[schematic].bought])
-        + account.caverns_.villagers["Cosmos"].majiks.hole['String is Strung'].level
-    )
-    account.caverns['Caverns'][cavern_name]['Max Strings'] = (
-        1
-        + len(schematics_unlocking_harp_strings)
-        + account.caverns_.villagers["Cosmos"].majiks.hole['String is Strung'].max_level
-    )
-    account.caverns['Caverns'][cavern_name]['ChordsUnlocked'] = [
-        chord for chord in account.caverns['Caverns'][cavern_name]['Chords'] if account.caverns['Caverns'][cavern_name]['Chords'][chord]['Unlocked']
-    ]
-    account.caverns['Caverns'][cavern_name]['ChordsUnlockedCount'] = len(account.caverns['Caverns'][cavern_name]['ChordsUnlocked'])
-    account.caverns['Caverns'][cavern_name]['Max Chords'] = 2 + len(schematics_unlocking_harp_chords)  #C and D available by default
 
 def _calculate_caverns_jar_collectibles(account):
     # Dependency: _calculate_w7_legend_talents

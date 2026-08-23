@@ -1,5 +1,4 @@
 from consts.progression_tiers import true_max_tiers
-from consts.consts_autoreview import EmojiType
 
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
@@ -8,93 +7,20 @@ from models.general.session_data import session_data
 from utils.logging import get_logger
 
 # from consts.consts import glowshroom_tunnels_progressionTiers, break_you_best, ValueToMulti
-from consts.consts_caverns import caverns_cavern_names, schematics_unlocking_harp_strings, harp_notes, \
-    getHarpNoteUnlockCost
+from consts.consts_caverns import caverns_cavern_names
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
-def getHarpAdviceGroup(schematics):
-    cavern_name = caverns_cavern_names[6]
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-
-    c_stats = "Cavern Stats"
-    c_faqs = "FAQs"
-    string_stats = f"String Stats: {cavern['Strings']}/{cavern['Max Strings']} unlocked"
-    chord_stats = f"Chord Stats: {cavern['ChordsUnlockedCount']}/{cavern['Max Chords']} unlocked"
-    n_stats = "Note Stats"
-    cavern_advice = {
-        c_stats: [],
-        c_faqs: [],
-        string_stats: [],
-        chord_stats: [],
-        n_stats: [],
-    }
-
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Spend passively generated Harp Power to collect Notes",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-# Cavern FAQs
-# String Stats
-    string_is_strung = session_data.account.caverns_.villagers["Cosmos"].majiks.hole['String is Strung']
-    cavern_advice[string_stats].append(string_is_strung.get_advice())
-    for schematic_name in schematics_unlocking_harp_strings:
-        schematic = schematics[schematic_name]
-        cavern_advice[string_stats].append(schematic.get_advice())
-
-# Chord Stats
-    cavern_advice[chord_stats] = [
-        Advice(
-            label=(
-                f"Level {chord_details['Level']} {chord_letter} chord"
-                f"<br>Strum Effect: {chord_details['Strum']}"
-                f"<br>LV Bonus: {chord_details['LVBonus']}"
-                if chord_details['Unlocked']
-                else f"Unlock {chord_letter} chord by purchasing Schematic {schematics[chord_details['UnlockedBy']].unlock_order}: {chord_details['UnlockedBy']}"
-            ),
-            picture_class=f"harp-chord-{chord_letter}",
-            progression=chord_details['Level'],
-            goal=EmojiType.INFINITY.value
-        ) for chord_letter, chord_details in cavern['Chords'].items()
-    ]
-    cavern_advice[chord_stats].insert(0, Advice(
-        label=f"Current Harp Power:"
-              f"<br>{notateNumber('Basic', cavern['HarpPower'], 2)}",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
-    ))
-# Note Stats
-    for note_index, note_amount in enumerate(cavern['NotesOwned']):
-        if cavern['NotesUnlocked'] < note_index:
-            unlock_cost = getHarpNoteUnlockCost(note_index-1)
-            target_string = notateNumber('Basic', unlock_cost, 2)
-            current_string = notateNumber('Match', min(unlock_cost, cavern['NotesOwned'][note_index-1]), 2, '', target_string)
-            note_advice = Advice(
-                label=f"Unlock {harp_notes[note_index]}s by trading {target_string} of the previous Note",
-                picture_class=f'harp-note-{note_index}',
-                resource=f'harp-note-{note_index-1}',
-                progression=current_string,
-                goal=target_string
-            )
-        else:
-            note_advice = Advice(
-                f"{harp_notes[note_index]}s: {notateNumber('Basic', note_amount, 2)}",
-                picture_class=f'harp-note-{note_index}',
-                goal=EmojiType.INFINITY.value,
-            )
-        cavern_advice[n_stats].append(note_advice)
-
+def getHarpAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['The Harp']
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True
     )
+    cavern_ag.mark_advice_completed()
     return cavern_ag
 
 def getLampAdviceGroup():
@@ -273,10 +199,9 @@ def getGlowshroomTunnelsAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
     glowshroom_tunnels_AdviceGroupDict = {}
     glowshroom_tunnels_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    glowshroom_tunnels_AdviceGroupDict['The Harp'] = getHarpAdviceGroup(schematics)
+    glowshroom_tunnels_AdviceGroupDict['The Harp'] = getHarpAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Lamp'] = getLampAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['The Hive'] = getHiveAdviceGroup()
     glowshroom_tunnels_AdviceGroupDict['Grotto'] = getGrottoAdviceGroup()

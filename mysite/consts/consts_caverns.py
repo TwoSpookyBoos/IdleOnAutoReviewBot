@@ -20,24 +20,7 @@ caverns_cavern_names = {
 }
 for index, raw_name in enumerate(HolesInfo[68]):
     caverns_cavern_names[index+1] = caverns_cavern_name_overrides.get(raw_name, raw_name.replace('_', ' ').title())
-schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp', 'Multitudinal Harp', 'Sumptuous Harp']
-schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
 
-
-harp_chord_effects = {
-    'C': ['Generate the tuned Note', 'Harp Note Gain'],
-    'D': ['Chance for an Opal', 'Harp Note Gain'],
-    'E': ['Nothing', 'Harp Power/hr'],
-    'F': ['Generate the tuned Note and both nearby Notes', 'Harp Note Gain'],
-    'G': ['Generate EXP for all unlocked Chords', 'String EXP Gain'],
-    'A': ['Generate every Note you have unlocked', 'Harp Note Gain'],
-    'B': ['TBD', 'TBD'],
-}
-harp_notes = [
-    'Crotchet Note', 'Natural Note', 'Bass Note', 'Treble Note', 'Eighth Note',
-    'Quaver Note', 'Sharp Note', '(F)Clef Note', '(G)Clef Note', 'Sixteenth Note'
-]
-max_harp_notes = len(harp_notes)
 
 # 'Bonus per Level' for the three stats boosted by 'World X Stuff' wishes.
 #`HoleozDT = "25,10,8;15,40,10;20,35,12;5,1,1;2,2,2"` in source. Last updated in v2.43 Nov 6
@@ -101,11 +84,6 @@ caverns_gambit_pts_for_doublers = [
 
 def getGrottoKills(current_opals: int):
     result = 5000 * safer_math_pow(3.4, current_opals)
-    return result
-
-
-def getHarpNoteUnlockCost(note_index):
-    result = math.ceil(150 * safer_math_pow(1 + note_index, 1.5) * safer_math_pow(4.5, note_index))
     return result
 
 

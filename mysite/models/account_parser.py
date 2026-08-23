@@ -46,11 +46,11 @@ from consts.consts_w5 import (
 )
 from consts.consts_caverns import (
     caverns_cavern_names,
-    schematics_unlocking_harp_chords,
-    harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
+    lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
     caverns_gambit_total_challenges, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
+from consts.caverns.caves.the_harp import max_harp_notes
 from consts.caverns.caves.the_well import max_sediments
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
@@ -2726,49 +2726,6 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 def _parse_caverns_biome2(account, raw_caverns_list):
     _parse_caverns_the_lamp(account, raw_caverns_list)
     _parse_caverns_grotto(account, raw_caverns_list)
-    _parse_caverns_the_harp(account, raw_caverns_list)
-
-def _parse_caverns_the_harp(account, raw_caverns_list):
-    cavern_name = 'The Harp'
-    try:
-        account.caverns['Caverns'][cavern_name]['HarpPower'] = raw_caverns_list[11][22]
-    except:
-        account.caverns['Caverns'][cavern_name]['HarpPower'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['NotesUnlocked'] = raw_caverns_list[11][20]
-    except:
-        account.caverns['Caverns'][cavern_name]['NotesUnlocked'] = 0
-
-    account.caverns['Caverns'][cavern_name]['Chords'] = {}
-    for chord_index, chord_name in enumerate(harp_chord_effects.keys()):
-        try:
-            account.caverns['Caverns'][cavern_name]['Chords'][chord_name] = {
-                'Level': raw_caverns_list[19][0 + (2 * chord_index)],
-                'Exp': raw_caverns_list[19][1 + (2 * chord_index)],
-                'Strum': harp_chord_effects[chord_name][0],
-                'LVBonus': harp_chord_effects[chord_name][1],
-            }
-        except:
-            account.caverns['Caverns'][cavern_name]['Chords'][chord_name] = {
-                'Level': 0,
-                'Exp': 0,
-                'Strum': harp_chord_effects[chord_name][0],
-                'LVBonus': harp_chord_effects[chord_name][1],
-            }
-        if chord_index < 2:
-            account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['Unlocked'] = True
-        else:
-            account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['UnlockedBy'] = schematics_unlocking_harp_chords[chord_index - 2]
-            account.caverns['Caverns'][cavern_name]['Chords'][chord_name]['Unlocked'] = (
-                account.caverns_.villagers["Kaipu"].schematics[schematics_unlocking_harp_chords[chord_index-2]].bought
-            )
-
-    try:
-        account.caverns['Caverns'][cavern_name]['NotesOwned'] = [safer_convert(entry, 0) for entry in raw_caverns_list[9][max_sediments:max_sediments+max_harp_notes]]
-    except:
-        account.caverns['Caverns'][cavern_name]['NotesOwned'] = [0] * max_harp_notes
-    while len(account.caverns['Caverns'][cavern_name]['NotesOwned']) < max_harp_notes:
-        account.caverns['Caverns'][cavern_name]['NotesOwned'].append(0)
 
 def _parse_caverns_the_lamp(account, raw_caverns_list):
     cavern_name = 'The Lamp'
