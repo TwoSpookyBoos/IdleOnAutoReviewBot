@@ -806,6 +806,14 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         )
         equipment_multi_bonus_as_mult = ValueToMulti(equipment_multi_bonus)
 
+        # Some slots (Cape, Nametag, Trophy) have items in both the flat Drop Rate and Drop Rate
+        # Multi dicts, which used to show up as confusing duplicate sections (e.g. "Drop Rate -
+        # Trophy" and "Drop Rate Multi - Trophy" side by side). Merge them into one section per
+        # slot - each item's own label already says whether it's a flat bonus or a multi.
+        equipment_advice_by_slot = merge_equipment_advice_by_slot(
+            [('Drop Rate - ', equipment_advice), ('Drop Rate Multi - ', equipment_multi_advice)]
+        )
+
         # Star Signs
         star_signs_advice: list[Advice] = []
         star_signs_bonus = 0
@@ -1075,9 +1083,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             f'Cards - +{round(card_bonus, 1)}% Drop Rate': card_advice,
             f'Card Set - +{round(cardset_bonus, 1)}% Drop Rate': cardset_advice,
             f'Equipment Drop Rate - Total: +{round(equipment_bonus, 1)}% Drop Rate': [],
-            **equipment_advice,
             f'Equipment Drop Rate Multi - Total: x{round(equipment_multi_bonus_as_mult, 2)} Drop Rate': [],
-            **equipment_multi_advice,
+            **equipment_advice_by_slot,
             f'Star Signs - +{round(star_signs_bonus, 1)}% Drop Rate': star_signs_advice,
             f'Post Office - +{round(post_office_bonus, 1)}% Drop Rate': post_office_advice,
             f'Prayers - +{round(prayer_bonus, 1)}% Drop Rate': prayer_advice,
@@ -1114,6 +1121,71 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             )
         )
     return TabbedAdviceGroup(tabbed_advices)
+
+
+_lab_chip_picture_classes = {'silkrode-motherboard', 'silkrode-software', 'silkrode-processor'}
+
+
+def merge_equipment_advice_by_slot(prefixed_equipment_advices: list[tuple[str, dict[str, list[Advice]]]]) -> dict[str, list[Advice]]:
+    """Combine equipment advice dicts keyed by "{prefix}{Slot}" (e.g. "Drop Rate - Trophy",
+    "Drop Rate Multi - Trophy") into one dict keyed by bare Slot (e.g. "Trophy"), so a slot that
+    shows up under multiple stats gets a single section instead of one per stat.
+
+    Some info rows (e.g. the Silkrode Motherboard chip note) get generated identically by each
+    stat's pass, so exact duplicate labels within a slot are dropped. An item that contributes to
+    both stats (e.g. Deadbones Nametag, listed under both Drop Rate and Drop Rate Multi) instead
+    gets combined into a single row with one bare stat line per stat (e.g. "+35% Drop Rate" /
+    "+25% Drop Rate Multi"), dropping each pass's Note since it only existed to cross-reference
+    the other stat's value, which is now redundant once both lines are shown directly.
+    """
+    merged: dict[str, list[Advice]] = {}
+    seen_chip_rows_by_slot: dict[str, set[tuple[str, str]]] = {}
+    # Per slot, the already-emitted combined row for each (equipment name, occurrence) seen so
+    # far - "occurrence" handles Keychains, where the same name can appear twice in one pass
+    # (upper/lower slot) without those two rows being merged into each other.
+    item_rows_by_slot: dict[str, dict[tuple[str, int], Advice]] = {}
+
+    for prefix, equipment_advice in prefixed_equipment_advices:
+        for slot_key, advices in equipment_advice.items():
+            slot = slot_key.removeprefix(prefix)
+            merged.setdefault(slot, [])
+            seen_chip_rows = seen_chip_rows_by_slot.setdefault(slot, set())
+            item_rows = item_rows_by_slot.setdefault(slot, {})
+            name_occurrence_so_far: dict[str, int] = {}
+
+            for advice in advices:
+                if advice.picture_class in _lab_chip_picture_classes:
+                    dedupe_key = (advice.label, advice.picture_class)
+                    if dedupe_key in seen_chip_rows:
+                        continue
+                    seen_chip_rows.add(dedupe_key)
+                    merged[slot].append(advice)
+                    continue
+
+                name = getattr(advice, 'equipment_name', None)
+                if name is None:
+                    # Not a recognized item row - pass through as-is
+                    merged[slot].append(advice)
+                    continue
+
+                occurrence = name_occurrence_so_far.get(name, 0)
+                name_occurrence_so_far[name] = occurrence + 1
+                item_key = (name, occurrence)
+
+                existing_row = item_rows.get(item_key)
+                if existing_row is not None:
+                    # Already have a row for this item from an earlier pass - rebuild the label
+                    # from bare stat lines only (dropping both passes' Notes, since those only
+                    # cross-referenced the other stat's value, which is redundant once merged).
+                    existing_row.stat_lines.append(advice.stat_line)
+                    limited_suffix = ' (Limited availability)' if existing_row.equipment_limited else ''
+                    existing_row.label = f"{name}{limited_suffix}:" + ''.join(
+                        f"<br>{line}" for line in existing_row.stat_lines
+                    )
+                else:
+                    item_rows[item_key] = advice
+                    merged[slot].append(advice)
+    return merged
 
 
 def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename: str, stat_human_readable_format: str, advice_group_prefix: str):
@@ -1166,7 +1238,10 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 'Slot': slot,
                 stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
                 'Image': equipment_data['Image'],
-                'EquippedAndMaxed': int(((not is_boosted) and equipped_equipment_bonus >= equipment_drop_rate_base) or (is_boosted and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
+                'EquippedAndMaxed': int(
+                    ((not is_boosted) and equipped_equipment_bonus >= equipment_drop_rate_base)
+                    or (is_boosted and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)
+                ), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
                 'Limited': equipment_data.get('Limited', False),
                 'Note': equipment_data.get('Note', ''),
                 'Can be boosted': can_be_boosted
@@ -1216,15 +1291,29 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 equipment[stat] *= 2
                 equipment['Note'] += f"<br>Boosted by Silkrode Processor"
 
-            equipment_advice[slot].append(Advice(
-                label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:"
-                      f"<br>+{equipment[stat]}% {stat_human_readable_format}"
-                      f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
+            # stat_line/detail_html are stashed separately so merge_equipment_advice_by_slot can
+            # combine an item that contributes to both Drop Rate and Drop Rate Multi (e.g.
+            # Deadbones Nametag) into a single row with one bare stat line per stat, instead of
+            # two rows each also repeating a now-redundant Note about the other stat's value.
+            stat_line = f"+{equipment[stat]}% {stat_human_readable_format}"
+            detail_html = f"<br>{stat_line}{'<br>' + equipment['Note'] if equipment['Note'] else ''}"
+            item_advice = Advice(
+                label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:{detail_html}",
                 picture_class=equipment['Image'],
                 progression=equipment['EquippedAndMaxed'],
                 goal=1
-            ))
-            if equipment['EquippedAndMaxed'] and index != len(equipment_list) - 1 and equipment['Name'] != equipment_list[index + 1]['Name']:
+            )
+            item_advice.equipment_name = equipment['Name']
+            item_advice.equipment_limited = equipment['Limited']
+            item_advice.stat_line = stat_line
+            item_advice.stat_lines = [stat_line]
+            item_advice.detail_html = detail_html
+            equipment_advice[slot].append(item_advice)
+            if (
+                equipment['EquippedAndMaxed']
+                and index != len(equipment_list) - 1
+                and equipment['Name'] != equipment_list[index + 1]['Name']
+            ):
                 # Don't check items that come after the equipped item because they are worse than the equipped item
                 break
     return equipment_advice, equipment_bonus
