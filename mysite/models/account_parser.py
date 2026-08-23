@@ -47,10 +47,9 @@ from consts.consts_w5 import (
 from consts.consts_caverns import (
     caverns_cavern_names,
     schematics_unlocking_harp_chords,
-    bell_ring_bonuses, bell_clean_improvements,
     harp_chord_effects, max_harp_notes, lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges, getBellExpRequired, getGrottoKills, getWishCost, caverns_jar_collectibles
+    caverns_gambit_total_challenges, getGrottoKills, getWishCost, caverns_jar_collectibles
 )
 from consts.caverns.caves.the_well import max_sediments
 from models.general.models_consumables import Bag, StorageChest
@@ -2699,7 +2698,6 @@ def _parse_caverns(account):
         raw_caverns_list.append([0]*100)
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
 
-    _parse_caverns_biome1(account, raw_caverns_list)
     _parse_caverns_biome2(account, raw_caverns_list)
     _parse_caverns_biome3(account, raw_caverns_list)
 
@@ -2724,94 +2722,6 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
                 'CavernNumber': cavern_index
             }
 
-
-def _parse_caverns_biome1(account, raw_caverns_list):
-    _parse_caverns_the_bell(account, raw_caverns_list)
-
-def _parse_caverns_the_bell(account, raw_caverns_list):
-    cavern_name = 'The Bell'
-
-    # Charge
-    account.caverns['Caverns'][cavern_name]['Charges'] = {}
-    try:
-        account.caverns['Caverns'][cavern_name]['Charges']['Ring'] = [
-            safer_convert(raw_caverns_list[18][0], 0),
-            safer_convert(raw_caverns_list[18][1], 0),
-            getBellExpRequired(0, raw_caverns_list[18][1])
-        ]
-    except:
-        account.caverns['Caverns'][cavern_name]['Charges']['Ring'] = [0, 0, getBellExpRequired(0, 0)],
-    try:
-        account.caverns['Caverns'][cavern_name]['Charges']['Ping'] = [
-            safer_convert(raw_caverns_list[18][2], 0),
-            safer_convert(raw_caverns_list[18][3], 0),
-            getBellExpRequired(1, raw_caverns_list[18][3])
-        ]
-    except:
-        account.caverns['Caverns'][cavern_name]['Charges']['Ping'] = [0, 0, getBellExpRequired(1, 0)]
-    try:
-        account.caverns['Caverns'][cavern_name]['Charges']['Clean'] = [
-            safer_convert(raw_caverns_list[18][4], 0),
-            safer_convert(raw_caverns_list[18][5], 0),
-            getBellExpRequired(2, raw_caverns_list[18][5])
-        ]
-    except:
-        account.caverns['Caverns'][cavern_name]['Charges']['Clean'] = [0, 0, getBellExpRequired(2, 0)]
-    try:
-        account.caverns['Caverns'][cavern_name]['Charges']['Renew'] = [
-            safer_convert(raw_caverns_list[18][6], 0),
-            safer_convert(raw_caverns_list[18][7], 0),
-            getBellExpRequired(3, raw_caverns_list[18][7])
-        ]
-    except:
-        account.caverns['Caverns'][cavern_name]['Charges']['Renew'] = [0, 0, getBellExpRequired(3, 0)]
-
-    # Ring Bonuses
-    account.caverns['Caverns'][cavern_name]['Ring Bonuses'] = {}
-    ring_levels = raw_caverns_list[17]
-    for ring_index, ring_details in bell_ring_bonuses.items():
-        try:
-            account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
-                'Level': int(ring_levels[ring_index]),
-                'Description': ring_details['Description'],
-                'ScalingValue': ring_details['ScalingValue'],
-                'Image': ring_details['Image']
-            }
-        except:
-            account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index] = {
-                'Level': 0,
-                'Description': ring_details['Description'].replace('{', '0.00'),
-                'ScalingValue': ring_details['ScalingValue'],
-                'Image': ring_details['Image']
-            }
-        account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value'] = (
-                account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Level']
-                * account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['ScalingValue']
-        )
-        account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'] = (
-            account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Description'].replace(
-                '{', f"{account.caverns['Caverns'][cavern_name]['Ring Bonuses'][ring_index]['Value']:.2f}"
-            )
-        )
-
-    # Improvements
-    account.caverns['Caverns'][cavern_name]['Improvements'] = {}
-    improvement_levels = raw_caverns_list[16]
-    for improvement_index, improvement_details in bell_clean_improvements.items():
-        try:
-            account.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
-                'Level': improvement_levels[improvement_index],
-                'Description': improvement_details['Description'],
-                'Image': improvement_details['Image'],
-                'Resource': improvement_details['Resource']
-            }
-        except:
-            account.caverns['Caverns'][cavern_name]['Improvements'][improvement_index] = {
-                'Level': 0,
-                'Description': improvement_details['Description'],
-                'Image': improvement_details['Image'],
-                'Resource': improvement_details['Resource']
-            }
 
 def _parse_caverns_biome2(account, raw_caverns_list):
     _parse_caverns_the_lamp(account, raw_caverns_list)

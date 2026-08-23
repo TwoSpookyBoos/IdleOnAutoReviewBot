@@ -4,7 +4,6 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_nu
 from consts.consts_caverns import (
     caverns_cavern_names, schematics_unlocking_harp_strings,
     schematics_unlocking_harp_chords,
-    getBellImprovementBonus
 )
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
     greenstack_amount
@@ -1211,35 +1210,9 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
     _calculate_caverns_jar_collectibles(account)
-    _calculate_caverns_the_bell(account)
     _calculate_caverns_the_harp(account)
     _calculate_caverns_gambit(account)
 
-
-def _calculate_caverns_the_bell(account):
-    cavern_name = 'The Bell'
-    account.caverns['Caverns'][cavern_name]['Total Improvements'] = sum(
-        [ci_details['Level'] for ci_details in account.caverns['Caverns'][cavern_name]['Improvements'].values()]
-    )
-    account.caverns['Caverns'][cavern_name]['Stack Size'] = 25
-    account.caverns['Caverns'][cavern_name]['Total Stacks'] = (
-            account.caverns['Caverns'][cavern_name]['Total Improvements'] // account.caverns['Caverns'][cavern_name]['Stack Size']
-    )
-    for ci_index, ci_details in account.caverns['Caverns'][cavern_name]['Improvements'].items():
-        try:
-            account.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = getBellImprovementBonus(
-                ci_index,
-                ci_details['Level'],
-                account.caverns['Caverns'][cavern_name]['Total Stacks'],
-                account.caverns_.villagers["Kaipu"].schematics["Improvement Stackin'"].bought
-            )
-        except:
-            account.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value'] = 0
-        account.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'] = (
-            account.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Description'].replace(
-                '{', f"{account.caverns['Caverns'][cavern_name]['Improvements'][ci_index]['Value']:,.0f}"
-            )
-        )
 
 def _calculate_caverns_the_harp(account):
     cavern_name = 'The Harp'

@@ -24,29 +24,6 @@ schematics_unlocking_harp_strings = ['Loaded Harp', 'Packed Harp', 'Hefty Harp',
 schematics_unlocking_harp_chords = ['Eee String', 'Eff String', 'Geez String', 'Aye String', 'Bee String']
 
 
-bell_ring_images = ['well-bucket', 'opal', 'cavern-6', 'cavern-7', 'jar-rupie-0', 'temple-torch']
-bell_ring_bonuses = {}
-for i in range(0, 6):
-    bell_ring_bonuses[i] = {
-        'Description': HolesInfo[59][i * 2].replace('|', ' ').replace('_', ' ').title(),
-        'ScalingValue': float(HolesInfo[59][i * 2 + 1]),
-        'Image': bell_ring_images[i]
-    }
-
-bell_clean_resources = ['coins', 'well-sediment-3', 'purple-bits', 'harp-note-4', 'particles', 'jar-rupie-5']
-bell_clean_improvements = {}
-for i in range(0, 6):
-    bell_clean_improvements[i] = {
-        'Description': HolesInfo[60][i].replace('|', ' ').replace('_', ' '),
-        'Image': (
-            "bell-ring" if 'Ring' in HolesInfo[60][i] else
-            'bell-ping' if 'Ping' in HolesInfo[60][i] else
-            'bell-clean' if 'Clean' in HolesInfo[60][i] else
-            ''
-        ),
-        'Resource': bell_clean_resources[i]
-    }
-
 harp_chord_effects = {
     'C': ['Generate the tuned Note', 'Harp Note Gain'],
     'D': ['Chance for an Opal', 'Harp Note Gain'],
@@ -120,28 +97,6 @@ caverns_gambit_pts_for_doublers = [
     217536654301, 370604474083, 631377165616, 1075640347430, 1832505545065,
     3121932512775, 5318653818304, 9061079418982, 15436831018131, 26298826096055
 ]
-
-
-def getBellExpRequired(bell_index, current_uses: int):
-    match bell_index:
-        case 0:  #Ring
-            result = (5 + 3 * current_uses) * safer_math_pow(1.05, current_uses)
-        case 1:  #Ping
-            result = (10 + (10 * current_uses + safer_math_pow(current_uses, 2.5))) * safer_math_pow(1.75, current_uses)
-        case 2:  #Clean
-            result = 100 * safer_math_pow(3, current_uses)
-        case _:  #Renew falls into this else
-            result = 250
-    return result
-
-
-def getBellImprovementBonus(i_index, i_level, schematic_stacks=0, schematic_owned=False):
-    # `BellMethodsQTY` in source. Last updated in v2.43 Nov 6
-    # Yes, HolesInfo[61] only applies AFTER the schematic is purchased. Probably a bug in game but must be replicated here for accuracy.
-    result = (
-        2 * i_level * max(1, safer_math_pow(1.1, schematic_stacks) * schematic_owned * float(HolesInfo[61][i_index]))
-    )
-    return result
 
 
 def getGrottoKills(current_opals: int):

@@ -4,6 +4,7 @@ from models.caverns.caves.bravery_monument import BraveryMonument
 from models.caverns.caves.cavern import Cavern
 from models.caverns.caves.justice_monument import JusticeMonument
 from models.caverns.caves.skilling_cavern import SkillingCavern
+from models.caverns.caves.the_bell import TheBell
 from models.caverns.caves.the_den import TheDen
 from models.caverns.caves.the_well import TheWell
 from models.caverns.caves.wisdom_monument import WisdomMonument
@@ -13,6 +14,7 @@ class Caves(dict[str, Cavern]):
     _CAVE_TYPES = {
         "the_well": TheWell,
         "the_den": TheDen,
+        "the_bell": TheBell,
         "motherlode": lambda: SkillingCavern(
             name="Motherlode",
             cavern_number=2,
@@ -51,6 +53,8 @@ class Caves(dict[str, Cavern]):
     def __getitem__(self, key: Literal["The Well"]) -> TheWell: ...
     @overload
     def __getitem__(self, key: Literal["The Den"]) -> TheDen: ...
+    @overload
+    def __getitem__(self, key: Literal["The Bell"]) -> TheBell: ...
     @overload
     def __getitem__(
         self, key: Literal["Motherlode", "The Hive", "Evertree"]
