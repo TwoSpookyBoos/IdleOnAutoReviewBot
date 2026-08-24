@@ -1,6 +1,5 @@
 from consts.caverns.cavern import max_cavern
 from consts.caverns.villager.minau import max_measurements
-from consts.consts_autoreview import EmojiType
 from consts.idleon.caverns.villager.kaipu import available_schematics
 from consts.progression_tiers import true_max_tiers
 from models.advice.advice import Advice
@@ -136,15 +135,10 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
     villager_advice["Base"] = base_speed_advice
     multi_speed = "Multi Group I"
     villager_advice[multi_speed] = []
-    rosemerald = session_data.account.caverns["Collectibles"]["Rosemerald"]
-    villager_advice[multi_speed].append(
-        Advice(
-            label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}%",
-            picture_class=rosemerald["Image"],
-            progression=rosemerald["Level"],
-            goal=EmojiType.INFINITY.value,
-        )
-    )
+    rosemerald = session_data.account.caverns_.caves["The Jar"].collectibles[
+        "Rosemerald"
+    ]
+    villager_advice[multi_speed].append(rosemerald.get_bonus_advice())
     study_majik = session_data.account.caverns_.villagers["Cosmos"].majiks.village[
         "Study All Nighter"
     ]

@@ -8,6 +8,7 @@ from models.caverns.caves.skilling_cavern import SkillingCavern
 from models.caverns.caves.the_bell import TheBell
 from models.caverns.caves.the_den import TheDen
 from models.caverns.caves.the_harp import TheHarp
+from models.caverns.caves.the_jar import TheJar
 from models.caverns.caves.the_lamp import TheLamp
 from models.caverns.caves.the_well import TheWell
 from models.caverns.caves.wisdom_monument import WisdomMonument
@@ -21,6 +22,7 @@ class Caves(dict[str, Cavern]):
         "the_harp": TheHarp,
         "the_lamp": TheLamp,
         "grotto": Grotto,
+        "the_jar": TheJar,
         "motherlode": lambda: SkillingCavern(
             name="Motherlode",
             cavern_number=2,
@@ -67,6 +69,8 @@ class Caves(dict[str, Cavern]):
     def __getitem__(self, key: Literal["The Lamp"]) -> TheLamp: ...
     @overload
     def __getitem__(self, key: Literal["Grotto"]) -> Grotto: ...
+    @overload
+    def __getitem__(self, key: Literal["The Jar"]) -> TheJar: ...
     @overload
     def __getitem__(
         self, key: Literal["Motherlode", "The Hive", "Evertree"]

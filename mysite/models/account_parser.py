@@ -46,12 +46,9 @@ from consts.consts_w5 import (
 )
 from consts.consts_caverns import (
     caverns_cavern_names,
-    caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
-    caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges, caverns_jar_collectibles
+    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
+    caverns_gambit_total_challenges,
 )
-from consts.caverns.caves.the_harp import max_harp_notes
-from consts.caverns.caves.the_well import max_sediments
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
@@ -2689,7 +2686,6 @@ def _parse_caverns(account):
     account.caverns = {
         'Caverns': {},
         'CavernsUnlocked': 0,
-        'Collectibles': {}
     }
     raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
     if not raw_caverns_list:
@@ -2723,79 +2719,8 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome3(account, raw_caverns_list):
-    _parse_caverns_the_jar(account, raw_caverns_list)
     _parse_caverns_gambit(account, raw_caverns_list)
     _parse_caverns_the_temple(account, raw_caverns_list)
-
-def _parse_caverns_the_jar(account, raw_caverns_list):
-    cavern_name = caverns_cavern_names[11]
-
-    #Rupies
-    try:
-        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [
-            safer_convert(entry, 0.00) for entry in raw_caverns_list[9][max_sediments + max_harp_notes:max_sediments + max_harp_notes + caverns_jar_max_rupies]]
-    except:
-        account.caverns['Caverns'][cavern_name]['RupiesOwned'] = [0] * caverns_jar_max_rupies
-    while len(account.caverns['Caverns'][cavern_name]['RupiesOwned']) < caverns_jar_max_rupies:
-        account.caverns['Caverns'][cavern_name]['RupiesOwned'].append(0)
-
-    #Jars
-    raw_jars_destroyed = [0] * caverns_jar_max_jar_types
-    for i in range(0, caverns_jar_max_jar_types):
-        try:
-            raw_jars_destroyed[i] = raw_caverns_list[11][40+i]
-        except:
-            continue
-    account.caverns['Caverns'][cavern_name]['Jars'] = {}
-    for jar_index, jar_name in enumerate(caverns_jar_jar_types):
-        try:
-            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
-                'Name': f'{jar_name} Jar',
-                'Image': f'jar-type-{jar_index}',
-                'Destroyed': raw_jars_destroyed[jar_index]
-            }
-        except:
-            account.caverns['Caverns'][cavern_name]['Jars'][jar_index] = {
-                'Name': f'{jar_name} Jar',
-                'Image': f'jar-type-{jar_index}',
-                'Destroyed': 0
-            }
-
-    #Collectible Levels
-    account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = []
-    for entry in raw_caverns_list[24]:
-        try:
-            account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(safer_convert(entry, 0))
-        except:
-            account.caverns['Caverns'][cavern_name]['CollectiblesOwned'] = 0
-    #Extend the levels to the expected length
-    while len(account.caverns['Caverns'][cavern_name]['CollectiblesOwned']) < caverns_jar_collectibles_count:
-        account.caverns['Caverns'][cavern_name]['CollectiblesOwned'].append(0)
-
-    #Individual Collectibles
-    for collectible_index, collectible_details in enumerate(caverns_jar_collectibles):
-        clean_name = collectible_details[0].title().replace('_', ' ')
-        scaling_value = safer_convert(collectible_details[1], 0)
-        try:
-            account.caverns['Collectibles'][clean_name] = {
-                'Level': account.caverns['Caverns'][cavern_name]['CollectiblesOwned'][collectible_index],
-                'ScalingValue': scaling_value,
-                'Value': 0,
-                'Description': collectible_details[3].replace('_', ' '),
-                'Image': f"jar-collectible-{collectible_index}"
-            }
-        except:
-            account.caverns['Collectibles'][clean_name] = {
-                'Level': 0,
-                'ScalingValue': scaling_value,
-                'Value': 0,
-                'Description': collectible_details[3].replace('_', ' '),
-                'Image': f"jar-collectible-{collectible_index}"
-            }
-
-    # for collectible_name in account.caverns['Collectibles']:
-    #     if account.caverns['Collectibles'][collectible_name]['Level'] > 0:
-    #         logger.debug(f"{collectible_name}: {account.caverns['Collectibles'][collectible_name]}")
 
 def _parse_caverns_gambit(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[14]

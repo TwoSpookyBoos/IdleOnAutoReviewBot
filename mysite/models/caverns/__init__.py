@@ -25,11 +25,9 @@ class Caverns:
     def skilling_resource_discount(self) -> float:
         # Depends on: Bolaia's studies, each SkillingCavern's layers_destroyed,
         # and The Jar's Amethyst Heartstone collectible.
-        from models.general.session_data import session_data
-
-        collectible_bonus = session_data.account.caverns["Collectibles"][
-            "Amethyst Heartstone"
-        ]["Value"]
+        collectible_bonus = (
+            self.caves["The Jar"].collectibles["Amethyst Heartstone"].value
+        )
         return ValueToMulti(
             collectible_bonus
             + (

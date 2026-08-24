@@ -27,7 +27,6 @@ from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
-from utils.number_formatting import round_and_trim
 
 logger = get_logger(__name__)
 
@@ -1208,39 +1207,8 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
-    _calculate_caverns_jar_collectibles(account)
     _calculate_caverns_gambit(account)
 
-
-def _calculate_caverns_jar_collectibles(account):
-    # Dependency: _calculate_w7_legend_talents
-    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Whats in your Jar?']['Value'])
-    for collectible_name, collectible_details in account.caverns['Collectibles'].items():
-        try:
-            account.caverns['Collectibles'][collectible_name]['Value'] = (
-                collectible_details['Level'] * collectible_details['ScalingValue']
-                * legend_talent_multi
-            )
-            if '{' in collectible_details['Description']:
-                scaling_note = (
-                    f"<br>+{account.caverns['Collectibles'][collectible_name]['ScalingValue']}"
-                    f"{'%' if '%' in collectible_details['Description'] else ''} per level"
-                )
-                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
-                    '{', f"{round_and_trim(account.caverns['Collectibles'][collectible_name]['Value'])}"
-                )
-
-            elif '}' in collectible_details['Description']:
-                scaling_note = f"<br>{round_and_trim(ValueToMulti(account.caverns['Collectibles'][collectible_name]['ScalingValue']) - 1)} per level"
-                account.caverns['Collectibles'][collectible_name]['Description'] = collectible_details['Description'].replace(
-                    '}', f"{round_and_trim(ValueToMulti(account.caverns['Collectibles'][collectible_name]['Value']))}"
-                )
-            else:
-                scaling_note = ''
-            account.caverns['Collectibles'][collectible_name]['Description'] += scaling_note
-        except:
-            logger.exception(f"Unable to update description for Collectible: {collectible_name}")
-            continue  #Already defaulted to 0 during parsing
 
 def _calculate_caverns_gambit(account):
     cavern_name = caverns_cavern_names[14]
@@ -1251,8 +1219,8 @@ def _calculate_caverns_gambit(account):
         + account.caverns_.villagers["Bolaia"].studies[13].value  # + Gambit Study bonus
         + (10 * account.caverns_.villagers["Kaipu"].schematics['The Sicilian'].bought)  # + The Sicilian schematic
         + account.caverns_.caves['Wisdom Monument'].bonuses['Gambit Points'].value  # + Wisdom Monument bonus
-        + account.caverns['Collectibles']['Deep Blue Square']['Value']
-        + account.caverns['Collectibles']['Murky Fabrege Egg']['Value']
+        + account.caverns_.caves['The Jar'].collectibles['Deep Blue Square'].value
+        + account.caverns_.caves['The Jar'].collectibles['Murky Fabrege Egg'].value
     )
 
     #Total PTS

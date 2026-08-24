@@ -22,12 +22,6 @@ for index, raw_name in enumerate(HolesInfo[68]):
     caverns_cavern_names[index+1] = caverns_cavern_name_overrides.get(raw_name, raw_name.replace('_', ' ').title())
 
 
-caverns_jar_collectibles = [entry.split('|') for entry in HolesInfo[67]]
-caverns_jar_collectibles_count = len(caverns_jar_collectibles)
-caverns_jar_rupies = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Turquoise', 'Orange', 'Ultramarine', 'Purple', 'Master', 'White', 'Dark']
-caverns_jar_max_rupies = len(caverns_jar_rupies)
-caverns_jar_jar_types = ['Simple', 'Tall', 'Ornate', 'Great', 'Enchanted', 'Artisan', 'Epic', 'Gilded', 'Ceremony', 'Heirloom']
-caverns_jar_max_jar_types = len(caverns_jar_jar_types)
 caverns_gambit_pts_bonuses = HolesInfo[71]
 caverns_gambit_challenge_names = ["King's Gambit", "Horsey's Gambit", "Bishop's Gambit", "Queen's Gambit", "Rook's Gambit", "Noob's Gambit"]
 schematics_unlocking_gambit_challenges = [None, 'Horsey Gambit', 'Bishop Gambit', 'Queen Gambit', 'Castle Gambit', 'Noob Gambit']
