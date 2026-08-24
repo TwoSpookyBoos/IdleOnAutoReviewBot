@@ -32,36 +32,28 @@ drop_rate_shiny_base = 1
 infinite_star_sign_shiny_base = 2
 
 def get_gallery_item_advice() -> list[Advice]:
-    # Itemized Trophies/Nametags, account-wide (Gallery, not equip)
-    # An item in both stat dicts (e.g. Deadbones Nametag) becomes one row, two stat lines.
+    # Itemized Trophies/Nametags, account-wide (Gallery, not equip). Delegates the actual
+    # advice rows to GalleryTrophy/GalleryNametag.get_bonus_advice() so they carry the real
+    # podium/inventory multi or nametag level (not just whether the item is owned), filtered
+    # down to just the Drop Rate/Drop Rate Multi lines since that's all this page cares about.
     gallery = session_data.account.gallery
-    trophies_in_gallery = {t.name for t in gallery.podium if t} | {t.name for t in gallery.inventory}
-    nametags_in_gallery = {name for name, tag in gallery.nametag.items() if tag.level > 0}
+    stats = {'DropRate', 'DropRateMulti'}
 
-    items: dict[str, dict] = {}
     order = []
-    for stat, stat_human_readable_format in (('DropRate', 'Drop Rate'), ('DropRateMulti', 'Drop Rate Multi')):
+    types: dict[str, str] = {}
+    for stat in stats:
         for name, data in equipment_by_bonus_dict[stat].items():
-            if data['Type'] not in ('Trophy', 'Nametag'):
+            if data['Type'] not in ('Trophy', 'Nametag') or name in types:
                 continue
-            misc1, misc2 = data.get('Misc1', {}), data.get('Misc2', {})
-            value = (misc1.get('Bonus') == stat) * misc1.get('Value', 0) + (misc2.get('Bonus') == stat) * misc2.get('Value', 0)
-            if name not in items:
-                items[name] = {'type': data['Type'], 'image': data['Image'], 'lines': []}
-                order.append(name)
-            items[name]['lines'].append(f"+{value}% {stat_human_readable_format}")
+            types[name] = data['Type']
+            order.append(name)
 
-    advices = []
-    for name in order:
-        item = items[name]
-        in_gallery = name in (trophies_in_gallery if item['type'] == 'Trophy' else nametags_in_gallery)
-        advices.append(Advice(
-            label=f"{name}:" + ''.join(f"<br>{line}" for line in item['lines']),
-            picture_class=item['image'],
-            progression=int(in_gallery),
-            goal=1
-        ))
-    return advices
+    return [
+        (gallery.trophy if types[name] == 'Trophy' else gallery.nametag)[name].get_bonus_advice(
+            stats=stats, link_to_section=True
+        )
+        for name in order
+    ]
 
 
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:

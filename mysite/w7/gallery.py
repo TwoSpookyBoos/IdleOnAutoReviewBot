@@ -28,13 +28,15 @@ def get_gallery_show() -> AdviceGroup:
     gallery = session_data.account.gallery
     advices = {
         "Trophy podium": [
-            gallery.podium[index].get_bonus_advice()
+            gallery.podium[index].get_bonus_advice(link_to_section=False)
             for index in range(0, gallery.podium_count)
             if gallery.podium[index] is not None
         ],
-        "Trophy inventory": [trophy.get_bonus_advice() for trophy in gallery.inventory],
+        "Trophy inventory": [
+            trophy.get_bonus_advice(link_to_section=False) for trophy in gallery.inventory
+        ],
         "Nametag": [
-            nametag.get_bonus_advice()
+            nametag.get_bonus_advice(link_to_section=False)
             for nametag in gallery.nametag.values()
             if nametag.level > 0
         ],
