@@ -81,13 +81,11 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     )
 
 #Multi Group B
-    lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
-    sps_adviceDict[mgb].append(Advice(
-        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: World 4 Stuff: +{lamp_cavern['WishTypes'][4]['BonusList'][1]}%",
-        picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
-        progression=lamp_cavern['WishTypes'][4]['BonusList'][1],
-        goal=EmojiType.INFINITY.value
-    ))
+    sps_adviceDict[mgb].append(
+        session_data.account.caverns_.caves['The Lamp']
+        .wishes['World 4 Stuff']
+        .get_bonus_advice(1)
+    )
 
 #Multi Group C
     sps_adviceDict[mgc].append(

@@ -46,9 +46,9 @@ from consts.consts_w5 import (
 )
 from consts.consts_caverns import (
     caverns_cavern_names,
-    lamp_world_wish_values, lamp_wishes, caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
+    caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges, getGrottoKills, getWishCost, caverns_jar_collectibles
+    caverns_gambit_total_challenges, getGrottoKills, caverns_jar_collectibles
 )
 from consts.caverns.caves.the_harp import max_harp_notes
 from consts.caverns.caves.the_well import max_sediments
@@ -2724,60 +2724,7 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome2(account, raw_caverns_list):
-    _parse_caverns_the_lamp(account, raw_caverns_list)
     _parse_caverns_grotto(account, raw_caverns_list)
-
-def _parse_caverns_the_lamp(account, raw_caverns_list):
-    cavern_name = 'The Lamp'
-    try:
-        account.caverns['Caverns'][cavern_name]['WishesStored'] = raw_caverns_list[11][25]
-    except:
-        account.caverns['Caverns'][cavern_name]['WishesStored'] = 0
-    account.caverns['Caverns'][cavern_name]['WishTypes'] = {}
-    try:
-        account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] = (
-            raw_caverns_list[21][0] + (1 * account.caverns['Caverns'][cavern_name]['Unlocked'])
-        )
-    except:
-        account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] = 1 * account.caverns['Caverns'][cavern_name]['Unlocked']
-    for wish_index, wish_dict in enumerate(lamp_wishes):
-        account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index] = {
-            'Name': wish_dict['Name'],
-            'BaseCost': wish_dict['BaseCost'],
-            'CostIncreaser': wish_dict['CostIncreaser'],
-            'Description': f"{wish_dict['Description']}{'. Cost does not increase.' if wish_dict['DoesCostIncrease'] is False else ''}",
-            'Image': f'lamp-wish-{wish_index}',
-            'BonusList': []
-        }
-        try:
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = (
-                    account.caverns_.villagers["Polonai"].level >= 7
-                    and account.caverns['Caverns'][cavern_name]['WishTypesUnlocked'] > wish_index
-                )
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = parse_number(raw_caverns_list[21][wish_index])
-        except:
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Unlocked'] = False
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level'] = 0
-        account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['NextCost'] = getWishCost(
-            wish_index, account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
-        )
-
-        #If this is a World X stuff wish, calculate each Value into BonusList then update the Description
-        if wish_dict['Name'].startswith('World '):
-            world_number = safer_convert(wish_dict['Name'].split('World ')[1][0], 0)
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'] = [
-                v * account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Level']
-                for v in lamp_world_wish_values.get(world_number, [0]*3)
-            ]
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
-                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '{', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][0]), 1))
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
-                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '}', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][1]), 1))
-            account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'] = (
-                account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['Description'].replace(
-                    '~', str(account.caverns['Caverns'][cavern_name]['WishTypes'][wish_index]['BonusList'][2]), 1))
 
 def _parse_caverns_grotto(account, raw_caverns_list):
     cavern_name = 'Grotto'

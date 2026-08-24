@@ -23,58 +23,14 @@ def getHarpAdviceGroup() -> AdviceGroup:
     cavern_ag.mark_advice_completed()
     return cavern_ag
 
-def getLampAdviceGroup():
-    c_stats = "Cavern Stats"
-    c_faqs = "FAQs"
-    w_stats = "Wish Type Stats"
-    cavern_advice = {
-        c_stats: [],
-        c_faqs: [],
-        w_stats: [],
-    }
-
-    cavern_name = caverns_cavern_names[7]
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-# Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Collect Wishes upon Daily Reset to invest into Wish Types",
-        picture_class=f"cavern-{cavern['CavernNumber']}",
-        resource='lamp-wish-button'
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-
-# Cavern FAQs
-    cavern_advice[c_faqs].append(Advice(
-        label=f"Gold Pocketwatches DO NOT grant Wishes!"
-              f"<br>Silver Pocketwatches do.",
-        picture_class='gold-pocketwatch',
-        resource='silver-pocketwatch'
-    ))
-
-# Wish Type Stats
-    cavern_advice[w_stats] = [
-        Advice(
-            label=f"Level {wish_details['Level']} {wish_details['Name']}: {wish_details['Description']}",
-            picture_class=wish_details['Image'],
-            progression=cavern['WishesStored'],
-            goal=wish_details['NextCost']
-        ) for wish_index, wish_details in cavern['WishTypes'].items()
-    ]
-    cavern_advice[w_stats].insert(0, Advice(
-        label=f"Wishes stored: {cavern['WishesStored']}",
-        picture_class='lamp-wish-button'
-    ))
-
-    cavern_ag = AdviceGroup(
+def getLampAdviceGroup() -> AdviceGroup:
+    cavern = session_data.account.caverns_.caves['The Lamp']
+    return AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
         informational=True
     )
-    return cavern_ag
 
 def getHiveAdviceGroup() -> AdviceGroup:
     cavern = session_data.account.caverns_.caves['The Hive']

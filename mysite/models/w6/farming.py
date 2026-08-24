@@ -764,7 +764,7 @@ class Farming:
             * evo_multi["Ballot Multi Current"]
         )
         evo_multi["Wish Multi"] = ValueToMulti(
-            account.caverns["Caverns"]["The Lamp"]["WishTypes"][8]["BonusList"][0]
+            account.caverns_.caves["The Lamp"].wishes["World 6 Majigers"].value_list[0]
         )
         # subtotal doesn't include Crop Chapter
         evo_multi["Subtotal Multi"] = (
