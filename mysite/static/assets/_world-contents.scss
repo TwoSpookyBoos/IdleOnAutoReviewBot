@@ -291,9 +291,6 @@ $world-monsters: (
     flombeige: img('wiki/Flombeige_Idle.gif'),
     stilted-seeker: img('wiki/Stilted_Seeker_Idle.gif'),
     crystal-custard: img('wiki/Crystal_Custard_Idle.gif'),
-    santa-snake: img('extracted_sprites/SantaSnake.gif'),
-    lucky-slug: img('extracted_sprites/LuckySlug.gif'),
-    crystal-glunko: img('extracted_sprites/CrystalGlunko.gif'),
     massive-troll: img('wiki/Massive_Troll_%28boss%29.png'),
 // The Rift
     rift-monsters: img('wiki/Rift_Spooker_Idle.gif'),  //Generic usage
@@ -323,6 +320,7 @@ $world-monsters: (
     dawg-den-dawgs: img('wiki/Dawgs_Idle.gif'),
     gloomie-mushroom: img('wiki/Gloomie_Mushroom_Idle.gif'),
     ancient-golem: img('wiki/Ancient_Golem_Idle.gif'),
+    crystal-glunko: img('monster/Crystal_Glunko.gif'),
 // W6
     sprout-spirit: img('wiki/Sprout_Spirit_Idle.gif'),
     ricecake: img('wiki/Ricecake_Idle.gif'),
@@ -365,6 +363,9 @@ $world-monsters: (
     pirate-deckhand: img('monster/Pirate_Deckhand.gif'),
     dreadnaught-captain: img('monster/Dreadnaught_Captain.gif'),
     crystal-cuttlefish: img('monster/Crystal_Cuttlefish.gif'),
+// Companion
+    santa-snake: img('monster/Santa_Snake.gif'),
+    lucky-slug: img('monster/Lucky_Slug.gif'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);
