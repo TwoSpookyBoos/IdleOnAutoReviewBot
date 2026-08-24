@@ -46,11 +46,6 @@ caverns_gambit_pts_for_doublers = [
 ]
 
 
-def getGrottoKills(current_opals: int):
-    result = 5000 * safer_math_pow(3.4, current_opals)
-    return result
-
-
 def getSummoningDoublerPtsCost(current_doublers):
     try:
         pts_required = caverns_gambit_pts_for_doublers[current_doublers+1]

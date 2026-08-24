@@ -48,7 +48,7 @@ from consts.consts_caverns import (
     caverns_cavern_names,
     caverns_jar_collectibles_count, caverns_jar_max_rupies, caverns_jar_jar_types,
     caverns_jar_max_jar_types, caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges, getGrottoKills, caverns_jar_collectibles
+    caverns_gambit_total_challenges, caverns_jar_collectibles
 )
 from consts.caverns.caves.the_harp import max_harp_notes
 from consts.caverns.caves.the_well import max_sediments
@@ -2698,7 +2698,6 @@ def _parse_caverns(account):
         raw_caverns_list.append([0]*100)
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
 
-    _parse_caverns_biome2(account, raw_caverns_list)
     _parse_caverns_biome3(account, raw_caverns_list)
 
     # for key in account.caverns:
@@ -2722,28 +2721,6 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
                 'CavernNumber': cavern_index
             }
 
-
-def _parse_caverns_biome2(account, raw_caverns_list):
-    _parse_caverns_grotto(account, raw_caverns_list)
-
-def _parse_caverns_grotto(account, raw_caverns_list):
-    cavern_name = 'Grotto'
-    try:
-        account.caverns['Caverns'][cavern_name]['PlayerKills'] = safer_convert(raw_caverns_list[11][27], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['PlayerKills'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['KillsRequired'] = getGrottoKills(account.caverns['Caverns'][cavern_name]['OpalsFound'])
-    except:
-        account.caverns['Caverns'][cavern_name]['KillsRequired'] = getGrottoKills(0)
-    account.caverns['Caverns'][cavern_name]['KillsRemaining'] = max(
-        0,
-        account.caverns['Caverns'][cavern_name]['KillsRequired'] - account.caverns['Caverns'][cavern_name]['PlayerKills']
-    )
-    account.caverns['Caverns'][cavern_name]['PercentRemaining'] = max(
-        0,
-        100 * (1 - (account.caverns['Caverns'][cavern_name]['PlayerKills'] / account.caverns['Caverns'][cavern_name]['KillsRequired']))
-    )
 
 def _parse_caverns_biome3(account, raw_caverns_list):
     _parse_caverns_the_jar(account, raw_caverns_list)
