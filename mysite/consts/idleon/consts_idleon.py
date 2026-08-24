@@ -177,7 +177,7 @@ expected_talents_dict = {
 base_crystal_chance = 0.0005  # 1 in 2000
 max_crystal_chance = 0.1  #10% last updated in v2.45 Nov 15. Any extra crystal spawn chance above this increases loot and killcount, but not spawns
 
-# `CompanionDB` in source. Last updated in v2.48 Dec 10
+# `CompanionDB` in source. Last updated in v2.523 (Steam build 23860451)
 companions_info = [
     "babaMummy All_Divinities_from_World_5_count_as_Active 1 -53 -22 -14 2000 165".split(" "),
     "rift2 +25_Lv_for_all_Talents 25 -31 6 -14 450 125".split(" "),
