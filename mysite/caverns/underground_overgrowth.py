@@ -1,5 +1,3 @@
-from math import ceil
-
 from consts.progression_tiers import true_max_tiers
 
 from models.advice.advice import Advice
@@ -9,7 +7,7 @@ from models.general.session_data import session_data
 from utils.safer_data_handling import safer_math_pow, safer_math_log
 from utils.logging import get_logger
 
-from consts.consts_autoreview import ValueToMulti, EmojiType  # shallow_caverns_progressionTiers, break_you_best
+from consts.consts_autoreview import ValueToMulti
 from consts.consts_caverns import caverns_cavern_names
 from utils.text_formatting import notateNumber
 
@@ -54,89 +52,14 @@ def getWisdomAdviceGroup() -> AdviceGroup:
     return cavern_ag
 
 def getGambitAdviceGroup() -> AdviceGroup:
-    cavern_name = caverns_cavern_names[14]
-    cavern = session_data.account.caverns['Caverns'][cavern_name]
-    bonuses = cavern['Bonuses']
-
-    c_stats = "Cavern Stats"
-    c_faqs = "FAQs"
-    challenge_stats = 'Challenge Stats'
-    bonus_stats = 'Bonuses'
-    cavern_advice = {
-        c_stats: [],
-        c_faqs: [],
-        challenge_stats: [],
-        bonus_stats: []
-    }
-
-    # Cavern Stats
-    cavern_advice[c_stats].append(Advice(
-        label=f"Objective- Survive as long as possible against various Summoning challenges",
-        picture_class=f"cavern-{cavern['CavernNumber']}"
-    ))
-    cavern_advice[c_stats].append(Advice(
-        label=f"Total Opals Found: {cavern['OpalsFound']}",
-        picture_class='opal'
-    ))
-
-    #FAQs
-    cavern_advice[c_faqs].append(Advice(
-        label=f"Your opponent does not have a health bar, and there is no reward for your units reaching the right edge.",
-        picture_class='engineer-schematic-78'
-    ))
-
-    #Challenge Stats
-    cavern_advice[challenge_stats] = [
-        Advice(
-            label=f"{challenge_name}"
-                  f"<br>{challenge_details['TimeDisplay']} = {challenge_details['BasePts']:,.2f} base points",
-            picture_class=challenge_details['Image'],
-        ) for challenge_name, challenge_details in cavern['Challenges'].items()
-    ]
-    cavern_advice[challenge_stats].insert(0, Advice(
-        label=f"Base Points: {session_data.account.caverns['Caverns'][cavern_name]['BasePts']:,.2f}",
-        picture_class='gambit-king-stone'
-    ))
-    cavern_advice[challenge_stats].insert(1, Advice(
-        label=f"Points Multi: {session_data.account.caverns['Caverns'][cavern_name]['PtsMulti']:,.2f}x",
-        picture_class='measurement-13'
-    ))
-    cavern_advice[challenge_stats].insert(2, Advice(
-        label=f"Total Points: {session_data.account.caverns['Caverns'][cavern_name]['TotalPts']:,.2f}",
-        picture_class='gambit-king-gold'
-    ))
-
-    cavern_advice[bonus_stats] = [
-        Advice(
-            label=(
-                f"{bonus_details['Name']}{': ' if bonus_details['Description'] else ''}{bonus_details['Description']}"
-                f"<br>{ceil(bonus_details['PtsRequired'] - session_data.account.caverns['Caverns'][cavern_name]['TotalPts']):,.0f} points to Unlock"
-                if not bonus_details['Unlocked'] else
-                f"{bonus_details['Name']}{': ' if bonus_details['Description'] else ''}{bonus_details['Description']}"
-            ),
-            picture_class=bonus_details['Image'],
-            progression=(
-                1 if bonus_details['Unlocked'] and not bonus_details['ScalesWithPts']
-                else 0 if not bonus_details['Unlocked'] and not bonus_details['ScalesWithPts']
-                else ''
-            ),
-            goal=(
-                1 if not bonus_details['ScalesWithPts']
-                else EmojiType.INFINITY.value
-            )
-        ) for bonus_index, bonus_details in bonuses.items()
-    ]
-
-    for subgroup in cavern_advice:
-        for advice in cavern_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    cavern = session_data.account.caverns_.caves["Gambit"]
     cavern_ag = AdviceGroup(
         tier='',
-        pre_string=f"Cavern {cavern['CavernNumber']}- {cavern_name}",
-        advices=cavern_advice,
-        informational=True
+        pre_string=cavern.pre_string(),
+        advices=cavern.advice_groups(),
+        informational=True,
     )
+    cavern_ag.mark_advice_completed()
     return cavern_ag
 
 def getTempleAdviceGroup() -> AdviceGroup:

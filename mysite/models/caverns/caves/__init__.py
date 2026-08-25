@@ -2,6 +2,7 @@ from typing import Literal, overload
 
 from models.caverns.caves.bravery_monument import BraveryMonument
 from models.caverns.caves.cavern import Cavern
+from models.caverns.caves.gambit import Gambit
 from models.caverns.caves.grotto import Grotto
 from models.caverns.caves.justice_monument import JusticeMonument
 from models.caverns.caves.skilling_cavern import SkillingCavern
@@ -23,6 +24,7 @@ class Caves(dict[str, Cavern]):
         "the_lamp": TheLamp,
         "grotto": Grotto,
         "the_jar": TheJar,
+        "gambit": Gambit,
         "motherlode": lambda: SkillingCavern(
             name="Motherlode",
             cavern_number=2,
@@ -71,6 +73,8 @@ class Caves(dict[str, Cavern]):
     def __getitem__(self, key: Literal["Grotto"]) -> Grotto: ...
     @overload
     def __getitem__(self, key: Literal["The Jar"]) -> TheJar: ...
+    @overload
+    def __getitem__(self, key: Literal["Gambit"]) -> Gambit: ...
     @overload
     def __getitem__(
         self, key: Literal["Motherlode", "The Hive", "Evertree"]

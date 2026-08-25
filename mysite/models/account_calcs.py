@@ -1,9 +1,6 @@
 from math import ceil, floor, prod
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
-from consts.consts_caverns import (
-    caverns_cavern_names,
-)
 from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
     greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
@@ -381,7 +378,7 @@ def _calculate_master_classes_grimoire_bone_sources(account):
     account.grimoire['Bone Calc'] = {
         'mga': ValueToMulti(account.sneaking.pristine_charms['Glimmerchain'].value),
         'mgb': ValueToMulti(grimoire_percent),
-        'mgc': ValueToMulti(100 * account.caverns['Caverns']['Gambit']['Bonuses'][12]['Unlocked']),
+        'mgc': ValueToMulti(account.caverns_.caves['Gambit'].bonuses[12].value),
         'mgd': ValueToMulti((25 * min(1, account.all_assets.get('EquipmentHats112').amount))),
         'mge': ValueToMulti(
             account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
@@ -1207,71 +1204,7 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 
 def _calculate_caverns(account):
     account.caverns_.villagers["Minau"].calculate_bonuses()
-    _calculate_caverns_gambit(account)
-
-
-def _calculate_caverns_gambit(account):
-    cavern_name = caverns_cavern_names[14]
-
-    #PTS Multi
-    account.caverns['Caverns'][cavern_name]['PtsMulti'] = ValueToMulti(
-        account.caverns_.villagers["Minau"].measurements[13].value  # Measurement
-        + account.caverns_.villagers["Bolaia"].studies[13].value  # + Gambit Study bonus
-        + (10 * account.caverns_.villagers["Kaipu"].schematics['The Sicilian'].bought)  # + The Sicilian schematic
-        + account.caverns_.caves['Wisdom Monument'].bonuses['Gambit Points'].value  # + Wisdom Monument bonus
-        + account.caverns_.caves['The Jar'].collectibles['Deep Blue Square'].value
-        + account.caverns_.caves['The Jar'].collectibles['Murky Fabrege Egg'].value
-    )
-
-    #Total PTS
-    account.caverns['Caverns'][cavern_name]['TotalPts'] = (
-        account.caverns['Caverns'][cavern_name]['BasePts']
-        * account.caverns['Caverns'][cavern_name]['PtsMulti']
-    )
-
-    #Bonuses
-    for bonus_index, bonus_details in account.caverns['Caverns'][cavern_name]['Bonuses'].items():
-        #Update Unlocked status
-        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Unlocked'] = (
-            account.caverns['Caverns'][cavern_name]['TotalPts'] >= bonus_details['PtsRequired']
-        )
-
-        #Calculate Value
-        if bonus_index == 0:
-            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
-                 max(1 if account.caverns['Caverns'][cavern_name]['TotalPts'] > 0 else 0, ceil(
-                     safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 2)
-                     - 8
-                     + (safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava') - 1)
-                     ))
-            )
-        else:
-            if bonus_details['ScalesWithPts']:
-                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = (
-                    bonus_details['ScalingValue'] * safer_math_log(account.caverns['Caverns'][cavern_name]['TotalPts'], 'Lava')
-                )
-            else:
-                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value'] = bonus_details['ScalingValue']
-
-        #Substitute Value into Description
-        if '{' in bonus_details['Name']:
-            if bonus_index == 0 or not bonus_details['ScalesWithPts']:
-                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
-                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']}"
-                )
-            else:
-                #bonus_details['ScalesWithPts']
-                account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
-                    '{', f"{account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']:.2f}"
-                )
-
-        elif '}' in bonus_details['Name']:
-            account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Name'] = bonus_details['Name'].replace(
-                '}', f"{ValueToMulti(account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index]['Value']):.3f}x"
-            )
-
-    # I hate this being here, but ordering matters. Unlocked status isn't accurate until after this calculation
-    if account.caverns['Caverns']['Gambit']['Bonuses'][9]['Unlocked']:
+    if account.caverns_.caves['Gambit'].bonuses[9].unlocked:
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 

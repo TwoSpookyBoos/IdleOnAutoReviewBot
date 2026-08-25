@@ -1,5 +1,4 @@
 from consts.consts_autoreview import MultiToValue, EmojiType
-from consts.consts_caverns import getSummoningDoublerPtsCost
 from consts.progression_tiers import true_max_tiers
 from consts.w6.summoning import (
     summoning_doubler_recommendations,
@@ -15,7 +14,6 @@ from models.general.session_data import session_data
 
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -188,16 +186,9 @@ def get_upgrades() -> AdviceGroup:
     }
     upgrades_advice.update({f"{k} Upgrades": [] for k in summoning_regular_match_colors})
     # Sources
-    next_doubler_cost = getSummoningDoublerPtsCost(session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Value'])
-    notated_next_doubler_cost = notateNumber('Basic', next_doubler_cost, decimals=3)
-    notated_gambit_pts = notateNumber('Match', session_data.account.caverns['Caverns']['Gambit']['TotalPts'], 3, matchString=notated_next_doubler_cost)
-    upgrades_advice[sources].append(Advice(
-        label=f"{session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Name']} earned from {{{{ Gambit Cavern|#underground-overgrowth}}}}"
-              f"<br>Next Doubler at {notated_next_doubler_cost} Total Gambit PTS ({next_doubler_cost - session_data.account.caverns['Caverns']['Gambit']['TotalPts']:,.0f} to go!)",
-        picture_class=session_data.account.caverns['Caverns']['Gambit']['Bonuses'][0]['Image'],
-        progression=notated_gambit_pts,
-        goal=notated_next_doubler_cost
-    ))
+    upgrades_advice[sources].append(
+        session_data.account.caverns_.caves['Gambit'].bonuses[0].get_bonus_advice()
+    )
     upgrades_advice[sources].append(Advice(
         label=f"{10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned']} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
         picture_class=session_data.account.event_points_shop['Bonuses']['Summoning Star']['Image'],

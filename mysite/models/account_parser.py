@@ -46,8 +46,6 @@ from consts.consts_w5 import (
 )
 from consts.consts_caverns import (
     caverns_cavern_names,
-    caverns_gambit_pts_bonuses, caverns_gambit_challenge_names, schematics_unlocking_gambit_challenges,
-    caverns_gambit_total_challenges,
 )
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
@@ -56,7 +54,7 @@ from models.general.character import Character
 from models.general.cards import Card
 from models.w1.stamps import Stamp
 from utils.data_formatting import getCharacterDetails
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_index
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner, letterToNumber
@@ -2719,71 +2717,7 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
 
 
 def _parse_caverns_biome3(account, raw_caverns_list):
-    _parse_caverns_gambit(account, raw_caverns_list)
     _parse_caverns_the_temple(account, raw_caverns_list)
-
-def _parse_caverns_gambit(account, raw_caverns_list):
-    cavern_name = caverns_cavern_names[14]
-
-    # Pts
-    account.caverns['Caverns'][cavern_name]['BasePts'] = 0
-    account.caverns['Caverns'][cavern_name]['PtsMulti'] = 1
-    account.caverns['Caverns'][cavern_name]['TotalPts'] = 0
-
-    # Challenges
-    account.caverns['Caverns'][cavern_name]['Challenges'] = {}
-    challenge_index_offset = 65  # Taken from  _customBlock_Holes2."GambitPts"
-    raw_challenge_times = []
-    for i in range(caverns_gambit_total_challenges):
-        try:
-            raw_challenge_times.append(raw_caverns_list[11][i + challenge_index_offset])
-        except:
-            logger.exception(f"Could not retrieve Caverns > Gambit > {caverns_gambit_challenge_names[i]} score")
-            raw_challenge_times.append(0)
-
-    for challenge_index, challenge_name in enumerate(caverns_gambit_challenge_names):
-        base_value = 100 if challenge_index == 0 else 200
-        base_pts = (
-            base_value * (
-                raw_challenge_times[challenge_index]  #1 point per second
-                + (3 * floor(raw_challenge_times[challenge_index] / 10))  #3 points per 10 seconds
-                + (10 * floor(raw_challenge_times[challenge_index] / 60))  #10 points per 60 seconds
-            )
-        )
-        account.caverns['Caverns'][cavern_name]['BasePts'] += base_pts
-        try:
-            unlocked = (
-                True if schematics_unlocking_gambit_challenges[challenge_index] is None else
-                account.caverns_.villagers["Kaipu"].schematics[schematics_unlocking_gambit_challenges[challenge_index]].bought
-            )
-        except:
-            unlocked = False
-        account.caverns['Caverns'][cavern_name]['Challenges'][challenge_name] = {
-            'Seconds': raw_challenge_times[challenge_index],
-            'TimeDisplay': f"{raw_challenge_times[challenge_index] // 60:.0f}min {raw_challenge_times[challenge_index] % 60:.1f}sec",
-            'BasePts': base_pts,
-            'Unlocked': unlocked,
-            'Image': 'engineer-schematic-78' if challenge_index == 0 else f'engineer-schematic-{88 + challenge_index}'
-        }
-
-    # Bonuses
-    account.caverns['Caverns'][cavern_name]['Bonuses'] = {}
-    for bonus_index, bonus_details in enumerate(caverns_gambit_pts_bonuses):
-        details_list = bonus_details.split('|')
-        clean_name = details_list[3].replace('_', ' ').replace('梦', '').replace('(TAP ME)', '').replace('而', 'x').strip().strip("'")
-        clean_description = details_list[2].replace('_', ' ').strip().strip("'")
-        if clean_description == 'no':
-            clean_description = ''
-        pts_required = 2e3 + 1e3 * (bonus_index + 1) * (1 + bonus_index / 5) * safer_math_pow(1.26, bonus_index)
-        account.caverns['Caverns'][cavern_name]['Bonuses'][bonus_index] = {
-            'ScalingValue': safer_convert(details_list[0], 0),
-            'ScalesWithPts': safer_convert(details_list[1], False),
-            'Description': clean_description,
-            'Name': clean_name,
-            'PtsRequired': pts_required,
-            'Unlocked': False,  #Fixed later in account_calcs._calculate_caverns_gambit(),
-            'Image': f'gambit-bonus-{bonus_index}'
-        }
 
 def _parse_caverns_the_temple(account, raw_caverns_list):
     cavern_name = caverns_cavern_names[15]
