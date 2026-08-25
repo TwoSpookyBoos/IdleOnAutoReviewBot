@@ -227,7 +227,7 @@ class Minau(Villager):
             # Studies Done
             account.caverns_.villagers["Bolaia"].studies.total,
             # Golem Kills
-            account.caverns["Caverns"]["The Temple"]["Golems Killed"],
+            account.caverns_.caves["The Temple"].current_kills,
         ]
 
     @staticmethod

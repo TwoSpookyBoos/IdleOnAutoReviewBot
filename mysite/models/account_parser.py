@@ -2692,8 +2692,6 @@ def _parse_caverns(account):
         raw_caverns_list.append([0]*100)
     _parse_caverns_actual_caverns(account, raw_caverns_list[7])
 
-    _parse_caverns_biome3(account, raw_caverns_list)
-
     # for key in account.caverns:
     #     logger.debug(f"{key}: {account.caverns[key]}")
 
@@ -2714,29 +2712,6 @@ def _parse_caverns_actual_caverns(account, opals_per_cavern):
                 'Image': f'cavern-{cavern_index}',
                 'CavernNumber': cavern_index
             }
-
-
-def _parse_caverns_biome3(account, raw_caverns_list):
-    _parse_caverns_the_temple(account, raw_caverns_list)
-
-def _parse_caverns_the_temple(account, raw_caverns_list):
-    cavern_name = caverns_cavern_names[15]
-    try:
-        account.caverns['Caverns'][cavern_name]['Torches Owned'] = safer_convert(raw_caverns_list[11][56], 0.0)
-    except:
-        account.caverns['Caverns'][cavern_name]['Torches Owned'] = 0.0
-    try:
-        account.caverns['Caverns'][cavern_name]['Illuminate'] = safer_convert(raw_caverns_list[11][57], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['Illuminate'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['Amplify'] = safer_convert(raw_caverns_list[11][59], 0)
-    except:
-        account.caverns['Caverns'][cavern_name]['Amplify'] = 0
-    try:
-        account.caverns['Caverns'][cavern_name]['Golems Killed'] = safer_convert(raw_caverns_list[11][63], 0.0)
-    except:
-        account.caverns['Caverns'][cavern_name]['Golems Killed'] = 0.0
 
 
 def _parse_w7(account):
