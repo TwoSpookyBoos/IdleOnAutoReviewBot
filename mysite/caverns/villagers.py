@@ -25,7 +25,7 @@ def getVillagersAdviceGroups() -> dict[str, AdviceGroup]:
 
 
 def getExplorerAdviceGroup() -> AdviceGroup:
-    polonai = session_data.account.caverns_.villagers["Polonai"]
+    polonai = session_data.account.caverns.villagers["Polonai"]
     villager_advice = {"Villager Stats": polonai.stat_advices()}
     discover_advices = polonai.feature_advice()
     if discover_advices:
@@ -42,7 +42,7 @@ def getExplorerAdviceGroup() -> AdviceGroup:
 
 
 def getEngineerAdviceGroup() -> AdviceGroup:
-    kaipu = session_data.account.caverns_.villagers["Kaipu"]
+    kaipu = session_data.account.caverns.villagers["Kaipu"]
     villager_advice = {"Villager Stats": kaipu.stat_advices()}
     schematics_advice = kaipu.feature_advice()
     if schematics_advice:
@@ -61,7 +61,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
 def getConjurorAdviceGroup() -> AdviceGroup:
     gscp = session_data.account.gemshop["Purchases"]["Conjuror Pts"]
-    cosmos = session_data.account.caverns_.villagers["Cosmos"]
+    cosmos = session_data.account.caverns.villagers["Cosmos"]
     villager_advice = {"Villager Stats": cosmos.stat_advices()}
     feature_advice = cosmos.feature_advice()
     if feature_advice:
@@ -78,7 +78,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
 
 
 def getMeasurerAdviceGroup() -> AdviceGroup:
-    minau = session_data.account.caverns_.villagers["Minau"]
+    minau = session_data.account.caverns.villagers["Minau"]
     villager_advice = {"Villager Stats": minau.stat_advices()}
     feature_advice = minau.feature_advice()
     if feature_advice:
@@ -95,7 +95,7 @@ def getMeasurerAdviceGroup() -> AdviceGroup:
 
 
 def getLibrarianAdviceGroup() -> AdviceGroup:
-    bolaia = session_data.account.caverns_.villagers["Bolaia"]
+    bolaia = session_data.account.caverns.villagers["Bolaia"]
     villager_advice = {
         "Villager Stats": bolaia.stat_advices(),
     }
@@ -103,7 +103,7 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
     if feature_advice:
         villager_advice.update(feature_advice)
 
-    schematics = session_data.account.caverns_.villagers["Kaipu"].schematics
+    schematics = session_data.account.caverns.villagers["Kaipu"].schematics
     # Study Speed Sources
     total_base_speed = 5
     max_base_speed = 5
@@ -135,11 +135,11 @@ def getLibrarianAdviceGroup() -> AdviceGroup:
     villager_advice["Base"] = base_speed_advice
     multi_speed = "Multi Group I"
     villager_advice[multi_speed] = []
-    rosemerald = session_data.account.caverns_.caves["The Jar"].collectibles[
+    rosemerald = session_data.account.caverns.caves["The Jar"].collectibles[
         "Rosemerald"
     ]
     villager_advice[multi_speed].append(rosemerald.get_bonus_advice())
-    study_majik = session_data.account.caverns_.villagers["Cosmos"].majiks.village[
+    study_majik = session_data.account.caverns.villagers["Cosmos"].majiks.village[
         "Study All Nighter"
     ]
     villager_advice[multi_speed].append(study_majik.get_advice())
@@ -179,7 +179,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getVillagersAdviceSection() -> AdviceSection:
     # Check if player has reached this section
-    if session_data.account.caverns_.villagers["Polonai"].level < 0:
+    if session_data.account.caverns.villagers["Polonai"].level < 0:
         villagers_AdviceSection = AdviceSection(
             name="Villagers",
             tier="Not Yet Evaluated",
@@ -196,7 +196,7 @@ def getVillagersAdviceSection() -> AdviceSection:
         "The Caverns Below",
         [
             villager.level_ready_alert()
-            for villager in session_data.account.caverns_.villagers.values()
+            for villager in session_data.account.caverns.villagers.values()
         ],
     )
 

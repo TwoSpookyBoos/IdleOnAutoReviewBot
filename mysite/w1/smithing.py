@@ -82,7 +82,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices['Scaling Sources'].append(get_arcade_advice(26))
 
     #Cosmos > IdleOn Majik #2 Beeg Beeg Forge
-    majik_beeg_forge = session_data.account.caverns_.villagers["Cosmos"].majiks.idleon['Beeg Beeg Forge']
+    majik_beeg_forge = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Beeg Beeg Forge']
     cap_Advices['Scaling Sources'].append(majik_beeg_forge.get_advice())
 
     # Upgrade Vault > Beeg Forge

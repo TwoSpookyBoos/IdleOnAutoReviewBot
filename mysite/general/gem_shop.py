@@ -105,24 +105,24 @@ def try_exclude_Gaming(exclusionLists):
         pass
     
 def try_exclude_ConjurorPts(exclusionLists):
-    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= session_data.account.caverns_.villagers["Cosmos"].majiks.max_point - session_data.account.caverns_.villagers["Cosmos"].level:
+    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.caverns.villagers["Cosmos"].level:
         for sublist in exclusionLists:
             sublist.append('Conjuror Pts')
 
 def try_exclude_ParallelVillagers(exclusionLists):
-    if session_data.account.caverns_.villagers["Polonai"].level >= max_cavern:
+    if session_data.account.caverns.villagers["Polonai"].level >= max_cavern:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Explorer')
 
-    if session_data.account.caverns_.villagers["Kaipu"].level >= session_data.account.caverns_.villagers["Kaipu"].max_useful_level:
+    if session_data.account.caverns.villagers["Kaipu"].level >= session_data.account.caverns.villagers["Kaipu"].max_useful_level:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Engineer')
 
-    if session_data.account.caverns_.villagers["Cosmos"].level >= (session_data.account.caverns_.villagers["Cosmos"].majiks.max_point - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
+    if session_data.account.caverns.villagers["Cosmos"].level >= (session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Conjuror')
 
-    if session_data.account.caverns_.villagers["Minau"].level >= max_measurements:
+    if session_data.account.caverns.villagers["Minau"].level >= max_measurements:
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Measurer')
 

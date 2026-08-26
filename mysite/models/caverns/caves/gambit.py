@@ -41,7 +41,7 @@ class GambitChallenge:
             return True
         from models.general.session_data import session_data
 
-        kaipu = session_data.account.caverns_.villagers["Kaipu"]
+        kaipu = session_data.account.caverns.villagers["Kaipu"]
         return kaipu.schematics[self._unlock_schematic].bought
 
     @cached_property
@@ -68,7 +68,7 @@ class GambitChallenge:
         assert self._unlock_schematic is not None
         from models.general.session_data import session_data
 
-        schematic = session_data.account.caverns_.villagers["Kaipu"].schematics[
+        schematic = session_data.account.caverns.villagers["Kaipu"].schematics[
             self._unlock_schematic
         ]
         return Advice(
@@ -236,15 +236,15 @@ class Gambit(Cavern):
 
         account = session_data.account
         return ValueToMulti(
-            account.caverns_.villagers["Minau"].measurements[13].value
-            + account.caverns_.villagers["Bolaia"].studies[13].value
+            account.caverns.villagers["Minau"].measurements[13].value
+            + account.caverns.villagers["Bolaia"].studies[13].value
             + (
                 10
-                * account.caverns_.villagers["Kaipu"].schematics["The Sicilian"].bought
+                * account.caverns.villagers["Kaipu"].schematics["The Sicilian"].bought
             )
-            + account.caverns_.caves["Wisdom Monument"].bonuses["Gambit Points"].value
-            + account.caverns_.caves["The Jar"].collectibles["Deep Blue Square"].value
-            + account.caverns_.caves["The Jar"].collectibles["Murky Fabrege Egg"].value
+            + account.caverns.caves["Wisdom Monument"].bonuses["Gambit Points"].value
+            + account.caverns.caves["The Jar"].collectibles["Deep Blue Square"].value
+            + account.caverns.caves["The Jar"].collectibles["Murky Fabrege Egg"].value
         )
 
     @cached_property

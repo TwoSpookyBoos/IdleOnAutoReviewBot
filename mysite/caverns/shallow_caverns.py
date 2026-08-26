@@ -8,7 +8,7 @@ logger = get_logger(__name__)
 
 
 def getWellAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["The Well"]
+    cavern = session_data.account.caverns.caves["The Well"]
     return AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -18,7 +18,7 @@ def getWellAdviceGroup() -> AdviceGroup:
 
 
 def getMotherlodeAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["Motherlode"]
+    cavern = session_data.account.caverns.caves["Motherlode"]
     cavern_ag = AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -29,7 +29,7 @@ def getMotherlodeAdviceGroup() -> AdviceGroup:
 
 
 def getDenAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["The Den"]
+    cavern = session_data.account.caverns.caves["The Den"]
     return AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -39,7 +39,7 @@ def getDenAdviceGroup() -> AdviceGroup:
 
 
 def getBraveryAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["Bravery Monument"]
+    cavern = session_data.account.caverns.caves["Bravery Monument"]
     cavern_ag = AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -51,7 +51,7 @@ def getBraveryAdviceGroup() -> AdviceGroup:
 
 
 def getBellAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["The Bell"]
+    cavern = session_data.account.caverns.caves["The Bell"]
     return AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -82,7 +82,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getShallowCavernsAdviceSection() -> AdviceSection:
     # Check if player has reached this section
-    if session_data.account.caverns_.villagers["Polonai"].level < 1:
+    if session_data.account.caverns.villagers["Polonai"].level < 1:
         shallow_caverns_AdviceSection = AdviceSection(
             name="Shallow Caverns",
             tier="Not Yet Evaluated",

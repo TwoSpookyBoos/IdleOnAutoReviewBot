@@ -71,7 +71,7 @@ class BellImprovement:
         from models.general.session_data import session_data
 
         schematic_bought = (
-            session_data.account.caverns_.villagers["Kaipu"]
+            session_data.account.caverns.villagers["Kaipu"]
             .schematics["Improvement Stackin'"]
             .bought
         )

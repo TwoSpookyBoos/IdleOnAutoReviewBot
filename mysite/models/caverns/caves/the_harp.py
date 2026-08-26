@@ -33,7 +33,7 @@ class HarpChord:
         assert self.unlocked_by is not None
         from models.general.session_data import session_data
 
-        return session_data.account.caverns_.villagers["Kaipu"].schematics[
+        return session_data.account.caverns.villagers["Kaipu"].schematics[
             self.unlocked_by
         ]
 
@@ -157,8 +157,8 @@ class TheHarp(Cavern):
     def strings_unlocked(self) -> int:
         from models.general.session_data import session_data
 
-        kaipu = session_data.account.caverns_.villagers["Kaipu"]
-        cosmos = session_data.account.caverns_.villagers["Cosmos"]
+        kaipu = session_data.account.caverns.villagers["Kaipu"]
+        cosmos = session_data.account.caverns.villagers["Cosmos"]
         bought_count = sum(
             1
             for schematic_name in schematics_unlocking_harp_strings
@@ -172,8 +172,8 @@ class TheHarp(Cavern):
     def _string_stats_advice(self) -> list[Advice]:
         from models.general.session_data import session_data
 
-        kaipu = session_data.account.caverns_.villagers["Kaipu"]
-        cosmos = session_data.account.caverns_.villagers["Cosmos"]
+        kaipu = session_data.account.caverns.villagers["Kaipu"]
+        cosmos = session_data.account.caverns.villagers["Cosmos"]
         return [
             cosmos.majiks.hole["String is Strung"].get_advice(),
             *[

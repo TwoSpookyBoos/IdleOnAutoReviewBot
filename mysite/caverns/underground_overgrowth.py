@@ -8,7 +8,7 @@ logger = get_logger(__name__)
 
 
 def getJarAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["The Jar"]
+    cavern = session_data.account.caverns.caves["The Jar"]
     cavern_ag = AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -20,7 +20,7 @@ def getJarAdviceGroup() -> AdviceGroup:
 
 
 def getEvertreeAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["Evertree"]
+    cavern = session_data.account.caverns.caves["Evertree"]
     return AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -30,7 +30,7 @@ def getEvertreeAdviceGroup() -> AdviceGroup:
 
 
 def getWisdomAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["Wisdom Monument"]
+    cavern = session_data.account.caverns.caves["Wisdom Monument"]
     cavern_ag = AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -42,7 +42,7 @@ def getWisdomAdviceGroup() -> AdviceGroup:
 
 
 def getGambitAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["Gambit"]
+    cavern = session_data.account.caverns.caves["Gambit"]
     cavern_ag = AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -54,7 +54,7 @@ def getGambitAdviceGroup() -> AdviceGroup:
 
 
 def getTempleAdviceGroup() -> AdviceGroup:
-    cavern = session_data.account.caverns_.caves["The Temple"]
+    cavern = session_data.account.caverns.caves["The Temple"]
     return AdviceGroup(
         tier="",
         pre_string=cavern.pre_string(),
@@ -85,7 +85,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getUndergroundOvergrowthAdviceSection() -> AdviceSection:
     # Check if player has reached this section
-    if session_data.account.caverns_.villagers["Polonai"].level < 11:
+    if session_data.account.caverns.villagers["Polonai"].level < 11:
         shallow_caverns_AdviceSection = AdviceSection(
             name="Shallow Caverns",
             tier="Not Yet Evaluated",

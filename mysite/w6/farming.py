@@ -442,7 +442,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     ))
 # Lamp
     evo_advices[lamp].append(
-        session_data.account.caverns_.caves['The Lamp']
+        session_data.account.caverns.caves['The Lamp']
         .wishes['World 6 Majigers']
         .get_bonus_advice(0)
     )

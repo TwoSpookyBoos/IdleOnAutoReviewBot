@@ -428,22 +428,22 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_5_bonus = 0
 
     # Caverns - Measurments - Yards
-    caverns_measurements_yards = session_data.account.caverns_.villagers["Minau"].measurements[15]
+    caverns_measurements_yards = session_data.account.caverns.villagers["Minau"].measurements[15]
     drop_rate_aw_advice[w5].append(caverns_measurements_yards.get_bonus_advice())
     world_5_bonus += caverns_measurements_yards.value
 
     # Caverns - Schematics - Gloomie Lootie
-    gloomie_lootie_schematic = session_data.account.caverns_.villagers["Kaipu"].schematics['Gloomie Lootie']
+    gloomie_lootie_schematic = session_data.account.caverns.villagers["Kaipu"].schematics['Gloomie Lootie']
     drop_rate_aw_advice[w5].append(gloomie_lootie_schematic.get_bonus_advice())
     world_5_bonus += gloomie_lootie_schematic.value
 
     # Caverns - Schematics - Sanctum of LOOT
-    sanctum_of_loot_schematic = session_data.account.caverns_.villagers["Kaipu"].schematics['Sanctum of LOOT']
+    sanctum_of_loot_schematic = session_data.account.caverns.villagers["Kaipu"].schematics['Sanctum of LOOT']
     drop_rate_aw_advice[w5].append(sanctum_of_loot_schematic.get_bonus_advice())
     world_5_bonus += sanctum_of_loot_schematic.value
 
     # Caverns - Wisdom Monument
-    wisdom_monument_drop_rate = session_data.account.caverns_.caves['Wisdom Monument'].bonuses['Player Drop Rate']
+    wisdom_monument_drop_rate = session_data.account.caverns.caves['Wisdom Monument'].bonuses['Player Drop Rate']
     drop_rate_aw_advice[w5].append(wisdom_monument_drop_rate.get_bonus_advice())
     world_5_bonus += wisdom_monument_drop_rate.value
 

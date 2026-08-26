@@ -20,7 +20,7 @@ class TheDen(Cavern):
     def _schematics(self):
         from models.general.session_data import session_data
 
-        return session_data.account.caverns_.villagers["Kaipu"].schematics
+        return session_data.account.caverns.villagers["Kaipu"].schematics
 
     def _next_opal_score(self) -> int:
         result = (

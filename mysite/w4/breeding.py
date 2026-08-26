@@ -82,7 +82,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
 
 #Multi Group B
     sps_adviceDict[mgb].append(
-        session_data.account.caverns_.caves['The Lamp']
+        session_data.account.caverns.caves['The Lamp']
         .wishes['World 4 Stuff']
         .get_bonus_advice(1)
     )

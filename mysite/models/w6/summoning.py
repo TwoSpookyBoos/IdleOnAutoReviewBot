@@ -420,7 +420,7 @@ class Summoning:
 
     def calculate_doublers(self, account: "Account"):
         self.doubler.own = (
-            account.caverns_.caves["Gambit"].bonuses[0].value
+            account.caverns.caves["Gambit"].bonuses[0].value
             + 10 * account.event_points_shop["Bonuses"]["Summoning Star"]["Owned"]
         )
         self.doubler.spentable = min(self.doubler.spentable, self.doubler.own)

@@ -187,7 +187,7 @@ def get_upgrades() -> AdviceGroup:
     upgrades_advice.update({f"{k} Upgrades": [] for k in summoning_regular_match_colors})
     # Sources
     upgrades_advice[sources].append(
-        session_data.account.caverns_.caves['Gambit'].bonuses[0].get_bonus_advice()
+        session_data.account.caverns.caves['Gambit'].bonuses[0].get_bonus_advice()
     )
     upgrades_advice[sources].append(Advice(
         label=f"{10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned']} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",

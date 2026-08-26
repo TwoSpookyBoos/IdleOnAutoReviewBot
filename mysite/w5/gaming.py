@@ -211,10 +211,10 @@ def getSnailInformationGroup() -> AdviceGroup:
                 picture_class='sodium',
             )]
         else:
-            num_trebel_notes = session_data.account.caverns_.caves['The Harp'].notes['Treble Note'].amount
+            num_trebel_notes = session_data.account.caverns.caves['The Harp'].notes['Treble Note'].amount
 
             final_ballad_bonus = 1.0
-            final_ballad = session_data.account.caverns_.villagers["Kaipu"].schematics['Final Ballad of the Snail']
+            final_ballad = session_data.account.caverns.villagers["Kaipu"].schematics['Final Ballad of the Snail']
             if final_ballad.bought:
                 num_trebel_stacks = int(math.log10(num_trebel_notes) if num_trebel_notes > 0 else 0)
                 final_ballad_bonus = 1 + 0.04 * num_trebel_stacks

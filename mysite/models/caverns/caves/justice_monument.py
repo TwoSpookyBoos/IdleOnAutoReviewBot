@@ -37,7 +37,7 @@ class JusticeMonument(MonumentCavern):
         from models.general.session_data import session_data
 
         compound_interest_bought = (
-            session_data.account.caverns_.villagers["Kaipu"]
+            session_data.account.caverns.villagers["Kaipu"]
             .schematics["Compound Interest"]
             .bought
         )

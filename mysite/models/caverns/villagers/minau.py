@@ -183,7 +183,7 @@ class Minau(Villager):
 
         account = session_data.account
         majik_multi = (
-            account.caverns_.villagers["Cosmos"]
+            account.caverns.villagers["Cosmos"]
             .majiks.village["Lengthmeister"]
             .as_multi
         )
@@ -225,9 +225,9 @@ class Minau(Villager):
             # Slab Items
             len(account.registered_slab),
             # Studies Done
-            account.caverns_.villagers["Bolaia"].studies.total,
+            account.caverns.villagers["Bolaia"].studies.total,
             # Golem Kills
-            account.caverns_.caves["The Temple"].current_kills,
+            account.caverns.caves["The Temple"].current_kills,
         ]
 
     @staticmethod

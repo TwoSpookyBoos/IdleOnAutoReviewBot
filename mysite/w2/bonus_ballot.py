@@ -50,7 +50,7 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 def getBallotMultiAdviceGroup():
     e_vr = session_data.account.equinox_bonuses['Voter Rights']
     summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
-    voter_integrity = session_data.account.caverns_.villagers["Cosmos"].majiks.idleon['Voter Integrity']
+    voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
     _, mashed_potato_advice = get_companion_advice('Mashed Potato')

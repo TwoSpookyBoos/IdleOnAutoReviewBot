@@ -28,9 +28,9 @@ class SchematicBonus:
 
         match self.unlock_order:
             case 44:  # Gloomie Lootie
-                return session_data.account.caverns_.caves["Grotto"].opals_found
+                return session_data.account.caverns.caves["Grotto"].opals_found
             case 81:  # Sanctum of LOOT
-                return session_data.account.caverns_.caves["The Temple"].opals_found
+                return session_data.account.caverns.caves["The Temple"].opals_found
             case _:
                 return 0
 

@@ -35,7 +35,7 @@ class MonumentBonus:
             from models.general.session_data import session_data
 
             cosmos_value = (
-                session_data.account.caverns_.villagers["Cosmos"]
+                session_data.account.caverns.villagers["Cosmos"]
                 .majiks.hole["Monumental Vibes"]
                 .value
             )
@@ -193,7 +193,7 @@ class MonumentCavern(Cavern):
     def _bonuses_stats_advice(self) -> list[Advice]:
         from models.general.session_data import session_data
 
-        monumental_vibes = session_data.account.caverns_.villagers[
+        monumental_vibes = session_data.account.caverns.villagers[
             "Cosmos"
         ].majiks.hole["Monumental Vibes"]
         return [

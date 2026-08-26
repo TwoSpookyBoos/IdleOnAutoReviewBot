@@ -42,7 +42,7 @@ class SkillingCavern(Cavern):
     def resources_remaining(self) -> float:
         from models.general.session_data import session_data
 
-        discount = session_data.account.caverns_.skilling_resource_discount
+        discount = session_data.account.caverns.skilling_resource_discount
         base_requirement = math.ceil(
             200 * safer_math_pow(2.2, 1 + self.layers_destroyed)
         )
@@ -73,7 +73,7 @@ class SkillingCavern(Cavern):
                     ),
                     picture_class=self.resource_skill,
                 ),
-                session_data.account.caverns_.skilling_resource_discount_advice,
+                session_data.account.caverns.skilling_resource_discount_advice,
                 Advice(
                     label=(
                         f"{self.resource_type} remaining to break Layer "

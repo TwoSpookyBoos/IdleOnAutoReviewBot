@@ -16,7 +16,7 @@ class Cavern(ABC):
     def unlocked(self) -> bool:
         from models.general.session_data import session_data
 
-        polonai_level = session_data.account.caverns_.villagers["Polonai"].level
+        polonai_level = session_data.account.caverns.villagers["Polonai"].level
         return polonai_level >= self.cavern_number
 
     def parse_opals_found(self, raw_caverns_list: list):

@@ -48,7 +48,7 @@ def _calculate_wave_1(account):
 
 def _calculate_caverns_majiks(account):
     have_doot = has_companion("King Doot")
-    account.caverns_.villagers["Cosmos"].calculate_bonuses(have_doot)
+    account.caverns.villagers["Cosmos"].calculate_bonuses(have_doot)
 
 
 def _calculate_w3_armor_sets(account):
@@ -378,7 +378,7 @@ def _calculate_master_classes_grimoire_bone_sources(account):
     account.grimoire['Bone Calc'] = {
         'mga': ValueToMulti(account.sneaking.pristine_charms['Glimmerchain'].value),
         'mgb': ValueToMulti(grimoire_percent),
-        'mgc': ValueToMulti(account.caverns_.caves['Gambit'].bonuses[12].value),
+        'mgc': ValueToMulti(account.caverns.caves['Gambit'].bonuses[12].value),
         'mgd': ValueToMulti((25 * min(1, account.all_assets.get('EquipmentHats112').amount))),
         'mge': ValueToMulti(
             account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
@@ -802,7 +802,7 @@ def _calculate_w2_ballot(account):
     # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
     account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
-        + account.caverns_.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value
+        + account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value
         + account.summoning.bonuses["Ballot Bonus"].value
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
@@ -1182,7 +1182,7 @@ def _calculate_w4_tome_bonuses(account):
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = (
         has_companion('King Doot') or
-        'Arctis' in account.caverns_.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
+        'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
     )
     _calculate_w5_divinity_offering_costs(account)
 
@@ -1203,8 +1203,8 @@ def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
 
 
 def _calculate_caverns(account):
-    account.caverns_.villagers["Minau"].calculate_bonuses()
-    if account.caverns_.caves['Gambit'].bonuses[9].unlocked:
+    account.caverns.villagers["Minau"].calculate_bonuses()
+    if account.caverns.caves['Gambit'].bonuses[9].unlocked:
         _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
 
 

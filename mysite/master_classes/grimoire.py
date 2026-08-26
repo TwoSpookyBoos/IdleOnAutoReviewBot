@@ -108,7 +108,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
 
     mgc_label = f"Bone Multi Group C: {grimoire['Bone Calc']['mgc']:.2f}x"
     currency_advices[mgc_label] = [
-        session_data.account.caverns_.caves['Gambit'].bonuses[12].get_bonus_advice()
+        session_data.account.caverns.caves['Gambit'].bonuses[12].get_bonus_advice()
     ]
 
     mgd_label = f"Bone Multi Group D: {grimoire['Bone Calc']['mgd']:.2f}x"

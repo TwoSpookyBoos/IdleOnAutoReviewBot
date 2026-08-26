@@ -33,7 +33,7 @@ class BraveryMonument(MonumentCavern):
         from models.general.session_data import session_data
 
         story_schematic_bought = (
-            session_data.account.caverns_.villagers["Kaipu"]
+            session_data.account.caverns.villagers["Kaipu"]
             .schematics["The Story Changes Over Time..."]
             .bought
         )
@@ -44,12 +44,12 @@ class BraveryMonument(MonumentCavern):
         from models.general.session_data import session_data
 
         story_schematic_bought = (
-            session_data.account.caverns_.villagers["Kaipu"]
+            session_data.account.caverns.villagers["Kaipu"]
             .schematics["The Story Changes Over Time..."]
             .bought
         )
         minau_measurement = (
-            session_data.account.caverns_.villagers["Minau"].measurements[1].value
+            session_data.account.caverns.villagers["Minau"].measurements[1].value
         )
         return (
             25 + (10 * floor(self.hours / 6) * story_schematic_bought)

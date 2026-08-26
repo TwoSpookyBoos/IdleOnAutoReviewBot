@@ -135,7 +135,7 @@ class Account:
         self.meals = {}
 
         # The Caverns Below
-        self.caverns_: Caverns = Caverns(self.raw_data)
+        self.caverns: Caverns = Caverns(self.raw_data)
 
         # W6
         self.summoning: Summoning = Summoning(self.raw_data)

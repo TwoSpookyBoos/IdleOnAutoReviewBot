@@ -44,9 +44,6 @@ from consts.consts_w5 import (
     sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
-from consts.consts_caverns import (
-    caverns_cavern_names,
-)
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
@@ -167,7 +164,6 @@ def _parse_wave_1(account, run_type):
     _parse_w3(account)
     _parse_w4(account)
     _parse_w5(account)
-    _parse_caverns(account)
     _parse_w7(account)
 
 def _parse_switches(account):
@@ -339,7 +335,7 @@ def _parse_general_gem_shop(account):
         }
     raw_caverns_list: list[int] = safe_loads(account.raw_data.get('Holes', []))
     parallel_villagers = safer_index(raw_caverns_list, 23, [0] * 10)
-    for villager in account.caverns_.villagers.values():
+    for villager in account.caverns.villagers.values():
         account.gemshop["Purchases"][f"Parallel Villagers {villager.role}"] = {
             'Owned': parallel_villagers[villager.index],
             'MaxLevel': 1,
@@ -2679,40 +2675,6 @@ def _parse_w5_divinity(account):
             character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
         except:
             continue
-
-def _parse_caverns(account):
-    account.caverns = {
-        'Caverns': {},
-        'CavernsUnlocked': 0,
-    }
-    raw_caverns_list: list[list] = safe_loads(account.raw_data.get('Holes', []))
-    if not raw_caverns_list:
-        logger.warning(f"Caverns data not present{', as expected' if account.version < 230 else ''}.")
-    while len(raw_caverns_list) < 30:
-        raw_caverns_list.append([0]*100)
-    _parse_caverns_actual_caverns(account, raw_caverns_list[7])
-
-    # for key in account.caverns:
-    #     logger.debug(f"{key}: {account.caverns[key]}")
-
-
-def _parse_caverns_actual_caverns(account, opals_per_cavern):
-    for cavern_index, cavern_name in caverns_cavern_names.items():
-        try:
-            account.caverns['Caverns'][cavern_name] = {
-                'Unlocked': account.caverns_.villagers["Polonai"].level >= cavern_index,
-                'OpalsFound': 0 if cavern_name == 'Camp' else opals_per_cavern[cavern_index - 1] or 0,
-                'Image': f'cavern-{cavern_index}',
-                'CavernNumber': cavern_index
-            }
-        except:
-            account.caverns['Caverns'][cavern_name] = {
-                'Unlocked': False,
-                'OpalsFound': 0,
-                'Image': f'cavern-{cavern_index}',
-                'CavernNumber': cavern_index
-            }
-
 
 def _parse_w7(account):
     _parse_w7_coral_reef(account)
