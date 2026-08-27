@@ -6,7 +6,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 const IDLEMMO_CONFIG = {
@@ -151,7 +151,15 @@ function watchSaveFor(uid) {
                 console.error("companion read failed (continuing without it):", e);
             }
 
-            const assembled = { data: cloudsave, charNames, companion };
+            let serverVars = {};
+            try {
+                const serverVarsSnap = await getDoc(doc(firestore, "_vars", "_vars"));
+                serverVars = serverVarsSnap.data() ?? {};
+            } catch (e) {
+                console.error("serverVars read failed (continuing without it):", e);
+            }
+
+            const assembled = { data: cloudsave, charNames, companion, serverVars };
             document.querySelector("#player").value = JSON.stringify(assembled);
             localStorage.setItem("player", JSON.stringify(assembled));
 
