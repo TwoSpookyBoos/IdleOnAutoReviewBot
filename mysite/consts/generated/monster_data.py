@@ -1214,5 +1214,17 @@ monster_data = {
     "Wisdom_Monument": {
         "Name": "Wisdom"
     },
+    "r0a": {
+        "Name": "Magician Grub"
+    },
+    "r0b": {
+        "Name": "Armadillo"
+    },
+    "r0c": {
+        "Name": "Imperial Ogre"
+    },
+    "r0d": {
+        "Name": "Pipsqueak"
+    },
     "_hash": "580e89e980c63f3ad06c731279af24c478fd947347f4a9c568bf224b4271be14"
 }
