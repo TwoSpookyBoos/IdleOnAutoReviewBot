@@ -177,9 +177,9 @@ expected_talents_dict = {
 base_crystal_chance = 0.0005  # 1 in 2000
 max_crystal_chance = 0.1  #10% last updated in v2.45 Nov 15. Any extra crystal spawn chance above this increases loot and killcount, but not spawns
 
-# `CompanionDB` in source. Last updated in v2.523 (Steam build 23860451)
+# `CompanionDB` in source. Last updated in v2.526.0 (Steam build 24938667)
 companions_info = [
-    "babaMummy All_Divinities_from_World_5_count_as_Active 1 -53 -22 -14 2000 165".split(" "),
+    "babaMummy All_Divinities_from_World_5_count_as_Active 1 -66 -22 -14 2000 165".split(" "),
     "rift2 +25_Lv_for_all_Talents 25 -31 6 -14 450 125".split(" "),
     "ram You_can_use_Storage_Chest_anywhere_in_Quickref 1 -26 16 -19 150 120".split(" "),
     "Crystal3 {100%_Drop_Rate_and_Class_Exp 100 -19 20 -8 150 110".split(" "),
@@ -272,11 +272,9 @@ companions_info = [
     "sandcastle Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 45".split(" "),
     "sandgiant Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 105".split(" "),
     "shovelR Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 50".split(" "),
-    "shovel Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "skele Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "skele2 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "slimeB Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
-    "slimmer Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "snailZ Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 115".split(" "),
     "snakeB All_Upgrade_Vault_upgrades_are_50%_cheaper! 50 5 0 -5 1 100".split(" "),
     "snakeY Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
@@ -320,15 +318,13 @@ companions_info = [
     "w7a6 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w7a9 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w7a11 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
-    "w7a12 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
+    "w7a12 3x_Resources_from_Outposts_for_Royal_Guardian 2 -31 0 -35 1 200".split(" "),
     "w7b1 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w7b2 20x_total_Spelunking_POW,_and_2x_Minehead_Currency_Gain! 20 -20 0 -19 1 190".split(" "),
     "w7b3 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w7b4 3x_Class_EXP_gain 2 -9 0 0 1 180".split(" "),
     "w7b6 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w7b7 All_bonuses_from_The_Button_in_W7_are_1.50x_bigger 50 -40 0 -33 1 160".split(" "),
-    "w7b8zzz Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
-    "w7b9zzz Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "T1a Congratulations_on_winning_the_Tournament! 1 -26 0 -19 1 10".split(" "),
     "T1b Congratulations_on_winning_the_Tournament! 1 -26 0 -19 1 10".split(" "),
     "T1c Congratulations_on_winning_the_Tournament! 1 -26 0 -24 1 10".split(" "),
@@ -346,9 +342,13 @@ companions_info = [
     "T2a Congratulations_on_winning_the_Tournament! 1 -19 0 -5 1 10".split(" "),
     "T2b Congratulations_on_winning_the_Tournament! 1 -19 0 -5 1 10".split(" "),
     "T2c Congratulations_on_winning_the_Tournament! 1 -19 0 -5 1 10".split(" "),
-    "fm_frog Thank_you_for_rescuing_me_from_the_Fortune_Mill! 1 -18 0 -34 1 177".split(" "),
+    "fm_frog Thanks_a_million_for_rescuing_me_from_the_Fortune_Mill! 1 -18 0 -34 1 177".split(" "),
     "caveD 1.50x_Damage,_1.40x_Class_EXP,_1.30x_Drop_Rate,_and_1.20x_extra_Kills 1 -50 0 -33 1 210".split(" "),
     "fm_goose All_daily_ribbons_have_a_50%_chance_to_be_+1_Tier,_40%_for_+3_Tiers,_and_10%_for_+5_Tiers 1 -59 0 -23 1 250".split(" "),
+    "r0a 1.25x_Total_Damage .25 -8 0 -17 1 130".split(" "),
+    "r0b {100%_additive_Crystal_Monster_Spawn_chance 100 -28 0 -30 1 180".split(" "),
+    "r0c {20%_Marble_and_Parchment_drop_rate_for_Royal_Guardians 20 -48 0 -33 1 220".split(" "),
+    "r0d The_lord_of_amber_herself_is_keeping_her_bonus_a_secret..._for_now... 1 -100 0 -60 1 480".split(" "),
 ]
 
 companions_data = {

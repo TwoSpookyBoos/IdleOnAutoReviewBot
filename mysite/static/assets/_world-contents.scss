@@ -366,6 +366,10 @@ $world-monsters: (
 // Companion
     santa-snake: img('monster/Santa_Snake.gif'),
     lucky-slug: img('monster/Lucky_Slug.gif'),
+    magician-grub: img('monster/Magician_Grub.gif'),
+    armadillo: img('monster/Armadillo.gif'),
+    imperial-ogre: img('monster/Imperial_Ogre.gif'),
+    pipsqueak: img('monster/Pipsqueak.gif'),
 );
 
 $all-world-contents: map-merge($world-contents, $world-monsters);
