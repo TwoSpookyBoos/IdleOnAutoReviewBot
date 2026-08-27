@@ -163,6 +163,71 @@ form {
             }
         }
     }
+
+    #steam-login-open {
+        border: none;
+        border-radius: 10px;
+        padding: 10px;
+        color: var(--fg-submit);
+        background: var(--bg-submit);
+    }
+
+    #steam-login-wrapper {
+        display: none;
+
+        &.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+
+            background-color: hsla(0deg, 0, 0, 0.7);
+        }
+
+        #steam-login-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            width: 400px;
+            max-width: 90vw;
+            padding: 20px;
+            border-radius: 20px;
+
+            color: var(--fg-sidebar);
+            background: var(--bg-sidebar);
+
+            p {
+                margin: 0;
+            }
+
+            input {
+                border: none;
+                padding: 5px;
+                border-radius: 10px;
+                color: var(--fg-textbox);
+                background: var(--bg-textbox);
+
+                &::placeholder {
+                    color: var(--fg-text-placeholder);
+                }
+            }
+
+            #steam-login-submit {
+                border: none;
+                border-radius: 10px;
+                padding: 8px;
+                color: var(--fg-submit);
+                background: var(--bg-submit);
+            }
+        }
+    }
 }
 
 form input,
