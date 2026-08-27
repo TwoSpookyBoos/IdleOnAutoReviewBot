@@ -31,6 +31,31 @@ logger = get_logger(__name__)
 drop_rate_shiny_base = 1
 infinite_star_sign_shiny_base = 2
 
+def get_gallery_item_advice() -> list[Advice]:
+    # Itemized Trophies/Nametags, account-wide (Gallery, not equip). Delegates the actual
+    # advice rows to GalleryTrophy/GalleryNametag.get_bonus_advice() so they carry the real
+    # podium/inventory multi or nametag level (not just whether the item is owned), filtered
+    # down to just the Drop Rate/Drop Rate Multi lines since that's all this page cares about.
+    gallery = session_data.account.gallery
+    stats = {'DropRate', 'DropRateMulti'}
+
+    order = []
+    types: dict[str, str] = {}
+    for stat in stats:
+        for name, data in equipment_by_bonus_dict[stat].items():
+            if data['Type'] not in ('Trophy', 'Nametag') or name in types:
+                continue
+            types[name] = data['Type']
+            order.append(name)
+
+    return [
+        (gallery.trophy if types[name] == 'Trophy' else gallery.nametag)[name].get_bonus_advice(
+            stats=stats, link_to_section=True
+        )
+        for name in order
+    ]
+
+
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     companion_data_missing = not session_data.account.companions['Companion Data Present']
     bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
@@ -52,6 +77,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     w5 = 'World 5'
     w6 = 'World 6'
     w7 = 'World 7'
+    gallery_group = 'World 7 - Gallery'
+    companion_group = 'Companions'
     special = 'Special bonuses'
     drop_rate_aw_advice = {
         general: [],
@@ -63,6 +90,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         w5: [],
         w6: [],
         w7: [],
+        gallery_group: [],
+        companion_group: [],
         special: []
     }
 
@@ -110,16 +139,6 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
     general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
-
-    # Companions - Crystal Custard
-    crystal_custard_value, crystal_custard_advice = get_companion_advice('Crystal Custard')
-    drop_rate_aw_advice[general].append(crystal_custard_advice)
-    general_bonus += crystal_custard_value
-
-    # Companions - Quenchie
-    quenchie_value, quenchie_advice = get_companion_advice('Quenchie')
-    drop_rate_aw_advice[general].append(quenchie_advice)
-    general_bonus += quenchie_value
 
     # Gem Shop - Deathbringer Pack
     has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
@@ -534,7 +553,68 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drop_rate_aw_advice[w7].append(get_legend_talent_advice('Greatest Drop Party Ever'))
     world_7_bonus += session_data.account.legend_talents['Talents']['Greatest Drop Party Ever']['Value']
 
+    # Gallery - Trophies & Nametags
+    gallery_unlocked = session_data.account.highest_world_reached >= 7
+    gallery_drop_rate_value = 0
+    gallery_drop_rate_multi_value = 0
+    if gallery_unlocked:
+        gallery = session_data.account.gallery
+        drop_rate_aw_advice[gallery_group].extend(get_gallery_item_advice())
+        gallery_drop_rate_value = gallery.bonuses['Drop Rate'][1]
+        gallery_drop_rate_multi_value = gallery.bonuses['Drop Rate Multi'][1]
+        world_7_bonus += gallery_drop_rate_value
+
     drop_rate_aw_advice[f"{w7} - +{round(world_7_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w7)
+    drop_rate_aw_advice[
+        f"{gallery_group} - +{round(gallery_drop_rate_value, 1)}% Drop Rate, "
+        f"x{round(ValueToMulti(gallery_drop_rate_multi_value), 2)} Drop Rate Multi"
+    ] = drop_rate_aw_advice.pop(gallery_group)
+
+    # Companions
+    #########################################
+    companion_bonus = 0
+
+    # Companions - Crystal Custard
+    crystal_custard_value, crystal_custard_advice = get_companion_advice('Crystal Custard')
+    drop_rate_aw_advice[companion_group].append(crystal_custard_advice)
+    companion_bonus += crystal_custard_value
+
+    # Companions - Quenchie
+    quenchie_value, quenchie_advice = get_companion_advice('Quenchie')
+    drop_rate_aw_advice[companion_group].append(quenchie_advice)
+    companion_bonus += quenchie_value
+
+    # Companions - Santa Snake (also gives a separate 1.01x Drop Rate Multi, not modeled in companions_data)
+    santa_snake_value, santa_snake_advice = get_companion_advice('Santa Snake')
+    drop_rate_aw_advice[companion_group].append(santa_snake_advice)
+    companion_bonus += santa_snake_value
+    santa_snake_multi = 1.01 if has_companion('Santa Snake') else 1.0
+
+    # Companions - Clammie
+    clammie_value, clammie_advice = get_companion_advice('Clammie')
+    drop_rate_aw_advice[companion_group].append(clammie_advice)
+    companion_bonus += clammie_value
+
+    # Companions - Lucky Slug
+    lucky_slug_value, lucky_slug_advice = get_companion_advice('Lucky Slug')
+    drop_rate_aw_advice[companion_group].append(lucky_slug_advice)
+    companion_bonus += lucky_slug_value
+
+    # Companions - Mama Troll (also gives a separate 1.50x Drop Rate Multi, not modeled in companions_data)
+    mama_troll_value, mama_troll_advice = get_companion_advice('Mama Troll')
+    drop_rate_aw_advice[companion_group].append(mama_troll_advice)
+    companion_bonus += mama_troll_value
+    mama_troll_multi = 1.50 if has_companion('Mama Troll') else 1.0
+
+    # Companions - Glunko The Massive (Drop Rate Multi only - Value covers unrelated stats)
+    _, glunko_massive_advice = get_companion_advice('Glunko The Massive')
+    drop_rate_aw_advice[companion_group].append(glunko_massive_advice)
+    glunko_massive_multi = 1.50 if has_companion('Glunko The Massive') else 1.0
+
+    # Companions - Crystal Glunko (Drop Rate Multi only - Value covers unrelated stats)
+    _, crystal_glunko_advice = get_companion_advice('Crystal Glunko')
+    drop_rate_aw_advice[companion_group].append(crystal_glunko_advice)
+    crystal_glunko_multi = 1.30 if has_companion('Crystal Glunko') else 1.0
 
     # Special bonuses. Dependent on character-specific bonuses as they are applied afterwards
     #########################################
@@ -599,7 +679,12 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Companions - Mallay
     mallay_multi, mallay_advice = get_companion_advice('Mallay')
-    drop_rate_aw_advice[special].append(mallay_advice)
+    drop_rate_aw_advice[companion_group].append(mallay_advice)
+
+    companion_multi = mallay_multi * santa_snake_multi * mama_troll_multi * glunko_massive_multi * crystal_glunko_multi
+    drop_rate_aw_advice[
+        f"{companion_group} - +{round(companion_bonus, 1)}% Drop Rate, x{round(companion_multi, 2)} Drop Rate Multi"
+    ] = drop_rate_aw_advice.pop(companion_group)
 
     # Still need to pop to keep the order, even if we don't change the key/label
     drop_rate_aw_advice[special] = drop_rate_aw_advice.pop(special)
@@ -608,7 +693,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         for advice in drop_rate_aw_advice[subgroup]:
             advice.mark_advice_completed()
 
-    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus
+    total_flat_value = general_bonus + master_classes_bonus + world_1_bonus + world_2_bonus + world_3_bonus + world_4_bonus + world_5_bonus + world_6_bonus + world_7_bonus + companion_bonus
     account_wide_advice_group = AdviceGroup(
         tier='',
         pre_string=f"Account wide sources of Drop Rate (+{round(total_flat_value, 1)}%)",
@@ -616,6 +701,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         advices=drop_rate_aw_advice,
         informational=True,
     )
+    account_wide_advice_group.remove_empty_subgroups()
 
     account_wide_bonuses = {
         'total_flat_value': total_flat_value,
@@ -623,7 +709,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         'sneak_mastery_value': sneak_mastery_value,
         'island_explorer_multi': island_explorer_multi,
         'cotton_candy_multi': cotton_candy_multi,
-        'mallay_multi': mallay_multi
+        'companion_multi': companion_multi,
+        'gallery_drop_rate_multi': ValueToMulti(gallery_drop_rate_multi_value)
     }
 
     return account_wide_advice_group, account_wide_bonuses
@@ -805,6 +892,14 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             'Drop Rate Multi - '
         )
         equipment_multi_bonus_as_mult = ValueToMulti(equipment_multi_bonus)
+
+        # Some slots (Cape, Nametag, Trophy) have items in both the flat Drop Rate and Drop Rate
+        # Multi dicts, which used to show up as confusing duplicate sections (e.g. "Drop Rate -
+        # Trophy" and "Drop Rate Multi - Trophy" side by side). Merge them into one section per
+        # slot - each item's own label already says whether it's a flat bonus or a multi.
+        equipment_advice_by_slot = merge_equipment_advice_by_slot(
+            [('Drop Rate - ', equipment_advice), ('Drop Rate Multi - ', equipment_multi_advice)]
+        )
 
         # Star Signs
         star_signs_advice: list[Advice] = []
@@ -1075,9 +1170,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             f'Cards - +{round(card_bonus, 1)}% Drop Rate': card_advice,
             f'Card Set - +{round(cardset_bonus, 1)}% Drop Rate': cardset_advice,
             f'Equipment Drop Rate - Total: +{round(equipment_bonus, 1)}% Drop Rate': [],
-            **equipment_advice,
             f'Equipment Drop Rate Multi - Total: x{round(equipment_multi_bonus_as_mult, 2)} Drop Rate': [],
-            **equipment_multi_advice,
+            **equipment_advice_by_slot,
             f'Star Signs - +{round(star_signs_bonus, 1)}% Drop Rate': star_signs_advice,
             f'Post Office - +{round(post_office_bonus, 1)}% Drop Rate': post_office_advice,
             f'Prayers - +{round(prayer_bonus, 1)}% Drop Rate': prayer_advice,
@@ -1096,7 +1190,8 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         # TODO: Arcane Cultist Map-specific Bonus
         final_value *= account_wide_bonuses['cotton_candy_multi']
         final_value *= equipment_multi_bonus_as_mult
-        final_value *= account_wide_bonuses['mallay_multi']
+        final_value *= account_wide_bonuses['companion_multi']
+        final_value *= account_wide_bonuses['gallery_drop_rate_multi']
 
         for subgroup in character_specific_advice.values():
             for advice in subgroup:
@@ -1116,6 +1211,71 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
     return TabbedAdviceGroup(tabbed_advices)
 
 
+_lab_chip_picture_classes = {'silkrode-motherboard', 'silkrode-software', 'silkrode-processor'}
+
+
+def merge_equipment_advice_by_slot(prefixed_equipment_advices: list[tuple[str, dict[str, list[Advice]]]]) -> dict[str, list[Advice]]:
+    """Combine equipment advice dicts keyed by "{prefix}{Slot}" (e.g. "Drop Rate - Trophy",
+    "Drop Rate Multi - Trophy") into one dict keyed by bare Slot (e.g. "Trophy"), so a slot that
+    shows up under multiple stats gets a single section instead of one per stat.
+
+    Some info rows (e.g. the Silkrode Motherboard chip note) get generated identically by each
+    stat's pass, so exact duplicate labels within a slot are dropped. An item that contributes to
+    both stats (e.g. Deadbones Nametag, listed under both Drop Rate and Drop Rate Multi) instead
+    gets combined into a single row with one bare stat line per stat (e.g. "+35% Drop Rate" /
+    "+25% Drop Rate Multi"), dropping each pass's Note since it only existed to cross-reference
+    the other stat's value, which is now redundant once both lines are shown directly.
+    """
+    merged: dict[str, list[Advice]] = {}
+    seen_chip_rows_by_slot: dict[str, set[tuple[str, str]]] = {}
+    # Per slot, the already-emitted combined row for each (equipment name, occurrence) seen so
+    # far - "occurrence" handles Keychains, where the same name can appear twice in one pass
+    # (upper/lower slot) without those two rows being merged into each other.
+    item_rows_by_slot: dict[str, dict[tuple[str, int], Advice]] = {}
+
+    for prefix, equipment_advice in prefixed_equipment_advices:
+        for slot_key, advices in equipment_advice.items():
+            slot = slot_key.removeprefix(prefix)
+            merged.setdefault(slot, [])
+            seen_chip_rows = seen_chip_rows_by_slot.setdefault(slot, set())
+            item_rows = item_rows_by_slot.setdefault(slot, {})
+            name_occurrence_so_far: dict[str, int] = {}
+
+            for advice in advices:
+                if advice.picture_class in _lab_chip_picture_classes:
+                    dedupe_key = (advice.label, advice.picture_class)
+                    if dedupe_key in seen_chip_rows:
+                        continue
+                    seen_chip_rows.add(dedupe_key)
+                    merged[slot].append(advice)
+                    continue
+
+                name = getattr(advice, 'equipment_name', None)
+                if name is None:
+                    # Not a recognized item row - pass through as-is
+                    merged[slot].append(advice)
+                    continue
+
+                occurrence = name_occurrence_so_far.get(name, 0)
+                name_occurrence_so_far[name] = occurrence + 1
+                item_key = (name, occurrence)
+
+                existing_row = item_rows.get(item_key)
+                if existing_row is not None:
+                    # Already have a row for this item from an earlier pass - rebuild the label
+                    # from bare stat lines only (dropping both passes' Notes, since those only
+                    # cross-referenced the other stat's value, which is redundant once merged).
+                    existing_row.stat_lines.append(advice.stat_line)
+                    limited_suffix = ' (Limited availability)' if existing_row.equipment_limited else ''
+                    existing_row.label = f"{name}{limited_suffix}:" + ''.join(
+                        f"<br>{line}" for line in existing_row.stat_lines
+                    )
+                else:
+                    item_rows[item_key] = advice
+                    merged[slot].append(advice)
+    return merged
+
+
 def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename: str, stat_human_readable_format: str, advice_group_prefix: str):
     equipment_advice: dict[str, list[Advice]] = {}
     equipment_bonus = 0
@@ -1124,8 +1284,25 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
     motherboard_equipped = "Silkrode Motherboard" in character.equipped_lab_chips
     software_equipped = "Silkrode Software" in character.equipped_lab_chips
     processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
+    # Gallery moves these account-wide
+    gallery_unlocked = session_data.account.highest_world_reached >= 7
+
+    if stat == 'DropRate':
+        # Equipping the chip is per-character even though its effect is account-wide
+        equipment_advice.setdefault(advice_group_prefix + 'Trophy', []).append(Advice(
+            label=(
+                "Lab Chips - Silkrode Motherboard<br>+10% Trophy Gallery Bonus Multi"
+                if gallery_unlocked else
+                "Lab Chips - Silkrode Motherboard<br>Doubles Misc. Bonuses of equipped Trophy"
+            ),
+            picture_class='silkrode-motherboard',
+            progression=int(motherboard_equipped),
+            goal=1
+        ))
 
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
+        if gallery_unlocked and equipment_data['Type'] in ('Trophy', 'Nametag'):
+            continue
         is_keychain = equipment_data['Type'] == 'Keychain'
         misc1 = equipment_data.get('Misc1', {})
         misc2 = equipment_data.get('Misc2', {})
@@ -1166,7 +1343,10 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 'Slot': slot,
                 stat: equipped_equipment_bonus if is_keychain else equipment_drop_rate_base,
                 'Image': equipment_data['Image'],
-                'EquippedAndMaxed': int(((not is_boosted) and equipped_equipment_bonus >= equipment_drop_rate_base) or (is_boosted and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
+                'EquippedAndMaxed': int(
+                    ((not is_boosted) and equipped_equipment_bonus >= equipment_drop_rate_base)
+                    or (is_boosted and equipped_equipment_bonus >= 2 * equipment_drop_rate_base)
+                ), # >= because the gem shop can sell items with boosted stats, if you have those you're fine
                 'Limited': equipment_data.get('Limited', False),
                 'Note': equipment_data.get('Note', ''),
                 'Can be boosted': can_be_boosted
@@ -1177,15 +1357,6 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
             continue
         if slot not in equipment_advice.keys():
             equipment_advice[slot] = []
-
-        if "Trophy" in slot:
-            equipment_advice[slot].append(Advice(
-                label=f"Lab Chips - Silkrode Motherboard"
-                      f"<br>Doubles Misc. Bonuses of equipped Trophy",
-                picture_class='silkrode-motherboard',
-                progression=int(motherboard_equipped),
-                goal=1
-            ))
 
         if "Keychain" in slot:
             equipment_advice[slot].append(Advice(
@@ -1216,15 +1387,29 @@ def get_equipment_advice_for_stat(character: Character, stat: str, stat_codename
                 equipment[stat] *= 2
                 equipment['Note'] += f"<br>Boosted by Silkrode Processor"
 
-            equipment_advice[slot].append(Advice(
-                label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:"
-                      f"<br>+{equipment[stat]}% {stat_human_readable_format}"
-                      f"{'<br>' + equipment['Note'] if equipment['Note'] else ''}",
+            # stat_line/detail_html are stashed separately so merge_equipment_advice_by_slot can
+            # combine an item that contributes to both Drop Rate and Drop Rate Multi (e.g.
+            # Deadbones Nametag) into a single row with one bare stat line per stat, instead of
+            # two rows each also repeating a now-redundant Note about the other stat's value.
+            stat_line = f"+{equipment[stat]}% {stat_human_readable_format}"
+            detail_html = f"<br>{stat_line}{'<br>' + equipment['Note'] if equipment['Note'] else ''}"
+            item_advice = Advice(
+                label=f"{equipment['Name']}{' (Limited availability)' if equipment['Limited'] else ''}:{detail_html}",
                 picture_class=equipment['Image'],
                 progression=equipment['EquippedAndMaxed'],
                 goal=1
-            ))
-            if equipment['EquippedAndMaxed'] and index != len(equipment_list) - 1 and equipment['Name'] != equipment_list[index + 1]['Name']:
+            )
+            item_advice.equipment_name = equipment['Name']
+            item_advice.equipment_limited = equipment['Limited']
+            item_advice.stat_line = stat_line
+            item_advice.stat_lines = [stat_line]
+            item_advice.detail_html = detail_html
+            equipment_advice[slot].append(item_advice)
+            if (
+                equipment['EquippedAndMaxed']
+                and index != len(equipment_list) - 1
+                and equipment['Name'] != equipment_list[index + 1]['Name']
+            ):
                 # Don't check items that come after the equipped item because they are worse than the equipped item
                 break
     return equipment_advice, equipment_bonus
