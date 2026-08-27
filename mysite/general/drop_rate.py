@@ -132,13 +132,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
+    vault_mastery_vault = session_data.account.vault.upgrades['Vault Mastery']
+    if vault_mastery_vault.level < vault_mastery_vault.max_level:
         drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
 
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
-    general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
+    general_bonus += session_data.account.vault.upgrades['Drops for Days'].total_value
 
     # Gem Shop - Deathbringer Pack
     has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']

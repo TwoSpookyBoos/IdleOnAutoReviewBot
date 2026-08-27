@@ -16,14 +16,14 @@ def get_guild_bonus_advice(bonus_name: str) -> Advice:
 
 
 def get_upgrade_vault_advice(upgrade_name: str, link_to_section: bool = True, additional_info_text: str = "") -> Advice:
-    upgrade = session_data.account.vault['Upgrades'][upgrade_name]
-    main_line = f"""{f"{{{{ Upgrade Vault|#upgrade-vault }}}} - {upgrade_name}" if link_to_section else upgrade_name}: {upgrade['Description']}"""
-    unlock_line = f"<br>Requires {upgrade['Unlock Requirement'] - session_data.account.vault['Total Upgrades']} more Upgrades to unlock" if not upgrade['Unlocked'] else ""
+    upgrade = session_data.account.vault.upgrades[upgrade_name]
+    main_line = f"""{f"{{{{ Upgrade Vault|#upgrade-vault }}}} - {upgrade_name}" if link_to_section else upgrade_name}: {upgrade.description}"""
+    unlock_line = f"<br>Requires {upgrade.unlock_requirement - session_data.account.vault.total_upgrades} more Upgrades to unlock" if not upgrade.unlocked else ""
     return Advice(
         label=main_line + unlock_line + additional_info_text,
-        picture_class=upgrade['Image'],
-        progression=upgrade['Level'],
-        goal=upgrade['Max Level'],
+        picture_class=upgrade.image,
+        progression=upgrade.level,
+        goal=upgrade.max_level,
     )
 
 
