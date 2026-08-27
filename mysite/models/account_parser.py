@@ -1776,10 +1776,10 @@ def _parse_w3_deathnote(account):
     _parse_w3_deathnote_miniboss_kills(account)
 
 def _parse_w3_apocalypse_BBIndex(account):
-    if len(account.bbCharactersIndexList) == 1:
-        return account.bbCharactersIndexList[0]
-    elif len(account.bbCharactersIndexList) >= 2:
-        return account.bbCharactersIndexList[1]
+    # Super CHOW/WOW progress is tracked on whichever Blood Berserker/Death Bringer
+    # is last in your character roster, not specifically your 2nd one.
+    if len(account.bbCharactersIndexList) >= 1:
+        return account.bbCharactersIndexList[-1]
     else:
         return None
 
