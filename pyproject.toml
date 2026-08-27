@@ -14,3 +14,11 @@ dependencies = [
     "requests==2.32.4",
     "ua-parser==1.0.1",
 ]
+
+[tool.ruff]
+line-length = 88
+src = ["mysite"]
+
+[tool.ruff.lint]
+preview = true
+select = ["E", "F", "I"]

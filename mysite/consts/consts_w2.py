@@ -2,8 +2,8 @@ from consts.idleon.consts_idleon import NinjaInfo
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 # `AlchemyDescription` in source. Last updated in v2.523
 # [0]=Orange, [1]=Green, [2]=Purple, [3]=Yellow bubbles,

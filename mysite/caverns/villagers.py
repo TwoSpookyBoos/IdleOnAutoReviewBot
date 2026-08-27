@@ -1,561 +1,229 @@
-from consts.consts_autoreview import EmojiType
-from consts.consts_caverns import max_cavern, caverns_villagers, caverns_engineer_schematics, \
-    caverns_engineer_schematics_unlock_order, max_schematics, \
-    released_schematics, max_majiks, total_placeholder_majiks, caverns_max_measurements, \
-    caverns_measurement_percent_goals, getMaxEngineerLevel
+from consts.caverns.cavern import max_cavern
+from consts.caverns.villager.minau import max_measurements
+from consts.idleon.caverns.villager.kaipu import available_schematics
 from consts.progression_tiers import true_max_tiers
-
 from models.advice.advice import Advice
-from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
+from models.advice.advice_section import AdviceSection
 from models.general.session_data import session_data
 from utils.logging import get_logger
 
-#villagers_progressionTiers,
+# villagers_progressionTiers,
 
 logger = get_logger(__name__)
 
+
 def getVillagersAdviceGroups() -> dict[str, AdviceGroup]:
     villager_ags = {
-        'Explorer': getExplorerAdviceGroup(),
-        'Engineer': getEngineerAdviceGroup(),
-        'Conjuror': getConjurorAdviceGroup(),
-        'Measurer': getMeasurerAdviceGroup(),
-        'Librarian': getLibrarianAdviceGroup()
+        "Explorer": getExplorerAdviceGroup(),
+        "Engineer": getEngineerAdviceGroup(),
+        "Conjuror": getConjurorAdviceGroup(),
+        "Measurer": getMeasurerAdviceGroup(),
+        "Librarian": getLibrarianAdviceGroup(),
     }
     return villager_ags
 
+
 def getExplorerAdviceGroup() -> AdviceGroup:
-    v_stats = 'Villager Stats'
-    c_stats = 'Cavern Unlock Status'
-    v_u_stats = 'Villager Unlock Status'
-    villager_advice = {
-        v_stats: []
-    }
-
-    villager_name = 'Polonai'
-    villager = session_data.account.caverns['Villagers'][villager_name]
-
-    # Generate Alert
-    if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
-            label=f"{{{{ Polonai|#villagers }}}} ready to level!",
-            picture_class=villager_name
-        ))
-
-# Villager Stats
-    #Practical Max Level
-    villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all implemented unlocks",
-        picture_class=villager_name,
-        progression=villager['Level'],
-        goal=max_cavern
-    ))
-    villager_advice[v_stats].append(Advice(
-        label="Next level progress",
-        picture_class=villager_name,
-        progression=f"{villager['LevelPercent']:.1f}",
-        goal=100,
-        unit='%'
-    ))
-    #Invested Opals
-    villager_advice[v_stats].append(Advice(
-        label="Opals Invested",
-        picture_class='opal',
-        progression=villager['Opals'],
-    ))
-# Cavern Unlocks
-    if villager['Level'] < max_cavern:
-        villager_advice[c_stats] = [
-            Advice(
-                label=f"Discover Cavern {session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']}- {cavern_name}",
-                picture_class=session_data.account.caverns['Caverns'][cavern_name]['Image'],
-                progression=villager['Level'],
-                goal=session_data.account.caverns['Caverns'][cavern_name]['CavernNumber']
-            )
-            for cavern_name in session_data.account.caverns['Caverns'] if not session_data.account.caverns['Caverns'][cavern_name]['Unlocked']
-        ]
-# Villager Unlocks
-    if not session_data.account.caverns['Villagers'][caverns_villagers[-1]['Name']]['Unlocked']:
-        villager_advice[v_u_stats] = [
-            Advice(
-                label=f"Discover Villager {villager_details['VillagerNumber']}- {villager_details['Title']} at Cavern {villager_details['UnlockedCavern']}",
-                picture_class=f"{villager_name}-undiscovered",
-                progression=villager['Level'],
-                goal=villager_details['UnlockedCavern']
-            )
-            for villager_name, villager_details in session_data.account.caverns['Villagers'].items() if not villager_details['Unlocked']
-        ]
-
-    for subgroup in villager_advice:
-        for advice in villager_advice[subgroup]:
-            advice.mark_advice_completed()
-
-    villager_ag = AdviceGroup(
-        tier='',
-        pre_string=f"Level {villager['Level']} {villager['Title']}",
-        advices=villager_advice,
-        informational=True,
-        completed=villager['Level'] >= max_cavern
-    )
-    return villager_ag
-
-def getEngineerAdviceGroup() -> AdviceGroup:
-    v_stats = 'Villager Stats'
-    s_stats = 'Schematic Stats'
-    unpurchased_stats = 'Unpurchased Schematics'
-    unreleased_schematics = 'Unreleased Schematics'
-    villager_advice = {
-        v_stats: [],
-        s_stats: [],
-        unpurchased_stats: [],
-        unreleased_schematics: []
-    }
-
-    villager_name = 'Kaipu'
-    villager = session_data.account.caverns['Villagers'][villager_name]
-    unlocked_schematics = min(max_schematics, 1 + (villager['Level'] * 3) + (villager['Level'] // 5))
-    max_engi_level_needed = getMaxEngineerLevel()
-
-    # Generate Alert
-    if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
-            label=f"{{{{ Kaipu|#villagers }}}} ready to level!",
-            picture_class=villager_name
-        ))
-
-# Villager Stats
-    # Practical Max Level
-    villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all implemented unlocks",
-        picture_class=villager_name,
-        progression=villager['Level'],
-        goal=max_engi_level_needed
-    ))
-    villager_advice[v_stats].append(Advice(
-        label="Next level progress",
-        picture_class=villager_name,
-        progression=f"{villager['LevelPercent']:.1f}",
-        goal=100,
-        unit='%'
-    ))
-    # Invested Opals
-    villager_advice[v_stats].append(Advice(
-        label="Opals Invested",
-        picture_class='opal',
-        progression=villager['Opals'],
-    ))
-# Schematic Stats
-    villager_advice[s_stats].append(Advice(
-        label=f"Total Schematics unlocked by leveling Kaipu",
-        picture_class='empty-schematic',
-        progression=unlocked_schematics,
-        goal=released_schematics
-    ))
-    villager_advice[s_stats].append(Advice(
-        label=f"Total Schematics purchased",
-        picture_class='empty-schematic',
-        progression=session_data.account.caverns['TotalSchematics'],
-        goal=released_schematics
-    ))
-    if session_data.account.caverns['TotalSchematics'] < max_schematics:
-        for list_index, schematic_number in enumerate(caverns_engineer_schematics_unlock_order):
-            clean_name = caverns_engineer_schematics[int(schematic_number)][0].replace("_", " ")
-            schematic_details = session_data.account.caverns['Schematics'][clean_name]
-            if not schematic_details['Purchased']:
-                villager_advice[unreleased_schematics if list_index+1 > released_schematics else unpurchased_stats].append(Advice(
-                    label=f"Schematic {list_index+1}: {clean_name}- {schematic_details['Description']}",
-                    picture_class=schematic_details['Image'],
-                    progression=int(schematic_details['Purchased']),
-                    goal=1,
-                    resource=schematic_details['Resource']
-                ))
-            # else:  #uncomment this chunk for testing, if you need to see them all
-            #     villager_advice[unpurchased_stats].append(Advice(
-            #         label=f"Schematic {list_index + 1}: {clean_name}: {schematic_details['Description']}",
-            #         picture_class=schematic_details['Image'],
-            #         progression=int(schematic_details['Purchased']),
-            #         goal=1,
-            #         resource=schematic_details['Resource']
-            #     ))
-
-    for subgroup in villager_advice:
-        for advice in villager_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    polonai = session_data.account.caverns.villagers["Polonai"]
+    villager_advice = {"Villager Stats": polonai.stat_advices()}
+    discover_advices = polonai.feature_advice()
+    if discover_advices:
+        villager_advice.update(discover_advices)
     villager_ag = AdviceGroup(
         tier="",
-        pre_string=f"Level {villager['Level']} {villager['Title']}",
+        pre_string=f"Level {polonai.level} {polonai.title}",
         advices=villager_advice,
         informational=True,
-        completed=session_data.account.caverns['TotalSchematics'] >= released_schematics
+        completed=polonai.level >= max_cavern,
+    )
+    villager_ag.mark_advice_completed()
+    return villager_ag
+
+
+def getEngineerAdviceGroup() -> AdviceGroup:
+    kaipu = session_data.account.caverns.villagers["Kaipu"]
+    villager_advice = {"Villager Stats": kaipu.stat_advices()}
+    schematics_advice = kaipu.feature_advice()
+    if schematics_advice:
+        villager_advice.update(schematics_advice)
+    villager_ag = AdviceGroup(
+        tier="",
+        pre_string=f"Level {kaipu.level} {kaipu.title}",
+        advices=villager_advice,
+        informational=True,
+        completed=kaipu.schematics.bought >= available_schematics,
     )
     villager_ag.remove_empty_subgroups()
+    villager_ag.mark_advice_completed()
     return villager_ag
+
 
 def getConjurorAdviceGroup() -> AdviceGroup:
-    v_stats = 'Villager Stats'
-    h_m_stats = 'Hole Majik Stats'
-    v_m_stats = 'Village Majik Stats'
-    i_m_stats = 'IdleOn Majik Stats'
-    villager_advice = {
-        v_stats: [],
-        h_m_stats: [],
-        v_m_stats: [],
-        i_m_stats: []
-    }
-
-    villager_name = 'Cosmos'
-    villager = session_data.account.caverns['Villagers'][villager_name]
-    gscp = session_data.account.gemshop['Purchases']['Conjuror Pts']
-    earned_conjuror_points = gscp['Owned'] + villager['Level']
-    spent_conjuror_points = session_data.account.caverns['TotalMajiks']
-
-    #Generate Alert
-    if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
-            label=f"{{{{ Cosmos|#villagers }}}} ready to level!",
-            picture_class=villager_name
-        ))
-
-# Majiks
-    for majik_name, majik_details in session_data.account.caverns['Majiks'].items():
-        subgroup = f"{majik_details['MajikType']} Majik Stats"
-        villager_advice[subgroup].append(Advice(
-            label=f"{majik_name}: {majik_details['Description']}",
-            picture_class=f"{majik_details['MajikType']}-majik-{'un' if majik_details['Level'] == 0 else ''}purchased",
-            progression=majik_details['Level'],
-            goal=majik_details['MaxLevel']
-        ))
-
-# Villager Stats
-    # Practical Max Level
-    villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all implemented unlocks",
-        picture_class=villager_name,
-        progression=villager['Level'],
-        goal=max_majiks - total_placeholder_majiks - gscp['Owned']
-    ))
-    villager_advice[v_stats].append(Advice(
-        label="Next level progress",
-        picture_class=villager_name,
-        progression=f"{villager['LevelPercent']:.1f}",
-        goal=100,
-        unit='%'
-    ))
-    villager_advice[v_stats].append(Advice(
-        label=f"Up to {gscp['MaxLevel']} Conjuror Pts can be purchased from the {{{{Gem Shop|#gem-shop}}}}",
-        picture_class='conjuror-pts',
-        progression=gscp['Owned'],
-        goal=gscp['MaxLevel']
-    ))
-    if earned_conjuror_points > spent_conjuror_points < max_majiks - total_placeholder_majiks:
-        unspent_pts_advice = Advice(
-            label=f"You have {earned_conjuror_points - spent_conjuror_points} unspent {{{{Conjuror Pts|#villagers}}}}!",
-            picture_class='cosmos',
-            progression=spent_conjuror_points,
-            goal=earned_conjuror_points
-        )
-        villager_advice[v_stats].append(unspent_pts_advice)
-        if villager['Unlocked']:
-            session_data.account.alerts_Advices['The Caverns Below'].append(unspent_pts_advice)
-    # Invested Opals
-    villager_advice[v_stats].append(Advice(
-        label="Opals Invested",
-        picture_class='opal',
-        progression=villager['Opals'],
-    ))
-
-    for subgroup in villager_advice:
-        for advice in villager_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    gscp = session_data.account.gemshop["Purchases"]["Conjuror Pts"]
+    cosmos = session_data.account.caverns.villagers["Cosmos"]
+    villager_advice = {"Villager Stats": cosmos.stat_advices()}
+    feature_advice = cosmos.feature_advice()
+    if feature_advice:
+        villager_advice.update(feature_advice)
     villager_ag = AdviceGroup(
-        tier='',
-        pre_string=f"Level {villager['Level']} {villager['Title']}",
+        tier="",
+        pre_string=f"Level {cosmos.level} {cosmos.title}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= max_majiks - total_placeholder_majiks - gscp['Owned']
+        completed=cosmos.level + gscp["Owned"] >= cosmos.majiks.max_point,
     )
+    villager_ag.mark_advice_completed()
     return villager_ag
 
-def get_next_measurer_goal(current_level):
-    try:
-        for level, percent in caverns_measurement_percent_goals.items():
-            if level > current_level:
-                goal_level = level
-                goal_percent = percent
-                return [goal_level, goal_percent]
-    except:
-        logger.exception(f"Failed to find next Measurer Goal given input of {type(current_level)}: {current_level}")
-        return [999999999, 'Darn near 100%']
-    # If their level is higher than the largest goal in the dictionary, return a generic placeholder
-    return [999999999, 'Darn near 100%']
 
 def getMeasurerAdviceGroup() -> AdviceGroup:
-    v_stats = 'Villager Stats'
-    m_stats = 'Measurement Stats'
-    villager_advice = {
-        v_stats: [],
-        m_stats: [],
-    }
-
-    villager_name = 'Minau'
-    villager = session_data.account.caverns['Villagers'][villager_name]
-    measurements = session_data.account.caverns['Measurements']
-
-    # Generate Alert
-    if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
-            label=f"{{{{ Minau|#villagers }}}} ready to level!",
-            picture_class=villager_name
-        ))
-
-# Villager Stats
-    # Practical Max Level
-    villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all implemented unlocks",
-        picture_class=villager_name,
-        progression=villager['Level'],
-        goal=caverns_max_measurements
-    ))
-    villager_advice[v_stats].append(Advice(
-        label="Next level progress",
-        picture_class=villager_name,
-        progression=f"{villager['LevelPercent']:.1f}",
-        goal=100,
-        unit='%'
-    ))
-    # Invested Opals
-    villager_advice[v_stats].append(Advice(
-        label="Opals Invested",
-        picture_class='opal',
-        progression=villager['Opals'],
-    ))
-# Measurement Stats
-    villager_advice[m_stats] = []
-    for measurement_name, measurement_details in measurements.items():
-        if measurement_name != 'i' and caverns_max_measurements >= measurement_details['MeasurementNumber']:
-            if measurement_details['TOT']:
-                goal_level, goal_percent = get_next_measurer_goal(measurement_details['Level'])
-                goal_string = f"<br>{goal_percent} of max value at Level {goal_level:,}"
-                villager_advice[m_stats].append(Advice(
-                    label=(
-                        f"Level {measurement_details['Level']} = "
-                        f"+{measurement_details['TotalBaseValue']:.2f}% {measurement_details['Description']}"
-                        f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
-                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['PrettyRaw']} {measurement_details['ScalesWith']})"
-                        f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
-                        f"{goal_string}"
-                    ),
-                    picture_class=measurement_details['Image'],
-                    progression=f"{(measurement_details['BaseValue'] / measurement_details['HI55']) * 100:.2f}",
-                    goal='100',
-                    resource=measurement_details['Resource'],
-                    unit='%'
-                ))
-            else:
-                villager_advice[m_stats].append(Advice(
-                    label=(
-                        f"Level {measurement_details['Level']} = "
-                        f"+{measurement_details['TotalBaseValue']:.0f}% {measurement_details['Description']}"
-                        f"<br>x{session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['Multi']:.3f} "
-                        f"({session_data.account.caverns['MeasurementMultis'][measurement_details['ScalesWith']]['PrettyRaw']} {measurement_details['ScalesWith']})"
-                        f"<br>Total Bonus: +{measurement_details['Value']:,.2f}%"
-                    ),
-                    picture_class=measurement_details['Image'],
-                    progression='Linear',
-                    goal=EmojiType.INFINITY.value,
-                    resource=measurement_details['Resource']
-                ))
-
-    for subgroup in villager_advice:
-        for advice in villager_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    minau = session_data.account.caverns.villagers["Minau"]
+    villager_advice = {"Villager Stats": minau.stat_advices()}
+    feature_advice = minau.feature_advice()
+    if feature_advice:
+        villager_advice.update(feature_advice)
     villager_ag = AdviceGroup(
-        tier='',
-        pre_string=f"Level {villager['Level']} {villager['Title']}",
+        tier="",
+        pre_string=f"Level {minau.level} {minau.title}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= caverns_max_measurements
+        completed=minau.level >= max_measurements,
     )
+    villager_ag.mark_advice_completed()
     return villager_ag
+
 
 def getLibrarianAdviceGroup() -> AdviceGroup:
-    v_stats = 'Villager Stats'
-    speed_stats = 'Study Speed Sources'
-    study_stats = 'Study Stats'
+    bolaia = session_data.account.caverns.villagers["Bolaia"]
     villager_advice = {
-        v_stats: [],
-        speed_stats: [],
-        study_stats: [],
+        "Villager Stats": bolaia.stat_advices(),
     }
+    feature_advice = bolaia.feature_advice()
+    if feature_advice:
+        villager_advice.update(feature_advice)
 
-    villager_name = 'Bolaia'
-    villager = session_data.account.caverns['Villagers'][villager_name]
-    studies = session_data.account.caverns['Studies']
-    schematics = session_data.account.caverns['Schematics']
-    majiks = session_data.account.caverns['Majiks']
-
-    # Generate Alert
-    if villager['LevelPercent'] >= 100:
-        session_data.account.alerts_Advices['The Caverns Below'].append(Advice(
-            label=f"{{{{ Bolaia|#villagers }}}} ready to level!",
-            picture_class=villager_name
-        ))
-
-# Villager Stats
-    # Practical Max Level
-    villager_advice[v_stats].append(Advice(
-        label=f"{villager['Title']} level for all implemented unlocks",
-        picture_class=villager_name,
-        progression=villager['Level'],
-        #goal=
-    ))
-    villager_advice[v_stats].append(Advice(
-        label="Next level progress",
-        picture_class=villager_name,
-        progression=f"{villager['LevelPercent']:.1f}",
-        goal=100,
-        unit='%'
-    ))
-    # Invested Opals
-    villager_advice[v_stats].append(Advice(
-        label="Opals Invested",
-        picture_class='opal',
-        progression=villager['Opals'],
-    ))
-
-# Study Speed Sources
+    schematics = session_data.account.caverns.villagers["Kaipu"].schematics
+    # Study Speed Sources
     total_base_speed = 5
     max_base_speed = 5
-    villager_advice[speed_stats].append(Advice(
-        label=f"Base study speed: 100 + 5/sec per level",
-        picture_class=villager_name,
-        progression=1,
-        goal=1
-    ))
-    for schematic_name, speed_boost in {
-        'Peer Reviewed Books': 2,
-        'Cutting Edge Research': 3,
-        'Billion Dollar Grant': 5
-    }.items():
-        villager_advice[speed_stats].append(Advice(
-            label=f"Schematic {schematics[schematic_name]['UnlockOrder']}: {schematic_name}"
-                  f"<br>+{speed_boost}/sec per level",
-            picture_class=schematics[schematic_name]['Image'],
-            progression=int(schematics[schematic_name]['Purchased']),
+    base_speed_advice = [
+        Advice(
+            label="Base study speed: 100 + 5/hr per level",
+            picture_class=bolaia.name,
+            progression=1,
             goal=1,
-            resource=schematics[schematic_name]['Resource'] if not schematics[schematic_name]['Purchased'] else ''
-        ))
-        total_base_speed += speed_boost * int(schematics[schematic_name]['Purchased'])
+        )
+    ]
+    for schematic_name, speed_boost in {
+        "Peer Reviewed Books": 2,
+        "Cutting Edge Research": 3,
+        "Billion Dollar Grant": 5,
+    }.items():
+        schematic = schematics[schematic_name]
+        base_speed_advice.append(schematic.get_advice())
+        total_base_speed += speed_boost * int(schematic.bought)
         max_base_speed += speed_boost
-    villager_advice[speed_stats].append(Advice(
-        label=f"Total Base: {100 + total_base_speed}/sec per level",
-        picture_class=villager_name,
-        progression=total_base_speed,
-        goal=max_base_speed
-    ))
-    rosemerald = session_data.account.caverns['Collectibles']['Rosemerald']
-    villager_advice[speed_stats].append(Advice(
-        label=f"Group B: Collectible: Rosemerald: +{rosemerald['Value']:.0f}%",
-        picture_class=rosemerald['Image'],
-        progression=rosemerald['Level'],
-        goal=EmojiType.INFINITY.value
-    ))
-    villager_advice[speed_stats].append(Advice(
-        label=f"Group B: Study All Nighter Majik: {majiks['Study All Nighter']['Description']}",
-        picture_class=f"{majiks['Study All Nighter']['MajikType']}-majik-{'un' if majiks['Study All Nighter']['Level'] == 0 else ''}purchased",
-        progression=majiks['Study All Nighter']['Level'],
-        goal=majiks['Study All Nighter']['MaxLevel']
-    ))
-    villager_advice[speed_stats].append(session_data.account.stamps['Study Hall Stamp'].get_advice())
-
-
-# Study Stats
-    villager_advice[study_stats].append(Advice(
-        label=f"Total Studies: {session_data.account.caverns['TotalStudies']}",
-        picture_class=villager_name
-    ))
-    for study_index, study_details in studies.items():
-        villager_advice[study_stats].append(Advice(
-            label=f"{study_details['CavernName']}: {study_details['Description']}",
-            picture_class=f"cavern-{study_details['CavernNumber']}",
-            progression=study_details['Level'],
-            goal=study_details['MaxLevel']
-        ))
-
-    for subgroup in villager_advice:
-        for advice in villager_advice[subgroup]:
-            advice.mark_advice_completed()
-
+    villager_advice["Study Speed"] = [
+        Advice(
+            label=f"Total Base: {100 + total_base_speed}/hr per level",
+            picture_class=bolaia.name,
+            progression=total_base_speed,
+            goal=max_base_speed,
+        )
+    ]
+    villager_advice["Base"] = base_speed_advice
+    multi_speed = "Multi Group I"
+    villager_advice[multi_speed] = []
+    rosemerald = session_data.account.caverns.caves["The Jar"].collectibles[
+        "Rosemerald"
+    ]
+    villager_advice[multi_speed].append(rosemerald.get_bonus_advice())
+    study_majik = session_data.account.caverns.villagers["Cosmos"].majiks.village[
+        "Study All Nighter"
+    ]
+    villager_advice[multi_speed].append(study_majik.get_advice())
+    villager_advice[multi_speed].append(
+        session_data.account.stamps["Study Hall Stamp"].get_advice()
+    )
     villager_ag = AdviceGroup(
-        tier='',
-        pre_string=f"Level {villager['Level']} {villager['Title']}",
+        tier="",
+        pre_string=f"Level {bolaia.level} {bolaia.title}",
         advices=villager_advice,
         informational=True,
-        completed=villager['Level'] >= caverns_max_measurements
+        completed=False,
     )
+    villager_ag.mark_advice_completed()
     return villager_ag
+
 
 def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     villagers_AdviceDict = {
-        'Tiers': {},
+        "Tiers": {},
     }
     optional_tiers = 0
-    true_max = true_max_tiers['Villagers']
+    true_max = true_max_tiers["Villagers"]
     max_tier = true_max - optional_tiers
     tier_Villagers = 0
 
-    #Assess Tiers
+    # Assess Tiers
 
     tiers_ag = AdviceGroup(
         tier=tier_Villagers,
         pre_string="Progression Tiers",
-        advices=villagers_AdviceDict['Tiers']
+        advices=villagers_AdviceDict["Tiers"],
     )
     overall_SectionTier = min(true_max, tier_Villagers)
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
+
 def getVillagersAdviceSection() -> AdviceSection:
-    #Check if player has reached this section
-    if session_data.account.caverns['Villagers']['Polonai']['Level'] < 1:
+    # Check if player has reached this section
+    if session_data.account.caverns.villagers["Polonai"].level < 0:
         villagers_AdviceSection = AdviceSection(
             name="Villagers",
             tier="Not Yet Evaluated",
             header="Come back after unlocking The Caverns Below in W5!",
-            picture='wiki/Hole_Campfire.gif',
+            picture="wiki/Hole_Campfire.gif",
             unrated=False,
             unreached=True,
-            completed=False
+            completed=False,
         )
         return villagers_AdviceSection
 
-    #Generate Alert Advice
+    # Generate Alert Advice
+    session_data.account.add_alert_list(
+        "The Caverns Below",
+        [
+            villager.level_ready_alert()
+            for villager in session_data.account.caverns.villagers.values()
+        ],
+    )
 
-    #Generate AdviceGroups
+    # Generate AdviceGroups
     villagers_AdviceGroupDict = {}
-    villagers_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
+    villagers_AdviceGroupDict["Tiers"], overall_SectionTier, max_tier, true_max = (
+        getProgressionTiersAdviceGroup()
+    )
     villagers_AdviceGroupDict.update(getVillagersAdviceGroups())
 
     for ag in villagers_AdviceGroupDict.values():
         ag.remove_empty_subgroups()
 
-    #Generate AdviceSection
+    # Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     villagers_AdviceSection = AdviceSection(
-        name='Villagers',
+        name="Villagers",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header='Villager Information',  #f"Best Villagers tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
-        picture='wiki/Hole_Campfire.gif',
+        header="Villager Information",
+        picture="wiki/Hole_Campfire.gif",
         groups=villagers_AdviceGroupDict.values(),
         completed=None,
         unrated=True,
-        informational=True
+        informational=True,
     )
 
     return villagers_AdviceSection

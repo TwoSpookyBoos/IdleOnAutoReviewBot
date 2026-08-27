@@ -428,55 +428,24 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_5_bonus = 0
 
     # Caverns - Measurments - Yards
-    caverns_measurements_yards = session_data.account.caverns['Measurements'][15]
-    caverns_measurements_yards_value = caverns_measurements_yards['Value']
-    drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}- Measurement 16:"
-              f"<br>+{round(caverns_measurements_yards_value, 1):g}% Drop Rate (scales with {caverns_measurements_yards['ScalesWith']})",
-        picture_class=caverns_measurements_yards['Image'],
-        progression=caverns_measurements_yards['Level'],
-        goal=EmojiType.INFINITY.value
-    ))
-    world_5_bonus += caverns_measurements_yards_value
+    caverns_measurements_yards = session_data.account.caverns.villagers["Minau"].measurements[15]
+    drop_rate_aw_advice[w5].append(caverns_measurements_yards.get_bonus_advice())
+    world_5_bonus += caverns_measurements_yards.value
 
     # Caverns - Schematics - Gloomie Lootie
-    grotto_cavern = session_data.account.caverns['Caverns']['Grotto']
-    gloomie_lootie_schematic = session_data.account.caverns['Schematics']['Gloomie Lootie']
-    gloomie_lootie_schematic_value = 5 * grotto_cavern['OpalsFound']
-    drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}- Schematic {gloomie_lootie_schematic['UnlockOrder']}: Gloomie Lootie:"
-              f"<br>+{gloomie_lootie_schematic_value}% Drop Rate (+5% per Cavern cleared)",
-        picture_class=gloomie_lootie_schematic['Image'],
-        progression=grotto_cavern['OpalsFound'] if gloomie_lootie_schematic['Purchased'] else 0,
-        goal=EmojiType.INFINITY.value
-    ))
-    world_5_bonus += gloomie_lootie_schematic_value
+    gloomie_lootie_schematic = session_data.account.caverns.villagers["Kaipu"].schematics['Gloomie Lootie']
+    drop_rate_aw_advice[w5].append(gloomie_lootie_schematic.get_bonus_advice())
+    world_5_bonus += gloomie_lootie_schematic.value
 
     # Caverns - Schematics - Sanctum of LOOT
-    temple_cavern = session_data.account.caverns['Caverns']['The Temple']
-    sanctum_of_loot_schematic = session_data.account.caverns['Schematics']['Sanctum of LOOT']
-    sanctum_of_loot_schematic_value = 20 * temple_cavern['OpalsFound']
-    drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Caverns|#villagers }}}}- Schematic {sanctum_of_loot_schematic['UnlockOrder']}: Sanctum of LOOT:"
-              f"<br>+{sanctum_of_loot_schematic_value}% Drop Rate (+20% per Sanctum cleared)",
-        picture_class=sanctum_of_loot_schematic['Image'],
-        progression=temple_cavern['OpalsFound'] if sanctum_of_loot_schematic['Purchased'] else 0,
-        goal=EmojiType.INFINITY.value
-    ))
-    world_5_bonus += sanctum_of_loot_schematic_value
+    sanctum_of_loot_schematic = session_data.account.caverns.villagers["Kaipu"].schematics['Sanctum of LOOT']
+    drop_rate_aw_advice[w5].append(sanctum_of_loot_schematic.get_bonus_advice())
+    world_5_bonus += sanctum_of_loot_schematic.value
 
     # Caverns - Wisdom Monument
-    wisdom_drop_rate_index = 26
-    wisdom_monument_drop_rate = session_data.account.caverns['Caverns']['Wisdom Monument']['Bonuses'][wisdom_drop_rate_index]
-    wisdom_monument_drop_rate_value = wisdom_monument_drop_rate['Value']
-    drop_rate_aw_advice[w5].append(Advice(
-        label=f"{{{{ Cavern 13|#underground-overgrowth }}}}- Wisdom Monument:"
-              f"<br>+{round(wisdom_monument_drop_rate_value, 1):g}% Drop Rate",
-        picture_class='cavern-13',
-        progression=wisdom_monument_drop_rate['Level'],
-        goal=EmojiType.INFINITY.value
-    ))
-    world_5_bonus += wisdom_monument_drop_rate_value
+    wisdom_monument_drop_rate = session_data.account.caverns.caves['Wisdom Monument'].bonuses['Player Drop Rate']
+    drop_rate_aw_advice[w5].append(wisdom_monument_drop_rate.get_bonus_advice())
+    world_5_bonus += wisdom_monument_drop_rate.value
 
     drop_rate_aw_advice[f"{w5} - +{round(world_5_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w5)
 

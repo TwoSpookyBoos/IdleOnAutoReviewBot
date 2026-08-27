@@ -1,5 +1,3 @@
-from math import ceil
-
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
@@ -109,20 +107,8 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     ]
 
     mgc_label = f"Bone Multi Group C: {grimoire['Bone Calc']['mgc']:.2f}x"
-    gambit = session_data.account.caverns['Caverns']['Gambit']
     currency_advices[mgc_label] = [
-        Advice(
-            label=(
-                f"{{{{Cavern 14- Gambit|#underground-overgrowth}}}}: Bonus 13: +100% Bones"
-                if gambit['Bonuses'][12]['Unlocked'] else
-                f"{{{{Cavern 14- Gambit|#underground-overgrowth}}}}: Bonus 13: +0% Bones"
-                f"<br>{ceil(gambit['Bonuses'][12]['PtsRequired'] - gambit['TotalPts']):,.0f}"
-                f" Gambit points remaining to Unlock this bonus"
-            ),
-            picture_class=gambit['Bonuses'][12]['Image'],
-            progression=int(gambit['Bonuses'][12]['Unlocked']),
-            goal=1
-        )
+        session_data.account.caverns.caves['Gambit'].bonuses[12].get_bonus_advice()
     ]
 
     mgd_label = f"Bone Multi Group D: {grimoire['Bone Calc']['mgd']:.2f}x"

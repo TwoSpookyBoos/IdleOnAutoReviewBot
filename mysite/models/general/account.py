@@ -1,4 +1,5 @@
 import copy
+from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
@@ -25,9 +26,13 @@ from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
 from models.w7.zenith_market import ZenithMarket
+from models.caverns import Caverns
+from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import InputType
 from flask import g
+
+logger = get_logger(__name__)
 
 
 def session_singleton(cls):
@@ -129,6 +134,9 @@ class Account:
         }
         self.meals = {}
 
+        # The Caverns Below
+        self.caverns: Caverns = Caverns(self.raw_data)
+
         # W6
         self.summoning: Summoning = Summoning(self.raw_data)
         self.farming: Farming = Farming(self.raw_data)
@@ -183,3 +191,26 @@ class Account:
             ],
             default=0,
         )
+
+    @cached_property
+    def highest_dmg(self) -> float:
+        # "Highest Dmg" from W2 Task
+        raw_tasks = safe_loads(self.raw_data.get('TaskZZ0', []))
+        try:
+            return float(raw_tasks[1][0])
+        except ValueError:
+            logger.exception(
+                f"Failed to cast Highest Damage of {raw_tasks[1][0]} from W2 Task. "
+                f"Defaulting to e20 idk"
+            )
+            return 1e20
+        except IndexError:
+            logger.exception(
+                "No TaskZZ0[1][0] for Highest Damage from W2 Tasks"
+            )
+            return 1
+        except:
+            logger.exception(
+                "TaskZZ0[1][0] has bad value for Highest Damage from W2 Tasks"
+            )
+            return 1

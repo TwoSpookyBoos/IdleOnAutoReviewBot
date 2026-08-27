@@ -6,7 +6,7 @@ import sys
 import threading
 import uuid
 
-from flask import request, g
+from flask import request, g, has_app_context
 from ua_parser import user_agent_parser
 from werkzeug.user_agent import UserAgent
 from werkzeug.utils import cached_property
@@ -15,8 +15,7 @@ from config import app
 import logging
 
 
-DEFAULT_FORMAT = "%(asctime)s | %(name)s | %(requestID)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
-CONSTS_FORMAT = "%(asctime)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
+DEFAULT_FORMAT = "%(asctime)s | %(requestID)s | %(name)s | %(funcName)s:%(lineno)d~ [%(levelname)s] %(message)s"
 SHORT_FORMAT = "%(asctime)s | %(requestID)s | %(message)s"
 
 
@@ -51,7 +50,10 @@ class ResponseCache:
 
 class Filter(logging.Filter):
     def filter(self, record):
-        record.requestID = g.request_id
+        if has_app_context() and hasattr(g, 'request_id'):
+            record.requestID = g.request_id
+        else:
+            record.requestID = 'APP'
         return True
 
 
@@ -72,22 +74,6 @@ def _try_colorise(logger):
         )
     return is_local_instance
 
-def _try_consts_colorise(logger):
-    is_local_instance = os.environ.get("PYTHONANYWHERE_DOMAIN", None) is None
-    if is_local_instance:
-        import coloredlogs
-
-        # coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["color"] = "white"
-        coloredlogs.DEFAULT_FIELD_STYLES |= {
-            "levelname": {"color": "white"},
-            "funcName": {"color": "magenta"},
-            "lineno": {"color": "cyan"},
-        }
-        coloredlogs.install(
-            level="DEBUG", fmt=CONSTS_FORMAT, stream=sys.stdout, logger=logger
-        )
-    return is_local_instance
-
 
 def _set_regular_logger(logger: logging.Logger):
     formatter = logging.Formatter(DEFAULT_FORMAT)
@@ -97,33 +83,9 @@ def _set_regular_logger(logger: logging.Logger):
 
     logger.addHandler(handler)
 
-def _set_consts_logger(logger: logging.Logger):
-    formatter = logging.Formatter(CONSTS_FORMAT)
-    handler = logging.StreamHandler(stream=sys.stdout)
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(formatter)
-
-    logger.addHandler(handler)
 
 def get_logger(name: str) -> logging.Logger:
-    logger_ = logging.getLogger(name)
-    logger_.setLevel(logging.DEBUG)
-    logger_.addFilter(Filter())
-
-    if not _try_colorise(logger_):
-        _set_regular_logger(logger_)
-
-    return logger_
-
-# Does not include the requestID for logging needs before evaluating player data
-def get_consts_logger(name: str) -> logging.Logger:
-    logger_ = logging.getLogger(name)
-    logger_.setLevel(logging.DEBUG)
-
-    if not _try_consts_colorise(logger_):
-        _set_consts_logger(logger_)
-
-    return logger_
+    return logging.getLogger("app." + name)
 
 
 def browser_data_logger() -> logging.Logger:
@@ -235,3 +197,17 @@ class ParsedUserAgent(UserAgent):
     @property
     def browser(self):
         return f"{self.browser_name} ({self.browser_version})"
+
+
+def _setup_app_logger():
+    logger = logging.getLogger("app")
+    logger.setLevel(logging.DEBUG)
+    if not _try_colorise(logger):
+        _set_regular_logger(logger)
+    # Install Filter on handler as propagated message don't go to logger filter
+    for handler in logger.handlers:
+        handler.addFilter(Filter())
+    return logger
+
+
+_setup_app_logger()
