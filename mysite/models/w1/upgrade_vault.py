@@ -1,9 +1,9 @@
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_master_classes import grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_monster_name
-from consts.idleon.w1.upgrade_vault import UpgradeVault, vault_dont_scale, vault_stack_types, vault_section_indexes
-from utils.safer_data_handling import safe_loads, safer_index, safer_convert, logger
-from utils.text_formatting import vault_string_cleaner
+from consts.idleon.w1.upgrade_vault import vault_upgrades, vault_stack_types
+from models.advice.advice import Advice
+from utils.safer_data_handling import safe_loads, safer_index, logger
 
 
 class VaultUpgrade:
@@ -58,6 +58,29 @@ class VaultUpgrade:
             f")"
         )
 
+    def get_advice(self, total_upgrades: int, link_to_section: bool = True, additional_info_text: str = "") -> Advice:
+        main_line = f"""{f"{{{{ Upgrade Vault|#upgrade-vault }}}} - {self.name}" if link_to_section else self.name}: {self.description}"""
+        unlock_line = f"<br>Requires {self.unlock_requirement - total_upgrades} more Upgrades to unlock" if not self.unlocked else ""
+        return Advice(
+            label=main_line + unlock_line + additional_info_text,
+            picture_class=self.image,
+            progression=self.level,
+            goal=self.max_level,
+        )
+
+    def get_tier_advice(self, total_upgrades: int) -> Advice:
+        return Advice(
+            label=(
+                f"Max {self.name}"
+                f"<br>Requires {self.unlock_requirement - total_upgrades} more Upgrades to unlock"
+                if not self.unlocked else
+                f"{self.name}: {self.description}"
+            ),
+            picture_class=self.image,
+            progression=self.level,
+            goal=self.max_level,
+        )
+
 
 class Vault:
     def __init__(self, raw_data: dict):
@@ -69,38 +92,28 @@ class Vault:
         raw_vault = safe_loads(raw_data.get("UpgVault", []))
         if not raw_vault:
             logger.warning("Upgrade Vault data not present.")
-        for index, upgrade_values in enumerate(UpgradeVault):
-            clean_name = vault_string_cleaner(upgrade_values[0])
-            secondary_description = vault_string_cleaner(upgrade_values[10]) if len(upgrade_values) >= 11 else ""
-            stack_type = clean_name.split("!")[0]
-            if stack_type in vault_stack_types:
-                clean_name += f" ({self.stacks.get(stack_type, 0)} stacks)"
-
-            vault_section = 0
-            for list_index, vault_section_index in enumerate(vault_section_indexes):
-                if index <= vault_section_index:
-                    vault_section = list_index + 1
-                    break
+        for upgrade in vault_upgrades:
+            clean_name = upgrade["Name"]
+            if upgrade["Stack Type"]:
+                clean_name += f" ({self.stacks.get(upgrade['Stack Type'], 0)} stacks)"
 
             try:
-                level = min(int(upgrade_values[4]), int(raw_vault[index]))
-                description = f"{vault_string_cleaner(upgrade_values[9])} {secondary_description}"
+                level = min(upgrade["Max Level"], int(raw_vault[upgrade["Index"]]))
             except:
                 level = 0
-                description = f"{upgrade_values[9].replace('_', ' ')}{secondary_description}"
 
             self.upgrades[clean_name] = VaultUpgrade(
                 name=clean_name,
-                index=index,
+                index=upgrade["Index"],
                 level=level,
-                cost_base=safer_convert(upgrade_values[1], 0),
-                cost_increment=float(upgrade_values[2]),
-                max_level=int(upgrade_values[4]),
-                value_per_level=int(upgrade_values[5]),
-                unlock_requirement=int(upgrade_values[6]),
-                description=description,
-                scaling_value=index not in vault_dont_scale,
-                vault_section=vault_section,
+                cost_base=upgrade["Cost Base"],
+                cost_increment=upgrade["Cost Increment"],
+                max_level=upgrade["Max Level"],
+                value_per_level=upgrade["Value Per Level"],
+                unlock_requirement=upgrade["Unlock Requirement"],
+                description=upgrade["Description"],
+                scaling_value=upgrade["Scaling Value"],
+                vault_section=upgrade["Vault Section"],
             )
 
         self.total_upgrades = sum(upgrade.level for upgrade in self.upgrades.values())

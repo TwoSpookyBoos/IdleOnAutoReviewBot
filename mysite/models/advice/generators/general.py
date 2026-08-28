@@ -17,14 +17,7 @@ def get_guild_bonus_advice(bonus_name: str) -> Advice:
 
 def get_upgrade_vault_advice(upgrade_name: str, link_to_section: bool = True, additional_info_text: str = "") -> Advice:
     upgrade = session_data.account.vault.upgrades[upgrade_name]
-    main_line = f"""{f"{{{{ Upgrade Vault|#upgrade-vault }}}} - {upgrade_name}" if link_to_section else upgrade_name}: {upgrade.description}"""
-    unlock_line = f"<br>Requires {upgrade.unlock_requirement - session_data.account.vault.total_upgrades} more Upgrades to unlock" if not upgrade.unlocked else ""
-    return Advice(
-        label=main_line + unlock_line + additional_info_text,
-        picture_class=upgrade.image,
-        progression=upgrade.level,
-        goal=upgrade.max_level,
-    )
+    return upgrade.get_advice(session_data.account.vault.total_upgrades, link_to_section, additional_info_text)
 
 
 def get_companion_advice(companion_name: str, value_is_multi: bool = False) -> tuple[int | float, Advice]:

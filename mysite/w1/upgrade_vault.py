@@ -31,34 +31,18 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                 if upgrades[upgrade_name].level < upgrades[upgrade_name].max_level:
                     add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                     if subgroup_label in vault_AdviceDict['Tiers']:
-                        vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                            label=(
-                                f"Max {upgrade_name}"
-                                f"<br>Requires {upgrades[upgrade_name].unlock_requirement - session_data.account.vault.total_upgrades} more Upgrades to unlock"
-                                if not upgrades[upgrade_name].unlocked else
-                                f"{upgrade_name}: {upgrades[upgrade_name].description}"
-                            ),
-                            picture_class=upgrades[upgrade_name].image,
-                            progression=upgrades[upgrade_name].level,
-                            goal=upgrades[upgrade_name].max_level,
-                        ))
+                        vault_AdviceDict['Tiers'][subgroup_label].append(
+                            upgrades[upgrade_name].get_tier_advice(session_data.account.vault.total_upgrades)
+                        )
         elif 'Exclude' in requirements:
             for upgrade_name, upgrade_details in session_data.account.vault.upgrades.items():
                 if upgrade_name not in requirements['Exclude']:
                     if upgrade_details.level < upgrade_details.max_level:
                         add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                         if subgroup_label in vault_AdviceDict['Tiers']:
-                            vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                                label=(
-                                    f"Max {upgrade_name}"
-                                    f"<br>Requires {upgrade_details.unlock_requirement - session_data.account.vault.total_upgrades} more Upgrades to unlock"
-                                    if not upgrade_details.unlocked else
-                                    f"{upgrade_name}: {upgrade_details.description}"
-                                ),
-                                picture_class=upgrade_details.image,
-                                progression=upgrade_details.level,
-                                goal=upgrade_details.max_level,
-                            ))
+                            vault_AdviceDict['Tiers'][subgroup_label].append(
+                                upgrade_details.get_tier_advice(session_data.account.vault.total_upgrades)
+                            )
 
         if subgroup_label not in vault_AdviceDict['Tiers'] and tier_Vault == tier_number - 1:
             tier_Vault = tier_number
