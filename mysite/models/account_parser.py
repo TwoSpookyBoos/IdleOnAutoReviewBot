@@ -1068,7 +1068,6 @@ def _parse_w1(account):
     _parse_w1_forge(account)
     _parse_w1_bribes(account)
     _parse_w1_stamps(account)
-    _parse_w1_owl(account)
     _parse_w1_statues(account)
 
 def _parse_w1_upgrade_vault(account):
@@ -1251,17 +1250,6 @@ def _parse_w1_stamps(account):
                 effect=""
             )
     _parse_master_classes_exalted_stamps(account)
-
-def _parse_w1_owl(account):
-    if 265 not in account.raw_optlacc_dict:
-        logger.warning(f"Owl data not present{', as expected' if account.version < 217 else ''}.")
-    account.owl = {
-        'Discovered': safer_get(account.raw_optlacc_dict, 265, False),
-        'FeatherGeneration': safer_get(account.raw_optlacc_dict, 254, 0),
-        'BonusesOfOrion': safer_get(account.raw_optlacc_dict, 255, 0),
-        'FeatherRestarts': safer_get(account.raw_optlacc_dict, 258, 0),
-        'MegaFeathersOwned': safer_get(account.raw_optlacc_dict, 262, 0)
-    }
 
 def _parse_w1_statues(account):
     account.statues = {}

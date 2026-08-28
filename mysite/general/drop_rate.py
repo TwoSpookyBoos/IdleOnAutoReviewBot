@@ -179,12 +179,12 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_1_bonus = 0
 
     # Owl Bonuses
-    owl_bonus = session_data.account.owl['Bonuses']['Drop Rate']['Value']
+    owl_bonus = session_data.account.owl.bonuses['Drop Rate'].value
     drop_rate_aw_advice[w1].append(Advice(
         label=f"{{{{ Owl|#owl }}}}- Drop Rate:"
               f"<br>+{owl_bonus}% Drop Rate",
         picture_class='the-great-horned-owl',
-        progression=max(0, session_data.account.owl['MegaFeathersOwned'] - 10),
+        progression=max(0, session_data.account.owl.mega_feathers_owned - 10),
         resource='megafeather-9',
         goal=EmojiType.INFINITY.value
     ))

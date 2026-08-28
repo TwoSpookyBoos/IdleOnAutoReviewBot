@@ -16,13 +16,12 @@ from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, build
 from consts.consts_w4 import tomepct, max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
-from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
 from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
+from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
@@ -539,7 +538,7 @@ def _calculate_w1(account):
     _calculate_w1_starsigns(account)
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
-    _calculate_w1_owl_bonuses(account)
+    account.owl.calculate(account.legend_talents['Talents']['Furry Friends Forever']['Value'])
     account.basketball.calculate()
     account.darts.calculate()
 
@@ -689,38 +688,6 @@ def _calculate_w1_stamps(account):
             account.stamps[stamp_name].total_value = stamp.value
             logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
             continue
-
-def _calculate_w1_owl_bonuses(account):
-    # Dependency: _calculate_w7_legend_talents
-    bonuses_of_orion_num = len(owl_bonuses_of_orion)
-    bonuses_of_orion_owned = account.owl['BonusesOfOrion']
-    megafeathers_owned = account.owl['MegaFeathersOwned']
-    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Furry Friends Forever']['Value'])
-    megafeather_mod = 0
-    if megafeathers_owned >= 10:
-        megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
-    elif megafeathers_owned > 7:
-        megafeather_mod = 5
-    elif megafeathers_owned > 5:
-        megafeather_mod = 4
-    elif megafeathers_owned > 3:
-        megafeather_mod = 3
-    elif megafeathers_owned > 1:
-        megafeather_mod = 2
-
-    account.owl['Bonuses'] = {}
-    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonuses_of_orion.items()):
-        bonus_base = bonus['BaseValue']
-        if account.owl['Discovered']:
-            bonus_num_unlocked = (floor(bonuses_of_orion_owned/bonuses_of_orion_num) + (1 if (bonuses_of_orion_owned % bonuses_of_orion_num) > bonus_index else 0))
-        else:
-            bonus_num_unlocked = 0
-        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod * legend_talent_multi
-        account.owl['Bonuses'][bonus_name] = {
-            'BaseValue': bonus_base,
-            'NumUnlocked': bonus_num_unlocked,
-            'Value': safer_convert(bonus_value, 0)
-        }
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
