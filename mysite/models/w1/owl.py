@@ -2,6 +2,7 @@ from math import floor
 
 from consts.consts_autoreview import ValueToMulti
 from consts.progression_tiers import owl_bonuses_of_orion
+from models.advice.advice import Advice
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert, logger
 
 
@@ -15,6 +16,16 @@ class OwlBonus:
     def calculate(self, num_unlocked: int, megafeather_mod: float, legend_talent_multi: float):
         self.num_unlocked = num_unlocked
         self.value = safer_convert(self.base_value * num_unlocked * megafeather_mod * legend_talent_multi, 0)
+
+    def get_bonus_advice(self, link_to_section: bool = True, progression: int = 0, resource: str = "", goal=None) -> Advice:
+        link_to_section_text = f"{{{{ Owl|#owl }}}}- " if link_to_section else ""
+        return Advice(
+            label=f"{link_to_section_text}{self.name}:<br>+{self.value}% {self.name}",
+            picture_class='the-great-horned-owl',
+            progression=progression,
+            resource=resource,
+            goal=goal,
+        )
 
 
 class Owl:
