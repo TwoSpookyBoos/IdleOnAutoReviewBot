@@ -4,7 +4,7 @@ from functools import cached_property
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
-from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
+from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.greenstacks import GreenStacks
@@ -25,6 +25,7 @@ from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
+from models.w7.legend_talents import LegendTalents
 from models.w7.zenith_market import ZenithMarket
 from models.caverns import Caverns
 from utils.logging import get_logger
@@ -150,9 +151,7 @@ class Account:
             'Town Corals': 0,
             'Reef Corals': copy.deepcopy(coral_reef_bonuses)
         }
-        self.legend_talents = {
-            'Talents': copy.deepcopy(legend_talents_bonuses)
-        }
+        self.legend_talents = LegendTalents(self.raw_data)
         self.advice_fish = AdviceFish(self.raw_data)
         self.clam_work = ClamWork(self.raw_data)
         self.meritocracy = Meritocracy(self.raw_data)

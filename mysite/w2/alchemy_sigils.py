@@ -11,7 +11,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
 
@@ -96,7 +95,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mge_label = f"Multi Group E: {mge:.3f}x"
 
     # Multi Group F = Legend Talents
-    mgf = ValueToMulti(session_data.account.legend_talents['Talents']['Big Sig Fig']['Value'])
+    mgf = ValueToMulti(session_data.account.legend_talents['Big Sig Fig'].value)
     mgf_label = f"Multi Group F: {round_and_trim(mgf)}x"
 
     total_multi = max(1, mga * mgb * mgc * mgd * mge * mgf)
@@ -176,7 +175,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mge_label].append(get_arcade_advice(43))
 
     # Multi Group F
-    speed_Advice[mgf_label].append(get_legend_talent_advice('Big Sig Fig'))
+    speed_Advice[mgf_label].append(session_data.account.legend_talents['Big Sig Fig'].get_advice())
 
     for group_name in speed_Advice:
         for advice in speed_Advice[group_name]:

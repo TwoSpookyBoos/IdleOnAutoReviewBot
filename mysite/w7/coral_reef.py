@@ -6,7 +6,7 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.w7 import get_coral_reef_advice, get_legend_talent_advice
+from models.advice.generators.w7 import get_coral_reef_advice
 from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
 from utils.safer_data_handling import safer_convert
@@ -101,11 +101,9 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(scale_on_ice_advice)
     multi_group_d_value += scale_on_ice_value
 
-    legend_talent = session_data.account.legend_talents['Talents']['Coral Restoration']
-    legend_talent_value = legend_talent['Value']
-    legend_talent_advice = get_legend_talent_advice('Coral Restoration')
-    multi_group_d_advice.append(legend_talent_advice)
-    multi_group_d_value += legend_talent_value
+    legend_talent = session_data.account.legend_talents['Coral Restoration']
+    multi_group_d_advice.append(legend_talent.get_advice())
+    multi_group_d_value += legend_talent.value
 
     multi_group_d_advice.append(get_arcade_advice(57))
     multi_group_d_value += session_data.account.arcade[57]['Value']

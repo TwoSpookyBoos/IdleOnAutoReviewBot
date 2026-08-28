@@ -22,7 +22,7 @@ def getInfluencers():
     return results
 
 def generateShrineLevelingAlerts():
-    has_shrine_world_order_bill = bool(session_data.account.legend_talents['Talents']['Shrine World Order Bill']['Level'])
+    has_shrine_world_order_bill = bool(session_data.account.legend_talents['Shrine World Order Bill'].level)
     if has_shrine_world_order_bill: 
         return
 

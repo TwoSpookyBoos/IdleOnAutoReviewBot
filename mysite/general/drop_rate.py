@@ -15,7 +15,6 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
@@ -519,8 +518,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_7_bonus = 0
 
     # Legend Talents: Greatest Drop Party Ever
-    drop_rate_aw_advice[w7].append(get_legend_talent_advice('Greatest Drop Party Ever'))
-    world_7_bonus += session_data.account.legend_talents['Talents']['Greatest Drop Party Ever']['Value']
+    drop_rate_aw_advice[w7].append(session_data.account.legend_talents['Greatest Drop Party Ever'].get_advice())
+    world_7_bonus += session_data.account.legend_talents['Greatest Drop Party Ever'].value
 
     # Gallery - Trophies & Nametags
     gallery_unlocked = session_data.account.highest_world_reached >= 7
@@ -760,7 +759,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if card.cardset == 'Events':
             events_cardset.append(card)
 
-    legend_talent_multi = ValueToMulti(session_data.account.legend_talents['Talents']['Flopping a Full House']['Value'])
+    legend_talent_multi = ValueToMulti(session_data.account.legend_talents['Flopping a Full House'].value)
     for index, character in enumerate(session_data.account.all_characters):
         # Drop Rate from LUK
         dr_from_luk_advice: list[Advice] = []
@@ -798,7 +797,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
                     starting_note = f'(DOUBLED {EmojiType.CHECK.value}{EmojiType.CHECK.value}) '
             card_advice.append(card.getAdvice(optional_character=character, optional_starting_note=starting_note, optional_ending_note=end_note))
         card_bonus *= legend_talent_multi
-        card_advice.append(get_legend_talent_advice('Flopping a Full House'))
+        card_advice.append(session_data.account.legend_talents['Flopping a Full House'].get_advice())
 
         # Card Sets - Bosses n Nightmares
         cardset_advice: list[Advice] = []

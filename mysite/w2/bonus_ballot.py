@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_companion_advice
 from utils.logging import get_logger
 
@@ -79,7 +78,7 @@ def getBallotMultiAdviceGroup():
             summoning_bonus.get_bonus_advice(),
             mashed_potato_advice,
             crystal_cuttlefish_advice,
-            get_legend_talent_advice('Democracy FTW')
+            session_data.account.legend_talents['Democracy FTW'].get_advice()
         ]
     }
 

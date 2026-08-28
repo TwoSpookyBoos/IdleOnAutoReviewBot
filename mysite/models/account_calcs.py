@@ -44,7 +44,6 @@ def _calculate_wave_1(account):
     account.summoning.calculate_winner_bonus_multi(account)
     account.summoning.calculate_bonuses()
     _calculate_w4_tome(account)
-    _calculate_w7_legend_talents(account)
 
 def _calculate_caverns_majiks(account):
     have_doot = has_companion("King Doot")
@@ -659,7 +658,7 @@ def _calculate_w1_starsigns(account):
 
 
 def _calculate_w1_stamps(account):
-    # Dependency: _calculate_w7_legend_talents
+    # Dependency: legend talents
     # `"StampDoubler" == d` in source. Last Updated in v2.43 Nov 6
     account.exalted_stamp_multi = ValueToMulti(
         100 #base
@@ -674,7 +673,7 @@ def _calculate_w1_stamps(account):
         # TODO: + Gaming Palette Bonus
         # TODO: + Exotic Market Bonus
         # TODO: + Spelunk Bonus
-        + account.legend_talents['Talents']['Wowa Woowa']['Value']
+        + account.legend_talents['Wowa Woowa'].value
     )
 
     for stamp_name, stamp in account.stamps.items():
@@ -691,11 +690,11 @@ def _calculate_w1_stamps(account):
             continue
 
 def _calculate_w1_owl_bonuses(account):
-    # Dependency: _calculate_w7_legend_talents
+    # Dependency: legend talents
     bonuses_of_orion_num = len(owl_bonuses_of_orion)
     bonuses_of_orion_owned = account.owl['BonusesOfOrion']
     megafeathers_owned = account.owl['MegaFeathersOwned']
-    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Furry Friends Forever']['Value'])
+    legend_talent_multi = ValueToMulti(account.legend_talents['Furry Friends Forever'].value)
     megafeather_mod = 0
     if megafeathers_owned >= 10:
         megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
@@ -798,7 +797,7 @@ def _calculate_w2_postOffice(account):
     )
 
 def _calculate_w2_ballot(account):
-    # Dependency: _calculate_w7_legend_talents
+    # Dependency: legend talents
     # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
     account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
@@ -808,7 +807,7 @@ def _calculate_w2_ballot(account):
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * has_companion('Mashed Potato'))
         + (40 * has_companion('Crystal Cuttlefish'))
-        + account.legend_talents['Talents']['Democracy FTW']['Value']
+        + account.legend_talents['Democracy FTW'].value
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
@@ -1639,31 +1638,3 @@ def _calculate_w7_coral_reef(account):
     for coral_details in account.coral_reef['Reef Corals'].values():
         coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))
 
-def _calculate_w7_legend_talents(account):
-    for legend_name, legend_details in account.legend_talents['Talents'].items():
-        legend_details['Value'] = legend_details['Base Value'] * legend_details['Level']
-        next_value = legend_details['Base Value'] * (legend_details['Level'] + 1)
-        if '{' in legend_details['Description']:
-            legend_details['Description'] = legend_details['Description'].replace('{', f"{legend_details['Value']}")
-        if '}' in legend_details['Description']:
-            legend_details['Description'] = legend_details['Description'].replace('}', f"{ValueToMulti(legend_details['Value'])}")
-        if '$' in legend_details['Description']:
-            if legend_name == 'Double Aint Enough':
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{2 + legend_details['Value'] / 100}")
-            elif legend_name == 'Super Talent Points':
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{50 + account.legend_talents['Talents']['Super Duper Talents']['Value']}")
-            elif legend_name == 'Inevitable Builder':
-                legend_details['Description'] = legend_details['Description'].replace(' for a total bonus speed of $x', '')
-            elif legend_name == "6 O'Clock Crystals":
-                legend_details['Description'] = legend_details['Description'].replace('$ ', '')
-            else:
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{legend_details['Value']}")
-        if '{' in legend_details['Bonus']:
-            legend_details['Bonus'] = legend_details['Bonus'].replace('{', f"{next_value}")
-        if '}' in legend_details['Bonus']:
-            legend_details['Bonus'] = legend_details['Bonus'].replace('}', f"{ValueToMulti(next_value)}")
-        if '$' in legend_details['Bonus']:
-            if legend_name == 'Double Aint Enough':
-                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{2 + next_value / 100}")
-            else:
-                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{next_value}")
