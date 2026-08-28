@@ -1,5 +1,8 @@
 from consts.idleon.w3.salt_lick import salt_lick_name_list, salt_lick_list
-from utils.safer_data_handling import safe_loads, logger
+from utils.logging import get_logger
+from utils.safer_data_handling import safe_loads
+
+logger = get_logger(__name__)
 
 
 class SaltLickUpgrade:
