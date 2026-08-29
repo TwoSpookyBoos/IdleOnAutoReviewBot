@@ -1,7 +1,7 @@
 from math import ceil, floor, prod
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
+from consts.consts_general import getNextESFamilyBreakpoint, storage_chests_item_slots_max, \
     greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
@@ -268,8 +268,8 @@ def _calculate_general_storage_slots(account):
         account.storage['Other Storage'][name] = {
             'Source': 'Vault',
             # Vault bonus Advice is standardized in get_upgrade_vault_advice. Extra entries not needed here.
-            'Owned Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Level'],
-            'Max Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Max Level'],
+            'Owned Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].level,
+            'Max Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].max_level,
         }
     for name, slots_per_level in construction_buildings.items():
         account.storage['Other Storage'][name] = {
@@ -535,81 +535,13 @@ def _calculate_master_classes_tesseract_tachyon_sources(account):
 
 
 def _calculate_w1(account):
-    _calculate_w1_upgrade_vault(account)
+    account.vault.calculate()
     _calculate_w1_starsigns(account)
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     _calculate_w1_owl_bonuses(account)
     account.basketball.calculate()
     account.darts.calculate()
-
-def _calculate_w1_upgrade_vault(account):
-    vault_multi = [
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery']['Level']
-            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-        ),
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery II']['Level']
-            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
-        )
-    ]
-    vault_multi_max = [
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery']['Max Level']
-            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-        ),
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery II']['Max Level']
-            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
-        )
-    ]
-    # logger.debug(f"{vault_multi = }")
-    for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
-        upgrade_scaling_multiplier = vault_multi[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
-        upgrade_scaling_multiplier_max = vault_multi_max[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
-        upgrade_total_value = (
-                account.vault['Upgrades'][upgrade_name]['Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * upgrade_scaling_multiplier
-        )
-        upgrade_total_value_max = (
-                account.vault['Upgrades'][upgrade_name]['Max Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * upgrade_scaling_multiplier_max
-        )
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = upgrade_total_value
-            account.vault['Upgrades'][upgrade_name]['Max Value'] = upgrade_total_value_max
-            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(upgrade_total_value)
-            account.vault['Upgrades'][upgrade_name]['Max Value'] = ValueToMulti(upgrade_total_value_max)
-            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if 'Target:&' in account.vault['Upgrades'][upgrade_name]['Description']:
-            if upgrade_name.split('!')[0] in vault_stack_types:
-                stack_type = upgrade_name.split('!')[0]
-                if len(grimoire_coded_stack_monster_order) < account.vault.get(f'{stack_type} Stacks', '0'):
-                    next_stack_target = "All done!"
-                else:
-                    try:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
-                    except:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
-                account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                    'Target:&', f"Target: {next_stack_target}"
-                )
-        account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * upgrade_scaling_multiplier:.2f} per level"
-            f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
-            f"{upgrade_details['Vault Section']}"
-            f")"
-        )
 
 def _calculate_w1_starsigns(account):
     seraph_summoning_player = get_seraph_cosmos_max_summ_level_goal(account.tesseract['Upgrades']['Astrology Cultism']['Level'])
@@ -734,7 +666,7 @@ def _calculate_w2(account):
 def _calculate_w2_vials(account):
     account.alchemy_vials_calcs = {
         'mga': (
-            account.vault['Upgrades']['Vial Overtune']['Total Value']
+            account.vault.upgrades['Vial Overtune'].total_value
             + ((account.maxed_vials * .02) if account.rift['VialMastery'] else 0)
         ),
         'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
@@ -1551,7 +1483,7 @@ def _calculate_w1_statues(account):
 
     voodoo_statufication_multi = ValueToMulti(max(voodoo_statufication_multi, default=0))
 
-    vault_multi = account.vault['Upgrades']['Statue Bonanza']['Total Value']
+    vault_multi = account.vault.upgrades['Statue Bonanza'].total_value
     vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
 
     onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
