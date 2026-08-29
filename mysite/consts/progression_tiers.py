@@ -65,7 +65,7 @@ gemShop_progressionTiers = [
     [0, "", {}, ""],
     [1, "S", {
         'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3D Printer': 1, 'Richelin Kitchen': 1, 'Divinity Sparkie': 1, 'Instagrow Generator': 1,
-        'Extra Card Slot': 4},
+        'Extra Card Slot': 4, 'King Of All Winners': 5, 'Legend Talent Pts': 5},
      ""],
     [2, "A", {
         'Item Backpack Space': 1, 'Storage Chest Space': 2, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 1,
@@ -73,21 +73,23 @@ gemShop_progressionTiers = [
         'Royal Egg Cap': 3, 'Souped Up Tube': 1,
         'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 1,
         'Conjuror Pts': 1,
-        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot Of Land': 2},
+        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot Of Land': 2, 'Gallery Showcases': 6},
      ""],
     [3, "B", {
         'Item Backpack Space': 2, 'Storage Chest Space': 4, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
         'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2, 'Zen Cogs': 4, 'Tower Building Slots': 2,
         'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Conjuror Pts': 3,
-        'Plot Of Land': 4, 'Instagrow Generator': 5},
+        'Plot Of Land': 4, 'Instagrow Generator': 5,
+        'Davey Jones Training': 8, 'Bling Bags': 8, 'More Coral': 10, 'Super Auto Mode': 2},
      ""],
     [4, "C", {
         'Item Backpack Space': 3, 'Storage Chest Space': 8, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9,
         'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Parallel Villagers The Librarian': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
-        'Plot Of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
+        'Plot Of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7,
+        'Novelty Jade Coins': 7, 'Super Auto Mode': 4},
      ""],
     [5, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8,
