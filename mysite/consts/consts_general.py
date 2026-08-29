@@ -113,7 +113,6 @@ greenstack_item_difficulty_groups = {
             "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"
         ],
         "Crystal Enemy Drops": [
-            # FoodPotMana2 removed from all drop table
             "FoodPotMana1", "FoodPotGr1", "FoodPotOr2", "Leaf1"
         ],
         "Other Skilling Resources": [
@@ -468,16 +467,21 @@ expected_stackables = {
         'Timecandy1', 'Timecandy2', 'Timecandy3', 'Timecandy4', 'Timecandy5', 'Timecandy6', 'Timecandy7', 'Timecandy8', 'Timecandy9',  # Time Candies
         'Whetstone', 'Quest72', 'Quest73', 'Quest76', 'Quest77',  # Other Time Skips
         'Quest70', 'Quest71', 'Quest75', 'ItemsCoupon1', 'ItemsCoupon2',  # Loot Bags
-        'FoodHealth8', 'Quest69', 'Quest74', 'FoodPotMana2',  # Unobtainables
+        'FoodHealth8', 'Quest69', 'Quest74',  # Unobtainables
         'EquipmentStatues6',  # Kachow
         'ClassSwap', 'ClassSwapB', 'ResetBox',
         'FoodG15',
+    ],
+    'Legacy': [  # Previously legitimately obtainable, since removed from the game - not achievable by new players
+        'FoodPotMana2',  # Average Mana Potion
     ]
 }
 greenstack_amount = 10 ** 7
+# Categories excluded from the "expected" (achievable-by-new-players) greenstack count
+excluded_gstack_categories = ('Cheater', 'Legacy')
 gstackable_codenames = [item for items in expected_stackables.values() for item in items]
 gstackable_codenames_expected = [
-    item for items in list(expected_stackables.values())[:-1] for item in items
+    item for category, items in expected_stackables.items() if category not in excluded_gstack_categories for item in items
 ]
 gstacks_rated_items = []
 quest_items_codenames = expected_stackables["Missable Quest Items"]
