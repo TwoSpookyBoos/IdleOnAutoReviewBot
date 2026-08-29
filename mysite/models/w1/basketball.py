@@ -1,5 +1,8 @@
 from consts.idleon.w1.basketball import basketball_upgrade_descriptions
-from utils.safer_data_handling import safe_loads, safer_index, logger
+from utils.logging import get_logger
+from utils.safer_data_handling import safe_loads, safer_index
+
+logger = get_logger(__name__)
 
 
 class BasketballUpgrade:
