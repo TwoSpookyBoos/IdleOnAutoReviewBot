@@ -1,3 +1,4 @@
+from consts.consts_general import specialized_skills_dict
 from consts.consts_w2 import get_obol_totals, po_box_dict, alchemy_jobs_list
 from consts.consts_w3 import prayers_dict, apoc_names_list
 from consts.consts_w4 import lab_chips_dict
@@ -63,7 +64,7 @@ class Character:
         self.current_preset_talent_bar: dict = current_preset_talent_bar
         self.secondary_preset_talent_bar: dict = secondary_preset_talent_bar
         self.fix_talent_bars()
-        self.specialized_skills: list[str] = getSpecializedSkills(self.all_classes)
+        self.specialized_skills: list[str] = get_specialized_skills(self.all_classes)
         self.expected_talents: list[int] = getExpectedTalents(self.all_classes)
         self.inventory_bags: dict = inventory_bags
         self.inventory_slots: int = 0
@@ -370,44 +371,6 @@ def getExpectedTalents(classes_list):
     return expectedTalents
 
 
-def getSpecializedSkills(classes_list):
-    specializedSkillsList = []
-    if "Warrior" in classes_list:
-        specializedSkillsList.append("Mining")
-    elif "Archer" in classes_list:
-        specializedSkillsList.append("Smithing")
-    elif "Mage" in classes_list:
-        specializedSkillsList.append("Chopping")
-
-    if "Barbarian" in classes_list:
-        specializedSkillsList.append("Fishing")
-    elif "Squire" in classes_list:
-        specializedSkillsList.append("Construction")
-    elif "Bowman" in classes_list:
-        specializedSkillsList.append("Catching")
-    elif "Hunter" in classes_list:
-        specializedSkillsList.append("Trapping")
-    elif "Wizard" in classes_list:
-        specializedSkillsList.append("Worship")
-    elif "Shaman" in classes_list:
-        specializedSkillsList.append("Alchemy")
-
-    if 'Blood Berserker' in classes_list:
-        specializedSkillsList.append('Cooking')
-    elif 'Divine Knight' in classes_list:
-        specializedSkillsList.append('Gaming')
-    elif 'Siege Breaker' in classes_list:
-        specializedSkillsList.append('Sailing')
-    elif 'Beast Master' in classes_list:
-        specializedSkillsList.append('Breeding')
-    elif 'Elemental Sorcerer' in classes_list:
-        specializedSkillsList.append('Divinity')
-    elif 'Bubonic Conjuror' in classes_list:
-        specializedSkillsList.append('Laboratory')
-
-    if 'Death Bringer' in classes_list:
-        specializedSkillsList.append('Farming')
-    elif 'Wind Walker' in classes_list:
-        specializedSkillsList.append('Sneaking')
-
-    return specializedSkillsList
+def get_specialized_skills(classes_list):
+    specialized_skills_list = [specialized_skills_dict.get(class_name) for class_name in classes_list]
+    return specialized_skills_list

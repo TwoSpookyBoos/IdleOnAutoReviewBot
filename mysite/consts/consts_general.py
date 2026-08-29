@@ -1349,70 +1349,107 @@ equipment_by_bonus_dict = {
 }
 
 
-
-def getBaseClass(inputClass):
-    match inputClass:
-        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
-            return "Warrior"
-        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Arcane Cultist" | "Wizard" | "Elemental Sorcerer":
-            return "Mage"
-        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Archer"
-        case "Journeyman" | "Maestro" | "Voidwalker":
-            return "Journeyman"
-        case "Beginner":
-            return "Beginner"
+def get_base_class(input_class):
+    match input_class:
+        case 'Warrior' | 'Barbarian' | 'Blood Berserker' | 'Death Bringer' | 'Squire' | 'Divine Knight' | 'Royal Guardian':
+            return 'Warrior'
+        case 'Mage' | 'Shaman' | 'Bubonic Conjuror' | 'Arcane Cultist' | 'Wizard' | 'Elemental Sorcerer':
+            return 'Mage'
+        case 'Archer' | 'Bowman' | 'Siege Breaker' | 'Hunter' | 'Beast Master' | 'Wind Walker':
+            return 'Archer'
+        case 'Journeyman' | 'Maestro' | 'Voidwalker':
+            return 'Journeyman'
+        case 'Beginner':
+            return 'Beginner'
         case _:
-            return f"UnknownBaseClass-{inputClass}"
+            logger.warning(f'No Base Class found for {input_class}')
+            return f'UnknownBaseClass-{input_class}'
 
 
-def getSubclass(inputClass):
-    match inputClass:
-        case "Barbarian" | "Blood Berserker" | "Death Bringer":
-            return "Barbarian"
-        case "Squire" | "Divine Knight":
-            return "Squire"
-        case "Shaman" | "Bubonic Conjuror" | "Arcane Cultist":
-            return "Shaman"
-        case "Wizard" | "Elemental Sorcerer":
-            return "Wizard"
-        case "Bowman" | "Siege Breaker":
-            return "Bowman"
-        case "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Hunter"
-        case "Maestro" | "Voidwalker":
-            return "Maestro"
-        case "Beginner" | "Warrior" | "Mage" | "Archer" | "Journeyman":
-            return "None"
+def get_sub_class(input_class):
+    match input_class:
+        case 'Barbarian' | 'Blood Berserker' | 'Death Bringer':
+            return 'Barbarian'
+        case 'Squire' | 'Divine Knight' | 'Royal Guardian':
+            return 'Squire'
+        case 'Shaman' | 'Bubonic Conjuror' | 'Arcane Cultist':
+            return 'Shaman'
+        case 'Wizard' | 'Elemental Sorcerer':
+            return 'Wizard'
+        case 'Bowman' | 'Siege Breaker':
+            return 'Bowman'
+        case 'Hunter' | 'Beast Master' | 'Wind Walker':
+            return 'Hunter'
+        case 'Maestro' | 'Voidwalker':
+            return 'Maestro'
+        case 'Beginner' | 'Warrior' | 'Mage' | 'Archer' | 'Journeyman':
+            return 'None'
         case _:
-            return f"UnknownSubclass-{inputClass}"
+            logger.warning(f'No Sub Class found for {input_class}')
+            return f'UnknownSubclass-{input_class}'
 
 
-def getEliteClass(inputClass):
-    match inputClass:
-        case "Blood Berserker" | "Death Bringer":
-            return "Blood Berserker"
+def get_elite_class(input_class):
+    match input_class:
+        case 'Blood Berserker' | 'Death Bringer':
+            return 'Blood Berserker'
+        case 'Divine Knight' | 'Royal Guardian':
+            return 'Divine Knight'
         case 'Beast Master' | 'Wind Walker':
             return 'Beast Master'
-        case "Bubonic Conjuror" | "Arcane Cultist":
-            return "Bubonic Conjuror"
-        case "Divine Knight" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
-            return inputClass
+        case 'Bubonic Conjuror' | 'Arcane Cultist':
+            return 'Bubonic Conjuror'
+        case 'Beast Master' | 'Windwalker':
+            return 'Beast Master'
+        case 'Elemental Sorcerer' | 'Siege Breaker' | 'Voidwalker':
+            return input_class
         case (
-            "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+            'Beginner' | 'Warrior' | 'Barbarian' | 'Squire' | 'Mage' | 'Shaman' | 'Wizard' | 'Archer' | 'Bowman' | 'Hunter' | 'Journeyman' | 'Maestro'
         ):
-            return "None"
+            return 'None'
         case _:
-            return f"UnknownEliteClass-{inputClass}"
+            logger.warning(f'No Elite Class found for {input_class}')
+            return f'UnknownEliteClass-{input_class}'
 
 
-def getMasterClass(inputClass):
-    match inputClass:
-        case 'Death Bringer' | 'Wind Walker' | "Arcane Cultist":
-            return inputClass
+def get_master_class(input_class):
+    match input_class:
+        case 'Death Bringer' | 'Wind Walker' | 'Arcane Cultist' | 'Royal Guardian':
+            return input_class
         case (
-            "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+            'Blood Berserker' | 'Divine Knight' | 'Bubonic Conjuror' | 'Elemental Sorcerer' | 'Siege Breaker' | 'Beast Master' | 'Voidwalker' | 'Beginner' | 'Warrior' | 'Barbarian' | 'Squire' | 'Mage' | 'Shaman' | 'Wizard' | 'Archer' | 'Bowman' | 'Hunter' | 'Journeyman' | 'Maestro'
         ):
-            return "None"
+            return 'None'
         case _:
-            return f"UnknownMasterClass-{inputClass}"
+            logger.warning(f'No Master Class found for {input_class}')
+            return f'UnknownMasterClass-{input_class}'
+
+
+specialized_skills_dict = {
+    #Base classes
+    'Warrior': 'Mining',
+    'Archer': 'Smithing',
+    'Mage': 'Chopping',
+
+    #Subclasses
+    'Barbarian': 'Fishing',
+    'Squire': 'Construction',
+    'Bowman': 'Catching',
+    'Hunter': 'Trapping',
+    'Wizard': 'Worship',
+    'Shaman': 'Alchemy',
+
+    #Elite classes
+    'Blood Berserker': 'Cooking',
+    'Divine Knight': 'Gaming',
+    'Siege Breaker': 'Sailing',
+    'Beast Master': 'Breeding',
+    'Elemental Sorcerer': 'Divinity',
+    'Bubonic Conjuror': 'Laboratory',
+
+    #Master classes
+    'Death Bringer': 'Farming',
+    'Royal Guardian': 'Spelunking',
+    'Wind Walker': 'Sneaking',
+    'Arcane Cultist': 'Summoning'
+}

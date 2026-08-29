@@ -718,13 +718,14 @@ def process_star_sign(name, drop_rate, picture_class, character, infinite_star_s
 def invalid_weapon_type(base_class, slot):
     if base_class == 'Warrior':
         return slot in ['Bow', 'Wand', 'Fisticuffs']
-    if base_class == 'Archer':
+    elif base_class == 'Archer':
         return slot in ['Spear', 'Wand', 'Fisticuffs']
-    if base_class == 'Mage':
+    elif base_class == 'Mage':
         return slot in ['Spear', 'Bow', 'Fisticuffs']
-    if base_class in ['Journeyman', 'Beginner'] :
+    elif base_class in ['Journeyman', 'Beginner']:
         return slot in ['Spear', 'Bow', 'Wand']
-    logger.warning(f'Provided unknown base_class: {base_class}')
+    else:
+        logger.warning(f'Provided unknown base_class: {base_class}')
     return True
 
 
