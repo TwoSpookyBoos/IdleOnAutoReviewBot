@@ -278,6 +278,8 @@ EquipmentHats136: Bronze Tournament Spike Hat
 EquipmentHats137: Silver Tournament Spike Hat
 EquipmentHats138: Gold Tournament Spike Hat
 EquipmentHats139: Sun Hat
+EquipmentHats140: Legion Commander Bicorne
+EquipmentHats141: Fudd Hat
 EquipmentHatsBeg1: Ice Cream Sundae
 TestObj13: Viking Cap
 TestObj14: Trojan Helmet
@@ -544,6 +546,9 @@ EquipmentRingsChat9: HONK Ring
 EquipmentRingsChat10: Meteorite Ring
 EquipmentRingsChat11: Equinox Ring
 EquipmentRingsChat12: Tournament Ring
+EquipmentRingsChat13: Bronze Div Ring
+EquipmentRingsChat14: Silver Div Ring
+EquipmentRingsChat15: Gold Div Ring
 EquipmentRingsFishing1: Shallow Watering
 EquipmentRingsFishing2: Oceanic Ring
 EquipmentRingsFishing3: Deepwater Trench Ring
@@ -568,6 +573,8 @@ EquipmentCape17: Gilded Emperor Wings
 EquipmentCape18: Chains of the Gilded Vaultguard
 EquipmentCape19: Dragonroll Mantlepiece
 EquipmentCape20: Beeg Egg
+EquipmentCape21: Crystal Crescent
+EquipmentCape22: Bladed Rucksack
 EquipmentGown0: Pyromancer Robes
 EquipmentGown1: Cobalt Robe
 EquipmentGown2: Abyssal Robe
@@ -576,6 +583,7 @@ EquipmentGown4: Silkshard Robe
 EquipmentGown5: Corsair Uniform
 EquipmentGown6: Bulwark Armor
 EquipmentGown7: Time Traveler Outfit
+EquipmentGown8: Arctic Furcoat
 StampA1: Sword Stamp
 StampA2: Heart Stamp
 StampA3: Mana Stamp
@@ -1626,6 +1634,7 @@ EquipmentNametag35: 5th Anniversary IdleOn Nametag
 EquipmentNametag36: Wonderful 5th Year Nametag
 EquipmentNametag37: Grand Egg Nametag
 EquipmentNametag41: All That Glitters Nametag
+EquipmentNametag42: Singed Nametag
 EquipmentNametagReplica0: Replica Nametag
 EquipmentNametagReplica1: Riftwalker Nametag
 EquipmentNametagReplica2: Lava's Awesome Nametag
@@ -1668,6 +1677,7 @@ EquipmentNametagReplica38: Bronze Tournament Border Nametag
 EquipmentNametagReplica39: Silver Tournament Border Nametag
 EquipmentNametagReplica40: Gold Tournament Border Nametag
 EquipmentNametagReplica41: All That Glitters Nametag
+EquipmentNametagReplica42: All That Glitters Nametag
 EquipmentKeychain0: Simple Key Chain
 EquipmentKeychain1: Leafy Chain
 EquipmentKeychain2: Red Sneaker Chain
