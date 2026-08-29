@@ -63,6 +63,15 @@ class TesseractUpgrade:
             resource=self.tachyon_image
         )
 
+    def get_tier_advice(self, required_level: int) -> Advice:
+        return Advice(
+            label=self.name,
+            picture_class=self.image,
+            progression=self.level,
+            goal=required_level,
+            resource=self.tachyon_image
+        )
+
 
 class Tesseract:
     def __init__(self, raw_data: dict):
@@ -101,6 +110,7 @@ class Tesseract:
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
         self.tachyon_calc: dict[str, float] = {}
+        self.tesseract_talent_bonus_value: float = 0.0
 
     def calculate_upgrades(self):
         for upgrade in self.upgrades.values():
@@ -126,7 +136,7 @@ class Tesseract:
                 ac.secondary_preset_talents.get(str(backup_energy_talent_index), 0),
             )
 
-        tesseract_talent_bonus_value = lava_func(
+        self.tesseract_talent_bonus_value = lava_func(
             funcType=all_talentsDict[tesseract_talent_index]['funcX'],
             level=tesseract_preset_level,
             x1=all_talentsDict[tesseract_talent_index]['x1'],
@@ -143,7 +153,7 @@ class Tesseract:
         self.tachyon_calc = {
             'mga': ValueToMulti(
                 self.upgrades['Ripple in Spacetime'].total_value
-                + tesseract_talent_bonus_value
+                + self.tesseract_talent_bonus_value
                 + self.upgrades['Verdon Hoarding'].total_value * safer_math_log(self.tachyons[2], 10)
                 + self.upgrades['Aurion Hoarding'].total_value * safer_math_log(self.tachyons[5], 10)
                 # + Extra Tachyon from Equipment
@@ -161,3 +171,15 @@ class Tesseract:
             'mgg': 4 * has_balloonfish,
         }
         self.tachyon_calc['Total'] = prod(self.tachyon_calc.values())
+
+    def get_tesseract_talent_advice(self) -> Advice:
+        return Advice(
+            label=f"Tesseract Talent: +{self.tesseract_talent_bonus_value:.2f}% Tachyons",
+            picture_class='tesseract'
+        )
+
+    def get_backup_energy_advice(self) -> Advice:
+        return Advice(
+            label=f"Backup Energy Talent: {self.tachyon_calc['mgd']:.2f}x Tachyons",
+            picture_class='backup-energy',
+        )

@@ -260,6 +260,85 @@ achievements_progressionTiers = {
     },
 }
 
+###MASTER CLASSES PROGRESSION TIERS###
+tesseract_progressionTiers = {
+    0: {},
+    1: {
+        'Total Upgrades': 130,
+        'Specific Upgrades': {},
+        'Highest Map': {'World': 1, 'Map Name': 'Winding Willows'},
+    },
+    2: {
+        'Total Upgrades': 415,
+        'Specific Upgrades': {'Parallel Statues': 10},
+        'Highest Map': {'World': 2, 'Map Name': 'Jar Bridge'},
+    },
+    3: {
+        'Total Upgrades': 1250,
+        'Specific Upgrades': {'Parallel Statues': 20, 'Ethereal Opals': 10, 'Parallel Golden Food': 10},
+        'Highest Map': {'World': 3, 'Map Name': 'Steep Sheep Ledge'},
+    },
+    4: {
+        'Total Upgrades': 1650,
+        'Specific Upgrades': {
+            'Parallel Statues': 25, 'Ethereal Opals': 20, 'Parallel Golden Food': 20,
+            'My Talents, and Mine Alone': 30, 'Villager Indoctrination': 20
+        },
+        'Highest Map': {'World': 3, 'Map Name': 'Signature Slopes'},
+    },
+    5: {
+        'Total Upgrades': 2750,
+        'Specific Upgrades': {
+            'Parallel Statues': 40, 'Ethereal Opals': 25, 'Parallel Golden Food': 40,
+            'My Talents, and Mine Alone': 60, 'Villager Indoctrination': 60, 'Fractal Tesseract': 10
+        },
+        'Highest Map': {'World': 4, 'Map Name': 'Spaceway Raceway'},
+    },
+    6: {
+        'Total Upgrades': 4000,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 100, 'Villager Indoctrination': 100, 'Fractal Tesseract': 21,
+            'Astrology Cultism': 3, 'Pinnacle of Prisma': 3
+        },
+        'Highest Map': {'World': 4, 'Map Name': 'Shelled Shores'},
+    },
+    7: {
+        'Total Upgrades': 4900,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 140, 'Villager Indoctrination': 140, 'Fractal Tesseract': 26,
+            'Astrology Cultism': 5, 'Pinnacle of Prisma': 5, 'Gambit Grandmaster': 20, 'Vicar of the Emperor': 8
+        },
+        'Highest Map': {'World': 5, 'Map Name': 'Naut Sake Perimeter'},
+    },
+    8: {
+        'Total Upgrades': 5700,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 160, 'Villager Indoctrination': 160, 'Fractal Tesseract': 32,
+            'Astrology Cultism': 6, 'Pinnacle of Prisma': 6, 'Gambit Grandmaster': 45, 'Vicar of the Emperor': 12,
+            'Drop Rate Crossfire': 20
+        },
+        'Highest Map': {'World': 5, 'Map Name': 'OJ Bay'},
+    },
+    9: {
+        'Total Upgrades': 6500,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 180, 'Villager Indoctrination': 180, 'Fractal Tesseract': 37,
+            'Astrology Cultism': 7, 'Pinnacle of Prisma': 8, 'Gambit Grandmaster': 80, 'Vicar of the Emperor': 17,
+            'Drop Rate Crossfire': 50, 'Endless Reductions': 25
+        },
+        'Highest Map': {'World': 6, 'Map Name': 'Gooble Goop Creek'},
+    },
+    10: {
+        'Total Upgrades': 7600,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 200, 'Villager Indoctrination': 200, 'Fractal Tesseract': 42,
+            'Astrology Cultism': 8, 'Pinnacle of Prisma': 10, 'Gambit Grandmaster': 120, 'Vicar of the Emperor': 23,
+            'Drop Rate Crossfire': 80, 'Endless Reductions': 48, 'Universe Talent': 5, 'Beyond All Limits': 6
+        },
+        'Highest Map': {'World': 6, 'Map Name': 'Yolkrock Basin'},
+    },
+}
+
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = {
     1: {
@@ -2221,7 +2300,7 @@ true_max_tiers = {
     # Master Classes
     'Grimoire': 0,
     'Compass': 0,
-    'Tesseract': 0,
+    'The Tesseract': max(tesseract_progressionTiers.keys()),
 
     # World 1
     'Bribes': max(bribes_progressionTiers.keys()),
