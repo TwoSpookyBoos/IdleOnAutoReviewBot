@@ -1504,17 +1504,8 @@ def _calculate_w1_statues(account):
             goal=max_sailing_artifact_level,
             resource='the-onyx-lantern'
         ),
-        Advice(
-            label=f"Zenith base bonus: {50 * account.zenith_statues_unlocked}/50%"
-                  f"<br>Total including {{{{Zenith Market|#zenith-market}}}} TRUE ZEN: {round(zenith_multi, 2):g}x",
-            picture_class='zenith-tools',
-            progression=account.zenith_market['TRUE ZEN'].level,
-            goal=account.zenith_market['TRUE ZEN'].max_level,
-        ),
-        Advice(
-            label=f"{{{{Meritocracy|#meritocracy}}}}: All Statues bonus: {round(merit_multi, 2):g}x",
-            picture_class='meritocracy-26',
-        ),
+        account.zenith_market['TRUE ZEN'].get_advice(),
+        account.meritocracy[26].get_bonus_advice(),
         Advice(
             label=f"{{{{Event Shop|#event-shop}}}}: Smiley Statue: {round(event_shop_multi, 2):g}/1.3x",
             picture_class=account.event_points_shop['Bonuses']['Smiley Statue']['Image'],
