@@ -84,9 +84,9 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
         Advice(
             label=f"{{{{ Grimoire|#the-grimoire}}}}: Superior Crop Research: "
                   f"{grimoire_multi}/4x",
-            picture_class=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Image'],
-            progression=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Level'],
-            goal=session_data.account.grimoire['Upgrades']['Superior Crop Research']['Max Level'],
+            picture_class=session_data.account.grimoire.upgrades['Superior Crop Research'].image,
+            progression=session_data.account.grimoire.upgrades['Superior Crop Research'].level,
+            goal=session_data.account.grimoire.upgrades['Superior Crop Research'].max_level,
         ),
     ]
     cd_tabbed = {

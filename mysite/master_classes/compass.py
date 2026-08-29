@@ -14,7 +14,7 @@ from consts.consts_autoreview import (
     ValueToMulti, EmojiType
 )
 from consts.idleon.lava_func import lava_func
-from consts.consts_master_classes import compass_upgrades_list, compass_dusts_list, compass_path_ordering, compass_medallions
+from consts.idleon.master_classes.compass import compass_dusts_list, compass_medallions
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -56,23 +56,23 @@ def getCompassCurrenciesAdviceGroup(compass):
     currency_advices['Currencies'].append(Advice(
         label=(
             f"""Daily Top of the Mornin' kills: """
-            f"""{compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value']}"""
-            f"""<br>Remaining: {compass["Top of the Mornin'"]}"""
+            f"""{compass.upgrades["Top of the Mornin'"].total_value + compass.upgrades['Abomination Slayer XII'].total_value}"""
+            f"""<br>Remaining: {compass.top_of_the_mornin}"""
         ),
-        picture_class=compass['Upgrades']["Top of the Mornin'"]['Image'],
-        progression=compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value'] - compass["Top of the Mornin'"],
-        goal=compass['Upgrades']["Top of the Mornin'"]['Total Value'] + compass['Upgrades']['Abomination Slayer XII']['Total Value'],
+        picture_class=compass.upgrades["Top of the Mornin'"].image,
+        progression=compass.upgrades["Top of the Mornin'"].total_value + compass.upgrades['Abomination Slayer XII'].total_value - compass.top_of_the_mornin,
+        goal=compass.upgrades["Top of the Mornin'"].total_value + compass.upgrades['Abomination Slayer XII'].total_value,
         informational=True
     ))
 
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Dusts Collected: {notateNumber('Basic', compass['Total Dust Collected'], 3)}",
+        label=f"Total Dusts Collected: {notateNumber('Basic', compass.total_dust_collected, 3)}",
         picture_class='dustwalker',
         informational=True,
         completed=True
     ))
 
-    if compass['Aethermoons Enabled']:
+    if compass.aethermoons_enabled:
         currency_advices['Currencies'].append(Advice(
             label=f"Aethermoons Enabled! Collect 1 per two full AFK hour while fighting on a Wind Walker. Maximize your /hr display "
                   f"within AFK Info screen before consuming!",
@@ -90,60 +90,41 @@ def getCompassCurrenciesAdviceGroup(compass):
         ))
 
     currency_advices['Currencies'].extend([Advice(
-        label=f"{dust_name}: {notateNumber('Basic', compass[f'Dust{dust_index}'], 3)}",
-        picture_class=f'compass-dust-{dust_index - 1}',
+        label=f"{dust_name}: {notateNumber('Basic', compass.dusts[dust_index], 3)}",
+        picture_class=f'compass-dust-{dust_index}',
         informational=True,
         completed=True
-    ) for dust_index, dust_name in enumerate(compass_dusts_list, start=1)])
+    ) for dust_index, dust_name in enumerate(compass_dusts_list)])
 
     # Dust Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Dust multi: {compass['Dust Calc']['Total']:.3f}x",
+        label=f"Total Dust multi: {compass.dust_calc['Total']:.3f}x",
         picture_class='compass'
     ))
 
-    mga_label = f"Dust Multi Group A: {compass['Dust Calc']['mga']:.3f}x"
+    mga_label = f"Dust Multi Group A: {compass.dust_calc['mga']:.3f}x"
+    solardust_stacks_text = (
+        f"<br>{safer_math_log(compass.dusts[2], 'Lava'):.3f} stacks = "
+        f"{compass.upgrades['Solardust Hoarding'].total_value * safer_math_log(compass.dusts[2], 'Lava'):.3f}% total"
+    )
     currency_advices[mga_label] = [
-        Advice(
-            label=f"{compass['Upgrades']['Mountains of Dust']['Path Name']}-{compass['Upgrades']['Mountains of Dust']['Path Ordering']}: "
-                  f"Mountains of Dust: <br>{compass['Upgrades']['Mountains of Dust']['Description']}",
-            picture_class=compass['Upgrades']['Mountains of Dust']['Image'],
-            progression=compass['Upgrades']['Mountains of Dust']['Level'],
-            goal=compass['Upgrades']['Mountains of Dust']['Max Level'],
-            resource=compass['Upgrades']['Mountains of Dust']['Dust Image'],
-        ),
-        Advice(
-            label=f"{compass['Upgrades']['Solardust Hoarding']['Path Name']}-{compass['Upgrades']['Solardust Hoarding']['Path Ordering']}: "
-                  f"Solardust Hoarding: <br>{compass['Upgrades']['Solardust Hoarding']['Description']}"
-                  f"<br>{safer_math_log(compass['Dust3'], 'Lava'):.3f} stacks = "
-                  f"{compass['Upgrades']['Solardust Hoarding']['Total Value'] * safer_math_log(compass['Dust3'], 'Lava'):.3f}% total",
-            picture_class=compass['Upgrades']['Solardust Hoarding']['Image'],
-            progression=compass['Upgrades']['Solardust Hoarding']['Level'],
-            goal=compass['Upgrades']['Solardust Hoarding']['Max Level'],
-            resource=compass['Upgrades']['Solardust Hoarding']['Dust Image'],
-        ),
+        compass.upgrades['Mountains of Dust'].get_advice(),
+        compass.upgrades['Solardust Hoarding'].get_advice(solardust_stacks_text),
     ]
 
-    mgb_label = f"Dust Multi Group B: {compass['Dust Calc']['mgb']:.2f}x"
+    mgb_label = f"Dust Multi Group B: {compass.dust_calc['mgb']:.2f}x"
     currency_advices[mgb_label] = [
-        Advice(
-            label=f"{compass['Upgrades']['Spire of Dust']['Path Name']}-{compass['Upgrades']['Spire of Dust']['Path Ordering']}: "
-                  f"Spire of Dust: <br>{compass['Upgrades']['Spire of Dust']['Description']}",
-            picture_class=compass['Upgrades']['Spire of Dust']['Image'],
-            progression=compass['Upgrades']['Spire of Dust']['Level'],
-            goal=compass['Upgrades']['Spire of Dust']['Max Level'],
-            resource=compass['Upgrades']['Spire of Dust']['Dust Image'],
-        ),
+        compass.upgrades['Spire of Dust'].get_advice(),
     ]
 
-    mgc_label = f"Dust Multi Group C: {compass['Dust Calc']['mgc']:.2f}x"
+    mgc_label = f"Dust Multi Group C: {compass.dust_calc['mgc']:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.sneaking.pristine_charms[
             'Twinkle Taffy'
         ].get_obtained_advice()
     ]
 
-    mgd_label = f"Dust Multi Group D: {compass['Dust Calc']['mgd']:.2f}x"
+    mgd_label = f"Dust Multi Group D: {compass.dust_calc['mgd']:.2f}x"
     currency_advices[mgd_label] = [
         Advice(
             label=f"Windwalker Hood: +25%",
@@ -172,7 +153,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         )
     ]
 
-    mge_label = f"Dust Multi Group E: {compass['Dust Calc']['mge']:.2f}x"
+    mge_label = f"Dust Multi Group E: {compass.dust_calc['mge']:.2f}x"
     currency_advices[mge_label] = []
     ww_index = None
     eternal_hunt_preset_level = 100
@@ -213,7 +194,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         informational=True
     ))
 
-    mgf_label = f"Dust Multi Group F: {compass['Dust Calc']['mgf']:.2f}x"
+    mgf_label = f"Dust Multi Group F: {compass.dust_calc['mgf']:.2f}x"
     currency_advices[mgf_label] = []
     ww_index = None
     compass_preset_level = 100
@@ -258,16 +239,9 @@ def getCompassCurrenciesAdviceGroup(compass):
         'De Dust I', 'De Dust II', 'De Dust III', 'De Dust IV', 'De Dust V',
         'Abomination Slayer IX', 'Abomination Slayer XXX', 'Abomination Slayer XXXIV'
     ]:
-        currency_advices[mgf_label].append(Advice(
-            label=f"{compass['Upgrades'][bonus_name]['Path Name']}-{compass['Upgrades'][bonus_name]['Path Ordering']}: "
-                  f"{bonus_name}: <br>{compass['Upgrades'][bonus_name]['Description']}",
-            picture_class=compass['Upgrades'][bonus_name]['Image'],
-            progression=compass['Upgrades'][bonus_name]['Level'],
-            goal=compass['Upgrades'][bonus_name]['Max Level'],
-            resource=compass['Upgrades'][bonus_name]['Dust Image'],
-        ))
+        currency_advices[mgf_label].append(compass.upgrades[bonus_name].get_advice())
 
-    mgg_label = f"Dust Multi Group G: {compass['Dust Calc']['mgg']:.2f}x"
+    mgg_label = f"Dust Multi Group G: {compass.dust_calc['mgg']:.2f}x"
     currency_advices[mgg_label] = [
         session_data.account.emperor["Windwalker Extra Dust"].get_bonus_advice()
     ]
@@ -288,23 +262,8 @@ def getCompassCurrenciesAdviceGroup(compass):
 def getCompassAbominationsAdviceGroup(compass):
     abom_advices = []
 
-    for abom_name, abom_details in compass['Abominations'].items():
-        if abom_details['Defeated']:
-            abom_advices.append(Advice(
-                label=f"{abom_name} defeated in W{abom_details['World']}"
-                      f"<br>Weakness: {abom_details['Weakness']}",
-                picture_class=abom_details['Image'] if abom_details['Defeated'] else 'placeholder',
-                progression=1,
-                goal=1
-            ))
-        else:
-            abom_advices.append(Advice(
-                label=f"{abom_name[:3]}... undefeated in W{abom_details['World']}"
-                      f"<br>Weakness: {abom_details['Weakness']}",
-                picture_class='placeholder',
-                progression=0,
-                goal=1
-            ))
+    for abomination in compass.abominations.values():
+        abom_advices.append(abomination.get_advice())
 
     for advice in abom_advices:
         advice.mark_advice_completed()
@@ -322,19 +281,14 @@ def getCompassMedallionsAdviceGroup(compass):
     medallion_advice = []
 
     medallion_advice.append(Advice(
-        label=f"Total Medallions Collected: {compass['Total Medallions']}/{len(compass_medallions)}",
+        label=f"Total Medallions Collected: {compass.total_medallions}/{len(compass_medallions)}",
         picture_class='wind-walker-medallion',
-        progression=compass['Total Medallions'],
+        progression=compass.total_medallions,
         goal=len(compass_medallions)
     ))
 
-    for code_name, enemy_details in compass['Medallions'].items():
-        medallion_advice.append(Advice(
-            label=f"{enemy_details['Enemy Name']}",
-            picture_class=f"{enemy_details['Image']}",
-            progression=int(enemy_details['Obtained']),
-            goal=1
-        ))
+    for medallion in compass.medallions.values():
+        medallion_advice.append(medallion.get_advice())
 
     for advice in medallion_advice:
         advice.mark_advice_completed()
@@ -352,54 +306,30 @@ def getCompassUpgradesAdviceGroups(compass):
     upgrades_AdviceDict = {}
     upgrades_AdviceGroups = []
 
-    for path_name in compass_path_ordering:
-        upgrades_AdviceDict[f'{path_name} Path Upgrades'] = []
-        for compass_upgrade_index in compass_path_ordering[path_name]:
-            clean_name = compass_upgrades_list[compass_upgrade_index][0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-            upgrade_details = compass['Upgrades'][clean_name]
-            if path_name == 'Abomination':
-                if 'Titan doesnt exist' not in upgrade_details['Description']:  #Filter out placeholders for future Titans/Abominations
-                    abom = compass['Abominations'].get(upgrade_details['Abomination Name'], {'World': '?'})
-                    if upgrade_details['Unlocked']:
-                        upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
-                            label=(
-                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {clean_name}:"
-                                f"<br>{upgrade_details['Description']}"
-                            ),
-                            picture_class=upgrade_details['Image'],
-                            progression=upgrade_details['Level'],
-                            goal=upgrade_details['Max Level'],
-                            resource=upgrade_details['Dust Image']
-                        ))
-                    else:
-                        upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
-                            label=(
-                                f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: {clean_name}:"
-                                f"<br>Defeat {upgrade_details['Abomination Name'][:3]}... in W{abom['World']} to reveal!"
-                            ),
-                            picture_class='placeholder',
-                            progression=upgrade_details['Level'],
-                            goal=upgrade_details['Max Level'],
-                            resource=upgrade_details['Dust Image']
-                        ))
-            else:
-                upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(Advice(
-                    label=(
-                        f"{upgrade_details['Path Name']}-{upgrade_details['Path Ordering']}: "
-                        f"{clean_name}: <br>{upgrade_details['Description']}"
-                        f"<br>{'This upgrade is Locked!' if not upgrade_details['Unlocked'] else ''}"
-                    ),
-                    picture_class=upgrade_details['Image'],
-                    progression=upgrade_details['Level'],
-                    goal=upgrade_details['Max Level'],
-                    resource=upgrade_details['Dust Image']
-                ))
+    # compass.upgrades is already populated in path-then-path-ordering order (see Compass.__init__),
+    # so grouping by upgrade_details.path_name here preserves the same path/ordering layout as before.
+    for upgrade_details in compass.upgrades.values():
+        path_name = upgrade_details.path_name
+        upgrades_AdviceDict.setdefault(f'{path_name} Path Upgrades', [])
+        if path_name == 'Abomination':
+            if 'Titan doesnt exist' not in upgrade_details.description:  #Filter out placeholders for future Titans/Abominations
+                if upgrade_details.unlocked:
+                    upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(upgrade_details.get_advice())
+                else:
+                    abomination = compass.abominations.get(upgrade_details.abomination_name)
+                    abom_world = abomination.world if abomination else '?'
+                    upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(
+                        upgrade_details.get_abomination_locked_advice(abom_world)
+                    )
+        else:
+            locked_text = f"<br>{'This upgrade is Locked!' if not upgrade_details.unlocked else ''}"
+            upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(upgrade_details.get_advice(locked_text))
     upgrades_AdviceDict['Default Path Upgrades'].insert(0, Advice(
-        label=f"Total Compass Upgrades: {compass['Total Upgrades']:,}",
+        label=f"Total Compass Upgrades: {compass.total_upgrades:,}",
         picture_class='compass',
     ))
     upgrades_AdviceDict['Abomination Path Upgrades'].insert(0, Advice(
-        label=f"Total Abominations Slain: {compass['Total Abominations Slain']:,}",
+        label=f"Total Abominations Slain: {compass.total_abominations_slain:,}",
         picture_class='slayer-abominator',
     ))
 

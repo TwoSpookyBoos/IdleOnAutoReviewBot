@@ -159,16 +159,16 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     #########################################
     master_classes_bonus = 0
     # Grimoire - Skull of Major Droprate
-    skull_drop_rate_grimoire = session_data.account.grimoire['Upgrades']['Skull of Major Droprate']
-    skull_drop_rate_grimoire_upgrades_unlock = skull_drop_rate_grimoire['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
-    skull_drop_rate_grimoire_value = skull_drop_rate_grimoire['Total Value']
+    skull_drop_rate_grimoire = session_data.account.grimoire.upgrades['Skull of Major Droprate']
+    skull_drop_rate_grimoire_upgrades_unlock = skull_drop_rate_grimoire.unlock_requirement - session_data.account.grimoire.total_upgrades
+    skull_drop_rate_grimoire_value = skull_drop_rate_grimoire.total_value
     drop_rate_aw_advice[mc].append(Advice(
         label=f"{{{{Grimoire|#the-grimoire}}}}- Skull of Major Droprate:"
               f"<br>+{round(skull_drop_rate_grimoire_value, 1):g}% Drop Rate"
               f"{f'<br>Requires {skull_drop_rate_grimoire_upgrades_unlock} more upgrades to unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
-        picture_class=skull_drop_rate_grimoire['Image'],
-        progression=skull_drop_rate_grimoire['Level'],
-        goal=skull_drop_rate_grimoire['Max Level']
+        picture_class=skull_drop_rate_grimoire.image,
+        progression=skull_drop_rate_grimoire.level,
+        goal=skull_drop_rate_grimoire.max_level
     ))
     master_classes_bonus += skull_drop_rate_grimoire_value
 
@@ -384,16 +384,16 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # The Tome
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    grey_tome_book = session_data.account.grimoire['Upgrades']['Grey Tome Book']
-    if grey_tome_book['Level'] < grey_tome_book['Max Level']:
-        upgrades_to_unlock = grey_tome_book['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
+    grey_tome_book = session_data.account.grimoire.upgrades['Grey Tome Book']
+    if grey_tome_book.level < grey_tome_book.max_level:
+        upgrades_to_unlock = grey_tome_book.unlock_requirement - session_data.account.grimoire.total_upgrades
         drop_rate_aw_advice[w4].append(Advice(
             label=f"{{{{Grimoire|#the-grimoire}}}}- Grey Tome Book:"
-                  f"<br>{round(grey_tome_book['Total Value'], 1):g}x higher bonus from Tome Red Pages"
+                  f"<br>{round(grey_tome_book.total_value, 1):g}x higher bonus from Tome Red Pages"
                   f"{f'<br>Requires {upgrades_to_unlock} more upgrades to unlock' if upgrades_to_unlock > 0 else ''}",
-            picture_class=session_data.account.grimoire['Upgrades']['Grey Tome Book']['Image'],
-            progression=grey_tome_book['Level'],
-            goal=grey_tome_book['Max Level']
+            picture_class=session_data.account.grimoire.upgrades['Grey Tome Book'].image,
+            progression=grey_tome_book.level,
+            goal=grey_tome_book.max_level
         ))
     troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
     if not troll_set['Owned']:
@@ -688,7 +688,7 @@ def process_star_sign(name, drop_rate, picture_class, character, infinite_star_s
     equipped = (starsign['Index'] - 1) in character.equipped_star_signs
     silkroad_chip_owned = session_data.account.star_sign_extras['DoublerOwned']
     boosted = silkroad_chip_equipped and infinite_unlocked
-    ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+    ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
     seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
 
     passive_value = drop_rate * seraph_cosmos_starsign_mod
@@ -884,7 +884,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         # Seraph Cosmos
         # Always shown because the modifier can grow based on Summoning levels
-        ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+        ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
         seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
         next_multi_goal = get_seraph_cosmos_summ_level_goal(ac_level, character.summoning_level)
         next_level_note = (

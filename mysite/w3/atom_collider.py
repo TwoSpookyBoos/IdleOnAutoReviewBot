@@ -145,14 +145,14 @@ def getMaxLevelAdviceGroup() -> AdviceGroup:
         )
     )
 
-    ap = session_data.account.compass['Upgrades']['Atomic Potential']
+    ap = session_data.account.compass.upgrades['Atomic Potential']
     ml_advice.append(
         Advice(
-            label=f"{{{{Compass|#the-compass}}}}: {ap['Path Name']}-{ap['Path Ordering']}: Atomic Potential: "
-                  f"+{ap['Level']}/{ap['Max Level']} max Atom levels",
-            picture_class=ap['Image'],
-            progression=ap['Level'],
-            goal=ap['Max Level']
+            label=f"{{{{Compass|#the-compass}}}}: {ap.path_name}-{ap.path_ordering}: Atomic Potential: "
+                  f"+{ap.level}/{ap.max_level} max Atom levels",
+            picture_class=ap.image,
+            progression=ap.level,
+            goal=ap.max_level
         )
     )
 
@@ -222,18 +222,18 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
 
     cr_advice.append(Advice(
-        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']}%",
-        picture_class=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Image'],
-        progression=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Level'],
-        goal=session_data.account.grimoire['Upgrades']['Death of the Atom Price']['Max Level']
+        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire.upgrades['Death of the Atom Price'].total_value}%",
+        picture_class=session_data.account.grimoire.upgrades['Death of the Atom Price'].image,
+        progression=session_data.account.grimoire.upgrades['Death of the Atom Price'].level,
+        goal=session_data.account.grimoire.upgrades['Death of the Atom Price'].max_level
     ))
 
-    acc = session_data.account.compass['Upgrades']['Atomic Cost Crash']
+    acc = session_data.account.compass.upgrades['Atomic Cost Crash']
     cr_advice.append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: {acc['Path Name']}-{acc['Path Ordering']}: Atomic Cost Crash: {acc['Total Value']}%",
-        picture_class=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Image'],
-        progression=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Level'],
-        goal=session_data.account.compass['Upgrades']['Atomic Cost Crash']['Max Level']
+        label=f"{{{{Compass|#the-compass}}}}: {acc.path_name}-{acc.path_ordering}: Atomic Cost Crash: {acc.total_value}%",
+        picture_class=session_data.account.compass.upgrades['Atomic Cost Crash'].image,
+        progression=session_data.account.compass.upgrades['Atomic Cost Crash'].level,
+        goal=session_data.account.compass.upgrades['Atomic Cost Crash'].max_level
     ))
 
     cr_advice.append(Advice(
