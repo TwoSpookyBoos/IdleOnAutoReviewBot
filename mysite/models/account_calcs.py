@@ -1,12 +1,10 @@
-from math import ceil, floor, prod
+from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
 from consts.consts_general import getNextESFamilyBreakpoint, storage_chests_item_slots_max, \
     greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
-from consts.idleon.master_classes.grimoire import grimoire_coded_stack_monster_order
-from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
     get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
     get_seraph_stacks, seraph_max
