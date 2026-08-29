@@ -15,7 +15,7 @@ from consts.consts_autoreview import (
     ValueToMulti, EmojiType,
 )
 from consts.idleon.lava_func import lava_func
-from consts.consts_master_classes import grimoire_bones_list
+from consts.idleon.master_classes.grimoire import grimoire_bones_list
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -43,10 +43,10 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         'Currencies': [],
     }
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Bones Collected: {notateNumber('Basic', grimoire['Total Bones Collected'], 3)}",
+        label=f"Total Bones Collected: {notateNumber('Basic', grimoire.total_bones_collected, 3)}",
         picture_class='wraith-overlord'
     ))
-    if grimoire['Charred Bones Enabled']:
+    if grimoire.charred_bones_enabled:
         currency_advices['Currencies'].append(Advice(
             label=f"Charred Bones Enabled! Collect 1 per full AFK hour while fighting on a Death Bringer. Maximize your /hr display "
                   f"within AFK Info screen before consuming!",
@@ -64,18 +64,18 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         ))
     currency_advices['Currencies'] += [
         Advice(
-            label=f"{bone_name}: {notateNumber('Basic', grimoire[f'Bone{bone_index}'], 3)}",
-            picture_class=f'grimoire-bone-{bone_index-1}'
-        ) for bone_index, bone_name in enumerate(grimoire_bones_list, start=1)
+            label=f"{bone_name}: {notateNumber('Basic', grimoire.bones[bone_index], 3)}",
+            picture_class=f'grimoire-bone-{bone_index}'
+        ) for bone_index, bone_name in enumerate(grimoire_bones_list)
     ]
 
     #Bone Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Bone multi: {grimoire['Bone Calc']['Total']:.3f}x",
+        label=f"Total Bone multi: {grimoire.bone_calc['Total']:.3f}x",
         picture_class='grimoire'
     ))
 
-    mga_label = f"Bone Multi Group A: {grimoire['Bone Calc']['mga']:.2f}x"
+    mga_label = f"Bone Multi Group A: {grimoire.bone_calc['mga']:.2f}x"
     currency_advices[mga_label] = [
         session_data.account.sneaking.pristine_charms[
             'Glimmerchain'
@@ -94,7 +94,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         if db.secondary_preset_talents.get('196', 0) > grimoire_preset_level:
             grimoire_preset_level = db.secondary_preset_talents.get('196', 0)
 
-    mgb_label = f"Bone Multi Group B: {grimoire['Bone Calc']['mgb']:.3f}x"
+    mgb_label = f"Bone Multi Group B: {grimoire.bone_calc['mgb']:.3f}x"
     currency_advices[mgb_label] = [
         Advice(
             label=f"{grimoire_preset_level}/{session_data.account.library['MaxBookLevel']} booked Grimoire:"
@@ -106,12 +106,12 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         )
     ]
 
-    mgc_label = f"Bone Multi Group C: {grimoire['Bone Calc']['mgc']:.2f}x"
+    mgc_label = f"Bone Multi Group C: {grimoire.bone_calc['mgc']:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.caverns.caves['Gambit'].bonuses[12].get_bonus_advice()
     ]
 
-    mgd_label = f"Bone Multi Group D: {grimoire['Bone Calc']['mgd']:.2f}x"
+    mgd_label = f"Bone Multi Group D: {grimoire.bone_calc['mgd']:.2f}x"
     currency_advices[mgd_label] = [
         Advice(
             label=f"Deathbringer Hood of Death: +25%",
@@ -122,36 +122,15 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         ),
     ]
 
-    mge_label = f"Bone Multi Group E: {grimoire['Bone Calc']['mge']:.2f}x"
+    mge_label = f"Bone Multi Group E: {grimoire.bone_calc['mge']:.2f}x"
     currency_advices[mge_label] = []
-    bop = grimoire['Upgrades']["Bones o' Plenty"]
-    currency_advices[mge_label].append(Advice(
-        label=(
-            f"Bones o' Plenty: {bop['Description']}"
-            f"<br>Requires {bop['Unlock Requirement'] - grimoire['Total Upgrades']} more Upgrades to unlock"
-            if not bop['Unlocked'] else
-            f"Bones o' Plenty: {bop['Description']}"
-        ),
-        picture_class=bop['Image'],
-        progression=bop['Level'],
-        goal=bop['Max Level'],
-        resource=bop['Bone Image']
-    ))
-    bh = grimoire['Upgrades']['Bovinae Hoarding']
-    currency_advices[mge_label].append(Advice(
-        label=(
-            f"Bovinae Hoarding: {bh['Description']}"
-            f"<br>Requires {bh['Unlock Requirement'] - grimoire['Total Upgrades']} more Upgrades to unlock"
-            if not bh['Unlocked'] else
-            f"Bovinae Hoarding: {bh['Description']}"
-            f"<br>{safer_math_log(grimoire['Bone4'], 'Lava'):.3f} stacks = "
-            f"{bh['Total Value'] * safer_math_log(grimoire['Bone4'], 'Lava'):.3f}% total"
-        ),
-        picture_class=bh['Image'],
-        progression=bh['Level'],
-        goal=bh['Max Level'],
-        resource=bh['Bone Image']
-    ))
+    currency_advices[mge_label].append(grimoire.upgrades["Bones o' Plenty"].get_advice(grimoire.total_upgrades))
+    bh = grimoire.upgrades['Bovinae Hoarding']
+    bh_stacks_text = (
+        f"<br>{safer_math_log(grimoire.bones[3], 'Lava'):.3f} stacks = "
+        f"{bh.total_value * safer_math_log(grimoire.bones[3], 'Lava'):.3f}% total"
+    )
+    currency_advices[mge_label].append(bh.get_advice(grimoire.total_upgrades, bh_stacks_text))
     currency_advices[mge_label].append(get_arcade_advice(40))
 
     lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
@@ -163,7 +142,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         goal=1
     ))
 
-    mgf_label = f"Bone Multi Group F: {grimoire['Bone Calc']['mgf']:.2f}x"
+    mgf_label = f"Bone Multi Group F: {grimoire.bone_calc['mgf']:.2f}x"
     db_index = None
     tombstone_preset_level = 100
     for db in session_data.account.dbs:
@@ -204,7 +183,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         )
     ]
 
-    mgg_label = f"Bone Multi Group G: {grimoire['Bone Calc']['mgg']:.2f}x"
+    mgg_label = f"Bone Multi Group G: {grimoire.bone_calc['mgg']:.2f}x"
     currency_advices[mgg_label] = [
         session_data.account.emperor["Deathbringer Extra Bones"].get_bonus_advice()
     ]
@@ -230,22 +209,11 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
 
     #Upgrades
     upgrades_AdviceDict['Upgrades'] = [Advice(
-        label=f"Total Grimoire Upgrades: {grimoire['Total Upgrades']:,}",
+        label=f"Total Grimoire Upgrades: {grimoire.total_upgrades:,}",
         picture_class='grimoire'
     )]
     upgrades_AdviceDict['Upgrades'] += [
-        Advice(
-            label=(
-                f"{upgrade_name}: {upgrade_details['Description']}"
-                f"<br>Requires {upgrade_details['Unlock Requirement'] - grimoire['Total Upgrades']} more Upgrades to unlock"
-                if not upgrade_details['Unlocked'] else
-                f"{upgrade_name}: {upgrade_details['Description']}"
-            ),
-            picture_class=upgrade_details['Image'],
-            progression=upgrade_details['Level'],
-            goal=upgrade_details['Max Level'],
-            resource=upgrade_details['Bone Image']
-        ) for upgrade_name, upgrade_details in grimoire['Upgrades'].items()
+        upgrade_details.get_advice(grimoire.total_upgrades) for upgrade_details in grimoire.upgrades.values()
     ]
 
     for subgroup in upgrades_AdviceDict:

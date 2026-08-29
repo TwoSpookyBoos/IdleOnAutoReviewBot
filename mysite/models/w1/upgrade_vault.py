@@ -1,6 +1,6 @@
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_master_classes import grimoire_coded_stack_monster_order
 from consts.consts_monster_data import decode_monster_name
+from consts.idleon.master_classes.grimoire import grimoire_coded_stack_monster_order
 from consts.idleon.w1.upgrade_vault import vault_upgrades, vault_stack_types
 from models.advice.advice import Advice
 from utils.logging import get_logger

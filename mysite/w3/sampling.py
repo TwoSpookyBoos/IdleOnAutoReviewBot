@@ -235,13 +235,13 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     biggole_mole_value = biggole_mole_days * 1 * has_companion('Biggole Mole')
     biggole_mole_multi = ValueToMulti(biggole_mole_value)
 
-    mop = session_data.account.compass['Upgrades']['Moon of Print']
+    mop = session_data.account.compass.upgrades['Moon of Print']
     compass_moon_of_print_max_days = 100
     compass_moon_of_print_days = min(compass_moon_of_print_max_days, safer_get(session_data.account.raw_optlacc_dict, 364, 0))
     compass_moon_of_print_value = (
         compass_moon_of_print_max_days
-        * mop['Unlocked']
-        * mop['Total Value']
+        * mop.unlocked
+        * mop.total_value
     )
     compass_moon_of_print_multi = ValueToMulti(compass_moon_of_print_value)
 
@@ -367,9 +367,9 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: {mop['Path Name']}-{mop['Path Ordering']}: Moon of Print: "
+        label=f"{{{{Compass|#the-compass}}}}: {mop.path_name}-{mop.path_ordering}: Moon of Print: "
               f"<br>{compass_moon_of_print_multi:.2f}x ({compass_moon_of_print_days}/{compass_moon_of_print_max_days} days)",
-        picture_class=mop['Image'],
+        picture_class=mop.image,
         progression=compass_moon_of_print_days,
         goal=compass_moon_of_print_max_days
     ))

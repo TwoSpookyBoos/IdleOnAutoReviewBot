@@ -19,6 +19,9 @@ from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
+from models.master_classes.compass import Compass
+from models.master_classes.grimoire import Grimoire
+from models.master_classes.tesseract import Tesseract
 from models.w7.coral_kid import CoralKid
 from models.w7.dancing_coral import DancingCoral
 from models.w7.research import Research
@@ -148,6 +151,11 @@ class Account:
         self.sneaking: Sneaking = Sneaking(self.raw_data)
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
+
+        # Master Classes (World 6 mechanic)
+        self.grimoire: Grimoire = Grimoire(self.raw_data)
+        self.compass: Compass = Compass(self.raw_data)
+        self.tesseract: Tesseract = Tesseract(self.raw_data)
 
         # W7
         self.spelunk = Spelunk(self.raw_data)
