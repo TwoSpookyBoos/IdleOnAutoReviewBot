@@ -12,6 +12,7 @@ from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
 from models.w1.owl import Owl
+from models.w1.upgrade_vault import Vault
 from models.w3.salt_lick import SaltLick
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
@@ -115,6 +116,7 @@ class Account:
         self.basketball: Basketball = Basketball(self.raw_data)
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
+        self.vault: Vault = Vault(self.raw_data)
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)
