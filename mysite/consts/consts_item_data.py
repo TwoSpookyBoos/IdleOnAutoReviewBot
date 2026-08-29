@@ -10,8 +10,8 @@ from models.general.item_definitions import (
 )
 from utils.generate_data_dict import generate_data_dict
 from utils.number_formatting import parse_number
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 # `scripts.ItemDefinitions` in source. Last updated in v2.505
 # paste body of the `make` function (excluding outer curly braces)

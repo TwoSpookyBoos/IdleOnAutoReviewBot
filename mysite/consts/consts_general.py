@@ -1,10 +1,10 @@
 from consts.consts_autoreview import EmojiType
 from consts.idleon.lava_func import lava_func
-from utils.logging import get_consts_logger
+from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import getItemDisplayName
 
-logger = get_consts_logger(__name__)
+logger = get_logger(__name__)
 
 # Greenstacks
 greenstack_item_difficulty_groups = {
@@ -1319,6 +1319,7 @@ equipment_by_bonus_dict = {
         'Goldberry': {'Type': 'Premium Hat', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'goldberry'},
         # Trophies
         'One of the Divine': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 42}, 'Misc2': {'Bonus': 'Damage', 'Value': 35}, 'Image': 'one-of-the-divine'},
+        'Luckiest Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 777}, 'Image': 'luckiest-lad'},
         'Luckier Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 50}, 'Misc2': {'Bonus': 'PercentLuck', 'Value': 5}, 'Image': 'luckier-lad'},
         'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
         'Ultra Unboxer': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'ultra-unboxer'},
@@ -1342,6 +1343,8 @@ equipment_by_bonus_dict = {
         'Chains of the Gilded Vaultguard': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'ClassExpMulti', 'Value': 100}, 'Misc2': {'Bonus': 'DropRateMulti', 'Value': 40}, 'Image': 'chains-of-the-gilded-vaultguard'},
         # NameTags
         'Deadbones Nametag': {'Type': 'Nametag', 'Limited': True, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 25}, 'Misc2': {'Bonus': 'DropRate', 'Value': 35}, 'Image': 'deadbones-nametag', 'Note': 'Also has a flat 35% Drop Rate bonus'},
+        # Trophies
+        'Nine Dart Finish': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRateMulti', 'Value': 9}, 'Misc2': {'Bonus': 'AfkGainsMulti', 'Value': 9}, 'Image': 'nine-dart-finish'},
     }
 }
 

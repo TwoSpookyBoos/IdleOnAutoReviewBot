@@ -173,6 +173,16 @@ def getRankDatabaseAdviceGroup(farming) -> AdviceGroup:
     ]
     for advice in advice_list:
         advice.mark_advice_completed()
+
+    # Alert on a large stockpile of unspent points
+    spent_points = sum(upgrade.level for upgrade in farming.land_rank.values())
+    unspent_points = farming.land_rank.total_level - spent_points
+    if unspent_points > 200 and unspent_points > 0.1 * farming.land_rank.total_level:
+        session_data.account.alerts_Advices['World 6'].append(Advice(
+            label=f"{{{{ Land Ranks|#farming }}}}: You have {unspent_points:,} unspent point{pl(unspent_points)} to spend in the Rank Database!",
+            picture_class=advice_list[0].picture_class,
+        ))
+
     return AdviceGroup(
         tier='',
         pre_string='Rank Database',
@@ -441,13 +451,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         goal=1
     ))
 # Lamp
-    lamp_cavern = session_data.account.caverns['Caverns']['The Lamp']
-    evo_advices[lamp].append(Advice(
-        label=f"{{{{Lamp|#glowshroom-tunnels}}}} Wish: {lamp_cavern['WishTypes'][8]['Name']}: +{lamp_cavern['WishTypes'][8]['BonusList'][0]}%",
-        picture_class=f"cavern-{lamp_cavern['CavernNumber']}",
-        progression=lamp_cavern['WishTypes'][8]['BonusList'][0],
-        goal=EmojiType.INFINITY.value
-    ))
+    evo_advices[lamp].append(
+        session_data.account.caverns.caves['The Lamp']
+        .wishes['World 6 Majigers']
+        .get_bonus_advice(0)
+    )
 
 # MISC
     # Achievement

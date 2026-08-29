@@ -1,7 +1,7 @@
 from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 combatLevels_progressionTiers = [
     # int tier, int TotalAccountLevel, str TAL reward, int PlayerLevels, str PL reward, str notes
@@ -719,7 +719,8 @@ bubbles_progressionTiers = [
      {'Roid Ragin': 840, 'Warriors Rule': 950, 'Multorange': 570},
      {'Swift Steppin': 840},
      {'Stable Jenius': 840, 'Mage Is Best': 950,  'Severapurple': 570},
-     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 1000, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500},
+     {'Laaarrrryyyy': 900, 'Big P': 540, 'Call Me Bob': 1000, 'Carpenter': 450, 'Big Game Hunter': 270, 'Mr Massacre': 450, "Grind Time": 500,
+      'Power Trione': 450, 'Power Tritwo': 450, 'Power Trithree': 450},
      "95% max value",
      ""],
     [11, 0,

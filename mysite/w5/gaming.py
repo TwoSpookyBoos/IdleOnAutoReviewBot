@@ -211,17 +211,17 @@ def getSnailInformationGroup() -> AdviceGroup:
                 picture_class='sodium',
             )]
         else:
-            num_trebel_notes = session_data.account.caverns['Caverns']['The Harp']['NotesOwned'][3]
+            num_trebel_notes = session_data.account.caverns.caves['The Harp'].notes['Treble Note'].amount
 
             final_ballad_bonus = 1.0
-
-            if session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Purchased']:
+            final_ballad = session_data.account.caverns.villagers["Kaipu"].schematics['Final Ballad of the Snail']
+            if final_ballad.bought:
                 num_trebel_stacks = int(math.log10(num_trebel_notes) if num_trebel_notes > 0 else 0)
                 final_ballad_bonus = 1 + 0.04 * num_trebel_stacks
 
                 snail_AdviceDict['General'].append(Advice(
                     label=f"<br>{num_trebel_stacks} Trebel Note stacks for a bonus of {final_ballad_bonus:0.2f}x",
-                    picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
+                    picture_class=final_ballad.image,
                     progression=num_trebel_stacks,
                     goal=EmojiType.INFINITY.value,
                     resource='harp-note-3'
@@ -229,7 +229,7 @@ def getSnailInformationGroup() -> AdviceGroup:
             else:
                 snail_AdviceDict['General'].append(Advice(
                     label=f"{{{{ Schematic|#villagers }}}}: Final Ballad of the Snail is NOT acquired",
-                    picture_class=session_data.account.caverns['Schematics']['Final Ballad of the Snail']['Image'],
+                    picture_class=final_ballad.image,
                     progression=0,
                     goal=1
                 ))

@@ -50,7 +50,7 @@ def getBonusesAdviceGroup() -> AdviceGroup:
 def getBallotMultiAdviceGroup():
     e_vr = session_data.account.equinox_bonuses['Voter Rights']
     summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
-    voter_integrity = session_data.account.caverns['Majiks']['Voter Integrity']
+    voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
     _, mashed_potato_advice = get_companion_advice('Mashed Potato')
@@ -63,12 +63,7 @@ def getBallotMultiAdviceGroup():
                 progression=e_vr['CurrentLevel'],
                 goal=e_vr['FinalMaxLevel']
             ),
-            Advice(
-                label=f"Voter Integrity {{{{ Majik|#villagers }}}}: +{voter_integrity['Description']}",
-                picture_class=f"{voter_integrity['MajikType']}-majik-{'un' if voter_integrity['Level'] == 0 else ''}purchased",
-                progression=voter_integrity['Level'],
-                goal=voter_integrity['MaxLevel']
-            ),
+            voter_integrity.get_advice(),
             Advice(
                 label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
                 picture_class=gvb['Image'],

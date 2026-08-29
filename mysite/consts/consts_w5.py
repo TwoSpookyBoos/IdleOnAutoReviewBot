@@ -1,8 +1,8 @@
 import re
 from utils.number_formatting import parse_number
 from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 #Sailing
 artifact_tier_names = {0: 'Undiscovered', 1: 'Base', 2: 'Ancient', 3: 'Eldritch', 4: 'Sovereign', 5: 'Omnipotent'}

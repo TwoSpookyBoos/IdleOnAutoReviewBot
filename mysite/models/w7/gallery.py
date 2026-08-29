@@ -1,6 +1,7 @@
 from math import ceil, floor
 from dataclasses import dataclass
 
+from consts.consts_general import equipment_by_bonus_dict
 from consts.consts_item_data import ITEM_DATA, ItemBonus
 from consts.idleon.w7.gallery import podium_multi_by_level, nametag_multi_by_level
 from consts.w7.gallery import nametag_max_level, bonus_image
@@ -29,17 +30,17 @@ class GalleryTrophy:
         self._multi = self._get_multi() * multi
 
     def get_how_get_advice(self) -> Advice:
-        advice = self.get_bonus_advice()
+        advice = self.get_bonus_advice(link_to_section=False)
         advice.change_progress(0, 1)
         return advice
 
-    def get_bonus_advice(self) -> Advice:
-        misc1_value = self._item.bonus.misc1.value * self._multi
-        label = (
-            f"{self.name}"
-            f"<br>{round_and_trim(misc1_value)}{self._item.bonus.misc1.effect}"
-        )
-        if self._item.bonus.misc2.effect != "0":
+    def get_bonus_advice(self, stats: set[str] | None = None, link_to_section: bool = True) -> Advice:
+        link_to_section_text = "{{ Gallery|#gallery }} - " if link_to_section else ""
+        label = f"{link_to_section_text}{self.name}"
+        if stats is None or _misc_bonus_stat(self.name, 1) in stats:
+            misc1_value = self._item.bonus.misc1.value * self._multi
+            label += f"<br>{round_and_trim(misc1_value)}{self._item.bonus.misc1.effect}"
+        if self._item.bonus.misc2.effect != "0" and (stats is None or _misc_bonus_stat(self.name, 2) in stats):
             misc2_value = self._item.bonus.misc2.value * self._multi
             label += f"<br>{round_and_trim(misc2_value)}{self._item.bonus.misc2.effect}"
         resource = ""
@@ -59,6 +60,16 @@ class GalleryTrophy:
         if self.level is None:
             return 1
         return podium_multi_by_level[self.level]
+
+
+def _misc_bonus_stat(item_name: str, slot: int) -> str | None:
+    """Which stat (e.g. 'DropRate') item_name's MiscN bonus represents, per
+    equipment_by_bonus_dict, or None if that curated dataset doesn't cover this item."""
+    for stat_entries in equipment_by_bonus_dict.values():
+        data = stat_entries.get(item_name)
+        if data:
+            return data.get(f"Misc{slot}", {}).get("Bonus")
+    return None
 
 
 def _add_item_bonus_to_total(
@@ -101,17 +112,17 @@ class GalleryNametag:
         _add_item_bonus_to_total(self._item.bonus, total, self._multi)
 
     def get_how_get_advice(self) -> Advice:
-        advice = self.get_bonus_advice()
+        advice = self.get_bonus_advice(link_to_section=False)
         advice.change_progress(0, 1)
         return advice
 
-    def get_bonus_advice(self) -> Advice:
-        misc1_value = self._item.bonus.misc1.value * self._multi
-        label = (
-            f"{self.name}"
-            f"<br>{round_and_trim(misc1_value)}{self._item.bonus.misc1.effect}"
-        )
-        if self._item.bonus.misc2.effect != "0":
+    def get_bonus_advice(self, stats: set[str] | None = None, link_to_section: bool = True) -> Advice:
+        link_to_section_text = "{{ Gallery|#gallery }} - " if link_to_section else ""
+        label = f"{link_to_section_text}{self.name}"
+        if stats is None or _misc_bonus_stat(self.name, 1) in stats:
+            misc1_value = self._item.bonus.misc1.value * self._multi
+            label += f"<br>{round_and_trim(misc1_value)}{self._item.bonus.misc1.effect}"
+        if self._item.bonus.misc2.effect != "0" and (stats is None or _misc_bonus_stat(self.name, 2) in stats):
             misc2_value = self._item.bonus.misc2.value * self._multi
             label += f"<br>{round_and_trim(misc2_value)}{self._item.bonus.misc2.effect}"
         if self.level > 0:
@@ -148,6 +159,7 @@ class Gallery:
         }
         # Trophy
         raw_trophy_index_list: list[int] = safer_index(spelunk_info, 16, [])
+        self.trophy: dict[str, GalleryTrophy] = {}
         self.inventory: list[GalleryTrophy] = []
         self.podium: list[GalleryTrophy | None] = [None] * (
             len(raw_trophy_index_list) - 48
@@ -175,6 +187,7 @@ class Gallery:
             self._bonuses_total[trophy_info.bonus.misc1.effect] = 0
             self._bonuses_total[trophy_info.bonus.misc2.effect] = 0
             all_trophy.append(trophy)
+            self.trophy[trophy.name] = trophy
         _trophy_by_index = {trophy.index: trophy for trophy in all_trophy}
 
         for trophy in all_trophy:
@@ -216,8 +229,16 @@ class Gallery:
                 self.missing.nametag.append(nametag)
 
     def calculate_bonuses(self, account: "Account"):
-        # TODO "GalleryBonusMulti" in source
+        # TODO other "GalleryBonusMulti" sources in source
         gallery_multi = 1.0
+        if account.highest_world_reached >= 7 and any(
+            "Silkrode Motherboard" in character.equipped_lab_chips
+            for character in account.all_characters
+        ):
+            # As of W7, Silkrode Motherboard no longer doubles the equipped Trophy's own
+            # stat - it instead gives a flat +10% Gallery Bonus Multi (patch notes: "The Lab
+            # Chip that doubled your trophy now gives +10% gallery bonus once you reach W7").
+            gallery_multi += 0.10
         self._calculate_trophy_bonuses(account, gallery_multi)
         self._calculate_nametag_bonuses(gallery_multi)
         for key, value in self._bonuses_total.items():

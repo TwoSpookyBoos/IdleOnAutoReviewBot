@@ -10,8 +10,8 @@ from consts.w1.stamps import unavailable_stamps_list, stamp_maxes
 from consts.consts_w2 import max_maxable_vials
 from consts.consts_w4 import get_final_combat_level_required_for_tome
 from consts.progression_tiers import stamps_progressionTiers, vials_progressionTiers, true_max_tiers, greenstack_progressionTiers, combatLevels_progressionTiers
-from utils.logging import get_consts_logger
-logger = get_consts_logger(__name__)
+from utils.logging import get_logger
+logger = get_logger(__name__)
 
 def finalize_consts():
     finalize_general_greenstacks()
