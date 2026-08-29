@@ -148,30 +148,30 @@ def getBreedabilityAdviceGroup():
         key=lambda pet: pet[1]['BreedabilityDays'],
         reverse=True
     )
-    max_heart_level = len(breedabilityHearts)
+    max_heart_level = len(breedabilityHearts) - 1
     total_pet = len(sorted_breedability)
     total_by_heart = {
         f"breedability-heart-{index + 1}": 0 for index in range(0, max_heart_level)
     }
+
     achievement_7s = 0
     for pet in sorted_breedability:
         achievement_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] and pet[1]['World'] != 4 else 0
         total_by_heart[pet[1]['BreedabilityHeart']] += 1
+
     for heart_index, heart in enumerate(total_by_heart.keys()):
         if total_by_heart[heart] > 0:
             # Found lowest breedability heart
             heart_level = heart_index + 1
             break
-    if heart_level > 6:
-        # On 7 level or higher, target one step ahead (if have that step)
-        if heart_level < max_heart_level:
-            heart_level = heart_level + 1
-            heart = f"breedability-heart-{heart_level}"
-    else:
-        # Start goal is 7 level
-        heart_level = 7
-        heart = f"breedability-heart-7"
-    target = breedabilityDaysList[heart_level - 1]
+
+    heart_level = min(max_heart_level, max(7, heart_level + 1))
+    heart = f"breedability-heart-{heart_level}"
+    try:
+        target = breedabilityDaysList[heart_level - 1]
+    except:
+        target = breedabilityDaysList[-1]
+
     for pet in sorted_breedability:
         if pet[1]['BreedabilityDays'] >= target:
             continue
