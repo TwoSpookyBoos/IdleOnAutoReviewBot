@@ -17,6 +17,7 @@ greenstack_item_difficulty_groups = {
             "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
             "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
             "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
+            "FoodHealth18", "FoodHealth19",  #W7
         ],
         "Other Skilling Resources": [
             "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
@@ -90,7 +91,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat7", "CraftMat9",
             "Critter1", "Critter2",
-            "Soul2"
+            "Soul2",
+            "StoneHelm1",  # Helmet Upgrade Stone I
         ]
     },
     6: {
@@ -101,7 +103,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat8", "CraftMat10",
             "Critter3", "Critter4",
-            "Soul3"
+            "Soul3",
+            "Quest17",  # Amarok Slab
         ]
     },
     7: {
@@ -110,7 +113,6 @@ greenstack_item_difficulty_groups = {
             "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"
         ],
         "Crystal Enemy Drops": [
-            # FoodPotMana2 removed from all drop table
             "FoodPotMana1", "FoodPotGr1", "FoodPotOr2", "Leaf1"
         ],
         "Other Skilling Resources": [
@@ -142,7 +144,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat13", "CraftMat14",
             "Critter8", "Critter9",
-            "Soul6"
+            "Soul6",
+            "Cutter", "TreeInterior1b",  # Bolt Cutters, Woodular Circle
         ]
     },
     10: {
@@ -203,12 +206,15 @@ greenstack_item_difficulty_groups = {
         "Rare Drops": [
             # World 7 part 1
             'w7A6',
-            "FoodPotRe1"
+            "FoodPotRe1", "JobApplication",
+            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "FoodG13", "FoodG14",  # Gold Foods
+            "FoodG11", "FoodG12",  # Golden Nigiri, Golden Dumpling
         ]
     },
     13: {
         "Base Monster Materials": [
-            "Quest15", "Hgg"
+            "Quest15", "Hgg", "Line9",  # Zeus Gon Fishin
         ],
         "Crystal Enemy Drops": [
             "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
@@ -226,20 +232,30 @@ greenstack_item_difficulty_groups = {
             'EquipmentSmithingTabs3',
             "PeanutG",
             "Spelunking2",
+            "Soul8",  # Deepsea Soul
+            "Tree14", "Bug15",  # Seaweed Logs, Litterbug
         ],
         "Rare Drops": [
             "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
             'EquipmentStatues29',  # Villager Statues from Caverns
+            'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues31', 'EquipmentStatues32',  # Compost, Stealth, Essence, Spelunky, Reef Coral Statues
+            "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart2",  # Ribbed Tunic, Chizoar Spike/Stalagmite, Troll Scales, Kruk Cavity Tooth
+            "MidnightCookie", "PetEgg", "SpiA2b", "SpiB2b",  # Midnight Cookie, Pet Egg, Stacked Rice Cake, Dark Lantern
+            "Quest95",  # Birthday Candle
         ]
     },
     14: {
         "Crystal Enemy Drops": [
             "StoneW2", 'ResetFrag', "SilverPen",
             "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
+            "StoneA2b", "StoneZ3", "StoneZ4",  # Armor Upgrade Stone B, Mystery Upgrade Stone III/IV
         ],
         "Other Skilling Resources": [
             "FoodTrapping1", "FoodWorship1",
-            "Ladle"
+            "Ladle",
+            "ResetCompleted", "ResetCompletedS",  # Talent Point / Star Talent Reset Potions
+            "PrehistriumBar",  # Prehistrium Bar
+            "Prehistrium",  # Prehistrium Ore
         ],
         "Rare Drops": [
             'Sewers1b',  #W1 Golden Plop
@@ -248,7 +264,9 @@ greenstack_item_difficulty_groups = {
             'EfauntDrop1',
             'EquipmentStatues15',  #Bullseye
             'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',  # W3 Statues
-            'EquipmentStatues30'  # Dragon Warrior Statues from Caverns
+            'EquipmentStatues30',  # Dragon Warrior Statues from Caverns
+            "BabaYagaETC",  # Baba Yaga Baby Eggs
+            "Key1", "Key2", "Key3", "Key4",  # Forest Villa, Efaunt's Tomb, Chizoar's Cavern, Troll's Enclave Keys
         ]
     },
     15: {
@@ -260,6 +278,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 2
             'Spelunking4', 'Spelunking5',
             'Line13',
+            "Gfoodcoupon", "Line14",  # Gold Food Coupon, Its Alright Celebration
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
@@ -275,10 +294,20 @@ greenstack_item_difficulty_groups = {
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
             'Coral4', 'w7B1b',
+            'Quest110',  # Zenith Cluster
         ],
         'Boss Drop': [
             # Every day boss gem farm
-            'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
+            'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
+            'ExpBalloon1',  # Small Experience Balloon
+        ],
+    },
+    16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
+        "Base Monster Materials": [
+            'StoneT1eb', 'StoneAeB', 'StoneWeb',  # Summer Tool/Armor/Weapon Upgrade Stones - event gated
+            'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',  # Tempest Bow/Ring Stones
+            "Quest41",  # Flowies
+            "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
         ],
     }
 }
@@ -318,13 +347,13 @@ expected_stackables = {
         # World 7 part 2
         'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
-        'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'Gfoodcoupon', 'Line9', 'Line14',
+        'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',
     ],
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
-        'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'Leaf1',  # W1
+        'FoodPotMana1', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'Leaf1',  # W1
         'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2', 'StoneA2b',  # W2
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
@@ -338,7 +367,6 @@ expected_stackables = {
         'PureWater', 'EquipmentStatues18',  #W3 Slow drops = Distilled Water + EhExPee Statue
         'EquipmentStatues20', 'EquipmentStatues21', 'EquipmentStatues22',  # W4 Statues
         'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25', 'FoodG9', 'StoneZ3',  #W5 Slow drops = Golden W5 Sammy + Statues
-        'FoodG11', 'FoodG12'  #W6 gold foods
     ],
     'Printable Skilling Resources': [
         'OakTree', 'BirchTree', 'JungleTree', 'ForestTree', 'ToiletTree', 'PalmTree', 'StumpTree', 'SaharanFoal',  # Logs1
@@ -443,12 +471,17 @@ expected_stackables = {
         'EquipmentStatues6',  # Kachow
         'ClassSwap', 'ClassSwapB', 'ResetBox',
         'FoodG15',
+    ],
+    'Legacy': [  # Previously legitimately obtainable, since removed from the game - not achievable by new players
+        'FoodPotMana2',  # Average Mana Potion
     ]
 }
 greenstack_amount = 10 ** 7
+# Categories excluded from the "expected" (achievable-by-new-players) greenstack count
+excluded_gstack_categories = ('Cheater', 'Legacy')
 gstackable_codenames = [item for items in expected_stackables.values() for item in items]
 gstackable_codenames_expected = [
-    item for items in list(expected_stackables.values())[:-1] for item in items
+    item for category, items in expected_stackables.items() if category not in excluded_gstack_categories for item in items
 ]
 gstacks_rated_items = []
 quest_items_codenames = expected_stackables["Missable Quest Items"]
