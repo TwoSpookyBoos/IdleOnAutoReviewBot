@@ -9,8 +9,8 @@ from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, UpgradeVault, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
+    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict,
+    inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_master_classes import (
@@ -54,7 +54,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner, letterToNumber
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -1063,79 +1063,11 @@ def _parse_master_classes_tesseract(account):
 
 
 def _parse_w1(account):
-    _parse_w1_upgrade_vault(account)
     _parse_w1_starsigns(account)
     _parse_w1_forge(account)
     _parse_w1_bribes(account)
     _parse_w1_stamps(account)
-    _parse_w1_owl(account)
     _parse_w1_statues(account)
-
-def _parse_w1_upgrade_vault(account):
-    account.vault = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
-    }
-    #Parse Vault Upgrades
-    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
-    if not raw_vault:
-        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(UpgradeVault):
-        clean_name = vault_string_cleaner(upgrade_values_list[0])
-        if len(upgrade_values_list) >= 11:
-            secondary_description = vault_string_cleaner(upgrade_values_list[10]) if upgrade_values_list != '_' else ''
-        else:
-            secondary_description = ''
-        if clean_name.split('!')[0] in vault_stack_types:
-            stack_type = clean_name.split('!')[0]
-            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
-        vault_section = 0
-        for list_index, vault_section_index in enumerate(vault_section_indexes):
-            if upgrade_index <= vault_section_index:
-                vault_section = list_index + 1
-                break
-        try:
-            account.vault['Upgrades'][clean_name] = {
-                'Level': min(int(upgrade_values_list[4]), int(raw_vault[upgrade_index])),
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{vault_string_cleaner(upgrade_values_list[9])} {secondary_description}",
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-        except:
-            # logger.exception(f"Vault parse error on index {upgrade_index}")
-            account.vault['Upgrades'][clean_name] = {
-                'Level': 0,
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-    #logger.debug(account.vault)
-
-    #Sum total upgrades
-    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
-    for upgrade_name in account.vault['Upgrades']:
-        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
@@ -1251,17 +1183,6 @@ def _parse_w1_stamps(account):
                 effect=""
             )
     _parse_master_classes_exalted_stamps(account)
-
-def _parse_w1_owl(account):
-    if 265 not in account.raw_optlacc_dict:
-        logger.warning(f"Owl data not present{', as expected' if account.version < 217 else ''}.")
-    account.owl = {
-        'Discovered': safer_get(account.raw_optlacc_dict, 265, False),
-        'FeatherGeneration': safer_get(account.raw_optlacc_dict, 254, 0),
-        'BonusesOfOrion': safer_get(account.raw_optlacc_dict, 255, 0),
-        'FeatherRestarts': safer_get(account.raw_optlacc_dict, 258, 0),
-        'MegaFeathersOwned': safer_get(account.raw_optlacc_dict, 262, 0)
-    }
 
 def _parse_w1_statues(account):
     account.statues = {}

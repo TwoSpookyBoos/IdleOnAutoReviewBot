@@ -86,7 +86,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices['Scaling Sources'].append(majik_beeg_forge.get_advice())
 
     # Upgrade Vault > Beeg Forge
-    beeg_forge = session_data.account.vault['Upgrades']['Beeg Forge']
+    beeg_forge = session_data.account.vault.upgrades['Beeg Forge']
     cap_Advices['Scaling Sources'].append(get_upgrade_vault_advice("Beeg Forge"))
 
     for group_name in cap_Advices:
@@ -95,7 +95,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp'].total_value)
-    groupC = ValueToMulti(bribe_value + beeg_forge['Total Value'])
+    groupC = ValueToMulti(bribe_value + beeg_forge.total_value)
     groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))
     groupE = majik_beeg_forge.value
 

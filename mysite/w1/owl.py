@@ -11,10 +11,10 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getNoFeathersGeneratingAlert():
-    if session_data.account.owl['FeatherGeneration'] < 1:
+    if session_data.account.owl.feather_generation < 1:
         alert_advice = Advice(
             label='Find the Owl in W1 and start generating Feathers!'
-            if not session_data.account.owl['Discovered']
+            if not session_data.account.owl.discovered
             else f"You aren't generating any {{{{ Owl|#owl }}}} Feathers!",
             picture_class='feather-generation'
         )
@@ -45,27 +45,27 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     for tier_number, requirements in owl_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         if 'MegaFeathersOwned' in requirements:
-            if session_data.account.owl['MegaFeathersOwned'] < requirements['MegaFeathersOwned'] + 1:
+            if session_data.account.owl.mega_feathers_owned < requirements['MegaFeathersOwned'] + 1:
                 for mf, resets in featherResetsDict.items():
                     if lastMFShown < mf <= requirements['MegaFeathersOwned']:
-                        if session_data.account.owl['MegaFeathersOwned'] <= mf:
+                        if session_data.account.owl.mega_feathers_owned <= mf:
                             add_subgroup_if_available_slot(owl_AdviceDict['MegaFeathers'], subgroup_label)
                             if subgroup_label in owl_AdviceDict['MegaFeathers']:
                                 lastMFShown = mf
                                 owl_AdviceDict['MegaFeathers'][subgroup_label].append(Advice(
                                     label=f"MF{mf+1}: Restart {resets} times first",
                                     picture_class=f"megafeather-{mf}" if mf < 10 else "the-great-mega-reset",
-                                    progression=session_data.account.owl['FeatherRestarts'] if session_data.account.owl['MegaFeathersOwned'] == mf else 0,
+                                    progression=session_data.account.owl.feather_restarts if session_data.account.owl.mega_feathers_owned == mf else 0,
                                     goal=resets
                                 ))
         if 'BonusesOfOrion' in requirements:
-            if session_data.account.owl['BonusesOfOrion'] < requirements['BonusesOfOrion']:
+            if session_data.account.owl.bonuses_of_orion_owned < requirements['BonusesOfOrion']:
                 add_subgroup_if_available_slot(owl_AdviceDict['MegaFeathers'], subgroup_label)
                 if subgroup_label in owl_AdviceDict['MegaFeathers']:
                     orion_advice = Advice(
                             label=f"Before MF{requirements['MegaFeathersOwned']+1}, purchase Bonuses of Orion {requirements['BonusesOfOrion']}",
                             picture_class='bonuses-of-orion',
-                            progression=session_data.account.owl['BonusesOfOrion'],
+                            progression=session_data.account.owl.bonuses_of_orion_owned,
                             goal=requirements['BonusesOfOrion']
                         )
                     if len(owl_AdviceDict['MegaFeathers']) > 0:

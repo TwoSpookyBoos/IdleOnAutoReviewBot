@@ -131,13 +131,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
+    vault_mastery_vault = session_data.account.vault.upgrades['Vault Mastery']
+    if vault_mastery_vault.level < vault_mastery_vault.max_level:
         drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
 
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
-    general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
+    general_bonus += session_data.account.vault.upgrades['Drops for Days'].total_value
 
     # Gem Shop - Deathbringer Pack
     has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
@@ -178,16 +178,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_1_bonus = 0
 
     # Owl Bonuses
-    owl_bonus = session_data.account.owl['Bonuses']['Drop Rate']['Value']
-    drop_rate_aw_advice[w1].append(Advice(
-        label=f"{{{{ Owl|#owl }}}}- Drop Rate:"
-              f"<br>+{owl_bonus}% Drop Rate",
-        picture_class='the-great-horned-owl',
-        progression=max(0, session_data.account.owl['MegaFeathersOwned'] - 10),
+    owl_drop_rate_bonus = session_data.account.owl.bonuses['Drop Rate']
+    drop_rate_aw_advice[w1].append(owl_drop_rate_bonus.get_bonus_advice(
+        progression=max(0, session_data.account.owl.mega_feathers_owned - 10),
         resource='megafeather-9',
         goal=EmojiType.INFINITY.value
     ))
-    world_1_bonus += owl_bonus
+    world_1_bonus += owl_drop_rate_bonus.value
 
     # Lab Nodes- Certified Stamp Book
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
