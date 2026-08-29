@@ -179,16 +179,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_1_bonus = 0
 
     # Owl Bonuses
-    owl_bonus = session_data.account.owl['Bonuses']['Drop Rate']['Value']
-    drop_rate_aw_advice[w1].append(Advice(
-        label=f"{{{{ Owl|#owl }}}}- Drop Rate:"
-              f"<br>+{owl_bonus}% Drop Rate",
-        picture_class='the-great-horned-owl',
-        progression=max(0, session_data.account.owl['MegaFeathersOwned'] - 10),
+    owl_drop_rate_bonus = session_data.account.owl.bonuses['Drop Rate']
+    drop_rate_aw_advice[w1].append(owl_drop_rate_bonus.get_bonus_advice(
+        progression=max(0, session_data.account.owl.mega_feathers_owned - 10),
         resource='megafeather-9',
         goal=EmojiType.INFINITY.value
     ))
-    world_1_bonus += owl_bonus
+    world_1_bonus += owl_drop_rate_bonus.value
 
     # Lab Nodes- Certified Stamp Book
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
