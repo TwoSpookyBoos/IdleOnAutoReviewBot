@@ -1455,6 +1455,11 @@ def _calculate_w1_statues(account):
     onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
     onyx_typenumber = get_statue_type_index_from_name('Onyx')
 
+    zenith_multi = ValueToMulti(50 + floor(account.zenith_market['TRUE ZEN'].value))
+    zenith_typenumber = get_statue_type_index_from_name('Zenith')
+
+    merit_multi = ValueToMulti(account.meritocracy[26].value)
+
     event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
 
     # The value of Dragon Statue is used to increase other statues so must be calculated first
@@ -1462,12 +1467,14 @@ def _calculate_w1_statues(account):
         account.statues['Dragon Statue']['BaseValue']
         * account.statues['Dragon Statue']['Level']
         * (onyx_multi if account.statues['Dragon Statue']['TypeNumber'] >= onyx_typenumber else 1)
+        * (zenith_multi if account.statues['Dragon Statue']['TypeNumber'] >= zenith_typenumber else 1)
         * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
         * voodoo_statufication_multi
         * event_shop_multi
+        * merit_multi
     )
     dragon_multi = ValueToMulti(account.statues['Dragon Statue']['Value'])
-    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }, {event_shop_multi = }")
+    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {zenith_multi = }, {dragon_multi = }, {event_shop_multi = }, {merit_multi = }")
 
     for statue_name, statue_details in account.statues.items():
         if statue_name != 'Dragon Statue':
@@ -1475,10 +1482,12 @@ def _calculate_w1_statues(account):
                 account.statues[statue_name]['BaseValue']
                 * account.statues[statue_name]['Level']
                 * (onyx_multi if statue_details['TypeNumber'] >= onyx_typenumber else 1)
+                * (zenith_multi if statue_details['TypeNumber'] >= zenith_typenumber else 1)
                 * (vault_multi if statue_name in vault_statues else 1)
                 * voodoo_statufication_multi
                 * dragon_multi
                 * event_shop_multi
+                * merit_multi
             )
 
     account.statue_effect_advice = [
@@ -1496,6 +1505,17 @@ def _calculate_w1_statues(account):
             resource='the-onyx-lantern'
         ),
         Advice(
+            label=f"Zenith base bonus: {50 * account.zenith_statues_unlocked}/50%"
+                  f"<br>Total including {{{{Zenith Market|#zenith-market}}}} TRUE ZEN: {round(zenith_multi, 2):g}x",
+            picture_class='zenith-tools',
+            progression=account.zenith_market['TRUE ZEN'].level,
+            goal=account.zenith_market['TRUE ZEN'].max_level,
+        ),
+        Advice(
+            label=f"{{{{Meritocracy|#meritocracy}}}}: All Statues bonus: {round(merit_multi, 2):g}x",
+            picture_class='meritocracy-26',
+        ),
+        Advice(
             label=f"{{{{Event Shop|#event-shop}}}}: Smiley Statue: {round(event_shop_multi, 2):g}/1.3x",
             picture_class=account.event_points_shop['Bonuses']['Smiley Statue']['Image'],
             progression=int(account.event_points_shop['Bonuses']['Smiley Statue']['Owned']),
@@ -1507,8 +1527,8 @@ def _calculate_w1_statues(account):
         ),
         get_upgrade_vault_advice('Statue Bonanza'),
         Advice(
-            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi, 2):g}x"
-                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi * vault_multi, 2):g}x",
+            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi, 2):g}x"
+                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi * vault_multi, 2):g}x",
             picture_class='town-marble'
         )
     ]
