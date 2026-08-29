@@ -159,16 +159,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     master_classes_bonus = 0
     # Grimoire - Skull of Major Droprate
     skull_drop_rate_grimoire = session_data.account.grimoire.upgrades['Skull of Major Droprate']
-    skull_drop_rate_grimoire_upgrades_unlock = skull_drop_rate_grimoire.unlock_requirement - session_data.account.grimoire.total_upgrades
     skull_drop_rate_grimoire_value = skull_drop_rate_grimoire.total_value
-    drop_rate_aw_advice[mc].append(Advice(
-        label=f"{{{{Grimoire|#the-grimoire}}}}- Skull of Major Droprate:"
-              f"<br>+{round(skull_drop_rate_grimoire_value, 1):g}% Drop Rate"
-              f"{f'<br>Requires {skull_drop_rate_grimoire_upgrades_unlock} more upgrades to unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
-        picture_class=skull_drop_rate_grimoire.image,
-        progression=skull_drop_rate_grimoire.level,
-        goal=skull_drop_rate_grimoire.max_level
-    ))
+    drop_rate_aw_advice[mc].append(skull_drop_rate_grimoire.get_advice(session_data.account.grimoire.total_upgrades))
     master_classes_bonus += skull_drop_rate_grimoire_value
 
     drop_rate_aw_advice[f"{mc} - +{round(master_classes_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(mc)
@@ -385,15 +377,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     grey_tome_book = session_data.account.grimoire.upgrades['Grey Tome Book']
     if grey_tome_book.level < grey_tome_book.max_level:
-        upgrades_to_unlock = grey_tome_book.unlock_requirement - session_data.account.grimoire.total_upgrades
-        drop_rate_aw_advice[w4].append(Advice(
-            label=f"{{{{Grimoire|#the-grimoire}}}}- Grey Tome Book:"
-                  f"<br>{round(grey_tome_book.total_value, 1):g}x higher bonus from Tome Red Pages"
-                  f"{f'<br>Requires {upgrades_to_unlock} more upgrades to unlock' if upgrades_to_unlock > 0 else ''}",
-            picture_class=session_data.account.grimoire.upgrades['Grey Tome Book'].image,
-            progression=grey_tome_book.level,
-            goal=grey_tome_book.max_level
-        ))
+        drop_rate_aw_advice[w4].append(grey_tome_book.get_advice(session_data.account.grimoire.total_upgrades))
     troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
     if not troll_set['Owned']:
         drop_rate_aw_advice[w4].append(Advice(
