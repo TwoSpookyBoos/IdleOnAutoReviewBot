@@ -177,7 +177,7 @@ expected_talents_dict = {
 base_crystal_chance = 0.0005  # 1 in 2000
 max_crystal_chance = 0.1  #10% last updated in v2.45 Nov 15. Any extra crystal spawn chance above this increases loot and killcount, but not spawns
 
-# `CompanionDB` in source. Last updated in v2.526.0 (Steam build 24938667)
+# `CompanionDB` in source. Last updated in v2.527
 companions_info = [
     "babaMummy All_Divinities_from_World_5_count_as_Active 1 -66 -22 -14 2000 165".split(" "),
     "rift2 +25_Lv_for_all_Talents 25 -31 6 -14 450 125".split(" "),
@@ -303,7 +303,7 @@ companions_info = [
     "w5c1 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w5c2 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w6a1 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
-    "w6a2 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
+    "w6a2 4x_Summoning_EXP_gain 3 -13 0 -3 1 160".split(" "),
     "w6a3 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
     "w6a4 {100%_Class_EXP_and_1.50x_Class_EXP_Multi 100 -10 0 -4 1 100".split(" "),
     "w6a5 Not_officially_in_the_game_and_may_never_be 1 0 0 0 1 100".split(" "),
@@ -349,6 +349,7 @@ companions_info = [
     "r0b {100%_additive_Crystal_Monster_Spawn_chance 100 -28 0 -30 1 180".split(" "),
     "r0c {20%_Marble_and_Parchment_drop_rate_for_Royal_Guardians 20 -48 0 -33 1 220".split(" "),
     "r0d The_lord_of_amber_herself_is_keeping_her_bonus_a_secret..._for_now... 1 -100 0 -60 1 480".split(" "),
+    "fm_rat +10000%_additive_Gold_Food_bonus_effect_and_1.50x_multiplier_to_Gold_Food 1 -56 0 -43 1 280".split(" "),
 ]
 
 companions_data = {

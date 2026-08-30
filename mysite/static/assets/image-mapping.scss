@@ -45,10 +45,12 @@ $id-map: map-merge($id-map, $all-equipment);
 @import "grimoire";
 @import "compass";
 @import "tesseract";
+@import "royal-armory";
 
 $id-map: map-merge($id-map, $all-grimoire);
 $id-map: map-merge($id-map, $all-compass);
 $id-map: map-merge($id-map, $all-tesseract);
+$id-map: map-merge($id-map, $all-royal-armory);
 
 //W1
 @import "upgrade_vault";
