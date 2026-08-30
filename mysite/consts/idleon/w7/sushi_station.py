@@ -67,10 +67,36 @@ sushi_max_tier = 62
 # "Research[32]" in source: real shop display order, not SushiUPG's declaration order
 sushi_upgrade_shop_order = [int(value) for value in Research[32]]
 
+# short stable names for each milestone
+sushi_milestone_names = [
+    "Research EXP Multi", "Minehead Upgrade Discount", "Research Daily Rolls",
+    "Research Points", "Research AFK Gains", "Event Game Extra Play",
+    "Spelunk Shop Discount", "Artifact Find Chance", "Research Magnifier",
+    "Summoning Upgrade Discount", "Breeding Mob Damage", "Stamina Regen Multi",
+    "Minehead Currency Multi", "Research Point (Flat)", "Ribbon Tier Up Chance",
+    "Class EXP Multi", "Minehead Upgrade Discount II", "Exalted Stamp Bonus",
+    "Monster Coin Drop", "Legend Talent Point", "Spelunking POW",
+    "Grand Discovery Chance", "Minehead Atom Unlock", "Prisma Bubble Bonus",
+    "Research AFK Gains II", "Burger Multi", "Sushi Station Upgrade Discount",
+    "Spelunk Shop Discount II", "Spelunking Amber Gain", "Gaming Bits Gain",
+    "Research Max Roll", "Rat King Crown Chance", "Ninja Twins Stealth",
+    "Exotic Market Purchases", "Summoning Upgrade Discount II", "Farming Crop Evo Chance",
+    "Hat Rack Multi", "Monster Coin Drop II", "Upgrade Vault Discount",
+    "Bubba Meat Slice", "Tiny Cogs", "Sigil EXP Multi",
+    "Gaming Palette Luck", "Laboratory EXP Multi", "Sushi Station Upgrade Discount II",
+    "Sailing Captain EXP", "Divinity PTS Gain", "Upgrade Vault Discount II",
+    "Drop Rate", "Total DMG", "Bonus Ballot Multi",
+    "Meritocracy Bonus Multi", "Blue Chest Chance", "Research Upgrade Bonus Multi",
+    "Gallery Bonus Multi", "Megacrop Growth Chance", "Villager Opals",
+    "Sailing Chest Treasure", "Construction Shrine Build LV", "Royal Guardian Orblet Chance",
+    "Royal Guardian Resource Rate", "Royal Guardian Regal Mobs", "Royal Guardian Marble Chance",
+]
+
 sushi_milestone_data = [
     {
+        "Name": name,
         "Description": description.replace("_", " "),
         "Value": parse_number(value),
     }
-    for description, value in zip(Research[36], Research[37])
+    for name, description, value in zip(sushi_milestone_names, Research[36], Research[37])
 ]

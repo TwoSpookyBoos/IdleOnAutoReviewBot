@@ -49,7 +49,7 @@ class TheButton:
         # "OptLacc"[594] in source: raw press counter for The Button
         self.total_clicks = int(safer_index(raw_optlacc, 594, 0))
         full_cycles = self.total_clicks // 5
-        self.bonuses: list[ButtonBonus] = []
+        self.bonuses: dict[str, ButtonBonus] = {}
         for index, (label, per_time) in enumerate(
             zip(button_bonus_labels, button_bonus_per_time)
         ):
@@ -57,11 +57,11 @@ class TheButton:
                 full_cycles // self.SLOT_COUNT
                 + (1 if index < full_cycles % self.SLOT_COUNT else 0)
             )
-            self.bonuses.append(ButtonBonus(index, label, per_time, activation_count))
+            self.bonuses[label] = ButtonBonus(index, label, per_time, activation_count)
 
-    def get_bonus_value(self, index: int) -> float:
+    def get_bonus_value(self, name: str) -> float:
         # "Button_Bonuses" in source
-        return self.bonuses[index].value
+        return self.bonuses[name].value
 
     def _get_challenge_advice(self, presses: int, picture_class: str) -> Advice:
         # "Button_Task"/"Button_REQ" in source. Current progress ("Button_uHave")

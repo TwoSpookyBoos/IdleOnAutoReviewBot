@@ -17,7 +17,7 @@ def get_bonuses_group() -> AdviceGroup:
 
 
 def get_totals_group() -> AdviceGroup:
-    advices = [bonus.get_advice() for bonus in session_data.account.the_button.bonuses]
+    advices = [bonus.get_advice() for bonus in session_data.account.the_button.bonuses.values()]
     for advice in advices:
         advice.mark_advice_completed()
     return AdviceGroup(

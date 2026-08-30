@@ -21,7 +21,7 @@ def get_upgrades_group() -> AdviceGroup:
 def get_milestones_group() -> AdviceGroup:
     sushi_station = session_data.account.sushi_station
     advices = [sushi_station.get_unique_sushi_advice()]
-    advices += [milestone.get_advice() for milestone in sushi_station.milestones]
+    advices += [milestone.get_advice() for milestone in sushi_station.milestones.values()]
     for advice in advices:
         advice.mark_advice_completed()
     return AdviceGroup(

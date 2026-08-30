@@ -50,6 +50,7 @@ class SushiUpgrade:
 class SushiMilestoneBonus:
     def __init__(self, index: int, info: dict, unique_sushi_count: int):
         self.index = index
+        self.name = info["Name"]
         self.description = info["Description"]
         self.value = info["Value"]
         self.unlocked = unique_sushi_count > index
@@ -94,18 +95,18 @@ class SushiStation:
             unique_sushi += 1
         self.unique_sushi = unique_sushi
 
-        self.milestones: list[SushiMilestoneBonus] = [
-            SushiMilestoneBonus(index, info, unique_sushi)
-            for index, info in enumerate(sushi_milestone_data)
-        ]
+        self.milestones: dict[str, SushiMilestoneBonus] = {}
+        for index, info in enumerate(sushi_milestone_data):
+            milestone = SushiMilestoneBonus(index, info, unique_sushi)
+            self.milestones[milestone.name] = milestone
 
     def calculate_bonuses(self):
         for upgrade in self.upgrades.values():
             upgrade.calculate_bonus()
 
-    def get_milestone_bonus_value(self, index: int) -> float:
+    def get_milestone_bonus_value(self, name: str) -> float:
         # "RoG_BonusQTY" in source
-        return self.milestones[index].unlocked_value
+        return self.milestones[name].unlocked_value
 
     def get_unique_sushi_advice(self) -> Advice:
         highest_tier_icon = (
