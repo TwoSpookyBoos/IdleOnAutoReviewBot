@@ -90,7 +90,7 @@ class RoyalStatue:
                 label=f"{self.name}: Tier {self.tier}"
                       f"<br>{self.get_bonus_text()}",
                 picture_class=self.image,
-                progression=1,
+                progression=self.tier,
                 goal=EmojiType.INFINITY.value,
                 informational=True,
                 resource='parchment-of-enchantment',
