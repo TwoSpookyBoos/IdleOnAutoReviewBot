@@ -1328,6 +1328,7 @@ def _calculate_w7(account):
     account.gallery.calculate_bonuses(account)
     account.zenith_market.calculate_bonuses()
     account.research.calculate_bonuses()
+    account.sushi_station.calculate_bonuses()
     account.dancing_coral.calculate_bonuses()
     account.coral_kid.calculate_bonuses()
 

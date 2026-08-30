@@ -25,6 +25,8 @@ from models.master_classes.tesseract import Tesseract
 from models.w7.coral_kid import CoralKid
 from models.w7.dancing_coral import DancingCoral
 from models.w7.research import Research
+from models.w7.sushi_station import SushiStation
+from models.w7.the_button import TheButton
 from models.w7.spelunk import Spelunk
 from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
@@ -170,6 +172,8 @@ class Account:
         self.gallery = Gallery(self.raw_data)
         self.zenith_market = ZenithMarket(self.raw_data)
         self.research = Research(self.raw_data)
+        self.sushi_station = SushiStation(self.raw_data)
+        self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
 
