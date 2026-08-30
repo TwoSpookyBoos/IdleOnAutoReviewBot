@@ -2223,6 +2223,7 @@ true_max_tiers = {
     'Grimoire': 0,
     'Compass': 0,
     'Tesseract': 0,
+    'Royal Armory': 0,
 
     # World 1
     'Bribes': max(bribes_progressionTiers.keys()),

@@ -10,6 +10,16 @@ $royal-armory-items: (
     wispy-marble:                       img('data/RGshard5.png'),
 );
 
+$royal-armory-statues: (
+    royal-statue-0: img('data/RoyalStatue0.png'),
+    royal-statue-1: img('data/RoyalStatue1.png'),
+    royal-statue-2: img('data/RoyalStatue2.png'),
+    royal-statue-3: img('data/RoyalStatue3.png'),
+    royal-statue-4: img('data/RoyalStatue4.png'),
+    royal-statue-5: img('data/RoyalStatue5.png'),
+    royal-statue-6: img('data/RoyalStatue6.png'),
+);
+
 // order is per in-game ordering, not RAupg's own file numbering - verified against first 27 upgrades - hopefully lava names these correctly down the road
 $royal-armory-upgrades: (
     royal-armory-upgrade-0: img('data/RAupg30.png'),
@@ -111,7 +121,10 @@ $royal-armory-resources: (
     royal-armory-resource-35: img('data/RGres35.png'),
     royal-armory-resource-36: img('data/RGres36.png'),
     royal-armory-resource-37: img('data/RGres37.png'),
+
+    royal-armory: img('extracted_sprites/OrbOfVerisimilitude.gif'),
 );
 
 $all-royal-armory: map-merge($royal-armory-items, $royal-armory-upgrades);
 $all-royal-armory: map-merge($all-royal-armory, $royal-armory-resources);
+$all-royal-armory: map-merge($all-royal-armory, $royal-armory-statues);

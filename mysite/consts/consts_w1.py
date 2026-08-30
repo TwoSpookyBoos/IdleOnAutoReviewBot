@@ -117,8 +117,9 @@ forge_upgrades_dict = {
     }
 }
 
-# `StatueInfo` in source. Last updated in v2.43 Nov 10
-StatueInfo = [["POWER", "@BASE_DAMAGE", "30", "3"], ["SPEED", "%@MOVE_SPEED", "65", "0.1"], ["MINING", "@MINING_POWER", "280", "0.3"], ["FEASTY", "%@FOOD_EFFECT", "320", "1"], ["HEALTH", "@BASE_HEALTH", "0", "3"], ["KACHOW", "%@CRIT_DAMAGE", "-15", "0.4"], ["LUMBERBOB", "@CHOPPIN_POWER", "90", "0.3"], ["THICC_SKIN", "@BASE_DEFENCE", "210", "1"], ["OCEANMAN", "@FISHING_POWER", "115", "0.3"], ["OL_RELIABLE", "@CATCHIN_POWER", "45", "0.3"], ["EXP", "%@CLASS_EXP", "0", "0.1"], ["ANVIL", "%@PRODUCT_SPD", "165", "0.5"], ["CAULDRON", "%@ALCHEMY_EXP", "280", "0.5"], ["BEHOLDER", "%@CRIT_CHANCE", "300", "0.2"], ["BULLSEYE", "%@ACCURACY", "110", "0.8"], ["BOX", "@TRAPPIN_POWER", "180", "0.3"], ["TWOSOUL", "@WORSHIP_POWER", "260", "0.3"], ["EHEXPEE", "%@SKILL_EXP", "69", "0.1"], ["SEESAW", "%@CONS_EXP", "13", "0.5"], ["PECUNIA", "%@COINS", "50", "1"], ["MUTTON", "%@COOKING_EXP", "0", "0.3"], ["EGG", "%@BREEDING_EXP", "25", "0.4"], ["BATTLEAXE", "%@DAMAGE", "300", "0.2"], ["SPIRAL", "%@DIVINITY_EXP", "70", "1"], ["BOAT", "%@SAILING_SPD", "210", "0.5"], ["COMPOST", "%@FARMING_EXP", "75", "0.4"], ["STEALTH", "%@STEALTH", "185", "0.3"], ["ESSENCE", "%@WHITE_ESS", "160", "0.6"], ["VILLAGER", "%@VILLAGER_EXP", "120", "0.3"], ["DRAGON", "%@STATUES_BONUS", "270", "0.2"], ["SPELUNKY", "%@SPELUNK_EXP", "43", "0.2"], ["CORAL", "%@DAILY_CORAL", "181", "0.02"]]
+# `StatueInfo` in source. Last updated in v2.527 - added a 5th field (Royal Guardian's Statue Flair
+# category, see consts.idleon.master_classes.royal_armory), and fixed SPELUNKY's magnitude (was 0.2)
+StatueInfo = [["POWER", "@BASE_DAMAGE", "30", "3", "0"], ["SPEED", "%@MOVE_SPEED", "65", "0.1", "0"], ["MINING", "@MINING_POWER", "280", "0.3", "0"], ["FEASTY", "%@FOOD_EFFECT", "320", "1", "0"], ["HEALTH", "@BASE_HEALTH", "0", "3", "0"], ["KACHOW", "%@CRIT_DAMAGE", "-15", "0.4", "1"], ["LUMBERBOB", "@CHOPPIN_POWER", "90", "0.3", "0"], ["THICC_SKIN", "@BASE_DEFENCE", "210", "1", "0"], ["OCEANMAN", "@FISHING_POWER", "115", "0.3", "1"], ["OL_RELIABLE", "@CATCHIN_POWER", "45", "0.3", "1"], ["EXP", "%@CLASS_EXP", "0", "0.1", "1"], ["ANVIL", "%@PRODUCT_SPD", "165", "0.5", "0"], ["CAULDRON", "%@ALCHEMY_EXP", "280", "0.5", "1"], ["BEHOLDER", "%@CRIT_CHANCE", "300", "0.2", "1"], ["BULLSEYE", "%@ACCURACY", "110", "0.8", "1"], ["BOX", "@TRAPPIN_POWER", "180", "0.3", "2"], ["TWOSOUL", "@WORSHIP_POWER", "260", "0.3", "2"], ["EHEXPEE", "%@SKILL_EXP", "69", "0.1", "2"], ["SEESAW", "%@CONS_EXP", "13", "0.5", "2"], ["PECUNIA", "%@COINS", "50", "1", "1"], ["MUTTON", "%@COOKING_EXP", "0", "0.3", "3"], ["EGG", "%@BREEDING_EXP", "25", "0.4", "3"], ["BATTLEAXE", "%@DAMAGE", "300", "0.2", "0"], ["SPIRAL", "%@DIVINITY_EXP", "70", "1", "4"], ["BOAT", "%@SAILING_SPD", "210", "0.5", "4"], ["COMPOST", "%@FARMING_EXP", "75", "0.4", "5"], ["STEALTH", "%@STEALTH", "185", "0.3", "5"], ["ESSENCE", "%@WHITE_ESS", "160", "0.6", "5"], ["VILLAGER", "%@VILLAGER_EXP", "120", "0.3", "4"], ["DRAGON", "%@STATUES_BONUS", "270", "0.2", "3"], ["SPELUNKY", "%@SPELUNK_EXP", "43", "0.1", "6"], ["CORAL", "%@DAILY_CORAL", "181", "0.02", "6"]]
 statue_farming = {
     0:  {"Farmer": "Crystals with DK at Beans", "Resource": "bored-bean"},
     1:  {"Farmer": "W1-W3 Crystals with DK", "Resource": "w1-w3-crystals"},
@@ -162,7 +163,7 @@ statues_dict = {
         'Farmer': statue_farming.get(index, {}).get('Farmer', ''),
         'Resource': statue_farming.get(index, {}).get('Resource', ''),
     }
-    for index, (name, effect, pos2, basevalue) in enumerate(StatueInfo)
+    for index, (name, effect, pos2, basevalue, *_flair_category) in enumerate(StatueInfo)
 }
 statue_type_dict = {0: 'Normal', 1: 'Gold', 2: 'Onyx', 3: 'Zenith'}
 statue_type_count = sum([isinstance(k, int) for k in statue_type_dict.keys()])
