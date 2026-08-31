@@ -163,7 +163,7 @@ statues_dict = {
         'Farmer': statue_farming.get(index, {}).get('Farmer', ''),
         'Resource': statue_farming.get(index, {}).get('Resource', ''),
     }
-    for index, (name, effect, pos2, basevalue, *_flair_category) in enumerate(StatueInfo)
+    for index, (name, effect, pos2, basevalue, _flair_category) in enumerate(StatueInfo)
 }
 statue_type_dict = {0: 'Normal', 1: 'Gold', 2: 'Onyx', 3: 'Zenith'}
 statue_type_count = sum([isinstance(k, int) for k in statue_type_dict.keys()])

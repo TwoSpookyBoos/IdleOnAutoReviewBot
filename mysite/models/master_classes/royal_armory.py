@@ -3,7 +3,8 @@ from consts.consts_w1 import statues_dict
 from consts.idleon.master_classes.royal_armory import (
     royal_armory_upgrades, royal_armory_upgrades_list,
     royal_armory_orblet_market_upgrades, royal_armory_orblet_market_glorification_index,
-    royal_armory_statue_names, royal_armory_statue_unlock_odds_denom, royal_armory_statue_images,
+    royal_armory_statue_names, royal_armory_statues_released,
+    royal_armory_statue_unlock_odds_denom, royal_armory_statue_images,
     royal_armory_statue_marble_images,
     royal_armory_statue_bonus_names, royal_armory_statue_bonus_base, royal_armory_statue_bonus_increment,
     royal_armory_statue_flair_names, royal_armory_statue_flair_max_level,
@@ -19,7 +20,7 @@ class RoyalArmoryUpgrade:
     def __init__(
         self, name: str, index: int, slot: int, image: str, level: int, cost_base: float, cost_increment: float,
         resource_index: int, resource_image: str, max_level: int, value_per_level: int,
-        unlock_requirement: int, description: str
+        unlock_requirement: int, description: str, unlocked: bool
     ):
         self.name = name
         self.index = index
@@ -34,7 +35,7 @@ class RoyalArmoryUpgrade:
         self.value_per_level = value_per_level
         self.unlock_requirement = unlock_requirement
         self.description = description
-        self.unlocked = False
+        self.unlocked = unlocked
         self.total_value = 0
 
     def calculate(self):
@@ -62,21 +63,21 @@ class RoyalArmoryUpgrade:
 
 class RoyalStatue:
     # `RGshard`-unlocked "Royal Statue" - separate from the existing W1 Statues that Statue Flair boosts.
-    def __init__(
-        self, index: int, name: str, tier: int, unlock_odds_denom: int, image: str, marble_image: str,
-        bonus_name: str | None, bonus_base: int, bonus_increment: int, royal_reverence_multi: float,
-    ):
+    def __init__(self, index: int, tier: int, royal_reverence_multi: float):
         self.index = index
-        self.name = name
+        self.name = royal_armory_statue_names[index]
         self.tier = tier
         self.built = tier >= 1
-        self.unlock_odds_denom = unlock_odds_denom
-        self.image = image
-        self.marble_image = marble_image
-        self.bonus_name = bonus_name
+        self.unlock_odds_denom = royal_armory_statue_unlock_odds_denom[index]
+        self.image = royal_armory_statue_images[index]
+        self.marble_image = royal_armory_statue_marble_images[index]
+        self.bonus_name = royal_armory_statue_bonus_names[index]
         # `StatueBon` in source: only meaningful once built (tier >= 1), else it's a flat 0.
         self.bonus_value = (
-            (bonus_base + bonus_increment * max(0, tier - 1)) * royal_reverence_multi if tier >= 1 else 0
+            (
+                royal_armory_statue_bonus_base[index]
+                + royal_armory_statue_bonus_increment[index] * max(0, tier - 1)
+            ) * royal_reverence_multi if tier >= 1 else 0
         )
 
     def get_bonus_text(self) -> str:
@@ -200,10 +201,8 @@ class RoyalArmory:
                 value_per_level=upgrade["Value Per Level"],
                 unlock_requirement=upgrade["Unlock Requirement"],
                 description=upgrade["Description"],
+                unlocked=self.total_levels >= upgrade["Unlock Requirement"],
             )
-        # `unlock_requirement` is already the correct per-slot threshold (royal_armory_slot_unlock_thresholds).
-        for upgrade in self.upgrades.values():
-            upgrade.unlocked = self.total_levels >= upgrade.unlock_requirement
 
         # Royal Statues (`RoyalG[0]`). Their bonus scales with Royal Reverence, an upgrade parsed above.
         royal_reverence = self.upgrades.get('Royal Reverence')
@@ -214,17 +213,10 @@ class RoyalArmory:
         self.statues: list[RoyalStatue] = [
             RoyalStatue(
                 index=statue_index,
-                name=royal_armory_statue_names[statue_index],
                 tier=int(safer_index(raw_statues, statue_index, 0)),
-                unlock_odds_denom=royal_armory_statue_unlock_odds_denom[statue_index],
-                image=royal_armory_statue_images[statue_index],
-                marble_image=royal_armory_statue_marble_images[statue_index],
-                bonus_name=royal_armory_statue_bonus_names[statue_index],
-                bonus_base=royal_armory_statue_bonus_base[statue_index],
-                bonus_increment=royal_armory_statue_bonus_increment[statue_index],
                 royal_reverence_multi=royal_reverence_multi,
             )
-            for statue_index in range(len(royal_armory_statue_names))
+            for statue_index in range(royal_armory_statues_released)
         ]
 
         # Statue Flair (`RoyalG[22]`, boosts the existing W1 Statues - same 32-entry order as `StatueInfo`)

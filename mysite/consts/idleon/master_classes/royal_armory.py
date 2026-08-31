@@ -48,6 +48,9 @@ royal_armory_statue_names = [
 ]
 # `StatueUpgOdds` for an unbuilt statue (idx 0-7): `1/[this]` chance per Marble spent.
 royal_armory_statue_unlock_odds_denom = [25, 50, 100, 250, 500, 1000, 2500, 10000]
+# Statues 6 and 7 (Neptune, Statue #8) aren't live in-game yet - no real marble art published for
+# either. Only the first N are shown to players.
+royal_armory_statues_released = 6
 # The statue's own artwork. Statue 7 has no image since it's unreleased.
 royal_armory_statue_images = [
     'royal-statue-0', 'royal-statue-1', 'royal-statue-2', 'royal-statue-3',
