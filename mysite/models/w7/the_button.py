@@ -46,17 +46,18 @@ class TheButton:
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
         if not raw_optlacc:
             logger.warning("The Button data not present.")
-        # "OptLacc"[594] in source: raw press counter for The Button
+        # "OptLacc"[594] in source: raw press counter for The Button. "Button_Bonuses" in
+        # source accumulates per_time once per click, cycling through slots every 5 clicks -
+        # a full cycle through all slots is 5 * SLOT_COUNT clicks.
         self.total_clicks = int(safer_index(raw_optlacc, 594, 0))
-        full_cycles = self.total_clicks // 5
+        cycle_length = 5 * self.SLOT_COUNT
+        full_cycles = self.total_clicks // cycle_length
+        remainder = self.total_clicks % cycle_length
         self.bonuses: dict[str, ButtonBonus] = {}
         for index, (label, per_time) in enumerate(
             zip(button_bonus_labels, button_bonus_per_time)
         ):
-            activation_count = (
-                full_cycles // self.SLOT_COUNT
-                + (1 if index < full_cycles % self.SLOT_COUNT else 0)
-            )
+            activation_count = 5 * full_cycles + max(0, min(5, remainder - 5 * index))
             self.bonuses[label] = ButtonBonus(index, label, per_time, activation_count)
 
     def get_bonus_value(self, name: str) -> float:
