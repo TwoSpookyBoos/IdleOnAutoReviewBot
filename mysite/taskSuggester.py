@@ -34,6 +34,8 @@ from w7 import (
     gallery,
     zenith_market,
     research,
+    sushi_station,
+    the_button,
     dancing_coral,
     coral_kid,
 )
@@ -176,6 +178,8 @@ def main(inputData, source_string, runType="web"):
             legend_talents.get_legend_talents_section(),
             coral_reef.get_coral_reef_section(),
             research.get_section(),
+            sushi_station.get_section(),
+            the_button.get_section(),
             advice_fish.get_section(),
             zenith_market.get_zenith_market_section(),
             dancing_coral.get_dancing_coral_section(),
