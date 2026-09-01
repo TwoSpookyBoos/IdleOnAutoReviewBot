@@ -143,7 +143,8 @@ greenstack_progressionTiers = {
     4: {'Required Stacks': 250},
     5: {'Required Stacks': 300},
     6: {'Required Stacks': 350},
-    7: {'Required Stacks': 400}
+    7: {'Required Stacks': 400},
+    8: {'Required Stacks': 440}
 }
 achievements_progressionTiers = {
     0: {},
@@ -2301,6 +2302,7 @@ true_max_tiers = {
     'Grimoire': 0,
     'Compass': 0,
     'The Tesseract': max(tesseract_progressionTiers.keys()),
+    'Royal Armory': 0,
 
     # World 1
     'Bribes': max(bribes_progressionTiers.keys()),

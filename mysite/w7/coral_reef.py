@@ -9,7 +9,8 @@ from models.general.session_data import session_data
 from models.advice.generators.w7 import get_coral_reef_advice
 from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
-from utils.safer_data_handling import safer_convert
+from utils.number_formatting import round_and_trim
+from utils.safer_data_handling import safer_convert, safer_get
 
 
 def get_corals_info_group() -> AdviceGroup:
@@ -57,31 +58,37 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_value = 0
     multi_group_d_advice: list[Advice] = []
 
-    # TODO: Coral Kid upgrade
-    coral_kid_advice = Advice(
-        label="Coral Kid Upgrade (WIP)",
-        picture_class="coming-soon"
-    )
-    multi_group_d_advice.append(coral_kid_advice)
+    coral_kid_bonus = session_data.account.coral_kid[5]
+    multi_group_d_advice.append(coral_kid_bonus.get_advice())
+    multi_group_d_value += coral_kid_bonus.value
 
     dancing_coral_bonus = session_data.account.dancing_coral[0]
     dancing_coral_advice = dancing_coral_bonus.get_advice()
     multi_group_d_advice.append(dancing_coral_advice)
     multi_group_d_value += dancing_coral_bonus.value
 
-    # TODO: Clamwork bonus
+    # +20% Daily Corals once Clam Work is past level 5
+    clamwork_level = session_data.account.clam_work.level
+    clamwork_value = 20 if clamwork_level > 5 else 0
     clamwork_advice = Advice(
-        label="Clamwork Bonus (WIP)",
-        picture_class="coming-soon"
+        label=f"Clam Work: +{clamwork_value}% Daily Corals past level 5",
+        picture_class="clam-pearl",
+        progression=clamwork_level,
+        goal=6,
     )
     multi_group_d_advice.append(clamwork_advice)
+    multi_group_d_value += clamwork_value
 
-    # TODO: Killroy bonus
+    killroy_coral_level = safer_get(session_data.account.raw_optlacc_dict, 470, 0)
+    killroy_coral_value = round_and_trim(killroy_coral_level / (250 + killroy_coral_level) * 25, 0)
     killroy_advice = Advice(
-        label="Killroy Bonus (WIP)",
-        picture_class="coming-soon"
+        label=f"Killroy: +{killroy_coral_value:g}% Daily Corals",
+        picture_class="killroy-skull",
+        progression=killroy_coral_level,
+        goal=EmojiType.INFINITY.value,
     )
     multi_group_d_advice.append(killroy_advice)
+    multi_group_d_value += killroy_coral_value
 
     corale_stamp = session_data.account.stamps['Corale Stamp']
     corale_stamp_value = corale_stamp.total_value

@@ -145,16 +145,7 @@ def getMaxLevelAdviceGroup() -> AdviceGroup:
         )
     )
 
-    ap = session_data.account.compass.upgrades['Atomic Potential']
-    ml_advice.append(
-        Advice(
-            label=f"{{{{Compass|#the-compass}}}}: {ap.path_name}-{ap.path_ordering}: Atomic Potential: "
-                  f"+{ap.level}/{ap.max_level} max Atom levels",
-            picture_class=ap.image,
-            progression=ap.level,
-            goal=ap.max_level
-        )
-    )
+    ml_advice.append(session_data.account.compass.upgrades['Atomic Potential'].get_advice())
 
     hb = session_data.account.event_points_shop['Bonuses']['Higgs Boson']
     ml_advice.append(
@@ -221,20 +212,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
     cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
 
-    cr_advice.append(Advice(
-        label=f"{{{{Grimoire|#the-grimoire}}}}: Death of the Atom Price: {session_data.account.grimoire.upgrades['Death of the Atom Price'].total_value}%",
-        picture_class=session_data.account.grimoire.upgrades['Death of the Atom Price'].image,
-        progression=session_data.account.grimoire.upgrades['Death of the Atom Price'].level,
-        goal=session_data.account.grimoire.upgrades['Death of the Atom Price'].max_level
+    cr_advice.append(session_data.account.grimoire.upgrades['Death of the Atom Price'].get_advice(
+        session_data.account.grimoire.total_upgrades
     ))
 
-    acc = session_data.account.compass.upgrades['Atomic Cost Crash']
-    cr_advice.append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: {acc.path_name}-{acc.path_ordering}: Atomic Cost Crash: {acc.total_value}%",
-        picture_class=session_data.account.compass.upgrades['Atomic Cost Crash'].image,
-        progression=session_data.account.compass.upgrades['Atomic Cost Crash'].level,
-        goal=session_data.account.compass.upgrades['Atomic Cost Crash'].max_level
-    ))
+    cr_advice.append(session_data.account.compass.upgrades['Atomic Cost Crash'].get_advice())
 
     cr_advice.append(Advice(
         label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
