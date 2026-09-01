@@ -63,10 +63,10 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     for dk in session_data.account.dks:
         best_orb_book = max(best_orb_book, dk.max_talents.get("168", 0))
     crystal_Advices.append(Advice(
-        label=f"Level {best_orb_book}/{session_data.account.library['MaxBookLevel']} booked Orb of Remembrance talent (Divine Knight only)",
+        label=f"Level {best_orb_book}/{session_data.account.library.max_book_level} booked Orb of Remembrance talent (Divine Knight only)",
         picture_class='orb-of-remembrance',
         progression=best_orb_book,
-        goal=session_data.account.library['MaxBookLevel']
+        goal=session_data.account.library.max_book_level
     ))
     tome_DropChance = safer_get(session_data.account.raw_optlacc_dict, 200, 1)
     crystal_Advices.append(Advice(

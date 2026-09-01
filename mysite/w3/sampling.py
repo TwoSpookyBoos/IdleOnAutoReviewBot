@@ -127,7 +127,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     character_sum += star_talent_diff_to_max
     po_box_max = lava_func('decay', 400, 5, 200)
     character_sum += po_box_max
-    squire_super_samples_max_book = lava_func('decay', session_data.account.library['MaxBookLevel'], 9, 75)
+    squire_super_samples_max_book = lava_func('decay', session_data.account.library.max_book_level, 9, 75)
     character_subgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squire_super_samples_max_book:.2f}% for Squires"
     psr_Advices[character_subgroup] = []
     psr_Advices[character_subgroup].append(Advice(
@@ -141,7 +141,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         picture_class='utilitarian-capsule'
     ))
     psr_Advices[character_subgroup].append(Advice(
-        label=f"Squire only: Super Samples: +{squire_super_samples_max_book:.2f}% at max book level {session_data.account.library['MaxBookLevel']}",
+        label=f"Squire only: Super Samples: +{squire_super_samples_max_book:.2f}% at max book level {session_data.account.library.max_book_level}",
         picture_class='super-samples'
     ))
 
@@ -250,17 +250,17 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     any_dk_max_leveled = False
     best_kotr_preset_level = 0
     for dk in session_data.account.dks:
-        levels_above_max = dk.max_talents_over_books - session_data.account.library['MaxBookLevel']
+        levels_above_max = dk.max_talents_over_books - session_data.account.library.max_book_level
         # Book level
-        if dk.max_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']:
+        if dk.max_talents.get("178", 0) >= session_data.account.library.max_book_level:
             any_dk_max_booked = True
         if dk.max_talents.get("178", 0) > best_kotr_book:
             best_kotr_book = dk.max_talents.get("178", 0)
 
         # Preset level
         if (
-            dk.current_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
-            or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library['MaxBookLevel']
+            dk.current_preset_talents.get("178", 0) >= session_data.account.library.max_book_level
+            or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library.max_book_level
         ):
             any_dk_max_leveled = True
         if dk.current_preset_talents.get("178", 0) >= best_kotr_preset_level:
