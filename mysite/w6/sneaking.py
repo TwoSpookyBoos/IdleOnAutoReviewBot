@@ -11,8 +11,22 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+def pristine_collector_advice(pristine_collector):
+    # This is a multi, so display it as such
+    advice = pristine_collector.get_advice()
+    advice.label = advice.label.replace(
+        f"+{pristine_collector.total_value:.2f}%",
+        f"x{round_and_trim(1 + pristine_collector.total_value / 100, 4)}"
+    ).replace(
+        f"({pristine_collector.value_per_level:.2f} per level)",
+        f"(+{round_and_trim(pristine_collector.value_per_level)}% per level)"
+    )
+    return advice
+
+
 def getSneakingProgressionTiersAdviceGroups():
     sneaking = session_data.account.sneaking
+    pristine_collector = session_data.account.compass.upgrades['Pristine Collector']
     sneaking_AdviceDict = {
         'Gemstones': [
             gemstone.get_bonus_advice() for gemstone in sneaking.gemstones.values()
@@ -23,6 +37,16 @@ def getSneakingProgressionTiersAdviceGroups():
         "PristineCharms": [
             pristine.get_obtained_advice(False)
             for pristine in sneaking.pristine_charms.values()
+        ],
+        "PristineOdds": [
+            Advice(
+                label=f"Each regular Charm found today lowers this, from 0.15% down to 0% at 120 found "
+                      f"(you're at {sneaking.daily_charms_found}/120, resets daily)",
+                picture_class='sneaking-meteorite',
+                progression=sum(charm.obtained for charm in sneaking.pristine_charms.values()),
+                goal=len(sneaking.pristine_charms),
+            ),
+            pristine_collector_advice(pristine_collector),
         ],
     }
     sneaking_AdviceGroups = {}
@@ -62,9 +86,12 @@ def getSneakingProgressionTiersAdviceGroups():
     )
     sneaking_AdviceGroups['PristineCharms'] = AdviceGroup(
         tier='',
-        pre_string='Collect all Pristine Charms',
+        pre_string='Pristine Charm Odds and Collection',
         post_string='Strategy: wear Meteorite charms on F12 at 0% detect chance. Mastery level does not matter.',
-        advices=sneaking_AdviceDict['PristineCharms'],
+        advices={
+            f"Pristine Charm Odds: {round_and_trim(sneaking.pristine_chance, 4)}%": sneaking_AdviceDict['PristineOdds'],
+            'Collect all Pristine Charms': sneaking_AdviceDict['PristineCharms'],
+        },
         informational=True
     )
     overall_SectionTier = min(true_max, tier_Sneaking)

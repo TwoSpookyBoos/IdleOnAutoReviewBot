@@ -905,6 +905,13 @@ def _calculate_w6_sneaking_gemstones(account):
     )
 
 
+def _calculate_w6_sneaking_pristine_chance(account):
+    # Dependency: _calculate_master_classes (Compass upgrades)
+    account.sneaking.calculate_pristine_chance(
+        account.compass.upgrades['Pristine Collector'].total_value
+    )
+
+
 def _calculate_w6_farming(account):
     # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_farming_land_ranks(account)
@@ -978,6 +985,7 @@ def _calculate_wave_3(account):
     _calculate_general_character_bonus_talent_levels(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
+    _calculate_w6_sneaking_pristine_chance(account)
     account.grimoire.calculate_bone_sources(
         account.dbs, account.sneaking, account.caverns, account.all_assets,
         account.arcade, account.labJewels, account.emperor
