@@ -48,10 +48,10 @@ class CoralKidUpgrade:
         if "{" in description:
             description = description.replace("{", str(self.base_value))
         elif "}" in description:
-            description = description.replace("}", str(ValueToMulti(self.base_value)))
+            description = description.replace("}", str(round_and_trim(ValueToMulti(self.base_value))))
 
         if "$x" in description:
-            description = description.replace("$x", f" {ValueToMulti(self.value)}x")
+            description = description.replace("$x", f" {round_and_trim(ValueToMulti(self.value))}x")
         elif "+$%" in description:
             description = description.replace("+$%", f" +{self.value}%")
 
