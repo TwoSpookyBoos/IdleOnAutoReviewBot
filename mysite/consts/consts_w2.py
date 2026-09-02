@@ -1,4 +1,5 @@
 from consts.idleon.consts_idleon import NinjaInfo
+from consts.idleon.lava_func import lava_func
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName
@@ -188,16 +189,22 @@ arcade_stat_name_overrides = {
     'Summon XP multi': 'Summoning XP multi',
     'Prisma Bonuses': 'Prisma Bubble Bonus',
 }
+arcade_max_level = 101
 arcade_bonuses = {
     index: {
         'Stat': arcade_stat_name_overrides.get(" ".join(stat_code.split("_")[1:]), " ".join(stat_code.split("_")[1:])),
         'x1': parse_number(x1),
         'x2': parse_number(x2),
         'funcType': func_type,
-        'displayType': '%' if stat_code.split("_")[0][-1] == '%' else ''
+        'displayType': '%' if stat_code.split("_")[0][-1] == '%' else '',
+        'Image': f'arcade-bonus-{index}',
+        'MaxValue': (
+            2  #Cosmic
+            * 2  #Reindeer Companion
+            * lava_func(func_type, arcade_max_level, parse_number(x1), parse_number(x2))
+        ),
     } for index, [stat_code, x1, x2, func_type, _, _, _] in enumerate(arcade_shop_info)
 }
-arcade_max_level = 101
 post_office_tabs = ["Bob's Boxes", "Charlie's Crates"]
 #`PostOffUpgradeInfo = function ()` in source. Last updated in v2.46 Nov 27
 #Translate using the Post Office tab in AR spreadsheet

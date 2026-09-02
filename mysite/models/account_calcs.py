@@ -18,7 +18,6 @@ from models.advice.advice import Advice
 from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from utils.misc.has_companion import has_companion
 from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
 
@@ -43,7 +42,7 @@ def _calculate_wave_1(account):
     _calculate_w4_tome(account)
 
 def _calculate_caverns_majiks(account):
-    have_doot = has_companion("King Doot")
+    have_doot = account.companions.has("King Doot")
     account.caverns.villagers["Cosmos"].calculate_bonuses(have_doot)
 
 
@@ -78,11 +77,7 @@ def _calculate_w6_emperor(account):
 
 
 def _calculate_w2_arcade(account):
-    for upgrade_index, upgrade_details in account.arcade.items():
-        account.arcade[upgrade_index]['Value'] *= (
-            max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
-            * max(1, 2 * has_companion('Spirit Reindeer'))
-        )
+    account.arcade.calculate_values(account.companions)
 
 def _calculate_w4_tome(account):
     raw_tome_pcts = account.raw_data.get('serverVars', {}).get('TomePct')
@@ -112,7 +107,7 @@ def _calculate_wave_2(account):
     account.tesseract.calculate_tachyon_sources(
         account.acs, account.labJewels, account.arcade, account.emperor,
         account.alchemy_bubbles, account.sneaking, account.gemshop, account.alchemy_vials,
-        has_companion('Balloonfish')
+        account.companions.has('Balloonfish')
     )
     _calculate_w3(account)
     _calculate_w4(account)
@@ -489,8 +484,8 @@ def _calculate_w2_ballot(account):
         + account.summoning.bonuses["Ballot Bonus"].value
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
-        + (5 * has_companion('Mashed Potato'))
-        + (40 * has_companion('Crystal Cuttlefish'))
+        + (5 * account.companions.has('Mashed Potato'))
+        + (40 * account.companions.has('Crystal Cuttlefish'))
         + account.legend_talents['Democracy FTW'].value
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
@@ -864,7 +859,7 @@ def _calculate_w4_tome_bonuses(account):
 
 def _calculate_w5(account):
     account.divinity['AccountWideArctis'] = (
-        has_companion('King Doot') or
+        account.companions.has('King Doot') or
         'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
     )
     _calculate_w5_divinity_offering_costs(account)
@@ -1035,11 +1030,11 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'Rift Slug': {
-            'Value': 25 * has_companion('Rift Slug'),
+            'Value': 25 * account.companions.has('Rift Slug'),
             'Image': 'rift-slug',
             'Label': f"Companion: Rift Slug: "
-                     f"+{25 * has_companion('Rift Slug')}/25",
-            'Progression': int(has_companion('Rift Slug')),
+                     f"+{25 * account.companions.has('Rift Slug')}/25",
+            'Progression': int(account.companions.has('Rift Slug')),
             'Goal': 1
         },
         'ES Family': {

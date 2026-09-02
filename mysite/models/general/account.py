@@ -7,12 +7,14 @@ from consts.w1.stamps import stamp_types
 from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
+from models.general.companions import Companions
 from models.general.greenstacks import GreenStacks
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
+from models.w2.arcade import Arcade
 from models.w3.salt_lick import SaltLick
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
@@ -117,6 +119,10 @@ class Account:
         self.wws = []
         self.sbs = []
 
+        self.companions: Companions = Companions(
+            self.raw_data, doot=g.doot, riftslug=g.riftslug, sheepie=g.sheepie
+        )
+
         #W1
         self.stamps: Stamps = Stamps()
         self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
@@ -124,6 +130,9 @@ class Account:
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
         self.vault: Vault = Vault(self.raw_data)
+
+        # W2
+        self.arcade: Arcade = Arcade(self.raw_data)
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)
@@ -173,7 +182,7 @@ class Account:
         self.meritocracy = Meritocracy(self.raw_data)
         self.gallery = Gallery(self.raw_data)
         self.zenith_market = ZenithMarket(self.raw_data)
-        self.research = Research(self.raw_data)
+        self.research = Research(self.raw_data, self.companions.has('King Doot'))
         self.sushi_station = SushiStation(self.raw_data)
         self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)

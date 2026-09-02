@@ -629,8 +629,8 @@ def getPetDamageAdviceGroup():
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
     power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30
 
-    pet_damage_arcade_bonus = next(arcade_bonus for arcade_bonus in session_data.account.arcade.values() if arcade_bonus['Stat'] == 'Breeding Pet DMG')
-    pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus['Value']
+    pet_damage_arcade_bonus = next(arcade_bonus for arcade_bonus in session_data.account.arcade.values() if arcade_bonus.stat == 'Breeding Pet DMG')
+    pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus.value
 
     pet_punchies_vault_upgrade = session_data.account.vault.upgrades['Pet Punchies']
     pet_punchies_vault_upgrade_bonus = pet_punchies_vault_upgrade.total_value

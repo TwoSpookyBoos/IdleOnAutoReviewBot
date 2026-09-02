@@ -91,7 +91,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     # Multi Group E = Arcade
     ab43 = session_data.account.arcade[43]
-    mge = ValueToMulti(ab43['Value'])
+    mge = ValueToMulti(ab43.value)
     mge_label = f"Multi Group E: {mge:.3f}x"
 
     # Multi Group F = Legend Talents

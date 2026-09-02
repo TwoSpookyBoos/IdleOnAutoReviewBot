@@ -20,7 +20,6 @@ from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
-from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber, kebab
 from utils.logging import get_logger
 
@@ -56,7 +55,7 @@ def get_gallery_item_advice() -> list[Advice]:
 
 
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
-    companion_data_missing = not session_data.account.companions['Companion Data Present']
+    companion_data_missing = not session_data.account.companions.data_present
     bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if bundle_data_missing else ''
     passive_drop_rate_cards = [
@@ -218,13 +217,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_2_bonus = 0
 
     # Arcade - Shop Bonuses
-    has_reindeer_companion = has_companion('Spirit Reindeer')
+    has_reindeer_companion = session_data.account.companions.has('Spirit Reindeer')
     if not has_reindeer_companion:
         _, reindeer_advice = get_companion_advice('Spirit Reindeer')
         drop_rate_aw_advice[w2].append(reindeer_advice)
 
     drop_rate_aw_advice[w2].append(get_arcade_advice(27))
-    world_2_bonus += session_data.account.arcade[27]['Value']
+    world_2_bonus += session_data.account.arcade[27].value
 
     # Obols - Family - Drop Rate
     obols_family_drop_rate = session_data.account.obols['BonusTotals'].get('Total%_DROP_CHANCE', 0)
@@ -537,7 +536,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     santa_snake_value, santa_snake_advice = get_companion_advice('Santa Snake')
     drop_rate_aw_advice[companion_group].append(santa_snake_advice)
     companion_bonus += santa_snake_value
-    santa_snake_multi = 1.01 if has_companion('Santa Snake') else 1.0
+    santa_snake_multi = 1.01 if session_data.account.companions.has('Santa Snake') else 1.0
 
     # Companions - Clammie
     clammie_value, clammie_advice = get_companion_advice('Clammie')
@@ -553,17 +552,17 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     mama_troll_value, mama_troll_advice = get_companion_advice('Mama Troll')
     drop_rate_aw_advice[companion_group].append(mama_troll_advice)
     companion_bonus += mama_troll_value
-    mama_troll_multi = 1.50 if has_companion('Mama Troll') else 1.0
+    mama_troll_multi = 1.50 if session_data.account.companions.has('Mama Troll') else 1.0
 
     # Companions - Glunko The Massive (Drop Rate Multi only - Value covers unrelated stats)
     _, glunko_massive_advice = get_companion_advice('Glunko The Massive')
     drop_rate_aw_advice[companion_group].append(glunko_massive_advice)
-    glunko_massive_multi = 1.50 if has_companion('Glunko The Massive') else 1.0
+    glunko_massive_multi = 1.50 if session_data.account.companions.has('Glunko The Massive') else 1.0
 
     # Companions - Crystal Glunko (Drop Rate Multi only - Value covers unrelated stats)
     _, crystal_glunko_advice = get_companion_advice('Crystal Glunko')
     drop_rate_aw_advice[companion_group].append(crystal_glunko_advice)
-    crystal_glunko_multi = 1.30 if has_companion('Crystal Glunko') else 1.0
+    crystal_glunko_multi = 1.30 if session_data.account.companions.has('Crystal Glunko') else 1.0
 
     # Special bonuses. Dependent on character-specific bonuses as they are applied afterwards
     #########################################
