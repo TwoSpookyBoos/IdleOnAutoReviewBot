@@ -93,7 +93,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         for advice in cap_Advices[group_name]:
             advice.mark_advice_completed()
 
-    groupA = ValueToMulti((session_data.account.arcade[26]['Value'] + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
+    groupA = ValueToMulti((session_data.account.arcade[26].value + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
     groupB = ValueToMulti(session_data.account.stamps['Forge Stamp'].total_value)
     groupC = ValueToMulti(bribe_value + beeg_forge.total_value)
     groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))

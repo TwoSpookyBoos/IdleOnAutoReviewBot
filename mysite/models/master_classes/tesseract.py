@@ -158,7 +158,7 @@ class Tesseract:
                 + self.upgrades['Aurion Hoarding'].total_value * safer_math_log(self.tachyons[5], 10)
                 # + Extra Tachyon from Equipment
                 + lab_jewels['Eternal Energy Jewel']['Value'] * lab_jewels['Eternal Energy Jewel']['Owned']
-                + arcade[50]['Value']
+                + arcade[50].value
             ),
             'mgb': ValueToMulti(
                 emperor["Arcane Cultist Extra Tachyons"].value

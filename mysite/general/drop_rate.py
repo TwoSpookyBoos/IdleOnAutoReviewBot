@@ -223,7 +223,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         drop_rate_aw_advice[w2].append(reindeer_advice)
 
     drop_rate_aw_advice[w2].append(get_arcade_advice(27))
-    world_2_bonus += session_data.account.arcade[27]['Value']
+    world_2_bonus += session_data.account.arcade[27].value
 
     # Obols - Family - Drop Rate
     obols_family_drop_rate = session_data.account.obols['BonusTotals'].get('Total%_DROP_CHANCE', 0)

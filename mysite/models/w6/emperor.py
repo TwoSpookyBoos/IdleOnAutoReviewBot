@@ -101,7 +101,7 @@ class Emperor(dict[str, EmperorBonus]):
     def calculate_bonus_multi(self, arcade, tesseract):
         # "EmperorBon" in source multi in return. Last updated in v2.48
         self.bonus_multi = ValueToMulti(
-            arcade[51]["Value"]
+            arcade[51].value
             + MultiToValue(tesseract.upgrades["Vicar of the Emperor"].total_value)
         )
 

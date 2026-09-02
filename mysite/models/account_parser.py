@@ -22,8 +22,8 @@ from consts.consts_w1 import (
 from consts.w1.stamps import stamp_types
 from consts.w1.bribes import bribes_dict
 from consts.consts_w2 import (
-    max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict, arcade_bonuses,
-    arcade_max_level, ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
+    max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict,
+    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
 )
 from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -894,7 +894,6 @@ def _parse_w2(account):
     _parse_w2_bubbles(account)
     _parse_w2_p2w(account)
     _parse_w2_postOffice(account)
-    _parse_w2_arcade(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
     _parse_w2_islands(account)
@@ -1087,72 +1086,6 @@ def _parse_w2_postOffice(account):
         'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc", 0), 0),
         'Upgrade Vault': safer_convert(account.raw_optlacc_dict.get(347, 0), 0)
     }
-
-def _parse_w2_arcade(account):
-    account.arcade_currency = {
-        'Balls': safer_get(account.raw_optlacc_dict, 74, 0),
-        'Gold Balls': safer_get(account.raw_optlacc_dict, 75, 0),
-        'Cosmic Balls': safer_get(account.raw_optlacc_dict, 324, 0),
-    }
-
-    account.arcade = {}
-    raw_arcade_upgrades = safe_loads(account.raw_data.get('ArcadeUpg', []))
-    for upgrade_index, upgrade_details in arcade_bonuses.items():
-        try:
-            account.arcade[upgrade_index] = {
-                'Level': raw_arcade_upgrades[upgrade_index],
-                'Value': lava_func(
-                    upgrade_details['funcType'],
-                    min(arcade_max_level, raw_arcade_upgrades[upgrade_index]),
-                    upgrade_details['x1'],
-                    upgrade_details['x2']
-                ),
-                'MaxValue':(
-                    2  #Cosmic
-                    * 2  #Reindeer Companion
-                    * lava_func(
-                        upgrade_details['funcType'],
-                        arcade_max_level,
-                        upgrade_details['x1'],
-                        upgrade_details['x2']
-                    )
-                ),
-                'Cosmic': raw_arcade_upgrades[upgrade_index] >= arcade_max_level,
-                'Material': (
-                    '' if raw_arcade_upgrades[upgrade_index] == 101
-                    else 'arcade-cosmic-ball' if raw_arcade_upgrades[upgrade_index] == 100
-                    else 'arcade-gold-ball'
-                ),
-                'Image': f'arcade-bonus-{upgrade_index}',
-                'Display Type': upgrade_details['displayType'],
-                'Stat': upgrade_details['Stat']
-            }
-        except Exception as e:
-            logger.warning(f"Arcade Gold Ball Bonus Parse error at upgrade_index {upgrade_index}: {e}. Defaulting to 0")
-            account.arcade[upgrade_index] = {
-                'Level': 0,
-                'Value': lava_func(
-                    upgrade_details['funcType'],
-                    0,
-                    upgrade_details['x1'],
-                    upgrade_details['x2']
-                ),
-                'MaxValue':(
-                    2  #Cosmic
-                    * 2  #Reindeer Companion
-                    * lava_func(
-                        upgrade_details['funcType'],
-                        arcade_max_level,
-                        upgrade_details['x1'],
-                        upgrade_details['x2']
-                    )
-                ),
-                'Cosmic': False,
-                'Material': 'arcade-gold-ball',
-                'Image': f'arcade-bonus-{upgrade_index}',
-                'Display Type': upgrade_details['displayType'],
-                'Stat': upgrade_details['Stat']
-            }
 
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])

@@ -113,7 +113,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_value += legend_talent.value
 
     multi_group_d_advice.append(get_arcade_advice(57))
-    multi_group_d_value += session_data.account.arcade[57]['Value']
+    multi_group_d_value += session_data.account.arcade[57].value
 
     coral_conservationism = session_data.account.sneaking.emporium['Coral Conservationism']
     multi_group_d_advice.append(coral_conservationism.get_obtained_advice())
