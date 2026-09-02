@@ -242,7 +242,7 @@ class Compass:
             'mge': 1,
             'mgf': ValueToMulti(
                 + compass_percent
-                + arcade[47]['Value']
+                + arcade[47].value
                 + lab_jewels['North Winds Jewel']['Value'] * lab_jewels['North Winds Jewel']['Enabled']
                 + self.upgrades['De Dust I'].total_value
                 + self.upgrades['De Dust II'].total_value

@@ -49,7 +49,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     amplestample_value = session_data.account.stamps['Amplestample Stamp'].total_value
     account_sum += stample_value
     account_sum += amplestample_value
-    account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
+    account_sum += session_data.account.arcade[5].value
     account_sum += session_data.account.achievements['Saharan Skull']['Complete']
     #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
     star_talent_one_point = lava_func('bigBase', 1, 10, 0.075)

@@ -1,11 +1,9 @@
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.general import get_companion_advice
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.logging import get_logger
 
@@ -17,18 +15,11 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
         'Currency': [],
         'Bonuses': []
     }
-    arcade_Advices['Currency'] = [
-        Advice(
-            label=f"{currency_name} owned: {currency_amount:,}",
-            picture_class=f'arcade-{currency_name[:-1]}',
-            completed=True,
-            informational=True
-        ) for currency_name, currency_amount in session_data.account.arcade_currency.items()
-    ]
+    arcade_Advices['Currency'] = session_data.account.arcade.get_currency_advice()
 
     _, reindeer_advice = get_companion_advice('Spirit Reindeer')
     arcade_Advices['Bonuses'] = [reindeer_advice] + [
-        get_arcade_advice(bonus_index, False) for bonus_index in session_data.account.arcade
+        upgrade.get_advice(False) for upgrade in session_data.account.arcade.values()
     ]
 
     for subgroup in arcade_Advices:

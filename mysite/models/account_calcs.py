@@ -77,11 +77,7 @@ def _calculate_w6_emperor(account):
 
 
 def _calculate_w2_arcade(account):
-    for upgrade_index, upgrade_details in account.arcade.items():
-        account.arcade[upgrade_index]['Value'] *= (
-            max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
-            * max(1, 2 * account.companions.has('Spirit Reindeer'))
-        )
+    account.arcade.calculate_values(account.companions)
 
 def _calculate_w4_tome(account):
     raw_tome_pcts = account.raw_data.get('serverVars', {}).get('TomePct')
