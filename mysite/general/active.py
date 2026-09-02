@@ -16,7 +16,6 @@ from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
 
-from utils.misc.has_companion import has_companion
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -625,10 +624,10 @@ def getBuboAdviceGroup() -> AdviceGroup:
             5: "fifth",
             6: "sixth"
         }
-        cookin_roadkill_equipped = has_companion('Sheepie') or 'b7' in best_bubo.big_alch_bubbles
+        cookin_roadkill_equipped = session_data.account.companions.has('Sheepie') or 'b7' in best_bubo.big_alch_bubbles
         bubo_advice[alch_talents].append(Advice(
             label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill']['Level']} Cookin Roadkill big bubble equipped "
-                  f"{' (Thanks Sheepie!)' if has_companion('Sheepie') else ''}"
+                  f"{' (Thanks Sheepie!)' if session_data.account.companions.has('Sheepie') else ''}"
                   f"<br>See {{{{ Bubbles|#bubbles}}}} for recommended levels",
             picture_class='cookin-roadkill',
             progression=int(cookin_roadkill_equipped),
