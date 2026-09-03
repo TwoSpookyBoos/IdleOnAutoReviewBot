@@ -18,9 +18,6 @@ def get_upgrade_vault_advice(upgrade_name: str, link_to_section: bool = True, ad
     return upgrade.get_advice(session_data.account.vault.total_upgrades, link_to_section, additional_info_text)
 
 
-def get_companion_advice(companion_name: str, value_is_multi: bool = False) -> tuple[int | float, Advice]:
-    return session_data.account.companions[companion_name].get_advice(value_is_multi)
-
 def get_gem_shop_purchase_advice(
         purchase_name: str,
         link_to_section: bool = True,

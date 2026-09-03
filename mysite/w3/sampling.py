@@ -4,7 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 from utils.safer_data_handling import safer_get
@@ -362,7 +361,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=supreme_wiring_max_days
     ))
 
-    _, biggole_mole_advice = get_companion_advice('Biggole Mole')
+    _, biggole_mole_advice = session_data.account.companions['Biggole Mole'].get_advice()
     po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(Advice(

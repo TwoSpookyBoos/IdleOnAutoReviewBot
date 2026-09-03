@@ -1,3 +1,4 @@
+from consts.general.companions import companion_bonuses
 from consts.idleon.consts_idleon import companions_data
 from models.advice.advice import Advice
 from utils.logging import get_logger
@@ -51,6 +52,22 @@ class Companion:
     @property
     def description(self) -> str:
         return self._upgraded_description if self.upgraded else self._base_description
+
+    def _get_bonus(self, stat: str, form: str, absent: float) -> float:
+        if not self.owned:
+            return absent
+        got_form, base, upgraded = companion_bonuses.get(self.name, {}).get(stat, (form, absent, absent))
+        if got_form != form:
+            return absent
+        return upgraded if self.upgraded else base
+
+    def get_multi(self, stat: str) -> float:
+        """Multi for `stat`, or 1.0 if none / unowned."""
+        return self._get_bonus(stat, 'multi', 1.0)
+
+    def get_value(self, stat: str) -> float:
+        """Additive `stat` bonus the formula scales out of Value, or 0 if none / unowned."""
+        return self._get_bonus(stat, 'value', 0)
 
     def get_advice(self, value_is_multi: bool = False) -> tuple[int | float, Advice]:
         data_present = self._companions.data_present
@@ -142,6 +159,18 @@ class Companions(dict[str, Companion]):
             logger.error(f"Unknown Companion name: {name}. Returning False / not owned.")
             return False
         return self[name].owned
+
+    def get_multi(self, name: str, stat: str) -> float:
+        if name not in self:
+            logger.error(f"Unknown Companion name: {name}. Returning 1.0 / no multi.")
+            return 1.0
+        return self[name].get_multi(stat)
+
+    def get_value(self, name: str, stat: str) -> float:
+        if name not in self:
+            logger.error(f"Unknown Companion name: {name}. Returning 0 / no bonus.")
+            return 0
+        return self[name].get_value(stat)
 
     @property
     def owned_names(self) -> set[str]:
