@@ -68,10 +68,10 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     for jman in session_data.account.jmans:
         bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
     crystal_Advice[cs].append(Advice(
-        label=f"Level {bestCrystalBook}/{session_data.account.library['MaxBookLevel']} booked Cmon Out Crystals talent (Jman only)",
+        label=f"Level {bestCrystalBook}/{session_data.account.library.max_book_level} booked Cmon Out Crystals talent (Jman only)",
         picture_class="cmon-out-crystals",
         progression=bestCrystalBook,
-        goal=session_data.account.library['MaxBookLevel']
+        goal=session_data.account.library.max_book_level
     ))
     crystals_4_dayys_multi = 1 + lava_func('decay', 100, 174, 50) / 100
     crystal_Advice[cs].append(Advice(
@@ -701,7 +701,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
                 continue
 
         #Talent Library book levels and checkouts
-        bubo_bonus_levels = best_bubo.max_talents_over_books - session_data.account.library['MaxBookLevel']
+        bubo_bonus_levels = best_bubo.max_talents_over_books - session_data.account.library.max_book_level
         bubo_advice[library].append(Advice(
             label=(
                 f"Able to reach 200+ max talent level?"
@@ -740,7 +740,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
             label="Max book your Cranium Cooking! Level it too, duh.",
             picture_class='cranium-cooking',
             progression=ccing_preset.get('490', 0),
-            goal=session_data.account.library['MaxBookLevel']
+            goal=session_data.account.library.max_book_level
         ))
         aura_level = ccing_preset.get('481', 0) + bubo_bonus_levels
         aura_width = aura_level // 35

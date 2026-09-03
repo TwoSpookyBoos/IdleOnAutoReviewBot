@@ -97,12 +97,12 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     mgb_label = f"Bone Multi Group B: {grimoire.bone_calc['mgb']:.3f}x"
     currency_advices[mgb_label] = [
         Advice(
-            label=f"{grimoire_preset_level}/{session_data.account.library['MaxBookLevel']} booked Grimoire:"
+            label=f"{grimoire_preset_level}/{session_data.account.library.max_book_level} booked Grimoire:"
                   f"<br>Max Preset Level {grimoire_preset_level + session_data.account.all_characters[db_index].total_bonus_talent_levels} on "
                   f"{session_data.account.all_characters[db_index].character_name} including bonus talent levels",
             picture_class='grimoire',
             progression=grimoire_preset_level,
-            goal=session_data.account.library['MaxBookLevel']
+            goal=session_data.account.library.max_book_level
         )
     ]
 
@@ -163,12 +163,12 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
 
     currency_advices[mgf_label] = [
         Advice(
-            label=f"{tombstone_preset_level}/{session_data.account.library['MaxBookLevel']} booked Graveyard Shift:"
+            label=f"{tombstone_preset_level}/{session_data.account.library.max_book_level} booked Graveyard Shift:"
                   f"<br>Max Preset Level {tombstone_preset_level + session_data.account.all_characters[db_index].total_bonus_talent_levels} on "
                   f"{session_data.account.all_characters[db_index].character_name} including bonus talent levels",
             picture_class='graveyard-shift',
             progression=tombstone_preset_level,
-            goal=session_data.account.library['MaxBookLevel']
+            goal=session_data.account.library.max_book_level
         ),
         Advice(
             label=f"<br>Per stack: +{tombstone_per_stack:.3f}%"

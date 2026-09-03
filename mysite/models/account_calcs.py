@@ -995,21 +995,14 @@ def _calculate_wave_3(account):
 
 def _calculate_w3_library_max_book_levels(account):
     # Dependency: Summoning regular battle
-    account.library['StaticSum'] = (
-        0
-        + (25 * (0 < account.construction_buildings['Talent Book Library']['Level']))
-        + (5 * account.achievements['Checkout Takeout']['Complete'])
-        + (10 * (0 < account.atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-        + (25 * account.sailing['Artifacts']['Fury Relic']['Level'])
-    )
-    account.library['ScalingSum'] = (
-        0
-        + 2 * account.merits[2][2]['Level']
-        + 2 * account.saltlick.upgrades['Max Book'].level
-    )
-    account.library['MaxBookLevel'] = (
-        100 + account.library['StaticSum'] + account.library['ScalingSum']
-        + account.summoning.bonuses["Library Max"].value
+    account.library.calculate_max_book_levels(
+        account.construction_buildings,
+        account.achievements,
+        account.atom_collider,
+        account.sailing,
+        account.merits,
+        account.saltlick,
+        account.summoning,
     )
 
 def _calculate_w3_equinox_max_levels(account):
@@ -1113,7 +1106,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         character_specific_bonuses += char.symbols_of_beyond
 
         char.total_bonus_talent_levels = account.sum_account_wide_bonus_talents + character_specific_bonuses
-        char.max_talents_over_books = account.library['MaxBookLevel'] + char.total_bonus_talent_levels
+        char.max_talents_over_books = account.library.max_book_level + char.total_bonus_talent_levels
 
         # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
         if char.class_name == 'Elemental Sorcerer':
