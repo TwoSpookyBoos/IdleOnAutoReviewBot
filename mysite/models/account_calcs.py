@@ -80,7 +80,7 @@ def _calculate_w2_arcade(account):
     for upgrade_index, upgrade_details in account.arcade.items():
         account.arcade[upgrade_index]['Value'] *= (
             max(1, 2 * account.arcade[upgrade_index]['Cosmic'])
-            * max(1, 2 * account.companions.has('Spirit Reindeer'))
+            * (1 + account.companions['Spirit Reindeer'].bonus)
         )
 
 def _calculate_w4_tome(account):
@@ -488,8 +488,8 @@ def _calculate_w2_ballot(account):
         + account.summoning.bonuses["Ballot Bonus"].value
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
-        + (5 * account.companions.has('Mashed Potato'))
-        + (40 * account.companions.has('Crystal Cuttlefish'))
+        + account.companions['Mashed Potato'].bonus
+        + account.companions['Crystal Cuttlefish'].bonus
         + account.legend_talents['Democracy FTW'].value
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
@@ -1034,10 +1034,11 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'Rift Slug': {
-            'Value': 25 * account.companions.has('Rift Slug'),
+            'Value': account.companions['Rift Slug'].bonus,
             'Image': 'rift-slug',
             'Label': f"Companion: Rift Slug: "
-                     f"+{25 * account.companions.has('Rift Slug')}/25",
+                     f"+{account.companions['Rift Slug'].bonus:g}"
+                     f"/{account.companions['Rift Slug'].value:g}",
             'Progression': int(account.companions.has('Rift Slug')),
             'Goal': 1
         },

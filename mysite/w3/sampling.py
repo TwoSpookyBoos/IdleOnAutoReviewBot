@@ -230,7 +230,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     biggole_mole_max_days = 100
     biggole_mole_days = min(biggole_mole_max_days, safer_get(session_data.account.raw_optlacc_dict, 354, 0))
-    biggole_mole_value = biggole_mole_days * 1 * session_data.account.companions.has('Biggole Mole')
+    biggole_mole_value = biggole_mole_days * session_data.account.companions['Biggole Mole'].bonus
     biggole_mole_multi = ValueToMulti(biggole_mole_value)
 
     mop = session_data.account.compass.upgrades['Moon of Print']
