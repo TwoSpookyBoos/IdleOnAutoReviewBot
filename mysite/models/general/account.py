@@ -13,6 +13,7 @@ from models.w1.basketball import Basketball
 from models.w1.darts import Darts
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
+from models.w3.library import Library
 from models.w3.salt_lick import SaltLick
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
@@ -127,6 +128,7 @@ class Account:
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)
+        self.library: Library = Library(self.raw_data)
 
         # W4
         self.cooking = {

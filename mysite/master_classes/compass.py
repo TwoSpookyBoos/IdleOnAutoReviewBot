@@ -175,12 +175,12 @@ def getCompassCurrenciesAdviceGroup(compass):
     )
 
     currency_advices[mge_label].append(Advice(
-        label=f"{eternal_hunt_preset_level}/{session_data.account.library['MaxBookLevel']} booked Eternal Hunt:"
+        label=f"{eternal_hunt_preset_level}/{session_data.account.library.max_book_level} booked Eternal Hunt:"
               f"<br>Max Preset Level {eternal_hunt_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels} on "
               f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels",
         picture_class='eternal-hunt',
         progression=eternal_hunt_preset_level,
-        goal=session_data.account.library['MaxBookLevel']
+        goal=session_data.account.library.max_book_level
     ))
     currency_advices[mge_label].append(Advice(
         label=f"<br>Per stack: +{ww_per_stack:.3f}%"
@@ -215,13 +215,13 @@ def getCompassCurrenciesAdviceGroup(compass):
         x2=300
     )
     currency_advices[mgf_label].append(Advice(
-        label=f"{compass_preset_level}/{session_data.account.library['MaxBookLevel']} booked Compass:"
+        label=f"{compass_preset_level}/{session_data.account.library.max_book_level} booked Compass:"
               f"<br>Max Preset Level {compass_preset_level + bonus_talent_levels} on "
               f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels"
               f"<br>+{compass_percent:.3f}% boost to Dust found",
         picture_class='compass',
         progression=compass_preset_level,
-        goal=session_data.account.library['MaxBookLevel']
+        goal=session_data.account.library.max_book_level
     ))
     currency_advices[mgf_label].append(get_arcade_advice(47))
 

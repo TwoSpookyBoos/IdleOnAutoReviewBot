@@ -1316,7 +1316,6 @@ def _parse_w2_weekly_boss(account):
 def _parse_w3(account):
     _parse_w3_refinery(account)
     _parse_w3_buildings(account)
-    _parse_w3_library(account)
     _parse_w3_deathnote(account)
     _parse_w3_equinox_dreams(account)
     _parse_w3_equinox_bonuses(account)
@@ -1371,11 +1370,6 @@ def _parse_w3_buildings(account):
                 'Image': buildingValuesDict['Image'],
                 'Type': buildingValuesDict['Type'],
             }
-
-def _parse_w3_library(account):
-    account.library = {
-        'BooksReady': safer_get(account.raw_optlacc_dict, 55, 0)
-    }
 
 def _parse_w3_deathnote(account):
     account.apocCharactersIndexList = [c.character_index for c in account.barbs]
