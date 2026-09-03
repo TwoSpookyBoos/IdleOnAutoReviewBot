@@ -1,9 +1,14 @@
 from consts.idleon.consts_idleon import companions_data
 from models.advice.advice import Advice
 from utils.logging import get_logger
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 
 logger = get_logger(__name__)
+
+# Pet Bonus Token indexes
+pet_bonus_tokens_owned_index = 605
+pet_bonus_token_targets_index = 606
 
 
 class Companion:
@@ -11,20 +16,58 @@ class Companion:
         self._companions = companions
         self.name: str = name
         self.companion_id: int = info['Id']
-        self.description: str = info['Description']
         self.image: str = info['Image']
-        self.value: float = info['Value']
-        self.owned: bool = False
+        self.tour_power: int = info['TourPower']
+        self.upgraded_tour_power: int = info['UpgradedTourPower']
+        self._base_description: str = info['Description']
+        self._upgraded_description: str = info['UpgradedDescription']
+        self._base_value: float = info['Value']
+        self._upgraded_value: float = info['UpgradedValue']
+
+        self.copies: int = 0
+        self.level: int = 0  # Pet Mart+ level, max across copies
+        self.via_token: bool = False
+
+    @property
+    def owned(self) -> bool:
+        """Copy owned, or granted by a Pet Bonus Token."""
+        return self.copies > 0 or self.via_token
+
+    @property
+    def upgraded(self) -> bool:
+        """`_customBlock_CompLV2` in source: the "+" tier."""
+        return self.copies > 0 and self.level >= 1
+
+    @property
+    def value(self) -> float:
+        """`CompanionBon` in source: field 11 upgraded, else field 2."""
+        return self._upgraded_value if self.upgraded else self._base_value
+
+    @property
+    def bonus(self) -> float:
+        """`_customBlock_Companions` in source: value, or 0 unowned."""
+        return self.value if self.owned else 0
+
+    @property
+    def description(self) -> str:
+        return self._upgraded_description if self.upgraded else self._base_description
 
     def get_advice(self, value_is_multi: bool = False) -> tuple[int | float, Advice]:
         data_present = self._companions.data_present
         value = self.value * self.owned
         if value == 0 and value_is_multi:
             value = 1
+        notes = ''
+        if not data_present:
+            notes += '<br>Note: Could be inaccurate. Companion data not found!'
+        elif self.upgraded:
+            notes += '<br>Upgraded with Pet Mart+'
+        elif self.via_token:
+            notes += '<br>Bonus granted by a Pet Bonus Token'
         return value, Advice(
-            label=f"Companions - {self.name}:"
+            label=f"Companions - {self.name}{'+' if self.upgraded else ''}:"
                   f"<br>{self.description}"
-                  f"{'' if data_present else '<br>Note: Could be inaccurate. Companion data not found!'}",
+                  f"{notes}",
             picture_class=self.image,
             progression=int(self.owned) if data_present else 'IDK',
             goal=1
@@ -34,31 +77,65 @@ class Companion:
 class Companions(dict[str, Companion]):
     def __init__(self, raw_data: dict, doot: bool = False, riftslug: bool = False, sheepie: bool = False):
         super().__init__()
-        # Toolbox exports a dict called `companion`, Efficiency a flat list of IDs called `companions`
+        # Toolbox: `companion` dict. Efficiency: `companions` id list
         raw_companion = raw_data.get('companion', None)
         raw_companions = raw_data.get('companions', None)
         self.data_present: bool = raw_companion is not None or raw_companions is not None
 
-        acquired_ids = set()
+        copies: dict[int, int] = {}
+        levels: dict[int, int] = {}
         if raw_companion is not None:
             for companion_info in raw_companion.get('l', []):
+                fields = f"{companion_info}".split(',')
                 try:
-                    acquired_ids.add(int(companion_info.split(',')[0]))
+                    companion_id = int(fields[0])
                 except:
+                    logger.warning(f"Unparseable companion entry: {companion_info}. Skipping")
                     continue
+                copies[companion_id] = copies.get(companion_id, 0) + 1
+                # field 4 = Pet Mart+ level, absent pre-2.3.525
+                level = safer_convert(safer_index(fields, 4, 0), 0)
+                levels[companion_id] = max(levels.get(companion_id, 0), level)
         elif raw_companions is not None:
-            acquired_ids.update(raw_companions)
+            # id-only, no Pet Mart+ level
+            for companion_id in raw_companions:
+                try:
+                    companion_id = int(companion_id)
+                except:
+                    logger.warning(f"Unparseable companion Id: {companion_id}. Skipping")
+                    continue
+                copies[companion_id] = copies.get(companion_id, 0) + 1
         else:
-            logger.debug("No companion data present in JSON. Relying only on Switches")
+            logger.warning("Companion data not present. Relying only on Switches")
+
+        raw_optlacc = safe_loads(raw_data.get('OptionsListAccount', []))
+        if not isinstance(raw_optlacc, list):
+            raw_optlacc = []
+        self.tokens_owned: int = min(1, safer_convert(
+            safer_index(raw_optlacc, pet_bonus_tokens_owned_index, 0), 0
+        ))
+        # comma list of token'd ids
+        raw_targets = f"{safer_index(raw_optlacc, pet_bonus_token_targets_index, '')}"
+        token_ids = set()
+        if raw_targets not in ('', '0', 'None'):
+            for target in raw_targets.split(','):
+                try:
+                    token_ids.add(int(target))
+                except:
+                    logger.warning(f"Unparseable Pet Bonus Token target: {target}. Skipping")
+                    continue
+        self.tokens_used: int = len(token_ids)
 
         for name, info in companions_data.items():
             companion = Companion(self, name, info)
-            companion.owned = info['Id'] in acquired_ids
+            companion.copies = copies.get(info['Id'], 0)
+            companion.level = levels.get(info['Id'], 0)
+            companion.via_token = companion.copies == 0 and info['Id'] in token_ids
             self[name] = companion
 
         for switch_enabled, name in ((doot, 'King Doot'), (riftslug, 'Rift Slug'), (sheepie, 'Sheepie')):
-            if switch_enabled:
-                self[name].owned = True
+            if switch_enabled and self[name].copies == 0:
+                self[name].copies = 1
 
     def has(self, name: str) -> bool:
         if name not in self:
@@ -69,3 +146,7 @@ class Companions(dict[str, Companion]):
     @property
     def owned_names(self) -> set[str]:
         return {name for name, companion in self.items() if companion.owned}
+
+    @property
+    def upgraded_names(self) -> set[str]:
+        return {name for name, companion in self.items() if companion.upgraded}
