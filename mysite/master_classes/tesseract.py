@@ -1,37 +1,112 @@
-from consts.consts_autoreview import EmojiType
-from consts.idleon.lava_func import lava_func
-from consts.consts_master_classes import tesseract_tachyon_list
+from consts.consts_autoreview import EmojiType, break_you_best, build_subgroup_label
+from consts.idleon.master_classes.tesseract import tesseract_tachyon_list
 from consts.consts_w2 import max_NBLB, max_vial_level
-from consts.progression_tiers import true_max_tiers
+from consts.progression_tiers import true_max_tiers, tesseract_progressionTiers
 from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.w2 import get_arcade_advice
 from models.advice.generators.general import get_companion_advice
-from utils.all_talentsDict import all_talentsDict
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.text_formatting import notateNumber
+from utils.text_formatting import notateNumber, pl
 
 logger = get_logger(__name__)
 
-def get_progression_tiers_advice_group() -> tuple[AdviceGroup, int, int, int]:
-    tesseract_advice_dict = {
-        'Tiers': {},
+def find_enemy_map(world_number: int, map_name: str):
+    #Look up the account's EnemyMap data for a zone by name, if it's been parsed
+    world = session_data.account.enemy_worlds.get(world_number)
+    if not world:
+        return None
+    return next((enemy_map for enemy_map in world.maps_dict.values() if enemy_map.map_name == map_name), None)
+
+def get_progression_tiers_advice_group(tesseract) -> tuple[dict[str, AdviceGroup], int, int, int]:
+    tesseract_advices = {
+        'Total Upgrades': {},
+        'Specific Upgrades': {},
+        'Highest Map': {},
     }
     optional_tiers = 0
-    true_max = true_max_tiers['Tesseract']
+    true_max = true_max_tiers['The Tesseract']
     max_tier = true_max - optional_tiers
-    tier_tesseract = 0
+    tier_total_upgrades = 0
+    tier_specific_upgrades = 0
+    tier_highest_map = 0
 
-    tiers_ag = AdviceGroup(
-        tier=tier_tesseract,
-        pre_string='Progression Tiers',
-        advices=tesseract_advice_dict['Tiers']
+    #Assess Tiers
+    for tier_number, requirements in tesseract_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+
+        #Total Upgrades
+        if tesseract.total_upgrades < requirements.get('Total Upgrades', 0):
+            add_subgroup_if_available_slot(tesseract_advices['Total Upgrades'], subgroup_label)
+            if subgroup_label in tesseract_advices['Total Upgrades']:
+                tesseract_advices['Total Upgrades'][subgroup_label].append(Advice(
+                    label="Total Tesseract Upgrades",
+                    picture_class='tesseract',
+                    progression=tesseract.total_upgrades,
+                    goal=requirements.get('Total Upgrades', 0)
+                ))
+        if subgroup_label not in tesseract_advices['Total Upgrades'] and tier_total_upgrades == tier_number - 1:
+            tier_total_upgrades = tier_number
+
+        #Specific Upgrades - account-wide talents
+        for upgrade_name, required_level in requirements.get('Specific Upgrades', {}).items():
+            upgrade_details = tesseract.upgrades.get(upgrade_name)
+            current_level = upgrade_details.level if upgrade_details else 0
+            if current_level < required_level:
+                add_subgroup_if_available_slot(tesseract_advices['Specific Upgrades'], subgroup_label)
+                if subgroup_label in tesseract_advices['Specific Upgrades']:
+                    tesseract_advices['Specific Upgrades'][subgroup_label].append(
+                        upgrade_details.get_tier_advice(required_level) if upgrade_details else Advice(
+                            label=upgrade_name,
+                            picture_class='tesseract',
+                            progression=current_level,
+                            goal=required_level
+                        )
+                    )
+        if subgroup_label not in tesseract_advices['Specific Upgrades'] and tier_specific_upgrades == tier_number - 1:
+            tier_specific_upgrades = tier_number
+
+        #Highest Map
+        map_requirement = requirements.get('Highest Map')
+        if map_requirement:
+            target_map = find_enemy_map(map_requirement['World'], map_requirement['Map Name'])
+            map_opened = bool(target_map and target_map.kill_count > 0)
+            if not map_opened:
+                add_subgroup_if_available_slot(tesseract_advices['Highest Map'], subgroup_label)
+                if subgroup_label in tesseract_advices['Highest Map']:
+                    tesseract_advices['Highest Map'][subgroup_label].append(Advice(
+                        label=f"Reach {map_requirement['Map Name']} (World {map_requirement['World']})",
+                        picture_class=target_map.monster_image if target_map else 'tesseract',
+                        progression=int(map_opened),
+                        goal=1
+                    ))
+        if subgroup_label not in tesseract_advices['Highest Map'] and tier_highest_map == tier_number - 1:
+            tier_highest_map = tier_number
+
+    #Generate AdviceGroups
+    tesseract_advice_group_dict = {}
+    tesseract_advice_group_dict['Total Upgrades'] = AdviceGroup(
+        tier=tier_total_upgrades,
+        pre_string='Purchase more Total Tesseract Upgrades',
+        advices=tesseract_advices['Total Upgrades'],
     )
-    overall_section_tier = min(true_max, tier_tesseract)
-    return tiers_ag, overall_section_tier, max_tier, true_max
+    tesseract_advice_group_dict['Specific Upgrades'] = AdviceGroup(
+        tier=tier_specific_upgrades,
+        pre_string=f"Level up the following account-wide Tesseract Upgrade{pl(tesseract_advices['Specific Upgrades'])}",
+        advices=tesseract_advices['Specific Upgrades'],
+    )
+    tesseract_advice_group_dict['Highest Map'] = AdviceGroup(
+        tier=tier_highest_map,
+        pre_string='Reach the following zones',
+        advices=tesseract_advices['Highest Map'],
+    )
+
+    overall_section_tier = min(true_max, tier_total_upgrades, tier_specific_upgrades, tier_highest_map)
+    return tesseract_advice_group_dict, overall_section_tier, max_tier, true_max
 
 
 def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
@@ -39,10 +114,10 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         'Currencies': [],
     }
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Tachyons Collected: {notateNumber('Basic', tesseract['Total Tachyons Collected'], 3)}",
+        label=f"Total Tachyons Collected: {notateNumber('Basic', tesseract.total_tachyons_collected, 3)}",
         picture_class='tachion-truth'
     ))
-    if tesseract["Arcane Rocks Enabled"]:
+    if tesseract.arcane_rocks_enabled:
         currency_advices["Currencies"].append(
             Advice(
                 label="Arcane Rocks Enabled! Collect 1 per full AFK hour while fighting on an Arcane Cultist. Maximize your /hr display "
@@ -66,82 +141,24 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         )
     currency_advices['Currencies'] += [
         Advice(
-            label=f"{tachyon_name}: {notateNumber('Basic', tesseract[f'Tachyon{tachyon_index}'], 3)}",
-            picture_class=f'tesseract-tachyon-{tachyon_index-1}'
-        ) for tachyon_index, tachyon_name in enumerate(tesseract_tachyon_list, start=1)
+            label=f"{tachyon_name}: {notateNumber('Basic', tesseract.tachyons[tachyon_index], 3)}",
+            picture_class=f'tesseract-tachyon-{tachyon_index}'
+        ) for tachyon_index, tachyon_name in enumerate(tesseract_tachyon_list)
     ]
 
     #Tachyon Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Tachyon multi: {tesseract['Tachyon Calc']['Total']:.3f}x",
+        label=f"Total Tachyon multi: {tesseract.tachyon_calc['Total']:.3f}x",
         picture_class='tesseract'
     ))
 
-    arcane_cultist_index = None
-    tesseract_preset_level = 100
-    tesseract_talent_index = 586
-
-    for arcane_cultist in session_data.account.acs:
-        if arcane_cultist_index is None:
-            arcane_cultist_index = arcane_cultist.character_index
-        if arcane_cultist.current_preset_talents.get(str(tesseract_talent_index), 0) > tesseract_preset_level:
-            arcane_cultist_index = arcane_cultist.character_index
-            tesseract_preset_level = arcane_cultist.current_preset_talents.get(str(tesseract_talent_index), 0)
-        if arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0) > tesseract_preset_level:
-            tesseract_preset_level = arcane_cultist.secondary_preset_talents.get(str(tesseract_talent_index), 0)
-
-    mga_label = f"Tachyon Multi Group A: {tesseract['Tachyon Calc']['mga']:.2f}x"
+    mga_label = f"Tachyon Multi Group A: {tesseract.tachyon_calc['mga']:.2f}x"
     currency_advices[mga_label] = []
 
-    ripple_in_spacetime = tesseract['Upgrades']['Ripple in Spacetime']
-    currency_advices[mga_label].append(
-        Advice(
-            label=f"Tesseract Upgrade 'Ripple in Spacetime':"
-                  f"<br>+{ripple_in_spacetime['Total Value']}% Tachyons",
-            picture_class=ripple_in_spacetime['Image'],
-            progression=ripple_in_spacetime['Level'],
-            goal=ripple_in_spacetime['Max Level'],
-            resource=ripple_in_spacetime['Tachyon Image']
-        )
-    )
-
-    tesseract_talent_bonus_value = lava_func(
-        funcType=all_talentsDict[tesseract_talent_index]['funcX'],
-        level=tesseract_preset_level,
-        x1=all_talentsDict[tesseract_talent_index]['x1'],
-        x2=all_talentsDict[tesseract_talent_index]['x2'],
-    )
-
-    currency_advices[mga_label].append(
-        Advice(
-            label=f"Tesseract Talent: +{tesseract_talent_bonus_value:.2f}% Tachyons",
-            picture_class='tesseract'
-        )
-    )
-
-    verdon_hoarding = tesseract['Upgrades']['Verdon Hoarding']
-    currency_advices[mga_label].append(
-        Advice(
-            label=f"Tesseract Upgrade 'Verdon Hoarding':"
-                  f"<br>+{verdon_hoarding['Total Value']}% Tachyons",
-            picture_class=verdon_hoarding['Image'],
-            progression=verdon_hoarding['Level'],
-            goal=verdon_hoarding['Max Level'],
-            resource=verdon_hoarding['Tachyon Image']
-        )
-    )
-
-    aurion_hoarding = tesseract['Upgrades']['Aurion Hoarding']
-    currency_advices[mga_label].append(
-        Advice(
-            label=f"Tesseract Upgrade 'Aurion Hoarding':"
-                  f"<br>+{aurion_hoarding['Total Value']}% Tachyons",
-            picture_class=aurion_hoarding['Image'],
-            progression=aurion_hoarding['Level'],
-            goal=aurion_hoarding['Max Level'],
-            resource=aurion_hoarding['Tachyon Image']
-        )
-    )
+    currency_advices[mga_label].append(tesseract.upgrades['Ripple in Spacetime'].get_bonus_advice())
+    currency_advices[mga_label].append(tesseract.get_tesseract_talent_advice())
+    currency_advices[mga_label].append(tesseract.upgrades['Verdon Hoarding'].get_bonus_advice())
+    currency_advices[mga_label].append(tesseract.upgrades['Aurion Hoarding'].get_bonus_advice())
 
     # TODO: Tachyons from Equipment
 
@@ -156,7 +173,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     currency_advices[mga_label].append(get_arcade_advice(50))
 
-    mgb_label = f"Tachyon Multi Group B: {tesseract['Tachyon Calc']['mgb']:.2f}x"
+    mgb_label = f"Tachyon Multi Group B: {tesseract.tachyon_calc['mgb']:.2f}x"
 
     emperor_tachyon_bonus = session_data.account.emperor["Arcane Cultist Extra Tachyons"]
     tachyon_bubble = session_data.account.alchemy_bubbles['Tachyon Bubble']
@@ -172,27 +189,22 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         )
     ]
 
-    mgc_label = f"Bone Multi Group C: {tesseract['Tachyon Calc']['mgc']:.2f}x"
+    mgc_label = f"Bone Multi Group C: {tesseract.tachyon_calc['mgc']:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.sneaking.pristine_charms[
             'Mystery Fizz'
         ].get_obtained_advice()
     ]
 
-    mgd_label = f"Tachyon Multi Group D: {tesseract['Tachyon Calc']['mgd']:.2f}x"
-    currency_advices[mgd_label] = [
-        Advice(
-            label=f"Backup Energy Talent: {tesseract['Tachyon Calc']['mgd']:.2f}x Tachyons",
-            picture_class='backup-energy',
-        )
-    ]
+    mgd_label = f"Tachyon Multi Group D: {tesseract.tachyon_calc['mgd']:.2f}x"
+    currency_advices[mgd_label] = [tesseract.get_backup_energy_advice()]
 
-    mge_label = f"Tachyon Multi Group E: {tesseract['Tachyon Calc']['mge']:.2f}x"
+    mge_label = f"Tachyon Multi Group E: {tesseract.tachyon_calc['mge']:.2f}x"
 
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
     missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
     has_arcanist_pack = session_data.account.gemshop['Bundles']['bun_x']['Owned']
-    ac_pack_value = tesseract['Tachyon Calc']['mge']
+    ac_pack_value = tesseract.tachyon_calc['mge']
     currency_advices[mge_label] = [Advice(
         label=f"Gemshop - Arcane Cultist Pack:"
               f"<br>{ac_pack_value}/1.2x Tachyons"
@@ -202,7 +214,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         goal=1
     )]
 
-    mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract['Tachyon Calc']['mgf'])}x"
+    mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_calc['mgf'])}x"
     vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
     currency_advices[mgf_label] = [Advice(
         label=f"{{{{ Vial|#vials }}}}: Paper Pint: +{round_and_trim(vial['Value'])}%",
@@ -211,7 +223,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         goal=max_vial_level
     )]
 
-    mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract['Tachyon Calc']['mgg'])}x"
+    mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_calc['mgg'])}x"
     _, ballonfish_advice = get_companion_advice('Balloonfish')
     currency_advices[mgg_label] = [ballonfish_advice]
 
@@ -231,25 +243,14 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 def get_tesseract_upgrades_advice_group(tesseract) -> AdviceGroup:
     upgrades_advice_dict = {
         'Upgrades': [Advice(
-            label=f"Total Tesseract Upgrades: {tesseract['Total Upgrades']:,}",
+            label=f"Total Tesseract Upgrades: {tesseract.total_upgrades:,}",
             picture_class='tesseract'
         )]
     }
 
     #Upgrades
     upgrades_advice_dict['Upgrades'] += [
-        Advice(
-            label=(
-                f"{upgrade_name}: {upgrade_details['Description']}"
-                f"<br>Requires {upgrade_details['Unlock Requirement'] - tesseract['Total Upgrades']} more Upgrades to unlock"
-                if not upgrade_details['Unlocked'] else
-                f"{upgrade_name}: {upgrade_details['Description']}"
-            ),
-            picture_class=upgrade_details['Image'],
-            progression=upgrade_details['Level'],
-            goal=upgrade_details['Max Level'],
-            resource=upgrade_details['Tachyon Image']
-        ) for upgrade_name, upgrade_details in tesseract['Upgrades'].items()
+        upgrade_details.get_advice(tesseract.total_upgrades) for upgrade_details in tesseract.upgrades.values()
     ]
 
     for subgroup in upgrades_advice_dict:
@@ -283,8 +284,7 @@ def get_tesseract_advice_section() -> AdviceSection:
     tesseract = session_data.account.tesseract
 
     #Generate AdviceGroups
-    tesseract_advice_group_dict = {}
-    tesseract_advice_group_dict['Tiers'], overall_section_tier, max_tier, true_max = get_progression_tiers_advice_group()
+    tesseract_advice_group_dict, overall_section_tier, max_tier, true_max = get_progression_tiers_advice_group(tesseract)
     tesseract_advice_group_dict['Currencies'] = get_tesseract_currencies_advice_group(tesseract)
     tesseract_advice_group_dict['Upgrades'] = get_tesseract_upgrades_advice_group(tesseract)
 
@@ -294,11 +294,12 @@ def get_tesseract_advice_section() -> AdviceSection:
         name='The Tesseract',
         tier=tier_section,
         pinchy_rating=overall_section_tier,
-        header='Arcane Cultist and Tesseract Information',  #tier met: {tier_section}{break_you_best if overall_section_tier >= max_tier else ''}",
+        max_tier=max_tier,
+        true_max_tier=true_max,
+        header=f"Best Tesseract tier met: {tier_section}{break_you_best if overall_section_tier >= max_tier else ''}",
         picture='customized/Tesseract.gif',
         groups=tesseract_advice_group_dict.values(),
         completed=None,
-        unrated=True,
     )
 
     return tesseract_advice_section

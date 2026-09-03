@@ -17,6 +17,7 @@ greenstack_item_difficulty_groups = {
             "FoodHealth12", "FoodHealth13", "FoodPotOr4", "FoodPotGr4", "FoodPotRe4", "FoodPotYe4",  #W4
             "FoodHealth14", "FoodHealth15", "OilBarrel6",  #W5
             "FoodHealth16", "FoodHealth17", "OilBarrel7",  #W6
+            "FoodHealth18", "FoodHealth19",  #W7
         ],
         "Other Skilling Resources": [
             "Refinery1", "Refinery2", "Refinery3", "Refinery4", "Refinery5", "Refinery6"
@@ -90,7 +91,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat7", "CraftMat9",
             "Critter1", "Critter2",
-            "Soul2"
+            "Soul2",
+            "StoneHelm1",  # Helmet Upgrade Stone I
         ]
     },
     6: {
@@ -101,7 +103,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat8", "CraftMat10",
             "Critter3", "Critter4",
-            "Soul3"
+            "Soul3",
+            "Quest17",  # Amarok Slab
         ]
     },
     7: {
@@ -110,7 +113,6 @@ greenstack_item_difficulty_groups = {
             "GalaxyB3", "GalaxyB4", "GalaxyB5", "GalaxyC1", "GalaxyC2", "GalaxyC3", "GalaxyC4"
         ],
         "Crystal Enemy Drops": [
-            # FoodPotMana2 removed from all drop table
             "FoodPotMana1", "FoodPotGr1", "FoodPotOr2", "Leaf1"
         ],
         "Other Skilling Resources": [
@@ -142,7 +144,8 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "CraftMat13", "CraftMat14",
             "Critter8", "Critter9",
-            "Soul6"
+            "Soul6",
+            "Cutter", "TreeInterior1b",  # Bolt Cutters, Woodular Circle
         ]
     },
     10: {
@@ -203,12 +206,15 @@ greenstack_item_difficulty_groups = {
         "Rare Drops": [
             # World 7 part 1
             'w7A6',
-            "FoodPotRe1"
+            "FoodPotRe1", "JobApplication",
+            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "FoodG13", "FoodG14",  # Gold Foods
+            "FoodG11", "FoodG12",  # Golden Nigiri, Golden Dumpling
         ]
     },
     13: {
         "Base Monster Materials": [
-            "Quest15", "Hgg"
+            "Quest15", "Hgg", "Line9",  # Zeus Gon Fishin
         ],
         "Crystal Enemy Drops": [
             "EquipmentStatues1", "EquipmentStatues5",  #Power and Health statues are still more common than W2 statues
@@ -226,20 +232,30 @@ greenstack_item_difficulty_groups = {
             'EquipmentSmithingTabs3',
             "PeanutG",
             "Spelunking2",
+            "Soul8",  # Deepsea Soul
+            "Tree14", "Bug15",  # Seaweed Logs, Litterbug
         ],
         "Rare Drops": [
             "FoodPotMana3", "ButterBar", "EquipmentStatues9", "OilBarrel2", "FoodPotRe2", "FoodPotGr3", "FoodHealth9",
             'EquipmentStatues29',  # Villager Statues from Caverns
+            'EquipmentStatues26', 'EquipmentStatues27', 'EquipmentStatues28', 'EquipmentStatues31', 'EquipmentStatues32',  # Compost, Stealth, Essence, Spelunky, Reef Coral Statues
+            "EfauntDrop2", "Chiz0", "Chiz1", "TrollPart", "KrukPart2",  # Ribbed Tunic, Chizoar Spike/Stalagmite, Troll Scales, Kruk Cavity Tooth
+            "MidnightCookie", "PetEgg", "SpiA2b", "SpiB2b",  # Midnight Cookie, Pet Egg, Stacked Rice Cake, Dark Lantern
+            "Quest95",  # Birthday Candle
         ]
     },
     14: {
         "Crystal Enemy Drops": [
             "StoneW2", 'ResetFrag', "SilverPen",
             "EquipmentStatues23", "EquipmentStatues24", "EquipmentStatues25",  # W5 Statues
+            "StoneA2b", "StoneZ3", "StoneZ4",  # Armor Upgrade Stone B, Mystery Upgrade Stone III/IV
         ],
         "Other Skilling Resources": [
             "FoodTrapping1", "FoodWorship1",
-            "Ladle"
+            "Ladle",
+            "ResetCompleted", "ResetCompletedS",  # Talent Point / Star Talent Reset Potions
+            "PrehistriumBar",  # Prehistrium Bar
+            "Prehistrium",  # Prehistrium Ore
         ],
         "Rare Drops": [
             'Sewers1b',  #W1 Golden Plop
@@ -248,7 +264,9 @@ greenstack_item_difficulty_groups = {
             'EfauntDrop1',
             'EquipmentStatues15',  #Bullseye
             'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',  # W3 Statues
-            'EquipmentStatues30'  # Dragon Warrior Statues from Caverns
+            'EquipmentStatues30',  # Dragon Warrior Statues from Caverns
+            "BabaYagaETC",  # Baba Yaga Baby Eggs
+            "Key1", "Key2", "Key3", "Key4",  # Forest Villa, Efaunt's Tomb, Chizoar's Cavern, Troll's Enclave Keys
         ]
     },
     15: {
@@ -260,6 +278,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 2
             'Spelunking4', 'Spelunking5',
             'Line13',
+            "Gfoodcoupon", "Line14",  # Gold Food Coupon, Its Alright Celebration
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
@@ -275,10 +294,20 @@ greenstack_item_difficulty_groups = {
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
             'Coral4', 'w7B1b',
+            'Quest110',  # Zenith Cluster
         ],
         'Boss Drop': [
             # Every day boss gem farm
-            'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7'
+            'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
+            'ExpBalloon1',  # Small Experience Balloon
+        ],
+    },
+    16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
+        "Base Monster Materials": [
+            'StoneT1eb', 'StoneAeB', 'StoneWeb',  # Summer Tool/Armor/Weapon Upgrade Stones - event gated
+            'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',  # Tempest Bow/Ring Stones
+            "Quest41",  # Flowies
+            "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
         ],
     }
 }
@@ -318,13 +347,13 @@ expected_stackables = {
         # World 7 part 2
         'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
-        'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'Gfoodcoupon', 'Line9', 'Line14',
+        'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',
     ],
     'Crystal Enemy Drops': [
         'SilverPen', 'ResetFrag',
-        'FoodPotMana1', 'FoodPotMana2', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'Leaf1',  # W1
+        'FoodPotMana1', 'FoodPotGr1', 'FoodPotOr1', 'FoodPotOr2', 'Leaf1',  # W1
         'FoodHealth6', 'FoodHealth7', 'FoodPotGr2', 'FoodPotRe3', 'Leaf2', 'StoneA2b',  # W2
         'FoodHealth10', 'FoodPotOr3', 'FoodPotYe2', 'Leaf3',  # W3
         'FoodPotMana4', 'Leaf4',  # W4
@@ -338,7 +367,6 @@ expected_stackables = {
         'PureWater', 'EquipmentStatues18',  #W3 Slow drops = Distilled Water + EhExPee Statue
         'EquipmentStatues20', 'EquipmentStatues21', 'EquipmentStatues22',  # W4 Statues
         'EquipmentStatues23', 'EquipmentStatues24', 'EquipmentStatues25', 'FoodG9', 'StoneZ3',  #W5 Slow drops = Golden W5 Sammy + Statues
-        'FoodG11', 'FoodG12'  #W6 gold foods
     ],
     'Printable Skilling Resources': [
         'OakTree', 'BirchTree', 'JungleTree', 'ForestTree', 'ToiletTree', 'PalmTree', 'StumpTree', 'SaharanFoal',  # Logs1
@@ -443,12 +471,17 @@ expected_stackables = {
         'EquipmentStatues6',  # Kachow
         'ClassSwap', 'ClassSwapB', 'ResetBox',
         'FoodG15',
+    ],
+    'Legacy': [  # Previously legitimately obtainable, since removed from the game - not achievable by new players
+        'FoodPotMana2',  # Average Mana Potion
     ]
 }
 greenstack_amount = 10 ** 7
+# Categories excluded from the "expected" (achievable-by-new-players) greenstack count
+excluded_gstack_categories = ('Cheater', 'Legacy')
 gstackable_codenames = [item for items in expected_stackables.values() for item in items]
 gstackable_codenames_expected = [
-    item for items in list(expected_stackables.values())[:-1] for item in items
+    item for category, items in expected_stackables.items() if category not in excluded_gstack_categories for item in items
 ]
 gstacks_rated_items = []
 quest_items_codenames = expected_stackables["Missable Quest Items"]
@@ -1067,7 +1100,7 @@ gem_shop_optlacc_dict = {
 
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
-# Last updated in 2.43 Nov 6
+# Last updated in v2.527 Aug 2026
 gem_shop_bundles_dict = {
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
@@ -1105,6 +1138,27 @@ gem_shop_bundles_dict = {
     'bon_h': "Lil' Squirrel Pack",
     'bon_i': 'Ocean Raider Pack',
     'bon_j': 'Piggy Pal',
+    'bon_k': 'Autumn Breeze Pack',
+    'bon_l': 'Chonky Seal Pack',
+    'bon_m': 'Giftmas Bunny Pack',
+    'bon_n': 'Giftmas Hedgehog Pack',
+    'bon_o': 'Giftmas Panda Pack',
+    'bon_p': "Santa's Little Helper Pack",
+    'bon_q': 'The Robot Pack',
+    'bon_r': 'Glimbo Pack',
+    'bon_s': 'Heavy Armor Pack',
+    'bon_t': 'Vanillie Pack',
+    'bon_u': 'Potluck Pack',
+    'bon_v': 'Eggroll Pack',
+    'ban_a': 'Wicker Spirit Anniversary Pack',
+    'ban_b': 'Time Traveler Pack',
+    'ban_c': 'Beeg Egg Pack',
+    'ban_d': 'Spooker Pack',
+    'ban_e': 'Crystal Glunko Pack',
+    'ban_f': 'Boaring Pack',
+    'ban_g': 'Armadillo Pack',
+    'ban_h': 'Coralcave Guardian Pack',
+    'ban_i': 'Rice Pet Pack',
 }
 
 #Guild
@@ -1348,77 +1402,108 @@ equipment_by_bonus_dict = {
     }
 }
 
-# `UpgradeVault = function` in source. Last updated in v2.46 Dec 1
-UpgradeVault = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_this_upgrade! _".split(" "), "Natural_Talent_製_(Tap_for_Info) 14 1.15 0 200 1 7 0 0 +{_Talent_Points._Go_spend_them! _".split(" "), "Monster_Tax 10 1.05 0 500 2 13 0 0 +{%_Coins_dropped_by_Monsters. Total_Coin_Bonus_from@all@sources;~x".split(" "), "Wicked_Smart 15 1.20 0 500 2 49 0 0 +{%_Class_EXP_Gain. Leveling_up_gives_you_Talent_Pts!".split(" "), "Bullseye_製 25 1.15 0 500 1 69 0 0 +{_Accuracy._Useful_when_you_start_missing! _".split(" "), "Steel_Guard 40 1.30 0 100 1 80 0 0 +{_Defence._Useful_when_monsters_start_hurting! _".split(" "), "Evolving_Talent_製 90 1.18 0 200 1 75 0 0 +{_Talent_Points_for_Warrior,_Archer,_and_Mage! _".split(" "), "Massive_Whirl 777 1.10 0 1 2 95 0 0 Whirl_is_2x_as_big_and_can_hit_+{_more_monsters! _".split(" "), "Rapid_Arrows 777 1.10 0 1 1 97 0 0 Piercing_Arrow_fires_double_arrows! _".split(" "), "Dual_Fireballs 777 1.10 0 1 1 99 0 0 Fireball_casts_in_both_directions_at_the_same_time! _".split(" "), "Weapon_Craft_製 170 7.5 0 5 10 115 0 0 All_crafted_weapons_give_+{%_more_damage. Go_craft_a_new_weapon_at_the_Anvil_in_Codex".split(" "), "Carry_Capacity_製 200 1.35 0 100 5 130 0 0 Can_carry_+{_more_resources_per_slot! Craft_Bags_at_the_anvil_to_boost_this_way_more!".split(" "), "Baby_on_Board_製 250 1.08 0 50 2 180 0 0 +{%_Class_EXP_Gain_for_your_Lowest_LV_Player _".split(" "), "Major_Discount 300 1.30 0 80 1 240 0 0 All_upgrades_in_the_Vault_are_{%_cheaper _".split(" "), "Bored_to_Death_製 300 4.50 0 10 5 280 0 0 +{%_Coins_from_Monsters_per_POW_10_Bean_Kills. $%_Coins".split(" "), "Knockout!_製 1000 6 0 5 1 330 0 0 +{%_Total_Damage_per_Knockout! Current_Target:&____Total:+$%_DMG".split(" "), "Stamp_Bonanza 500 1.20 0 100 2 370 0 0 }x_higher_bonuses_from_Sword,_Heart, Target,_and_Shield_Stamps".split(" "), "Mining_Payday$_製 650 1.28 0 100 2 410 0 0 Boosts_Coins_based_on_total_ores_mined_(Total:+^%) Go_do_the_mining_on_your_2nd_player!".split(" "), "Drops_for_Days 700 1.17 0 50 1 450 0 0 +{%_Drop_Rarity,_also_known_by_the IdleOn_community_as_Drop_Rate,_or_DR".split(" "), "Happy_Doggy_製 800 1.25 0 100 2 480 0 0 +{%_Dog Happiness".split(" "), "Slice_N_Dice_製 900 1.10 0 100 2 550 0 0 +{_Base_Damage_per_POW_10_Carrot_Kills. $_Dmg".split(" "), "Go_Go_Secret_Owl_製 400 1.10 0 100 5 600 0 0 +{%_Feathers/sec_for_Orion_the_Horned_Owl _".split(" "), "Boss_Decimation 1150 1.12 0 25 1 630 0 0 +{%_Boss_Damage _".split(" "), "Sleepy_Time 1200 1.55 0 20 1 680 0 0 +{%_AFK_Gains_for_Fighting_and_Skilling _".split(" "), "Production_Revolution_製 1300 1.15 0 100 5 750 0 0 +{%_faster_Anvil_Production _".split(" "), "Statue_Bonanza 1500 1.28 0 50 2 810 0 0 }x_higher_bonuses_from_Power,_Speed, Mining,_and_Lumberbob_Statues".split(" "), "Beeg_Forge 1600 1.15 0 100 5 860 0 0 +{%_higher_Forge_Capacity _".split(" "), "Stick_Snapping_製 1800 1.13 0 50 1 900 0 0 +{%_Total_Damage_per_POW_10_Branch_Kills. $%_DMG".split(" "), "Liquid_Knowledge 2000 1.06 0 100 1 930 0 0 +{%_Alchemy_EXP_Gain _".split(" "), "Bug_Knowledge 2100 1.06 0 100 1 950 0 0 +{%_Catching_EXP_Gain _".split(" "), "Fish_Knowledge 2200 1.06 0 100 1 980 0 0 +{%_Fishing_EXP_Gain _".split(" "), "Dirty_Money_製 3000 1.10 0 25 2 1000 0 0 +{%_Coins_from_Monsters_per_POW_10_Poop_Kills $%_Coins".split(" "), "Vault_Mastery 10000 1.65 0 50 1 1050 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Blue_Highlight!!!".split(" "), "Storage Slots;5000;4.00;0;24;1;1100;0;0;+{_more_slots_in_your_Storage_Chest!;Great_for_moving_items_between_players!".split(";"), "Recipe_for_Profit_製 8000 1.35 0 50 1 1140 0 0 +{%_Coins_per_recipe_unlocked_from_Taskboard! Total_bonus:+$%_Coins".split(" "), "Schoolin'_the_Fish$_製 15000 1.50 0 20 1 1210 0 0 +{%_Class_EXP_per_POW_10_fish_caught. Total_Bonus:+$%_Class_EXP".split(" "), "Straight_to_Storage 3000000 1.85 0 1 1 1260 0 0 You_can_now_deposit_resources_from_AFK_straight_to storage._Other_items_will_still_drop_on_the_ground.".split(" "), "Bubble_Money_製 36000 1.70 0 10 1 1320 0 0 +{%_Coins_from_Mobs_for_each_time_you_upgrade an_Alchemy_Bubble._Total_Bonus:+$%_Coins".split(" "), "Drip_Drip_Drip 55000 1.35 0 20 5 1400 0 0 +{%_faster_Liquid_Generation_for_Alchemy. This_is_one_of_the_costs_to_upgrade_bubbles!".split(" "), "Active_Learning 85000 1.10 0 100 2 1470 0 0 }x_more_Class_EXP_gained_from_defeating_monsters while_the_game_is_open.".split(" "), "Stunning_Talent 120000 1.14 0 100 1 1540 0 0 +{_Talent_Points_for_your_Subclass._Talk_to Specius_in_World_2_Map_3_to_get_your_subclass!!!".split(" "), "Bug_Power_En_Masse$ 170000 1.50 0 20 1 1620 0 0 +{%_Total_Damage_per_POW_10_bugs_caught. Total_Bonus:+$%_DMG".split(" "), "Vial_Overtune_製 245000 25 0 3 10 1700 0 0 All_vials_give_}x_higher_bonuses. _".split(" "), "Active_Murdering 400000 1.35 0 100 1 1780 0 0 Killing_monsters_open_portals_}x_faster_while the_game_is_open.".split(" "), "Card_Retirement_製 50000000 1.00 0 1 1 1850 0 0 Cards_that_give_Card_Drop_Rate_bonuses_become PASSIVE,_so_you_never_need_to_equip_them_again!".split(" "), "Go_Go_Secret_Kangaroo_Mouse_製 580000 1.10 0 250 10 1920 0 0 +{%_Bluefish_for_Poppy_the_Kangaroo_Mouse! _".split(" "), "All_Armoured_Up 700000 1.15 0 100 1 2000 0 0 All_equipment_gives_}x_more_DEF_stat. You'll_need_this_to_not_die_from_monsters!".split(" "), "Daily_Mailbox 1100000 2.5 0 10 1 2080 0 0 Get_{_Post_Office_boxes_every_day_you_open up_IdleOn_and_play_it!".split(" "), "Buildie_Sheepie_製 1500000 1.65 0 20 2 2160 0 0 +{%_Construction_SPD_per_POW_10_Sheepie_Kills. $%_Build_SPD".split(" "), "Quest_KAPOW!_製 2200000 1.08 0 200 1 2240 0 0 Raises_the_max_LV_of_the_star_talent_to_{ You'll_see_this_star_talent_on_Page_1.".split(" "), "Critters_'n_Souls_製 3500000 1.06 0 300 1 2320 0 0 +{%_more_Critters_and_Souls_from_all_sources! _".split(" "), "Slight_Do-Over 5500000 2.10 0 20 1 2400 0 0 Hold_down_on_a_Talent_to_refund,_doable_{_times every_day._This_will_refund_the_points!".split(" "), "Duplicate_Entries 100000000 1.00 0 1 1 2470 0 0 Whenever_you_get_new_colosseum_tickets,_you_get DOUBLE_the_amount!".split(" "), "Special_Talent 15000000 1.08 0 150 1 2530 0 0 +{_Star_Talent_Points _".split(" "), "Kitchen_Dream-mare 25000000 1.20 0 500 6 2600 0 0 }x_meal_cooking_speed Go_on_lad,_turn_that_kitchen_around!".split(" "), "Lab_Knowledge 40000000 1.10 0 100 1 2700 0 0 +{%_Lab_EXP_Gain_for_all_players _".split(" "), "Foraging_Forever 70000000 1.15 0 250 1 2850 0 0 +{%_Foraging_Speed_for_all_pets,_so_you_can_gather spices_so_much_faster!".split(" "), "Teh_TOM 112000000 1.25 0 500 2 3000 0 0 +{_Tome_Score._Maybe_this_will_get_you_into_the Top_1%_Score_of_all_IdleOn_players?".split(" "), "Pet_Punchies 175000000 1.13 0 250 2 3100 0 0 +{%_Pet_Damage_for_all_pets,_so_you_can_win_pet battles_easier_and_collect_new_spices!".split(" "), "Breeding_Knowledge 300000000 1.10 0 100 2 3200 0 0 +{%_Breeding_EXP_Gain. Also,_rare_eggs_now_have_a_HUGE_exp_multi!".split(" "), "Cooking_Knowledge 600000000 1.14 0 500 2 3300 0 0 +{%_Cooking_EXP_Gain._This_bonus_is_weird,_it actually_goes_up_faster_the_more_you_level_it!".split(" "), "Vault_Mastery_II 1500000000.0 2.00 0 50 1 3500 0 0 }x_higher_bonuses_from_all_the_Vault_Upgrades above_with_the_Green_Highlight!!!".split(" ")]
-# `"VaultUpgBonus" == d` in `_customBlock_Summoning`. Last updated in v2.43 Nov 6
-vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 999]
-vault_stack_types = ['Knockout']
-vault_section_indexes = [32, 61]  #Vault Mastery and Vault Mastery II's indexes
 
-
-def getBaseClass(inputClass):
-    match inputClass:
-        case "Warrior" | "Barbarian" | "Blood Berserker" | "Death Bringer" | "Squire" | "Divine Knight":
-            return "Warrior"
-        case "Mage" | "Shaman" | "Bubonic Conjuror" | "Arcane Cultist" | "Wizard" | "Elemental Sorcerer":
-            return "Mage"
-        case "Archer" | "Bowman" | "Siege Breaker" | "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Archer"
-        case "Journeyman" | "Maestro" | "Voidwalker":
-            return "Journeyman"
-        case "Beginner":
-            return "Beginner"
+def get_base_class(input_class):
+    match input_class:
+        case 'Warrior' | 'Barbarian' | 'Blood Berserker' | 'Death Bringer' | 'Squire' | 'Divine Knight' | 'Royal Guardian':
+            return 'Warrior'
+        case 'Mage' | 'Shaman' | 'Bubonic Conjuror' | 'Arcane Cultist' | 'Wizard' | 'Elemental Sorcerer':
+            return 'Mage'
+        case 'Archer' | 'Bowman' | 'Siege Breaker' | 'Hunter' | 'Beast Master' | 'Wind Walker':
+            return 'Archer'
+        case 'Journeyman' | 'Maestro' | 'Voidwalker':
+            return 'Journeyman'
+        case 'Beginner':
+            return 'Beginner'
         case _:
-            return f"UnknownBaseClass-{inputClass}"
+            logger.warning(f'No Base Class found for {input_class}')
+            return f'UnknownBaseClass-{input_class}'
 
 
-def getSubclass(inputClass):
-    match inputClass:
-        case "Barbarian" | "Blood Berserker" | "Death Bringer":
-            return "Barbarian"
-        case "Squire" | "Divine Knight":
-            return "Squire"
-        case "Shaman" | "Bubonic Conjuror" | "Arcane Cultist":
-            return "Shaman"
-        case "Wizard" | "Elemental Sorcerer":
-            return "Wizard"
-        case "Bowman" | "Siege Breaker":
-            return "Bowman"
-        case "Hunter" | "Beast Master" | 'Wind Walker':
-            return "Hunter"
-        case "Maestro" | "Voidwalker":
-            return "Maestro"
-        case "Beginner" | "Warrior" | "Mage" | "Archer" | "Journeyman":
-            return "None"
+def get_sub_class(input_class):
+    match input_class:
+        case 'Barbarian' | 'Blood Berserker' | 'Death Bringer':
+            return 'Barbarian'
+        case 'Squire' | 'Divine Knight' | 'Royal Guardian':
+            return 'Squire'
+        case 'Shaman' | 'Bubonic Conjuror' | 'Arcane Cultist':
+            return 'Shaman'
+        case 'Wizard' | 'Elemental Sorcerer':
+            return 'Wizard'
+        case 'Bowman' | 'Siege Breaker':
+            return 'Bowman'
+        case 'Hunter' | 'Beast Master' | 'Wind Walker':
+            return 'Hunter'
+        case 'Maestro' | 'Voidwalker':
+            return 'Maestro'
+        case 'Beginner' | 'Warrior' | 'Mage' | 'Archer' | 'Journeyman':
+            return 'None'
         case _:
-            return f"UnknownSubclass-{inputClass}"
+            logger.warning(f'No Sub Class found for {input_class}')
+            return f'UnknownSubclass-{input_class}'
 
 
-def getEliteClass(inputClass):
-    match inputClass:
-        case "Blood Berserker" | "Death Bringer":
-            return "Blood Berserker"
+def get_elite_class(input_class):
+    match input_class:
+        case 'Blood Berserker' | 'Death Bringer':
+            return 'Blood Berserker'
+        case 'Divine Knight' | 'Royal Guardian':
+            return 'Divine Knight'
         case 'Beast Master' | 'Wind Walker':
             return 'Beast Master'
-        case "Bubonic Conjuror" | "Arcane Cultist":
-            return "Bubonic Conjuror"
-        case "Divine Knight" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker":
-            return inputClass
+        case 'Bubonic Conjuror' | 'Arcane Cultist':
+            return 'Bubonic Conjuror'
+        case 'Beast Master' | 'Windwalker':
+            return 'Beast Master'
+        case 'Elemental Sorcerer' | 'Siege Breaker' | 'Voidwalker':
+            return input_class
         case (
-            "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+            'Beginner' | 'Warrior' | 'Barbarian' | 'Squire' | 'Mage' | 'Shaman' | 'Wizard' | 'Archer' | 'Bowman' | 'Hunter' | 'Journeyman' | 'Maestro'
         ):
-            return "None"
+            return 'None'
         case _:
-            return f"UnknownEliteClass-{inputClass}"
+            logger.warning(f'No Elite Class found for {input_class}')
+            return f'UnknownEliteClass-{input_class}'
 
 
-def getMasterClass(inputClass):
-    match inputClass:
-        case 'Death Bringer' | 'Wind Walker' | "Arcane Cultist":
-            return inputClass
+def get_master_class(input_class):
+    match input_class:
+        case 'Death Bringer' | 'Wind Walker' | 'Arcane Cultist' | 'Royal Guardian':
+            return input_class
         case (
-            "Blood Berserker" | "Divine Knight" | "Bubonic Conjuror" | "Elemental Sorcerer" | "Siege Breaker" | "Beast Master" | "Voidwalker" | "Beginner" | "Warrior" | "Barbarian" | "Squire" | "Mage" | "Shaman" | "Wizard" | "Archer" | "Bowman" | "Hunter" | "Journeyman" | "Maestro"
+            'Blood Berserker' | 'Divine Knight' | 'Bubonic Conjuror' | 'Elemental Sorcerer' | 'Siege Breaker' | 'Beast Master' | 'Voidwalker' | 'Beginner' | 'Warrior' | 'Barbarian' | 'Squire' | 'Mage' | 'Shaman' | 'Wizard' | 'Archer' | 'Bowman' | 'Hunter' | 'Journeyman' | 'Maestro'
         ):
-            return "None"
+            return 'None'
         case _:
-            return f"UnknownMasterClass-{inputClass}"
+            logger.warning(f'No Master Class found for {input_class}')
+            return f'UnknownMasterClass-{input_class}'
+
+
+specialized_skills_dict = {
+    #Base classes
+    'Warrior': 'Mining',
+    'Archer': 'Smithing',
+    'Mage': 'Chopping',
+
+    #Subclasses
+    'Barbarian': 'Fishing',
+    'Squire': 'Construction',
+    'Bowman': 'Catching',
+    'Hunter': 'Trapping',
+    'Wizard': 'Worship',
+    'Shaman': 'Alchemy',
+
+    #Elite classes
+    'Blood Berserker': 'Cooking',
+    'Divine Knight': 'Gaming',
+    'Siege Breaker': 'Sailing',
+    'Beast Master': 'Breeding',
+    'Elemental Sorcerer': 'Divinity',
+    'Bubonic Conjuror': 'Laboratory',
+
+    #Master classes
+    'Death Bringer': 'Farming',
+    'Royal Guardian': 'Spelunking',
+    'Wind Walker': 'Sneaking',
+    'Arcane Cultist': 'Summoning'
+}

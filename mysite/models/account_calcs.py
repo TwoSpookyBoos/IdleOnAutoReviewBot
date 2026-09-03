@@ -1,12 +1,10 @@
-from math import ceil, floor, prod
+from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
-from consts.consts_general import getNextESFamilyBreakpoint, vault_stack_types, storage_chests_item_slots_max, \
+from consts.consts_general import getNextESFamilyBreakpoint, storage_chests_item_slots_max, \
     greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
-from consts.consts_master_classes import grimoire_stack_types, grimoire_coded_stack_monster_order
-from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
     get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
     get_seraph_stacks, seraph_max
@@ -16,13 +14,12 @@ from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, build
 from consts.consts_w4 import tomepct, max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
-from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
 from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.misc.has_companion import has_companion
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_math_pow, safer_math_log
+from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
@@ -39,12 +36,11 @@ def _calculate_wave_1(account):
     _calculate_caverns_majiks(account)
     _calculate_w3_armor_sets(account)
     _calculate_w2_arcade(account)
-    _calculate_master_classes_tesseract_upgrades(account)
+    account.tesseract.calculate_upgrades()
     _calculate_w6_emperor(account)
     account.summoning.calculate_winner_bonus_multi(account)
     account.summoning.calculate_bonuses()
     _calculate_w4_tome(account)
-    _calculate_w7_legend_talents(account)
 
 def _calculate_caverns_majiks(account):
     have_doot = has_companion("King Doot")
@@ -113,7 +109,11 @@ def _calculate_wave_2(account):
     _calculate_master_classes(account)
     _calculate_w1(account)
     _calculate_w2(account)
-    _calculate_master_classes_tesseract_tachyon_sources(account)
+    account.tesseract.calculate_tachyon_sources(
+        account.acs, account.labJewels, account.arcade, account.emperor,
+        account.alchemy_bubbles, account.sneaking, account.gemshop, account.alchemy_vials,
+        has_companion('Balloonfish')
+    )
     _calculate_w3(account)
     _calculate_w4(account)
     _calculate_w5(account)
@@ -268,8 +268,8 @@ def _calculate_general_storage_slots(account):
         account.storage['Other Storage'][name] = {
             'Source': 'Vault',
             # Vault bonus Advice is standardized in get_upgrade_vault_advice. Extra entries not needed here.
-            'Owned Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Level'],
-            'Max Slots': account.vault['Upgrades'][name]['Value Per Level'] * account.vault['Upgrades'][name]['Max Level'],
+            'Owned Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].level,
+            'Max Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].max_level,
         }
     for name, slots_per_level in construction_buildings.items():
         account.storage['Other Storage'][name] = {
@@ -310,315 +310,30 @@ def _calculate_general_storage_slots(account):
 
 
 def _calculate_master_classes(account):
-    _calculate_master_classes_grimoire_upgrades(account)
-    # _calculate_master_classes_grimoire_bone_sources(account)  #Moved to wave3 as it relies on Caverns/Gambit
-    _calculate_master_classes_compass_upgrades(account)
-    _calculate_master_classes_compass_dust_sources(account)
-
-def _calculate_master_classes_grimoire_upgrades(account):
-    grimoire_multi = ValueToMulti(
-        account.grimoire['Upgrades']['Writhing Grimoire']['Level']
-        * account.grimoire['Upgrades']['Writhing Grimoire']['Value Per Level']
+    account.grimoire.calculate_upgrades()
+    # account.grimoire.calculate_bone_sources(...)  #Moved to wave3 as it relies on Caverns/Gambit
+    account.compass.calculate_upgrades()
+    account.compass.calculate_dust_sources(
+        account.wws, account.sneaking, account.all_assets, account.arcade, account.labJewels, account.emperor
     )
-
-    for upgrade_name, upgrade_details in account.grimoire['Upgrades'].items():
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.grimoire['Upgrades'][upgrade_name]['Description']:
-            account.grimoire['Upgrades'][upgrade_name]['Total Value'] = (
-                account.grimoire['Upgrades'][upgrade_name]['Level']
-                * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
-                * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
-            )
-            account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.grimoire['Upgrades'][upgrade_name]['Total Value']}"
-            )
-        if '}' in account.grimoire['Upgrades'][upgrade_name]['Description']:
-            account.grimoire['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.grimoire['Upgrades'][upgrade_name]['Level']
-                * account.grimoire['Upgrades'][upgrade_name]['Value Per Level']
-                * (grimoire_multi if upgrade_details['Scaling Value'] else 1)
-            )
-            account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
-                '}', f"{account.grimoire['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if 'Target:$' in account.grimoire['Upgrades'][upgrade_name]['Description']:
-            if upgrade_name.split('!')[0] in grimoire_stack_types:
-                stack_type = upgrade_name.split('!')[0]
-                if len(grimoire_coded_stack_monster_order) < account.grimoire.get(f'{stack_type} Stacks', '0'):
-                    next_stack_target = "All done!"
-                else:
-                    try:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.grimoire.get(f'{stack_type} Stacks', '0')])
-                    except:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
-                account.grimoire['Upgrades'][upgrade_name]['Description'] = account.grimoire['Upgrades'][upgrade_name]['Description'].replace(
-                    'Target:$', f"Target: {next_stack_target}"
-                )
-        account.grimoire['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.grimoire['Upgrades'][upgrade_name]['Value Per Level'] * (grimoire_multi if upgrade_details['Scaling Value'] else 1):.2f} per level"
-            f"{' after Writhing Grimoire' if upgrade_details['Scaling Value'] else ': Not scaled by Writhing Grimoire'})"
-        )
-
-def _calculate_master_classes_grimoire_bone_sources(account):
-    # if ("GrimoireBonesDropDEC" == e)
-    grimoire_preset_level = 100
-    tombstone_preset_level = 100
-
-    for db in account.dbs:
-        grimoire_preset_level = max(grimoire_preset_level, db.current_preset_talents.get('196', 0), db.secondary_preset_talents.get('196', 0))
-        tombstone_preset_level = max(tombstone_preset_level, db.current_preset_talents.get('198', 0), db.secondary_preset_talents.get('198', 0))
-
-    grimoire_percent = lava_func(
-        funcType=all_talentsDict[196]['funcX'],
-        level=grimoire_preset_level,
-        x1=all_talentsDict[196]['x1'],
-        x2=all_talentsDict[196]['x2'],
-    )
-
-    account.grimoire['Bone Calc'] = {
-        'mga': ValueToMulti(account.sneaking.pristine_charms['Glimmerchain'].value),
-        'mgb': ValueToMulti(grimoire_percent),
-        'mgc': ValueToMulti(account.caverns.caves['Gambit'].bonuses[12].value),
-        'mgd': ValueToMulti((25 * min(1, account.all_assets.get('EquipmentHats112').amount))),
-        'mge': ValueToMulti(
-            account.grimoire['Upgrades']["Bones o' Plenty"]['Total Value']
-            + (account.grimoire['Upgrades']['Bovinae Hoarding']['Total Value'] * safer_math_log(account.grimoire['Bone4'], 'Lava'))
-            + account.arcade[40]['Value']
-            + account.labJewels['Deadly Wrath Jewel']['Value'] * account.labJewels['Deadly Wrath Jewel']['Enabled']
-        ),
-        'mgf': 1,
-        'mgg': ValueToMulti(account.emperor["Deathbringer Extra Bones"].value)
-    }
-    account.grimoire['Bone Calc']['Total'] = prod(account.grimoire['Bone Calc'].values())
-
-def _calculate_master_classes_compass_upgrades(account):
-    compass_circle_multi = ValueToMulti(
-        account.compass['Upgrades']['Circle Supremacy']['Base Value']
-        + account.compass['Upgrades']['Abomination Slayer XXI']['Base Value']
-    )
-
-    for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
-        value = (
-            account.compass['Upgrades'][upgrade_name]['Base Value']
-            * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1)
-            * (safer_math_pow(2, account.compass['Upgrades'][upgrade_name]['Level']//50) if upgrade_name == 'Moon of Sneak' else 1)
-        )
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = value
-            account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if '}' in account.compass['Upgrades'][upgrade_name]['Description']:
-            account.compass['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(value)
-            account.compass['Upgrades'][upgrade_name]['Description'] = account.compass['Upgrades'][upgrade_name]['Description'].replace(
-                '}', f"{account.compass['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        account.compass['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.compass['Upgrades'][upgrade_name]['Value Per Level'] * (compass_circle_multi if upgrade_details['Shape'] == 'Circle' else 1):.2f} per level"
-            f"{' after Circle Multis' if upgrade_details['Shape'] == 'Circle' else ''})"
-        )
-
-def _calculate_master_classes_compass_dust_sources(account):
-    # _customBlock_Windwalker if ("ExtraDust" == e)
-    ww_preset_level = 100
-    for ww in account.wws:
-        if ww.current_preset_talents.get('421', 0) >= ww_preset_level:
-            ww_preset_level = ww.current_preset_talents.get('421', 0)
-        if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
-            ww_preset_level = ww.secondary_preset_talents.get('421', 0)
-    compass_percent = lava_func(
-        funcType=all_talentsDict[421]['funcX'],
-        level=ww_preset_level,
-        x1=all_talentsDict[421]['x1'],
-        x2=all_talentsDict[421]['x2'],
-    )
-    account.compass['Dust Calc'] = {
-        'mga': ValueToMulti(
-            account.compass['Upgrades']['Mountains of Dust']['Total Value']
-            + (account.compass['Upgrades']['Solardust Hoarding']['Total Value'] * safer_math_log(account.compass['Dust3'], 'Lava'))
-        ),
-        'mgb': account.compass['Upgrades']['Spire of Dust']['Total Value'],
-        'mgc': ValueToMulti(account.sneaking.pristine_charms['Twinkle Taffy'].value),
-        'mgd': ValueToMulti(
-            (25 * min(1, account.all_assets.get('EquipmentHats118').amount))
-        ),
-        'mge': 1,
-        'mgf': ValueToMulti(
-            + compass_percent
-            + account.arcade[47]['Value']
-            + account.labJewels['North Winds Jewel']['Value'] * account.labJewels['North Winds Jewel']['Enabled']
-            + account.compass['Upgrades']['De Dust I']['Total Value']
-            + account.compass['Upgrades']['De Dust II']['Total Value']
-            + account.compass['Upgrades']['De Dust III']['Total Value']
-            + account.compass['Upgrades']['De Dust IV']['Total Value']
-            + account.compass['Upgrades']['De Dust V']['Total Value']
-            + account.compass['Upgrades']['Abomination Slayer IX']['Total Value']
-            + account.compass['Upgrades']['Abomination Slayer XXX']['Total Value']
-            + account.compass['Upgrades']['Abomination Slayer XXXIV']['Total Value']
-        ),
-        'mgg': ValueToMulti(account.emperor["Windwalker Extra Dust"].value)
-    }
-    account.compass['Dust Calc']['Total'] = prod(account.compass['Dust Calc'].values())
-
-def _calculate_master_classes_tesseract_upgrades(account):
-    for upgrade_name, upgrade_details in account.tesseract['Upgrades'].items():
-        tesseract_multi = 1
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.tesseract['Upgrades'][upgrade_name]['Description']:
-            account.tesseract['Upgrades'][upgrade_name]['Total Value'] = (
-                    account.tesseract['Upgrades'][upgrade_name]['Level']
-                    * account.tesseract['Upgrades'][upgrade_name]['Value Per Level']
-                    * tesseract_multi
-            )
-            account.tesseract['Upgrades'][upgrade_name]['Description'] = account.tesseract['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.tesseract['Upgrades'][upgrade_name]['Total Value']}"
-            )
-        if '}' in account.tesseract['Upgrades'][upgrade_name]['Description']:
-            account.tesseract['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(
-                account.tesseract['Upgrades'][upgrade_name]['Level']
-                * account.tesseract['Upgrades'][upgrade_name]['Value Per Level']
-                * tesseract_multi
-            )
-            account.tesseract['Upgrades'][upgrade_name]['Description'] = account.tesseract['Upgrades'][upgrade_name]['Description'].replace(
-                '}', f"{account.tesseract['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-
-def _calculate_master_classes_tesseract_tachyon_sources(account):
-    # Dependency: _calculate_w2_vials(account)
-    # _customBlock_ArcaneType: "ExtraTachyon" == d
-    tesseract_preset_level = 100
-    backup_energy_preset_level = 100
-
-    tesseract_talent_index = 586
-    backup_energy_talent_index = 599
-
-    for ac in account.acs:
-        tesseract_preset_level = max(tesseract_preset_level, ac.current_preset_talents.get(str(tesseract_talent_index), 0), ac.secondary_preset_talents.get(str(tesseract_talent_index), 0))
-        backup_energy_preset_level = max(backup_energy_preset_level, ac.current_preset_talents.get(str(backup_energy_talent_index), 0), ac.secondary_preset_talents.get(str(backup_energy_talent_index), 0))
-
-    tesseract_talent_bonus_value = lava_func(
-        funcType=all_talentsDict[tesseract_talent_index]['funcX'],
-        level=tesseract_preset_level,
-        x1=all_talentsDict[tesseract_talent_index]['x1'],
-        x2=all_talentsDict[tesseract_talent_index]['x2'],
-    )
-
-    backup_energy_bonus_value = lava_func(
-        funcType=all_talentsDict[backup_energy_talent_index]['funcX'],
-        level=backup_energy_talent_index,
-        x1=all_talentsDict[backup_energy_talent_index]['x1'],
-        x2=all_talentsDict[backup_energy_talent_index]['x2'],
-    )
-
-    account.tesseract['Tachyon Calc'] = {
-        'mga': ValueToMulti(
-            account.tesseract['Upgrades']['Ripple in Spacetime']['Total Value']
-            + tesseract_talent_bonus_value
-            + account.tesseract['Upgrades']['Verdon Hoarding']['Total Value'] * safer_math_log(account.tesseract['Tachyon3'], 10)
-            + account.tesseract['Upgrades']['Aurion Hoarding']['Total Value'] * safer_math_log(account.tesseract['Tachyon6'], 10)
-            # + Extra Tachyon from Equipment
-            + account.labJewels['Eternal Energy Jewel']['Value'] * account.labJewels['Eternal Energy Jewel']['Owned']
-            + account.arcade[50]['Value']
-        ),
-        'mgb': ValueToMulti(
-            account.emperor["Arcane Cultist Extra Tachyons"].value
-            + account.alchemy_bubbles['Tachyon Bubble']['BaseValue']
-        ),
-        'mgc': ValueToMulti(account.sneaking.pristine_charms['Mystery Fizz'].value),
-        'mgd': ValueToMulti(backup_energy_bonus_value),
-        'mge': 1 + 0.2 * account.gemshop['Bundles']['bun_x']['Owned'],
-        'mgf': ValueToMulti(account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]['Value']),
-        'mgg': 4 * has_companion('Balloonfish'),
-    }
-    account.tesseract['Tachyon Calc']['Total'] = prod(account.tesseract['Tachyon Calc'].values())
-
 
 def _calculate_w1(account):
-    _calculate_w1_upgrade_vault(account)
+    account.vault.calculate()
     _calculate_w1_starsigns(account)
     # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
-    _calculate_w1_owl_bonuses(account)
+    account.owl.calculate(account.legend_talents['Furry Friends Forever'].value)
     account.basketball.calculate()
     account.darts.calculate()
 
-def _calculate_w1_upgrade_vault(account):
-    vault_multi = [
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery']['Level']
-            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-        ),
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery II']['Level']
-            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
-        )
-    ]
-    vault_multi_max = [
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery']['Max Level']
-            * account.vault['Upgrades']['Vault Mastery']['Value Per Level']
-        ),
-        ValueToMulti(
-            account.vault['Upgrades']['Vault Mastery II']['Max Level']
-            * account.vault['Upgrades']['Vault Mastery II']['Value Per Level']
-        )
-    ]
-    # logger.debug(f"{vault_multi = }")
-    for upgrade_name, upgrade_details in account.vault['Upgrades'].items():
-        upgrade_scaling_multiplier = vault_multi[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
-        upgrade_scaling_multiplier_max = vault_multi_max[upgrade_details['Vault Section'] - 1] if upgrade_details['Scaling Value'] else 1
-        upgrade_total_value = (
-                account.vault['Upgrades'][upgrade_name]['Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * upgrade_scaling_multiplier
-        )
-        upgrade_total_value_max = (
-                account.vault['Upgrades'][upgrade_name]['Max Level']
-                * account.vault['Upgrades'][upgrade_name]['Value Per Level']
-                * upgrade_scaling_multiplier_max
-        )
-        # Update description with total value, stack counts, and scaling info
-        if '{' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = upgrade_total_value
-            account.vault['Upgrades'][upgrade_name]['Max Value'] = upgrade_total_value_max
-            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '{', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if '}' in account.vault['Upgrades'][upgrade_name]['Description']:
-            account.vault['Upgrades'][upgrade_name]['Total Value'] = ValueToMulti(upgrade_total_value)
-            account.vault['Upgrades'][upgrade_name]['Max Value'] = ValueToMulti(upgrade_total_value_max)
-            account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                '}', f"{account.vault['Upgrades'][upgrade_name]['Total Value']:.2f}"
-            )
-        if 'Target:&' in account.vault['Upgrades'][upgrade_name]['Description']:
-            if upgrade_name.split('!')[0] in vault_stack_types:
-                stack_type = upgrade_name.split('!')[0]
-                if len(grimoire_coded_stack_monster_order) < account.vault.get(f'{stack_type} Stacks', '0'):
-                    next_stack_target = "All done!"
-                else:
-                    try:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[account.vault.get(f'{stack_type} Stacks', '0')])
-                    except:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
-                account.vault['Upgrades'][upgrade_name]['Description'] = account.vault['Upgrades'][upgrade_name]['Description'].replace(
-                    'Target:&', f"Target: {next_stack_target}"
-                )
-        account.vault['Upgrades'][upgrade_name]['Description'] += (
-            f"<br>({account.vault['Upgrades'][upgrade_name]['Value Per Level'] * upgrade_scaling_multiplier:.2f} per level"
-            f"{' after Vault Mastery ' if upgrade_details['Scaling Value'] else ': Not scaled by Vault Mastery '}"
-            f"{upgrade_details['Vault Section']}"
-            f")"
-        )
-
 def _calculate_w1_starsigns(account):
-    seraph_summoning_player = get_seraph_cosmos_max_summ_level_goal(account.tesseract['Upgrades']['Astrology Cultism']['Level'])
+    seraph_summoning_player = get_seraph_cosmos_max_summ_level_goal(account.tesseract.upgrades['Astrology Cultism'].level)
     account.star_sign_extras['SeraphMulti'] = get_seraph_cosmos_multi(
-        astrology_cultism_level=account.tesseract['Upgrades']['Astrology Cultism']['Level'],
+        astrology_cultism_level=account.tesseract.upgrades['Astrology Cultism'].level,
         all_summoning_levels=account.all_skills['Summoning']
     )
     account.star_sign_extras['SeraphGoal'] = get_seraph_cosmos_summ_level_goal(
-        astrology_cultism_level=account.tesseract['Upgrades']['Astrology Cultism']['Level'],
+        astrology_cultism_level=account.tesseract.upgrades['Astrology Cultism'].level,
         all_summoning_levels=account.all_skills['Summoning']
     )
     min_level_stacks = get_seraph_stacks(min(account.all_skills['Summoning'], default=0))
@@ -659,7 +374,7 @@ def _calculate_w1_starsigns(account):
 
 
 def _calculate_w1_stamps(account):
-    # Dependency: _calculate_w7_legend_talents
+    # Dependency: legend talents
     # `"StampDoubler" == d` in source. Last Updated in v2.43 Nov 6
     account.exalted_stamp_multi = ValueToMulti(
         100 #base
@@ -668,13 +383,13 @@ def _calculate_w1_stamps(account):
             * account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']
         )
         + account.sneaking.pristine_charms['Jellypick'].value
-        + account.compass['Upgrades']['Abomination Slayer XVII']['Total Value']
+        + account.compass.upgrades['Abomination Slayer XVII'].total_value
         + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
         + (20 * account.event_points_shop['Bonuses']['Extra Exaltedness']['Owned'])
         # TODO: + Gaming Palette Bonus
         # TODO: + Exotic Market Bonus
         # TODO: + Spelunk Bonus
-        + account.legend_talents['Talents']['Wowa Woowa']['Value']
+        + account.legend_talents['Wowa Woowa'].value
     )
 
     for stamp_name, stamp in account.stamps.items():
@@ -690,38 +405,6 @@ def _calculate_w1_stamps(account):
             logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
             continue
 
-def _calculate_w1_owl_bonuses(account):
-    # Dependency: _calculate_w7_legend_talents
-    bonuses_of_orion_num = len(owl_bonuses_of_orion)
-    bonuses_of_orion_owned = account.owl['BonusesOfOrion']
-    megafeathers_owned = account.owl['MegaFeathersOwned']
-    legend_talent_multi = ValueToMulti(account.legend_talents['Talents']['Furry Friends Forever']['Value'])
-    megafeather_mod = 0
-    if megafeathers_owned >= 10:
-        megafeather_mod = 6 + ((megafeathers_owned - 10) * 0.5)
-    elif megafeathers_owned > 7:
-        megafeather_mod = 5
-    elif megafeathers_owned > 5:
-        megafeather_mod = 4
-    elif megafeathers_owned > 3:
-        megafeather_mod = 3
-    elif megafeathers_owned > 1:
-        megafeather_mod = 2
-
-    account.owl['Bonuses'] = {}
-    for bonus_index, (bonus_name, bonus) in enumerate(owl_bonuses_of_orion.items()):
-        bonus_base = bonus['BaseValue']
-        if account.owl['Discovered']:
-            bonus_num_unlocked = (floor(bonuses_of_orion_owned/bonuses_of_orion_num) + (1 if (bonuses_of_orion_owned % bonuses_of_orion_num) > bonus_index else 0))
-        else:
-            bonus_num_unlocked = 0
-        bonus_value = bonus_base * bonus_num_unlocked * megafeather_mod * legend_talent_multi
-        account.owl['Bonuses'][bonus_name] = {
-            'BaseValue': bonus_base,
-            'NumUnlocked': bonus_num_unlocked,
-            'Value': safer_convert(bonus_value, 0)
-        }
-
 def _calculate_w2(account):
     _calculate_w2_vials(account)
     _calculate_w2_sigils(account)
@@ -734,7 +417,7 @@ def _calculate_w2(account):
 def _calculate_w2_vials(account):
     account.alchemy_vials_calcs = {
         'mga': (
-            account.vault['Upgrades']['Vial Overtune']['Total Value']
+            account.vault.upgrades['Vial Overtune'].total_value
             + ((account.maxed_vials * .02) if account.rift['VialMastery'] else 0)
         ),
         'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
@@ -798,7 +481,7 @@ def _calculate_w2_postOffice(account):
     )
 
 def _calculate_w2_ballot(account):
-    # Dependency: _calculate_w7_legend_talents
+    # Dependency: legend talents
     # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
     account.ballot['BonusMulti'] = ValueToMulti(
         account.equinox_bonuses['Voter Rights']['CurrentLevel']
@@ -808,7 +491,7 @@ def _calculate_w2_ballot(account):
         + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
         + (5 * has_companion('Mashed Potato'))
         + (40 * has_companion('Crystal Cuttlefish'))
-        + account.legend_talents['Talents']['Democracy FTW']['Value']
+        + account.legend_talents['Democracy FTW'].value
     )
     for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
         account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
@@ -915,8 +598,8 @@ def _calculate_w3_collider_base_costs(account):
             account.atom_collider['Atoms'][atomName]['MaxLevel'] += 10
 
         #Update max level if Wind Walker Compass > Atomic Potential is leveled
-        if account.compass['Upgrades']['Atomic Potential']['Level'] > 0:
-            account.atom_collider['Atoms'][atomName]['MaxLevel'] += account.compass['Upgrades']['Atomic Potential']['Total Value']
+        if account.compass.upgrades['Atomic Potential'].level > 0:
+            account.atom_collider['Atoms'][atomName]['MaxLevel'] += account.compass.upgrades['Atomic Potential'].total_value
 
         #Update max level if Higgs Boson Event Shop bought
         if account.event_points_shop['Bonuses']['Higgs Boson']['Owned']:
@@ -947,8 +630,8 @@ def _calculate_w3_collider_cost_reduction(account):
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
         + account.alchemy_bubbles['Atom Split']['BaseValue']
         + account.stamps['Atomic Stamp'].total_value
-        + account.grimoire['Upgrades']['Death of the Atom Price']['Total Value']
-        + account.compass['Upgrades']['Atomic Cost Crash']['Total Value']
+        + account.grimoire.upgrades['Death of the Atom Price'].total_value
+        + account.compass.upgrades['Atomic Cost Crash'].total_value
     )
     account.atom_collider['CostReductionMulti'] = 1 / account.atom_collider['CostReductionRaw']
     account.atom_collider['CostDiscount'] = (1 - (1 / account.atom_collider['CostReductionRaw'])) * 100
@@ -1069,13 +752,13 @@ def _calculate_w4_cooking_max_plate_levels(account):
         ))
 
     # Grimoire Increases
-    account.cooking['PlayerMaxPlateLvl'] += account.grimoire['Upgrades']['Supreme Head Chef Status']['Level']
-    if account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'] < account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']:
+    account.cooking['PlayerMaxPlateLvl'] += account.grimoire.upgrades['Supreme Head Chef Status'].level
+    if account.grimoire.upgrades['Supreme Head Chef Status'].level < account.grimoire.upgrades['Supreme Head Chef Status'].max_level:
         account.cooking['PlayerMissingPlateUpgrades'].append((
             "Upgrade \"Supreme Head Chef Status\" within {{ The Grimoire|#the-grimoire }}",
-            account.grimoire['Upgrades']['Supreme Head Chef Status']['Image'],
-            account.grimoire['Upgrades']['Supreme Head Chef Status']['Level'],  #progress
-            account.grimoire['Upgrades']['Supreme Head Chef Status']['Max Level']  #goal
+            account.grimoire.upgrades['Supreme Head Chef Status'].image,
+            account.grimoire.upgrades['Supreme Head Chef Status'].level,  #progress
+            account.grimoire.upgrades['Supreme Head Chef Status'].max_level  #goal
         ))
 
     # Spelunking Increases
@@ -1152,7 +835,7 @@ def _calculate_w4_lab_bonuses(account):
 
 def _calculate_w4_tome_bonuses(account):
     tome_bonus_multi = ValueToMulti(
-        account.grimoire['Upgrades']['Grey Tome Book']['Level']
+        account.grimoire.upgrades['Grey Tome Book'].level
         + MultiToValue(account.armor_sets['Sets']['TROLL SET']['Total Value'])
     )
     # DMG
@@ -1222,6 +905,13 @@ def _calculate_w6_sneaking_gemstones(account):
     )
 
 
+def _calculate_w6_sneaking_pristine_chance(account):
+    # Dependency: _calculate_master_classes (Compass upgrades)
+    account.sneaking.calculate_pristine_chance(
+        account.compass.upgrades['Pristine Collector'].total_value
+    )
+
+
 def _calculate_w6_farming(account):
     # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_farming_land_ranks(account)
@@ -1251,7 +941,7 @@ def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
         (account.labBonuses['Depot Studies PhD']['Value'] + account.labJewels['Pure Opal Rhombol']['Value']) * account.labBonuses['Depot Studies PhD']['Enabled']
     )
-    grimoire_multi = account.grimoire['Upgrades']['Superior Crop Research']['Total Value']  #Grimoire 22: Superior Crop Research already a Multi
+    grimoire_multi = account.grimoire.upgrades['Superior Crop Research'].total_value  #Grimoire 22: Superior Crop Research already a Multi
     account.farming.calculate_crop_depot_bonus(
         lab_multi, grimoire_multi, account.sneaking.emporium
     )
@@ -1295,7 +985,11 @@ def _calculate_wave_3(account):
     _calculate_general_character_bonus_talent_levels(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
-    _calculate_master_classes_grimoire_bone_sources(account)
+    _calculate_w6_sneaking_pristine_chance(account)
+    account.grimoire.calculate_bone_sources(
+        account.dbs, account.sneaking, account.caverns, account.all_assets,
+        account.arcade, account.labJewels, account.emperor
+    )
     _calculate_class_unique_kill_stacks(account)
     _calculate_w6_farming(account)
 
@@ -1382,13 +1076,13 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 3
         },
         'Grimoire': {
-            'Value': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
-            'Image': account.grimoire['Upgrades']['Skull of Major Talent']['Image'],
+            'Value': account.grimoire.upgrades['Skull of Major Talent'].level,
+            'Image': account.grimoire.upgrades['Skull of Major Talent'].image,
             'Label': f"{{{{Grimoire|#the-grimoire}}}}: Skull of Major Talent: "
-                     f"+{account.grimoire['Upgrades']['Skull of Major Talent']['Level']}"
-                     f"/{account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']}",
-            'Progression': account.grimoire['Upgrades']['Skull of Major Talent']['Level'],
-            'Goal': account.grimoire['Upgrades']['Skull of Major Talent']['Max Level']
+                     f"+{account.grimoire.upgrades['Skull of Major Talent'].level}"
+                     f"/{account.grimoire.upgrades['Skull of Major Talent'].max_level}",
+            'Progression': account.grimoire.upgrades['Skull of Major Talent'].level,
+            'Goal': account.grimoire.upgrades['Skull of Major Talent'].max_level
         }
     }
     account.sum_account_wide_bonus_talents = 0
@@ -1551,11 +1245,16 @@ def _calculate_w1_statues(account):
 
     voodoo_statufication_multi = ValueToMulti(max(voodoo_statufication_multi, default=0))
 
-    vault_multi = account.vault['Upgrades']['Statue Bonanza']['Total Value']
+    vault_multi = account.vault.upgrades['Statue Bonanza'].total_value
     vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
 
     onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
     onyx_typenumber = get_statue_type_index_from_name('Onyx')
+
+    zenith_multi = ValueToMulti(50 + floor(account.zenith_market['TRUE ZEN'].value))
+    zenith_typenumber = get_statue_type_index_from_name('Zenith')
+
+    merit_multi = ValueToMulti(account.meritocracy[26].value)
 
     event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
 
@@ -1564,12 +1263,14 @@ def _calculate_w1_statues(account):
         account.statues['Dragon Statue']['BaseValue']
         * account.statues['Dragon Statue']['Level']
         * (onyx_multi if account.statues['Dragon Statue']['TypeNumber'] >= onyx_typenumber else 1)
+        * (zenith_multi if account.statues['Dragon Statue']['TypeNumber'] >= zenith_typenumber else 1)
         * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
         * voodoo_statufication_multi
         * event_shop_multi
+        * merit_multi
     )
     dragon_multi = ValueToMulti(account.statues['Dragon Statue']['Value'])
-    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {dragon_multi = }, {event_shop_multi = }")
+    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {zenith_multi = }, {dragon_multi = }, {event_shop_multi = }, {merit_multi = }")
 
     for statue_name, statue_details in account.statues.items():
         if statue_name != 'Dragon Statue':
@@ -1577,10 +1278,12 @@ def _calculate_w1_statues(account):
                 account.statues[statue_name]['BaseValue']
                 * account.statues[statue_name]['Level']
                 * (onyx_multi if statue_details['TypeNumber'] >= onyx_typenumber else 1)
+                * (zenith_multi if statue_details['TypeNumber'] >= zenith_typenumber else 1)
                 * (vault_multi if statue_name in vault_statues else 1)
                 * voodoo_statufication_multi
                 * dragon_multi
                 * event_shop_multi
+                * merit_multi
             )
 
     account.statue_effect_advice = [
@@ -1597,6 +1300,8 @@ def _calculate_w1_statues(account):
             goal=max_sailing_artifact_level,
             resource='the-onyx-lantern'
         ),
+        account.zenith_market['TRUE ZEN'].get_advice(),
+        account.meritocracy[26].get_bonus_advice(),
         Advice(
             label=f"{{{{Event Shop|#event-shop}}}}: Smiley Statue: {round(event_shop_multi, 2):g}/1.3x",
             picture_class=account.event_points_shop['Bonuses']['Smiley Statue']['Image'],
@@ -1609,8 +1314,8 @@ def _calculate_w1_statues(account):
         ),
         get_upgrade_vault_advice('Statue Bonanza'),
         Advice(
-            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi, 2):g}x"
-                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * dragon_multi * event_shop_multi * vault_multi, 2):g}x",
+            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi, 2):g}x"
+                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi * vault_multi, 2):g}x",
             picture_class='town-marble'
         )
     ]
@@ -1631,6 +1336,7 @@ def _calculate_w7(account):
     account.gallery.calculate_bonuses(account)
     account.zenith_market.calculate_bonuses()
     account.research.calculate_bonuses()
+    account.sushi_station.calculate_bonuses()
     account.dancing_coral.calculate_bonuses()
     account.coral_kid.calculate_bonuses()
 
@@ -1639,31 +1345,3 @@ def _calculate_w7_coral_reef(account):
     for coral_details in account.coral_reef['Reef Corals'].values():
         coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))
 
-def _calculate_w7_legend_talents(account):
-    for legend_name, legend_details in account.legend_talents['Talents'].items():
-        legend_details['Value'] = legend_details['Base Value'] * legend_details['Level']
-        next_value = legend_details['Base Value'] * (legend_details['Level'] + 1)
-        if '{' in legend_details['Description']:
-            legend_details['Description'] = legend_details['Description'].replace('{', f"{legend_details['Value']}")
-        if '}' in legend_details['Description']:
-            legend_details['Description'] = legend_details['Description'].replace('}', f"{ValueToMulti(legend_details['Value'])}")
-        if '$' in legend_details['Description']:
-            if legend_name == 'Double Aint Enough':
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{2 + legend_details['Value'] / 100}")
-            elif legend_name == 'Super Talent Points':
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{50 + account.legend_talents['Talents']['Super Duper Talents']['Value']}")
-            elif legend_name == 'Inevitable Builder':
-                legend_details['Description'] = legend_details['Description'].replace(' for a total bonus speed of $x', '')
-            elif legend_name == "6 O'Clock Crystals":
-                legend_details['Description'] = legend_details['Description'].replace('$ ', '')
-            else:
-                legend_details['Description'] = legend_details['Description'].replace('$', f"{legend_details['Value']}")
-        if '{' in legend_details['Bonus']:
-            legend_details['Bonus'] = legend_details['Bonus'].replace('{', f"{next_value}")
-        if '}' in legend_details['Bonus']:
-            legend_details['Bonus'] = legend_details['Bonus'].replace('}', f"{ValueToMulti(next_value)}")
-        if '$' in legend_details['Bonus']:
-            if legend_name == 'Double Aint Enough':
-                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{2 + next_value / 100}")
-            else:
-                legend_details['Bonus'] = legend_details['Bonus'].replace('$', f"{next_value}")

@@ -16,7 +16,7 @@ from utils.data_formatting import getJSONfromAPI, getJSONfromText, HeaderData
 from utils.logging import get_logger
 from utils.text_formatting import is_username
 from general import combat_levels, greenstacks, pinchy, cards, secret_path, consumables, gem_shop, active, achievements, event_shop, drop_rate
-from master_classes import grimoire, compass, tesseract
+from master_classes import grimoire, compass, tesseract, royal_armory
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl, darts, basketball
 from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
@@ -34,6 +34,8 @@ from w7 import (
     gallery,
     zenith_market,
     research,
+    sushi_station,
+    the_button,
     dancing_coral,
     coral_kid,
 )
@@ -107,7 +109,8 @@ def main(inputData, source_string, runType="web"):
         sections_master_classes := [
             grimoire.getGrimoireAdviceSection(),
             compass.getCompassAdviceSection(),
-            tesseract.get_tesseract_advice_section()
+            tesseract.get_tesseract_advice_section(),
+            royal_armory.getRoyalArmoryAdviceSection(),
         ],
         sections_1 := [
             upgrade_vault.getVaultAdviceSection(),
@@ -175,6 +178,8 @@ def main(inputData, source_string, runType="web"):
             legend_talents.get_legend_talents_section(),
             coral_reef.get_coral_reef_section(),
             research.get_section(),
+            sushi_station.get_section(),
+            the_button.get_section(),
             advice_fish.get_section(),
             zenith_market.get_zenith_market_section(),
             dancing_coral.get_dancing_coral_section(),

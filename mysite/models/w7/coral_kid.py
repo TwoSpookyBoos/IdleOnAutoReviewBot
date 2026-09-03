@@ -2,8 +2,11 @@ from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.idleon.w7.coral_kid import coral_kid_description_templates, coral_kid_upgrades_divinity_requirements, \
     coral_kid_upgrades_bonus_base_formulas, coral_kid_upgrades_bonus_final_formulas
 from models.advice.advice import Advice
+from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, logger, safer_index
+from utils.safer_data_handling import safe_loads, safer_index
+
+logger = get_logger(__name__)
 
 
 class CoralKidUpgrade:
@@ -45,10 +48,10 @@ class CoralKidUpgrade:
         if "{" in description:
             description = description.replace("{", str(self.base_value))
         elif "}" in description:
-            description = description.replace("}", str(ValueToMulti(self.base_value)))
+            description = description.replace("}", str(round_and_trim(ValueToMulti(self.base_value))))
 
         if "$x" in description:
-            description = description.replace("$x", f" {ValueToMulti(self.value)}x")
+            description = description.replace("$x", f" {round_and_trim(ValueToMulti(self.value))}x")
         elif "+$%" in description:
             description = description.replace("+$%", f" +{self.value}%")
 

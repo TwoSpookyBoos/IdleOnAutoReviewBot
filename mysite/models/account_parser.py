@@ -9,14 +9,10 @@ from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict, vault_stack_types,
-    vault_section_indexes, UpgradeVault, vault_dont_scale, inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
+    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict,
+    inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_item_data import ITEM_DATA
-from consts.consts_master_classes import (
-    grimoire_upgrades_list, grimoire_dont_scale, grimoire_bones_list, compass_upgrades_list, compass_dusts_list,
-    compass_titans, compass_path_ordering, compass_medallions, tesseract_upgrades_list, tesseract_tachyon_list
-)
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
     starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
@@ -54,7 +50,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, vault_string_cleaner, letterToNumber
+from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -728,271 +724,9 @@ def _parse_general_storage_slots(account):
 
 
 def _parse_master_classes(account):
-    _parse_master_classes_grimoire(account)
-    _parse_master_classes_compass(account)
-    _parse_master_classes_tesseract(account)
-
-def _parse_master_classes_grimoire(account):
-    account.grimoire = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Total Bones Collected': safer_convert(safer_get(account.raw_optlacc_dict, 329, 0), 0.0),
-        'Bone1': safer_convert(safer_get(account.raw_optlacc_dict, 330, 0), 0.0),
-        'Bone2': safer_convert(safer_get(account.raw_optlacc_dict, 331, 0), 0.0),
-        'Bone3': safer_convert(safer_get(account.raw_optlacc_dict, 332, 0), 0.0),
-        'Bone4': safer_convert(safer_get(account.raw_optlacc_dict, 333, 0), 0.0),
-        'Knockout Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 334, 0), 0),
-        'Elimination Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 335, 0), 0),
-        'Annihilation Stacks': safer_convert(safer_get(account.raw_optlacc_dict, 336, 0), 0),
-        'Charred Bones Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 367, False), False)
-    }
-    #Parse Grimoire Upgrades
-    raw_grimoire = safe_loads(account.raw_data.get('Grimoire', []))
-    if not raw_grimoire:
-        logger.warning(f"Grimore data not present{', as expected' if account.version < 236 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(grimoire_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-        if '(#)' in clean_name:
-            stack_type = clean_name.split('!')[0]
-            clean_name = clean_name.replace('(#)', f"({account.grimoire.get(f'{stack_type} Stacks', '#')})")
-        if clean_name != 'Ripped Page':
-            try:
-                account.grimoire['Upgrades'][clean_name] = {
-                    'Level': min(int(upgrade_values_list[4]), int(raw_grimoire[upgrade_index])),
-                    'Index': upgrade_index,
-                    'Image': f"grimoire-upgrade-{upgrade_index}",
-                    'Cost Base': int(upgrade_values_list[1]),
-                    'Cost Increment': float(upgrade_values_list[2]),
-                    'Bone Name': grimoire_bones_list[int(upgrade_values_list[3])],
-                    'Bone Image': f"grimoire-bone-{upgrade_values_list[3]}",
-                    'Max Level': int(upgrade_values_list[4]),
-                    'Value Per Level': int(upgrade_values_list[5]),
-                    'Unlock Requirement': int(upgrade_values_list[6]),
-                    # 'Placeholder7': upgrade_values_list[7],
-                    # 'Placeholder8': upgrade_values_list[8],
-                    'Description': upgrade_values_list[9].replace('_', ' '),
-                    'Scaling Value': upgrade_index not in grimoire_dont_scale
-                }
-            except:
-                #logger.exception(f"Error parsing Grimoire Index {upgrade_index}")
-                account.grimoire['Upgrades'][clean_name] = {
-                    'Level': 0,
-                    'Index': upgrade_index,
-                    'Image': f"grimoire-upgrade-{upgrade_index}",
-                    'Cost Base': int(upgrade_values_list[1]),
-                    'Cost Increment': float(upgrade_values_list[2]),
-                    'Bone Name': grimoire_bones_list[int(upgrade_values_list[3])],
-                    'Bone Image': f"grimoire-bone-{upgrade_values_list[3]}",
-                    'Max Level': int(upgrade_values_list[4]),
-                    'Value Per Level': int(upgrade_values_list[5]),
-                    'Unlock Requirement': int(upgrade_values_list[6]),
-                    # 'Placeholder7': upgrade_values_list[7],
-                    # 'Placeholder8': upgrade_values_list[8],
-                    'Description': upgrade_values_list[9].replace('_', ' '),
-                    'Scaling Value': upgrade_index not in grimoire_dont_scale
-                }
-
-    #Sum total upgrades
-    account.grimoire['Total Upgrades'] = sum([v['Level'] for v in account.grimoire['Upgrades'].values()])
-    for upgrade_name in account.grimoire['Upgrades']:
-        account.grimoire['Upgrades'][upgrade_name]['Unlocked'] = account.grimoire['Total Upgrades'] >= account.grimoire['Upgrades'][upgrade_name]['Unlock Requirement']
-
-def _parse_master_classes_compass(account):
-    account.compass = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Total Dust Collected': safer_convert(safer_get(account.raw_optlacc_dict, 362, 0), 0.0),
-        'Dust1': safer_convert(safer_get(account.raw_optlacc_dict, 357, 0), 0.0),
-        'Dust2': safer_convert(safer_get(account.raw_optlacc_dict, 358, 0), 0.0),
-        'Dust3': safer_convert(safer_get(account.raw_optlacc_dict, 359, 0), 0.0),
-        'Dust4': safer_convert(safer_get(account.raw_optlacc_dict, 360, 0), 0.0),
-        'Dust5': safer_convert(safer_get(account.raw_optlacc_dict, 361, 0), 0.0),
-        "Top of the Mornin'": max(0, safer_convert(safer_get(account.raw_optlacc_dict, 365, 0),0)),
-        'Abominations': {},
-        'Elements': {0: 'Fire', 1: 'Wind', 2: 'Grass', 3: 'Ice'},
-        'Medallions': {},
-        'Total Medallions': 0,
-        'Aethermoons Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 401, False), False)
-    }
-    #Parse Compass Upgrades
-    raw_compass = safe_loads(account.raw_data.get('Compass', []))
-    if not raw_compass:
-        logger.warning(f"Compass data not present{', as expected' if account.version < 264 else ''}.")
-    while len(raw_compass) < 5:
-        raw_compass.append([])
-
-    raw_abom_status = [safer_convert(v, 0) for v in raw_compass[1]]
-    account.compass['Total Abominations Slain'] = sum(raw_abom_status)
-    _parse_master_classes_abominations(account, raw_abom_status)  #Need their status for Upgrades
-
-    raw_compass_upgrades = [safer_convert(v, 0) for v in raw_compass[0]]
-    account.compass['Total Upgrades'] = sum([safer_convert(v, 0) for v in raw_compass_upgrades])
-    _parse_master_classes_compass_upgrades(account, raw_compass_upgrades)
-
-    # raw_portals_opened = raw_compass[2]
-    raw_medallions = raw_compass[3]
-    account.compass['Total Medallions'] = len(raw_medallions)
-    _parse_master_classes_medallions(account, raw_medallions)
-
-    raw_stamps_exalted = raw_compass[4]
-    account.compass['Total Exalted'] = len(raw_stamps_exalted)
-    # see _parse_master_classes_exalted_stamps for more info. Has to come after w1 stamps are parsed
-
-def _parse_master_classes_abominations(account, raw_abom_status):
-    for abom_index, abom_data in enumerate(compass_titans):
-        clean_name = abom_data[0].replace('_', ' ')
-        if 50 > int(abom_data[2]):
-            weakness = 0
-        elif 100 > int(abom_data[2]):
-            weakness = 3
-        elif 150 > int(abom_data[2]):
-            weakness = 2
-        elif 200 > int(abom_data[2]):
-            weakness = 1
-        else:
-            weakness = int(abom_data[11]) % 4
-        try:
-            account.compass['Abominations'][clean_name] = {
-                'Defeated': raw_abom_status[abom_index] > 0,
-                'Map Index': int(abom_data[2]),
-                'World': 1 + (int(abom_data[2])//50),
-                'Image': f'titan-{abom_index}',
-                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
-            }
-        except:
-            account.compass['Abominations'][clean_name] = {
-                'Defeated': False,
-                'Map Index': int(abom_data[2]),
-                'World': 1 + (int(abom_data[2]) // 50),
-                'Image': f'titan-{abom_index}',
-                'Weakness': account.compass['Elements'].get(weakness, 'Unknown')
-            }
-
-def _parse_master_classes_compass_upgrades(account, raw_compass_upgrades):
-    for path_name, upgrade_indexes_list in compass_path_ordering.items():
-        for path_ordering, upgrade_index in enumerate(upgrade_indexes_list):
-            upgrade_values_list = compass_upgrades_list[upgrade_index]
-            clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-            clean_description = upgrade_values_list[11].replace('_', ' ')  #.replace('@', '<br>')
-            # if 'Titan doesnt exist' not in clean_description:  #Placeholders as of v2.35 release patch
-            try:
-                account.compass['Upgrades'][clean_name] = {
-                    'Level': min(int(upgrade_values_list[4]), int(raw_compass_upgrades[upgrade_index])),
-                    'Index': upgrade_index,
-                    'Image': f"compass-upgrade-{upgrade_index}",
-                    'Cost Base': int(upgrade_values_list[1]),
-                    'Cost Increment': float(upgrade_values_list[2]),
-                    'Dust Name': compass_dusts_list[int(upgrade_values_list[3])],
-                    'Dust Image': f"compass-dust-{upgrade_values_list[3]}",
-                    'Max Level': int(upgrade_values_list[4]),
-                    'Value Per Level': safer_convert(upgrade_values_list[5], 0.00 if '.' in upgrade_values_list[5] else 0),
-                    # 'Unlock Requirement': int(upgrade_values_list[6]),
-                    # 'Placeholder7': upgrade_values_list[7],
-                    # 'Placeholder8': upgrade_values_list[8],
-                    'Shape': 'Square' if int(upgrade_values_list[9]) == 0 else 'Circle' if int(upgrade_values_list[9]) == 1 else 'UnknownShape',
-                    # 'Path Index': int(upgrade_values_list[10]),
-                    'Path Name': path_name,
-                    'Path Ordering': path_ordering if path_name != 'Abomination' else path_ordering + 1,
-                    'Description': clean_description,
-                }
-            except:
-                if raw_compass_upgrades:
-                    # No need for 200 exceptions if they don't have any Compass data
-                    logger.exception(f"Error parsing Compass Upgrade Index {upgrade_index} ({clean_name})")
-                account.compass['Upgrades'][clean_name] = {
-                    'Level': 0,
-                    'Index': upgrade_index,
-                    'Image': f"compass-upgrade-{upgrade_index}",
-                    'Cost Base': int(upgrade_values_list[1]),
-                    'Cost Increment': float(upgrade_values_list[2]),
-                    'Dust Name': compass_dusts_list[int(upgrade_values_list[3])],
-                    'Dust Image': f"compass-dust-{upgrade_values_list[3]}",
-                    'Max Level': int(upgrade_values_list[4]),
-                    'Value Per Level': safer_convert(upgrade_values_list[5], 0.00 if '.' in upgrade_values_list[5] else 0),
-                    # 'Unlock Requirement': int(upgrade_values_list[6]),
-                    # 'Placeholder7': upgrade_values_list[7],
-                    # 'Placeholder8': upgrade_values_list[8],
-                    'Shape': 'Square' if int(upgrade_values_list[9]) == 0 else 'Circle' if int(upgrade_values_list[9]) == 1 else 'UnknownShape',
-                    # 'Path Index': int(upgrade_values_list[10]),
-                    'Path Name': path_name,
-                    'Path Ordering': path_ordering,
-                    'Description': clean_description,
-                }
-            account.compass['Upgrades'][clean_name]['Base Value'] = (
-                account.compass['Upgrades'][clean_name]['Level']
-                * account.compass['Upgrades'][clean_name]['Value Per Level']
-            )
-
-    # Determine Unlock Status
-    for upgrade_name, upgrade_details in account.compass['Upgrades'].items():
-        path_name = f"{upgrade_details['Path Name']} Path"
-        if path_name == 'Default Path':
-            if upgrade_name == 'Pathfinder':
-                account.compass['Upgrades'][upgrade_name]['Unlocked'] = True
-            else:
-                account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades']['Pathfinder']['Level'] >= 1
-        elif path_name == 'Abomination Path':
-            if 'Titan doesnt exist' not in upgrade_details['Description']:
-                try:
-                    account.compass['Upgrades'][upgrade_name]['Abomination Name'] = compass_titans[upgrade_details['Path Ordering']-1][0].replace('_', ' ')
-                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Abominations'][account.compass['Upgrades'][upgrade_name]['Abomination Name']]['Defeated']
-                except:
-                    account.compass['Upgrades'][upgrade_name]['Abomination Name'] = '??????'
-                    logger.exception(f"Could not look up Abomination defeated status for {upgrade_name}")
-                    account.compass['Upgrades'][upgrade_name]['Unlocked'] = False
-        else:
-            account.compass['Upgrades'][upgrade_name]['Unlocked'] = account.compass['Upgrades'][path_name]['Level'] >= upgrade_details['Path Ordering']
-
-def _parse_master_classes_medallions(account, raw_medallions):
-    known_extras = {
-        'reindeer': ['Spirit Reindeer', 'spirit-reindeer'],
-        'Crystal0': ['Crystal Carrot (Glitterbug prayer)', 'crystal-carrot'],
-        'Crystal1': ['Crystal Crabal (Glitterbug prayer)', 'crystal-crabal'],
-        'Crystal2': ['Crystal Cattle (Glitterbug prayer)', 'crystal-cattle'],
-        'Crystal3': ['Crystal Custard (Glitterbug prayer)', 'crystal-custard'],
-        'Crystal4': ['Crystal Capybara (Glitterbug prayer)', 'crystal-capybara'],
-        'Crystal5': ['Crystal Candalight (Glitterbug prayer)', 'crystal-candalight'],
-        'caveA': ['Cavern 3: Dawg Den', 'dawg-den-dawgs'],
-        'rockS': ['W3 Colo: Skull Rock', 'skull-rock'],
-        'Meteor': ['Random Event Boss: Fallen Meteor', 'fallen-meteor'],
-        'rocky': ['Random Event Boss: Mega Grumblo', 'mega-grumblo'],
-        'iceknight': ['Random Event Boss: Glacial Guild', 'ice-guard'],
-        'snakeZ': ['Random Event Boss: Snake Swarm', 'snake-swarm'],
-        'frogGR': ['Random Event Boss: Angry Frogs', 'angry-frogs'],
-        'ChestA1': ['W1 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB1': ['W1 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC1': ['W1 Colo: Gold Chest', 'colo-gold-chest'],
-        'ChestA2': ['W2 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB2': ['W2 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC2': ['W2 Colo: Gold Chest', 'colo-gold-chest'],
-        'ChestA3': ['W3 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB3': ['W3 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC3': ['W3 Colo: Gold Chest', 'colo-gold-chest'],
-        'ChestA4': ['W4 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB4': ['W4 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC4': ['W4 Colo: Gold Chest', 'colo-gold-chest'],
-        'ChestA5': ['W5 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB5': ['W5 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC5': ['W5 Colo: Gold Chest', 'colo-gold-chest'],
-        'ChestA6': ['W6 Colo: Bronze Chest', 'colo-bronze-chest'],
-        'ChestB6': ['W6 Colo: Silver Chest', 'colo-silver-chest'],
-        'ChestC6': ['W6 Colo: Gold Chest', 'colo-gold-chest'],
-    }
-
-    for raw_enemy_name in compass_medallions:
-        if raw_enemy_name in known_extras:  #Anything that isn't a standard Card
-            account.compass['Medallions'][raw_enemy_name] = {
-                'Obtained': raw_enemy_name in raw_medallions,
-                'Enemy Name': known_extras[raw_enemy_name][0],
-                'Image': known_extras[raw_enemy_name][1],
-            }
-        else:
-            decoded_name = decode_monster_name(raw_enemy_name, card=True)
-            account.compass['Medallions'][raw_enemy_name] = {
-                'Obtained': raw_enemy_name in raw_medallions,
-                'Enemy Name': decoded_name,
-                'Image': f"{decoded_name}-card"
-            }
+    # Grimoire, Compass, and Tesseract/Arcane Cultist are now self-parsing; see Grimoire(account.raw_data),
+    # Compass(account.raw_data), and Tesseract(account.raw_data) in Account.__init__
+    pass
 
 def _parse_master_classes_exalted_stamps(account):
     raw_compass = safe_loads(account.raw_data.get('Compass', []))
@@ -1016,126 +750,13 @@ def _parse_master_classes_exalted_stamps(account):
                 logger.exception(f"Error parsing Exalted status for stamp {stamp_type_code}{stamp_code}: {stamp.name}")
             account.stamps[stamp.name].exalted = False
 
-def _parse_master_classes_tesseract(account):
-    account.tesseract = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Total Tachyons Collected': safer_convert(safer_get(account.raw_optlacc_dict, 394, 0), 0.0),
-        'Tachyon1': safer_convert(safer_get(account.raw_optlacc_dict, 388, 0), 0.0),
-        'Tachyon2': safer_convert(safer_get(account.raw_optlacc_dict, 389, 0), 0.0),
-        'Tachyon3': safer_convert(safer_get(account.raw_optlacc_dict, 390, 0), 0.0),
-        'Tachyon4': safer_convert(safer_get(account.raw_optlacc_dict, 391, 0), 0.0),
-        'Tachyon5': safer_convert(safer_get(account.raw_optlacc_dict, 392, 0), 0.0),
-        'Tachyon6': safer_convert(safer_get(account.raw_optlacc_dict, 393, 0), 0.0),
-        'Prisma Bubbles': safer_convert(safer_get(account.raw_optlacc_dict, 395, 0), 0.0),
-        'Arcane Rocks Enabled': safer_convert(safer_get(account.raw_optlacc_dict, 452, False), False)
-    }
-    raw_tesseract = safe_loads(account.raw_data.get('Arcane', []))
-    if not raw_tesseract:
-        logger.warning(f"Tesseract data not present{', as expected' if account.version < 236 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(tesseract_upgrades_list):
-        clean_name = upgrade_values_list[0].replace('(Tap_for_more_info)', '').replace('製', '').replace('_', ' ').rstrip()
-        if clean_name != 'Boundless Energy':
-            try:
-                level = min(int(upgrade_values_list[4]), int(raw_tesseract[upgrade_index]))
-            except IndexError:
-                level = 0
-            account.tesseract['Upgrades'][clean_name] = {
-                'Level': level,
-                'Index': upgrade_index,
-                'Image': f"tesseract-upgrade-{upgrade_index}",
-                'Cost Base': int(upgrade_values_list[1]),
-                'Cost Increment': float(upgrade_values_list[2]),
-                'Tachyon Name': tesseract_tachyon_list[int(upgrade_values_list[3])],
-                'Tachyon Image': f"tesseract-tachyon-{upgrade_values_list[3]}",
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': upgrade_values_list[9].replace('_', ' '),
-            }
-
-    # Sum total upgrades
-    account.tesseract['Total Upgrades'] = sum([v['Level'] for v in account.tesseract['Upgrades'].values()])
-    for upgrade_name in account.tesseract['Upgrades']:
-        account.tesseract['Upgrades'][upgrade_name]['Unlocked'] = account.tesseract['Total Upgrades'] >= account.tesseract['Upgrades'][upgrade_name]['Unlock Requirement']
-
 
 def _parse_w1(account):
-    _parse_w1_upgrade_vault(account)
     _parse_w1_starsigns(account)
     _parse_w1_forge(account)
     _parse_w1_bribes(account)
     _parse_w1_stamps(account)
-    _parse_w1_owl(account)
     _parse_w1_statues(account)
-
-def _parse_w1_upgrade_vault(account):
-    account.vault = {
-        'Upgrades': {},
-        'Total Upgrades': 0,
-        'Knockout Stacks': safer_get(account.raw_optlacc_dict, 338, 0),
-    }
-    #Parse Vault Upgrades
-    raw_vault = safe_loads(account.raw_data.get('UpgVault', []))
-    if not raw_vault:
-        logger.warning(f"Upgrade Vault data not present{', as expected' if account.version < 237 else ''}.")
-    for upgrade_index, upgrade_values_list in enumerate(UpgradeVault):
-        clean_name = vault_string_cleaner(upgrade_values_list[0])
-        if len(upgrade_values_list) >= 11:
-            secondary_description = vault_string_cleaner(upgrade_values_list[10]) if upgrade_values_list != '_' else ''
-        else:
-            secondary_description = ''
-        if clean_name.split('!')[0] in vault_stack_types:
-            stack_type = clean_name.split('!')[0]
-            clean_name += f" ({account.vault.get(f'{stack_type} Stacks', '#')} stacks)"
-        vault_section = 0
-        for list_index, vault_section_index in enumerate(vault_section_indexes):
-            if upgrade_index <= vault_section_index:
-                vault_section = list_index + 1
-                break
-        try:
-            account.vault['Upgrades'][clean_name] = {
-                'Level': min(int(upgrade_values_list[4]), int(raw_vault[upgrade_index])),
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{vault_string_cleaner(upgrade_values_list[9])} {secondary_description}",
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-        except:
-            # logger.exception(f"Vault parse error on index {upgrade_index}")
-            account.vault['Upgrades'][clean_name] = {
-                'Level': 0,
-                'Index': upgrade_index,
-                'Image': f"vault-upgrade-{upgrade_index}",
-                'Cost Base': safer_convert(upgrade_values_list[1], 0),
-                'Cost Increment': float(upgrade_values_list[2]),
-                # 'Placeholder3': upgrade_values_list[3],
-                'Max Level': int(upgrade_values_list[4]),
-                'Value Per Level': int(upgrade_values_list[5]),
-                'Unlock Requirement': int(upgrade_values_list[6]),
-                # 'Placeholder7': upgrade_values_list[7],
-                # 'Placeholder8': upgrade_values_list[8],
-                'Description': f"{upgrade_values_list[9].replace('_', ' ')}{secondary_description}",
-                'Scaling Value': upgrade_index not in vault_dont_scale,
-                'Vault Section': vault_section
-            }
-    #logger.debug(account.vault)
-
-    #Sum total upgrades
-    account.vault['Total Upgrades'] = sum([v['Level'] for v in account.vault['Upgrades'].values()])
-    for upgrade_name in account.vault['Upgrades']:
-        account.vault['Upgrades'][upgrade_name]['Unlocked'] = account.vault['Total Upgrades'] >= account.vault['Upgrades'][upgrade_name]['Unlock Requirement']
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
@@ -1251,17 +872,6 @@ def _parse_w1_stamps(account):
                 effect=""
             )
     _parse_master_classes_exalted_stamps(account)
-
-def _parse_w1_owl(account):
-    if 265 not in account.raw_optlacc_dict:
-        logger.warning(f"Owl data not present{', as expected' if account.version < 217 else ''}.")
-    account.owl = {
-        'Discovered': safer_get(account.raw_optlacc_dict, 265, False),
-        'FeatherGeneration': safer_get(account.raw_optlacc_dict, 254, 0),
-        'BonusesOfOrion': safer_get(account.raw_optlacc_dict, 255, 0),
-        'FeatherRestarts': safer_get(account.raw_optlacc_dict, 258, 0),
-        'MegaFeathersOwned': safer_get(account.raw_optlacc_dict, 262, 0)
-    }
 
 def _parse_w1_statues(account):
     account.statues = {}
@@ -2678,7 +2288,6 @@ def _parse_w5_divinity(account):
 
 def _parse_w7(account):
     _parse_w7_coral_reef(account)
-    _parse_w7_legend_talents(account)
 
 
 def _parse_w7_coral_reef(account):
@@ -2692,9 +2301,3 @@ def _parse_w7_coral_reef(account):
     for index, coral_data in enumerate(account.coral_reef['Reef Corals'].values()):
         coral_data['Unlocked'] = bool(safer_index(unlocked_reef_corals, index, False))
         coral_data['Level'] = safer_index(coral_levels, index, 0)
-
-def _parse_w7_legend_talents(account):
-    # Dependencies: None
-    legend_talents_levels = safer_index(safe_loads(account.raw_data.get('Spelunk', [])), 18, [])
-    for index, talent_data in enumerate(account.legend_talents['Talents'].values()):
-        talent_data['Level'] = safer_index(legend_talents_levels, index, 0)

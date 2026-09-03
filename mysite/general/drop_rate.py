@@ -15,7 +15,6 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice, get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
@@ -132,13 +131,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    vault_mastery_vault = session_data.account.vault['Upgrades']['Vault Mastery']
-    if vault_mastery_vault['Level'] < vault_mastery_vault['Max Level']:
+    vault_mastery_vault = session_data.account.vault.upgrades['Vault Mastery']
+    if vault_mastery_vault.level < vault_mastery_vault.max_level:
         drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
 
     # Upgrade Vault - Drops for Days
     drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
-    general_bonus += session_data.account.vault['Upgrades']['Drops for Days']['Total Value']
+    general_bonus += session_data.account.vault.upgrades['Drops for Days'].total_value
 
     # Gem Shop - Deathbringer Pack
     has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
@@ -159,17 +158,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     #########################################
     master_classes_bonus = 0
     # Grimoire - Skull of Major Droprate
-    skull_drop_rate_grimoire = session_data.account.grimoire['Upgrades']['Skull of Major Droprate']
-    skull_drop_rate_grimoire_upgrades_unlock = skull_drop_rate_grimoire['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
-    skull_drop_rate_grimoire_value = skull_drop_rate_grimoire['Total Value']
-    drop_rate_aw_advice[mc].append(Advice(
-        label=f"{{{{Grimoire|#the-grimoire}}}}- Skull of Major Droprate:"
-              f"<br>+{round(skull_drop_rate_grimoire_value, 1):g}% Drop Rate"
-              f"{f'<br>Requires {skull_drop_rate_grimoire_upgrades_unlock} more upgrades to unlock' if skull_drop_rate_grimoire_upgrades_unlock > 0 else ''}",
-        picture_class=skull_drop_rate_grimoire['Image'],
-        progression=skull_drop_rate_grimoire['Level'],
-        goal=skull_drop_rate_grimoire['Max Level']
-    ))
+    skull_drop_rate_grimoire = session_data.account.grimoire.upgrades['Skull of Major Droprate']
+    skull_drop_rate_grimoire_value = skull_drop_rate_grimoire.total_value
+    drop_rate_aw_advice[mc].append(skull_drop_rate_grimoire.get_advice(session_data.account.grimoire.total_upgrades))
     master_classes_bonus += skull_drop_rate_grimoire_value
 
     drop_rate_aw_advice[f"{mc} - +{round(master_classes_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(mc)
@@ -179,16 +170,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_1_bonus = 0
 
     # Owl Bonuses
-    owl_bonus = session_data.account.owl['Bonuses']['Drop Rate']['Value']
-    drop_rate_aw_advice[w1].append(Advice(
-        label=f"{{{{ Owl|#owl }}}}- Drop Rate:"
-              f"<br>+{owl_bonus}% Drop Rate",
-        picture_class='the-great-horned-owl',
-        progression=max(0, session_data.account.owl['MegaFeathersOwned'] - 10),
+    owl_drop_rate_bonus = session_data.account.owl.bonuses['Drop Rate']
+    drop_rate_aw_advice[w1].append(owl_drop_rate_bonus.get_bonus_advice(
+        progression=max(0, session_data.account.owl.mega_feathers_owned - 10),
         resource='megafeather-9',
         goal=EmojiType.INFINITY.value
     ))
-    world_1_bonus += owl_bonus
+    world_1_bonus += owl_drop_rate_bonus.value
 
     # Lab Nodes- Certified Stamp Book
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
@@ -387,17 +375,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # The Tome
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    grey_tome_book = session_data.account.grimoire['Upgrades']['Grey Tome Book']
-    if grey_tome_book['Level'] < grey_tome_book['Max Level']:
-        upgrades_to_unlock = grey_tome_book['Unlock Requirement'] - session_data.account.grimoire['Total Upgrades']
-        drop_rate_aw_advice[w4].append(Advice(
-            label=f"{{{{Grimoire|#the-grimoire}}}}- Grey Tome Book:"
-                  f"<br>{round(grey_tome_book['Total Value'], 1):g}x higher bonus from Tome Red Pages"
-                  f"{f'<br>Requires {upgrades_to_unlock} more upgrades to unlock' if upgrades_to_unlock > 0 else ''}",
-            picture_class=session_data.account.grimoire['Upgrades']['Grey Tome Book']['Image'],
-            progression=grey_tome_book['Level'],
-            goal=grey_tome_book['Max Level']
-        ))
+    grey_tome_book = session_data.account.grimoire.upgrades['Grey Tome Book']
+    if grey_tome_book.level < grey_tome_book.max_level:
+        drop_rate_aw_advice[w4].append(grey_tome_book.get_advice(session_data.account.grimoire.total_upgrades))
     troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
     if not troll_set['Owned']:
         drop_rate_aw_advice[w4].append(Advice(
@@ -519,8 +499,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_7_bonus = 0
 
     # Legend Talents: Greatest Drop Party Ever
-    drop_rate_aw_advice[w7].append(get_legend_talent_advice('Greatest Drop Party Ever'))
-    world_7_bonus += session_data.account.legend_talents['Talents']['Greatest Drop Party Ever']['Value']
+    drop_rate_aw_advice[w7].append(session_data.account.legend_talents['Greatest Drop Party Ever'].get_advice())
+    world_7_bonus += session_data.account.legend_talents['Greatest Drop Party Ever'].value
 
     # Gallery - Trophies & Nametags
     gallery_unlocked = session_data.account.highest_world_reached >= 7
@@ -691,7 +671,7 @@ def process_star_sign(name, drop_rate, picture_class, character, infinite_star_s
     equipped = (starsign['Index'] - 1) in character.equipped_star_signs
     silkroad_chip_owned = session_data.account.star_sign_extras['DoublerOwned']
     boosted = silkroad_chip_equipped and infinite_unlocked
-    ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+    ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
     seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
 
     passive_value = drop_rate * seraph_cosmos_starsign_mod
@@ -722,13 +702,14 @@ def process_star_sign(name, drop_rate, picture_class, character, infinite_star_s
 def invalid_weapon_type(base_class, slot):
     if base_class == 'Warrior':
         return slot in ['Bow', 'Wand', 'Fisticuffs']
-    if base_class == 'Archer':
+    elif base_class == 'Archer':
         return slot in ['Spear', 'Wand', 'Fisticuffs']
-    if base_class == 'Mage':
+    elif base_class == 'Mage':
         return slot in ['Spear', 'Bow', 'Fisticuffs']
-    if base_class in ['Journeyman', 'Beginner'] :
+    elif base_class in ['Journeyman', 'Beginner']:
         return slot in ['Spear', 'Bow', 'Wand']
-    logger.warning(f'Provided unknown base_class: {base_class}')
+    else:
+        logger.warning(f'Provided unknown base_class: {base_class}')
     return True
 
 
@@ -760,7 +741,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if card.cardset == 'Events':
             events_cardset.append(card)
 
-    legend_talent_multi = ValueToMulti(session_data.account.legend_talents['Talents']['Flopping a Full House']['Value'])
+    legend_talent_multi = ValueToMulti(session_data.account.legend_talents['Flopping a Full House'].value)
     for index, character in enumerate(session_data.account.all_characters):
         # Drop Rate from LUK
         dr_from_luk_advice: list[Advice] = []
@@ -798,7 +779,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
                     starting_note = f'(DOUBLED {EmojiType.CHECK.value}{EmojiType.CHECK.value}) '
             card_advice.append(card.getAdvice(optional_character=character, optional_starting_note=starting_note, optional_ending_note=end_note))
         card_bonus *= legend_talent_multi
-        card_advice.append(get_legend_talent_advice('Flopping a Full House'))
+        card_advice.append(session_data.account.legend_talents['Flopping a Full House'].get_advice())
 
         # Card Sets - Bosses n Nightmares
         cardset_advice: list[Advice] = []
@@ -887,7 +868,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         # Seraph Cosmos
         # Always shown because the modifier can grow based on Summoning levels
-        ac_level = session_data.account.tesseract['Upgrades']['Astrology Cultism']['Level']
+        ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
         seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
         next_multi_goal = get_seraph_cosmos_summ_level_goal(ac_level, character.summoning_level)
         next_level_note = (

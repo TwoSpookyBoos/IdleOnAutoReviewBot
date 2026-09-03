@@ -21,44 +21,28 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     max_tier = true_max - optional_tiers
     tier_Vault = 0
 
-    upgrades = session_data.account.vault['Upgrades']
+    upgrades = session_data.account.vault.upgrades
 
     for tier_number, requirements in vault_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
         if 'Include' in requirements:
             for upgrade_name in requirements['Include']:
-                if upgrades[upgrade_name]['Level'] < upgrades[upgrade_name]['Max Level']:
+                if upgrades[upgrade_name].level < upgrades[upgrade_name].max_level:
                     add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                     if subgroup_label in vault_AdviceDict['Tiers']:
-                        vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                            label=(
-                                f"Max {upgrade_name}"
-                                f"<br>Requires {upgrades[upgrade_name]['Unlock Requirement'] - session_data.account.vault['Total Upgrades']} more Upgrades to unlock"
-                                if not upgrades[upgrade_name]['Unlocked'] else
-                                f"{upgrade_name}: {upgrades[upgrade_name]['Description']}"
-                            ),
-                            picture_class=upgrades[upgrade_name]['Image'],
-                            progression=upgrades[upgrade_name]['Level'],
-                            goal=upgrades[upgrade_name]['Max Level'],
-                        ))
+                        vault_AdviceDict['Tiers'][subgroup_label].append(
+                            upgrades[upgrade_name].get_tier_advice(session_data.account.vault.total_upgrades)
+                        )
         elif 'Exclude' in requirements:
-            for upgrade_name, upgrade_details in session_data.account.vault['Upgrades'].items():
+            for upgrade_name, upgrade_details in session_data.account.vault.upgrades.items():
                 if upgrade_name not in requirements['Exclude']:
-                    if upgrade_details['Level'] < upgrade_details['Max Level']:
+                    if upgrade_details.level < upgrade_details.max_level:
                         add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                         if subgroup_label in vault_AdviceDict['Tiers']:
-                            vault_AdviceDict['Tiers'][subgroup_label].append(Advice(
-                                label=(
-                                    f"Max {upgrade_name}"
-                                    f"<br>Requires {upgrade_details['Unlock Requirement'] - session_data.account.vault['Total Upgrades']} more Upgrades to unlock"
-                                    if not upgrade_details['Unlocked'] else
-                                    f"{upgrade_name}: {upgrade_details['Description']}"
-                                ),
-                                picture_class=upgrade_details['Image'],
-                                progression=upgrade_details['Level'],
-                                goal=upgrade_details['Max Level'],
-                            ))
+                            vault_AdviceDict['Tiers'][subgroup_label].append(
+                                upgrade_details.get_tier_advice(session_data.account.vault.total_upgrades)
+                            )
 
         if subgroup_label not in vault_AdviceDict['Tiers'] and tier_Vault == tier_number - 1:
             tier_Vault = tier_number
@@ -77,9 +61,9 @@ def getVaultUpgradesAdviceGroup():
     upgrades_AdviceDict = {}
 
     #Upgrades
-    upgrades_AdviceDict['Upgrades'] = [get_upgrade_vault_advice(upgrade_name, link_to_section=False) for upgrade_name in session_data.account.vault['Upgrades'].keys()]
+    upgrades_AdviceDict['Upgrades'] = [get_upgrade_vault_advice(upgrade_name, link_to_section=False) for upgrade_name in session_data.account.vault.upgrades.keys()]
     upgrades_AdviceDict['Upgrades'].insert(0, Advice(
-        label=f"Total Vault Upgrades: {session_data.account.vault['Total Upgrades']:,}",
+        label=f"Total Vault Upgrades: {session_data.account.vault.total_upgrades:,}",
         picture_class='upgrade-vault',
     ))
 

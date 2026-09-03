@@ -65,7 +65,7 @@ gemShop_progressionTiers = [
     [0, "", {}, ""],
     [1, "S", {
         'Infinity Hammer': 1, 'Bleach Liquid Cauldrons': 1, 'Crystal 3D Printer': 1, 'Richelin Kitchen': 1, 'Divinity Sparkie': 1, 'Instagrow Generator': 1,
-        'Extra Card Slot': 4},
+        'Extra Card Slot': 4, 'King Of All Winners': 5, 'Legend Talent Pts': 5},
      ""],
     [2, "A", {
         'Item Backpack Space': 1, 'Storage Chest Space': 2, 'Carry Capacity': 2, 'Weekly Dungeon Boosters': 1,
@@ -73,21 +73,23 @@ gemShop_progressionTiers = [
         'Royal Egg Cap': 3, 'Souped Up Tube': 1,
         'Chest Sluggo': 2, 'Divinity Sparkie': 2, 'Lava Sprouts': 1,
         'Conjuror Pts': 1,
-        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot Of Land': 2},
+        'Instagrow Generator': 3, 'Shroom Familiar': 1, 'Plot Of Land': 2, 'Gallery Showcases': 6},
      ""],
     [3, "B", {
         'Item Backpack Space': 2, 'Storage Chest Space': 4, 'Carry Capacity': 4, 'Weekly Dungeon Boosters': 2, 'Food Slot': 1,
         'Bleach Liquid Cauldrons': 3, 'More Sample Spaces': 2, 'Zen Cogs': 4, 'Tower Building Slots': 2,
         'Royal Egg Cap': 5, 'Fenceyard Space': 2, 'Chest Sluggo': 6,
         'Parallel Villagers The Engineer': 1, 'Parallel Villagers The Conjuror': 1, 'Conjuror Pts': 3,
-        'Plot Of Land': 4, 'Instagrow Generator': 5},
+        'Plot Of Land': 4, 'Instagrow Generator': 5,
+        'Davey Jones Training': 8, 'Bling Bags': 8, 'More Coral': 10, 'Super Auto Mode': 2},
      ""],
     [4, "C", {
         'Item Backpack Space': 3, 'Storage Chest Space': 8, 'Carry Capacity': 6, 'Weekly Dungeon Boosters': 3, 'Food Slot': 2,
         'Bleach Liquid Cauldrons': 4, 'More Sample Spaces': 4, 'Tower Building Slots': 4,
         'Fenceyard Space': 4, 'Chest Sluggo': 9,
         'Parallel Villagers The Explorer': 1, 'Parallel Villagers The Measurer': 1, 'Parallel Villagers The Librarian': 1, 'Resource Boost': 2, 'Conjuror Pts': 6,
-        'Plot Of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7},
+        'Plot Of Land': 6, 'Shroom Familiar': 2, 'Instagrow Generator': 7,
+        'Novelty Jade Coins': 7, 'Super Auto Mode': 4},
      ""],
     [5, "D", {
         'Item Backpack Space': 4, 'Carry Capacity': 8,
@@ -141,7 +143,8 @@ greenstack_progressionTiers = {
     4: {'Required Stacks': 250},
     5: {'Required Stacks': 300},
     6: {'Required Stacks': 350},
-    7: {'Required Stacks': 400}
+    7: {'Required Stacks': 400},
+    8: {'Required Stacks': 440}
 }
 achievements_progressionTiers = {
     0: {},
@@ -255,6 +258,85 @@ achievements_progressionTiers = {
             'Summoning GM': {'World': 6, 'Reward': '6% Drop Rate', 'Rating': ''},
             'Big Big Hampter': {'World': 6, 'Reward': '4% Drop Rate', 'Rating': ''},
         },
+    },
+}
+
+###MASTER CLASSES PROGRESSION TIERS###
+tesseract_progressionTiers = {
+    0: {},
+    1: {
+        'Total Upgrades': 130,
+        'Specific Upgrades': {},
+        'Highest Map': {'World': 1, 'Map Name': 'Winding Willows'},
+    },
+    2: {
+        'Total Upgrades': 415,
+        'Specific Upgrades': {'Parallel Statues': 10},
+        'Highest Map': {'World': 2, 'Map Name': 'Jar Bridge'},
+    },
+    3: {
+        'Total Upgrades': 1250,
+        'Specific Upgrades': {'Parallel Statues': 20, 'Ethereal Opals': 10, 'Parallel Golden Food': 10},
+        'Highest Map': {'World': 3, 'Map Name': 'Steep Sheep Ledge'},
+    },
+    4: {
+        'Total Upgrades': 1650,
+        'Specific Upgrades': {
+            'Parallel Statues': 25, 'Ethereal Opals': 20, 'Parallel Golden Food': 20,
+            'My Talents, and Mine Alone': 30, 'Villager Indoctrination': 20
+        },
+        'Highest Map': {'World': 3, 'Map Name': 'Signature Slopes'},
+    },
+    5: {
+        'Total Upgrades': 2750,
+        'Specific Upgrades': {
+            'Parallel Statues': 40, 'Ethereal Opals': 25, 'Parallel Golden Food': 40,
+            'My Talents, and Mine Alone': 60, 'Villager Indoctrination': 60, 'Fractal Tesseract': 10
+        },
+        'Highest Map': {'World': 4, 'Map Name': 'Spaceway Raceway'},
+    },
+    6: {
+        'Total Upgrades': 4000,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 100, 'Villager Indoctrination': 100, 'Fractal Tesseract': 21,
+            'Astrology Cultism': 3, 'Pinnacle of Prisma': 3
+        },
+        'Highest Map': {'World': 4, 'Map Name': 'Shelled Shores'},
+    },
+    7: {
+        'Total Upgrades': 4900,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 140, 'Villager Indoctrination': 140, 'Fractal Tesseract': 26,
+            'Astrology Cultism': 5, 'Pinnacle of Prisma': 5, 'Gambit Grandmaster': 20, 'Vicar of the Emperor': 8
+        },
+        'Highest Map': {'World': 5, 'Map Name': 'Naut Sake Perimeter'},
+    },
+    8: {
+        'Total Upgrades': 5700,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 160, 'Villager Indoctrination': 160, 'Fractal Tesseract': 32,
+            'Astrology Cultism': 6, 'Pinnacle of Prisma': 6, 'Gambit Grandmaster': 45, 'Vicar of the Emperor': 12,
+            'Drop Rate Crossfire': 20
+        },
+        'Highest Map': {'World': 5, 'Map Name': 'OJ Bay'},
+    },
+    9: {
+        'Total Upgrades': 6500,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 180, 'Villager Indoctrination': 180, 'Fractal Tesseract': 37,
+            'Astrology Cultism': 7, 'Pinnacle of Prisma': 8, 'Gambit Grandmaster': 80, 'Vicar of the Emperor': 17,
+            'Drop Rate Crossfire': 50, 'Endless Reductions': 25
+        },
+        'Highest Map': {'World': 6, 'Map Name': 'Gooble Goop Creek'},
+    },
+    10: {
+        'Total Upgrades': 7600,
+        'Specific Upgrades': {
+            'My Talents, and Mine Alone': 200, 'Villager Indoctrination': 200, 'Fractal Tesseract': 42,
+            'Astrology Cultism': 8, 'Pinnacle of Prisma': 10, 'Gambit Grandmaster': 120, 'Vicar of the Emperor': 23,
+            'Drop Rate Crossfire': 80, 'Endless Reductions': 48, 'Universe Talent': 5, 'Beyond All Limits': 6
+        },
+        'Highest Map': {'World': 6, 'Map Name': 'Yolkrock Basin'},
     },
 }
 
@@ -2219,7 +2301,8 @@ true_max_tiers = {
     # Master Classes
     'Grimoire': 0,
     'Compass': 0,
-    'Tesseract': 0,
+    'The Tesseract': max(tesseract_progressionTiers.keys()),
+    'Royal Armory': 0,
 
     # World 1
     'Bribes': max(bribes_progressionTiers.keys()),

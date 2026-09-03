@@ -4,27 +4,36 @@ from functools import cached_property
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
-from consts.consts_w7 import coral_reef_bonuses, legend_talents_bonuses
+from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.greenstacks import GreenStacks
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
+from models.w1.owl import Owl
+from models.w1.upgrade_vault import Vault
 from models.w3.salt_lick import SaltLick
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
 from models.w6.beanstalk import Beanstalk
 from models.w6.sneaking import Sneaking
+from models.master_classes.compass import Compass
+from models.master_classes.grimoire import Grimoire
+from models.master_classes.royal_armory import RoyalArmory
+from models.master_classes.tesseract import Tesseract
 from models.w7.coral_kid import CoralKid
 from models.w7.dancing_coral import DancingCoral
 from models.w7.research import Research
+from models.w7.sushi_station import SushiStation
+from models.w7.the_button import TheButton
 from models.w7.spelunk import Spelunk
 from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
+from models.w7.legend_talents import LegendTalents
 from models.w7.zenith_market import ZenithMarket
 from models.caverns import Caverns
 from utils.logging import get_logger
@@ -113,6 +122,8 @@ class Account:
         self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
         self.basketball: Basketball = Basketball(self.raw_data)
         self.darts: Darts = Darts(self.raw_data)
+        self.owl: Owl = Owl(self.raw_data)
+        self.vault: Vault = Vault(self.raw_data)
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)
@@ -144,21 +155,27 @@ class Account:
         self.beanstalk: Beanstalk = Beanstalk(self.raw_data)
         self.emperor: Emperor = Emperor(self.raw_data)
 
+        # Master Classes (World 6 mechanic)
+        self.grimoire: Grimoire = Grimoire(self.raw_data)
+        self.compass: Compass = Compass(self.raw_data)
+        self.tesseract: Tesseract = Tesseract(self.raw_data)
+        self.royal_armory: RoyalArmory = RoyalArmory(self.raw_data)
+
         # W7
         self.spelunk = Spelunk(self.raw_data)
         self.coral_reef = {
             'Town Corals': 0,
             'Reef Corals': copy.deepcopy(coral_reef_bonuses)
         }
-        self.legend_talents = {
-            'Talents': copy.deepcopy(legend_talents_bonuses)
-        }
+        self.legend_talents = LegendTalents(self.raw_data)
         self.advice_fish = AdviceFish(self.raw_data)
         self.clam_work = ClamWork(self.raw_data)
         self.meritocracy = Meritocracy(self.raw_data)
         self.gallery = Gallery(self.raw_data)
         self.zenith_market = ZenithMarket(self.raw_data)
         self.research = Research(self.raw_data)
+        self.sushi_station = SushiStation(self.raw_data)
+        self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
 

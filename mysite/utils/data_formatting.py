@@ -9,8 +9,8 @@ import yaml
 from babel.dates import format_datetime
 from flask import request, g as session_data
 
-from consts.consts_general import cardset_identifiers, cardset_names, getBaseClass, getSubclass, getEliteClass, \
-    getMasterClass
+from consts.consts_general import cardset_identifiers, cardset_names, get_base_class, get_sub_class, get_elite_class, \
+    get_master_class
 from consts.idleon.consts_idleon import getAllSkillLevelsDict, getHumanReadableClasses, max_characters
 from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDataException
 
@@ -296,7 +296,7 @@ def getCharacterDetails(inputJSON, runType):
         characterDict[character_index] = dict(
             alchemy_job=alchemy_jobs_list[character_index],
             all_skill_levels=characterSkillsDict[character_index],
-            base_class=getBaseClass(character_classes[character_index]),
+            base_class=get_base_class(character_classes[character_index]),
             big_alch_bubbles=big_alch_bubbles[character_index],
             character_index=character_index,
             character_name=character_names[character_index],
@@ -304,19 +304,19 @@ def getCharacterDetails(inputJSON, runType):
             current_map_index=current_map_index[character_index],
             current_preset_talent_bar=current_preset_talent_bar[character_index],
             current_preset_talents=characterCurrentPresetTalents[character_index],
-            elite_class=getEliteClass(character_classes[character_index]),
+            elite_class=get_elite_class(character_classes[character_index]),
             equipped_lab_chips=equipped_lab_chips[character_index],
             equipped_prayers=equipped_prayers[character_index],
             inventory_bags=inventory_bags[character_index],
             kill_dict={k:v for k, v in enumerate(kill_lists[character_index])},
-            master_class=getMasterClass(character_classes[character_index]),
+            master_class=get_master_class(character_classes[character_index]),
             max_talents=characterMaxTalents[character_index],
             obol_upgrades=obol_upgrades_list[character_index],
             obols=obols_list[character_index],
             po_boxes=postOfficeList[character_index],
             secondary_preset_talent_bar=secondary_preset_talent_bar[character_index],
             secondary_preset_talents=characterSecondaryPresetTalents[character_index],
-            sub_class=getSubclass(character_classes[character_index]),
+            sub_class=get_sub_class(character_classes[character_index]),
             equipped_cards_codenames=equipped_cards_codenames[character_index],
             equipped_cardset=equipped_cardset[character_index],
             equipped_star_signs=equipped_star_signs[character_index],

@@ -286,7 +286,7 @@ class Gallery:
             # TODO: + Math.min(2, m._customBlock_RandomEvent("KillroyBonuses", 3, 0))
             + 2 * ("Eamsy Earl" in account.companions)
             + floor(account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 2)
-            + account.legend_talents["Talents"]["Superb Gallerium"]["Value"]
+            + account.legend_talents["Superb Gallerium"].value
             + max(0, min(2, deathskull_level - 2) - min(1, floor(deathskull_level / 5)))
         )
 

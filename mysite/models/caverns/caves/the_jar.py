@@ -32,9 +32,7 @@ class CollectibleBonus:
         from models.general.session_data import session_data
 
         legend_talent_multi = ValueToMulti(
-            session_data.account.legend_talents["Talents"]["Whats in your Jar?"][
-                "Value"
-            ]
+            session_data.account.legend_talents["Whats in your Jar?"].value
         )
         return self.level * self.scaling_value * legend_talent_multi
 
@@ -160,7 +158,7 @@ class TheJar(Cavern):
         return advices
 
     def advice_groups(self) -> dict[str, list[Advice]]:
-        from models.advice.generators.w7 import get_legend_talent_advice
+        from models.general.session_data import session_data
 
         total_collectible_levels = sum(
             bonus.level for bonus in self.collectibles.values()
@@ -181,6 +179,6 @@ class TheJar(Cavern):
                 bonus.get_advice() for bonus in self.collectibles.values()
             ],
             "Collectibles bonus Multi": [
-                get_legend_talent_advice("Whats in your Jar?")
+                session_data.account.legend_talents["Whats in your Jar?"].get_advice()
             ],
         }

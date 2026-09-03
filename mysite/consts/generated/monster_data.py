@@ -791,6 +791,9 @@ monster_data = {
     "fm_goose": {
         "Name": "Bin Goosey"
     },
+    "fm_rat": {
+        "Name": "Verminous"
+    },
     "T1a": {
         "Name": "Bronze Champion Ram"
     },
@@ -808,6 +811,18 @@ monster_data = {
     },
     "T2c": {
         "Name": "Gold Champion Troll"
+    },
+    "r0a": {
+        "Name": "Magician Grub"
+    },
+    "r0b": {
+        "Name": "Armadillo"
+    },
+    "r0c": {
+        "Name": "Imperial Ogre"
+    },
+    "r0d": {
+        "Name": "Pipsqueak"
     },
     "Copper": {
         "Name": "Copper"
@@ -1211,20 +1226,5 @@ monster_data = {
     "Justice_Monument": {
         "Name": "Justice"
     },
-    "Wisdom_Monument": {
-        "Name": "Wisdom"
-    },
-    "r0a": {
-        "Name": "Magician Grub"
-    },
-    "r0b": {
-        "Name": "Armadillo"
-    },
-    "r0c": {
-        "Name": "Imperial Ogre"
-    },
-    "r0d": {
-        "Name": "Pipsqueak"
-    },
-    "_hash": "580e89e980c63f3ad06c731279af24c478fd947347f4a9c568bf224b4271be14"
+    "_hash": "629fcf125da7a033abcc585c830524626c36615f67b4accca661753694c0daf5"
 }

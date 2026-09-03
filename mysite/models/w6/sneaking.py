@@ -142,6 +142,8 @@ class Sneaking:
         raw_optlacc = raw_data.get("OptLacc", [])
         self.current_mastery = safer_index(raw_optlacc, 231, 0)
         self.unlocked_mastery = safer_index(raw_optlacc, 232, 0)
+        # OptionsListAccount[402] in source; daily charm counter
+        self.daily_charms_found = safer_index(raw_optlacc, 402, 0)
         self.pristine_charms: dict[str, PristineCharm] = {}
         self.gemstones: dict[str, Gemstone] = {}
         self.emporium: dict[str, Emporium] = {}
@@ -176,6 +178,11 @@ class Sneaking:
         for name, info in gemstones_info.items():
             level = safer_index(raw_optlacc, info["OptlAcc Index"], 0)
             self.gemstones[name] = Gemstone(name, info, level)
+
+    def calculate_pristine_chance(self, pristine_collector_bonus: float):
+        # "GenerateItem" in source
+        base_chance = 0.1 * max(0.0, 1.5 - self.daily_charms_found / 80)
+        self.pristine_chance = base_chance * (1 + pristine_collector_bonus / 100)
 
     def calculate_gemstones_values(self, talent_level, gemstone_multi):
         moissanite = self.gemstones["Moissanite"]

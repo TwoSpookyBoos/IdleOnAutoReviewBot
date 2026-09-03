@@ -12,7 +12,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w7 import get_legend_talent_advice
 from models.advice.generators.general import get_guild_bonus_advice, get_gem_shop_purchase_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
@@ -299,14 +298,14 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         goal=1
     ))
 
-    compass_abs = compass['Upgrades']['Abomination Slayer XVII']
+    compass_abs = compass.upgrades['Abomination Slayer XVII']
     exalted_advice[boni].append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: {compass_abs['Path Name']}-{compass_abs['Path Ordering']}: "
-              f"<br>Abomination Slayer XVII: +{compass_abs['Total Value']}/{compass_abs['Max Level']}%",
-        picture_class=compass_abs['Image'] if compass_abs['Unlocked'] else 'placeholder',
-        progression=compass_abs['Level'],
-        goal=compass_abs['Max Level'],
-        resource=compass_abs['Dust Image']
+        label=f"{{{{Compass|#the-compass}}}}: {compass_abs.path_name}-{compass_abs.path_ordering}: "
+              f"<br>Abomination Slayer XVII: +{compass_abs.total_value}/{compass_abs.max_level}%",
+        picture_class=compass_abs.image if compass_abs.unlocked else 'placeholder',
+        progression=compass_abs.level,
+        goal=compass_abs.max_level,
+        resource=compass_abs.dust_image
     ))
 
     extra_exaltedness = session_data.account.event_points_shop['Bonuses']['Extra Exaltedness']
@@ -316,21 +315,21 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         picture_class='event-shop-18'
     ))
 
-    exalted_advice[boni].append(get_legend_talent_advice('Wowa Woowa'))
+    exalted_advice[boni].append(session_data.account.legend_talents['Wowa Woowa'].get_advice())
 
-    tot_available = compass['Upgrades']['Exalted Stamps']['Level'] + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
+    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
 
     exalted_advice[tot].append(Advice(
-        label=f"Total Exalted Stamps spent: {compass['Total Exalted']}/{tot_available}",
+        label=f"Total Exalted Stamps spent: {compass.total_exalted}/{tot_available}",
         picture_class='exalted-stamps',
-        progression=compass['Total Exalted'],
+        progression=compass.total_exalted,
         goal=tot_available
     ))
     exalted_advice[tot].append(Advice(
-        label=f"Exalted Stamps from Wind Walker {{{{Compass|#the-compass}}}}: {compass['Upgrades']['Exalted Stamps']['Level']}",
-        picture_class=compass['Upgrades']['Exalted Stamps']['Image'],
-        progression=compass['Upgrades']['Exalted Stamps']['Level'],
-        goal=compass['Upgrades']['Exalted Stamps']['Max Level']
+        label=f"Exalted Stamps from Wind Walker {{{{Compass|#the-compass}}}}: {compass.upgrades['Exalted Stamps'].level}",
+        picture_class=compass.upgrades['Exalted Stamps'].image,
+        progression=compass.upgrades['Exalted Stamps'].level,
+        goal=compass.upgrades['Exalted Stamps'].max_level
     ))
     gemshop_exalted_stamps = gemshop['Exalted Stamps']
     exalted_advice[tot].append(Advice(
