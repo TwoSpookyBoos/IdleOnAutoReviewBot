@@ -217,9 +217,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_2_bonus = 0
 
     # Arcade - Shop Bonuses
-    has_reindeer_companion = session_data.account.companions.has('Spirit Reindeer')
-    if not has_reindeer_companion:
-        _, reindeer_advice = session_data.account.companions['Spirit Reindeer'].get_advice()
+    reindeer = session_data.account.companions['Spirit Reindeer']
+    if not reindeer.owned:
+        _, reindeer_advice = reindeer.get_advice()
         drop_rate_aw_advice[w2].append(reindeer_advice)
 
     drop_rate_aw_advice[w2].append(get_arcade_advice(27))
@@ -626,9 +626,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Companions - Mallay
-    mallay_multi, mallay_advice = session_data.account.companions['Mallay'].get_advice()
+    _, mallay_advice = session_data.account.companions['Mallay'].get_advice()
     drop_rate_aw_advice[companion_group].append(mallay_advice)
 
+    mallay_multi = session_data.account.companions['Mallay'].get_multi('Drop Rate')
     companion_multi = mallay_multi * santa_snake_multi * mama_troll_multi * glunko_massive_multi * crystal_glunko_multi
     drop_rate_aw_advice[
         f"{companion_group} - +{round(companion_bonus, 1)}% Drop Rate, x{round(companion_multi, 2)} Drop Rate Multi"
