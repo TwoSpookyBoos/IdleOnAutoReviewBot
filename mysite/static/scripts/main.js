@@ -839,6 +839,16 @@ function recalculate_tab_selections() {
     });
 }
 
+function fetchPlayerAdviceUnlessFirebaseWillHandleIt() {
+    // firebase-auth.js sets this if it's present; it resolves with a user
+    // (skip our stale-localStorage replay, a fresher live fetch is already in
+    // flight) or null/undefined (fall back to normal behavior, same as if
+    // firebase-auth.js weren't loaded at all).
+    Promise.resolve(window.firebaseAuthReady).then((firebaseUser) => {
+        if (!firebaseUser) fetchPlayerAdvice();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // Define the fonts you are loading
     const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
@@ -849,12 +859,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fonts are loaded, now run your code
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        fetchPlayerAdviceUnlessFirebaseWillHandleIt();
     }).catch(() => {
         console.error('One or more fonts failed to load.');
         // You can still run your code here or handle the error
         storeGetParamsIfProvided();
         initBaseUI();
-        fetchPlayerAdvice();
+        fetchPlayerAdviceUnlessFirebaseWillHandleIt();
     });
 });
