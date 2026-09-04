@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_companion_advice
 from utils.logging import get_logger
 
 
@@ -52,8 +51,8 @@ def getBallotMultiAdviceGroup():
     voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
-    _, mashed_potato_advice = get_companion_advice('Mashed Potato')
-    _, crystal_cuttlefish_advice = get_companion_advice('Crystal Cuttlefish')
+    _, mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
+    _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
         f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
             Advice(

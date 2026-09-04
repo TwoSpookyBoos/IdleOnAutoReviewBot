@@ -7,7 +7,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.w2 import get_arcade_advice
-from models.advice.generators.general import get_companion_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
@@ -224,7 +223,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     )]
 
     mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_calc['mgg'])}x"
-    _, ballonfish_advice = get_companion_advice('Balloonfish')
+    _, ballonfish_advice = session_data.account.companions['Balloonfish'].get_advice()
     currency_advices[mgg_label] = [ballonfish_advice]
 
     for subgroup in currency_advices:

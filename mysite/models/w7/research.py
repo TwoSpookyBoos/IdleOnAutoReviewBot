@@ -71,9 +71,8 @@ class ResearchGridUpgrade:
             .replace("&", str(self.totals.masterclass_cost_reduction))
         )
         if self.name == "Divine Design":
-            from utils.misc.has_companion import has_companion
             divine_design_description = "You_are_now_permanently_linked_to_Arctis_on_all_characters".replace("_", " ")
-            if has_companion("King Doot"):
+            if self.totals.has_doot:
                 divine_design_description = "Arctis_nods_in_approval..._all_Research_Grid_bonuses_are_1.05x_higher".replace("_", " ")
             bonus_description = bonus_description.replace("<", divine_design_description)
 
@@ -88,7 +87,8 @@ class ResearchGridUpgrade:
 
 class GridTotals:
     """Account-wide counts the grid's "Total Bonus" values scale off."""
-    def __init__(self, raw_research_info: list, raw_optlacc: list):
+    def __init__(self, raw_research_info: list, raw_optlacc: list, has_doot: bool):
+        self.has_doot = has_doot
         self.crowns_reclaimed = len(safer_index(raw_research_info, 11, []))
         self.glimbo_trades = round(sum(
             safer_convert(trades, 0.0) for trades in safer_index(raw_research_info, 12, [])
@@ -113,8 +113,8 @@ class GridTotals:
 
 
 class ResearchGrid(dict[str, ResearchGridUpgrade]):
-    def __init__(self, raw_research_info: list, raw_optlacc: list):
-        self.totals = GridTotals(raw_research_info, raw_optlacc)
+    def __init__(self, raw_research_info: list, raw_optlacc: list, has_doot: bool):
+        self.totals = GridTotals(raw_research_info, raw_optlacc, has_doot)
 
         research_levels: list[int] = safer_index(raw_research_info, 0, [])
         research_levels: list[list[int]] = [research_levels[i:i + research_grid_row_size] for i in range(0, len(research_levels), research_grid_row_size)]
@@ -196,13 +196,13 @@ class PostyNotes(dict[str, PostyNote]):
 
 
 class Research:
-    def __init__(self, raw_data: dict):
+    def __init__(self, raw_data: dict, has_doot: bool):
         research_level = safer_index(safer_get(raw_data, "Lv0_0", []), 20, 0)
         raw_research_info = safe_loads(raw_data.get("Research", []))
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
         if not raw_research_info:
             logger.warning("Research data not present.")
-        self.grid = ResearchGrid(raw_research_info, raw_optlacc)
+        self.grid = ResearchGrid(raw_research_info, raw_optlacc, has_doot)
         self.observations = Observations(raw_research_info)
         self.posty_notes = PostyNotes(research_level)
 

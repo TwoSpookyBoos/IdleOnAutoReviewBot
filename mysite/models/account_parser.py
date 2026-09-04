@@ -4,7 +4,7 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import items_codes_and_names
-from consts.idleon.consts_idleon import companions_data, max_characters
+from consts.idleon.consts_idleon import max_characters
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
@@ -153,7 +153,6 @@ def _parse_wave_1(account, run_type):
     _parse_switches(account)
     _parse_characters(account, run_type)
     _parse_general(account)
-    _parse_companions(account)
     _parse_master_classes(account)
     _parse_w1(account)
     _parse_w2(account)
@@ -175,52 +174,6 @@ def _parse_switches(account):
     account.max_subgroups = 3
     account.library_group_characters = g.library_group_characters
     account.tabbed_advice_groups = g.tabbed_advice_groups
-
-def _parse_companions(account):
-    # Companions v2
-    account.companions = {}
-
-    # Read the player's data to capture all unique Companion IDs
-    acquired_companion_ids = set()
-    # If the data comes from Toolbox, it'll be a dictionary called companion singular
-    raw_companion = account.raw_data.get('companion', None)
-    # If the data comes from Efficiency, it'll be a flat list of just companion ID: "companions": [7, 10, 4, 5, 9, 2, 3, 6]
-    raw_companions = account.raw_data.get('companions', None)
-    if raw_companion is not None:
-        account.companions['Companion Data Present'] = True
-        for companionInfo in raw_companion.get('l', []):
-            try:
-                companionID = int(companionInfo.split(',')[0])
-                acquired_companion_ids.add(companionID)
-            except:
-                continue
-    elif raw_companions is not None:
-        account.companions['Companion Data Present'] = True
-        for companionID in raw_companions:
-            acquired_companion_ids.add(companionID)
-    else:
-        account.companions['Companion Data Present'] = False
-        logger.debug(f"No companion data present in JSON. Relying only on Switches")
-
-    # Match the Companion IDs to their names
-    for companion_name, companion_data in companions_data.items():
-        if companion_data['Id'] in acquired_companion_ids:
-            account.companions[companion_name] = copy.deepcopy(companion_data)
-            if companion_name == 'Biggole Mole':
-                biggole_mole_max_days = 100
-                biggole_mole_days = min(biggole_mole_max_days, safer_get(account.raw_optlacc_dict, 354, 0))
-                account.companions[companion_name]['Description'] += f" ({biggole_mole_days}/{biggole_mole_max_days} days)"
-
-    # Account for the manual entries in the Switches
-    try:
-        if g.doot:
-            account.companions['King Doot'] = companions_data['King Doot']
-        if g.riftslug:
-            account.companions['Rift Slug'] = companions_data['Rift Slug']
-        if g.sheepie:
-            account.companions['Sheepie'] = companions_data['Sheepie']
-    except:
-        pass
 
 def _parse_characters(account, run_type):
     character_count, character_names, character_classes, characterDict, perSkillDict = getCharacterDetails(
