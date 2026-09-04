@@ -299,8 +299,7 @@ class Gallery:
     def _calculate_podium_lv4(self, account):
         # PodiumsOwned_Lv4 in source. Last update in 2.48 Giftmas Event
         return (
-            1 * account.companions.has("RIP Tide")
-            + 1 * account.companions["RIP Tide"].upgraded
+            account.companions["RIP Tide"].get_value("Showcase Slot")
             + account.event_points_shop["Bonuses"]["Worldclass Showcase"]["Owned"]
         )
 

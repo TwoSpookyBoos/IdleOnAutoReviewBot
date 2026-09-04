@@ -27,6 +27,8 @@ companion_bonuses = {
     },
     # `min(1.3, 1 + Companions(26))` - the cap currently holds the '+' at 1.30x, desc says 1.50x
     'Mallay': {'Drop Rate': ('multi', 1.30, 1.50)},
+    # `min(1, Companions(28)) + min(1, CompLV2(28))` on PodiumsOwned_Lv4
+    'RIP Tide': {'Showcase Slot': ('value', 1.0, 2.0)},
     # `FriendBonusXtraMulti`: `1 + 100 * Companions(30) / 100`
     'Mr Pig': {'Friend Bonuses': ('multi', 2.0, 2.5)},
     # `1 + Companions(32)`
