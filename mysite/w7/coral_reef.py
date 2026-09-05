@@ -6,19 +6,18 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.w7 import get_coral_reef_advice
 from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safer_convert, safer_get
+from utils.safer_data_handling import safer_get
 
 
 def get_corals_info_group() -> AdviceGroup:
     coral_advice: list[Advice] = [
         Advice(
-            label=f"Town Corals: {safer_convert(session_data.account.coral_reef['Town Corals'], 0)}",
+            label=f"Town Corals: {session_data.account.coral_reef.town_corals}",
             picture_class="coral"
-        ), *[get_coral_reef_advice(name) for name in session_data.account.coral_reef['Reef Corals'].keys()]
+        ), *[bonus.get_advice() for bonus in session_data.account.coral_reef.values()]
     ]
     return AdviceGroup(
         pre_string='Corals',

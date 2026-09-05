@@ -1,10 +1,8 @@
-import copy
 from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
-from consts.consts_w7 import coral_reef_bonuses
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.greenstacks import GreenStacks
@@ -25,6 +23,7 @@ from models.master_classes.grimoire import Grimoire
 from models.master_classes.royal_armory import RoyalArmory
 from models.master_classes.tesseract import Tesseract
 from models.w7.coral_kid import CoralKid
+from models.w7.coral_reef import CoralReef
 from models.w7.dancing_coral import DancingCoral
 from models.w7.research import Research
 from models.w7.sushi_station import SushiStation
@@ -165,10 +164,7 @@ class Account:
 
         # W7
         self.spelunk = Spelunk(self.raw_data)
-        self.coral_reef = {
-            'Town Corals': 0,
-            'Reef Corals': copy.deepcopy(coral_reef_bonuses)
-        }
+        self.coral_reef = CoralReef(self.raw_data)
         self.legend_talents = LegendTalents(self.raw_data)
         self.advice_fish = AdviceFish(self.raw_data)
         self.clam_work = ClamWork(self.raw_data)
