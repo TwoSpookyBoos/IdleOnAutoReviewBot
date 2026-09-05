@@ -251,7 +251,7 @@ class Gallery:
         self.podium_count = min(
             19,
             1
-            + ceil(account.coral_reef["Reef Corals"]["Paragorgia Coral"]["Level"] / 4)
+            + ceil(account.coral_reef["Paragorgia Coral"].level / 4)
             + account.sneaking.emporium["Another Gallery Podium"].value
             + floor(account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 1)
             + 2 * int(account.spelunk.caves["Lunarheim"].bonus_obtained)

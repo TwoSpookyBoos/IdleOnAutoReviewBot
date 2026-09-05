@@ -1324,7 +1324,6 @@ def _calculate_w6_beanstalk(account):
 def _calculate_w7(account):
     account.spelunk.calculate_lore_bonus(account.sailing["Artifacts"]["Pointagon"])
     account.advice_fish.calculate_bonuses()
-    _calculate_w7_coral_reef(account)
     account.meritocracy.calculate_bonuses()
     account.gallery.calculate_bonuses(account)
     account.zenith_market.calculate_bonuses()
@@ -1332,9 +1331,4 @@ def _calculate_w7(account):
     account.sushi_station.calculate_bonuses()
     account.dancing_coral.calculate_bonuses()
     account.coral_kid.calculate_bonuses()
-
-
-def _calculate_w7_coral_reef(account):
-    for coral_details in account.coral_reef['Reef Corals'].values():
-        coral_details['Next Cost'] = int(coral_details['Coefficient'] * safer_math_pow(coral_details['Exponent Base'], coral_details['Level'], 0))
 
