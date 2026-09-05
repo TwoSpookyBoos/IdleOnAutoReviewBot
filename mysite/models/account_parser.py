@@ -160,7 +160,6 @@ def _parse_wave_1(account, run_type):
     _parse_w3(account)
     _parse_w4(account)
     _parse_w5(account)
-    _parse_w7(account)
 
 def _parse_switches(account):
     # AutoLoot
@@ -2279,19 +2278,3 @@ def _parse_w5_divinity(account):
             character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
         except:
             continue
-
-def _parse_w7(account):
-    _parse_w7_coral_reef(account)
-
-
-def _parse_w7_coral_reef(account):
-    # Dependencies: None
-    town_corals_count = safer_index(safer_index(safe_loads(account.raw_data.get('Spelunk', [])),4, []), 5, 0)
-    account.coral_reef['Town Corals'] = town_corals_count
-
-    unlocked_reef_corals = safer_index(safe_loads(account.raw_data.get('Spelunk', [])),12 , [])
-    coral_levels = safer_index(safe_loads(account.raw_data.get('Spelunk', [])), 13, [])
-
-    for index, coral_data in enumerate(account.coral_reef['Reef Corals'].values()):
-        coral_data['Unlocked'] = bool(safer_index(unlocked_reef_corals, index, False))
-        coral_data['Level'] = safer_index(coral_levels, index, 0)

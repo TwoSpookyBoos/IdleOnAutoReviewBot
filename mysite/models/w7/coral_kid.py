@@ -25,18 +25,14 @@ class CoralKidUpgrade:
         self.base_value = round_and_trim(coral_kid_upgrades_bonus_base_formulas[self.index]({
             "level": self.level,
             "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
-            "coral_reef_upgrade_count": sum(
-                [coral["Level"] for coral in list(session_data.account.coral_reef["Reef Corals"].values())]
-            ),
+            "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
             "god_rank": session_data.account.divinity["GodRank"],
         }), 0)
 
         self.value = round_and_trim(coral_kid_upgrades_bonus_final_formulas[self.index]({
             "level": self.level,
             "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
-            "coral_reef_upgrade_count": sum(
-                [coral["Level"] for coral in list(session_data.account.coral_reef["Reef Corals"].values())]
-            ),
+            "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
             "god_rank": session_data.account.divinity["GodRank"],
         }), 0)
 
