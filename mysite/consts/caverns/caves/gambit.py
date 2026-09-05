@@ -36,7 +36,7 @@ def _parse_gambit_bonus(index: int, entry: str) -> dict:
     clean_description = description.replace("_", " ").strip().strip("'")
     if clean_description == "no":
         clean_description = ""
-    # `_customBlock_Holes "GambitPtsREQ"` in source. Last updated in v2.523
+    # `"GambitPtsREQ" ==` in source. Last updated in v2.528.0
     pts_required = 2e3 + 1e3 * (index + 1) * (1 + index / 5) * safer_math_pow(
         1.26, index
     )

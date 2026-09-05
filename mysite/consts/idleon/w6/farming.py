@@ -118,8 +118,8 @@ landrank_list = [
     for index, name in enumerate(NinjaInfo[34])
 ]
 
-# SeedInfo in source. Last updated v2.48 Giftmas Event
-SeedInfo = ["BASIC 0 0 20 1 0.30 0.75".split(" "),"EARTHY 1 21 45 10 0.12 0.63".split(" "),"BULBO 2 46 60 25 0.04 0.3".split(" "),"SUSHI 3 61 83 50 0.01 0.4".split(" "),"MUSHIE 4 84 106 80 0.003 0.2".split(" "),"GLASSY 5 107 229 120 0.0005 0.05".split(" "),"MEDAL 6 230 279 120 0.000069420 0.003".split(" ")] # fmt: skip # noqa
+# `SeedInfo = function` in source. Last updated v2.528.0
+SeedInfo = ["BASIC 0 0 20 1 0.30 0.75".split(" "),"EARTHY 1 21 45 10 0.12 0.63".split(" "),"BULBO 2 46 60 25 0.04 0.3".split(" "),"SUSHI 3 61 83 50 0.01 0.4".split(" "),"MUSHIE 4 84 106 80 0.003 0.2".split(" "),"GLASSY 5 107 229 120 0.0005 0.05".split(" "),"MEDAL 6 230 329 120 0.000069420 0.003".split(" ")] # fmt: skip # noqa
 seed_dict = {
     info[0].title(): {
         "CropIndexStart": parse_number(info[2]),

@@ -198,9 +198,9 @@ def getBreedabilityAdviceGroup():
         goal=total_pet,
     ))
     b_advices.insert(1, Advice(
-        label=f"I LOVE These Pets achievement: {achievement_7s}/15",
+        label=f"I LOVE These Mobs achievement: {achievement_7s}/15",
         picture_class='i-love-these-pets',
-        progression=int(session_data.account.achievements['I LOVE These Pets']['Complete']),
+        progression=int(session_data.account.achievements['I LOVE These Mobs']['Complete']),
         goal=1,
     ))
 
@@ -212,7 +212,7 @@ def getBreedabilityAdviceGroup():
         pre_string="Breedability Multi and Heart Progress",
         post_string=(
             f"Note: W4 pets don't count toward the achievement {EmojiType.FROWN.value}"
-            if not session_data.account.achievements['I LOVE These Pets']['Complete'] else
+            if not session_data.account.achievements['I LOVE These Mobs']['Complete'] else
             ''
         ),
         advices=b_advices,
@@ -629,7 +629,7 @@ def getPetDamageAdviceGroup():
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
     power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30
 
-    pet_damage_arcade_bonus = next(arcade_bonus for arcade_bonus in session_data.account.arcade.values() if arcade_bonus['Stat'] == 'Breeding Pet DMG')
+    pet_damage_arcade_bonus = next(arcade_bonus for arcade_bonus in session_data.account.arcade.values() if arcade_bonus['Stat'] == 'Breeding Mob DMG')
     pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus['Value']
 
     pet_punchies_vault_upgrade = session_data.account.vault.upgrades['Pet Punchies']

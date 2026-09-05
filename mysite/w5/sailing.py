@@ -102,7 +102,7 @@ def get_sailing_progression_tier_advicegroups():
         # Outside requirement checks should be at the top of the list
         if session_data.account.sum_artifact_tiers < total_artifacts:
             if 'Eldritch' in requirements:
-                if not session_data.account.rift['EldritchArtifacts']:
+                if not session_data.account.rift['EldritchArtifact']:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
