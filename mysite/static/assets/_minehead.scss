@@ -1,0 +1,7 @@
+$minehead-upgrades: ();
+
+$minehead-misc: (
+    mine-tile: img('data/MineTile0.png')
+);
+
+$all-minehead: map-merge($minehead-upgrades, $minehead-misc);

@@ -1,5 +1,6 @@
 @import "ballot";
 @import "coral";
+@import "minehead";
 @import "research";
 @import "spelunking";
 
@@ -9,5 +10,6 @@ $dancing-coral: (
     dancing-coral-bonus-1: map-get($all-spelunking, spelunking-tool-0),
     dancing-coral-bonus-2: map-get($all-spelunking, spelunking-amber-0),
     dancing-coral-bonus-3: map-get($ballot, ballot-15),
-    dancing-coral-bonus-4: map-get($all-research, research)
+    dancing-coral-bonus-4: map-get($all-research, research),
+    dancing-coral-bonus-5: map-get($all-minehead, mine-tile)
 );
