@@ -112,6 +112,7 @@
     ["Where the Kelp Meets Trench", 320, "Kelpfish", 25e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "kelpfish"],
     ["Trench Precipice", 321, "Mantaray", 35e7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "mantaray"],
     ["The Glowing Underbelly", 322, "Glowfish", 5e8, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "glowfish"],
+    ["Ancient Fissure", 323, "Ancientfish", 75E7, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "ancientfish"],
     ["Pirate Mess Hall", 325, "Pirate Deckhand", 2e9, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "pirate-deckhand"],
     ["Dreadnaught Chamber", 326, "Dreadnaught Captain", 0, "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "Basic W7 Enemies", "dreadnaught-captain"]
   ]
