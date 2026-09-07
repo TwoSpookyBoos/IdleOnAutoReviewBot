@@ -34,7 +34,7 @@ class Equipment:
                     all_inventory[o] += safer_convert(q, 0.0)
                 else:
                     all_inventory[o] = safer_convert(q, 0.0)
-                groups.append([Asset(name, count) for name, count in all_inventory.items()])
+            groups.append([Asset(name, count) for name, count in all_inventory.items()])
 
             # equips, tools, foods = groups
 
