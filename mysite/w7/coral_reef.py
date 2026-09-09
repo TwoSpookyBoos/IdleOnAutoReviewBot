@@ -7,7 +7,7 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
 from models.advice.generators.w7 import get_coral_reef_advice
-from models.advice.generators.general import get_companion_advice, get_gem_shop_purchase_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
 from models.advice.generators.w2 import get_arcade_advice
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safer_convert, safer_get
@@ -34,7 +34,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     base_daily_corals = 10
 
     # Mult A
-    shellslug_multi, shellslug_advice = get_companion_advice('Shellslug', value_is_multi=True)
+    shellslug_multi, shellslug_advice = session_data.account.companions['Shellslug'].get_advice(value_is_multi=True)
 
     # Mult B
     coolral = session_data.account.event_points_shop['Bonuses']['Coolral']

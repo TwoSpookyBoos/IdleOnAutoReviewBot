@@ -4,7 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_companion_advice
 from models.advice.generators.w2 import get_arcade_advice
 
 from utils.logging import get_logger
@@ -26,7 +25,7 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
         ) for currency_name, currency_amount in session_data.account.arcade_currency.items()
     ]
 
-    _, reindeer_advice = get_companion_advice('Spirit Reindeer')
+    _, reindeer_advice = session_data.account.companions['Spirit Reindeer'].get_advice()
     arcade_Advices['Bonuses'] = [reindeer_advice] + [
         get_arcade_advice(bonus_index, False) for bonus_index in session_data.account.arcade
     ]

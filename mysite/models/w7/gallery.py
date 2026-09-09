@@ -284,7 +284,7 @@ class Gallery:
         return (
             2 * account.clam_work.bonuses[0].obtained
             # TODO: + Math.min(2, m._customBlock_RandomEvent("KillroyBonuses", 3, 0))
-            + 2 * ("Eamsy Earl" in account.companions)
+            + account.companions["Eamsy Earl"].bonus  # 2, or 3 upgraded
             + floor(account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 2)
             + account.legend_talents["Superb Gallerium"].value
             + max(0, min(2, deathskull_level - 2) - min(1, floor(deathskull_level / 5)))
@@ -299,7 +299,7 @@ class Gallery:
     def _calculate_podium_lv4(self, account):
         # PodiumsOwned_Lv4 in source. Last update in 2.48 Giftmas Event
         return (
-            1 * ("RIP Tide" in account.companions)
+            account.companions["RIP Tide"].get_value("Showcase Slot")
             + account.event_points_shop["Bonuses"]["Worldclass Showcase"]["Owned"]
         )
 
