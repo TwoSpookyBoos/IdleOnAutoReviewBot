@@ -8,7 +8,6 @@ from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgrou
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
 from models.advice.generators.general import get_upgrade_vault_advice
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert
@@ -79,7 +78,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices['Scaling Sources'].append(session_data.account.stamps['Forge Stamp'].get_advice())
 
     #Arcade Bonus 26 gives Forge Ore Capacity
-    cap_Advices['Scaling Sources'].append(get_arcade_advice(26))
+    cap_Advices['Scaling Sources'].append(session_data.account.arcade[26].get_advice())
 
     #Cosmos > IdleOn Majik #2 Beeg Beeg Forge
     majik_beeg_forge = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Beeg Beeg Forge']

@@ -16,7 +16,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
@@ -222,7 +221,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         _, reindeer_advice = reindeer.get_advice()
         drop_rate_aw_advice[w2].append(reindeer_advice)
 
-    drop_rate_aw_advice[w2].append(get_arcade_advice(27))
+    drop_rate_aw_advice[w2].append(session_data.account.arcade[27].get_advice())
     world_2_bonus += session_data.account.arcade[27].value
 
     # Obols - Family - Drop Rate

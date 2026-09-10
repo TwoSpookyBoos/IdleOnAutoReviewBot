@@ -8,7 +8,6 @@ from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
 from models.advice.generators.w7 import get_coral_reef_advice
 from models.advice.generators.general import get_gem_shop_purchase_advice
-from models.advice.generators.w2 import get_arcade_advice
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safer_convert, safer_get
 
@@ -112,7 +111,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(legend_talent.get_advice())
     multi_group_d_value += legend_talent.value
 
-    multi_group_d_advice.append(get_arcade_advice(57))
+    multi_group_d_advice.append(session_data.account.arcade[57].get_advice())
     multi_group_d_value += session_data.account.arcade[57].value
 
     coral_conservationism = session_data.account.sneaking.emporium['Coral Conservationism']
