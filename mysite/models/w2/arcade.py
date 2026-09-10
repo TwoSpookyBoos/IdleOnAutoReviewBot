@@ -31,8 +31,8 @@ class ArcadeUpgrade:
             return ''
         return 'arcade-cosmic-ball' if self.level == arcade_max_level - 1 else 'arcade-gold-ball'
 
-    def calculate_value(self, has_reindeer: bool):
-        self.value = self._base_value * max(1, 2 * self.cosmic) * max(1, 2 * has_reindeer)
+    def calculate_value(self, reindeer_multi: float):
+        self.value = self._base_value * max(1, 2 * self.cosmic) * reindeer_multi
 
     def get_advice(self, link_to_section: bool = True) -> Advice:
         label = '{{Arcade|#arcade}} ' if link_to_section else ''
@@ -64,9 +64,9 @@ class Arcade(dict[int, ArcadeUpgrade]):
             self[index] = ArcadeUpgrade(index, info, level)
 
     def calculate_values(self, companions):
-        has_reindeer = companions.has('Spirit Reindeer')
+        reindeer_multi = 1 + companions['Spirit Reindeer'].bonus
         for upgrade in self.values():
-            upgrade.calculate_value(has_reindeer)
+            upgrade.calculate_value(reindeer_multi)
 
     def get_currency_advice(self) -> list[Advice]:
         return [
