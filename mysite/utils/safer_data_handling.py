@@ -94,6 +94,13 @@ def safer_math_log(input_value, base):
 
 def safer_index(array: list, index: int, default: T) -> T:
     try:
-        return array[index]
+        result = array[index]
     except IndexError:
         return default
+    except TypeError:
+        logger.exception(f"Could not index provided {type(array)} data. Returning default.")
+        return default
+    if result is None:
+        logger.warning(f"Null found at index {index}. Returning default: {default}")
+        return default
+    return result
