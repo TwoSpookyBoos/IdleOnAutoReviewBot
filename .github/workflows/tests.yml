@@ -1,5 +1,7 @@
 name: tests.yml
-on: push
+on:
+  push: 
+  pull_request: 
 
 jobs:
   run-tests:
