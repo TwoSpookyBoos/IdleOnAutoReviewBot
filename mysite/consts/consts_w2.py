@@ -59,8 +59,8 @@ sigils_dict = {
         "PlayerHours": 0,
         "Level": 0,
         "PrechargeLevel": 0,
-        "Requirements": [int(req1), int(req2), int(req3), int(req4)],
-        "Values": [0, int(bon1), int(bon2), int(bon3), int(bon4)],
+        "Requirements": [parse_number(req1), parse_number(req2), parse_number(req3), parse_number(req4), parse_number(req5)],
+        "Values": [0, int(bon1), int(bon2), int(bon3), int(bon4), int(bon5)],
         "Description": description.replace("_", " ")
     }
     for index, (name, req1, req2, bon1, bon2, _, description, req3, bon3, req4, bon4, req5, bon5) in enumerate(sigils_data)
