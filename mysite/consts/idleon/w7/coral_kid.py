@@ -7,7 +7,7 @@ coral_kid_description_templates = [desc.replace("_", " ").replace(" @ ", " ") fo
 coral_kid_upgrades_divinity_requirements = [0, 600, 900, 1250, 1700, 2200]
 
 
-# derived from `"CoralKidUpgBonus" == "` in source. Last updated in v2.505 May 25
+# derived from `"CoralKidUpgBonus" == "` in source. Last updated in v2.528.0
 class CoralKidUpgradeBonusFormulaInput(TypedDict):
     level: int
     god_rank: int
@@ -18,10 +18,10 @@ class CoralKidUpgradeBonusFormulaInput(TypedDict):
 coral_kid_upgrades_bonus_base_formulas: list[Callable[[CoralKidUpgradeBonusFormulaInput], int | float]] = [
     lambda data: 10 * data["level"],
     lambda data: 2 * data["level"],
-    lambda data: 20 * data["level"] / (25 + data["level"]),
+    lambda data: (data["level"] / (25 + data["level"])) * 20,
     lambda data: -1,
     lambda data: 2 * data["level"],
-    lambda data: 100 * data["level"] / (40 + data["level"])
+    lambda data: (data["level"] / (40 + data["level"])) * 100
 ]
 
 coral_kid_upgrades_bonus_final_formulas: list[Callable[[CoralKidUpgradeBonusFormulaInput], int | float]] = [

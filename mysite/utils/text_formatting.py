@@ -23,12 +23,13 @@ def pl(_list, suffix_singular: str = "", suffix_plural: str = "s") -> str:
     return suffix_plural if length > 1 else suffix_singular
 
 
+# `Number2Letter` function in source. Last updated in 2.528.0
+# It's not cleanly defined anywhere, but running `a.engine.getGameAttribute("Number2Letter").join("")` in the browser while the game is paused on a breakpoint gives you the correct string.
 def letterToNumber(inputLetter: str) -> int:
-    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".index(inputLetter)
-
+    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ肥肢肖肋肉職耐者箱管算箔策答筒筍白発癒痛痕病疾疲潤潜漬漠演漏漁滞毎殻殺段殖残歳歯歩武歓欲次欠櫛機色村材杉本末未木授掃捧彼役影彫彩胃堪城坑努助加功力創割借候倒老個景是明昇早既掴担想扉戻懸懲憩態感蛮蛍虫虚蘇薬薄蔵".index(inputLetter)
 
 def numberToLetter(inputNumber: int) -> str:
-    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[inputNumber]
+    return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ肥肢肖肋肉職耐者箱管算箔策答筒筍白発癒痛痕病疾疲潤潜漬漠演漏漁滞毎殻殺段殖残歳歯歩武歓欲次欠櫛機色村材杉本末未木授掃捧彼役影彫彩胃堪城坑努助加功力創割借候倒老個景是明昇早既掴担想扉戻懸懲憩態感蛮蛍虫虚蘇薬薄蔵"[inputNumber]
 
 
 def kebab(string: str) -> str:

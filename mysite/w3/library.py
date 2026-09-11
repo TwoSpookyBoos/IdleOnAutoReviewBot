@@ -72,7 +72,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
         goal=1
     ))
-    if not session_data.account.rift['EldritchArtifacts'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
+    if not session_data.account.rift['EldritchArtifact'] and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
         furyPostString = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
     elif not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 3:
         furyPostString = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'

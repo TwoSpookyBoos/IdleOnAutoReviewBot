@@ -689,7 +689,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
     if causticolumn_level < 2:
         account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", 'causticolumn', 0, 1))
     if causticolumn_level < 3:
-        if account.rift['EldritchArtifacts']:
+        if account.rift['EldritchArtifact']:
             account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", 'causticolumn', 0, 1))
         else:
             account.cooking['PlayerMissingPlateUpgrades'].append((

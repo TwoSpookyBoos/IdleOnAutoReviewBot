@@ -7,5 +7,5 @@ bribes_dict = {
     "W6": ["The Art of the Grail", "Artifact Pilfering", "Forge Cap Smuggling", "Gold from Lead", "Nugget Fabrication", "Divine PTS Miscounting", "Loot Table Tampering", "The Art of the Flail"]
 }
 
-# See the end of `BribeDescriptions` in source. Last updated in v2.43 Nov 6
+# See the end of `BribeDescriptions = function` in source. Last updated in v2.528.0
 unpurchasable_bribes = ["The Art of the Flail"]

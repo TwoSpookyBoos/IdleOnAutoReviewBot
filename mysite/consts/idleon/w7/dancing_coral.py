@@ -12,7 +12,7 @@ for index, (base_cost, description_template, base_value) in enumerate(zip(dancin
         continue
     dancing_coral_bonus_data.append({
         "Base Cost": parse_number(base_cost),
-        "Description Template": description_template.replace("_", " "),
+        "Description Template": description_template.replace("_", " ").replace("潤", "&"),
         "Base Value": parse_number(base_value),
         "Target Shrine Name": ShrineInfo[index][0].replace("_", " ")
     })

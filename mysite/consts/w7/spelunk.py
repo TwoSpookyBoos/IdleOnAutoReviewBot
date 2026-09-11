@@ -1,4 +1,4 @@
-# Part of spelunk page item name
+# Search for `Type = "SPELUNKY_PAGE` in source.
 chapter_name = [
     "The Fear Within",
     "Decay Surrounds",
