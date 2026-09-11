@@ -53,7 +53,7 @@ summoning_enemy_per_color_dict = {
     "Purple": "mushP w4a2 w4a3 demonP w4b2 w4b1 w4b3 w4b4 w4b5 w4c1 w4c2 w4c3 w4c4".split(" "),
     "Red": "w5a1 w5a2 w5a3 w5a4 w5a5 w5b1 w5b2 w5b3 w5b4 w5b5 w5b6 w5c1 w5c2".split(" "),
     "Cyan": "w6a1 w6a2 w6a3 w6a4 w6a5 w6b1 w6b2 w6b3 w6b4 w6c1 w6c2 w6d1 w6d2 w6d3".split(" "),
-    "Teal": "w7a1 w7a2 w7a3 w7a4 w7a5 w7a6 w7a7 w7a8 w7a9 w7a10 w7a11 w7a12 w7b1 w7b2 w7b3 w7b4 w7b5 w7b6 w7b7 w7b8".split(" "),
+    "Teal": "w7a1 w7a2 w7a3 w7a4 w7a5 w7a6 w7a7 w7a8 w7a9 w7a10 w7a11 w7a12 w7b1 w7b2 w7b3 w7b4 w7b5 w7b6".split(" "),
     "Endless": "rift1 rift2 rift3 rift4 rift5".split(" "),
     "Gambit": "Crystal1 Crystal2 Crystal3 Crystal4 Crystal0 Crystal5".split(" "),
     "Stones": "babaMummy slimeB mini6a mini3a mini4a mini5a Boss6 babayaga babayaga".split(" "),
@@ -81,7 +81,7 @@ all_assigned_enemy = [
     for enemy_list in summoning_enemy_per_color_dict.values()
     for enemy in enemy_list
 ]
-# Unimplemented battels
+# Unimplemented battles
 all_assigned_enemy.extend(
     [
         "Copper",
@@ -90,6 +90,8 @@ all_assigned_enemy.extend(
         "Void",
         "Starfire",
         "poopD",
+        "w7b7",
+        "w7b8"
     ]
 )
 

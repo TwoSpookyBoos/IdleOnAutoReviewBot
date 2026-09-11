@@ -178,7 +178,10 @@ versions_patches = {
     297: "v2.43 World 7",
     299: "v2.44 Cropfall Event",
     301: "v2.45 Zenith Statues",
-    306: "v2.46 Bubba Clicker"
+    306: "v2.46 Bubba Clicker",
+    # TODO: some are missing here
+    380: "v2.528.0 Royal Guardian",
+    385: "v2.530.0 W7 Tasks"
 }
 lowest_accepted_version = 297  # 297.x was the W7 release patch
 ignorable_labels: tuple = ('Weekly Ballot',)
