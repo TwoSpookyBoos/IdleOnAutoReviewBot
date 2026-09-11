@@ -35,7 +35,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
     # Set False (as in False, the recommendation should NOT be excluded), otherwise keep the default True
     highest_iss_in_tiers = max([requirements.get('Shinies', {}).get('Infinite Star Signs', [0])[0] for requirements in progression_tiers_breeding.values()])
     if (
-        session_data.account.rift['InfiniteStars']
+        session_data.account.rift['InfiniteStars'].unlocked
         and sum([shiny_pet[1] for shiny_pet in breeding_dict['Grouped Bonus']['Infinite Star Signs']]) < highest_iss_in_tiers
     ):
         shinyExclusionsDict['Infinite Star Signs'] = False
@@ -307,36 +307,14 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     ))
 
     # Lab Chips
-    abm_adviceDict['Lab Chips'].append(Advice(
-        label='Chocolatey Chip for more Crystal Mobs',
-        picture_class="chocolatey-chip",
-        progression=session_data.account.labChips.get('Chocolatey Chip', 0),
-        goal=1
-    ))
-    abm_adviceDict['Lab Chips'].append(Advice(
-        label='Omega Nanochip: Top Left card doubler',
-        picture_class="omega-nanochip",
-        progression=session_data.account.labChips.get('Omega Nanochip', 0),
-        goal=1
-    ))
-    abm_adviceDict['Lab Chips'].append(Advice(
-        label='Omega Motherboard: Bottom Right card doubler',
-        picture_class='omega-motherboard',
-        progression=session_data.account.labChips.get('Omega Motherboard', 0),
-        goal=1
-    ))
-    abm_adviceDict['Lab Chips'].append(Advice(
-        label='Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn',
-        picture_class='silkrode-software',
-        progression=session_data.account.labChips.get('Silkrode Software', 0),
-        goal=1
-    ))
-    abm_adviceDict['Lab Chips'].append(Advice(
-        label='Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn',
-        picture_class='silkrode-processor',
-        progression=session_data.account.labChips.get('Silkrode Processor', 0),
-        goal=1
-    ))
+    for chip_name, chip_label in (
+        ('Chocolatey Chip', 'Chocolatey Chip for more Crystal Mobs'),
+        ('Omega Nanochip', 'Omega Nanochip: Top Left card doubler'),
+        ('Omega Motherboard', 'Omega Motherboard: Bottom Right card doubler'),
+        ('Silkrode Software', 'Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn'),
+        ('Silkrode Processor', 'Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn'),
+    ):
+        abm_adviceDict['Lab Chips'].append(session_data.account.lab_chips[chip_name].get_advice(chip_label))
     abm_adviceDict['Lab Chips'].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     abm_adviceDict['Lab Chips'].append(Advice(
         label='Fill any remaining slots with Galvanic Nanochip: +10% respawn per chip',

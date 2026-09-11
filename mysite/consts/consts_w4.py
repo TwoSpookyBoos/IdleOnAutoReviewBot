@@ -91,7 +91,8 @@ lab_chips_dict = {
         'Name': name.replace('_', ' ').title(),
         'Description': description.replace('_', ' '),
         'Effect': effect.replace('_', ' '),
-        'BaseValue': parse_number(basevalue)
+        'BaseValue': parse_number(basevalue),
+        'Image': name.replace('_', '-').lower()
     }
     for index, (name, effect, description, _, _, _, _, _, _, _, _, basevalue) in enumerate(ChipDesc)
 }

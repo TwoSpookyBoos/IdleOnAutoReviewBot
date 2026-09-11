@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from consts.consts_w2 import max_vial_level, max_NBLB
-from consts.consts_w3 import totems_max_wave
 
 from models.general.character import Character
 from models.general.cards import Card
@@ -102,7 +101,7 @@ def get_sailing_progression_tier_advicegroups():
         # Outside requirement checks should be at the top of the list
         if session_data.account.sum_artifact_tiers < total_artifacts:
             if 'Eldritch' in requirements:
-                if not session_data.account.rift['EldritchArtifact']:
+                if not session_data.account.rift['EldritchArtifact'].unlocked:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
                         sailing_Advices['Artifacts'][subgroup_label].append(Advice(
@@ -136,7 +135,7 @@ def get_sailing_progression_tier_advicegroups():
                 #If Golden Hampters are not 10k Beanstacked and the player has a Chocolatey Chip to active farm them
                 'Beanstacked' in requirements
                 and session_data.account.beanstalk["Golden Hampter Gummy Candy"].tier < 1
-                and session_data.account.labChips.get('Chocolatey Chip', 0) > 0
+                and session_data.account.lab_chips['Chocolatey Chip'].owned
                 and session_data.account.highest_world_reached >= 6
                 and tier_Artifacts >= tier_number - 1
             ):
@@ -241,11 +240,11 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
     oj_jooce_vial = session_data.account.alchemy_vials['Oj Jooce (Orange Slice)']
 
-    has_skill_mastery: bool = session_data.account.rift['SkillMastery']
+    has_skill_mastery: bool = session_data.account.rift['SkillMastery'].unlocked
     total_sailing_level = sum(session_data.account.all_skills['Sailing'])
 
     has_msa_sailing: bool = session_data.account.gaming['SuperBits']['MSA Sailing']['Unlocked']
-    total_worship_waves = sum([totem['Waves'] for totem in session_data.account.worship['Totems'].values()])
+    total_worship_waves = session_data.account.worship.total_waves
 
     c_shanti_minor = session_data.account.star_signs['C. Shanti Minor']
 
@@ -364,7 +363,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 label=f'MSA Sailing: +{has_msa_sailing * total_worship_waves // 10}% (+1% per 10 waves in Worship)',
                 picture_class='worship',
                 progression=total_worship_waves,
-                goal=len(session_data.account.worship['Totems'].keys()) * totems_max_wave,
+                goal=session_data.account.worship.max_total_waves,
             ),
             Advice(
                 label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {'+20% if equipped' if c_shanti_minor['Unlocked'] else 'Locked.'}",

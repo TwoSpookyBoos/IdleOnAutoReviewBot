@@ -3,7 +3,7 @@ from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.consts_w4 import rift_rewards_dict, shiny_days_list
+from consts.consts_w4 import shiny_days_list
 from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
 from consts.consts_w2 import max_sigil_level, sigils_dict, po_box_dict, obols_max_bonuses_dict
 from consts.consts_w1 import starsigns_dict, get_seraph_cosmos_multi, seraph_max, get_seraph_cosmos_summ_level_goal
@@ -100,16 +100,12 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     #########################################
     general_bonus = 0
     # Rift - Ruby Cards
-    if not session_data.account.rift['RubyCards']:
-        ruby_cards_rift_level = next(i for i, r in rift_rewards_dict.items() if r['Shorthand'] == 'RubyCards')
-        rift_level = session_data.account.rift['Level']
-        drop_rate_aw_advice[general].append(Advice(
-            label=f"Rift- Ruby Cards:"
-                  f"<br>+1 Max Card Level"
-                  f"<br>Note: increases the max card level for the cards below",
-            picture_class='ruby-cards',
-            progression=rift_level,
-            goal=ruby_cards_rift_level
+    ruby_cards = session_data.account.rift['RubyCards']
+    if not ruby_cards.unlocked:
+        drop_rate_aw_advice[general].append(ruby_cards.get_advice(
+            "Rift- Ruby Cards:"
+            "<br>+1 Max Card Level"
+            "<br>Note: increases the max card level for the cards below"
         ))
 
     # Cards - Drop Rate
@@ -763,9 +759,9 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         for card in sorted(acquired_drop_rate_cards, key=lambda c: c.getCurrentValue(), reverse=True):
             end_note = ''
             if best_2_cards < 2:
-                if best_2_cards == 0 and session_data.account.labChips['Omega Nanochip'] > 0:
+                if best_2_cards == 0 and session_data.account.lab_chips['Omega Nanochip'].owned:
                     end_note = 'Note: Place in TOP LEFT card slot and equip Omega Nanochip Lab Chip'
-                elif best_2_cards != 0 and session_data.account.labChips['Omega Motherboard'] > 0:
+                elif best_2_cards != 0 and session_data.account.lab_chips['Omega Motherboard'].owned:
                     end_note = 'Note: Place in BOT RIGHT card slot and equip Omega Motherboard Lab Chip'
                 best_2_cards += 1
             equipped = card.codename in character.equipped_cards_codenames

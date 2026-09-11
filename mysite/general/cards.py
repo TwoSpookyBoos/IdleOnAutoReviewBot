@@ -246,7 +246,7 @@ def getCardsAdviceSection() -> AdviceSection:
 
     player_max_card_stars = (
         4
-        + (1 * session_data.account.rift['RubyCards'])
+        + (1 * session_data.account.rift['RubyCards'].unlocked)
         + (1 * session_data.account.spelunk.caves["Rustbelt 03"].bonus_obtained)
     )
 
@@ -284,7 +284,7 @@ def getCardsAdviceSection() -> AdviceSection:
     )
 
     if not section:  #If there are no AdviceGroups
-        if not session_data.account.rift['RubyCards']:
+        if not session_data.account.rift['RubyCards'].unlocked:
             section.tier = f"{max_tier}/{max_tier}"
             section.header = (
                 f"You have completed all {section.tier} cardset tiers. But... "

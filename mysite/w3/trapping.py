@@ -199,7 +199,7 @@ def getStaticCritterTrapAdviceList(highest_trapset: int) -> dict[str, list[Advic
             progression=manualCritterTrapsDict[listIndexManualAdvice][1][counter]
         ))
 
-    if session_data.account.rift['TrapBoxVacuum']:
+    if session_data.account.rift['TrapBoxVacuum'].unlocked:
         advices["Efficiency for Rift's Daily traps"] = []
         for counter in range(0, len(vaccuumCritterTrapsDict[listIndexVaccuumAdvice][0])):
             advices["Efficiency for Rift's Daily traps"].append(Advice(
@@ -228,7 +228,7 @@ def getStaticShinyTrapAdviceList(highest_trapset: int) -> dict[str, list[Advice]
                 progression=shiny_traps_eff_per_hour_list[counter]
             ))
 
-    if session_data.account.rift['TrapBoxVacuum']:
+    if session_data.account.rift['TrapBoxVacuum'].unlocked:
         advices["Shiny Chance Multi for Rift's Daily traps"] = []
         for counter in range(len(shiny_traps_label_list) - num_of_vaccuum_suggestions, len(shiny_traps_label_list)):
             if highest_trapset >= shiny_traps_required_trap_index_list[counter]:
@@ -257,7 +257,7 @@ def getStaticEXPTrapAdviceList(highest_trapset) -> dict[str, list[Advice]]:
                 progression=exp_traps_eff_per_hour_list[counter]
             ))
 
-    if session_data.account.rift['TrapBoxVacuum']:
+    if session_data.account.rift['TrapBoxVacuum'].unlocked:
         advices["Best Experience for Rift's Daily traps"] = []
         for counter in range(len(exp_traps_label_list) - num_of_vaccuum_suggestions, len(exp_traps_label_list)):
             if highest_trapset >= exp_traps_required_trap_index_list[counter]:

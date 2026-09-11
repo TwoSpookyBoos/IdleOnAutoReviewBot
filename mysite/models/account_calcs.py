@@ -352,9 +352,9 @@ def _calculate_w1_starsigns(account):
         )
     )
 
-    if account.labChips.get('Silkrode Nanochip', 0) > 0:
+    if account.lab_chips['Silkrode Nanochip'].owned:
         account.star_sign_extras['DoublerOwned'] = True
-        account.star_sign_extras['SilkrodeNanoEval'] = f"{account.labChips.get('Silkrode Nanochip', 0)} owned. Doubles star signs when equipped."
+        account.star_sign_extras['SilkrodeNanoEval'] = f"{account.lab_chips['Silkrode Nanochip'].count} owned. Doubles star signs when equipped."
         account.star_sign_extras['SilkrodeNanoMulti'] = 2
     else:
         account.star_sign_extras['DoublerOwned'] = False
@@ -363,7 +363,7 @@ def _calculate_w1_starsigns(account):
     account.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
         label=f"Lab Chip: Silkrode Nanochip: {account.star_sign_extras['SilkrodeNanoEval']}",
         picture_class="silkrode-nanochip",
-        progression=1 if account.labChips.get('Silkrode Nanochip', 0) > 0 else 0,
+        progression=1 if account.lab_chips['Silkrode Nanochip'].owned else 0,
         goal=1
     )
 
@@ -404,7 +404,6 @@ def _calculate_w2(account):
     _calculate_w2_vials(account)
     _calculate_w2_sigils(account)
     _calculate_w2_cauldrons(account)
-    _calculate_w2_postOffice(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
@@ -413,7 +412,7 @@ def _calculate_w2_vials(account):
     account.alchemy_vials_calcs = {
         'mga': (
             account.vault.upgrades['Vial Overtune'].total_value
-            + ((account.maxed_vials * .02) if account.rift['VialMastery'] else 0)
+            + ((account.maxed_vials * .02) if account.rift['VialMastery'].unlocked else 0)
         ),
         'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
     }
@@ -466,14 +465,6 @@ def _calculate_w2_sigils(account):
             account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = account.alchemy_p2w["Sigils"][sigilName]["Level"]
         # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
         # After the +1, 0/1/2/3
-
-def _calculate_w2_postOffice(account):
-    account.postOffice['Total Boxes Earned'] = (
-        account.postOffice['Completing Orders']
-        + account.postOffice['Streak Bonuses']
-        + account.postOffice['Miscellaneous']
-        + account.postOffice['Upgrade Vault']
-    )
 
 def _calculate_w2_ballot(account):
     # Dependency: legend talents
@@ -548,7 +539,7 @@ def _update_w3_building_max_levels(account, building_name: str, levels: int, not
             logger.warning(f"Could not increase max level of {building_name}: {note if note else 'No note provided'}")
 
 def _calculate_w3_building_max_levels(account):
-    if account.rift['SkillMastery']:
+    if account.rift['SkillMastery'].unlocked:
         totalLevel = sum(account.all_skills['Construction'])
         if totalLevel >= 500:
             _update_w3_building_max_levels(account, 'Trapper Drone', 35, '500 Construction Mastery')
@@ -685,7 +676,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
     if causticolumn_level < 2:
         account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Ancient Causticolumn", 'causticolumn', 0, 1))
     if causticolumn_level < 3:
-        if account.rift['EldritchArtifact']:
+        if account.rift['EldritchArtifact'].unlocked:
             account.cooking['PlayerMissingPlateUpgrades'].append(("{{ Artifact|#sailing }}: Eldritch Causticolumn", 'causticolumn', 0, 1))
         else:
             account.cooking['PlayerMissingPlateUpgrades'].append((
@@ -1130,10 +1121,10 @@ def _calculate_general_crystal_spawn_chance(account):
     genie_value = 15 * (1 + next(c.getStars() for c in account.cards if c.name == 'Demon Genie'))
 
     # If they have both doublers, add together and 2x
-    if account.labChips['Omega Nanochip'] and account.labChips['Omega Motherboard']:
+    if account.lab_chips['Omega Nanochip'].owned and account.lab_chips['Omega Motherboard'].owned:
         total_card_chance = 2 * (poop_value + genie_value)
     # If they only have 1 doubler, double whichever is stronger
-    elif account.labChips['Omega Nanochip'] or account.labChips['Omega Motherboard']:
+    elif account.lab_chips['Omega Nanochip'].owned or account.lab_chips['Omega Motherboard'].owned:
         total_card_chance = (2 * max(poop_value, genie_value)) + min(poop_value, genie_value)
     # If they have neither doubler, use base values only
     else:
