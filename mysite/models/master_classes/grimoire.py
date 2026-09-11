@@ -152,7 +152,7 @@ class Grimoire:
             'mge': ValueToMulti(
                 self.upgrades["Bones o' Plenty"].total_value
                 + (self.upgrades['Bovinae Hoarding'].total_value * safer_math_log(self.bones[3], 'Lava'))
-                + arcade[40]['Value']
+                + arcade[40].value
                 + lab_jewels['Deadly Wrath Jewel']['Value'] * lab_jewels['Deadly Wrath Jewel']['Enabled']
             ),
             'mgf': 1,
