@@ -4,7 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.safer_data_handling import safer_get
 from utils.text_formatting import notateNumber
@@ -48,7 +47,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     amplestample_value = session_data.account.stamps['Amplestample Stamp'].total_value
     account_sum += stample_value
     account_sum += amplestample_value
-    account_sum += float(session_data.account.arcade.get(5, {}).get('Value', 0))
+    account_sum += session_data.account.arcade[5].value
     account_sum += session_data.account.achievements['Saharan Skull']['Complete']
     #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
     star_talent_one_point = lava_func('bigBase', 1, 10, 0.075)
@@ -105,7 +104,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psr_Advices[account_subgroup].append(
         session_data.account.sneaking.pristine_charms['Liqorice Rolle'].get_obtained_advice()
     )
-    psr_Advices[account_subgroup].append(get_arcade_advice(5))
+    psr_Advices[account_subgroup].append(session_data.account.arcade[5].get_advice())
     psr_Advices[account_subgroup].append(Advice(
         label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
         picture_class='saharan-skull',

@@ -7,7 +7,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.generators.general import get_upgrade_vault_advice
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
@@ -629,8 +628,8 @@ def getPetDamageAdviceGroup():
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
     power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30
 
-    pet_damage_arcade_bonus = next(arcade_bonus for arcade_bonus in session_data.account.arcade.values() if arcade_bonus['Stat'] == 'Breeding Mob DMG')
-    pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus['Value']
+    pet_damage_arcade_bonus = session_data.account.arcade[30]
+    pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus.value
 
     pet_punchies_vault_upgrade = session_data.account.vault.upgrades['Pet Punchies']
     pet_punchies_vault_upgrade_bonus = pet_punchies_vault_upgrade.total_value
@@ -700,7 +699,7 @@ def getPetDamageAdviceGroup():
                 progression=int(power_bowower_star_sign['Unlocked']),
                 goal=1
             ),
-            get_arcade_advice(30),
+            session_data.account.arcade[30].get_advice(),
             get_upgrade_vault_advice('Pet Punchies')
         ]
     }

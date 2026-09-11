@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w2 import get_arcade_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
@@ -170,7 +169,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         goal=1
     ))
 
-    currency_advices[mga_label].append(get_arcade_advice(50))
+    currency_advices[mga_label].append(session_data.account.arcade[50].get_advice())
 
     mgb_label = f"Tachyon Multi Group B: {tesseract.tachyon_calc['mgb']:.2f}x"
 

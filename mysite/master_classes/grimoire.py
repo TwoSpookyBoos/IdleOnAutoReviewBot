@@ -4,7 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.all_talentsDict import all_talentsDict
 from utils.safer_data_handling import safer_math_log
@@ -131,7 +130,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         f"{bh.total_value * safer_math_log(grimoire.bones[3], 'Lava'):.3f}% total"
     )
     currency_advices[mge_label].append(bh.get_advice(grimoire.total_upgrades, bh_stacks_text))
-    currency_advices[mge_label].append(get_arcade_advice(40))
+    currency_advices[mge_label].append(session_data.account.arcade[40].get_advice())
 
     lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
     lab_jewel_active = lab_jewel['Enabled']

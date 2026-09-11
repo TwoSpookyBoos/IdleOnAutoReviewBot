@@ -4,7 +4,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w2 import get_arcade_advice
 
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
@@ -223,7 +222,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         progression=compass_preset_level,
         goal=session_data.account.library.max_book_level
     ))
-    currency_advices[mgf_label].append(get_arcade_advice(47))
+    currency_advices[mgf_label].append(session_data.account.arcade[47].get_advice())
 
     lab_jewel = session_data.account.labJewels['North Winds Jewel']
     lab_jewel_active = lab_jewel['Enabled']
