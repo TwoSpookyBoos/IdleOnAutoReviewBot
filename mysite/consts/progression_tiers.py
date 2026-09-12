@@ -340,6 +340,80 @@ tesseract_progressionTiers = {
     },
 }
 
+grimoire_progressionTiers = {
+    0: {},
+    1: {
+        'Total Upgrades': 100,
+        'Specific Upgrades': {'Ribbon Shelf': 1, 'Ribbon Winning': 5},
+        'Stacks': {},
+    },
+    2: {
+        'Total Upgrades': 380,
+        'Specific Upgrades': {'Ribbon Winning': 15, 'Pure Opals': 5, 'Sacrifice of Harvest': 20},
+        'Stacks': {'Knockout': 6},  #Target: Carrotman
+    },
+    3: {
+        'Total Upgrades': 900,
+        'Specific Upgrades': {'Ribbon Winning': 20, 'Pure Opals': 10, 'Sacrifice of Harvest': 40, 'Grey Tome Book': 5},
+        'Stacks': {'Knockout': 16, 'Elimination': 16},  #Target: Sand Castle
+    },
+    4: {
+        'Total Upgrades': 1900,
+        'Specific Upgrades': {
+            'Ribbon Winning': 30, 'Pure Opals': 15, 'Sacrifice of Harvest': 70, 'Grey Tome Book': 30, 'Supreme Head Chef Status': 10
+        },
+        'Stacks': {'Knockout': 20, 'Elimination': 20},  #Target: Mashed Potato
+    },
+    5: {
+        'Total Upgrades': 3150,
+        'Specific Upgrades': {
+            'Ribbon Winning': 35, 'Pure Opals': 20, 'Sacrifice of Harvest': 120, 'Grey Tome Book': 50, 'Supreme Head Chef Status': 20,
+            'Villager Extraciricular': 30, 'Talents for Me, not for Thee': 10
+        },
+        'Stacks': {'Knockout': 25, 'Elimination': 25, 'Annihilation': 25},  #Target: Sheepie
+    },
+    6: {
+        'Total Upgrades': 4100,
+        'Specific Upgrades': {
+            'Ribbon Winning': 50, 'Pure Opals': 25, 'Sacrifice of Harvest': 150, 'Grey Tome Book': 70,
+            'Villager Extraciricular': 40, 'Talents for Me, not for Thee': 40, 'Writhing Grimoire': 10
+        },
+        'Stacks': {'Knockout': 31, 'Elimination': 31, 'Annihilation': 31},  #Target: Penguins
+    },
+    7: {
+        'Total Upgrades': 4600,
+        'Specific Upgrades': {
+            'Sacrifice of Harvest': 210, 'Grey Tome Book': 90, 'Villager Extraciricular': 60,
+            'Talents for Me, not for Thee': 60, 'Writhing Grimoire': 18, 'Skull of Major Talent': 30
+        },
+        'Stacks': {'Knockout': 37, 'Elimination': 37, 'Annihilation': 37},  #Target: Dedotated Rams
+    },
+    8: {
+        'Total Upgrades': 5850,
+        'Specific Upgrades': {
+            'Sacrifice of Harvest': 250, 'Grey Tome Book': 100, 'Villager Extraciricular': 80, 'Talents for Me, not for Thee': 70,
+            'Writhing Grimoire': 25, 'Skull of Major Droprate': 50, 'Ok fine, Talents for Thee too': 40
+        },
+        'Stacks': {'Knockout': 48, 'Elimination': 48, 'Annihilation': 48},  #Target: Octodar
+    },
+    9: {
+        'Total Upgrades': 7500,
+        'Specific Upgrades': {
+            'Sacrifice of Harvest': 300, 'Grey Tome Book': 110, 'Villager Extraciricular': 100, 'Talents for Me, not for Thee': 120,
+            'Writhing Grimoire': 40, 'Skull of Major Droprate': 100, 'Ok fine, Talents for Thee too': 60, 'Death of the Atom Price': 70
+        },
+        'Stacks': {'Knockout': 63, 'Elimination': 63, 'Annihilation': 63},  #Target: Tremor Wurms
+    },
+    10: {
+        'Total Upgrades': 11000,
+        'Specific Upgrades': {
+            'Sacrifice of Harvest': 500, 'Grey Tome Book': 150, 'Villager Extraciricular': 170, 'Talents for Me, not for Thee': 200,
+            'Writhing Grimoire': 50, 'Skull of Major Droprate': 270, 'Ok fine, Talents for Thee too': 130, 'Death of the Atom Price': 120
+        },
+        'Stacks': {'Knockout': 78, 'Elimination': 78, 'Annihilation': 78},  #Target: Samurai Guardians
+    },
+}
+
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = {
     1: {
@@ -2299,7 +2373,7 @@ true_max_tiers = {
     'Secret Class Path': max(secret_class_progressionTiers.keys()),
 
     # Master Classes
-    'Grimoire': 0,
+    'The Grimoire': max(grimoire_progressionTiers.keys()),
     'Compass': 0,
     'The Tesseract': max(tesseract_progressionTiers.keys()),
     'Royal Armory': 0,

@@ -48,7 +48,7 @@ class GrimoireUpgrade:
             stack_type = self.name.split('!')[0]
             if stack_type in grimoire_stack_types:
                 stack_count = stacks.get(stack_type, 0)
-                if len(grimoire_coded_stack_monster_order) < stack_count:
+                if stack_count >= len(grimoire_coded_stack_monster_order):
                     next_stack_target = "All done!"
                 else:
                     try:

@@ -1,4 +1,4 @@
-from consts.progression_tiers import true_max_tiers
+from consts.progression_tiers import true_max_tiers, grimoire_progressionTiers
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice
@@ -6,35 +6,111 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
 from utils.all_talentsDict import all_talentsDict
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
 
 from consts.consts_autoreview import (
-    # grimoire_progressionTiers, break_you_best, infinity_string,
+    break_you_best, build_subgroup_label,
     ValueToMulti, EmojiType,
 )
 from consts.idleon.lava_func import lava_func
-from consts.idleon.master_classes.grimoire import grimoire_bones_list
-from utils.text_formatting import notateNumber
+from consts.idleon.master_classes.grimoire import grimoire_bones_list, grimoire_coded_stack_monster_order
+from consts.consts_monster_data import decode_monster_name
+from utils.text_formatting import notateNumber, pl
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
-    grimoire_AdviceDict = {
-        'Tiers': {},
+def get_stack_target_monster(required_stacks: int) -> str | None:
+    #The Nth stack is earned by defeating the monster at index N-1 in the shared stack target order
+    index = required_stacks - 1
+    if index < 0 or index >= len(grimoire_coded_stack_monster_order):
+        return None
+    return decode_monster_name(grimoire_coded_stack_monster_order[index])
+
+def getProgressionTiersAdviceGroup(grimoire) -> tuple[dict[str, AdviceGroup], int, int, int]:
+    grimoire_Advices = {
+        'Total Upgrades': {},
+        'Specific Upgrades': {},
+        'Stacks': {},
     }
     optional_tiers = 0
-    true_max = true_max_tiers['Grimoire']
+    true_max = true_max_tiers['The Grimoire']
     max_tier = true_max - optional_tiers
-    tier_Grimoire = 0
+    tier_TotalUpgrades = 0
+    tier_SpecificUpgrades = 0
+    tier_Stacks = 0
 
-    tiers_ag = AdviceGroup(
-        tier=tier_Grimoire,
-        pre_string='Progression Tiers',
-        advices=grimoire_AdviceDict['Tiers']
+    #Assess Tiers
+    for tier_number, requirements in grimoire_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+
+        #Total Upgrades
+        if grimoire.total_upgrades < requirements.get('Total Upgrades', 0):
+            add_subgroup_if_available_slot(grimoire_Advices['Total Upgrades'], subgroup_label)
+            if subgroup_label in grimoire_Advices['Total Upgrades']:
+                grimoire_Advices['Total Upgrades'][subgroup_label].append(Advice(
+                    label="Total Grimoire Upgrades",
+                    picture_class='grimoire',
+                    progression=grimoire.total_upgrades,
+                    goal=requirements.get('Total Upgrades', 0)
+                ))
+        if subgroup_label not in grimoire_Advices['Total Upgrades'] and tier_TotalUpgrades == tier_number - 1:
+            tier_TotalUpgrades = tier_number
+
+        #Specific Upgrades - account-wide talents
+        for upgrade_name, required_level in requirements.get('Specific Upgrades', {}).items():
+            upgrade_details = grimoire.upgrades.get(upgrade_name)
+            current_level = upgrade_details.level if upgrade_details else 0
+            if current_level < required_level:
+                add_subgroup_if_available_slot(grimoire_Advices['Specific Upgrades'], subgroup_label)
+                if subgroup_label in grimoire_Advices['Specific Upgrades']:
+                    grimoire_Advices['Specific Upgrades'][subgroup_label].append(Advice(
+                        label=upgrade_name,
+                        picture_class=upgrade_details.image if upgrade_details else 'grimoire',
+                        progression=current_level,
+                        goal=required_level
+                    ))
+        if subgroup_label not in grimoire_Advices['Specific Upgrades'] and tier_SpecificUpgrades == tier_number - 1:
+            tier_SpecificUpgrades = tier_number
+
+        #Stacks - Knockout/Elimination/Annihilation
+        for stack_type, required_stacks in requirements.get('Stacks', {}).items():
+            current_stacks = grimoire.stacks.get(stack_type, 0)
+            if current_stacks < required_stacks:
+                add_subgroup_if_available_slot(grimoire_Advices['Stacks'], subgroup_label)
+                if subgroup_label in grimoire_Advices['Stacks']:
+                    target_monster = get_stack_target_monster(required_stacks)
+                    grimoire_Advices['Stacks'][subgroup_label].append(Advice(
+                        label=f"{stack_type} Stacks",
+                        picture_class=target_monster or 'grimoire',
+                        progression=current_stacks,
+                        goal=required_stacks
+                    ))
+        if subgroup_label not in grimoire_Advices['Stacks'] and tier_Stacks == tier_number - 1:
+            tier_Stacks = tier_number
+
+    #Generate AdviceGroups
+    grimoire_AdviceGroupDict = {}
+    grimoire_AdviceGroupDict['Total Upgrades'] = AdviceGroup(
+        tier=tier_TotalUpgrades,
+        pre_string='Purchase more Total Grimoire Upgrades',
+        advices=grimoire_Advices['Total Upgrades'],
     )
-    overall_SectionTier = min(true_max, tier_Grimoire)
-    return tiers_ag, overall_SectionTier, max_tier, true_max
+    grimoire_AdviceGroupDict['Specific Upgrades'] = AdviceGroup(
+        tier=tier_SpecificUpgrades,
+        pre_string=f"Level up the following account-wide Grimoire Upgrade{pl(grimoire_Advices['Specific Upgrades'])}",
+        advices=grimoire_Advices['Specific Upgrades'],
+    )
+    grimoire_AdviceGroupDict['Stacks'] = AdviceGroup(
+        tier=tier_Stacks,
+        pre_string='Build up the following Knockout/Elimination/Annihilation Stacks',
+        advices=grimoire_Advices['Stacks'],
+        post_string='Stack targets rotate through a fixed monster order',
+    )
+
+    overall_SectionTier = min(true_max, tier_TotalUpgrades, tier_SpecificUpgrades, tier_Stacks)
+    return grimoire_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 
 def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
@@ -247,8 +323,7 @@ def getGrimoireAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    grimoire_AdviceGroupDict = {}
-    grimoire_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
+    grimoire_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(grimoire)
     grimoire_AdviceGroupDict['Currencies'] = getGrimoireCurrenciesAdviceGroup(grimoire)
     grimoire_AdviceGroupDict['Upgrades'] = getGrimoireUpgradesAdviceGroup(grimoire)
 
@@ -258,11 +333,12 @@ def getGrimoireAdviceSection() -> AdviceSection:
         name='The Grimoire',
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
-        header='Death Bringer and Grimoire Information',  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        max_tier=max_tier,
+        true_max_tier=true_max,
+        header=f"Best Grimoire tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='customized/Wraith.gif',
         groups=grimoire_AdviceGroupDict.values(),
         completed=None,
-        unrated=True,
     )
 
     return grimoire_AdviceSection

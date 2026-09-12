@@ -11,7 +11,7 @@ grimoire_bones_list = ['Femurs', 'Ribcages', 'Craniums', 'Bovinae']
 # Vault.calculate() once vault-to-classes merges) also indexes into this same table for its own
 # "Target: X" display. Whether that's deliberate shared game design or just code reuse isn't
 # confirmed here -- only that the existing (pre-this-session) code already relies on it that way.
-grimoire_stack_types = ['Knockout', 'Elimination', 'Annihiliation']
+grimoire_stack_types = ['Knockout', 'Elimination', 'Annihilation']
 grimoire_coded_stack_monster_order = RANDOlist[104]
 
 
