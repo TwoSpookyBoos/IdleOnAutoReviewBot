@@ -1,10 +1,9 @@
 from math import prod
 
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_monster_data import decode_monster_name
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.grimoire import (
-    grimoire_upgrades, grimoire_bones_list, grimoire_stack_types, grimoire_coded_stack_monster_order
+    grimoire_upgrades, grimoire_bones_list, grimoire_stack_types, grimoire_stack_target_monsters
 )
 from models.advice.advice import Advice
 from utils.all_talentsDict import all_talentsDict
@@ -48,13 +47,10 @@ class GrimoireUpgrade:
             stack_type = self.name.split('!')[0]
             if stack_type in grimoire_stack_types:
                 stack_count = stacks.get(stack_type, 0)
-                if stack_count >= len(grimoire_coded_stack_monster_order):
-                    next_stack_target = "All done!"
-                else:
-                    try:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[stack_count])
-                    except:
-                        next_stack_target = decode_monster_name(grimoire_coded_stack_monster_order[0])
+                next_stack_target = (
+                    "All done!" if stack_count >= len(grimoire_stack_target_monsters)
+                    else grimoire_stack_target_monsters[stack_count]
+                )
                 self.description = self.description.replace('Target:$', f"Target: {next_stack_target}")
         self.description += (
             f"<br>({self.value_per_level * multi:.2f} per level"

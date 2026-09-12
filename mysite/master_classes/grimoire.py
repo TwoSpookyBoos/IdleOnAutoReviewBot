@@ -15,18 +15,10 @@ from consts.consts_autoreview import (
     ValueToMulti, EmojiType,
 )
 from consts.idleon.lava_func import lava_func
-from consts.idleon.master_classes.grimoire import grimoire_bones_list, grimoire_coded_stack_monster_order
-from consts.consts_monster_data import decode_monster_name
+from consts.idleon.master_classes.grimoire import grimoire_bones_list, grimoire_stack_target_monsters
 from utils.text_formatting import notateNumber, pl
 
 logger = get_logger(__name__)
-
-def get_stack_target_monster(required_stacks: int) -> str | None:
-    #The Nth stack is earned by defeating the monster at index N-1 in the shared stack target order
-    index = required_stacks - 1
-    if index < 0 or index >= len(grimoire_coded_stack_monster_order):
-        return None
-    return decode_monster_name(grimoire_coded_stack_monster_order[index])
 
 def getProgressionTiersAdviceGroup(grimoire) -> tuple[dict[str, AdviceGroup], int, int, int]:
     grimoire_Advices = {
@@ -80,7 +72,12 @@ def getProgressionTiersAdviceGroup(grimoire) -> tuple[dict[str, AdviceGroup], in
             if current_stacks < required_stacks:
                 add_subgroup_if_available_slot(grimoire_Advices['Stacks'], subgroup_label)
                 if subgroup_label in grimoire_Advices['Stacks']:
-                    target_monster = get_stack_target_monster(required_stacks)
+                    target_index = required_stacks - 1
+                    target_monster = (
+                        grimoire_stack_target_monsters[target_index]
+                        if 0 <= target_index < len(grimoire_stack_target_monsters)
+                        else None
+                    )
                     grimoire_Advices['Stacks'][subgroup_label].append(Advice(
                         label=f"{stack_type} Stacks",
                         picture_class=target_monster or 'grimoire',
