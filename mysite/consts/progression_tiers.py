@@ -1330,8 +1330,8 @@ deathNote_progressionTiers = [
     [22, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, 80, ""],
     [23, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, 82, ""],
     [24, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 85, ""],
-    [25, 20, 20, 20, 20, 20, 20,   20, 0,  106, 106, 106, 106, ""], # Add W7 mob to zow, chow, meow, wow + skull tier
-    [26, 20, 20, 20, 20, 20, 20,   20, 0,  108, 108, 108, 108, ""]  # Max zow, chow, meow, wow
+    [25, 20, 20, 20, 20, 20, 20,   20, 0,  107, 107, 107, 107, ""], # Add W7 mob to zow, chow, meow, wow + skull tier
+    [26, 20, 20, 20, 20, 20, 20,   20, 0,  109, 109, 109, 109, ""]  # Max zow, chow, meow, wow
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
