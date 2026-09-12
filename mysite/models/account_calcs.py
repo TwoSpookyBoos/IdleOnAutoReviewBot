@@ -360,11 +360,8 @@ def _calculate_w1_starsigns(account):
         account.star_sign_extras['DoublerOwned'] = False
         account.star_sign_extras['SilkrodeNanoEval'] = "None Owned. Would double other signs if equipped."
         account.star_sign_extras['SilkrodeNanoMulti'] = 1
-    account.star_sign_extras['SilkrodeNanoAdvice'] = Advice(
-        label=f"Lab Chip: Silkrode Nanochip: {account.star_sign_extras['SilkrodeNanoEval']}",
-        picture_class="silkrode-nanochip",
-        progression=1 if account.lab_chips['Silkrode Nanochip'].owned else 0,
-        goal=1
+    account.star_sign_extras['SilkrodeNanoAdvice'] = account.lab_chips['Silkrode Nanochip'].get_advice(
+        f": {account.star_sign_extras['SilkrodeNanoEval']}"
     )
 
 

@@ -103,8 +103,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ruby_cards = session_data.account.rift['RubyCards']
     if not ruby_cards.unlocked:
         drop_rate_aw_advice[general].append(ruby_cards.get_advice(
-            "Rift- Ruby Cards:"
-            "<br>+1 Max Card Level"
+            ":<br>+1 Max Card Level"
             "<br>Note: increases the max card level for the cards below"
         ))
 

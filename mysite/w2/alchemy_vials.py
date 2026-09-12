@@ -159,8 +159,8 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
         ],
         f"Multi Group A: {session_data.account.alchemy_vials_calcs['mga']:.2f}x": [
             get_upgrade_vault_advice('Vial Overtune'),
-            session_data.account.rift['VialMastery'].get_unlock_advice(
-                f"{{{{ Rift|#rift}}}}: Vial Mastery: +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'].unlocked else 0}%"
+            session_data.account.rift['VialMastery'].get_bonus_advice(
+                f": +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'].unlocked else 0}%"
             ),
             Advice(
                 label=f"You have {session_data.account.maxed_vials}/{max_maxable_vials} maxed Vials",

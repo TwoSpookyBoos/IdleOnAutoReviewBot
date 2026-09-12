@@ -6,24 +6,25 @@ from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 class RiftBonus:
     def __init__(self, level_required: int, info: dict, rift_level: int):
         self.level_required: int = level_required
+        self.displayed_unlock_level: int = level_required + 1
         self.name: str = info['Name']
         self.shorthand: str = info['Shorthand']
         self._rift_level: int = rift_level
         self.unlocked: bool = rift_level >= level_required
 
-    def get_advice(self, label: str = '') -> Advice:
+    def get_advice(self, additional_text: str = '') -> Advice:
         """Progress toward the rift level that unlocks this bonus."""
         return Advice(
-            label=label or self.name,
+            label=f"{self.name}{additional_text}",
             picture_class=self.name,
             progression=self._rift_level,
             goal=self.level_required,
         )
 
-    def get_unlock_advice(self, label: str) -> Advice:
+    def get_bonus_advice(self, additional_text: str = '') -> Advice:
         """Binary have-it-or-not framing, for sections that only care that the bonus is live."""
         return Advice(
-            label=label,
+            label=f"{{{{ Rift|#rift }}}} #{self.displayed_unlock_level}: {self.name} unlocked{additional_text}",
             picture_class=self.name,
             progression=int(self.unlocked),
             goal=1,

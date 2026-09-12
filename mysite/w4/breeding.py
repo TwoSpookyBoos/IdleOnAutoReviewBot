@@ -307,14 +307,10 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     ))
 
     # Lab Chips
-    for chip_name, chip_label in (
-        ('Chocolatey Chip', 'Chocolatey Chip for more Crystal Mobs'),
-        ('Omega Nanochip', 'Omega Nanochip: Top Left card doubler'),
-        ('Omega Motherboard', 'Omega Motherboard: Bottom Right card doubler'),
-        ('Silkrode Software', 'Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn'),
-        ('Silkrode Processor', 'Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn'),
+    for chip_name in (
+        'Chocolatey Chip', 'Omega Nanochip', 'Omega Motherboard', 'Silkrode Software', 'Silkrode Processor'
     ):
-        abm_adviceDict['Lab Chips'].append(session_data.account.lab_chips[chip_name].get_advice(chip_label))
+        abm_adviceDict['Lab Chips'].append(session_data.account.lab_chips[chip_name].get_advice())
     abm_adviceDict['Lab Chips'].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
     abm_adviceDict['Lab Chips'].append(Advice(
         label='Fill any remaining slots with Galvanic Nanochip: +10% respawn per chip',

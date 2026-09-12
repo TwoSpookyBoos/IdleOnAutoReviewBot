@@ -47,9 +47,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     ))
 
     #Verify Skill Mastery itself is unlocked from The Rift
-    cap_Advices['Static Sources'].append(
-        session_data.account.rift['SkillMastery'].get_unlock_advice("{{ Rift|#rift }} 16: Skill Mastery unlocked")
-    )
+    cap_Advices['Static Sources'].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
     #Account-wide total smithing levels of 300 needed to unlock the bonus
     total_smithing_levels = sum(session_data.account.all_skills['Smithing'])
     skill_mastery_bonus_bool = session_data.account.rift['SkillMastery'].unlocked and total_smithing_levels >= 300

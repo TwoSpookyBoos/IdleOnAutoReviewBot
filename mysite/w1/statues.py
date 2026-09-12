@@ -28,7 +28,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
             goal=1
         ))
     crystal_Advices.append(
-        session_data.account.lab_chips['Chocolatey Chip'].get_advice('Chocolatey Chip for more Crystal Mobs')
+        session_data.account.lab_chips['Chocolatey Chip'].get_advice()
     )
     cards = ['Demon Genie', 'Poop']
     for card_name in cards:

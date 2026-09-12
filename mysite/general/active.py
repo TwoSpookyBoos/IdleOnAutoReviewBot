@@ -31,17 +31,17 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     }
     # Account Wide
     crystal_Advice[aw].append(
-        session_data.account.lab_chips['Chocolatey Chip'].get_advice("Chocco Chip for more Crystal Mobs")
+        session_data.account.lab_chips['Chocolatey Chip'].get_advice()
     )
     cards = ['Demon Genie', 'Poop']
     for card_name in cards:
         crystal_Advice[aw].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
 
     crystal_Advice[aw].append(
-        session_data.account.lab_chips['Omega Nanochip'].get_advice("Omega Nanochip: Top Left card doubler")
+        session_data.account.lab_chips['Omega Nanochip'].get_advice()
     )
     crystal_Advice[aw].append(
-        session_data.account.lab_chips['Omega Motherboard'].get_advice("Omega Motherboard: Bottom Right card doubler")
+        session_data.account.lab_chips['Omega Motherboard'].get_advice()
     )
     crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])

@@ -92,10 +92,19 @@ lab_chips_dict = {
         'Description': description.replace('_', ' '),
         'Effect': effect.replace('_', ' '),
         'BaseValue': parse_number(basevalue),
-        'Image': name.replace('_', '-').lower()
+        'Image': kebab(name.replace('_', ' '))
     }
     for index, (name, effect, description, _, _, _, _, _, _, _, _, basevalue) in enumerate(ChipDesc)
 }
+lab_chip_advice_labels = {
+    'Chocolatey Chip': 'Chocolatey Chip for more Crystal Mobs',
+    'Omega Nanochip': 'Omega Nanochip: Top Left card doubler',
+    'Omega Motherboard': 'Omega Motherboard: Bottom Right card doubler',
+    'Silkrode Software': 'Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn',
+    'Silkrode Processor': 'Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn',
+}
+for chip in lab_chips_dict.values():
+    chip['AdviceLabel'] = lab_chip_advice_labels.get(chip['Name'], chip['Name'])
 
 #`LabMainBonus = function ()` in source. Last updated in v2.528.0
 LabMainBonus = ["0 91 353 90 0 1 Animal_Farm +1%_Total_Damage_for_every_different_species_you_have_bred_within_Mob_Breeding._You_just_need_to_breed_the_Mob_type_one_time_for_it_to_count!_@_-_@_Total_Bonus:_{%".split(" ",),"1 250 310 90 1 2 Wired_In All_Uploaded_Players_print_2x_more_resources_from_their_section_of_the_3D_Printer._The_displayed_amount_will_NOT_appear_doubled,_just_to_avoid_confusion_as_to_what_your_actual_base_Sampling_Rate_is,_but_it_will_be_displayed_in_blue.".split(" ",),"2 356 147 90 1 3 Gilded_Cyclical_Tubing All_refinery_cycles_occur_3x_faster._Faster_cycles_means_more_salts!".split(" ",),"3 450 220 90 0 1 No_Bubble_Left_Behind Every_24_hours,_your_3_lowest_level_Alchemy_Bubbles_gets_+1_Lv._This_only_applies_to_bubbles_Lv_5_or_higher,_so_it's_more_like_'your_lowest_level_bubble_that_is_at_least_level_5'._ALSO,_it_only_works_on_the_first_15_bubbles_of_each_colour!_@_Doesn't_trigger_on_days_that_you_don't_login.".split(" ",),"4 538 362 90 1 2 Killer's_Brightside All_monster_kills_count_for_2x_more_than_normal_for_things_like_opening_portals_and_Death_Note._Doesn't_increase_resource_drops_or_exp_gain.".split(" ",),"5 651 200 90 0 1 Shrine_World_Tour If_a_shrine_is_placed_within_town,_instead_of_in_a_monster_map,_it_will_act_as_though_it_is_placed_in_EVERY_map_in_that_entire_world!".split(" ",),"6 753 113 90 1 5 Viaduct_of_the_Gods All_alchemy_liquids_have_x5_higher_max_capacity._However,_you_regenerate_alchemy_liquids_-30%_slower.".split(" ",),"7 824 377 90 1 2 Certified_Stamp_Book All_Stamps,_except_for_MISC_tab_stamps,_give_DOUBLE_the_bonus.".split(" ",),"8 945 326 90 1 1.5 Spelunker_Obol 1.50x_higher_effects_from_all_active_Jewels_within_the_Mainframe,_and_gives_you_+50%_rememberance_of_the_game_Idle_Skilling._@_This_bonus_always_has_a_80px_connection_range_no_matter_what!".split(" ",),"9 990 148 90 0 2 Fungi_Finger_Pocketer +2%_extra_cash_from_monsters_for_every_1_million_Green_Mushroom_kills_your_account_has,_which_can_be_viewed_at_Death_Note._@_-_@_Total_Bonus:_{%".split(" ",),"10 1177 163 90 1 2 My_1st_Chemistry_Set All_Vials_in_Alchemy_give_DOUBLE_the_bonus._The_bonus_description_will_reflect_this_doubling.".split(" ",),"11 1300 380 90 0 2 Unadulterated_Banking_Fury +2%_Total_Damage_for_each_'green_stack'_of_resources_in_your_bank._A_'green_stack'_is_a_stack_in_your_Storage_Chest_with_10_million_or_more_items,_since_the_number_turns_Green_after_10M!_@_-_@_Total_Bonus:_{%".split(" ",),"12 400 390 90 0 1 Sigils_of_Olden_Alchemy Allows_you_to_level_up_Alchemy_Sigils_by_assigning_players_in_alchemy,_at_a_base_rate_of_1_sigil_xp_per_hour._@_Sigils_can_be_leveled_up_just_twice:_Once_to_unlock_their_bonus,_and_once_more_to_boost_their_bonus._Their_bonuses_are_passive,_and_apply_to_all_characters_always.".split(" ",),"13 1430 265 90 0 50 Viral_Connection All_mainframe_bonuses_and_jewels_have_a_50%_larger_connection_range,_unless_it_states_otherwise._@_This_bonus_always_has_a_80px_connection_range_no_matter_what!".split(" ",),]

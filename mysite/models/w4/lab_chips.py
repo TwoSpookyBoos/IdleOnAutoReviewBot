@@ -11,15 +11,16 @@ class LabChip:
         self.effect: str = info['Effect']
         self.base_value: float = info['BaseValue']
         self.image: str = info['Image']
+        self._advice_label: str = info['AdviceLabel']
         self.count: int = count
 
     @property
     def owned(self) -> bool:
         return self.count > 0
 
-    def get_advice(self, label: str) -> Advice:
+    def get_advice(self, additional_text: str = '') -> Advice:
         return Advice(
-            label=label,
+            label=f"{self._advice_label}{additional_text}",
             picture_class=self.image,
             progression=self.count,
             goal=1,
