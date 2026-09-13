@@ -6,6 +6,7 @@ from utils.safer_data_handling import safe_loads
 from consts.consts_general import (
     greenstack_item_difficulty_groups,
     gstack_unique_expected,
+    gstack_unique_known,
     quest_items_codenames,
 )
 
@@ -22,7 +23,7 @@ class GreenStacks:
         return [
             codename
             for codename in self._codenames
-            if codename not in gstack_unique_expected
+            if codename not in gstack_unique_known
         ]
 
     @cached_property
