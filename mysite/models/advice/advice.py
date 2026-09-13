@@ -79,8 +79,8 @@ class Advice(AdviceBase):
 
     def render_row(self, progress_bars) -> Markup:
         data_attrs = "".join(f' data-{attr}="true"' for attr, val in self.dataset if val)
-        css_class = escape(self.css_class)
-        status = escape(self.status)
+        css_class = self.css_class
+        status = self.status
 
         percent = self.percent
         potential = getattr(self, "potential_percent", _UNSET)
