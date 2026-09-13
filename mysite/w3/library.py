@@ -382,6 +382,7 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
     anyBookAdvice = False
 
     talentExclusions = getTalentExclusions()
+    max_book_level = session_data.account.library.max_book_level
 
     #Account-Wide, highest priority talents after increasing talent book levels
     awp = library_subgroup_tiers[0]
@@ -487,13 +488,13 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
         subgroupName = library_subgroup_tiers[-2]  #'ALL Unmaxed Talents'
         for talent_number in char.expected_talents:
             if talent_number not in unbookable_talents_list:
-                if char.max_talents.get(str(talent_number), 0) < session_data.account.library.max_book_level:
+                if char.max_talents.get(str(talent_number), 0) < max_book_level:
                     category_advices[subgroupName][char_banner].append(
                         Advice(
                             label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: {all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
                             picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
                             progression=char.max_talents.get(str(talent_number), 0),
-                            goal=session_data.account.library.max_book_level
+                            goal=max_book_level
                         )
                     )
                     talentNumbersAdded.append(talent_number)
