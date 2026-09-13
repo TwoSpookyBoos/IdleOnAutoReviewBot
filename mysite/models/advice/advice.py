@@ -7,11 +7,15 @@ from consts.consts_autoreview import ignorable_labels
 from models.advice.advice_base import AdviceBase
 from utils.text_formatting import kebab
 
+_link_pattern = re.compile(r"\{\{.+?}}")
+_float_pattern = re.compile(r'((?:\d+|,)+(?:\.\d+)?)')
+
+
 class LabelBuilder:
     wrapper = "span"
 
     def __init__(self, label):
-        matches = re.findall(r"\{\{.+?}}", label)
+        matches = _link_pattern.findall(label)
 
         if not matches:
             self.label = label
@@ -121,8 +125,7 @@ class Advice(AdviceBase):
         if (value is None):
             return None
         if (isinstance(value, str)):
-            float_re = re.compile(r'((?:\d+|,)+(?:\.\d+)?)')
-            res = float_re.search(value)
+            res = _float_pattern.search(value)
             if res is None or len(res.groups()) != 1:
                 return None
 
