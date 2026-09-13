@@ -94,7 +94,11 @@ expected_talents_dict = {
         170, 141, 142, 143, 144,
         175, 176, 177, 178, 149
     ],
-    #"Royal Guardian": [],
+    'Royal Guardian': [
+        225, 226, 227, 228, 229,
+        230, 231, 232, 203, 234,
+        235, 236, 237, 238, 239
+    ],
 
     'Archer': [
         #All 3 rows from Tab1
