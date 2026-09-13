@@ -193,7 +193,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 1
             'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
             # World 7 part 2
-            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
+            'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B11', 'w7B12',
             "Sewers3"
         ],
         "Crystal Enemy Drops": [
@@ -253,7 +253,7 @@ greenstack_item_difficulty_groups = {
         "Other Skilling Resources": [
             "FoodTrapping1", "FoodWorship1",
             "Ladle",
-            "ResetCompleted", "ResetCompletedS",  # Talent Point / Star Talent Reset Potions
+            "ResetCompletedS",  # Talent Point / Star Talent Reset Potions
             "PrehistriumBar",  # Prehistrium Bar
             "Prehistrium",  # Prehistrium Ore
         ],
@@ -300,6 +300,7 @@ greenstack_item_difficulty_groups = {
             # Every day boss gem farm
             'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
             'ExpBalloon1',  # Small Experience Balloon
+            'StoneA3b',
         ],
     },
     16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
@@ -308,6 +309,7 @@ greenstack_item_difficulty_groups = {
             'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',  # Tempest Bow/Ring Stones
             "Quest41",  # Flowies
             "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
+            "ResetCompleted",
         ],
     }
 }
@@ -345,7 +347,7 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B11', 'w7B12',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
         'Gfoodcoupon', 'Line9', 'Line14',
         'StoneT1eb', 'StoneAeB', 'StoneWeb',
@@ -447,6 +449,7 @@ expected_stackables = {
         'Meatloaf', 'Quest17', 'Quest29',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
         'Quest41',
+        'StoneA3b'
     ],
     'Cheater': [
         'EmpPart',  # W6 Boss Material
@@ -483,6 +486,11 @@ gstackable_codenames = [item for items in expected_stackables.values() for item 
 gstackable_codenames_expected = [
     item for category, items in expected_stackables.items() if category not in excluded_gstack_categories for item in items
 ]
+# Legitimately obtainable codenames (everything except 'Cheater'), regardless of whether they're
+# still achievable by new players - used to keep Legacy items out of the "unprecedented" gstack list
+gstack_unique_known = {
+    item for category, items in expected_stackables.items() if category != 'Cheater' for item in items
+}
 gstacks_rated_items = []
 quest_items_codenames = expected_stackables["Missable Quest Items"]
 for dg in greenstack_item_difficulty_groups:
@@ -500,9 +508,10 @@ for item_name in gstackable_codenames_expected:
         gstack_duplicate_expected.add(item_name)
     else:
         gstack_unique_expected.add(item_name)
+# Expected: sold in Vendor Shops + also a Rare Drop from enemies
+gstack_duplicate_expected -= {'FoodPotGr3', 'FoodPotRe2', 'FoodHealth9'}
 if len(gstack_duplicate_expected) > 0:
     logger.warning(f"{len(gstack_duplicate_expected)} Duplicate entries in GStack Expected list: {gstack_duplicate_expected}")
-    #These 3 are expected as they're sold in Vendor Shops category + Rare Drops from enemies {'FoodPotGr3', 'FoodPotRe2', 'FoodHealth9'}
 
 #Cards
 max_card_stars = 6
