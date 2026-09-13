@@ -1,6 +1,7 @@
 import json
 import traceback
 import uuid
+import zlib
 from datetime import datetime
 from pathlib import Path
 
@@ -53,8 +54,24 @@ from utils.text_formatting import (
 logger = get_logger(__name__)
 
 
+MAX_REQUEST_BYTES = 30_000_000
+
+
+def get_request_json() -> dict:
+    # parsed once per request; the browser gzips large bodies
+    if "request_json" not in g:
+        body = request.get_data()
+        if body[:2] == b"\x1f\x8b":
+            decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS | 16)
+            body = decompressor.decompress(body, MAX_REQUEST_BYTES)
+            if decompressor.unconsumed_tail:
+                raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
+        g.request_json = json.loads(body)
+    return g.request_json
+
+
 def get_user_input() -> str:
-    return (request.args.get("player") or json.loads(request.data).get("player", "")).strip()
+    return (request.args.get("player") or get_request_json().get("player", "")).strip()
 
 
 def parse_user_input():
@@ -86,7 +103,7 @@ def parse_user_input():
 
 def store_user_preferences():
     if request.method == "POST":
-        args = json.loads(request.data)
+        args = get_request_json()
     elif request.method == "GET":
         args = request.args.to_dict()
     else:
