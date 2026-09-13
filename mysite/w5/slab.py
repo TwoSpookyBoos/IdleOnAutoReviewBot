@@ -37,16 +37,19 @@ def getSlabProgressionTierAdviceGroups():
     true_max = true_max_tiers['Slab']
     max_tier = true_max - optional_tiers
     tier_Slab = 0
+    account = session_data.account
+    # set for O(1) lookups, checked once per slab item
+    registered_slab = set(account.registered_slab)
 
     # Assess Tiers
     for item_codename in SlabItemSort:
         item_displayname = getItemDisplayName(item_codename)
-        if item_codename not in session_data.account.registered_slab:
+        if item_codename not in registered_slab:
             # If the item is an Asset, meaning in storage, character inventory, or worn by a character
-            item = session_data.account.stored_assets.get(item_codename)
+            item = account.stored_assets.get(item_codename)
             if item.amount > 0:
                 sources = ", ".join([
-                    char.character_name for char in session_data.account.all_characters
+                    char.character_name for char in account.all_characters
                     if item_codename in char.equipment.inventory
                 ])
                 sources = 'In Storage' if not sources else f"Inventory of {sources}"
@@ -57,10 +60,10 @@ def getSlabProgressionTierAdviceGroups():
                     goal=1
                 ))
                 continue
-            elif session_data.account.worn_assets.get(item_codename).amount > 0:
-                item = session_data.account.worn_assets.get(item_codename)
+            elif account.worn_assets.get(item_codename).amount > 0:
+                item = account.worn_assets.get(item_codename)
                 sources = ", ".join([
-                    char.character_name for char in session_data.account.all_characters
+                    char.character_name for char in account.all_characters
                     if item_codename in char.equipment.equips
                     or item_codename in char.equipment.tools
                 ])
@@ -71,7 +74,7 @@ def getSlabProgressionTierAdviceGroups():
                     goal=1
                 ))
                 continue
-            elif session_data.account.npc_tokens.owned(item_codename):
+            elif account.npc_tokens.owned(item_codename):
                 slab_AdviceDict['Storage'].append(Advice(
                     label=f"{item_displayname} (Retrieve from NPC Tokens)",
                     picture_class=item_displayname,
@@ -81,7 +84,7 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
             if item_codename in reclaimable_quest_items.keys():
-                if session_data.account.compiled_quests.get(reclaimable_quest_items[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
+                if account.compiled_quests.get(reclaimable_quest_items[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
                     slab_AdviceDict['Reclaims'].append(Advice(
                         label=f"{item_displayname} ({reclaimable_quest_items[item_codename]['QuestGiver'].replace('_', ' ')}: {reclaimable_quest_items[item_codename]['QuestName']})",
                         picture_class=item_displayname,
@@ -92,8 +95,8 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
             if item_codename in slab_quest_rewards_all_chars.keys():
-                # logger.debug(f"{item_codename} quest {slab_QuestRewards[item_codename]['QuestNameCoded']} completed by {session_data.account.compiled_quests.get(slab_QuestRewards[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{max_characters}")
-                if session_data.account.compiled_quests.get(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded'], {}).get('CompletedCount',
+                # logger.debug(f"{item_codename} quest {slab_QuestRewards[item_codename]['QuestNameCoded']} completed by {account.compiled_quests.get(slab_QuestRewards[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{max_characters}")
+                if account.compiled_quests.get(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded'], {}).get('CompletedCount',
                                                                                                                               0) < max_characters:
                     slab_AdviceDict["Quests"].append(Advice(
                         label=f"{item_displayname} ({slab_quest_rewards_all_chars[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_all_chars[item_codename]['QuestName']})",
@@ -105,7 +108,7 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
             if item_codename in slab_quest_rewards_once.keys():
-                if session_data.account.compiled_quests.get(slab_quest_rewards_once[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
+                if account.compiled_quests.get(slab_quest_rewards_once[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
                     slab_AdviceDict["Quests"].append(Advice(
                         label=f"{item_displayname} ({slab_quest_rewards_once[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_once[item_codename]['QuestName']})",
                         picture_class=item_displayname,
@@ -151,7 +154,7 @@ def getSlabProgressionTierAdviceGroups():
                 ))
                 continue
             # If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
-            if item_codename in dungeon_weapons_list and session_data.account.dungeon_upgrades.get("MaxWeapon", 0) >= max_dungeon_weapons_available:
+            if item_codename in dungeon_weapons_list and account.dungeon_upgrades.get("MaxWeapon", 0) >= max_dungeon_weapons_available:
                 slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
                     label=item_displayname,
                     picture_class=item_displayname,
@@ -164,7 +167,7 @@ def getSlabProgressionTierAdviceGroups():
                 try:
                     if (
                         item_codename in equipment_list
-                        and session_data.account.dungeon_upgrades['MaxArmor'][equipment_type_index] >= max_dungeon_armors_available[equipment_type_index]
+                        and account.dungeon_upgrades['MaxArmor'][equipment_type_index] >= max_dungeon_armors_available[equipment_type_index]
                     ):
                         slab_AdviceDict['Dungeon']['Armor'].append(Advice(
                             label=item_displayname,
@@ -180,7 +183,7 @@ def getSlabProgressionTierAdviceGroups():
                 try:
                     if (
                         item_codename in jewelry_list
-                        and session_data.account.dungeon_upgrades['MaxJewelry'][jewelry_type_index] >= max_dungeon_jewelry_available[jewelry_type_index]
+                        and account.dungeon_upgrades['MaxJewelry'][jewelry_type_index] >= max_dungeon_jewelry_available[jewelry_type_index]
                     ):
                         slab_AdviceDict['Dungeon']['Armor'].append(Advice(
                             label=item_displayname,
@@ -194,7 +197,7 @@ def getSlabProgressionTierAdviceGroups():
 
     # Replace any locked Vendors with unlock note
     for vendor_name, required_item in vendor_unlock_item.items():
-        if required_item not in session_data.account.registered_slab:
+        if required_item not in registered_slab:
             slab_AdviceDict['Vendors'][vendor_name] = [
                 Advice(
                     label=f"{vendor_name} purchases hidden until Boss Crystal registered in The Slab",
@@ -206,7 +209,7 @@ def getSlabProgressionTierAdviceGroups():
 
     # Replace any locked Anvil Tabs with unlock note
     for display_name, code_name in anvil_tabs.items():
-        if code_name not in session_data.account.registered_slab:
+        if code_name not in registered_slab:
             slab_AdviceDict['Anvil'][display_name] = [
                 Advice(
                     label=f"{display_name} craftables hidden until Tab registered in The Slab",
@@ -219,7 +222,7 @@ def getSlabProgressionTierAdviceGroups():
     # Generate Alert
     minimal_effort_stacks = len(slab_AdviceDict['Reclaims']) + len(slab_AdviceDict['Storage'])
     if minimal_effort_stacks > 0:
-        session_data.account.alerts_Advices['World 5'].append(Advice(
+        account.alerts_Advices['World 5'].append(Advice(
             label=f"{minimal_effort_stacks} minimal effort {{{{ Slab|#slab}}}} stack{pl(minimal_effort_stacks)} available",
             picture_class='the-slab',
             unrated=True,
