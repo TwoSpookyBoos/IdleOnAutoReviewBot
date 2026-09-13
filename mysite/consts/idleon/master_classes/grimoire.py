@@ -1,3 +1,4 @@
+from consts.consts_monster_data import decode_monster_name
 from consts.idleon.consts_idleon import RANDOlist
 
 # `GrimoireUpg = function`. Last updated in v2.528.0
@@ -6,13 +7,11 @@ grimoire_upgrades_list = ["Wraith_Damage_製_(Tap_for_more_info) 8 1.10 0 999999
 grimoire_dont_scale = [9, 11, 26, 36, 39, 17, 32, 45]
 grimoire_bones_list = ['Femurs', 'Ribcages', 'Craniums', 'Bovinae']
 
-# NOTE: not Grimoire-exclusive -- Vault's own separate Knockout stack (own counter, own raw save
-# index, a distinct mechanic; see _calculate_w1_upgrade_vault in account_calcs.py, or
-# Vault.calculate() once vault-to-classes merges) also indexes into this same table for its own
-# "Target: X" display. Whether that's deliberate shared game design or just code reuse isn't
-# confirmed here -- only that the existing (pre-this-session) code already relies on it that way.
-grimoire_stack_types = ['Knockout', 'Elimination', 'Annihiliation']
+grimoire_stack_types = ['Knockout', 'Elimination', 'Annihilation']
 grimoire_coded_stack_monster_order = RANDOlist[104]
+grimoire_stack_target_monsters: list[str] = [
+    decode_monster_name(coded_name) for coded_name in grimoire_coded_stack_monster_order
+]
 
 
 # Account-independent per-upgrade data, derived once from grimoire_upgrades_list above. Grimoire.__init__
