@@ -8,33 +8,7 @@
             {% if title != "default" %}
                 <li class="advice-title"><strong>{{ title }}</strong></li>
             {% endif %}
-            {% for advice in advices %}
-                <li class="advice {{ advice.css_class }} lazy"
-                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"{% endif %}{% endfor %}>
-                                    <span class="progress-box{% if not progress_bars or (advice.percent == 0 and advice.potential_percent == 0) %} hidden{% endif %} {{ advice.status }}"
-                                            {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
-                                            {% endif %}{% endfor %}>
-                                        <span class="progress-bar"{% if advice.percent%} style="width: {{ advice.percent }}%;"{% endif %}></span>
-                                        <span class="progress-bar secondary"{% if advice.potential_percent%} style="width: {{ advice.potential_percent }}%;"{% endif %}></span>
-                                    </span>
-                    {% if advice.as_link %}
-                        <a href="#{{ advice.css_class }}">{{ advice.label }}</a>
-                    {% else %}
-                        {{ advice.label | safe }}
-                    {% endif %}
-                </li>
-                <li class="resource{% if advice.resource %} resource-{{ advice.resource }} lazy{% endif %}"
-                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
-                        {% endif %}{% endfor %}></li>
-                <li class="prog"{% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
-                {% endif %}{% endfor %}>{{ advice.progression }}</li>
-                <li class="arrow{% if not advice.progression or not advice.goal %}-hidden{% endif %}"
-                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
-                        {% endif %}{% endfor %}></li>
-                <li class="goal {{ advice.status }}"
-                        {% for attr, val in advice.dataset %}{% if val %} data-{{ attr }}="true"
-                        {% endif %}{% endfor %}>{{ advice.goal }}</li>
-            {% endfor %}
+            {% for advice in advices %}{{ advice.render_row(progress_bars) }}{% endfor %}
         {% endfor %}
     </ul>
     {% if advice_group.post_string %}
