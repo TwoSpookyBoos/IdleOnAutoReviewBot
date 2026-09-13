@@ -1,6 +1,8 @@
 import re
 from typing import Any
 
+from markupsafe import Markup, escape
+
 from consts.consts_autoreview import ignorable_labels
 from models.advice.advice_base import AdviceBase
 from utils.text_formatting import kebab
@@ -22,6 +24,9 @@ class LabelBuilder:
             label = label.replace(match, link)
 
         self.label = f"<{self.wrapper}>{label}</{self.wrapper}>"
+
+
+_UNSET = object()
 
 
 class Advice(AdviceBase):
@@ -67,6 +72,39 @@ class Advice(AdviceBase):
         self.unrated: bool = unrated
         self.overwhelming = overwhelming
         self.optional = optional
+
+    def render_row(self, progress_bars) -> Markup:
+        data_attrs = "".join(f' data-{attr}="true"' for attr, val in self.dataset if val)
+        css_class = escape(self.css_class)
+        status = escape(self.status)
+
+        percent = self.percent
+        potential = getattr(self, "potential_percent", _UNSET)
+        potential_is_zero = potential == 0 if potential is not _UNSET else False
+        hidden = " hidden" if not progress_bars or (percent == 0 and potential_is_zero) else ""
+
+        bar = f' style="width: {percent}%;"' if percent else ""
+        secondary = f' style="width: {potential}%;"' if potential is not _UNSET and potential else ""
+
+        if getattr(self, "as_link", False):
+            label = f'<a href="#{css_class}">{escape(self.label)}</a>'
+        else:
+            label = self.label
+
+        resource = f' resource-{escape(self.resource)} lazy' if self.resource else ""
+        arrow = "" if self.progression and self.goal else "-hidden"
+
+        return Markup(
+            f'<li class="advice {css_class} lazy"{data_attrs}>'
+            f'<span class="progress-box{hidden} {status}"{data_attrs}>'
+            f'<span class="progress-bar"{bar}></span>'
+            f'<span class="progress-bar secondary"{secondary}></span>'
+            f'</span> {label} </li>'
+            f'<li class="resource{resource}"{data_attrs}></li>'
+            f'<li class="prog"{data_attrs}>{escape(self.progression)}</li>'
+            f'<li class="arrow{arrow}"{data_attrs}></li>'
+            f'<li class="goal {status}"{data_attrs}>{escape(self.goal)}</li>'
+        )
 
     @property
     def css_class(self) -> str:
