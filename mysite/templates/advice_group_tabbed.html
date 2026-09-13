@@ -5,7 +5,6 @@
         {% endfor %}
     </div>
     {% for _, advice_group in group.tabbed_advices.values() %}
-        {% set is_tabbed=True %}
-        {% include 'advice_group.html' %}
+        {{ advice_group.render(progress_bars, is_tabbed=True) }}
     {% endfor %}
 </div>

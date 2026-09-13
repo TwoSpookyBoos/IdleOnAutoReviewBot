@@ -21,8 +21,7 @@
                             {% include 'advice_group_tabbed.html' %}
                         {% endif %}
                     {% else %}
-                        {% set advice_group = group %}
-                        {% include 'advice_group.html' %}
+                        {{ group.render(progress_bars) }}
                     {% endif %}
                 {% endfor %}
             </li>
