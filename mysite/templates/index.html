@@ -20,11 +20,14 @@
         <link rel="icon" href="{{ "pinchy_64x64.png"|img }}" type="image/png">
         <link rel="apple-touch-icon" href="{{ "pinchy_64x64.png"|img }}" type="image/png">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.standalone.js"></script>
-        <script src="{{ "jquery-eu-biscuit-law-popup"|script }}"></script>
-        <script src="{{ "spin"|script }}"></script>
-        <script src="{{ "main"|script }}"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <script defer src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.standalone.js"></script>
+        <script defer src="{{ "jquery-eu-biscuit-law-popup"|script }}"></script>
+        <script defer src="{{ "spin"|script }}"></script>
+        <script defer src="{{ "main"|script }}"></script>
 
         {% if beta %}
         <meta name="robots" content="noindex">
