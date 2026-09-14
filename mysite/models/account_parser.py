@@ -29,15 +29,15 @@ from consts.consts_w3 import (
     max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
     collider_storage_limit_list, prayers_dict, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
     apocable_map_index_dict,
-    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict, totems_list
+    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
 )
 from consts.consts_w4 import (
-    max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, rift_rewards_dict, lab_chips_dict, lab_bonuses_dict, lab_jewels_dict,
+    max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
     max_breeding_territories, slot_unlock_waves_list, territory_names, breeding_upgrades_dict, breeding_genetics_list, breeding_shiny_bonus_list, breeding_species_dict,
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex, npc_tokens,
+    sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from models.general.models_consumables import Bag, StorageChest
@@ -241,10 +241,8 @@ def _parse_general(account):
     _parse_general_guild_bonuses(account)
     _parse_general_printer(account)
     _parse_general_maps(account)
-    _parse_general_colo_scores(account)
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
-    _parse_general_npc_tokens(account)
     _parse_general_inventory_slots_account_wide(account)
     _parse_general_inventory_characters(account)
     _parse_general_storage_slots(account)
@@ -349,18 +347,6 @@ def _parse_general_quests(account):
                 status = 'Unaccepted'
             account.compiled_quests[questName][f'{status}Count'] += 1
             account.compiled_quests[questName][f'{status}Chars'].append(charIndex)
-
-def _parse_general_npc_tokens(account):
-    account.npc_tokens = {}
-    raw_npc_tokens = account.raw_data.get('CYNPC', [])
-    for tokenIndex, tokenName in enumerate(npc_tokens):
-        try:
-            account.npc_tokens[tokenName] = safer_convert(raw_npc_tokens[tokenIndex], 0)
-        except Exception as e:
-            logger.warning(f"NPC Token Parse error at tokenIndex {tokenIndex}: {e}. Defaulting to 0")
-            account.npc_tokens[tokenName] = 0
-    # for tokenName, tokenCount in account.npc_tokens.items():
-    #     account.all_assets.get(tokenName).add(tokenCount)
 
 def _parse_family_bonuses(account):
     account.family_bonuses = {}
@@ -545,16 +531,6 @@ def _parse_general_item_filter(account, raw_printer_xtra):
 def _parse_general_maps(account):
     account.enemy_maps = buildMaps()
     account.enemy_worlds = {}
-
-def _parse_general_colo_scores(account):
-    account.colo_scores = {}
-    raw_colo_scores = safe_loads(account.raw_data.get('FamValColosseumHighscores', []))
-    for coloIndex, coloScore in enumerate(raw_colo_scores):
-        try:
-            account.colo_scores[coloIndex] = safer_convert(coloScore, 0)
-        except Exception as e:
-            logger.warning(f"Colo Score Parse error at coloIndex {coloIndex}: {e}. Defaulting to 0")
-            account.colo_scores[coloIndex] = 0
 
 def _parse_general_event_points_shop(account):
     account.event_points_shop = {
@@ -892,7 +868,6 @@ def _parse_w2(account):
     _parse_w2_cauldrons(account)
     _parse_w2_bubbles(account)
     _parse_w2_p2w(account)
-    _parse_w2_postOffice(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
     _parse_w2_islands(account)
@@ -1078,14 +1053,6 @@ def _parse_w2_p2w(account):
         except:
             pass  # Already defaulted to 0s in consts.sigils_dict
         
-def _parse_w2_postOffice(account):
-    account.postOffice = {
-        'Completing Orders': safer_convert(account.raw_data.get("CYDeliveryBoxComplete", 0), 0),
-        'Streak Bonuses': safer_convert(account.raw_data.get("CYDeliveryBoxStreak", 0), 0),
-        'Miscellaneous': safer_convert(account.raw_data.get("CYDeliveryBoxMisc", 0), 0),
-        'Upgrade Vault': safer_convert(account.raw_optlacc_dict.get(347, 0), 0)
-    }
-
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
     raw_vote_categories = [safer_convert(v, 0) for v in raw_vote_categories]  #Convert any None to 0 as a default
@@ -1208,7 +1175,6 @@ def _parse_w3(account):
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
     _parse_w3_armor_sets(account)
-    _parse_w3_worship(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -1588,25 +1554,6 @@ def _parse_w3_armor_sets(account):
             'Base Value': safer_convert(requirements[3][2], 0)
         }
 
-def _parse_w3_worship(account):
-    account.worship = {
-        'Totems': {}
-    }
-    raw_totem_data = safe_loads(account.raw_data.get("TotemInfo", []))
-    if len(raw_totem_data) > 0:
-        waves = raw_totem_data[0]
-        for totem_index, totem_name in enumerate(totems_list):
-            try:
-                account.worship['Totems'][totem_index] = {
-                    'Name': totem_name,
-                    'Waves': safer_convert(waves[totem_index], 0)
-                }
-            except:
-                account.worship['Totems'][totem_index] = {
-                    'Name': totem_name,
-                    'Waves': 0
-                }
-
 
 def _parse_w4(account):
     _parse_w4_cooking(account)
@@ -1692,20 +1639,8 @@ def _parse_w4_tome(account):
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
-    _parse_w4_lab_chips(account, raw_lab)
     _parse_w4_lab_bonuses(account, raw_lab)
     _parse_w4_jewels(account, raw_lab)
-
-def _parse_w4_lab_chips(account, raw_lab):
-    account.labChips = {}
-    raw_labChips_list = raw_lab
-    if len(raw_labChips_list) >= 15:
-        raw_labChips_list = raw_labChips_list[15]
-    for labChipIndex, labChip in lab_chips_dict.items():
-        try:
-            account.labChips[labChip["Name"]] = max(0, int(raw_labChips_list[labChipIndex]))
-        except:
-            account.labChips[labChip["Name"]] = 0
 
 def _parse_w4_lab_bonuses(account, raw_lab):
     # TODO: Actually figure out lab :(
@@ -1739,20 +1674,8 @@ def _parse_w4_jewels(account, raw_lab):
             }
 
 def _parse_w4_rift(account):
-    account.rift = {
-        'Unlocked': False,
-        'Level': account.raw_data.get("Rift", [0])[0],
-    }
-    account.rift_level = account.raw_data.get("Rift", [0])[0]
-    if account.rift['Level'] > 0:
-        account.rift['Unlocked'] = True
-    else:
-        for characterIndex in range(0, len(account.all_quests)):
-            if account.all_quests[characterIndex].get("Rift_Ripper1", 0) == 1:
-                account.rift['Unlocked'] = True
-                break
-    for riftLevel, riftBonusDict in rift_rewards_dict.items():
-        account.rift[riftBonusDict['Shorthand']] = account.rift['Level'] >= riftLevel
+    # Seam: hands the model the already-parsed quest data it needs
+    account.rift.calculate_unlocked(account.all_quests)
 
 def _parse_w4_breeding(account):
     account.breeding = {

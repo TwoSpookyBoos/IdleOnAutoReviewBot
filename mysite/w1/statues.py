@@ -27,12 +27,9 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
             progression=0,
             goal=1
         ))
-    crystal_Advices.append(Advice(
-        label='Chocolatey Chip for more Crystal Mobs',
-        picture_class="chocolatey-chip",
-        progression=session_data.account.labChips.get('Chocolatey Chip', 0),
-        goal=1
-    ))
+    crystal_Advices.append(
+        session_data.account.lab_chips['Chocolatey Chip'].get_advice()
+    )
     cards = ['Demon Genie', 'Poop']
     for card_name in cards:
         crystal_Advices.append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice('Minimum 3 star'))

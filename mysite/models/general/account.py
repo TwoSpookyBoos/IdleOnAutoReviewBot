@@ -5,16 +5,22 @@ from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
+from models.general.colo_scores import ColoScores
 from models.general.companions import Companions
 from models.general.greenstacks import GreenStacks
+from models.general.npc_tokens import NpcTokens
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
 from models.w2.arcade import Arcade
+from models.w2.post_office import PostOffice
 from models.w3.library import Library
 from models.w3.salt_lick import SaltLick
+from models.w3.worship import Worship
+from models.w4.lab_chips import LabChips
+from models.w4.rift import Rift
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
@@ -99,6 +105,8 @@ class Account:
             'Total Slots Max': 0
         }
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
+        self.colo_scores: ColoScores = ColoScores(self.raw_data)
+        self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)
         #Class lists
         self.beginners = []
         self.jmans = []
@@ -133,12 +141,16 @@ class Account:
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
+        self.post_office: PostOffice = PostOffice(self.raw_data)
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)
         self.library: Library = Library(self.raw_data)
+        self.worship: Worship = Worship(self.raw_data)
 
         # W4
+        self.lab_chips: LabChips = LabChips(self.raw_data)
+        self.rift: Rift = Rift(self.raw_data)
         self.cooking = {
             'MealsUnlocked': 0,
             'MealsUnlockedByWorld': {i:0 for i in range(0,9)},

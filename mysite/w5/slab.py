@@ -71,7 +71,7 @@ def getSlabProgressionTierAdviceGroups():
                     goal=1
                 ))
                 continue
-            elif session_data.account.npc_tokens.get(item_codename, 0) > 0:
+            elif session_data.account.npc_tokens.owned(item_codename):
                 slab_AdviceDict['Storage'].append(Advice(
                     label=f"{item_displayname} (Retrieve from NPC Tokens)",
                     picture_class=item_displayname,
