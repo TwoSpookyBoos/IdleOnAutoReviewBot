@@ -53,6 +53,8 @@ ItemDef = TypeVar("ItemDef", bound=ItemDefinition | StampItemDefinition)
 
 class ItemDefinitions(dict[str, ItemDef]):
     def get_item_from_codename(self, codename: str) -> ItemDef:
+        if codename in self:
+            return self[codename]
         return next(item for code, item in self.items() if code == codename)
 
     def get_all_stamps(self) -> list[StampItemDefinition]:
