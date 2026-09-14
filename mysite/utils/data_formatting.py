@@ -260,6 +260,10 @@ def getCharacterDetails(inputJSON, runType):
     equipped_cardset = {}
     equipped_star_signs = {}
     main_stats = {}
+    try:
+        lab_data = safe_loads(inputJSON['Lab'])
+    except:
+        lab_data = None
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
@@ -274,7 +278,7 @@ def getCharacterDetails(inputJSON, runType):
         obols_list[character_index] = safe_loads(inputJSON.get(f'ObolEqO0_{character_index}', []))
         obol_upgrades_list[character_index] = safe_loads(inputJSON.get(f'ObolEqMAP_{character_index}', {}))
         try:
-            equipped_lab_chips[character_index] = safe_loads(inputJSON['Lab'])[character_index + 1]
+            equipped_lab_chips[character_index] = lab_data[character_index + 1]
         except:
             equipped_lab_chips[character_index] = []
         current_preset_talent_bar[character_index] = safe_loads(inputJSON.get(f'AttackLoadout_{character_index}', []))
