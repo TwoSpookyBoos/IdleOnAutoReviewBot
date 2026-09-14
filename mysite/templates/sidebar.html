@@ -21,6 +21,12 @@
                 {% for text, name, on, off, static, initial in switches %}
                     {% if static == "true" %}
                         {% include "slider_button.html" %}
+                        {% if name == "manual_tome" %}
+                            <div id="tome-score-box"{% if initial != "on" %} class="hidden"{% endif %}>
+                                <label for="tome_score">Total Tome score</label>
+                                <input type="text" id="tome_score" name="tome_score" inputmode="numeric" maxlength="6" placeholder="0-100000" autocomplete="off">
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>

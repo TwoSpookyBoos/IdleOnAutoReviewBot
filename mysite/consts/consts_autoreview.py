@@ -109,6 +109,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Manually enter Tome score",
+        "name": "manual_tome",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Handedness",
         "name": "handedness",
         "true": "L",
@@ -117,6 +124,7 @@ switches = [
     },
     # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
 ]
+max_manual_tome_score = 100000
 
 ###AutoReview consts###
 class AdviceType(Enum):
