@@ -6,13 +6,9 @@ from utils.text_formatting import pl
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best
-from consts.consts_w4 import rift_rewards_dict
 from consts.progression_tiers import rift_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
-
-def getRiftRewardFromLevel(input_level):
-    return rift_rewards_dict.get(input_level, {}).get('Name', f'UnknownRiftReward-{input_level}')
 
 def getRiftProgressionTiersAdviceGroup():
     rift_Advices = {
@@ -24,15 +20,12 @@ def getRiftProgressionTiersAdviceGroup():
     max_tier = true_max - optional_tiers
 
     for tier_number, requirements in rift_progressionTiers.items():
-        if session_data.account.rift_level >= requirements[0]:
+        if session_data.account.rift.level >= requirements[0]:
             tier_RiftBonusesUnlocked = tier_number
         else:
-            rift_Advices['UnlockRewards'].append(Advice(
-                label=getRiftRewardFromLevel(requirements[0]),
-                picture_class=getRiftRewardFromLevel(requirements[0]),
-                progression=session_data.account.rift_level,
-                goal=requirements[0]
-            ))
+            rift_Advices['UnlockRewards'].append(
+                session_data.account.rift.bonus_at_level(requirements[0]).get_advice()
+            )
             rift_Advices['UnlockRewards'].append(Advice(
                 label=f'{requirements[1]} max damage for Multikill',
                 picture_class='damage'
@@ -68,7 +61,7 @@ def getRiftProgressionTiersAdviceGroup():
     return rift_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getRiftAdviceSection() -> AdviceSection:
-    if not session_data.account.rift['Unlocked']:
+    if not session_data.account.rift.unlocked:
         rift_AdviceSection = AdviceSection(
             name='Rift',
             tier='0/0',

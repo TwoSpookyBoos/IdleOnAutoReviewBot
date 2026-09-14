@@ -86,12 +86,21 @@ rift_rewards_dict = {
 
 #`ChipDesc = function ()` in source. Last updated in v2.528.0
 ChipDesc = ["Grounded_Nanochip +{%_Total_Defence Boosts_total_defence Copper 20000 Meal0 100 Spice0 100 0 def 10".split(" ",),"Grounded_Motherboard +{%_Move_Speed_if_total_is_less_than_170% Boosts_total_movement_speed OakTree 30000 Meal1 100 Spice0 100 0 move 30".split(" ",),"Grounded_Software +{%_Total_Accuracy Boosts_total_accuracy Fish1 20000 Meal3 100 Spice1 100 0 acc 10".split(" ",),"Grounded_Processor +{%_Drop_Rate_if_total_is_less_than_5.00x Boosts_total_drop_rate DesertA1 10000 Meal4 100 Spice1 100 0 dr 60".split(" ",),"Potato_Chip +{%_Basic_Attack_spd._*Can_Only_Equip_1_per_player* Boosts_attack_speed Bug1 20000 Meal6 100 Spice2 100 1 atkspd 20".split(" ",),"Conductive_Nanochip +{%_Lab_EXP_Gain Boosts_lab_exp_gain StumpTree 100000 Meal9 100 Spice3 100 0 labexp 30".split(" ",),"Conductive_Motherboard +{%_Line_Width_within_Mainframe Boosts_mainframe_line_width Gold 100000 Meal12 100 Spice4 100 0 linewidth 12".split(" ",),"Conductive_Software +{%_Fighting_AFK_Gain_Rate_*Can_Only_Equip_1_per_player* Boosts_Fighting_AFK_gain_rate Critter2 10000 Meal15 100 Spice4 100 1 fafk 15".split(" ",),"Conductive_Processor +{%_Skilling_AFK_Gain_Rate_*Can_Only_Equip_1_per_player* Boosts_Skilling_AFK_gain_Rate Bug5 100000 Meal18 100 Spice5 100 1 safk 15".split(" ",),"Chocolatey_Chip {%_chance_to_spawn_a_crystal_mob_when_one_dies._*Can_Only_Equip_1_per_player* Chance_for_Crystal_Mob_revival CraftMat8 200000 Meal21 100 Spice6 100 1 crys 75".split(" ",),"Galvanic_Nanochip +{%_Monster_Respawn_Rate Boosts_Mob_respawn_rate SnowC1 100000 Meal24 100 Spice7 100 0 resp 10".split(" ",),"Galvanic_Motherboard +{%_Total_Skilling_Efficiency_for_all_skills Boosts_skilling_efficiency Fish5 250000 Meal27 100 Spice8 100 0 toteff 20".split(" ",),"Galvanic_Software +{%_Total_Damage Boosts_total_damage Dementia 300000 Meal29 100 Spice9 100 0 dmg 10".split(" ",),"Galvanic_Processor +{_Base_Efficiency_for_all_skills Boosts_base_skilling_efficiency GalaxyB2 100000 Meal31 100 Spice10 100 0 eff 250".split(" ",),"Wood_Chip +{%_Multikill_per_Damage_Tier_for_all_worlds Boosts_multikill Tree8 250000 Meal33 100 Spice11 100 0 mkill 15".split(" ",),"Silkrode_Nanochip Doubles_the_bonuses_of_all_active_Star_Signs._*Can_Only_Equip_1_per_player* Bolsters_active_star_signs CraftMat10 2000000 Meal35 100 Spice12 100 1 star 1".split(" ",),"Silkrode_Motherboard Doubles_MISC_bonuses_of_currently_equipped_Trophy._*Can_Only_Equip_1_per_player* Bolsters_equipped_trophy Soul5 2000000 Meal37 100 Spice13 100 1 troph 1".split(" ",),"Silkrode_Software Doubles_MISC_bonuses_of_keychain_equipped_in_the_upper_keychain_slot._*Can_Only_Equip_1_per_player* Bolsters_equipped_keychain Bug8 2000000 Meal39 100 Spice13 100 1 key1 1".split(" ",),"Silkrode_Processor Doubles_MISC_bonuses_of_currently_equipped_Pendant._*Can_Only_Equip_1_per_player* Bolsters_equipped_pendant Critter10 2000000 Meal41 100 Spice14 100 1 pend 1".split(" ",),"Poker_Chip Your_weapon_gives_1.{x_more_Weapon_Power._*Can_Only_Equip_1_per_player* Bolsters_equipped_Weapon CraftMat14 2000000 Meal43 100 Spice14 100 1 weppow 25".split(" ",),"Omega_Nanochip Doubles_bonus_of_card_equipped_in_top_left_slot._*Can_Only_Equip_1_per_player* Bolsters_an_equipped_card Bug8 10000000 Meal45 100 Spice15 100 1 card1 1".split(" ",),"Omega_Motherboard Doubles_bonus_of_card_equipped_in_bottom_right_slot._*Can_Only_Equip_1_per_player* Bolsters_an_equipped_card Fish8 10000000 Meal47 100 Spice16 100 1 card2 1".split(" ",),]
+lab_chip_advice_labels = {
+    'Chocolatey Chip': 'Chocolatey Chip for more Crystal Mobs',
+    'Omega Nanochip': 'Omega Nanochip: Top Left card doubler',
+    'Omega Motherboard': 'Omega Motherboard: Bottom Right card doubler',
+    'Silkrode Software': 'Silkrode Software aka Keychain Doubler ONLY IF your top Keychain gives more than 10% total respawn',
+    'Silkrode Processor': 'Silkrode Processor aka Pendant Doubler ONLY IF your Pendant gives more than 10% total respawn',
+}
 lab_chips_dict = {
     index: {
-        'Name': name.replace('_', ' ').title(),
+        'Name': (clean_name := name.replace('_', ' ').title()),
         'Description': description.replace('_', ' '),
         'Effect': effect.replace('_', ' '),
-        'BaseValue': parse_number(basevalue)
+        'BaseValue': parse_number(basevalue),
+        'Image': kebab(clean_name),
+        'AdviceLabel': lab_chip_advice_labels.get(clean_name, clean_name)
     }
     for index, (name, effect, description, _, _, _, _, _, _, _, _, basevalue) in enumerate(ChipDesc)
 }

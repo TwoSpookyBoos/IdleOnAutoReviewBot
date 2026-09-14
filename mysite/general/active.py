@@ -30,28 +30,19 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         total: [],
     }
     # Account Wide
-    crystal_Advice[aw].append(Advice(
-        label="Chocco Chip for more Crystal Mobs",
-        picture_class="chocolatey-chip",
-        progression=session_data.account.labChips.get('Chocolatey Chip', 0),
-        goal=1
-    ))
+    crystal_Advice[aw].append(
+        session_data.account.lab_chips['Chocolatey Chip'].get_advice()
+    )
     cards = ['Demon Genie', 'Poop']
     for card_name in cards:
         crystal_Advice[aw].append(next(c for c in session_data.account.cards if c.name == card_name).getAdvice())
 
-    crystal_Advice[aw].append(Advice(
-        label="Omega Nanochip: Top Left card doubler",
-        picture_class="omega-nanochip",
-        progression=session_data.account.labChips.get('Omega Nanochip', 0),
-        goal=1
-    ))
-    crystal_Advice[aw].append(Advice(
-        label="Omega Motherboard: Bottom Right card doubler",
-        picture_class="omega-motherboard",
-        progression=session_data.account.labChips.get('Omega Motherboard', 0),
-        goal=1
-    ))
+    crystal_Advice[aw].append(
+        session_data.account.lab_chips['Omega Nanochip'].get_advice()
+    )
+    crystal_Advice[aw].append(
+        session_data.account.lab_chips['Omega Motherboard'].get_advice()
+    )
     crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
     crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
@@ -164,7 +155,7 @@ def getShortTermAdviceList() -> list[Advice]:
         ))
     if 24 > session_data.account.obols['Drop Rate']['Circle']['Total']:
         # If Chocco Chip is owned, POPs last, otherwise POPs first
-        obols.insert(0 if session_data.account.labChips['Chocolatey Chip'] > 0 else len(obols), Advice(
+        obols.insert(0 if session_data.account.lab_chips['Chocolatey Chip'].owned else len(obols), Advice(
             label=f"Farm POP Obols for Circle slots with ES at Gigafrogs"
                   f"<br>Note: Hyper Six Obols are included in your progress",
             picture_class='silver-obol-of-pop-pop',
@@ -204,7 +195,7 @@ def getShortTermAdviceList() -> list[Advice]:
 
 def getCardsAdviceList() -> list[Advice]:
     cards = []
-    card_level_goal = cards_max_level if session_data.account.rift['RubyCards'] else cards_max_level-1
+    card_level_goal = cards_max_level if session_data.account.rift['RubyCards'].unlocked else cards_max_level-1
     all_cards = {
         "Card Drop Chance": ["Sir Stache", "Snelbie", "Gigafrog"],
         "Shrine Value": ["Chaotic Chizoar"],

@@ -33,7 +33,7 @@ def getAchievementExclusions() -> set[str]:
         # I wouldn't go spend gems just for this achievement, but you should get it if you already spent the Gems
         exclusionsSet.add('Gilded Shells')
 
-    if session_data.account.postOffice["Total Boxes Earned"] >= max_po_box_before_myriad * 0.8:
+    if session_data.account.post_office.total_boxes_earned >= max_po_box_before_myriad * 0.8:
         # Saving Silver Pens doesn't really matter if you've got enough boxes
         exclusionsSet.add('Ink Blot')
 

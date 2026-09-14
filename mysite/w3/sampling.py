@@ -206,7 +206,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Calculate Multis for Labels
     # Skill Mastery
-    sm_base = 4 * session_data.account.rift['SkillMastery']  # This isn't expressed anywhere in game, but is hard-coded in source code.
+    sm_base = 4 * session_data.account.rift['SkillMastery'].unlocked  # This isn't expressed anywhere in game, but is hard-coded in source code.
     sm_eligible_skills = len(skill_index_list) - 1  #-1 to exclude Combat
     sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
     sm_sum = sm_base + sm_bonus

@@ -737,7 +737,7 @@ class Farming:
         # Misc
         evo_multi["Total Farming Levels"] = sum(account.all_skills["Farming"])
         evo_multi["Skill Mastery Bonus Bool"] = (
-            account.rift["SkillMastery"] and evo_multi["Total Farming Levels"] >= 300
+            account.rift['SkillMastery'].unlocked and evo_multi["Total Farming Levels"] >= 300
         )
         evo_multi["Ballot Active"] = account.ballot["CurrentBuff"] == 29
         # TODO: move to Ballot class method that create advice for it
@@ -759,7 +759,7 @@ class Farming:
             * ValueToMulti(
                 15
                 * evo_multi["Skill Mastery Bonus Bool"]
-                * account.rift["SkillMastery"]
+                * account.rift['SkillMastery'].unlocked
             )
             * evo_multi["Ballot Multi Current"]
         )

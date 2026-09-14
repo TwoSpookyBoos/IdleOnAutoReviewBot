@@ -470,15 +470,10 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     ))
     #Skill Mastery
     # Verify Skill Mastery itself is unlocked from The Rift
-    evo_advices[misc].append(Advice(
-        label="{{ Rift|#rift }} 16: Skill Mastery unlocked",
-        picture_class='skill-mastery',
-        progression=int(session_data.account.rift['SkillMastery']),
-        goal=1
-    ))
+    evo_advices[misc].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
     # Account-wide total farming levels of 200 needed to unlock the bonus
     evo_advices[misc].append(Advice(
-        label=f"Skill Mastery at 200 Farming: +{1.15 * evo_multi['Skill Mastery Bonus Bool'] * session_data.account.rift['SkillMastery']}/1.15x",
+        label=f"Skill Mastery at 200 Farming: +{1.15 * evo_multi['Skill Mastery Bonus Bool'] * session_data.account.rift['SkillMastery'].unlocked}/1.15x",
         picture_class='farming',
         progression=evo_multi['Total Farming Levels'],
         goal=200
