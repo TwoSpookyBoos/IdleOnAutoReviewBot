@@ -1,3 +1,4 @@
+import functools
 from pathlib import Path
 
 import yaml
@@ -43,8 +44,14 @@ from w7 import (
 logger = get_logger(__name__)
 
 
+@functools.lru_cache(maxsize=1)
+def _load_banned_accounts(mtime):
+    with open(Path(app.static_folder) / "banned.yaml") as f:
+        return yaml.load(f, yaml.Loader)
+
+
 def maybe_ban(username, runType):
-    bannedAccountsList = yaml.load(open(Path(app.static_folder) / "banned.yaml"), yaml.Loader)
+    bannedAccountsList = _load_banned_accounts((Path(app.static_folder) / "banned.yaml").stat().st_mtime)
 
     if username in bannedAccountsList:
         if runType == "consoleTest":
