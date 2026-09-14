@@ -48,8 +48,8 @@ def is_username(data) -> bool:
         isinstance(data, str)
         and (
             len(data) < 16
-            or ('idleonefficiency.com' in data.lower() and len(data) < 200)
-            or ('idleontoolbox.com' in data.lower() and len(data) < 200)
+            or (len(data) < 200 and 'idleonefficiency.com' in data.lower())
+            or (len(data) < 200 and 'idleontoolbox.com' in data.lower())
             # or 'idleonleaderboards.com in data.lower()
         )
     )
