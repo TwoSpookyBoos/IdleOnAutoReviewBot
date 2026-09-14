@@ -32,6 +32,14 @@ class LabelBuilder:
 
 _UNSET = object()
 _DATASET_ATTRS = ("optional", "completed", "informational", "unrated", "unreached", "overwhelming")
+_html_special = re.compile("[<>&\"']")
+
+
+def _escape_text(value) -> str:
+    if hasattr(value, "__html__"):
+        return value.__html__()
+    text = str(value)
+    return escape(text) if _html_special.search(text) else text
 
 
 class Advice(AdviceBase):
@@ -92,11 +100,11 @@ class Advice(AdviceBase):
         secondary = f' style="width: {potential}%;"' if potential is not _UNSET and potential else ""
 
         if getattr(self, "as_link", False):
-            label = f'<a href="#{css_class}">{escape(self.label)}</a>'
+            label = f'<a href="#{css_class}">{_escape_text(self.label)}</a>'
         else:
             label = self.label
 
-        resource = f' resource-{escape(self.resource)} lazy' if self.resource else ""
+        resource = f' resource-{_escape_text(self.resource)} lazy' if self.resource else ""
         arrow = "" if self.progression and self.goal else "-hidden"
 
         return Markup(
@@ -106,9 +114,9 @@ class Advice(AdviceBase):
             f'<span class="progress-bar secondary"{secondary}></span>'
             f'</span> {label} </li>'
             f'<li class="resource{resource}"{data_attrs}></li>'
-            f'<li class="prog"{data_attrs}>{escape(self.progression)}</li>'
+            f'<li class="prog"{data_attrs}>{_escape_text(self.progression)}</li>'
             f'<li class="arrow{arrow}"{data_attrs}></li>'
-            f'<li class="goal {status}"{data_attrs}>{escape(self.goal)}</li>'
+            f'<li class="goal {status}"{data_attrs}>{_escape_text(self.goal)}</li>'
         )
 
     @property
