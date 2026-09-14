@@ -31,6 +31,7 @@ class LabelBuilder:
 
 
 _UNSET = object()
+_DATASET_ATTRS = ("optional", "completed", "informational", "unrated", "unreached", "overwhelming")
 
 
 class Advice(AdviceBase):
@@ -78,7 +79,7 @@ class Advice(AdviceBase):
         self.optional = optional
 
     def render_row(self, progress_bars) -> Markup:
-        data_attrs = "".join(f' data-{attr}="true"' for attr, val in self.dataset if val)
+        data_attrs = "".join(f' data-{attr}="true"' for attr in _DATASET_ATTRS if getattr(self, attr, False))
         css_class = self.css_class
         status = self.status
 
