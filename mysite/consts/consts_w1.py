@@ -87,32 +87,26 @@ def get_seraph_stacks(summoning_level) -> int:
 forge_upgrades_dict = {
     0: {
         "UpgradeName": "New Forge Slot",
-        "Purchased": 0,
         "MaxPurchases": 16
     },
     1: {
         "UpgradeName": "Ore Capacity Boost",
-        "Purchased": 0,
         "MaxPurchases": 50
     },
     2: {
         "UpgradeName": "Forge Speed",
-        "Purchased": 0,
         "MaxPurchases": 90
     },
     3: {
         "UpgradeName": "Forge EXP Gain (Does Nothing!)",
-        "Purchased": 0,
         "MaxPurchases": 85
     },
     4: {
         "UpgradeName": "Bar Bonanza",
-        "Purchased": 0,
         "MaxPurchases": 75
     },
     5: {
         "UpgradeName": "Puff Puff Go",
-        "Purchased": 0,
         "MaxPurchases": 60
     }
 }

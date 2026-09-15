@@ -15,7 +15,7 @@ from consts.consts_general import (
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
+    starsigns_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
     statue_type_count, get_statue_type_index_from_name
 )
@@ -636,7 +636,6 @@ def _parse_master_classes_exalted_stamps(account):
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
-    _parse_w1_forge(account)
     _parse_w1_bribes(account)
     _parse_w1_stamps(account)
     _parse_w1_statues(account)
@@ -668,16 +667,6 @@ def _parse_w1_starsigns(account):
             }
 
     account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
-
-def _parse_w1_forge(account):
-    account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
-    raw_forge_upgrades = account.raw_data.get("ForgeLV", [])
-    for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
-        try:
-            account.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
-        except Exception as e:
-            logger.warning(f"Forge Upgrade Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
-            continue  # Already defaulted to 0 in Consts
 
 def _parse_w1_bribes(account):
     account.bribes = {}

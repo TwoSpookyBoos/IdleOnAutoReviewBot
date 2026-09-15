@@ -60,13 +60,8 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     #Scaling Sources
     #Forge Upgrade purchased at the forge itself with coins
-    forge_upgrades = (2 + 0.5 * (session_data.account.forge_upgrades[1]['Purchased'] - 1)) * session_data.account.forge_upgrades[1]['Purchased'] * 10
-    cap_Advices['Scaling Sources'].append(Advice(
-        label=f"Forge Upgrade: {session_data.account.forge_upgrades[1]['UpgradeName']}: +{int(forge_upgrades)}/13250",
-        picture_class='forge-upgrades',
-        progression=session_data.account.forge_upgrades[1]['Purchased'],
-        goal=session_data.account.forge_upgrades[1]['MaxPurchases']
-    ))
+    forge_upgrades = session_data.account.forge_upgrades.ore_capacity
+    cap_Advices['Scaling Sources'].append(session_data.account.forge_upgrades.get_ore_capacity_advice())
 
     #Godshard Ore card
     cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
@@ -157,7 +152,7 @@ def getProgressionTiersAdviceGroup():
     player_monster_points = []
     sum_CashPoints = 0
     sum_MonsterPoints = 0
-    sum_ForgeUpgrades = sum(safer_convert(upgradeData['Purchased'], 0) for upgradeData in session_data.account.forge_upgrades.values())
+    sum_ForgeUpgrades = session_data.account.forge_upgrades.total_purchased
 
     # Total up all the purchases across all current characters
     # TODO: Move this parsing to Account
@@ -218,15 +213,9 @@ def getProgressionTiersAdviceGroup():
                 ))
                 if 'All Unmaxed Forge Upgrades' not in smithing_Advices['Forge Upgrades']:
                     smithing_Advices['Forge Upgrades']['All Unmaxed Forge Upgrades'] = []
-                    for upgradeIndex, upgradeData in session_data.account.forge_upgrades.items():
-                        if upgradeData['Purchased'] < upgradeData['MaxPurchases']:
-                            if not upgradeData['UpgradeName'].startswith('Forge EXP Gain'):
-                                smithing_Advices['Forge Upgrades'][subgroup_label].append(Advice(
-                                    label=upgradeData['UpgradeName'],
-                                    picture_class='forge-upgrades',
-                                    progression=upgradeData['Purchased'],
-                                    goal=upgradeData['MaxPurchases']
-                                ))
+                    for upgrade in session_data.account.forge_upgrades.values():
+                        if not upgrade.maxed and not upgrade.name.startswith('Forge EXP Gain'):
+                            smithing_Advices['Forge Upgrades'][subgroup_label].append(upgrade.get_advice())
         if subgroup_label not in smithing_Advices['Forge Upgrades'] and tier_ForgeTotals == tier_number - 1:
             tier_ForgeTotals = tier_number
     

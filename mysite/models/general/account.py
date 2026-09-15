@@ -13,6 +13,7 @@ from models.general.npc_tokens import NpcTokens
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.darts import Darts
+from models.w1.forge import ForgeUpgrades
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
 from models.w2.arcade import Arcade
@@ -140,6 +141,7 @@ class Account:
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
         self.vault: Vault = Vault(self.raw_data)
+        self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
