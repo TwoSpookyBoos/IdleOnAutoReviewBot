@@ -989,15 +989,15 @@ def _calculate_w3_library_max_book_levels(account):
     )
 
 def _calculate_w3_equinox_max_levels(account):
-    bonus_equinox_levels = (
-        account.summoning.bonuses["Equinox Max LV"].value
-        + (10 * account.gaming['SuperBits']['Equinox Unending']['Unlocked'])
-    )
-    if bonus_equinox_levels > 0:
-        for bonus, bonus_details in account.equinox_bonuses.items():
-            if bonus_details['SummoningExpands']:
-                account.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
-                account.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
+    summoning_levels = account.summoning.bonuses["Equinox Max LV"].value
+    superbit_levels = 10 * account.gaming['SuperBits']['Equinox Unending']['Unlocked']
+    for bonus, bonus_details in account.equinox_bonuses.items():
+        bonus_equinox_levels = (
+            summoning_levels * bonus_details['SummoningExpands']
+            + superbit_levels * bonus_details['SuperbitExpands']
+        )
+        account.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
+        account.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
 
 def _calculate_general_character_bonus_talent_levels(account):
     account.bonus_talents = {

@@ -1363,6 +1363,7 @@ def _parse_w3_deathnote_miniboss_kills(account):
 
 def _parse_w3_equinox_dreams(account):
     account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
+    account.equinox_nightmares_unlocked = account.research.grid['Equinox Nightmares'].level >= 1
     account.equinox_dreams = [True]  # d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
     raw_equinox_dreams = safe_loads(account.raw_data.get("WeeklyBoss", {}))
     account.equinox_dreams += [
@@ -1389,7 +1390,8 @@ def _parse_w3_equinox_bonuses(account):
             'Unlocked': account.total_equinox_bonuses_unlocked >= bonusIndex - 2,
             'FinalMaxLevel': bonusValueDict['FinalMaxLevel'],
             'RemainingUpgrades': [],
-            'SummoningExpands': bonusValueDict['SummoningExpands']
+            'SummoningExpands': bonusValueDict['SummoningExpands'],
+            'SuperbitExpands': bonusValueDict['SuperbitExpands']
         }
         try:
             account.equinox_bonuses[upgradeName]['CurrentLevel'] = int(raw_equinox_bonuses[bonusIndex])

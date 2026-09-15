@@ -1459,7 +1459,7 @@ prayers_progressionTiers = {
 equinox_progressionTiers = {
     'Recommended': [
         'Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz',
-        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights'
+        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights', 'Nonstop Studies'
     ],
     'Optional': [
         'Shades of K', 'Laboratory Fuse', 'Food Lust'

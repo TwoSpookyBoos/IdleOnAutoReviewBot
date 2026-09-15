@@ -8,25 +8,37 @@ logger = get_logger(__name__)
 max_printer_sample_rate = 90
 arbitrary_shrine_goal = 32  # Last updated in v2.46 Nov 19
 arbitrary_shrine_note = f"Shrines have no Max level. Goal of {arbitrary_shrine_goal} is arbitrary"
-max_implemented_dreams = 36  # Last verified as of v2.30
-max_possible_dreams = 35  # Last verified as of v2.30. The dream to complete Killroy Prime is impossible
-dreams_that_unlock_new_bonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32]
-#`DreamUpg = function ()` in source. Last updated in v2.46 Nov 19
+max_implemented_dreams = 77  # Last verified as of v2.528.0
+max_possible_dreams = 76  # Dream 77, the Killroy Prime challenge, isn't completable yet
+dreams_that_unlock_new_bonuses = [1, 3, 6, 8, 11, 14, 18, 21, 24, 29, 32, 37]
+# "Grid_Bonus",86 gate in "CloudsTask" in source. Last updated in v2.528.0
+equinox_first_nightmare = 37
+
+
+def getEquinoxDreamName(dream_number: int) -> str:
+    if dream_number >= equinox_first_nightmare:
+        return f"Nightmare {dream_number - equinox_first_nightmare + 1}"
+    return f"Dream {dream_number}"
+
+
+#`DreamUpg = function ()` and "UpgMaxLV" in source. Last updated in v2.528.0
 equinox_bonuses_dict = {
-    2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False},
-    3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended', 'SummoningExpands': False},
-    4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional', 'SummoningExpands': False},
+    2: {'Name': 'Equinox Dreams', 'BaseLevel': 5, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 5, 'Category': 'Recommended', 'SummoningExpands': False, 'SuperbitExpands': False},
+    3: {'Name': 'Equinox Resources', 'BaseLevel': 4, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 4, 'Category': 'Recommended', 'SummoningExpands': False, 'SuperbitExpands': False},
+    4: {'Name': 'Shades of K', 'BaseLevel': 3, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 3, 'Category': 'Optional', 'SummoningExpands': False, 'SuperbitExpands': False},
     5: {'Name': 'Liquidvestment', 'BaseLevel': 4, 'MaxLevelIncreases': {7: 3, 16: 4}, 'FinalMaxLevel': 11, 'Category': 'Recommended',
-        'SummoningExpands': False},
-    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10}, 'FinalMaxLevel': 33, 'Category': 'Recommended',
-        'SummoningExpands': True},
-    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': True},
-    8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional', 'SummoningExpands': False},
-    9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended', 'SummoningExpands': True},
-    10: {'Name': 'Faux Jewels', 'BaseLevel': 6, 'MaxLevelIncreases': {22: 5, 27: 10}, 'FinalMaxLevel': 21, 'Category': 'Recommended', 'SummoningExpands': True},
-    11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional', 'SummoningExpands': True},
-    12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended', 'SummoningExpands': True},
-    13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended', 'SummoningExpands': True},
+        'SummoningExpands': False, 'SuperbitExpands': False},
+    6: {'Name': 'Matching Scims', 'BaseLevel': 8, 'MaxLevelIncreases': {13: 5, 19: 10, 35: 10, 40: 10}, 'FinalMaxLevel': 43, 'Category': 'Recommended',
+        'SummoningExpands': True, 'SuperbitExpands': True},
+    7: {'Name': 'Slow Roast Wiz', 'BaseLevel': 5, 'MaxLevelIncreases': {33: 6}, 'FinalMaxLevel': 11, 'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': True},
+    8: {'Name': 'Laboratory Fuse', 'BaseLevel': 10, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 10, 'Category': 'Optional', 'SummoningExpands': False, 'SuperbitExpands': False},
+    9: {'Name': 'Metal Detector', 'BaseLevel': 6, 'MaxLevelIncreases': {}, 'FinalMaxLevel': 6, 'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': True},
+    10: {'Name': 'Faux Jewels', 'BaseLevel': 6, 'MaxLevelIncreases': {22: 5, 27: 10}, 'FinalMaxLevel': 21, 'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': True},
+    11: {'Name': 'Food Lust', 'BaseLevel': 10, 'MaxLevelIncreases': {26: 4}, 'FinalMaxLevel': 14, 'Category': 'Optional', 'SummoningExpands': True, 'SuperbitExpands': True},
+    12: {'Name': 'Equinox Symbols', 'BaseLevel': 5, 'MaxLevelIncreases': {31: 4}, 'FinalMaxLevel': 9, 'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': True},
+    13: {'Name': 'Voter Rights', 'BaseLevel': 15, 'MaxLevelIncreases': {36: 15}, 'FinalMaxLevel': 30, 'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': True},
+    14: {'Name': 'Nonstop Studies', 'BaseLevel': 10, 'MaxLevelIncreases': {38: 5, 43: 5, 44: 5, 48: 5, 51: 5, 56: 5, 59: 6, 62: 6, 65: 7, 76: 8}, 'FinalMaxLevel': 67,
+         'Category': 'Recommended', 'SummoningExpands': True, 'SuperbitExpands': False},
 }
 #`RefineryInfo = function` in source holds the material cost, if we ever want to care about that.
 refinery_dict = {
