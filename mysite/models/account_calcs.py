@@ -482,7 +482,7 @@ def _calculate_w2_islands_trash(account):
     account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp'].delivered or account.stored_assets.get('StampB32').amount > 0
     account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp'].delivered or account.stored_assets.get('StampA38').amount > 0
     account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp'].delivered or account.stored_assets.get('StampA39').amount > 0
-    account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Trash Island']['Random Garbage'] >= 0
+    account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Random Garbage'].unlocked
 
     #Repeated purchases
     account.islands['Trash Island']['Garbage Purchases'] = safer_get(account.raw_optlacc_dict, 163, 0)

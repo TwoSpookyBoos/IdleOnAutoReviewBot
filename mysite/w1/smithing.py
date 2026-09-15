@@ -35,16 +35,9 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         goal=1
     ))
 
-    #Bribe value of 1 means purchased
-    bribe = session_data.account.bribes['W6']['Forge Cap Smuggling'] == 1
-    bribe_value = 30 * bribe
-    bribe_multi = ValueToMulti(bribe_value)
-    cap_Advices['Static Sources'].append(Advice(
-        label=f"{{{{ Bribe|#bribes }}}}: Forge Cap Smuggling: {bribe_multi}/1.3x",
-        picture_class='forge-cap-smuggling',
-        progression=int(bribe),
-        goal=1
-    ))
+    bribe = session_data.account.bribes['Forge Cap Smuggling']
+    bribe_value = bribe.bonus
+    cap_Advices['Static Sources'].append(bribe.get_bonus_advice())
 
     #Verify Skill Mastery itself is unlocked from The Rift
     cap_Advices['Static Sources'].append(session_data.account.rift['SkillMastery'].get_bonus_advice())

@@ -98,13 +98,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         capacity_Advices['Stamps'].append(session_data.account.stamps[cap_stamp.name].get_advice(link_to_section=False))
 
     # Account-Wide
-    capacity_Advices['Account Wide'].append(Advice(
-        label=f"{{{{ Bribe|#bribes }}}}: Bottomless Bags: "
-              f"{'5' if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else '0'}/5%",
-        picture_class='bottomless-bags',
-        progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
-        goal=1
-    ))
+    capacity_Advices['Account Wide'].append(session_data.account.bribes['Bottomless Bags'].get_bonus_advice())
     capacity_Advices['Account Wide'].append(session_data.account.guild_bonuses['Rucksack'].get_advice())
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])

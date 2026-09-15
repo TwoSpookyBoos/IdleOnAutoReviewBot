@@ -51,7 +51,8 @@ def getCardDropChanceAdviceGroup(groups):
     multi_group_b = round(multi_group_b, 2)
 
     # Multi Group A: all other bonuses
-    bribe_bonus = session_data.account.bribes['W2']['Five Aces in the Deck'] * 20
+    five_aces = session_data.account.bribes['Five Aces in the Deck']
+    bribe_bonus = five_aces.bonus
 
     pokaminni = session_data.account.star_signs['Pokaminni']
 
@@ -131,13 +132,7 @@ def getCardDropChanceAdviceGroup(groups):
         ],
         f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
         f'Multi Group A - account-wide': [
-            Advice(
-                label=f"{{{{ Bribe|#bribes }}}}: Five Aces in the Deck: "
-                      f"+{bribe_bonus}/20%",
-                picture_class='bottomless-bags',
-                progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
-                goal=1
-            ),
+            five_aces.get_bonus_advice(),
             Advice(
                 label=f"{{{{ Vial|#vials }}}}: Anearful: +{anearful_vial['Value']:.2f}%",
                 picture_class='glublin-ear',

@@ -20,7 +20,6 @@ from consts.consts_w1 import (
     statue_type_count, get_statue_type_index_from_name
 )
 from consts.w1.stamps import stamp_types
-from consts.w1.bribes import bribes_dict
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict,
     ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
@@ -636,7 +635,6 @@ def _parse_master_classes_exalted_stamps(account):
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
-    _parse_w1_bribes(account)
     _parse_w1_stamps(account)
     _parse_w1_statues(account)
 
@@ -667,20 +665,6 @@ def _parse_w1_starsigns(account):
             }
 
     account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
-
-def _parse_w1_bribes(account):
-    account.bribes = {}
-    raw_bribes_list = safe_loads(account.raw_data.get("BribeStatus", []))
-    overall_bribe_index = 0
-    for bribeSet in bribes_dict:
-        account.bribes[bribeSet] = {}
-        for bribeIndex, bribeName in enumerate(bribes_dict[bribeSet]):
-            try:
-                account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[overall_bribe_index], -1)
-            except Exception as e:
-                logger.warning(f"Bribes Parse error at {bribeSet} {bribeName}: {e}. Defaulting to -1")
-                account.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
-            overall_bribe_index += 1
 
 def _parse_w1_stamps(account):
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))
