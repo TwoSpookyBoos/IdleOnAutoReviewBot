@@ -1020,13 +1020,13 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'ES Family': {
-            'Value': floor(account.family_bonuses["Elemental Sorcerer"]['Value']),
+            'Value': floor(account.family_bonuses['Elemental Sorcerer'].value),
             'Image': 'elemental-sorcerer-icon',
             'Label': f"ES Family Bonus: "
-                     f"+{floor(account.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                     f"+{floor(account.family_bonuses['Elemental Sorcerer'].value)}.<br>"
                      f"Next increase at Class Level: ",
-            'Progression': account.family_bonuses['Elemental Sorcerer']['Level'],
-            'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer']['Level'])
+            'Progression': account.family_bonuses['Elemental Sorcerer'].level,
+            'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer'].level)
         },
         'Equinox Symbols': {
             'Value': account.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
@@ -1104,8 +1104,8 @@ def _calculate_general_character_bonus_talent_levels(account):
                 )
                 family_guy_multi = ValueToMulti(family_guy_bonus)
                 final_fg_value = (
-                    floor(account.family_bonuses['Elemental Sorcerer']['Value'] * family_guy_multi)
-                    - floor(account.family_bonuses['Elemental Sorcerer']['Value'])
+                    floor(account.family_bonuses['Elemental Sorcerer'].value * family_guy_multi)
+                    - floor(account.family_bonuses['Elemental Sorcerer'].value)
                 )
                 char.max_talents_over_books += final_fg_value
                 char.setFamilyGuyBonus(final_fg_value)

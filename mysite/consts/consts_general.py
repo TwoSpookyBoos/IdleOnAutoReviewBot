@@ -1192,7 +1192,8 @@ guild_bonuses_dict = {
 }
 
 #Family Bonuses
-family_bonus_class_tier_level_reductions = [9, 29, 69, 999]  #Character must be this high of a level to get bonuses
+# `ClassAccountBonus = function` in source
+family_bonus_class_tier_level_reductions = [9, 29, 69, 129]  #Character must be this high of a level to get bonuses
 family_bonuses_dict = {
     #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
     "Journeyman": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Luck', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
@@ -1204,16 +1205,16 @@ family_bonuses_dict = {
     "Barbarian": {'funcType': 'decay', 'x1': 25, 'x2': 100, 'Stat': 'Weapon Power', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[1]},
     "Squire": {'funcType': 'decay', 'x1': 40, 'x2': 100, 'Stat': 'Total HP', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[1]},
     "Blood Berserker": {'funcType': 'decay', 'x1': 20, 'x2': 180, 'Stat': 'Total Damage', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
-    #"Death Bringer": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
+    "Death Bringer": {'funcType': 'decay', 'x1': 60, 'x2': 800, 'Stat': 'Kill per Kill', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[3]},
     "Divine Knight": {'funcType': 'decay', 'x1': 50, 'x2': 150, 'Stat': 'Refinery Speed', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
-    #"Royal Guardian": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
+    "Royal Guardian": {'funcType': 'decay', 'x1': 10, 'x2': 800, 'Stat': 'Drop Rate Multiplier', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[3]},
     #"Calm Basics": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
     "Archer": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Agility', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
     "Bowman": {'funcType': 'decay', 'x1': 38, 'x2': 100, 'Stat': 'EXP when fighting monsters actively', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[1]},
     "Hunter": {'funcType': 'decay', 'x1': 30, 'x2': 100, 'Stat': 'Efficiency for all skills', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[1]},
     "Siege Breaker": {'funcType': 'decay', 'x1': 20, 'x2': 170, 'Stat': 'Faster Minimum Boat Travel Time', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
     #"Mayheim": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
-    #"Wind Walker": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
+    "Wind Walker": {'funcType': 'decayMulti', 'x1': 1.4, 'x2': 800, 'Stat': 'Coins from Mobs', 'PrePlus': False, 'PostDisplay': 'x', 'levelDiscount': family_bonus_class_tier_level_reductions[3]},
     "Beast Master": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Skill AFK Gains', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
     #"Savvy Basics": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
     "Mage": {'funcType': 'intervalAdd', 'x1': 1, 'x2': 5, 'Stat': 'Total Wisdom', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
@@ -1222,7 +1223,7 @@ family_bonuses_dict = {
     "Elemental Sorcerer": {'funcType': 'decay', 'x1': 20, 'x2': 350, 'Stat': 'Lv For All Talents Above Lv 1', 'PrePlus': True, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
     #"Spiritual Monk": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
     "Bubonic Conjuror": {'funcType': 'decay', 'x1': 5, 'x2': 180, 'Stat': 'All Stat. STR, AGI, WIS, LUK.', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[2]},
-    #"Arcane Cultist": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
+    "Arcane Cultist": {'funcType': 'decay', 'x1': 12, 'x2': 800, 'Stat': 'Total Damage Multiplier', 'PrePlus': True, 'PostDisplay': '%', 'levelDiscount': family_bonus_class_tier_level_reductions[3]},
 }
 esFamilyBonusBreakpointsList = [0, 88, 108, 131, 157, 186, 219, 258, 303, 356, 419, 497, 594, 719, 885, 1118, 1468, 2049, 3210, 6681, 1272447]
 arbitrary_es_family_goal = esFamilyBonusBreakpointsList[15]  #1118 fairly feasible, 1468 feels too tough atm. Last updated in v2.46 Nov 29
