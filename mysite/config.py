@@ -1,8 +1,14 @@
+import mimetypes
 import os
 import sass
 
 from flask import Flask
 from pathlib import Path
+
+# Some Windows installs have a hijacked/misconfigured registry mapping .js to
+# text/plain, which browsers accept for classic <script> tags but reject for
+# type="module" scripts (spec requires a strict JS MIME type for those).
+mimetypes.add_type("text/javascript", ".js")
 
 app = Flask(__name__)
 
