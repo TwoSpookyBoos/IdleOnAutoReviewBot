@@ -1,4 +1,5 @@
-from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
 from utils.logging import get_logger
 logger = get_logger(__name__)
@@ -1459,7 +1460,7 @@ prayers_progressionTiers = {
 equinox_progressionTiers = {
     'Recommended': [
         'Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz',
-        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights'
+        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights', 'Nonstop Studies'
     ],
     'Optional': [
         'Shades of K', 'Laboratory Fuse', 'Food Lust'
@@ -2403,7 +2404,7 @@ true_max_tiers = {
     'Atom Collider': max(atoms_progressionTiers.keys()),
     'Buildings': 0,
     'Death Note': deathNote_progressionTiers[-1][0],
-    'Equinox': len(dreams_that_unlock_new_bonuses) + 1,
+    'Equinox': len(equinox_unlock_dreams) + 1,
     'Library': len(library_subgroup_tiers),
     'Library Characters': len(old_library_subgroup_tiers),
     'Refinery': 1,  #Pass or Fail

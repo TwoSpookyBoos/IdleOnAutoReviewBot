@@ -320,21 +320,12 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Equinox - Faux Jewels
     # Will show additional info if player is maxed out for their currently available levels
-    faux_jewels_bonus = session_data.account.equinox_bonuses['Faux Jewels']
-    faux_jewels_level = faux_jewels_bonus['CurrentLevel']
-    faux_jewels_max_current = max(faux_jewels_bonus['FinalMaxLevel'], faux_jewels_bonus['PlayerMaxLevel'])
-    faux_jewels_at_current_max = faux_jewels_level == faux_jewels_bonus['PlayerMaxLevel'] and faux_jewels_bonus['PlayerMaxLevel'] != 0
-    faux_jewels_value = 5 * faux_jewels_level
-    drop_rate_aw_advice[w3].append(Advice(
-        label=f"{{{{ Equinox|#equinox }}}}- Faux Jewels:"
-              f"<br>+{faux_jewels_value}/{5 * faux_jewels_max_current}% Drop Rate (+5% per level)"
-              f"{'<br>Note: Increase Faux Jewels max level with {{Endless Summoning|#summoning}}' if faux_jewels_at_current_max else ''}",
-        picture_class='faux-jewels',
-        progression=faux_jewels_level,
-        # This is technically infinite with Endless Summoning wins, but we'll just show what's currently unlocked with a note about ES
-        goal=faux_jewels_max_current
+    faux_jewels = session_data.account.equinox.upgrades['Faux Jewels']
+    drop_rate_aw_advice[w3].append(faux_jewels.get_bonus_advice(
+        '<br>Note: Increase Faux Jewels max level with {{Endless Summoning|#summoning}}'
+        if faux_jewels.level == faux_jewels.max_level else ''
     ))
-    world_3_bonus += faux_jewels_value
+    world_3_bonus += faux_jewels.value
 
     efaunt_set = session_data.account.armor_sets['Sets']['EFAUNT SET']
     drop_rate_aw_advice[w3].append(Advice(
