@@ -9,18 +9,17 @@ from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, family_bonuses_dict, achievements_list, allMeritsDict,
+    achievements_list, allMeritsDict,
     inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    starsigns_dict, forge_upgrades_dict, statues_dict, statue_type_dict,
+    starsigns_dict, statues_dict, statue_type_dict,
     statue_count, event_points_shop_dict,
     statue_type_count, get_statue_type_index_from_name
 )
 from consts.w1.stamps import stamp_types
-from consts.w1.bribes import bribes_dict
 from consts.consts_w2 import (
     max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict,
     ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
@@ -45,6 +44,7 @@ from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
 from models.general.cards import Card
+from models.general.family_bonuses import FamilyBonuses
 from models.w1.stamps import Stamp
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
@@ -234,11 +234,10 @@ def _parse_general(account):
     _parse_general_gem_shop(account)
     _parse_general_gem_shop_optlacc(account)
     _parse_general_gem_shop_bundles(account)
-    _parse_family_bonuses(account)
+    account.family_bonuses = FamilyBonuses(account.safe_characters)
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
     _parse_general_merits(account)
-    _parse_general_guild_bonuses(account)
     _parse_general_printer(account)
     _parse_general_maps(account)
     _parse_general_event_points_shop(account)
@@ -348,33 +347,6 @@ def _parse_general_quests(account):
             account.compiled_quests[questName][f'{status}Count'] += 1
             account.compiled_quests[questName][f'{status}Chars'].append(charIndex)
 
-def _parse_family_bonuses(account):
-    account.family_bonuses = {}
-    for className in family_bonuses_dict.keys():
-        # Create the skeleton for all current classes, with level and value of 0
-        account.family_bonuses[className] = {'Level': 0, 'Value': 0}
-    for char in account.safe_characters:
-        for className in [char.base_class, char.sub_class, char.elite_class]:
-            if className in family_bonuses_dict:
-                if char.combat_level > account.family_bonuses[className]['Level']:
-                    account.family_bonuses[className]['Level'] = char.combat_level
-    for className in account.family_bonuses.keys():
-        try:
-            account.family_bonuses[className]['Value'] = lava_func(
-                family_bonuses_dict[className]['funcType'],
-                account.family_bonuses[className]['Level'] - min(family_bonuses_dict[className]['levelDiscount'], account.family_bonuses[className]['Level']),
-                family_bonuses_dict[className]['x1'],
-                family_bonuses_dict[className]['x2'])
-        except:
-            logger.exception(f"Error parsing Family Bonus for {className}. Defaulting to 0 value")
-            account.family_bonuses[className]['Value'] = 0
-        account.family_bonuses[className]['DisplayValue'] = (
-            f"{'+' if family_bonuses_dict[className]['PrePlus'] else ''}"
-            f"{account.family_bonuses[className]['Value']:.2f}"
-            f"{family_bonuses_dict[className]['PostDisplay']}"
-            f" {family_bonuses_dict[className]['Stat']}"
-        )
-
 def _parse_dungeon_upgrades(account):
     account.dungeon_upgrades = {}
     raw_dungeon_upgrades = safe_loads(account.raw_data.get('DungUpg', []))
@@ -453,24 +425,6 @@ def _parse_general_merits(account):
             except Exception as e:
                 logger.warning(f"Merit Parse error: {e}. Defaulting to 0")
                 continue  # Already defaulted to 0 in Consts
-
-def _parse_general_guild_bonuses(account):
-    account.guild_bonuses = {}
-    raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_dict.items()):
-        try:
-            guild_bonus_level = safer_convert(raw_guild[0][bonus_index], 0)
-        except Exception as e:
-            logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
-            guild_bonus_level = 0
-        account.guild_bonuses[bonus_name] = {
-            'Level': guild_bonus_level,
-            'Value': lava_func(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
-            'Max Level': bonus['Max Level'],
-            'Max Value': bonus['Max Value'],
-            'Image': bonus['Image'],
-            'Description': bonus['Description']
-        }
 
 def _parse_general_printer(account):
     account.printer = {
@@ -681,8 +635,6 @@ def _parse_master_classes_exalted_stamps(account):
 
 def _parse_w1(account):
     _parse_w1_starsigns(account)
-    _parse_w1_forge(account)
-    _parse_w1_bribes(account)
     _parse_w1_stamps(account)
     _parse_w1_statues(account)
 
@@ -713,30 +665,6 @@ def _parse_w1_starsigns(account):
             }
 
     account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
-
-def _parse_w1_forge(account):
-    account.forge_upgrades = copy.deepcopy(forge_upgrades_dict)
-    raw_forge_upgrades = account.raw_data.get("ForgeLV", [])
-    for upgradeIndex, upgrade in enumerate(raw_forge_upgrades):
-        try:
-            account.forge_upgrades[upgradeIndex]["Purchased"] = upgrade
-        except Exception as e:
-            logger.warning(f"Forge Upgrade Parse error at upgradeIndex {upgradeIndex}: {e}. Defaulting to 0")
-            continue  # Already defaulted to 0 in Consts
-
-def _parse_w1_bribes(account):
-    account.bribes = {}
-    raw_bribes_list = safe_loads(account.raw_data.get("BribeStatus", []))
-    overall_bribe_index = 0
-    for bribeSet in bribes_dict:
-        account.bribes[bribeSet] = {}
-        for bribeIndex, bribeName in enumerate(bribes_dict[bribeSet]):
-            try:
-                account.bribes[bribeSet][bribeName] = safer_convert(raw_bribes_list[overall_bribe_index], -1)
-            except Exception as e:
-                logger.warning(f"Bribes Parse error at {bribeSet} {bribeName}: {e}. Defaulting to -1")
-                account.bribes[bribeSet][bribeName] = -1  # -1 means unavailable for purchase, 0 means available, and 1 means purchased
-            overall_bribe_index += 1
 
 def _parse_w1_stamps(account):
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))

@@ -15,7 +15,7 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_guild_bonus_advice, get_upgrade_vault_advice
+from models.advice.generators.general import get_upgrade_vault_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
@@ -119,8 +119,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         drop_rate_aw_advice[general].append(chaotic_chizoar_card.getAdvice(optional_ending_note="Increases Clover Shrine effect. See character-specific sections"))
 
     # Guild Bonus - Gold Charm
-    drop_rate_aw_advice[general].append(get_guild_bonus_advice('Gold Charm'))
-    general_bonus += session_data.account.guild_bonuses['Gold Charm']['Value']
+    gold_charm = session_data.account.guild_bonuses['Gold Charm']
+    drop_rate_aw_advice[general].append(gold_charm.get_advice())
+    general_bonus += gold_charm.value
 
     # Upgrade Vault - Vault Mastery
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
