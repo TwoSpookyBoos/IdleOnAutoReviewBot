@@ -9,7 +9,7 @@ from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
-    guild_bonuses_dict, achievements_list, allMeritsDict,
+    achievements_list, allMeritsDict,
     inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
 )
 from consts.consts_item_data import ITEM_DATA
@@ -239,7 +239,6 @@ def _parse_general(account):
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
     _parse_general_merits(account)
-    _parse_general_guild_bonuses(account)
     _parse_general_printer(account)
     _parse_general_maps(account)
     _parse_general_event_points_shop(account)
@@ -427,24 +426,6 @@ def _parse_general_merits(account):
             except Exception as e:
                 logger.warning(f"Merit Parse error: {e}. Defaulting to 0")
                 continue  # Already defaulted to 0 in Consts
-
-def _parse_general_guild_bonuses(account):
-    account.guild_bonuses = {}
-    raw_guild = safe_loads(account.raw_data.get('Guild', [[]]))
-    for bonus_index, (bonus_name, bonus) in enumerate(guild_bonuses_dict.items()):
-        try:
-            guild_bonus_level = safer_convert(raw_guild[0][bonus_index], 0)
-        except Exception as e:
-            logger.warning(f"Guild Bonus Parse error: {e}. Defaulting to 0")
-            guild_bonus_level = 0
-        account.guild_bonuses[bonus_name] = {
-            'Level': guild_bonus_level,
-            'Value': lava_func(bonus['funcType'], guild_bonus_level, bonus['x1'], bonus['x2']),
-            'Max Level': bonus['Max Level'],
-            'Max Value': bonus['Max Value'],
-            'Image': bonus['Image'],
-            'Description': bonus['Description']
-        }
 
 def _parse_general_printer(account):
     account.printer = {

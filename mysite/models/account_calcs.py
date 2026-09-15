@@ -120,7 +120,6 @@ def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
     account.highest_world_reached = _calculate_general_highest_world_reached(account)
-    _calculate_general_guild_bonuses(account)
     _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
@@ -218,16 +217,6 @@ def _calculate_general_highest_world_reached(account):
         return 2
     else:
         return 1
-
-def _calculate_general_guild_bonuses(account):
-    for bonus_name, bonus in account.guild_bonuses.items():
-        if '{' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
-        if '}' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
-        if ']' in bonus['Description']:
-            if bonus_name == 'Bonus GP for small guilds':
-                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")
 
 def _calculate_general_storage_slots(account):
     #Dependencies: none

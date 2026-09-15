@@ -8,6 +8,7 @@ from models.advice.advice import Advice
 from models.general.colo_scores import ColoScores
 from models.general.companions import Companions
 from models.general.greenstacks import GreenStacks
+from models.general.guild_bonuses import GuildBonuses
 from models.general.npc_tokens import NpcTokens
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
@@ -107,6 +108,7 @@ class Account:
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         self.colo_scores: ColoScores = ColoScores(self.raw_data)
         self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)
+        self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
         #Class lists
         self.beginners = []
         self.jmans = []

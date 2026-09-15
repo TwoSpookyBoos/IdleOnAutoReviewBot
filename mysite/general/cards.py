@@ -12,7 +12,6 @@ from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
@@ -77,7 +76,7 @@ def getCardDropChanceAdviceGroup(groups):
     cards_galore_talent_bonus = lava_func(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
 
     guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
-    guild_bonus_bonus = guild_bonus['Value']
+    guild_bonus_bonus = guild_bonus.value
 
     max_obol_card_drop_chance = obols_max_bonuses_dict["PlayerCardDropChanceTrue"] + obols_max_bonuses_dict["FamilyCardDropChanceTrue"]
     max_8ball_keychain_card_drop_chance = 2 * 10
@@ -153,7 +152,7 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=card_champ_bubble['Level'],
                 goal=3960
             ),
-            get_guild_bonus_advice('C2 Card Spotter')
+            guild_bonus.get_advice()
         ],
         f'Multi Group A - character-specific': [
             gigafrog.getAdvice(),
