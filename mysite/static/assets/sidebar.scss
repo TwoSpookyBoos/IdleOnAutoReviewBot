@@ -15,6 +15,11 @@
 
     --fg-text-placeholder: lightgray;
 
+    --fg-steam: hsl(204, 27%, 83%);
+    --bg-steam: hsl(210, 35%, 16%);
+    --bg-steam-dark: hsl(225, 18%, 11%);
+    --accent-steam: hsl(202, 86%, 68%);
+
     --fg-link-sidebar: var(--fg-link);
     --fg-link-sidebar-visited: var(--fg-link-visited);
 
@@ -164,12 +169,56 @@ form {
         }
     }
 
-    #steam-login-open {
-        border: none;
+    #steam-login-open, #steam-sync, #steam-sign-out, #steam-login-submit {
+        border: 2px solid transparent;
         border-radius: 10px;
-        padding: 10px;
-        color: var(--fg-submit);
-        background: var(--bg-submit);
+        padding: 5px 10px;
+        font: inherit;
+        letter-spacing: inherit;
+        transition: background-color .2s ease-in-out, border-color .2s ease-in-out, color .2s ease-in-out;
+
+        &:disabled {
+            opacity: .6;
+            cursor: progress;
+        }
+    }
+
+    // Steam branding
+    #steam-login-open, #steam-sync, #steam-login-submit {
+        color: var(--fg-steam);
+        background: linear-gradient(90deg, var(--bg-steam-dark), var(--bg-steam));
+
+        &:hover, &:focus-visible {
+            color: white;
+            border-color: var(--accent-steam);
+        }
+    }
+
+    #steam-sign-out {
+        color: var(--fg-sidebar);
+        background: transparent;
+        border-color: var(--bg-textbox);
+
+        &:hover, &:focus-visible {
+            border-color: var(--fg-sidebar);
+        }
+    }
+
+    #steam-signed-in {
+        display: flex;
+        gap: 10px;
+
+        #steam-sync {
+            flex-grow: 2;
+        }
+
+        #steam-sign-out {
+            flex-grow: 1;
+        }
+    }
+
+    #steam-login-open[hidden], #steam-signed-in[hidden] {
+        display: none;
     }
 
     #steam-login-wrapper {
@@ -217,14 +266,6 @@ form {
                 &::placeholder {
                     color: var(--fg-text-placeholder);
                 }
-            }
-
-            #steam-login-submit {
-                border: none;
-                border-radius: 10px;
-                padding: 8px;
-                color: var(--fg-submit);
-                background: var(--bg-submit);
             }
         }
     }

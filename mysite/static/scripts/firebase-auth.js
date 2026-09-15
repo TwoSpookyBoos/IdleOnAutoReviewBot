@@ -5,8 +5,8 @@
 // to copy it out and paste it back. This matches IdleonToolbox's own flow.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithCustomToken, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 const IDLEMMO_CONFIG = {
@@ -28,6 +28,16 @@ function showFriendlyError(message) {
     // Reuses main.js's existing error modal (main.js:384) rather than
     // inventing new UI. statusCode 0 is fine — it's only used for a console.log.
     window.loadErrorPopup(message, 0);
+}
+
+// secondary data, don't block the save on it
+async function readOr(read, fallback, label) {
+    try {
+        return (await read()) ?? fallback;
+    } catch (e) {
+        console.error(`${label} read failed (continuing without it):`, e);
+        return fallback;
+    }
 }
 
 function openSteamPopup() {
@@ -69,25 +79,28 @@ async function exchangeSteamUrl(pastedUrl) {
         return;
     }
 
-    let token;
+    let response, json;
     try {
-        const response = await fetch(ASIL_ENDPOINT, {
+        response = await fetch(ASIL_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ data: steamParams }),
         });
-        const json = await response.json();
-        token = json?.result;
+        json = await response.json().catch(() => null);
     } catch (e) {
         console.error("Steam token exchange failed:", e);
         showFriendlyError("Couldn't reach the login service. Please try again in a moment.");
         return;
     }
 
+    const token = json?.result;
     if (!token || typeof token !== "string") {
-        showFriendlyError(
-            "Couldn't log in with that link. Steam sign-ins can only be completed once — " +
-            "click \"Log in with Steam\" again to get a fresh one."
+        console.error("Steam token exchange returned no token:", response.status, json);
+        showFriendlyError(response.status >= 500
+            ? "The login service had a problem. Try again in a moment — if it keeps failing, " +
+              "click \"Or log in with Steam\" again to get a fresh link."
+            : "Couldn't log in with that link. Steam sign-in links only work once, so if this one was " +
+              "already used, click \"Or log in with Steam\" again to get a fresh one."
         );
         return;
     }
@@ -102,98 +115,65 @@ async function exchangeSteamUrl(pastedUrl) {
         return;
     }
 
-    // Called directly rather than relying on onAuthStateChanged: that
-    // listener (below) is one-shot and already fired once — with null —
-    // before this login even started, so it won't fire again for this
-    // sign-in. It only ever covers the "already had a persisted session at
-    // page-load" case.
-    watchSaveFor(uid);
+    syncSteamSave(uid);
 }
 
-// Tracks the live listener so re-logging in (e.g. a different Steam account)
-// tears down the previous subscription instead of leaving it running.
-let unsubscribeFromSave = null;
+let syncing = false;
 
-function watchSaveFor(uid) {
-    if (unsubscribeFromSave) unsubscribeFromSave();
+// one-shot load, only on login or Sync Steam
+async function syncSteamSave(uid) {
+    if (syncing) return;
+    syncing = true;
+    const syncButton = document.querySelector("#steam-sync");
+    syncButton.disabled = true;
 
-    let isFirstUpdate = true;
-    unsubscribeFromSave = onSnapshot(
-        doc(firestore, "_data", uid),
-        async (snap) => {
-            if (!snap.exists()) {
-                if (isFirstUpdate) {
-                    showFriendlyError(
-                        "No save data found for this account yet. Make sure you're logging in with " +
-                        "the account you actually play IdleOn with, and that you've played at least once."
-                    );
-                }
-                isFirstUpdate = false;
-                return;
-            }
-            const cloudsave = snap.data();
-
-            // charNames/companion are supporting data — default gracefully
-            // rather than blocking the primary save data on a secondary read failing.
-            let charNames = [];
-            try {
-                const charNamesSnap = await get(child(ref(database), `_uid/${uid}`));
-                charNames = charNamesSnap.val() ?? [];
-            } catch (e) {
-                console.error("charNames read failed (continuing without it):", e);
-            }
-
-            let companion = {};
-            try {
-                const companionSnap = await get(child(ref(database), `_comp/${uid}`));
-                companion = companionSnap.val() ?? {};
-            } catch (e) {
-                console.error("companion read failed (continuing without it):", e);
-            }
-
-            let serverVars = {};
-            try {
-                const serverVarsSnap = await getDoc(doc(firestore, "_vars", "_vars"));
-                serverVars = serverVarsSnap.data() ?? {};
-            } catch (e) {
-                console.error("serverVars read failed (continuing without it):", e);
-            }
-
-            const assembled = { data: cloudsave, charNames, companion, serverVars };
-            document.querySelector("#player").value = JSON.stringify(assembled);
-            localStorage.setItem("player", JSON.stringify(assembled));
-
-            if (isFirstUpdate) {
-                isFirstUpdate = false;
-                document.querySelector("#steam-login-wrapper").classList.remove("open");
-                // First result this page-view: full submit, spinner and sidebar
-                // close included, same as a manual paste-and-submit.
-                document.querySelector("form").requestSubmit();
-            } else {
-                // A later cloud-save came in (auto-save or a manual in-game
-                // save) while the user is already looking at their results —
-                // refresh quietly, without wiping #top or toggling the sidebar.
-                window.fetchPlayerAdvice();
-            }
-        },
-        (e) => {
-            console.error("Live save listener error:", e);
-            showFriendlyError("Lost the connection to your save data. You can still paste your save JSON manually below.");
+    try {
+        let snap;
+        try {
+            snap = await getDoc(doc(firestore, "_data", uid));
+        } catch (e) {
+            console.error("Save read failed:", e);
+            showFriendlyError("Couldn't load your save data. Please try again, or paste your save JSON manually below.");
+            return;
         }
-    );
+        if (!snap.exists()) {
+            showFriendlyError(
+                "No save data found for this account yet. Make sure you're logging in with " +
+                "the account you actually play IdleOn with, and that you've played at least once."
+            );
+            return;
+        }
+
+        const [charNames, companion, serverVars] = await Promise.all([
+            readOr(async () => (await get(child(ref(database), `_uid/${uid}`))).val(), [], "charNames"),
+            readOr(async () => (await get(child(ref(database), `_comp/${uid}`))).val(), {}, "companion"),
+            readOr(async () => (await getDoc(doc(firestore, "_vars", "_vars"))).data(), {}, "serverVars"),
+        ]);
+
+        document.querySelector("#player").value = JSON.stringify({ data: snap.data(), charNames, companion, serverVars });
+        document.querySelector("#steam-login-wrapper").classList.remove("open");
+        // Clicked from the open sidebar: full submit, spinner and sidebar
+        // close included, same as a manual paste-and-submit.
+        document.querySelector("form").requestSubmit();
+    } finally {
+        syncing = false;
+        syncButton.disabled = false;
+    }
 }
 
-// Exposed so main.js's own on-load auto-submit (which replays whatever's
-// cached in localStorage) can skip itself when a fresher live fetch is about
-// to run instead — see fetchPlayerAdviceUnlessFirebaseWillHandleIt in main.js.
-window.firebaseAuthReady = new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-        unsubscribe();
-        resolve(user);
-    });
-});
-window.firebaseAuthReady.then((user) => {
-    if (user) watchSaveFor(user.uid);
+async function signOutOfSteam() {
+    try {
+        await signOut(auth);
+    } catch (e) {
+        console.error("Sign-out failed:", e);
+        showFriendlyError("Couldn't sign out. Please try again.");
+    }
+}
+
+// swap login/signed-in buttons
+onAuthStateChanged(auth, (user) => {
+    document.querySelector("#steam-login-open").hidden = !!user;
+    document.querySelector("#steam-signed-in").hidden = !user;
 });
 
 function initFirebaseLogin() {
@@ -215,6 +195,12 @@ function initFirebaseLogin() {
         e.preventDefault(); // don't let Enter submit the outer form with an empty #player
         exchangeSteamUrl(e.target.value.trim());
     });
+
+    document.querySelector("#steam-sync").addEventListener("click", () => {
+        if (auth.currentUser) syncSteamSave(auth.currentUser.uid);
+    });
+
+    document.querySelector("#steam-sign-out").addEventListener("click", signOutOfSteam);
 }
 
 document.addEventListener("DOMContentLoaded", initFirebaseLogin);
