@@ -18,7 +18,7 @@ def getEquinoxDreams() -> dict:
     results = {}
     for dreamNumber in [1, 12, 29]:
         try:
-            results[f"Dream{dreamNumber}"] = session_data.account.equinox_dreams[dreamNumber]
+            results[f"Dream{dreamNumber}"] = session_data.account.equinox.dreams[dreamNumber].completed
         except Exception as reason:
             logger.warning(f"Unable to access Equinox Dream {dreamNumber}: {reason}. Defaulting to False.")
             results[f"Dream{dreamNumber}"] = False

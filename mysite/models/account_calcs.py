@@ -124,7 +124,7 @@ def _calculate_general(account):
     _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
-    if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox_dreams[17]:
+    if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox.dreams[17].completed:
         account.alerts_Advices['General'].append(Advice(
             label=f"You have {account.stored_assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
             picture_class="luckier-lad"
@@ -467,7 +467,7 @@ def _calculate_w2_ballot(account):
     # Dependency: legend talents
     # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
     account.ballot['BonusMulti'] = ValueToMulti(
-        account.equinox_bonuses['Voter Rights']['CurrentLevel']
+        account.equinox.upgrades['Voter Rights'].level
         + account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value
         + account.summoning.bonuses["Ballot Bonus"].value
         + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
@@ -505,7 +505,7 @@ def _calculate_w2_killroy(account):
             account.killroy[upgradeName]['Available'] = (
                 safer_get(account.raw_optlacc_dict, 112, 0) >= upgradeDict['Required Fights']
                 or account.killroy[upgradeName]['Upgrades'] > 0
-            ) and account.equinox_bonuses['Shades of K']['CurrentLevel'] >= upgradeDict['Required Equinox']
+            ) and account.equinox.upgrades['Shades of K'].level >= upgradeDict['Required Equinox']
 
 
 def _calculate_w3(account):
@@ -989,15 +989,10 @@ def _calculate_w3_library_max_book_levels(account):
     )
 
 def _calculate_w3_equinox_max_levels(account):
-    summoning_levels = account.summoning.bonuses["Equinox Max LV"].value
-    superbit_levels = 10 * account.gaming['SuperBits']['Equinox Unending']['Unlocked']
-    for bonus, bonus_details in account.equinox_bonuses.items():
-        bonus_equinox_levels = (
-            summoning_levels * bonus_details['SummoningExpands']
-            + superbit_levels * bonus_details['SuperbitExpands']
-        )
-        account.equinox_bonuses[bonus]['PlayerMaxLevel'] += bonus_equinox_levels
-        account.equinox_bonuses[bonus]['FinalMaxLevel'] += bonus_equinox_levels
+    account.equinox.calculate_max_levels(
+        account.summoning.bonuses["Equinox Max LV"].value,
+        account.gaming['SuperBits']['Equinox Unending']['Unlocked'],
+    )
 
 def _calculate_general_character_bonus_talent_levels(account):
     account.bonus_talents = {
@@ -1029,12 +1024,12 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer']['Level'])
         },
         'Equinox Symbols': {
-            'Value': account.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
+            'Value': account.equinox.upgrades['Equinox Symbols'].level,
             'Image': 'equinox-symbols',
             'Label': f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: "
-                     f"+{account.equinox_bonuses['Equinox Symbols']['CurrentLevel']}/{account.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']}",
-            'Progression': account.equinox_bonuses['Equinox Symbols']['CurrentLevel'],
-            'Goal': account.equinox_bonuses['Equinox Symbols']['FinalMaxLevel']
+                     f"+{account.equinox.upgrades['Equinox Symbols'].level}/{account.equinox.upgrades['Equinox Symbols'].final_max_level}",
+            'Progression': account.equinox.upgrades['Equinox Symbols'].level,
+            'Goal': account.equinox.upgrades['Equinox Symbols'].final_max_level
         },
         'Maroon Warship': {
             'Value': 1 * account.achievements['Maroon Warship']['Complete'],

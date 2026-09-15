@@ -46,7 +46,7 @@ def getBonusesAdviceGroup() -> AdviceGroup:
     return bb_ag
 
 def getBallotMultiAdviceGroup():
-    e_vr = session_data.account.equinox_bonuses['Voter Rights']
+    voter_rights = session_data.account.equinox.upgrades['Voter Rights']
     summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
     voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
     gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
@@ -55,12 +55,7 @@ def getBallotMultiAdviceGroup():
     _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
         f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
-            Advice(
-                label=f"{{{{ Equinox|#equinox}}}}: Voter Rights: +{e_vr['CurrentLevel']}/{e_vr['FinalMaxLevel']}%",
-                picture_class="voter-rights",
-                progression=e_vr['CurrentLevel'],
-                goal=e_vr['FinalMaxLevel']
-            ),
+            voter_rights.get_bonus_advice(),
             voter_integrity.get_advice(),
             Advice(
                 label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
