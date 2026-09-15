@@ -1192,7 +1192,7 @@ guild_bonuses_dict = {
 }
 
 #Family Bonuses
-# `ClassAccountBonus = function` in source
+# `ClassAccountBonus = function` in source. Last updated in v2.528.0
 family_bonus_class_tier_level_reductions = [9, 29, 69, 129]  #Character must be this high of a level to get bonuses
 family_bonuses_dict = {
     #"Beginner": {'funcType': 'decay', 'x1': 0, 'x2': 0, 'Stat': '', 'PrePlus': False, 'PostDisplay': '', 'levelDiscount': family_bonus_class_tier_level_reductions[0]},
