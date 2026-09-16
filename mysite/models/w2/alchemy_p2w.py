@@ -1,6 +1,6 @@
 from consts.consts_w2 import sigils_dict
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 
 logger = get_logger(__name__)
@@ -38,11 +38,8 @@ class Sigils(dict[str, Sigil]):
         super().__init__()
         for name, info in sigils_dict.items():
             sigil = Sigil(name, info)
-            try:
-                sigil.player_hours = float(raw_sigils[sigil.index])
-                sigil.level = raw_sigils[sigil.index + 1] + 1
-            except:
-                pass  # already defaulted to 0s in consts.sigils_dict
+            sigil.player_hours = safer_convert(safer_index(raw_sigils, sigil.index, 0), 0.0)
+            sigil.level = safer_convert(safer_index(raw_sigils, sigil.index + 1, -1), 0) + 1
             self[name] = sigil
 
     def calculate_precharge_levels(self, has_ionized_sigils: bool):
