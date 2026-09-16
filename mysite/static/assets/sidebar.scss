@@ -20,7 +20,11 @@
     --bg-steam-dark: hsl(225, 18%, 11%);
     --accent-steam: hsl(202, 86%, 68%);
 
+    --fg-google: hsl(210, 8%, 25%);
+    --bg-google: hsl(0, 0%, 100%);
     --accent-google: hsl(217, 89%, 61%);
+
+    --bg-apple: hsl(0, 0%, 0%);
     --accent-apple: hsl(0, 0%, 80%);
 
     --fg-link-sidebar: var(--fg-link);
@@ -187,8 +191,7 @@ form {
         }
     }
 
-    #steam-login-open, #google-login-open, #apple-login-open,
-    #cloud-sync, #steam-login-submit {
+    #steam-login-open, #cloud-sync, #steam-login-submit {
         color: var(--fg-steam);
         background: linear-gradient(90deg, var(--bg-steam-dark), var(--bg-steam));
 
@@ -198,12 +201,35 @@ form {
         }
     }
 
-    #google-login-open:hover, #google-login-open:focus-visible {
-        border-color: var(--accent-google);
+    #google-login-open {
+        color: var(--fg-google);
+        background: var(--bg-google);
+
+        &:hover, &:focus-visible {
+            border-color: var(--accent-google);
+        }
     }
 
-    #apple-login-open:hover, #apple-login-open:focus-visible {
-        border-color: var(--accent-apple);
+    #apple-login-open {
+        color: white;
+        background: var(--bg-apple);
+
+        &:hover, &:focus-visible {
+            border-color: var(--accent-apple);
+        }
+    }
+
+    #signin-buttons button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        img {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
     }
 
     #sign-out {

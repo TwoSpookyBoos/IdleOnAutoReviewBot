@@ -45,9 +45,15 @@
         </div>
         <div id="signin-buttons" hidden>
             <span>Or log in with</span>
-            <button type="button" id="steam-login-open">Steam</button>
-            <button type="button" id="google-login-open">Google</button>
-            <button type="button" id="apple-login-open">Apple</button>
+            <button type="button" id="steam-login-open">
+                <img src="{{ "steam-logo.svg"|img }}" alt="" aria-hidden="true">Steam
+            </button>
+            <button type="button" id="google-login-open">
+                <img src="{{ "google-logo.svg"|img }}" alt="" aria-hidden="true">Google
+            </button>
+            <button type="button" id="apple-login-open">
+                <img src="{{ "apple-logo.svg"|img }}" alt="" aria-hidden="true">Apple
+            </button>
         </div>
         <div id="signed-in" hidden>
             <button type="button" id="cloud-sync">Sync save</button>
