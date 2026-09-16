@@ -388,7 +388,7 @@ def getCookingAdviceSection() -> AdviceSection:
     vmans = session_data.account.vmans
     challenge_account = session_data.account.no_beginners
     atom_fluoride_level = session_data.account.atom_collider['Atoms']['Fluoride - Void Plate Chef']['Level']
-    dchef_level = session_data.account.alchemy_bubbles['Diamond Chef']['Level']
+    dchef_level = session_data.account.alchemy_bubbles['Diamond Chef'].level
     cooking = session_data.account.cooking
 
     #Generate AdviceGroup

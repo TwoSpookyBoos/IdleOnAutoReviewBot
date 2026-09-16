@@ -211,13 +211,13 @@ def getArctisAdviceGroup(lowest_divinity_level: int, highest_divinity_level: int
     arctis_Advices = {
         'Current Values': []
     }
-    current_big_p = session_data.account.alchemy_bubbles['Big P']['Level']
+    current_big_p = session_data.account.alchemy_bubbles['Big P'].level
 
     # Find the lowest minor link bonus from Arctis across all characters, as if they were linked
     current_lowest_arctis_value = 0
     current_highest_arctis_value = 0
     for char in session_data.account.all_characters:
-        char_arctis = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+        char_arctis = ceil(15 * session_data.account.alchemy_bubbles['Big P'].base_value * (char.divinity_level / (char.divinity_level + 60)))
         if current_lowest_arctis_value == 0:  #First character being evaluated
             current_lowest_arctis_value = char_arctis
             current_highest_arctis_value = char_arctis

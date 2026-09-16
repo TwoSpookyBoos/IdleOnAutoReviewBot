@@ -162,7 +162,7 @@ class Tesseract:
             ),
             'mgb': ValueToMulti(
                 emperor["Arcane Cultist Extra Tachyons"].value
-                + alchemy_bubbles['Tachyon Bubble']['BaseValue']
+                + alchemy_bubbles['Tachyon Bubble'].base_value
             ),
             'mgc': ValueToMulti(sneaking.pristine_charms['Mystery Fizz'].value),
             'mgd': ValueToMulti(backup_energy_bonus_value),
