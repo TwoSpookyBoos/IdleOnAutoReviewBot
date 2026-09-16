@@ -682,14 +682,14 @@ class Farming:
         evo_multi["Cropius Final Value"] = (
             # TODO: Move to alchemy bonus calculate
             evo_multi["Maps Opened"]
-            * account.alchemy_bubbles["Cropius Mapper"]["BaseValue"]
+            * account.alchemy_bubbles["Cropius Mapper"].base_value
         )
         evo_multi["Vial Value"] = account.alchemy_vials["Flavorgil (Caulifish)"].value
         evo_multi["Alch Multi"] = (
             ValueToMulti(evo_multi["Cropius Final Value"])
             * ValueToMulti(
                 # TODO: Move to alchemy bonus calculate
-                account.alchemy_bubbles["Crop Chapter"]["BaseValue"]
+                account.alchemy_bubbles["Crop Chapter"].base_value
                 * max(0, floor((account.tome["Total Points"] - 5000) / 2000))
             )
             * ValueToMulti(evo_multi["Vial Value"])

@@ -398,27 +398,7 @@ def _calculate_w2_vials(account):
     account.alchemy_vials.calculate_values(account.vault, account.rift, account.labBonuses)
 
 def _calculate_w2_cauldrons(account):
-    perCauldronBubblesUnlocked = [
-        account.alchemy_cauldrons['OrangeUnlocked'],
-        account.alchemy_cauldrons['GreenUnlocked'],
-        account.alchemy_cauldrons['PurpleUnlocked'],
-        account.alchemy_cauldrons['YellowUnlocked']
-    ]
-    bubbleUnlockListByWorld = [20, 0, 0, 0, 0, 0, 0, 0, 0]
-    for bubbleColorCount in perCauldronBubblesUnlocked:
-        worldCounter = 1
-        while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
-            bubbleUnlockListByWorld[worldCounter] += 5
-            bubbleColorCount -= 5
-            worldCounter += 1
-        if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
-            bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
-    account.alchemy_cauldrons['BubblesPerWorld'] = bubbleUnlockListByWorld
-
-    account.alchemy_cauldrons['NextWorldMissingBubbles'] = min(
-        [cauldronValue // 5 for cauldronValue in perCauldronBubblesUnlocked],
-        default=0
-    ) + 1
+    account.alchemy_cauldrons.calculate_bubble_unlocks()
 
 def _calculate_w2_sigils(account):
     account.alchemy_p2w.sigils.calculate_precharge_levels(
@@ -573,7 +553,7 @@ def _calculate_w3_collider_cost_reduction(account):
         + (account.construction_buildings['Atom Collider']['Level'] / 10)
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
-        + account.alchemy_bubbles['Atom Split']['BaseValue']
+        + account.alchemy_bubbles['Atom Split'].base_value
         + account.stamps['Atomic Stamp'].total_value
         + account.grimoire.upgrades['Death of the Atom Price'].total_value
         + account.compass.upgrades['Atomic Cost Crash'].total_value
@@ -1032,7 +1012,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         # Arctis minor link
         if account.divinity['AccountWideArctis'] or char.isArctisLinked():
             arctis_base = 15
-            bigp_value = account.alchemy_bubbles['Big P']['BaseValue']
+            bigp_value = account.alchemy_bubbles['Big P'].base_value
             div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
             final_arctis_result = ceil(arctis_base * bigp_value * div_minorlink_value)
             character_specific_bonuses += final_arctis_result

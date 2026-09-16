@@ -343,19 +343,19 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         label=f"Cropius Mapper: {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.enemy_maps[6]) - 1)} maps"
               f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
-        progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
+        progression=session_data.account.alchemy_bubbles['Cropius Mapper'].level,
         goal=EmojiType.INFINITY.value,
-        resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
+        resource=session_data.account.alchemy_bubbles['Cropius Mapper'].material
     ))
     crop_chapter_stacks = max(0, (session_data.account.tome['Total Points'] - 5000) // 2000)
     evo_advices[alch].append(Advice(
-        label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k"
+        label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter'].base_value:.3}% per 2k Tome Points above 5k"
               f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
-              f"<br>Total: +{round(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks, 3):g}%",
+              f"<br>Total: +{round(session_data.account.alchemy_bubbles['Crop Chapter'].base_value * crop_chapter_stacks, 3):g}%",
         picture_class='crop-chapter',
-        progression=session_data.account.alchemy_bubbles['Crop Chapter']['Level'],
+        progression=session_data.account.alchemy_bubbles['Crop Chapter'].level,
         goal=EmojiType.INFINITY.value,
-        resource=session_data.account.alchemy_bubbles['Crop Chapter']['Material']
+        resource=session_data.account.alchemy_bubbles['Crop Chapter'].material
     ))
 #Vial
     flavorgil = session_data.account.alchemy_vials['Flavorgil (Caulifish)']
@@ -867,16 +867,16 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         #Alchemy Bubbles
         if 'Alchemy Bubbles' in requirements:
             for r_name, r_level in requirements['Alchemy Bubbles'].items():
-                if r_level > session_data.account.alchemy_bubbles[r_name]['Level']:
+                if r_level > session_data.account.alchemy_bubbles[r_name].level:
                     add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         advice_types_added.add('Alchemy Bubbles')
                         farming_Advices['Tiers'][subgroup_label].append(Advice(
                             label=f'Level {r_name} to 99% value',
                             picture_class=r_name,
-                            progression=session_data.account.alchemy_bubbles[r_name]['Level'],
+                            progression=session_data.account.alchemy_bubbles[r_name].level,
                             goal=r_level,
-                            resource=session_data.account.alchemy_bubbles[r_name]['Material']
+                            resource=session_data.account.alchemy_bubbles[r_name].material
                         ))
 
         #Final tier check

@@ -196,9 +196,9 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
     purrmep_minor_bonus = 0
     if char_linked_to_purrmep is not None:
-        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p['BaseValue'] * purrmep_base_max_minor_bonus
+        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p.base_value * purrmep_base_max_minor_bonus
 
-    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble['BaseValue']) / 125
+    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble.base_value) / 125
     multi_group_a = round(multi_group_a, 2)
 
     # Multi Group B -- Goharut Blessing
@@ -287,11 +287,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             ),
             crawler.getAdvice(),
             kattlekruk.getAdvice(),
-            Advice(
-                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{boaty_bubble['BaseValue']:.2f}/135%",
-                picture_class='boaty-bubble',
-                resource=boaty_bubble['Material'],
-                progression=boaty_bubble['Level'],
+            boaty_bubble.get_bonus_advice(
+                f"+{boaty_bubble.base_value:.2f}/135%",
                 goal=max_NBLB
             )
         ],

@@ -133,7 +133,7 @@ def try_exclude_ShroomFamiliar(exclusionLists):
             sublist.append('Shroom Familiar')
 
 def try_exclude_IvoryBubbleCauldrons(exclusionLists):
-    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > current_world:
+    if session_data.account.alchemy_cauldrons.next_world_missing_bubbles > current_world:
         for sublist in exclusionLists:
             sublist.append('Ivory Bubble Cauldrons')
 

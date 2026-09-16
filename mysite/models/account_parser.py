@@ -21,7 +21,6 @@ from consts.consts_w1 import (
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
-    max_implemented_bubble_index, bubbles_dict,
     ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, get_obol_totals
 )
 from consts.consts_w3 import (
@@ -792,119 +791,12 @@ def _parse_w1_statues(account):
 
 
 def _parse_w2(account):
-    _parse_w2_cauldrons(account)
-    _parse_w2_bubbles(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
     _parse_w2_islands(account)
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
-
-def _parse_w2_cauldrons(account):
-    raw_cauldron_upgrades = account.raw_data.get('CauldUpgLVs', [])
-    account.alchemy_cauldrons = {
-        'OrangeUnlocked': 0,
-        'GreenUnlocked': 0,
-        'PurpleUnlocked': 0,
-        'YellowUnlocked': 0,
-        'TotalUnlocked': 0,
-    }
-    try:
-        account.alchemy_cauldrons["OrangeBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[0], 0),
-            safer_convert(raw_cauldron_upgrades[1], 0),
-            safer_convert(raw_cauldron_upgrades[2], 0),
-            safer_convert(raw_cauldron_upgrades[3], 0),
-        ]
-        account.alchemy_cauldrons["GreenBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[4], 0),
-            safer_convert(raw_cauldron_upgrades[5], 0),
-            safer_convert(raw_cauldron_upgrades[6], 0),
-            safer_convert(raw_cauldron_upgrades[7], 0),
-        ]
-        account.alchemy_cauldrons["PurpleBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[8], 0),
-            safer_convert(raw_cauldron_upgrades[9], 0),
-            safer_convert(raw_cauldron_upgrades[10], 0),
-            safer_convert(raw_cauldron_upgrades[11], 0),
-        ]
-        account.alchemy_cauldrons["PurpleBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[12], 0),
-            safer_convert(raw_cauldron_upgrades[13], 0),
-            safer_convert(raw_cauldron_upgrades[14], 0),
-            safer_convert(raw_cauldron_upgrades[15], 0),
-        ]
-    except Exception as e:
-        logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["OrangeBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["GreenBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["PurpleBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["YellowBoosts"] = [0, 0, 0, 0]
-    try:
-        account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
-        account.alchemy_cauldrons["TrenchSeawater"] = [safer_convert(raw_cauldron_upgrades[26], 0), safer_convert(raw_cauldron_upgrades[27], 0)]
-        account.alchemy_cauldrons["ToxicMercury"] = [safer_convert(raw_cauldron_upgrades[30], 0), safer_convert(raw_cauldron_upgrades[31], 0)]
-    except Exception as e:
-        logger.warning(f"Alchemy Water Cauldron decants Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["WaterDroplets"] = [0, 0]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [0, 0]
-        account.alchemy_cauldrons["TrenchSeawater"] = [0, 0]
-        account.alchemy_cauldrons["ToxicMercury"] = [0, 0]
-
-def _parse_w2_bubbles(account):
-    account.alchemy_bubbles = {}
-
-    try:
-        all_raw_bubbles = [
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][0].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][1].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][2].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][3].items() if k != 'length'},
-        ]
-    except:
-        all_raw_bubbles = [
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},  #+1 to compensate for range() stopping before max
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-        ]
-
-    account.alchemy_cauldrons['OrangeUnlocked'] = sum([1 for v in all_raw_bubbles[0].values() if v > 0])
-    account.alchemy_cauldrons['GreenUnlocked'] = sum([1 for v in all_raw_bubbles[1].values() if v > 0])
-    account.alchemy_cauldrons['PurpleUnlocked'] = sum([1 for v in all_raw_bubbles[2].values() if v > 0])
-    account.alchemy_cauldrons['YellowUnlocked'] = sum([1 for v in all_raw_bubbles[3].values() if v > 0])
-    account.alchemy_cauldrons['TotalUnlocked'] = (
-        account.alchemy_cauldrons['OrangeUnlocked']
-        + account.alchemy_cauldrons['GreenUnlocked']
-        + account.alchemy_cauldrons['PurpleUnlocked']
-        + account.alchemy_cauldrons['YellowUnlocked']
-    )
-
-    for cauldronIndex in bubbles_dict:
-        for bubbleIndex in bubbles_dict[cauldronIndex]:
-            if bubbleIndex <= max_implemented_bubble_index:  #Don't waste time calculating unimplemented bubbles
-                try:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        'CauldronIndex': cauldronIndex,
-                        'BubbleIndex': bubbleIndex,
-                        'Level': all_raw_bubbles[cauldronIndex][bubbleIndex],
-                        'BaseValue': lava_func(
-                            bubbles_dict[cauldronIndex][bubbleIndex]['funcType'],
-                            all_raw_bubbles[cauldronIndex][bubbleIndex],
-                            bubbles_dict[cauldronIndex][bubbleIndex]['x1'],
-                            bubbles_dict[cauldronIndex][bubbleIndex]['x2']),
-                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
-                    }
-                except:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        'CauldronIndex': cauldronIndex,
-                        'BubbleIndex': bubbleIndex,
-                        'Level': 0,
-                        'BaseValue': 0.0,
-                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
-                    }
 
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])

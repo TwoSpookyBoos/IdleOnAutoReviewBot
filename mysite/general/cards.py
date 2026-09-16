@@ -84,7 +84,7 @@ def getCardDropChanceAdviceGroup(groups):
     max_equipment_card_drop_chance_bonus = max_obol_card_drop_chance + max_8ball_keychain_card_drop_chance
 
     card_champ_bubble = session_data.account.alchemy_bubbles['Card Champ']
-    card_champ_bubble_bonus = card_champ_bubble['BaseValue']
+    card_champ_bubble_bonus = card_champ_bubble.base_value
 
     multi_group_a = (
             bribe_bonus +
@@ -137,11 +137,8 @@ def getCardDropChanceAdviceGroup(groups):
                 f"+{anearful_vial.value:.2f}%", include_material=False
             ),
             session_data.account.stamps['Card Stamp'].get_advice(),
-            Advice(
-                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Card Champ: +{card_champ_bubble['BaseValue']:.2f}/100%",
-                picture_class='card-champ',
-                resource=card_champ_bubble['Material'],
-                progression=card_champ_bubble['Level'],
+            card_champ_bubble.get_bonus_advice(
+                f"+{card_champ_bubble.base_value:.2f}/100%",
                 goal=3960
             ),
             guild_bonus.get_advice()

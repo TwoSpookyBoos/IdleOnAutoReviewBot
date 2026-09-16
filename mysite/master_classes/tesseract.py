@@ -178,11 +178,8 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     currency_advices[mgb_label] = [
         emperor_tachyon_bonus.get_bonus_advice(),
-        Advice(
-            label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Tachyon Bubble: +{round_and_trim(tachyon_bubble['BaseValue'])}/250%",
-            picture_class='tachyon-bubble',
-            resource=tachyon_bubble['Material'],
-            progression=tachyon_bubble['Level'],
+        tachyon_bubble.get_bonus_advice(
+            f"+{round_and_trim(tachyon_bubble.base_value)}/250%",
             goal=max_NBLB
         )
     ]
