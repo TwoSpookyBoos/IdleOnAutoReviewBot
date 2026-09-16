@@ -230,6 +230,38 @@ def index() -> Response:
     return Response(page, headers={"Cache-Control": "must-revalidate"})
 
 
+# Apple sign-in only. Lava's tspa/capsc send no CORS headers, so the browser
+# can't call them directly. Fixed targets, never a caller-supplied URL.
+APPLE_AUTH_ENDPOINTS = {
+    "start": "https://us-central1-idlemmo.cloudfunctions.net/tspa",
+    "status": "https://us-central1-idlemmo.cloudfunctions.net/capsc",
+}
+
+
+@app.route("/apple-auth/<step>", methods=["POST"])
+def apple_auth(step: str) -> Response:
+    target = APPLE_AUTH_ENDPOINTS.get(step)
+    if not target:
+        return Response('{"error":"unknown step"}', status=404, content_type="application/json")
+
+    try:
+        upstream = requests.post(
+            target,
+            data=request.get_data(),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=20,
+        )
+    except requests.RequestException as e:
+        logger.warning(f"Apple auth proxy to {step} failed: {e}")
+        return Response('{"error":"upstream"}', status=502, content_type="application/json")
+
+    return Response(
+        upstream.content,
+        status=upstream.status_code,
+        content_type=upstream.headers.get("Content-Type", "application/json"),
+    )
+
+
 __handled_log_keys = ResponseCache()
 
 def create_and_populate_log_files(data, headerData, msg, name_or_data, error):

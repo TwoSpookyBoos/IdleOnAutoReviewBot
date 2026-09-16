@@ -20,6 +20,9 @@
     --bg-steam-dark: hsl(225, 18%, 11%);
     --accent-steam: hsl(202, 86%, 68%);
 
+    --accent-google: hsl(217, 89%, 61%);
+    --accent-apple: hsl(0, 0%, 80%);
+
     --fg-link-sidebar: var(--fg-link);
     --fg-link-sidebar-visited: var(--fg-link-visited);
 
@@ -169,7 +172,8 @@ form {
         }
     }
 
-    #steam-login-open, #steam-sync, #steam-sign-out, #steam-login-submit {
+    #steam-login-open, #google-login-open, #apple-login-open,
+    #cloud-sync, #sign-out, #steam-login-submit {
         border: 2px solid transparent;
         border-radius: 10px;
         padding: 5px 10px;
@@ -183,8 +187,8 @@ form {
         }
     }
 
-    // Steam branding
-    #steam-login-open, #steam-sync, #steam-login-submit {
+    #steam-login-open, #google-login-open, #apple-login-open,
+    #cloud-sync, #steam-login-submit {
         color: var(--fg-steam);
         background: linear-gradient(90deg, var(--bg-steam-dark), var(--bg-steam));
 
@@ -194,7 +198,15 @@ form {
         }
     }
 
-    #steam-sign-out {
+    #google-login-open:hover, #google-login-open:focus-visible {
+        border-color: var(--accent-google);
+    }
+
+    #apple-login-open:hover, #apple-login-open:focus-visible {
+        border-color: var(--accent-apple);
+    }
+
+    #sign-out {
         color: var(--fg-sidebar);
         background: transparent;
         border-color: var(--bg-textbox);
@@ -204,24 +216,35 @@ form {
         }
     }
 
-    #steam-signed-in {
+    #signin-buttons {
         display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         gap: 10px;
 
-        #steam-sync {
-            flex-grow: 2;
-        }
-
-        #steam-sign-out {
+        button {
             flex-grow: 1;
         }
     }
 
-    #steam-login-open[hidden], #steam-signed-in[hidden] {
+    #signed-in {
+        display: flex;
+        gap: 10px;
+
+        #cloud-sync {
+            flex-grow: 2;
+        }
+
+        #sign-out {
+            flex-grow: 1;
+        }
+    }
+
+    #signin-buttons[hidden], #signed-in[hidden] {
         display: none;
     }
 
-    #steam-login-wrapper {
+    #steam-login-wrapper, #device-login-wrapper {
         display: none;
 
         &.open {
@@ -239,7 +262,7 @@ form {
             background-color: hsla(0deg, 0, 0, 0.7);
         }
 
-        #steam-login-panel {
+        #steam-login-panel, #device-login-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -254,6 +277,24 @@ form {
 
             p {
                 margin: 0;
+            }
+
+            #device-login-code-box {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                // needs to sit at this specificity to beat the rule above
+                &[hidden] {
+                    display: none;
+                }
+            }
+
+            #device-login-code {
+                font-size: 1.6em;
+                letter-spacing: .2em;
+                text-align: center;
+                user-select: all;
             }
 
             input {
