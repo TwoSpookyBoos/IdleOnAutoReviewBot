@@ -4,7 +4,7 @@ from typing import Any
 from markupsafe import Markup, escape
 
 from consts.consts_autoreview import ignorable_labels
-from models.advice.advice_base import AdviceBase
+from models.advice.advice_base import AdviceBase, DATASET_ATTRS
 from utils.text_formatting import kebab
 
 _link_pattern = re.compile(r"\{\{.+?}}")
@@ -31,7 +31,6 @@ class LabelBuilder:
 
 
 _UNSET = object()
-_DATASET_ATTRS = ("optional", "completed", "informational", "unrated", "unreached", "overwhelming")
 _html_special = re.compile("[<>&\"']")
 
 
@@ -87,7 +86,7 @@ class Advice(AdviceBase):
         self.optional = optional
 
     def render_row(self, progress_bars) -> Markup:
-        data_attrs = "".join(f' data-{attr}="true"' for attr in _DATASET_ATTRS if getattr(self, attr, False))
+        data_attrs = "".join(f' data-{attr}="true"' for attr in DATASET_ATTRS if getattr(self, attr, False))
         css_class = self.css_class
         status = self.status
 
