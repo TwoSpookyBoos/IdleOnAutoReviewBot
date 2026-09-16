@@ -41,7 +41,6 @@ class Bubble:
         self.base_value: float = lava_func(info['funcType'], level, info['x1'], info['x2'])
 
     def get_advice(self, additional_text: str = '', **kwargs) -> Advice:
-        """Bubble name, with progress toward the caller's target level."""
         kwargs.setdefault('picture_class', self.name)
         kwargs.setdefault('resource', self.material)
         return Advice(
