@@ -92,7 +92,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskBasic_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        f"{' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else ''}",
+                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
                         goal=target
                     ))
 
@@ -148,7 +148,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskLithium_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        f"{' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else ''}",
+                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
                         goal=target
                     ))
 
@@ -182,12 +182,7 @@ def getBubblesProgressionTiersAdviceGroup():
     tier_TotalBubblesUnlocked = 0
     exclusions_list = getBubbleExclusions()
 
-    per_cauldron_bubbles_unlocked = [
-        session_data.account.alchemy_cauldrons.bubbles_unlocked[0],
-        session_data.account.alchemy_cauldrons.bubbles_unlocked[1],
-        session_data.account.alchemy_cauldrons.bubbles_unlocked[2],
-        session_data.account.alchemy_cauldrons.bubbles_unlocked[3]
-    ]
+    per_cauldron_bubbles_unlocked = session_data.account.alchemy_cauldrons.bubbles_unlocked
     sum_total_bubbles_unlocked = session_data.account.alchemy_cauldrons.total_unlocked
     next_world_missing_bubbles = session_data.account.alchemy_cauldrons.next_world_missing_bubbles
 
@@ -249,7 +244,7 @@ def getBubblesProgressionTiersAdviceGroup():
                             printing = bubble.material in session_data.account.printer['AllCurrentPrints']
                             bubble_Advices[bubble_type][subgroup_including_percent_label].append(
                                 bubble.get_advice(
-                                    f"{' (Printing!)' if printing else ''}",
+                                    ' (Printing!)' if printing else '',
                                     goal=tier[type_index + 2][required_bubble]
                                 )
                             ),

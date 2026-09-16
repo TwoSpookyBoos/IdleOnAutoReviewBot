@@ -29,7 +29,7 @@ def getVialsProgressionTiersAdviceGroup():
     player_alchemy_vials = session_data.account.alchemy_vials
     virile_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value.level >= 4]
     max_expected_vv = max_index_of_vials - 4  # Exclude both pickle and both rare drop vials
-    maxed_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value.level >= max_vial_level]
+    maxed_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value.maxed]
     # unmaxed_vials_list = [vial_name for vial_name in player_alchemy_vials if vial_name not in maxed_vials_list]
     # lockedVialsList = [vial_name for vial_name, vialValue in player_alchemy_vials.items() if vialValue['Level'] == 0]
     unlocked_vials = sum(1 for vial in player_alchemy_vials.values() if vial.level > 0)
