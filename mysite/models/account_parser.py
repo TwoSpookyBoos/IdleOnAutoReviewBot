@@ -26,7 +26,7 @@ from consts.consts_w2 import (
     ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
 )
 from consts.consts_w3 import (
-    max_implemented_dreams, dreams_that_unlock_new_bonuses, equinox_bonuses_dict, refinery_dict, buildings_dict, buildings_shrines, atoms_list,
+    refinery_dict, buildings_dict, buildings_shrines, atoms_list,
     collider_storage_limit_list, prayers_dict, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
     apocable_map_index_dict,
     apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
@@ -1169,8 +1169,7 @@ def _parse_w3(account):
     _parse_w3_refinery(account)
     _parse_w3_buildings(account)
     _parse_w3_deathnote(account)
-    _parse_w3_equinox_dreams(account)
-    _parse_w3_equinox_bonuses(account)
+    _parse_w3_equinox(account)
     _parse_w3_shrines(account)
     _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
@@ -1361,47 +1360,8 @@ def _parse_w3_deathnote_miniboss_kills(account):
     # Sum up all the MK value of the individual skulls
     account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
 
-def _parse_w3_equinox_dreams(account):
-    account.equinox_unlocked = account.achievements['Equinox Visitor']['Complete']
-    account.equinox_dreams = [True]  # d_0 in the code is Dream 1. By padding the first slot, we can get Dream 1 by that same index: equinox_dreams[1]
-    raw_equinox_dreams = safe_loads(account.raw_data.get("WeeklyBoss", {}))
-    account.equinox_dreams += [
-        float(raw_equinox_dreams.get(f'd_{i}', 0)) == -1
-        for i in range(max_implemented_dreams)
-    ]
-    account.total_dreams_completed = sum(account.equinox_dreams) - 1  # Remove the placeholder in 0th index
-    account.total_equinox_bonuses_unlocked = 0
-    account.remaining_equinox_dreams_unlocking_new_bonuses = []
-    for dreamNumber in dreams_that_unlock_new_bonuses:
-        if account.equinox_dreams[dreamNumber] == True:
-            account.total_equinox_bonuses_unlocked += 1
-        else:
-            account.remaining_equinox_dreams_unlocking_new_bonuses.append(dreamNumber)
-
-def _parse_w3_equinox_bonuses(account):
-    account.equinox_bonuses = {}
-    raw_equinox_bonuses = safe_loads(account.raw_data.get("Dream", [0] * 30))
-    for bonusIndex, bonusValueDict in equinox_bonuses_dict.items():
-        upgradeName = bonusValueDict['Name']
-        account.equinox_bonuses[upgradeName] = {
-            'PlayerMaxLevel': 0,  # This will get updated in the next Try block. Do not fret, dear reader.
-            'Category': bonusValueDict['Category'],
-            'Unlocked': account.total_equinox_bonuses_unlocked >= bonusIndex - 2,
-            'FinalMaxLevel': bonusValueDict['FinalMaxLevel'],
-            'RemainingUpgrades': [],
-            'SummoningExpands': bonusValueDict['SummoningExpands']
-        }
-        try:
-            account.equinox_bonuses[upgradeName]['CurrentLevel'] = int(raw_equinox_bonuses[bonusIndex])
-        except:
-            account.equinox_bonuses[upgradeName]['CurrentLevel'] = 0
-        if account.equinox_bonuses[upgradeName]['Unlocked']:
-            account.equinox_bonuses[upgradeName]['PlayerMaxLevel'] = bonusValueDict['BaseLevel']
-            for dreamIndex, bonusMaxLevelIncrease in bonusValueDict['MaxLevelIncreases'].items():
-                if account.equinox_dreams[dreamIndex]:
-                    account.equinox_bonuses[upgradeName]['PlayerMaxLevel'] += bonusMaxLevelIncrease
-                else:
-                    account.equinox_bonuses[upgradeName]['RemainingUpgrades'].append(dreamIndex)
+def _parse_w3_equinox(account):
+    account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
 
 def _parse_w3_shrines(account):
     account.shrines = {}
