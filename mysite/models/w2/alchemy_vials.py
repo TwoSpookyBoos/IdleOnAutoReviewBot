@@ -29,7 +29,6 @@ class Vial:
 
     def get_advice(self, additional_text: str = '', include_material: bool = True,
                    goal_override: int | None = None, **kwargs) -> Advice:
-        """Vial name and bonus, with progress toward max level."""
         kwargs.setdefault('picture_class', self.image)
         return Advice(
             label=f"{{{{ Vial|#vials }}}}: {self.name if include_material else self.short_name}: {additional_text}",
