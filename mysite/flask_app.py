@@ -7,6 +7,7 @@ from pathlib import Path
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from utils.logging import (
     ResponseCache,
@@ -60,7 +61,10 @@ MAX_REQUEST_BYTES = app.config["MAX_CONTENT_LENGTH"]
 def get_request_json() -> dict:
     # parsed once per request; the browser gzips large bodies
     if "request_json" not in g:
-        body = request.get_data()
+        try:
+            body = request.get_data()
+        except RequestEntityTooLarge:
+            raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
         if body[:2] == b"\x1f\x8b":
             decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS | 16)
             body = decompressor.decompress(body, MAX_REQUEST_BYTES)
@@ -132,13 +136,12 @@ def results() -> Response | str:
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
     g.request_id = uuid.uuid4().hex[:8]
 
-    store_user_preferences()
-
     live_link = "live"
     beta_link = "beta"
 
     name_or_data: str | dict = ""
     try:
+        store_user_preferences()
         name_or_data, source_string = parse_user_input()
 
         if name_or_data:
