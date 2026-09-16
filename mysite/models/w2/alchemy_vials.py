@@ -2,7 +2,7 @@ from consts.consts_w2 import vials_dict, max_index_of_vials, max_vial_level, get
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import getItemDisplayName
 
 
@@ -52,10 +52,9 @@ class AlchemyVials(dict[str, Vial]):
         levels = {}
         for key, value in raw_vials.items():
             try:
-                levels[int(key)] = int(value)
+                levels[int(key)] = safer_convert(value, 0)
             except:
-                logger.warning(f'Unable to normalize Vials level to int: {type(value)}: {value}. Replacing with 0.')
-                levels[int(key)] = 0
+                logger.warning(f'Unable to normalize Vials index to int: {type(key)}: {key}. Skipping.')
 
         for index, info in vials_dict.items():
             self[getReadableVialNames(index)] = Vial(index, info, levels.get(index, 0))
