@@ -40,23 +40,23 @@ class Bubble:
         self.material: str = getItemDisplayName(info['Material'])
         self.base_value: float = lava_func(info['funcType'], level, info['x1'], info['x2'])
 
-    def get_advice(self, additional_text: str = '', **kwargs) -> Advice:
-        kwargs.setdefault('picture_class', self.name)
-        kwargs.setdefault('resource', self.material)
+    def get_advice(self, additional_text: str = '', goal='') -> Advice:
         return Advice(
             label=f"{self.name}{additional_text}",
+            picture_class=self.name,
             progression=self.level,
-            **kwargs
+            goal=goal,
+            resource=self.material
         )
 
-    def get_bonus_advice(self, additional_text: str = '', **kwargs) -> Advice:
+    def get_bonus_advice(self, additional_text: str = '', goal='') -> Advice:
         """Linked framing, for sections that only cite the bubble's bonus."""
-        kwargs.setdefault('picture_class', self.name)
-        kwargs.setdefault('resource', self.material)
         return Advice(
             label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - {self.name}: {additional_text}",
+            picture_class=self.name,
             progression=self.level,
-            **kwargs
+            goal=goal,
+            resource=self.material
         )
 
 

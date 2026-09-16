@@ -28,13 +28,13 @@ class Vial:
         self.value = total_multi * self.base_value
 
     def get_advice(self, additional_text: str = '', include_material: bool = True,
-                   goal_override: int | None = None, **kwargs) -> Advice:
-        kwargs.setdefault('picture_class', self.image)
+                   picture_class: str = '', resource: str = '') -> Advice:
         return Advice(
             label=f"{{{{ Vial|#vials }}}}: {self.name if include_material else self.short_name}: {additional_text}",
+            picture_class=picture_class or self.image,
             progression=self.level,
-            goal=max_vial_level if goal_override is None else goal_override,
-            **kwargs
+            goal=max_vial_level,
+            resource=resource
         )
 
 
