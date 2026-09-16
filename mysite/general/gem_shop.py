@@ -145,8 +145,8 @@ def try_exclude_Farming(exclusionLists):
 
 def try_exclude_Sigils(exclusionLists):
     if (
-        session_data.account.alchemy_p2w['Sigils']['Pea Pod']['PrechargeLevel'] >= 3
-        or session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'] >= 3
+        session_data.account.alchemy_p2w.sigils['Pea Pod'].precharge_level >= 3
+        or session_data.account.alchemy_p2w.sigils['Pea Pod'].level >= 3
     ):
         for sublist in exclusionLists:
             sublist.append('Sigil Supercharge')

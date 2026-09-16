@@ -21,7 +21,7 @@ from consts.consts_w1 import (
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
-    max_implemented_bubble_index, sigils_dict, bubbles_dict,
+    max_implemented_bubble_index, bubbles_dict,
     ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, get_obol_totals
 )
 from consts.consts_w3 import (
@@ -794,7 +794,6 @@ def _parse_w1_statues(account):
 def _parse_w2(account):
     _parse_w2_cauldrons(account)
     _parse_w2_bubbles(account)
-    _parse_w2_p2w(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
     _parse_w2_islands(account)
@@ -907,38 +906,6 @@ def _parse_w2_bubbles(account):
                         'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
                     }
 
-def _parse_w2_p2w(account):
-    account.alchemy_p2w = {
-        'Sigils': copy.deepcopy(sigils_dict)
-    }
-    raw_p2w_list = safe_loads(account.raw_data.get('CauldronP2W', []))
-    for subElementIndex, subElementValue in enumerate(raw_p2w_list):
-        if not isinstance(subElementValue, list):
-            raw_p2w_list[subElementIndex] = [subElementValue]
-    try:
-        account.alchemy_p2w['Cauldrons'] = raw_p2w_list[0]
-    except:
-        account.alchemy_p2w['Cauldrons'] = [0] * 12
-    try:
-        account.alchemy_p2w['Liquids'] = raw_p2w_list[1]
-    except:
-        account.alchemy_p2w['Liquids'] = [0] * 8
-    try:
-        account.alchemy_p2w['Vials'] = raw_p2w_list[2]
-    except:
-        account.alchemy_p2w['Vials'] = [0] * 2
-    try:
-        account.alchemy_p2w['Player'] = raw_p2w_list[3]
-    except:
-        account.alchemy_p2w['Player'] = [0] * 2
-
-    for sigilName in account.alchemy_p2w['Sigils']:
-        try:
-            account.alchemy_p2w['Sigils'][sigilName]['PlayerHours'] = float(raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"]])
-            account.alchemy_p2w['Sigils'][sigilName]['Level'] = raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
-        except:
-            pass  # Already defaulted to 0s in consts.sigils_dict
-        
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
     raw_vote_categories = [safer_convert(v, 0) for v in raw_vote_categories]  #Convert any None to 0 as a default

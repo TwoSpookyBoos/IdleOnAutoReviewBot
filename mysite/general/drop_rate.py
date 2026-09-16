@@ -278,7 +278,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
             goal=max_sailing_artifact_level
         ))
     # Alchemy - Sigils - Trove
-    trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
+    trove_sigil_level = session_data.account.alchemy_p2w.sigils['Trove'].level
     try:
         trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level] * chilled_yarn_multi
     except:

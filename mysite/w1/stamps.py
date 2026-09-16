@@ -2,7 +2,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_general import inventory_slots_max_usable
 from consts.consts_item_data import ITEM_DATA
 from consts.w1.stamps import stamp_types, unavailable_stamps_list, stamps_exalt_recommendations
-from consts.consts_w2 import max_vial_level, max_sigil_level
+from consts.consts_w2 import max_sigil_level
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.w6.farming import max_farming_crops
@@ -206,8 +206,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     if (
-        session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['PrechargeLevel']
-        > session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['Level']
+        session_data.account.alchemy_p2w.sigils['Envelope Pile'].precharge_level
+        > session_data.account.alchemy_p2w.sigils['Envelope Pile'].level
     ):
         envelope_pile_precharged = ' (Precharged)'
     else:
@@ -215,7 +215,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices['Uncapped'].append(Advice(
         label=f"Sigil: Envelope Pile{envelope_pile_precharged}",
         picture_class='envelope-pile',
-        progression=session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['PrechargeLevel'],
+        progression=session_data.account.alchemy_p2w.sigils['Envelope Pile'].precharge_level,
         goal=max_sigil_level
     ))
     costReduction_Advices['Uncapped'].append(

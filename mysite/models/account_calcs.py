@@ -421,24 +421,9 @@ def _calculate_w2_cauldrons(account):
     ) + 1
 
 def _calculate_w2_sigils(account):
-    for sigilName in account.alchemy_p2w["Sigils"]:
-        if account.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
-            if account.sneaking.emporium['Ionized Sigils'].obtained:
-                # If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
-                red_Hours = account.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-            else:
-                # To precharge Red sigils before buying the upgreade, you need Gold + Red hours
-                red_Hours = account.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + account.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-            if account.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
-                account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-            else:
-                account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = account.alchemy_p2w["Sigils"][sigilName]["Level"]
-        elif account.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
-            account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-        else:
-            account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = account.alchemy_p2w["Sigils"][sigilName]["Level"]
-        # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
-        # After the +1, 0/1/2/3
+    account.alchemy_p2w.sigils.calculate_precharge_levels(
+        account.sneaking.emporium['Ionized Sigils'].obtained
+    )
 
 def _calculate_w2_ballot(account):
     # Dependency: legend talents
