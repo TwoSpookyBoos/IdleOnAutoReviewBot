@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from models.w2.alchemy_bubbles import parse_raw_cauldrons
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
@@ -28,14 +30,12 @@ class AlchemyCauldrons:
             for liquid, indexes in _DECANT_INDEXES.items()
         }
 
-        self.bubbles_per_world: list[int] = []
-        self.next_world_missing_bubbles: int = 0
-
     @property
     def water_droplets(self) -> list[int]:
         return self.decants['WaterDroplets']
 
-    def calculate_bubble_unlocks(self):
+    @cached_property
+    def bubbles_per_world(self) -> list[int]:
         per_world = [20, 0, 0, 0, 0, 0, 0, 0, 0]
         for unlocked in self.bubbles_unlocked:
             world = 1
@@ -45,7 +45,8 @@ class AlchemyCauldrons:
                 world += 1
             if unlocked > 0 and world <= len(per_world) - 1:
                 per_world[world] += unlocked
-        self.bubbles_per_world = per_world
-        self.next_world_missing_bubbles = min(
-            [unlocked // 5 for unlocked in self.bubbles_unlocked], default=0
-        ) + 1
+        return per_world
+
+    @cached_property
+    def next_world_missing_bubbles(self) -> int:
+        return min([unlocked // 5 for unlocked in self.bubbles_unlocked], default=0) + 1

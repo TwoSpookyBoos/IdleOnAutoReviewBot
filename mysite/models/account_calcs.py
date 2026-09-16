@@ -389,16 +389,12 @@ def _calculate_w1_stamps(account):
 def _calculate_w2(account):
     _calculate_w2_vials(account)
     _calculate_w2_sigils(account)
-    _calculate_w2_cauldrons(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
 
 def _calculate_w2_vials(account):
     account.alchemy_vials.calculate_values(account.vault, account.rift, account.labBonuses)
-
-def _calculate_w2_cauldrons(account):
-    account.alchemy_cauldrons.calculate_bubble_unlocks()
 
 def _calculate_w2_sigils(account):
     account.alchemy_p2w.sigils.calculate_precharge_levels(
