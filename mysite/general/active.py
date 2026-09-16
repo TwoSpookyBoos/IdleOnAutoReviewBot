@@ -489,7 +489,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             goal=stamp_maxes['Mason Jar Stamp'],
             resource='x1-hr-time-candy'
         ))
-    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
+    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)'].level < max_vial_level:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
                   f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"

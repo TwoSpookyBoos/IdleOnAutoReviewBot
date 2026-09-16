@@ -1,7 +1,6 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_w2 import max_vial_level
 from consts.consts_w4 import max_meal_plate_level
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.w6.farming import landrank_list
@@ -359,12 +358,10 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         resource=session_data.account.alchemy_bubbles['Crop Chapter']['Material']
     ))
 #Vial
-    evo_advices[alch].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {evo_multi['Vial Value']:.2f}%",
-        picture_class="caulifish",
-        progression=session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Level'],
-        goal=max_vial_level
+    flavorgil = session_data.account.alchemy_vials['Flavorgil (Caulifish)']
+    evo_advices[alch].append(flavorgil.get_advice(
+        f"{flavorgil.base_value:.2f}%"
+        f"<br>Total Value after multis: {evo_multi['Vial Value']:.2f}%"
     ))
 
 #Stamp
@@ -540,12 +537,10 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     speed_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Vial and Market
     # Vial
-    speed_advices[vm].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {farming.multi['Speed']['Vial Value']:.2f}%",
-        picture_class="rice-cake",
-        progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],
-        goal=max_vial_level
+    ricecakorade = session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']
+    speed_advices[vm].append(ricecakorade.get_advice(
+        f"{ricecakorade.base_value:.2f}%"
+        f"<br>Total Value after multis: {farming.multi['Speed']['Vial Value']:.2f}%"
     ))
     # Day Market
     speed_advices[vm].append(

@@ -21,8 +21,8 @@ from consts.consts_w1 import (
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
-    max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict,
-    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
+    max_implemented_bubble_index, sigils_dict, bubbles_dict,
+    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, get_obol_totals
 )
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -792,7 +792,6 @@ def _parse_w1_statues(account):
 
 
 def _parse_w2(account):
-    _parse_w2_vials(account)
     _parse_w2_cauldrons(account)
     _parse_w2_bubbles(account)
     _parse_w2_p2w(account)
@@ -802,47 +801,6 @@ def _parse_w2(account):
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
-def _parse_w2_vials(account):
-    account.alchemy_vials = {}
-    raw_alchemy_vials = safe_loads(account.raw_data.get('CauldronInfo', [0, 0, 0, 0, {}])[4])
-    if 'length' in raw_alchemy_vials:
-        del raw_alchemy_vials['length']
-    if len(raw_alchemy_vials) < max_index_of_vials:
-        logger.warning(f'Vials list shorter than expected by {max_index_of_vials - len(raw_alchemy_vials)}')
-
-    #Normalize Vial data
-    cleaner_alchemy_vials = {}
-    for key, value in raw_alchemy_vials.items():
-        try:
-            # Attempts to normalize the data, which may otherwise have strings or floats as keys and values
-            cleaner_alchemy_vials[int(key)] = int(value)
-        except:
-            logger.warning(f'Unable to normalize Vials level to int: {type(value)}: {value}. Replacing with 0.')
-            cleaner_alchemy_vials[int(key)] = 0
-
-    for vial_index, vial_values in vials_dict.items():
-        try:
-            account.alchemy_vials[getReadableVialNames(vial_index)] = {
-                'Level': cleaner_alchemy_vials[vial_index],
-                'BaseValue': lava_func(
-                    vials_dict[vial_index]['funcType'],
-                    cleaner_alchemy_vials[vial_index],
-                    vials_dict[vial_index]['x1'],
-                    vials_dict[vial_index]['x2'],
-                ),
-                'Material': vials_dict[vial_index]['Material'],
-                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
-            }
-        except Exception as e:
-            logger.warning(f"Alchemy Vial Parse error at vial_index {vial_index}: {e}. Defaulting to level 0")
-            account.alchemy_vials[getReadableVialNames(vial_index)] = {
-                'Level': 0,
-                'BaseValue': 0,
-                'Material': vials_dict[vial_index]['Material'],
-                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
-            }
-
-    account.maxed_vials = sum([details['Level'] >= max_vial_level for name, details in account.alchemy_vials.items()])
 
 def _parse_w2_cauldrons(account):
     raw_cauldron_upgrades = account.raw_data.get('CauldUpgLVs', [])

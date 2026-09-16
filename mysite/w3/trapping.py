@@ -156,7 +156,7 @@ def getSecretClassTrapStatus(placed_traps):
 def getUnmaxedCritterVialStatus():
     unmaxed_critter_vials_count = 0
     for vial_name in maxable_critter_vials_list:
-        if session_data.account.alchemy_vials[vial_name]['Level'] < max_vial_level:
+        if session_data.account.alchemy_vials[vial_name].level < max_vial_level:
             unmaxed_critter_vials_count += 1
     return unmaxed_critter_vials_count != 0
 

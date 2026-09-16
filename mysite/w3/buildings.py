@@ -13,7 +13,7 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getInfluencers():
-    honker_vial_level = session_data.account.alchemy_vials['Goosey Glug (Honker)']['Level']
+    honker_vial_level = session_data.account.alchemy_vials['Goosey Glug (Honker)'].level
     poisonic_level = session_data.account.construction_buildings['Poisonic Elder']['Level']
     cons_mastery = session_data.account.rift['ConstructMastery'].unlocked
     carbon_unlocked = session_data.account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] >= 1

@@ -167,7 +167,7 @@ class Tesseract:
             'mgc': ValueToMulti(sneaking.pristine_charms['Mystery Fizz'].value),
             'mgd': ValueToMulti(backup_energy_bonus_value),
             'mge': 1 + 0.2 * gemshop['Bundles']['bun_x']['Owned'],
-            'mgf': ValueToMulti(alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]['Value']),
+            'mgf': ValueToMulti(alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"].value),
             'mgg': 4 * has_balloonfish,
         }
         self.tachyon_calc['Total'] = prod(self.tachyon_calc.values())

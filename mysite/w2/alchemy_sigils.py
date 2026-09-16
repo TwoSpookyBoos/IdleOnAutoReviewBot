@@ -49,7 +49,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
                 peapod_values[max_sigil_level]
                 * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
         )
-    willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+    willow_vial = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']
+    willow_vial_value = willow_vial.value
 
     player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
     goal_sigil_stamp_value = lava_func('decay', stamp_maxes['Sigil Stamp'], 40, 150)
@@ -70,7 +71,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mgb_label = f"Summoning: {round_and_trim(mgb)}x"
 
     # Multi Group C = Tuttle Vial
-    tuttle_vial_multi = ValueToMulti(session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value'])
+    tuttle_vial = session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']
+    tuttle_vial_multi = ValueToMulti(tuttle_vial.value)
     mgc = tuttle_vial_multi
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
@@ -141,24 +143,14 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
         goal=max_sailing_artifact_level
     ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value:.3f}",
-        picture_class='willow-logs',
-        progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
-        goal=max_vial_level
-    ))
+    speed_Advice[mga_label].append(willow_vial.get_advice(f"+{willow_vial_value:.3f}"))
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
     speed_Advice[mgb_label].append(summoning_bonus.get_bonus_advice())
 
     # Multi Group C
-    speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi:.3f}x",
-        picture_class='tuttle',
-        progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
-        goal=max_vial_level
-    ))
+    speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{tuttle_vial_multi:.3f}x"))
 
     # Multi Group D
     speed_Advice[mgd_label].append(Advice(

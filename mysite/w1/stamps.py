@@ -187,20 +187,16 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         'Uncapped': []
     }
 
-    costReduction_Advices['Vials'].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Blue Flav (Platinum Ore): {session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']:.2f}%",
-        picture_class='platinum-ore',
-        progression=session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Level'],
-        goal=max_vial_level
-    ))
-    costReduction_Advices['Vials'].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Venison Malt (Mongo Worm Slices): {session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']:.2f}%",
-        picture_class='mongo-worm-slices',
-        progression=session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Level'],
-        goal=max_vial_level
-    ))
+    blue_flav = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']
+    venison_malt = session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']
+    costReduction_Advices['Vials'].append(
+        blue_flav.get_advice(f"{blue_flav.value:.2f}%")
+    )
+    costReduction_Advices['Vials'].append(
+        venison_malt.get_advice(f"{venison_malt.value:.2f}%")
+    )
 
-    totalVialReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value'] + session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
+    totalVialReduction = blue_flav.value + venison_malt.value
     costReduction_Advices['Vials'].append(Advice(
         label='Total Vial reduction (90% hardcap)',
         picture_class='vial-1',
