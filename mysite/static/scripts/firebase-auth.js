@@ -54,7 +54,24 @@ function openSteamPopup() {
     document.querySelector("#steam-login-url").focus();
 }
 
+let exchanging = false;
+
+// one-time-use link, don't let a double-click spend it twice
 async function exchangeSteamUrl(pastedUrl) {
+    if (exchanging) return;
+    exchanging = true;
+    const submitButton = document.querySelector("#steam-login-submit");
+    submitButton.disabled = true;
+
+    try {
+        await runSteamExchange(pastedUrl);
+    } finally {
+        exchanging = false;
+        submitButton.disabled = false;
+    }
+}
+
+async function runSteamExchange(pastedUrl) {
     if (!pastedUrl.startsWith(STEAM_REALM)) {
         showFriendlyError(
             `That doesn't look like the right page. The URL should start with <code>${STEAM_REALM}</code> — ` +
@@ -170,7 +187,7 @@ async function signOutOfSteam() {
     }
 }
 
-// swap login/signed-in buttons
+// both start hidden: nothing to click if firebase never loads
 onAuthStateChanged(auth, (user) => {
     document.querySelector("#steam-login-open").hidden = !!user;
     document.querySelector("#steam-signed-in").hidden = !user;
