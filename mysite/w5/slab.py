@@ -94,7 +94,6 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
             if item_codename in slab_quest_rewards_all_chars.keys():
-                # logger.debug(f"{item_codename} quest {slab_QuestRewards[item_codename]['QuestNameCoded']} completed by {account.compiled_quests.get(slab_QuestRewards[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0)}/{max_characters}")
                 if account.compiled_quests.get(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded'], {}).get('CompletedCount',
                                                                                                                               0) < max_characters:
                     slab_AdviceDict["Quests"].append(Advice(

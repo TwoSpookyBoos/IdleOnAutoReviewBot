@@ -45,7 +45,7 @@ logger = get_logger(__name__)
 
 
 @functools.lru_cache(maxsize=1)
-def _load_banned_accounts(mtime):
+def _load_banned_accounts(mtime):  # mtime is the cache key
     with open(Path(app.static_folder) / "banned.yaml") as f:
         return yaml.load(f, yaml.Loader)
 
