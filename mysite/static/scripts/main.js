@@ -197,14 +197,18 @@ function setupSwitchesActions() {
     }
 
     // toggle progress bars
-    document.querySelector('#progress_bars').onclick = () => document.querySelectorAll(".progress-box").forEach(progressBox => {
-        const checkbox = document.querySelector('#progress_bars')
-        if (checkbox.value === "off") {
-            progressBox.classList.add('hidden')
-        } else {
-            progressBox.classList.remove('hidden')
-        }
-    })
+    document.querySelector('#progress_bars').onclick = () => {
+        unwarmAdviceGroups()
+        document.querySelectorAll(".progress-box").forEach(progressBox => {
+            const checkbox = document.querySelector('#progress_bars')
+            if (checkbox.value === "off") {
+                progressBox.classList.add('hidden')
+            } else {
+                progressBox.classList.remove('hidden')
+            }
+        })
+        warmAdviceGroups()
+    }
 
     // On Click Listener for the Hide Overwhelming switch
     document.querySelector('label[for="hide_overwhelming"]').addEventListener('click', hideComposite);
@@ -367,6 +371,46 @@ function loadResults(html) {
     initLazyLoading();
 }
 
+// Safari has no requestIdleCallback, so fall back to 10ms slices
+const whenIdle = window.requestIdleCallback ?? (cb => setTimeout(() => {
+    const end = performance.now() + 10
+    cb({ timeRemaining: () => Math.max(0, end - performance.now()) })
+}, 100))
+const cancelIdle = window.cancelIdleCallback ?? clearTimeout
+let warmTimer, warmTask
+
+// after results load, render offscreen groups once in idle time and keep them rendered
+function warmAdviceGroups() {
+    clearTimeout(warmTimer)
+    cancelIdle(warmTask)
+    let groups = null
+
+    const work = deadline => {
+        if (!groups) {
+            const center = window.innerHeight / 2
+            groups = [...document.querySelectorAll('#mainresults .advice-group:not(.cv-warm)')]
+                .map(group => [group, Math.abs(group.getBoundingClientRect().top - center)])
+                .sort((a, b) => a[1] - b[1])
+                .map(([group]) => group)
+        }
+        while (groups.length && deadline.timeRemaining() > 1) {
+            const group = groups.shift()
+            group.classList.add('cv-warm')
+            group.getBoundingClientRect()
+        }
+        if (groups.length) warmTask = whenIdle(work)
+    }
+    // let the first paint and transitions finish first
+    warmTimer = setTimeout(() => warmTask = whenIdle(work), 1000)
+}
+
+// page-wide changes lay out only what's on screen, then warm again
+function unwarmAdviceGroups() {
+    clearTimeout(warmTimer)
+    cancelIdle(warmTask)
+    document.querySelectorAll('#mainresults .cv-warm').forEach(group => group.classList.remove('cv-warm'))
+}
+
 function initLazyLoading() {
     const images = document.querySelectorAll(".lazy");
     const observer = new IntersectionObserver((entries) => {
@@ -394,8 +438,8 @@ function loadErrorPopup(html, statusCode) {
     }
 }
 
-function fetchPlayerAdvice() {
-    fetch("/results", {
+function fetchPlayerAdvice(ready = Promise.resolve()) {
+    const request = fetch("/results", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -403,7 +447,10 @@ function fetchPlayerAdvice() {
         body: JSON.stringify(fetchStoredUserParams())
     }).then(response => {
         return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
-    }).then(([html, statusCode]) => {
+    });
+
+    // request runs while the page finishes setting up
+    Promise.all([request, ready]).then(([[html, statusCode]]) => {
         switch (statusCode) {
             case 400:
             case 403:
@@ -416,9 +463,12 @@ function fetchPlayerAdvice() {
                     openSidebarIfFirstAccess();
                     return;
                 }
+                // before insert, label clicks force a full layout
+                setFormValues();
                 loadResults(html);
                 initResultsUI();
                 initialize_tabbed_advice_group_logic();
+                warmAdviceGroups();
                 break;
             default:
                 throw new Error(statusCode.toString());
@@ -542,15 +592,18 @@ const hiddenElements = {
     [kidsHiddenClass]: new Set()
 }
 
-function allHidden(siblings) {
-    if (siblings.length < 1) return false;
-
+function collectHidden() {
     const allHiddenElements = new Set();
     for (const set of Object.values(hiddenElements)) {
         for (const el of set) {
             allHiddenElements.add(el);
         }
     }
+    return allHiddenElements;
+}
+
+function allHidden(siblings, allHiddenElements = collectHidden()) {
+    if (siblings.length < 1) return false;
 
     for (const sib of siblings) {
         if (!allHiddenElements.has(sib)) return false;
@@ -558,7 +611,7 @@ function allHidden(siblings) {
     return true;
 }
 
-function hideEmptySubgroupTitles(adviceGroup) {
+function hideEmptySubgroupTitles(adviceGroup, allHiddenElements) {
     const table = adviceGroup.querySelector('.table');
     const adviceTitles = table.querySelectorAll('.advice-title');
     const siblings = [...table.children];
@@ -573,7 +626,7 @@ function hideEmptySubgroupTitles(adviceGroup) {
         })
         .forEach(([title, groupedAdvice]) => {
             // If no visible siblings are found, add `classToHide` class to the title
-            const allKidsHidden = allHidden(groupedAdvice);
+            const allKidsHidden = allHidden(groupedAdvice, allHiddenElements);
             title.classList.toggle(kidsHiddenClass, allKidsHidden);
             if (allKidsHidden) {
                 hiddenElements[kidsHiddenClass].add(title)
@@ -584,6 +637,7 @@ function hideEmptySubgroupTitles(adviceGroup) {
 }
 
 function hideComposite(event) {
+    unwarmAdviceGroups()
     const slider = event.currentTarget,
         classToHide = slider.dataset.hides,
         checkboxOn = document.getElementById(slider.getAttribute("for")).value === "on",
@@ -606,25 +660,30 @@ function hideComposite(event) {
         [".advice-group", ".advice"]    // hide advice group if all pieces of advice within are hidden
     ].reverse() // has to be processed in reverse order (deeper nested elements first), but writing it out in this order makes it more readable
 
+    // built once per call; titles never appear in the child lists below
+    const allHiddenElements = collectHidden()
+
     // first handle subgroup titles
     for (const element of document.querySelectorAll(elementsToRecurse[0][0])) {
-        hideEmptySubgroupTitles(element, hiddenClass)
+        hideEmptySubgroupTitles(element, allHiddenElements)
     }
 
     // recurse through groups, sections, and worlds and hide them if needed
     elementsToRecurse.forEach(([parentStr, childStr]) => {
         document.querySelectorAll(parentStr).forEach(parent => {
-            const shouldHide = allHidden(parent.querySelectorAll(childStr));
+            const shouldHide = allHidden(parent.querySelectorAll(childStr), allHiddenElements);
             parent.classList.toggle(kidsHiddenClass, shouldHide)
         });
     })
 
     recalculate_tab_selections()
+    warmAdviceGroups()
 }
 
 let searchTimer
 
 function searchByCriteria(criteria) {
+    unwarmAdviceGroups()
     criteria = criteria.toLowerCase()
     const allElements = document.querySelectorAll("article, section, .advice-group, .advice-title, .advice, .resource, .prog, .arrow, .arrow-hidden, .goal")
     allElements.forEach(el => {
@@ -663,16 +722,19 @@ function searchByCriteria(criteria) {
             }
         }
     })
+    warmAdviceGroups()
 }
 
 function setupSearchBar() {
     const searchBar = document.querySelector('#search');
 
     document.querySelector('#search-clear').onclick = () => {
+        unwarmAdviceGroups()
         searchBar.value = ""
         document.querySelectorAll('.search-hidden').forEach(hidden => {
             hidden.classList.remove('search-hidden')
         })
+        warmAdviceGroups()
     };
 
     searchBar.addEventListener("keyup", e => {
@@ -722,7 +784,6 @@ function initBaseUI() {
 }
 
 function initResultsUI() {
-    setFormValues()
     setupFolding()
     setupHrefEventActions()
     applyShowMoreButton()
@@ -842,19 +903,13 @@ function recalculate_tab_selections() {
 document.addEventListener("DOMContentLoaded", () => {
     // Define the fonts you are loading
     const fonts = ['Kode Mono', 'Open Sans', 'Rubik', 'Roboto']
-    const loadedFonts = fonts.map(f => new FontFaceObserver(f).load())
+    storeGetParamsIfProvided();
 
-    // Wait for all fonts to be loaded
-    Promise.all(loadedFonts).then(() => {
-        // Fonts are loaded, now run your code
-        storeGetParamsIfProvided();
-        initBaseUI();
-        fetchPlayerAdvice();
-    }).catch(() => {
-        console.error('One or more fonts failed to load.');
-        // You can still run your code here or handle the error
-        storeGetParamsIfProvided();
-        initBaseUI();
-        fetchPlayerAdvice();
-    });
+    // Wait for all fonts to be loaded before building the UI
+    const ready = Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
+        .catch(() => console.error('One or more fonts failed to load.'))
+        .then(initBaseUI);
+
+    // don't hold the request back on fonts
+    fetchPlayerAdvice(ready);
 });

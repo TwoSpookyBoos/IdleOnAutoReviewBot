@@ -736,6 +736,7 @@ body {
 
                                     .advice-group-tabbed-tab-content {
                                         max-height: calc(420px - 69px);
+                                        contain-intrinsic-size: auto calc(420px - 69px);
                                     }
                                 }
 
@@ -746,6 +747,15 @@ body {
 
                                     width: 100%;
                                     max-height: 420px;
+
+                                    // skip layout/paint while offscreen
+                                    content-visibility: auto;
+                                    contain-intrinsic-size: auto 420px;
+
+                                    // rendered in idle time, see warmAdviceGroups
+                                    &.cv-warm {
+                                        content-visibility: visible;
+                                    }
 
                                     padding: 20px;
                                     border-radius: 20px;
