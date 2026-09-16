@@ -54,7 +54,7 @@ from utils.text_formatting import (
 logger = get_logger(__name__)
 
 
-MAX_REQUEST_BYTES = 30_000_000
+MAX_REQUEST_BYTES = app.config["MAX_CONTENT_LENGTH"]
 
 
 def get_request_json() -> dict:

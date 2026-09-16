@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 app.config.update(dict(
     DEBUG=os.environ.get("FLASK_DEBUG") == "1",
+    MAX_CONTENT_LENGTH=30_000_000,
     PROJECT_ROOT=Path(os.path.dirname(os.path.abspath(__file__))),
     IE="https://www.idleonefficiency.com",
     IT="https://idleontoolbox.com",
