@@ -94,7 +94,7 @@ def getAchievementStatus(achievementName):
             case 'Ink Blot':
                 return min(101, session_data.account.achievements[achievementName]['Raw']), 101, 'silver-pen'
             case 'Vial Junkee':
-                return sum(1 for vial in session_data.account.alchemy_vials.values() if vial['Level'] >= 9), 10, 'vial-9'
+                return sum(1 for vial in session_data.account.alchemy_vials.values() if vial.level >= 9), 10, 'vial-9'
             case 'Fruit Salad':
                 return notateNumber('Match', min(1000000, session_data.account.all_assets.get('Bug4').amount), 0, 'K'), '1000K', 'fruitfly'
             #W3

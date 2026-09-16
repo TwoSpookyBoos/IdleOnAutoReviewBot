@@ -83,7 +83,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         resource=session_data.account.alchemy_bubbles['Startue Exp']['Material']
     ))
 
-    vial_value = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value']
+    vial_value = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)'].value
 
     deposit_Advices.append(Advice(
         label=f"Total Skinny 0 Cal (Snake Skin) {{{{ Vial|#vials }}}} value (100% hardcap)",

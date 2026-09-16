@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from consts.consts_w2 import max_vial_level, max_NBLB
+from consts.consts_w2 import max_NBLB
 
 from models.general.character import Character
 from models.general.cards import Card
@@ -254,7 +254,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             sailboat_stamp.total_value +
             (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
             popped_corn['Value'] +
-            oj_jooce_vial['Value'] +
+            oj_jooce_vial.value +
             has_skill_mastery * (total_sailing_level > 200) * 15 +
             has_msa_sailing * (total_worship_waves // 10) +
             c_shanti_minor['Unlocked'] * 20
@@ -347,11 +347,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=popped_corn['Level'],
                 goal=max_meal_plate_level
             ),
-            Advice(
-                label=f"{{{{ Vial|#vials }}}}: Oj Jooce: +{oj_jooce_vial['Value']:.2f}%",
-                picture_class='orange-slice',
-                progression=oj_jooce_vial['Level'],
-                goal=max_vial_level
+            oj_jooce_vial.get_advice(
+                f"+{oj_jooce_vial.value:.2f}%", include_material=False
             ),
             Advice(
                 label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",

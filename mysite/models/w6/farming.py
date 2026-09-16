@@ -684,9 +684,7 @@ class Farming:
             evo_multi["Maps Opened"]
             * account.alchemy_bubbles["Cropius Mapper"]["BaseValue"]
         )
-        evo_multi["Vial Value"] = account.alchemy_vials["Flavorgil (Caulifish)"][
-            "Value"
-        ]
+        evo_multi["Vial Value"] = account.alchemy_vials["Flavorgil (Caulifish)"].value
         evo_multi["Alch Multi"] = (
             ValueToMulti(evo_multi["Cropius Final Value"])
             * ValueToMulti(
@@ -783,9 +781,7 @@ class Farming:
     def calculate_crop_speed(self, account: "Account"):
         speed_multi = {}
         # Vial and Day Market
-        speed_multi["Vial Value"] = account.alchemy_vials["Ricecakorade (Rice Cake)"][
-            "Value"
-        ]
+        speed_multi["Vial Value"] = account.alchemy_vials["Ricecakorade (Rice Cake)"].value
         speed_multi["VM Multi"] = ValueToMulti(
             speed_multi["Vial Value"] + self.market["Nutritious Soil"].value
         )

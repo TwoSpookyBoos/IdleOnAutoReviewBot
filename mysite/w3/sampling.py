@@ -37,7 +37,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Account-Wide
     account_sum = 0.0
-    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value']
+    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].value
     account_sum += vialBonus
     account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
     account_sum += 0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level
@@ -58,8 +58,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     
     psr_Advices[account_subgroup].append(Advice(
         label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
-        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Image'],
-        progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
+        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].image,
+        progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].level,
         goal=max_vial_level
     ))
     psr_Advices[account_subgroup].append(Advice(

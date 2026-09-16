@@ -395,19 +395,7 @@ def _calculate_w2(account):
     _calculate_w2_killroy(account)
 
 def _calculate_w2_vials(account):
-    account.alchemy_vials_calcs = {
-        'mga': (
-            account.vault.upgrades['Vial Overtune'].total_value
-            + ((account.maxed_vials * .02) if account.rift['VialMastery'].unlocked else 0)
-        ),
-        'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
-    }
-    account.alchemy_vials_calcs['Total Multi'] = account.alchemy_vials_calcs['mga'] * account.alchemy_vials_calcs['mgb']
-    for vial_name, vial_details in account.alchemy_vials.items():
-        try:
-            account.alchemy_vials[vial_name]['Value'] = account.alchemy_vials_calcs['Total Multi'] * account.alchemy_vials[vial_name]['BaseValue']
-        except:
-            logger.warning(f"Could not increase {vial_name} value")
+    account.alchemy_vials.calculate_values(account.vault, account.rift, account.labBonuses)
 
 def _calculate_w2_cauldrons(account):
     perCauldronBubblesUnlocked = [
