@@ -15,6 +15,11 @@
 
     --fg-text-placeholder: lightgray;
 
+    --fg-steam: hsl(204, 27%, 83%);
+    --bg-steam: hsl(210, 35%, 16%);
+    --bg-steam-dark: hsl(225, 18%, 11%);
+    --accent-steam: hsl(202, 86%, 68%);
+
     --fg-link-sidebar: var(--fg-link);
     --fg-link-sidebar-visited: var(--fg-link-visited);
 
@@ -160,6 +165,107 @@ form {
                 padding-left: 5px;
                 padding-top: 5px;
                 color: var(--fg-text-placeholder);
+            }
+        }
+    }
+
+    #steam-login-open, #steam-sync, #steam-sign-out, #steam-login-submit {
+        border: 2px solid transparent;
+        border-radius: 10px;
+        padding: 5px 10px;
+        font: inherit;
+        letter-spacing: inherit;
+        transition: background-color .2s ease-in-out, border-color .2s ease-in-out, color .2s ease-in-out;
+
+        &:disabled {
+            opacity: .6;
+            cursor: progress;
+        }
+    }
+
+    // Steam branding
+    #steam-login-open, #steam-sync, #steam-login-submit {
+        color: var(--fg-steam);
+        background: linear-gradient(90deg, var(--bg-steam-dark), var(--bg-steam));
+
+        &:hover, &:focus-visible {
+            color: white;
+            border-color: var(--accent-steam);
+        }
+    }
+
+    #steam-sign-out {
+        color: var(--fg-sidebar);
+        background: transparent;
+        border-color: var(--bg-textbox);
+
+        &:hover, &:focus-visible {
+            border-color: var(--fg-sidebar);
+        }
+    }
+
+    #steam-signed-in {
+        display: flex;
+        gap: 10px;
+
+        #steam-sync {
+            flex-grow: 2;
+        }
+
+        #steam-sign-out {
+            flex-grow: 1;
+        }
+    }
+
+    #steam-login-open[hidden], #steam-signed-in[hidden] {
+        display: none;
+    }
+
+    #steam-login-wrapper {
+        display: none;
+
+        &.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+
+            background-color: hsla(0deg, 0, 0, 0.7);
+        }
+
+        #steam-login-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            width: 400px;
+            max-width: 90vw;
+            padding: 20px;
+            border-radius: 20px;
+
+            color: var(--fg-sidebar);
+            background: var(--bg-sidebar);
+
+            p {
+                margin: 0;
+            }
+
+            input {
+                border: none;
+                padding: 5px;
+                border-radius: 10px;
+                color: var(--fg-textbox);
+                background: var(--bg-textbox);
+
+                &::placeholder {
+                    color: var(--fg-text-placeholder);
+                }
             }
         }
     }
