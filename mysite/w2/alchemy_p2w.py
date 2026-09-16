@@ -31,12 +31,12 @@ def getP2WProgressionTiersAdviceGroup(highest_alchemy_level):
     bubble_cauldron_max = 4 * 375  # 4 cauldrons, 375 upgrades each
     liquid_cauldron_max = 180 * liquid_cauldrons_unlocked
     vials_max = 15 + 45  # 15 attempts, 45 RNG
-    bubble_cauldron_sum = sum(session_data.account.alchemy_p2w['Cauldrons'])
-    vials_sum = sum(session_data.account.alchemy_p2w['Vials'])
-    player_sum = sum(session_data.account.alchemy_p2w['Player'])
-    if isinstance(session_data.account.alchemy_p2w['Liquids'], list):
+    bubble_cauldron_sum = sum(session_data.account.alchemy_p2w.cauldrons)
+    vials_sum = sum(session_data.account.alchemy_p2w.vials)
+    player_sum = sum(session_data.account.alchemy_p2w.player)
+    if isinstance(session_data.account.alchemy_p2w.liquids, list):
         # Liquids are different. Any locked liquid cauldrons are stored as -1 which would throw off a simple sum
-        for liquid_entry in session_data.account.alchemy_p2w.get("Liquids"):
+        for liquid_entry in session_data.account.alchemy_p2w.liquids:
             if liquid_entry != -1:
                 sum_liquid_cauldrons += liquid_entry
 
