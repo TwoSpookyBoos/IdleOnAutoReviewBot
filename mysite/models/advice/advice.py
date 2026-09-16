@@ -87,7 +87,7 @@ class Advice(AdviceBase):
 
     def render_row(self, progress_bars) -> Markup:
         data_attrs = "".join(f' data-{attr}="true"' for attr in DATASET_ATTRS if getattr(self, attr, False))
-        css_class = self.css_class
+        css_class = self.css_class  # kebab strips all but \w and -
         status = self.status
 
         percent = self.percent
