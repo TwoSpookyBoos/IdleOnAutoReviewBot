@@ -260,10 +260,7 @@ def getCharacterDetails(inputJSON, runType):
     equipped_cardset = {}
     equipped_star_signs = {}
     main_stats = {}
-    try:
-        lab_data = safe_loads(inputJSON['Lab'])
-    except:
-        lab_data = None
+    lab_data = safe_loads(inputJSON.get('Lab', []))
 
     for character_index in range(0, character_count):
         character_classes.append(getHumanReadableClasses(inputJSON.get(f'CharacterClass_{character_index}', 0)))
