@@ -156,5 +156,5 @@ class Assets(dict):
     def get(self, item, default=None):
         # only build the fallback Asset on a miss
         if item in self:
-            return super().__getitem__(item)
-        return default if default else Asset(item, 0)
+            return self[item]
+        return default if default is not None else Asset(item, 0)
