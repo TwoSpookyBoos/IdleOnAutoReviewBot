@@ -787,12 +787,63 @@ vault_progressionTiers = {
         ]  #This list generated from Acecow's alt account when they first entered World 6 and may need to be adjusted in the future
     },
     3: {
+        'Max Index': 61,  #Mastery III section handled by tiers 4+
         'Exclude': [
-            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
+            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too expensive to max, tiered by level in 4+
             'Beeg Forge',  #Having too large of Ore capacity can be annoying. Not maxing this is one way player's have chosen to keep capacity down
             'Card Retirement'  #Passive cards cannot be doubled. I don't care, but some people like the option
-        ]  #You're probably going to regret doing an exclude after Vault3 gets added, RIP
-    }
+        ]
+    },
+    #Tiers 4-7: Mastery III section + tier 3's too-expensive excludes.
+    #Budget per tier = Raw Damage at lv 50/100/150/200, everything else cost-matched to that
+    4: {
+        'Levels': {
+            'Wicked Smart': 278, 'Bullseye': 359, 'Kitchen Dream-mare': 215, 'Teh TOM': 170, 'Cooking Knowledge': 273,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 176, 'Skulltrick': 100, 'Go Go Bubba the Seal': 149,
+            'Ocean Knowledge': 100, 'Sailing Loot': 132, 'Mega Bits': 144, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 93, 'Divine Knowledge': 87, 'Smarter Villagers': 24,
+            'Super Slab': 10, 'Better Captains': 82, 'Big Blessings': 20, 'Farming Knowledge': 81,
+            'Croppius Evolvius': 105, 'Properly Funded Research': 7, 'Raw Damage': 50, 'Finders Keepers': 91,
+            'Sneaking Knowledge': 66, 'White Essentials': 85, 'Summoning Knowledge': 54, 'Bigger Better Beans': 15,
+            '24 Karat Foods': 8, 'Rest of the Essentials': 39, 'Topheavy Charms': 16, 'Vault Mastery III': 4,
+        }
+    },
+    5: {
+        'Levels': {
+            'Wicked Smart': 387, 'Bullseye': 500, 'Kitchen Dream-mare': 327, 'Teh TOM': 261, 'Cooking Knowledge': 428,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 247,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 246, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 41,
+            'Super Slab': 18, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 203, 'Properly Funded Research': 10, 'Raw Damage': 100, 'Finders Keepers': 193,
+            'Sneaking Knowledge': 100, 'White Essentials': 196, 'Summoning Knowledge': 100, 'Bigger Better Beans': 37,
+            '24 Karat Foods': 22, 'Rest of the Essentials': 150, 'Topheavy Charms': 93, 'Vault Mastery III': 21,
+        }
+    },
+    6: {
+        'Levels': {
+            'Wicked Smart': 497, 'Bullseye': 500, 'Kitchen Dream-mare': 438, 'Teh TOM': 352, 'Cooking Knowledge': 500,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 345,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 300, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 50,
+            'Super Slab': 20, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 250, 'Properly Funded Research': 10, 'Raw Damage': 150, 'Finders Keepers': 250,
+            'Sneaking Knowledge': 100, 'White Essentials': 200, 'Summoning Knowledge': 100, 'Bigger Better Beans': 50,
+            '24 Karat Foods': 37, 'Rest of the Essentials': 200, 'Topheavy Charms': 100, 'Vault Mastery III': 38,
+        }
+    },
+    7: {
+        'Levels': {
+            'Wicked Smart': 500, 'Bullseye': 500, 'Kitchen Dream-mare': 500, 'Teh TOM': 443, 'Cooking Knowledge': 500,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 443,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 300, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 50,
+            'Super Slab': 20, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 250, 'Properly Funded Research': 10, 'Raw Damage': 200, 'Finders Keepers': 250,
+            'Sneaking Knowledge': 100, 'White Essentials': 200, 'Summoning Knowledge': 100, 'Bigger Better Beans': 50,
+            '24 Karat Foods': 50, 'Rest of the Essentials': 200, 'Topheavy Charms': 100, 'Vault Mastery III': 50,
+        }
+    },
 }
 
 ###WORLD 2 PROGRESSION TIERS###

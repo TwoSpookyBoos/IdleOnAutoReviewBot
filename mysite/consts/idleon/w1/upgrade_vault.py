@@ -6,7 +6,7 @@ UpgradeVault = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_th
 # `"VaultUpgBonus" ==` in `_customBlock_Summoning`. Last updated in v2.528.0
 vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 89, 64, 70, 73, 74, 76, 79, 85, 86, 88]
 vault_stack_types = ['Knockout']
-vault_section_indexes = [32, 61]  #Vault Mastery and Vault Mastery II's indexes
+vault_section_indexes = [32, 61, 89]  #Vault Mastery, II, and III's indexes
 
 
 def _get_vault_section(index: int) -> int:

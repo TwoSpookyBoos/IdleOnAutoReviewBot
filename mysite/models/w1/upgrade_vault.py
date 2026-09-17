@@ -71,17 +71,19 @@ class VaultUpgrade:
             goal=self.max_level,
         )
 
-    def get_tier_advice(self, total_upgrades: int) -> Advice:
+    def get_tier_advice(self, total_upgrades: int, goal: int = 0) -> Advice:
+        goal = min(goal, self.max_level) if goal else self.max_level
+        target = f"Max {self.name}" if goal >= self.max_level else f"{self.name} to Lv {goal}"
         return Advice(
             label=(
-                f"Max {self.name}"
+                f"{target}"
                 f"<br>Requires {self.unlock_requirement - total_upgrades} more Upgrades to unlock"
                 if not self.unlocked else
                 f"{self.name}: {self.description}"
             ),
             picture_class=self.image,
             progression=self.level,
-            goal=self.max_level,
+            goal=goal,
         )
 
 
@@ -124,16 +126,9 @@ class Vault:
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
     def calculate(self):
-        mastery = self.upgrades["Vault Mastery"]
-        mastery_ii = self.upgrades["Vault Mastery II"]
-        vault_multi = [
-            ValueToMulti(mastery.level * mastery.value_per_level),
-            ValueToMulti(mastery_ii.level * mastery_ii.value_per_level),
-        ]
-        vault_multi_max = [
-            ValueToMulti(mastery.max_level * mastery.value_per_level),
-            ValueToMulti(mastery_ii.max_level * mastery_ii.value_per_level),
-        ]
+        masteries = [self.upgrades[name] for name in ("Vault Mastery", "Vault Mastery II", "Vault Mastery III")]
+        vault_multi = [ValueToMulti(m.level * m.value_per_level) for m in masteries]
+        vault_multi_max = [ValueToMulti(m.max_level * m.value_per_level) for m in masteries]
         for upgrade in self.upgrades.values():
             scaling_multiplier = vault_multi[upgrade.vault_section - 1] if upgrade.scaling_value else 1
             scaling_multiplier_max = vault_multi_max[upgrade.vault_section - 1] if upgrade.scaling_value else 1
