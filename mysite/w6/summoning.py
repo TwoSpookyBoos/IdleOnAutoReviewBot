@@ -153,6 +153,17 @@ def get_bonuses_multi() -> AdviceGroup:
         progression=int(account.armor_sets['Sets']['GODSHARD SET']['Owned']),
         goal=1
     ))
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop['Bundle Data Present'] else ''
+    missing_bundle_data = not account.gemshop['Bundle Data Present']
+    has_daydreamer_pack = account.gemshop['Bundles']['ban_i']['Owned']
+    multi_advices[mgc].append(Advice(
+        label=f"Gemshop - Daydreamer Pack:"
+              f"<br>+{50 * int(has_daydreamer_pack)}/50% Summoning Winner Bonuses"
+              f"{missing_bundle_data_txt}",
+        picture_class='gem',
+        progression=int(has_daydreamer_pack) if not missing_bundle_data else 'IDK',
+        goal=1
+    ))
     # Summary
     total = round_and_trim(summoning.multi["Bonuses"]["Value"])
     library_total = round_and_trim(summoning.multi["Library"]["Value"])

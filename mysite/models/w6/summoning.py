@@ -363,6 +363,7 @@ class Summoning:
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
             + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + 50  # Gem Shop - Daydreamer Pack (ban_i)
             # Not for Library
             + self.bonuses["Winner Bonuses"].value
             + account.emperor["Summoning Winner Bonuses"].value  # Technically infinity
@@ -374,6 +375,7 @@ class Summoning:
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
             + 15  # max value of account.armor_sets['Sets']['GODSHARD SET']
+            + 50  # Gem Shop - Daydreamer Pack (ban_i)
         )
         player_mgc_rest = ValueToMulti(
             (25 * account.sailing["Artifacts"]["The Winz Lantern"]["Level"])
@@ -381,6 +383,7 @@ class Summoning:
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
             # Not for library
             + self.bonuses["Winner Bonuses"].value
             + account.emperor["Summoning Winner Bonuses"].value
@@ -391,6 +394,7 @@ class Summoning:
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
         )
         self.multi = {}
         # Library
