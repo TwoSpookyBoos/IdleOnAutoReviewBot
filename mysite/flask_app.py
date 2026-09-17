@@ -67,10 +67,16 @@ def get_request_json() -> dict:
             raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
         if body[:2] == b"\x1f\x8b":
             decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS | 16)
-            body = decompressor.decompress(body, MAX_REQUEST_BYTES)
+            try:
+                body = decompressor.decompress(body, MAX_REQUEST_BYTES)
+            except zlib.error:
+                raise JSONDecodeError("")
             if decompressor.unconsumed_tail:
                 raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
-        g.request_json = json.loads(body)
+        try:
+            g.request_json = json.loads(body)
+        except json.JSONDecodeError:
+            raise JSONDecodeError("")
     return g.request_json
 
 
