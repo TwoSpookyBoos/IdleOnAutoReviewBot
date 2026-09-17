@@ -34,9 +34,19 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                         vault_AdviceDict['Tiers'][subgroup_label].append(
                             upgrades[upgrade_name].get_tier_advice(session_data.account.vault.total_upgrades)
                         )
+        elif 'Levels' in requirements:
+            for upgrade_name, target_level in requirements['Levels'].items():
+                upgrade_details = upgrades[upgrade_name]
+                if upgrade_details.level < min(target_level, upgrade_details.max_level):
+                    add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
+                    if subgroup_label in vault_AdviceDict['Tiers']:
+                        vault_AdviceDict['Tiers'][subgroup_label].append(
+                            upgrade_details.get_tier_advice(session_data.account.vault.total_upgrades, target_level)
+                        )
         elif 'Exclude' in requirements:
+            max_index = requirements.get('Max Index', len(upgrades))
             for upgrade_name, upgrade_details in session_data.account.vault.upgrades.items():
-                if upgrade_name not in requirements['Exclude']:
+                if upgrade_name not in requirements['Exclude'] and upgrade_details.index <= max_index:
                     if upgrade_details.level < upgrade_details.max_level:
                         add_subgroup_if_available_slot(vault_AdviceDict['Tiers'], subgroup_label)
                         if subgroup_label in vault_AdviceDict['Tiers']:
