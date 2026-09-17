@@ -1918,7 +1918,7 @@ def _parse_w5_gaming_sprouts(account):
         }
 
 def _parse_w5_slab(account):
-    account.registered_slab = safe_loads(account.raw_data.get("Cards1", []))
+    account.registered_slab = set(safe_loads(account.raw_data.get("Cards1", [])))
 
 def _parse_w5_sailing(account):
     account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'Islands Discovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}

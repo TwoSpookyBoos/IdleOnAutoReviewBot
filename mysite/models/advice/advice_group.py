@@ -1,5 +1,7 @@
 import functools
 
+from markupsafe import Markup, escape
+
 from models.advice.advice_base import AdviceBase
 from models.advice.advice import Advice
 from utils.text_formatting import kebab
@@ -81,6 +83,25 @@ class AdviceGroup(AdviceBase):
             text += ":"
 
         return text
+
+    def render(self, progress_bars, is_tabbed=False) -> Markup:
+        data_attrs = "".join(f' data-{attr}="true"' for attr, val in self.dataset if val)
+        hidden = " hidden" if getattr(self, "hide", False) else ""
+        tab_content = " advice-group-tabbed-tab-content" if is_tabbed else ""
+
+        parts = [f'<div class="advice-group{hidden}{tab_content}"{data_attrs}>']
+        if heading := self.heading:
+            parts.append(f'<span class="{escape(self.picture_class)}">{heading}</span>')
+        parts.append('<ul class="table">')
+        for title, advices in self.advices.items():
+            if title != "default":
+                parts.append(f'<li class="advice-title"><strong>{escape(title)}</strong></li>')
+            parts.extend(advice.render_row(progress_bars) for advice in advices)
+        parts.append('</ul>')
+        if self.post_string:
+            parts.append(f'<span class="post-string">{escape(self.post_string)}</span>')
+        parts.append('</div>')
+        return Markup("".join(parts))
 
     def _is_valid_operand(self, other):
         return all(hasattr(other, field) for field in self.__compare_by)

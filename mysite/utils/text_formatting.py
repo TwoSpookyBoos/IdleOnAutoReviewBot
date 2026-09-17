@@ -32,12 +32,15 @@ def numberToLetter(inputNumber: int) -> str:
     return "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ肥肢肖肋肉職耐者箱管算箔策答筒筍白発癒痛痕病疾疲潤潜漬漠演漏漁滞毎殻殺段殖残歳歯歩武歓欲次欠櫛機色村材杉本末未木授掃捧彼役影彫彩胃堪城坑努助加功力創割借候倒老個景是明昇早既掴担想扉戻懸懲憩態感蛮蛍虫虚蘇薬薄蔵"[inputNumber]
 
 
+_non_kebab_chars = re.compile(r"[^\w-]")
+
+
 def kebab(string: str) -> str:
     """
     Converts any string to kebab-case format.
     Spaces and apostrophes turn to hyphens, non-word characters are removed.
     """
-    return re.sub(r"[^\w-]", "", string.lower().replace(" ", "-").replace("'", "-"))
+    return _non_kebab_chars.sub("", string.lower().replace(" ", "-").replace("'", "-"))
 
 
 def is_username(data) -> bool:
@@ -45,8 +48,8 @@ def is_username(data) -> bool:
         isinstance(data, str)
         and (
             len(data) < 16
-            or ('idleonefficiency.com' in data.lower() and len(data) < 200)
-            or ('idleontoolbox.com' in data.lower() and len(data) < 200)
+            or (len(data) < 200 and 'idleonefficiency.com' in data.lower())
+            or (len(data) < 200 and 'idleontoolbox.com' in data.lower())
             # or 'idleonleaderboards.com in data.lower()
         )
     )

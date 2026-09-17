@@ -1,11 +1,13 @@
 import json
 import traceback
 import uuid
+import zlib
 from datetime import datetime
 from pathlib import Path
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from utils.logging import (
     ResponseCache,
@@ -53,8 +55,33 @@ from utils.text_formatting import (
 logger = get_logger(__name__)
 
 
+MAX_REQUEST_BYTES = app.config["MAX_CONTENT_LENGTH"]
+
+
+def get_request_json() -> dict:
+    # parsed once per request; the browser gzips large bodies
+    if "request_json" not in g:
+        try:
+            body = request.get_data()
+        except RequestEntityTooLarge:
+            raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
+        if body[:2] == b"\x1f\x8b":
+            decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS | 16)
+            try:
+                body = decompressor.decompress(body, MAX_REQUEST_BYTES)
+            except zlib.error:
+                raise JSONDecodeError("")
+            if decompressor.unconsumed_tail:
+                raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
+        try:
+            g.request_json = json.loads(body)
+        except json.JSONDecodeError:
+            raise JSONDecodeError("")
+    return g.request_json
+
+
 def get_user_input() -> str:
-    return (request.args.get("player") or json.loads(request.data).get("player", "")).strip()
+    return (request.args.get("player") or get_request_json().get("player", "")).strip()
 
 
 def parse_user_input():
@@ -86,7 +113,7 @@ def parse_user_input():
 
 def store_user_preferences():
     if request.method == "POST":
-        args = json.loads(request.data)
+        args = get_request_json()
     elif request.method == "GET":
         args = request.args.to_dict()
     else:
@@ -115,13 +142,12 @@ def results() -> Response | str:
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
     g.request_id = uuid.uuid4().hex[:8]
 
-    store_user_preferences()
-
     live_link = "live"
     beta_link = "beta"
 
     name_or_data: str | dict = ""
     try:
+        store_user_preferences()
         name_or_data, source_string = parse_user_input()
 
         if name_or_data:

@@ -1,10 +1,14 @@
 import json
+import random
 import re
+import string
 from pathlib import Path
 
 import pytest
 import yaml
+from markupsafe import Markup, escape
 
+from models.advice.advice import _escape_text
 from models.custom_exceptions import UserDataException, UsernameBanned
 
 def execute_test_checks(response: bytes | str):
@@ -78,3 +82,22 @@ def test_output_consistency(client, conf, datafile):
         assert response.status_code == 200 and len(response.data) > 0
         all_responses.append(response.get_data(as_text=True))
     assert len(set(all_responses)) == 1
+
+
+def test_escape_text_matches_markupsafe():
+    cases = ["", "plain text", "<script>", "a & b", 'say "hi"', "it's", "<>&\"'", "café", 5, 1.5, None]
+    for case in cases:
+        assert _escape_text(case) == escape(case)
+
+
+def test_escape_text_matches_markupsafe_fuzzed():
+    alphabet = string.printable + "<>&\"'"
+    rand = random.Random(0)
+    for _ in range(2000):
+        text = "".join(rand.choice(alphabet) for _ in range(rand.randrange(12)))
+        assert _escape_text(text) == escape(text)
+
+
+def test_escape_text_passes_markup_through():
+    markup = Markup("<b>bold</b>")
+    assert _escape_text(markup) == markup == escape(markup)

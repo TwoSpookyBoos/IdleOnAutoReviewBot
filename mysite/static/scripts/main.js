@@ -438,14 +438,24 @@ function loadErrorPopup(html, statusCode) {
     }
 }
 
+async function encodeRequestBody(params) {
+    const json = JSON.stringify(params)
+    if (!window.CompressionStream || json.length < 1024) {
+        return { body: json, headers: {} }
+    }
+    const stream = new Blob([json]).stream().pipeThrough(new CompressionStream('gzip'))
+    return { body: await new Response(stream).blob(), headers: { 'Content-Encoding': 'gzip' } }
+}
+
 function fetchPlayerAdvice(ready = Promise.resolve()) {
-    const request = fetch("/results", {
+    const request = encodeRequestBody(fetchStoredUserParams()).then(({ body, headers }) => fetch("/results", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...headers
         },
-        body: JSON.stringify(fetchStoredUserParams())
-    }).then(response => {
+        body
+    })).then(response => {
         return response.text().then(text => [text, (response.ok ? 200 : response.status)]);
     });
 
