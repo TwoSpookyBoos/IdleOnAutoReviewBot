@@ -397,7 +397,7 @@ def getCompassUpgradesTabbed(compass) -> TabbedAdviceGroup:
         path_upgrade = compass.upgrades.get(f'{path_name} Path')
         tab_image = path_upgrade.image if path_upgrade else compass_path_tab_images[path_name]
         upgrades_tabbed[path_name] = (
-            TabbedAdviceGroupTab(tab_image, f'{path_name} Path'),
+            TabbedAdviceGroupTab(tab_image, f''),
             AdviceGroup(
                 tier='',
                 pre_string=f'{path_name} Path Upgrades',
