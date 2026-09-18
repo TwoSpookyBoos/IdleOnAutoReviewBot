@@ -84,9 +84,17 @@ function closePopup(popup) {
 
 // bumped to abandon an in-flight device poll when its panel closes
 let devicePoll = 0;
+let devicePopup = null;
+let deviceLoginInFlight = false;
+
+function setLoginBusy(busy) {
+    deviceLoginInFlight = busy;
+    document.querySelectorAll("#signin-buttons button").forEach((b) => (b.disabled = busy));
+}
 
 function closeAllPanels() {
     devicePoll++;
+    setLoginBusy(false);
     document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper")
         .forEach((panel) => panel.classList.remove("open"));
 }
@@ -105,6 +113,8 @@ function abandoned(mine, popup) {
 /* ---------- Steam ---------- */
 
 function openSteamPopup() {
+    if (deviceLoginInFlight) return;
+    setLoginBusy(true);
     const params = new URLSearchParams({
         "openid.ns": "http://specs.openid.net/auth/2.0",
         "openid.claimed_id": "http://specs.openid.net/auth/2.0/identifier_select",
@@ -219,17 +229,14 @@ function showDevicePanel(provider, { url, code, linkLabel } = {}) {
 
 /* ---------- device flows ---------- */
 
-let deviceLoginInFlight = false;
-
 // one at a time: two concurrent polls can both resolve and race each other
 // into signInWithCredential. The popup must open before the first await,
 // while we're still inside the click handler, or Safari blocks it.
 async function startDeviceLogin(provider, run) {
     if (deviceLoginInFlight) return;
-    deviceLoginInFlight = true;
-    const buttons = [...document.querySelectorAll("#signin-buttons button")];
-    buttons.forEach((b) => (b.disabled = true));
+    setLoginBusy(true);
     const popup = openBlankPopup();
+    devicePopup = popup;
 
     try {
         await run(popup);
@@ -239,8 +246,8 @@ async function startDeviceLogin(provider, run) {
         console.error(`${provider} sign-in failed:`, e);
         showFriendlyError(`Couldn't reach ${provider}. Please check your connection and try again.`);
     } finally {
-        deviceLoginInFlight = false;
-        buttons.forEach((b) => (b.disabled = false));
+        devicePopup = null;
+        setLoginBusy(false);
     }
 }
 
@@ -459,7 +466,9 @@ function initFirebaseLogin() {
     // clicking the panel content inside it does not.
     document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper").forEach((wrapper) => {
         wrapper.addEventListener("click", (e) => {
-            if (e.target === e.currentTarget) e.currentTarget.classList.remove("open");
+            if (e.target !== e.currentTarget) return;
+            closePopup(devicePopup);
+            closeAllPanels();
         });
     });
 

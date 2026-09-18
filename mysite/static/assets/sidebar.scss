@@ -24,6 +24,7 @@
     --bg-google: hsl(0, 0%, 100%);
     --accent-google: hsl(217, 89%, 61%);
 
+    --fg-apple: hsl(0, 0%, 100%);
     --bg-apple: hsl(0, 0%, 0%);
     --accent-apple: hsl(0, 0%, 80%);
 
@@ -211,7 +212,7 @@ form {
     }
 
     #apple-login-open {
-        color: white;
+        color: var(--fg-apple);
         background: var(--bg-apple);
 
         &:hover, &:focus-visible {
