@@ -7,6 +7,7 @@ from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.colo_scores import ColoScores
 from models.general.companions import Companions
+from models.general.family_bonuses import FamilyBonuses
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
 from models.general.npc_tokens import NpcTokens
@@ -111,6 +112,7 @@ class Account:
         self.colo_scores: ColoScores = ColoScores(self.raw_data)
         self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)
         self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
+        self.family_bonuses: FamilyBonuses = FamilyBonuses()
         #Class lists
         self.beginners = []
         self.jmans = []

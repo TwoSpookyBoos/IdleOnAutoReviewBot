@@ -44,7 +44,6 @@ from models.general.assets import Assets
 from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
 from models.general.cards import Card
-from models.general.family_bonuses import FamilyBonuses
 from models.w1.stamps import Stamp
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
@@ -234,7 +233,7 @@ def _parse_general(account):
     _parse_general_gem_shop(account)
     _parse_general_gem_shop_optlacc(account)
     _parse_general_gem_shop_bundles(account)
-    account.family_bonuses = FamilyBonuses(account.safe_characters)
+    account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
     _parse_general_merits(account)
