@@ -61,7 +61,8 @@ $sushi-dishes: (
   sushi-59: img('data/Sushi59.png'),
   sushi-60: img('data/Sushi60.png'),
   sushi-61: img('data/Sushi61.png'),
-  sushi-62: img('data/Sushi62.png')
+  sushi-62: img('data/Sushi62.png'),
+  sushi-63: img('data/Sushi63.png')
 );
 
 $sushi-upgrades: (
@@ -109,11 +110,12 @@ $sushi-upgrades: (
   sushi-upg-41: img('data/SushiUpg41.png'),
   sushi-upg-42: img('data/SushiUpg42.png'),
   sushi-upg-43: img('data/SushiUpg43.png'),
-  sushi-upg-44: img('data/SushiUpg44.png')
+  sushi-upg-44: img('data/SushiUpg44.png'),
+  sushi-upg-45: img('data/SushiUpg45.png')
 );
 
 $sushi-station-misc: (
-  sushi-station: img('data/Sushi62.png')
+  sushi-station: img('data/Sushi63.png')
 );
 
 $all-sushi-station: map-merge($sushi-dishes, $sushi-upgrades);

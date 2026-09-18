@@ -42,6 +42,7 @@ from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
+from models.w7.jelly_operator import JellyOperator
 from models.w7.legend_talents import LegendTalents
 from models.w7.zenith_market import ZenithMarket
 from models.caverns import Caverns
@@ -199,6 +200,7 @@ class Account:
         self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
+        self.jelly_operator = JellyOperator(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]
