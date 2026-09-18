@@ -1,39 +1,106 @@
-from consts.progression_tiers import true_max_tiers
+from consts.progression_tiers import true_max_tiers, compass_progressionTiers
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
+from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_math_log
 from utils.logging import get_logger
 
 from consts.consts_autoreview import (
-    # compass_progressionTiers, break_you_best, infinity_string,
-    ValueToMulti, EmojiType
+    break_you_best, build_subgroup_label,
+    ValueToMulti, EmojiType,
 )
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.compass import compass_dusts_list, compass_medallions
-from utils.text_formatting import notateNumber
+from utils.text_formatting import notateNumber, pl
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
-    compass_AdviceDict = {
-        'Tiers': {},
+def getProgressionTiersAdviceGroup(compass) -> tuple[dict[str, AdviceGroup], int, int, int]:
+    compass_Advices = {
+        'Specific Upgrades': {},
+        'Abominations': {},
+        'Medallions': {},
     }
     optional_tiers = 0
     true_max = true_max_tiers['Compass']
     max_tier = true_max - optional_tiers
-    tier_Compass = 0
+    tier_SpecificUpgrades = 0
+    tier_Abominations = 0
+    tier_Medallions = 0
 
-    tiers_ag = AdviceGroup(
-        tier=tier_Compass,
-        pre_string='Progression Tiers',
-        advices=compass_AdviceDict['Tiers']
+    for tier_number, requirements in compass_progressionTiers.items():
+        subgroup_label = build_subgroup_label(tier_number, max_tier)
+
+        for upgrade_name, required_level in requirements.get('Specific Upgrades', {}).items():
+            upgrade_details = compass.upgrades.get(upgrade_name)
+            current_level = upgrade_details.level if upgrade_details else 0
+            if current_level < required_level:
+                add_subgroup_if_available_slot(compass_Advices['Specific Upgrades'], subgroup_label)
+                if subgroup_label in compass_Advices['Specific Upgrades']:
+                    compass_Advices['Specific Upgrades'][subgroup_label].append(Advice(
+                        label=(
+                            f"{upgrade_details.path_name}-{upgrade_details.path_ordering}: {upgrade_name}"
+                            if upgrade_details else upgrade_name
+                        ),
+                        picture_class=upgrade_details.image if upgrade_details else 'compass',
+                        progression=current_level,
+                        goal=required_level,
+                        resource=upgrade_details.dust_image if upgrade_details else ''
+                    ))
+        if subgroup_label not in compass_Advices['Specific Upgrades'] and tier_SpecificUpgrades == tier_number - 1:
+            tier_SpecificUpgrades = tier_number
+
+        required_abominations = requirements.get('Abominations', 0)
+        if compass.total_abominations_slain < required_abominations:
+            add_subgroup_if_available_slot(compass_Advices['Abominations'], subgroup_label)
+            if subgroup_label in compass_Advices['Abominations']:
+                compass_Advices['Abominations'][subgroup_label].append(Advice(
+                    label="Abominations Slain",
+                    picture_class='slayer-abominator',
+                    progression=compass.total_abominations_slain,
+                    goal=required_abominations
+                ))
+        if subgroup_label not in compass_Advices['Abominations'] and tier_Abominations == tier_number - 1:
+            tier_Abominations = tier_number
+
+        required_medallions = requirements.get('Medallions', 0)
+        if compass.total_medallions < required_medallions:
+            add_subgroup_if_available_slot(compass_Advices['Medallions'], subgroup_label)
+            if subgroup_label in compass_Advices['Medallions']:
+                compass_Advices['Medallions'][subgroup_label].append(Advice(
+                    label="Medallions Collected",
+                    picture_class='wind-walker-medallion',
+                    progression=compass.total_medallions,
+                    goal=required_medallions
+                ))
+        if subgroup_label not in compass_Advices['Medallions'] and tier_Medallions == tier_number - 1:
+            tier_Medallions = tier_number
+
+    compass_AdviceGroupDict = {}
+    compass_AdviceGroupDict['Specific Upgrades'] = AdviceGroup(
+        tier=tier_SpecificUpgrades,
+        pre_string=f"Level up the following Compass Upgrade{pl(compass_Advices['Specific Upgrades'])}",
+        advices=compass_Advices['Specific Upgrades'],
+        post_string='Path levels unlock the upgrades further along that Path',
     )
-    overall_SectionTier = min(true_max, tier_Compass)
-    return tiers_ag, overall_SectionTier, max_tier, true_max
+    compass_AdviceGroupDict['Abominations'] = AdviceGroup(
+        tier=tier_Abominations,
+        pre_string='Slay more Abominations',
+        advices=compass_Advices['Abominations'],
+    )
+    compass_AdviceGroupDict['Medallions'] = AdviceGroup(
+        tier=tier_Medallions,
+        pre_string='Collect more Medallions',
+        advices=compass_Advices['Medallions'],
+        post_string='Medallions only drop while in Tempest Form',
+    )
+
+    overall_SectionTier = min(true_max, tier_SpecificUpgrades, tier_Abominations, tier_Medallions)
+    return compass_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getCompassGeneralInfoAdviceGroup():
     general_advices = []
@@ -301,33 +368,32 @@ def getCompassMedallionsAdviceGroup(compass):
     medallion_ag.remove_empty_subgroups()
     return medallion_ag
 
-def getCompassUpgradesAdviceGroups(compass):
+def getCompassUpgradesAdviceGroup(compass) -> AdviceGroup:
     upgrades_AdviceDict = {}
-    upgrades_AdviceGroups = []
 
     # compass.upgrades is already populated in path-then-path-ordering order (see Compass.__init__),
     # so grouping by upgrade_details.path_name here preserves the same path/ordering layout as before.
     for upgrade_details in compass.upgrades.values():
-        path_name = upgrade_details.path_name
-        upgrades_AdviceDict.setdefault(f'{path_name} Path Upgrades', [])
-        if path_name == 'Abomination':
+        subgroup_name = f'{upgrade_details.path_name} Path'
+        upgrades_AdviceDict.setdefault(subgroup_name, [])
+        if upgrade_details.path_name == 'Abomination':
             if 'Titan doesnt exist' not in upgrade_details.description:  #Filter out placeholders for future Titans/Abominations
                 if upgrade_details.unlocked:
-                    upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(upgrade_details.get_advice())
+                    upgrades_AdviceDict[subgroup_name].append(upgrade_details.get_advice())
                 else:
                     abomination = compass.abominations.get(upgrade_details.abomination_name)
                     abom_world = abomination.world if abomination else '?'
-                    upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(
+                    upgrades_AdviceDict[subgroup_name].append(
                         upgrade_details.get_abomination_locked_advice(abom_world)
                     )
         else:
             locked_text = f"<br>{'This upgrade is Locked!' if not upgrade_details.unlocked else ''}"
-            upgrades_AdviceDict[f'{path_name} Path Upgrades'].append(upgrade_details.get_advice(locked_text))
-    upgrades_AdviceDict['Default Path Upgrades'].insert(0, Advice(
+            upgrades_AdviceDict[subgroup_name].append(upgrade_details.get_advice(locked_text))
+    upgrades_AdviceDict['Default Path'].insert(0, Advice(
         label=f"Total Compass Upgrades: {compass.total_upgrades:,}",
         picture_class='compass',
     ))
-    upgrades_AdviceDict['Abomination Path Upgrades'].insert(0, Advice(
+    upgrades_AdviceDict['Abomination Path'].insert(0, Advice(
         label=f"Total Abominations Slain: {compass.total_abominations_slain:,}",
         picture_class='slayer-abominator',
     ))
@@ -336,24 +402,21 @@ def getCompassUpgradesAdviceGroups(compass):
         for advice in upgrades_AdviceDict[subgroup]:
             advice.mark_advice_completed()
 
-    for path_name, path_advice in upgrades_AdviceDict.items():
-        upgrades_AdviceGroups.append(AdviceGroup(
-            tier='',
-            pre_string=path_name,
-            advices=upgrades_AdviceDict[path_name],
-            informational=True
-        ))
-
-    for ag in upgrades_AdviceGroups:
-        ag.remove_empty_subgroups()
-    return upgrades_AdviceGroups
+    upgrades_ag = AdviceGroup(
+        tier='',
+        pre_string='Compass Upgrades',
+        advices=upgrades_AdviceDict,
+        informational=True
+    )
+    upgrades_ag.remove_empty_subgroups()
+    return upgrades_ag
 
 
 def getCompassAdviceSection() -> AdviceSection:
     #Check if player has reached this section
     if 'Wind Walker' not in session_data.account.classes:
         compass_AdviceSection = AdviceSection(
-            name="The Compass",
+            name="Compass",
             tier="Not Yet Evaluated",
             header="Come back after unlocking a Wind Walker in World 6!",
             picture='customized/Compass_NoBG.png',
@@ -368,29 +431,25 @@ def getCompassAdviceSection() -> AdviceSection:
     #Generate Alert Advice
 
     #Generate AdviceGroups
-    compass_AdviceGroupDict = {}
-    compass_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
+    compass_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(compass)
     compass_AdviceGroupDict['General'] = getCompassGeneralInfoAdviceGroup()
     compass_AdviceGroupDict['Currencies'] = getCompassCurrenciesAdviceGroup(compass)
-    compass_AdviceGroupDict['Abominations'] = getCompassAbominationsAdviceGroup(compass)
-    compass_AdviceGroupDict['Medallions'] = getCompassMedallionsAdviceGroup(compass)
-    upgrades_ags = getCompassUpgradesAdviceGroups(compass)
-    for ag in upgrades_ags:
-        compass_AdviceGroupDict[ag.pre_string] = ag
+    compass_AdviceGroupDict['Abominations Info'] = getCompassAbominationsAdviceGroup(compass)
+    compass_AdviceGroupDict['Medallions Info'] = getCompassMedallionsAdviceGroup(compass)
+    compass_AdviceGroupDict['Upgrades'] = getCompassUpgradesAdviceGroup(compass)
 
     #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"
     compass_AdviceSection = AdviceSection(
-        name="The Compass",
+        name="Compass",
         tier=tier_section,
         pinchy_rating=overall_SectionTier,
         max_tier=max_tier,
         true_max_tier=true_max,
-        header='Wind Walker and Compass Information',  #tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
+        header=f"Best Compass tier met: {tier_section}{break_you_best if overall_SectionTier >= max_tier else ''}",
         picture='customized/Compass_NoBG.png',
         groups=compass_AdviceGroupDict.values(),
         completed=None,
-        unrated=True,
     )
 
     return compass_AdviceSection

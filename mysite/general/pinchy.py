@@ -179,6 +179,7 @@ class Placements(dict):
     BEANSTALK = "Beanstalk"
     TESSERACT = "The Tesseract"
     GRIMOIRE = "The Grimoire"
+    COMPASS = "Compass"
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
         VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
@@ -186,7 +187,7 @@ class Placements(dict):
         ARMOR_SETS, REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING,  #GAMING,
-        FARMING, BEANSTALK, TESSERACT, GRIMOIRE
+        FARMING, BEANSTALK, TESSERACT, GRIMOIRE, COMPASS
     ]
 
     sectionThresholds = {
@@ -229,6 +230,7 @@ class Placements(dict):
         BEANSTALK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,          true_max_tiers[BEANSTALK], 99],
         TESSERACT:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[TESSERACT], 99],
         GRIMOIRE:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[GRIMOIRE], 99],
+        COMPASS:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[COMPASS], 99],
     }
     section_count = len(sectionThresholds)
 
