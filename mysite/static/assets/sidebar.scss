@@ -131,6 +131,37 @@ form {
             [type="checkbox"] {
                 display: none;
             }
+
+            #tome-score-box {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                column-gap: 40px;
+
+                input {
+                    flex-shrink: 0;
+                    box-sizing: border-box;
+                    width: calc(8ch + 2 * var(--shaft-radius));
+                    height: var(--shaft-height);
+                    padding: 0 var(--shaft-radius);
+                    border: none;
+                    border-radius: var(--shaft-radius);
+
+                    font: inherit;
+                    letter-spacing: normal;
+                    text-align: center;
+                    color: black;
+                    background: oldlace;
+
+                    &::placeholder {
+                        color: gray;
+                    }
+
+                    &:focus {
+                        outline: 2px solid forestgreen;
+                    }
+                }
+            }
         }
     }
 

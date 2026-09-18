@@ -1,4 +1,5 @@
 import json
+import re
 import traceback
 import uuid
 import zlib
@@ -121,6 +122,15 @@ def store_user_preferences():
 
     for switch in consts.consts_autoreview.switches:
         setattr(g, switch["name"], args.get(switch["name"], False) in ["on", "True", "true", True])
+
+    g.tome_score = parse_tome_score(args.get("tome_score"))
+
+
+def parse_tome_score(value) -> int | None:
+    text = str(value).strip() if value is not None else ""
+    if not re.fullmatch(r"[0-9]{1,6}", text):
+        return None
+    return min(int(text), consts.consts_autoreview.max_manual_tome_score)
 
 
 def get_user_preferences():

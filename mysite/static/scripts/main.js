@@ -34,6 +34,8 @@ const defaults = {
     hide_unrated: "off",
     progress_bars: "off",
     tabbed_advice_groups: "on",
+    manual_tome: "off",
+    tome_score: "",
     handedness: "off",
     light: "off"
 }
@@ -224,6 +226,25 @@ function setupSwitchesActions() {
 
     // On Click Listener for the Hide Info switch
     document.querySelector('label[for="hide_unrated"]').addEventListener('click', hideComposite);
+
+    // show tome score box
+    const tomeScoreBox = document.querySelector('#tome-score-box')
+    document.querySelector('label[for="manual_tome"]').addEventListener('click', () => {
+        tomeScoreBox.classList.toggle('hidden', document.querySelector('#manual_tome').value === "off")
+    })
+
+    const tomeScoreInput = document.querySelector('#tome_score')
+    tomeScoreInput.value = sanitizeTomeScore(localStorage.getItem("tome_score"))
+    tomeScoreInput.addEventListener('input', () => {
+        tomeScoreInput.value = sanitizeTomeScore(tomeScoreInput.value)
+        localStorage.setItem("tome_score", tomeScoreInput.value)
+    })
+}
+
+// digits only, 0-100000
+function sanitizeTomeScore(value) {
+    const digits = String(value ?? "").replace(/\D/g, "")
+    return digits === "" ? "" : Math.min(Number(digits), 100000).toString()
 }
 
 function setupHrefEventActions() {
@@ -358,6 +379,8 @@ function setFormValues() {
         const input = form.querySelector(`[name=${k}]`)
         if (k === "player")
             input.value = userValue
+        else if (k === "tome_score")
+            input.value = sanitizeTomeScore(userValue)
         else if (input && input.value.toString() !== userValue)
             form.querySelector(`[for=${k}]`).click()
     })

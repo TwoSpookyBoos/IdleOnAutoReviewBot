@@ -173,6 +173,7 @@ def _parse_switches(account):
     account.max_subgroups = 3
     account.library_group_characters = g.library_group_characters
     account.tabbed_advice_groups = g.tabbed_advice_groups
+    account.manual_tome_score = g.get("tome_score") if g.manual_tome else None
 
 def _parse_characters(account, run_type):
     character_count, character_names, character_classes, characterDict, perSkillDict = getCharacterDetails(
@@ -1584,9 +1585,12 @@ def _parse_w4_cooking_ribbons(account):
                 logger.exception(f"Could not retrieve Ribbon for {meal_name}")
 
 def _parse_w4_tome(account):
+    parsed_data = account.raw_data.get('parsedData', {})
+    save_has_score = 'totalTomePoints' in parsed_data
+    manual_score = account.manual_tome_score
     account.tome = {
-        'Data Present': 'totalTomePoints' in account.raw_data.get('parsedData', {}),
-        'Total Points': floor(account.raw_data.get('parsedData', {}).get('totalTomePoints', 0)),
+        'Data Present': save_has_score or manual_score is not None,
+        'Total Points': floor(parsed_data['totalTomePoints']) if save_has_score else (manual_score or 0),
         'Blue Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 196, False), False),
         'Red Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 197, False), False),
         'Bonuses': {
