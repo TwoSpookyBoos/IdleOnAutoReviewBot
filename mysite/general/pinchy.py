@@ -61,9 +61,9 @@ class Threshold:
     EARLY_W6 = "Early W6"
     MID_W6 = "Mid W6"
     LATE_W6 = "Late W6"
-    EARLY_W7_PREP = "Early W7 Prep"
-    SOLID_W7_PREP = "Solid W7 Prep"
-    W7_WAITING_ROOM = "W7 Waiting Room"
+    EARLY_W7 = "Early W7"
+    MID_W7 = "Mid W7"
+    LATE_W7 = "Late W7"
     MAX_TIER = "Practical Max"
     TRUE_MAX = "True Max"
     PLACEHOLDER = "Placeholder"
@@ -75,7 +75,7 @@ class Threshold:
         EARLY_W4, MID_W4, LATE_W4,
         EARLY_W5, MID_W5, LATE_W5,
         EARLY_W6, MID_W6, LATE_W6,
-        EARLY_W7_PREP, SOLID_W7_PREP, W7_WAITING_ROOM,
+        EARLY_W7, MID_W7, LATE_W7,
         MAX_TIER, TRUE_MAX,
         PLACEHOLDER
     ]
@@ -334,7 +334,9 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
 # https://idleon.wiki/wiki/Portal_Requirements
 mapThresholds = [
-    (Threshold.EARLY_W7_PREP, 6,    264),  # W6 Samurai Spirits
+    (Threshold.LATE_W7,       7,    323),  # W7 Ancientfish
+    (Threshold.MID_W7,        7,    312),  # W7 Coralcave Guardians
+    (Threshold.EARLY_W7,      7,    301),  # W7 Equinox Broadbass
     (Threshold.LATE_W6,       6,    260),  # W6 Ceramic Spirits
     (Threshold.MID_W6,        6,    256),  # W6 Bamboo Spirits
     (Threshold.EARLY_W6,      6,    251),  # W6 Sprout Spirits
@@ -376,9 +378,9 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 21:
-            expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+            expectedThreshold = Threshold.fromname(Threshold.LATE_W7)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
-            expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+            expectedThreshold = Threshold.fromname(Threshold.MID_W7)
         else:
             threshold = threshold_for_highest_portal_opened()
             mobKillThresholds.append(threshold)
