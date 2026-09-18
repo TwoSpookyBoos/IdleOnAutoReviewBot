@@ -18,6 +18,7 @@ compass_path_ordering = {
     'Abomination': [int(v) for v in RANDOlist[109]],
 }
 compass_medallions = RANDOlist[112]
+compass_path_tab_images = {'Default': 'compass', 'Abomination': 'slayer-abominator'}
 
 
 # Account-independent per-upgrade data, derived once from compass_upgrades_list/compass_path_ordering above.

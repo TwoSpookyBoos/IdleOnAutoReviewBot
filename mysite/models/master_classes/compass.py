@@ -79,12 +79,16 @@ class CompassUpgrade:
             f"{' after Circle Multis' if self.shape == 'Circle' else ''})"
         )
 
-    def get_advice(self, additional_info_text: str = "") -> Advice:
+    def get_advice(self, additional_info_text: str = "", goal: int = 0) -> Advice:
+        #A goal means this is a progression tier target, so the description is dropped
         return Advice(
-            label=f"{self.path_name}-{self.path_ordering}: {self.name}: <br>{self.description}{additional_info_text}",
+            label=(
+                f"{self.path_name}-{self.path_ordering}: {self.name}" if goal
+                else f"{self.path_name}-{self.path_ordering}: {self.name}: <br>{self.description}{additional_info_text}"
+            ),
             picture_class=self.image,
             progression=self.level,
-            goal=self.max_level,
+            goal=goal or self.max_level,
             resource=self.dust_image
         )
 
