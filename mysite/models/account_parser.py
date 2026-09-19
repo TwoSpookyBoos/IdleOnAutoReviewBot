@@ -1079,7 +1079,6 @@ def _parse_w4(account):
     _parse_w4_lab(account)
     _parse_w4_rift(account)
     _parse_w4_breeding(account)
-    _parse_w4_tome(account)
 
 def _parse_w4_cooking(account):
     _parse_w4_cooking_tables(account)
@@ -1141,23 +1140,6 @@ def _parse_w4_cooking_ribbons(account):
             account.meals[meal_name]['RibbonTier'] = 0
             if raw_ribbons:
                 logger.exception(f"Could not retrieve Ribbon for {meal_name}")
-
-def _parse_w4_tome(account):
-    parsed_data = account.raw_data.get('parsedData', {})
-    save_has_score = 'totalTomePoints' in parsed_data
-    manual_score = account.manual_tome_score
-    account.tome = {
-        'Data Present': save_has_score or manual_score is not None,
-        'Total Points': floor(parsed_data['totalTomePoints']) if save_has_score else (manual_score or 0),
-        'Blue Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 196, False), False),
-        'Red Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 197, False), False),
-        'Bonuses': {
-            'DMG': {},
-            'Skill Efficiency': {},
-            'Drop Rarity': {},
-        },
-        'Tome Percent': 100
-    }
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))
