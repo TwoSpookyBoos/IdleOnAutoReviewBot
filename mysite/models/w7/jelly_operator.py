@@ -239,6 +239,7 @@ class JellyOperator:
         # the flat "1.01x" grows with Cell Mutilation
         cell_biology = self._by_index.get(10)
         if cell_biology and self._qty(17) >= 1:
+            multiplier = ValueToMulti(1 + self._qty(17))
             cell_biology.description = cell_biology.description.replace(
-                "1.01x", f"1.0{round(1 + self._qty(17))}x"
+              "1.01x", f"{multiplier:.2f}x"
             )
