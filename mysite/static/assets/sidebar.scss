@@ -208,8 +208,8 @@ form {
         }
     }
 
-    #steam-login-open, #google-login-open, #apple-login-open,
-    #cloud-sync, #sign-out, #steam-login-submit {
+    #steam-login-open, #google-login-open, #apple-login-open, #email-login-open,
+    #cloud-sync, #sign-out, #steam-login-submit, #email-login-submit {
         border: 2px solid transparent;
         border-radius: 10px;
         padding: 5px 10px;
@@ -248,6 +248,24 @@ form {
 
         &:hover, &:focus-visible {
             border-color: var(--accent-apple);
+        }
+    }
+
+    #email-login-open {
+        color: var(--fg-textbox);
+        background: var(--bg-textbox);
+
+        &:hover, &:focus-visible {
+            border-color: var(--fg-sidebar);
+        }
+    }
+
+    #email-login-submit {
+        color: var(--fg-submit);
+        background: var(--bg-submit);
+
+        &:hover, &:focus-visible {
+            border-color: var(--fg-sidebar);
         }
     }
 
@@ -302,7 +320,7 @@ form {
         display: none;
     }
 
-    #steam-login-wrapper, #device-login-wrapper {
+    #steam-login-wrapper, #device-login-wrapper, #email-login-wrapper {
         display: none;
 
         &.open {
@@ -320,7 +338,7 @@ form {
             background-color: hsla(0deg, 0, 0, 0.7);
         }
 
-        #steam-login-panel, #device-login-panel {
+        #steam-login-panel, #device-login-panel, #email-login-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
