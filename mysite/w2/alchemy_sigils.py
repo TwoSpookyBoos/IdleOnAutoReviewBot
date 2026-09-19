@@ -3,7 +3,7 @@ from collections import defaultdict
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
 from consts.idleon.lava_func import lava_func
 from consts.w1.stamps import stamp_maxes
-from consts.consts_w2 import max_sigil_level, max_vial_level, sigils_dict
+from consts.consts_w2 import max_sigil_level, sigils_dict
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
@@ -37,7 +37,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # "SigilBonusSpeed" in source. Last updated in v2.49 Dec 24 2025
     # Multi Group A = several
     peapod_values = sigils_dict['Pea Pod']['Values']
-    peapod_level = session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']
+    peapod_level = session_data.account.alchemy_p2w.sigils['Pea Pod'].level
     try:
         player_peapod_value = (
                 peapod_values[peapod_level]
@@ -49,7 +49,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
                 peapod_values[max_sigil_level]
                 * get_chilled_yarn_multi(session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
         )
-    willow_vial_value = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Value']
+    willow_vial = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']
+    willow_vial_value = willow_vial.value
 
     player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
     goal_sigil_stamp_value = lava_func('decay', stamp_maxes['Sigil Stamp'], 40, 150)
@@ -70,7 +71,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mgb_label = f"Summoning: {round_and_trim(mgb)}x"
 
     # Multi Group C = Tuttle Vial
-    tuttle_vial_multi = ValueToMulti(session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Value'])
+    tuttle_vial = session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']
+    tuttle_vial_multi = ValueToMulti(tuttle_vial.value)
     mgc = tuttle_vial_multi
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
@@ -127,10 +129,10 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     gsss_advice.completed = not practical_maxed
     speed_Advice[mga_label].append(gsss_advice)
     speed_Advice[mga_label].append(Advice(
-        label=f"Sigil: Level {session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level']}"
+        label=f"Sigil: Level {session_data.account.alchemy_p2w.sigils['Pea Pod'].level}"
               f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * get_max_chilled_yarn_multi()}%",
         picture_class='pea-pod',
-        progression=session_data.account.alchemy_p2w['Sigils']['Pea Pod']['Level'],
+        progression=session_data.account.alchemy_p2w.sigils['Pea Pod'].level,
         goal=max_sigil_level
     ))
     speed_Advice[mga_label].append(Advice(
@@ -141,24 +143,14 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
         goal=max_sailing_artifact_level
     ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Willow Sippy (Willow Logs): +{willow_vial_value:.3f}",
-        picture_class='willow-logs',
-        progression=session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']['Level'],
-        goal=max_vial_level
-    ))
+    speed_Advice[mga_label].append(willow_vial.get_advice(f"+{willow_vial_value:.3f}"))
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
     speed_Advice[mgb_label].append(summoning_bonus.get_bonus_advice())
 
     # Multi Group C
-    speed_Advice[mgc_label].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Turtle Tisane (Tuttle): {tuttle_vial_multi:.3f}x",
-        picture_class='tuttle',
-        progression=session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']['Level'],
-        goal=max_vial_level
-    ))
+    speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{tuttle_vial_multi:.3f}x"))
 
     # Multi Group D
     speed_Advice[mgd_label].append(Advice(
@@ -196,7 +188,7 @@ def getSigilsProgressionTiersAdviceGroup():
     true_max = true_max_tiers['Sigils']
     max_tier = true_max - optional_tiers
     tier_Sigils = 0
-    player_sigils = session_data.account.alchemy_p2w['Sigils']
+    player_sigils = session_data.account.alchemy_p2w.sigils
     player_sigil_assignments = defaultdict(lambda: 0)
     for char in session_data.account.safe_characters:
         if char.alchemy_job_group == 'Sigils':
@@ -216,7 +208,7 @@ def getSigilsProgressionTiersAdviceGroup():
                 )
         # Unlock new Sigils
         for requiredSigil, requiredLevel in requirements.get('Unlock', {}).items():
-            if player_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+            if player_sigils[requiredSigil].precharge_level < requiredLevel:
                 add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
                 has_chars_assigned = player_sigil_assignments[requiredSigil] > 0
                 info_text = ''
@@ -226,20 +218,20 @@ def getSigilsProgressionTiersAdviceGroup():
                     sigils_Advices['Sigils'][subgroup_label].append(Advice(
                         label=f"Unlock {requiredSigil}{info_text}",
                         picture_class=requiredSigil,
-                        progression=f"{player_sigils[requiredSigil]['PlayerHours']:.2f}",
-                        goal=player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]
+                        progression=f"{player_sigils[requiredSigil].player_hours:.2f}",
+                        goal=player_sigils[requiredSigil].requirements[requiredLevel - 1]
                     ))
 
         # Level Up unlocked Sigils
         for requiredSigil, requiredLevel in requirements.get('LevelUp', {}).items():
-            if player_sigils[requiredSigil]['PrechargeLevel'] < requiredLevel:
+            if player_sigils[requiredSigil].precharge_level < requiredLevel:
                 add_subgroup_if_available_slot(sigils_Advices['Sigils'], subgroup_label)
                 if subgroup_label in sigils_Advices['Sigils']:
-                    if player_sigils[requiredSigil]['PlayerHours'] < 100:
-                        prog = f"{player_sigils[requiredSigil]['PlayerHours']:.2f}"
+                    if player_sigils[requiredSigil].player_hours < 100:
+                        prog = f"{player_sigils[requiredSigil].player_hours:.2f}"
                     else:
-                        prog = f"{player_sigils[requiredSigil]['PlayerHours']:.0f}"
-                    sigil_level_ready = player_sigils[requiredSigil]['PlayerHours'] > player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]
+                        prog = f"{player_sigils[requiredSigil].player_hours:.0f}"
+                    sigil_level_ready = player_sigils[requiredSigil].player_hours > player_sigils[requiredSigil].requirements[requiredLevel - 1]
                     has_chars_assigned = player_sigil_assignments[requiredSigil] > 0
                     info_text = ''
                     if has_chars_assigned:
@@ -249,8 +241,8 @@ def getSigilsProgressionTiersAdviceGroup():
                     sigils_Advices['Sigils'][subgroup_label].append(Advice(
                         label=f"Level up {requiredSigil}{info_text}",
                         picture_class=f"{requiredSigil}-{requiredLevel}",
-                        progression=f"{0 if requiredLevel > player_sigils[requiredSigil]['PrechargeLevel'] + 1 else prog}",
-                        goal=f"{player_sigils[requiredSigil]['Requirements'][requiredLevel - 1]}"
+                        progression=f"{0 if requiredLevel > player_sigils[requiredSigil].precharge_level + 1 else prog}",
+                        goal=f"{player_sigils[requiredSigil].requirements[requiredLevel - 1]}"
                     ))
 
         if tier_Sigils == tier_number - 1 and subgroup_label not in sigils_Advices['Sigils']:

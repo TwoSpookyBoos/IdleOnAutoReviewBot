@@ -37,9 +37,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
 
     #Account-Wide
     account_sum = 0.0
-    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Value']
+    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].value
     account_sum += vialBonus
-    account_sum += session_data.account.alchemy_bubbles['Sample It']['BaseValue']
+    account_sum += session_data.account.alchemy_bubbles['Sample It'].base_value
     account_sum += 0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level
     account_sum += 0.5 * session_data.account.merits[2][4]['Level']
     account_sum += session_data.account.family_bonuses['Maestro'].value
@@ -58,17 +58,13 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     
     psr_Advices[account_subgroup].append(Advice(
         label=f"Snow Slurry {{{{ Vial|#vials }}}}: +{vialBonus:.2f}/30%",
-        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Image'],
-        progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)']['Level'],
+        picture_class=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].image,
+        progression=session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].level,
         goal=max_vial_level
     ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"Sample It bubble: "
-              f"+{session_data.account.alchemy_bubbles['Sample It']['BaseValue']:.2f}/10%",
-        picture_class='sample-it',
-        progression=session_data.account.alchemy_bubbles['Sample It']['Level'],
-        goal=200,
-        resource=session_data.account.alchemy_bubbles['Sample It']['Material']
+    psr_Advices[account_subgroup].append(session_data.account.alchemy_bubbles['Sample It'].get_advice(
+        f" bubble: +{session_data.account.alchemy_bubbles['Sample It'].base_value:.2f}/10%",
+        goal=200
     ))
     psr_Advices[account_subgroup].append(Advice(
         label=f"{{{{ Salt Lick|#salt-lick }}}} bonus: "

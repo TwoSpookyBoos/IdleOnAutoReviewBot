@@ -2,7 +2,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label, Emoji
 from consts.consts_general import inventory_slots_max_usable
 from consts.consts_item_data import ITEM_DATA
 from consts.w1.stamps import stamp_types, unavailable_stamps_list, stamps_exalt_recommendations
-from consts.consts_w2 import max_vial_level, max_sigil_level
+from consts.consts_w2 import max_sigil_level
 from consts.consts_w3 import max_overall_book_levels
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.w6.farming import max_farming_crops
@@ -187,20 +187,16 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         'Uncapped': []
     }
 
-    costReduction_Advices['Vials'].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Blue Flav (Platinum Ore): {session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value']:.2f}%",
-        picture_class='platinum-ore',
-        progression=session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Level'],
-        goal=max_vial_level
-    ))
-    costReduction_Advices['Vials'].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Venison Malt (Mongo Worm Slices): {session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']:.2f}%",
-        picture_class='mongo-worm-slices',
-        progression=session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Level'],
-        goal=max_vial_level
-    ))
+    blue_flav = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']
+    venison_malt = session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']
+    costReduction_Advices['Vials'].append(
+        blue_flav.get_advice(f"{blue_flav.value:.2f}%")
+    )
+    costReduction_Advices['Vials'].append(
+        venison_malt.get_advice(f"{venison_malt.value:.2f}%")
+    )
 
-    totalVialReduction = session_data.account.alchemy_vials['Blue Flav (Platinum Ore)']['Value'] + session_data.account.alchemy_vials['Venison Malt (Mongo Worm Slices)']['Value']
+    totalVialReduction = blue_flav.value + venison_malt.value
     costReduction_Advices['Vials'].append(Advice(
         label='Total Vial reduction (90% hardcap)',
         picture_class='vial-1',
@@ -210,8 +206,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     if (
-        session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['PrechargeLevel']
-        > session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['Level']
+        session_data.account.alchemy_p2w.sigils['Envelope Pile'].precharge_level
+        > session_data.account.alchemy_p2w.sigils['Envelope Pile'].level
     ):
         envelope_pile_precharged = ' (Precharged)'
     else:
@@ -219,7 +215,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices['Uncapped'].append(Advice(
         label=f"Sigil: Envelope Pile{envelope_pile_precharged}",
         picture_class='envelope-pile',
-        progression=session_data.account.alchemy_p2w['Sigils']['Envelope Pile']['PrechargeLevel'],
+        progression=session_data.account.alchemy_p2w.sigils['Envelope Pile'].precharge_level,
         goal=max_sigil_level
     ))
     costReduction_Advices['Uncapped'].append(

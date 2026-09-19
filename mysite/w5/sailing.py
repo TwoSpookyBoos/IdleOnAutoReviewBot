@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from consts.consts_w2 import max_vial_level, max_NBLB
+from consts.consts_w2 import max_NBLB
 
 from models.general.character import Character
 from models.general.cards import Card
@@ -196,9 +196,9 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
     purrmep_minor_bonus = 0
     if char_linked_to_purrmep is not None:
-        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p['BaseValue'] * purrmep_base_max_minor_bonus
+        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p.base_value * purrmep_base_max_minor_bonus
 
-    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble['BaseValue']) / 125
+    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble.base_value) / 125
     multi_group_a = round(multi_group_a, 2)
 
     # Multi Group B -- Goharut Blessing
@@ -254,7 +254,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             sailboat_stamp.total_value +
             (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
             popped_corn['Value'] +
-            oj_jooce_vial['Value'] +
+            oj_jooce_vial.value +
             has_skill_mastery * (total_sailing_level > 200) * 15 +
             has_msa_sailing * (total_worship_waves // 10) +
             c_shanti_minor['Unlocked'] * 20
@@ -287,11 +287,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             ),
             crawler.getAdvice(),
             kattlekruk.getAdvice(),
-            Advice(
-                label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Boaty Bubble: +{boaty_bubble['BaseValue']:.2f}/135%",
-                picture_class='boaty-bubble',
-                resource=boaty_bubble['Material'],
-                progression=boaty_bubble['Level'],
+            boaty_bubble.get_bonus_advice(
+                f"+{boaty_bubble.base_value:.2f}/135%",
                 goal=max_NBLB
             )
         ],
@@ -347,11 +344,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=popped_corn['Level'],
                 goal=max_meal_plate_level
             ),
-            Advice(
-                label=f"{{{{ Vial|#vials }}}}: Oj Jooce: +{oj_jooce_vial['Value']:.2f}%",
-                picture_class='orange-slice',
-                progression=oj_jooce_vial['Level'],
-                goal=max_vial_level
+            oj_jooce_vial.get_advice(
+                f"+{oj_jooce_vial.value:.2f}%", include_material=False
             ),
             Advice(
                 label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",

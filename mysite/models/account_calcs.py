@@ -389,68 +389,17 @@ def _calculate_w1_stamps(account):
 def _calculate_w2(account):
     _calculate_w2_vials(account)
     _calculate_w2_sigils(account)
-    _calculate_w2_cauldrons(account)
     _calculate_w2_ballot(account)
     _calculate_w2_islands_trash(account)
     _calculate_w2_killroy(account)
 
 def _calculate_w2_vials(account):
-    account.alchemy_vials_calcs = {
-        'mga': (
-            account.vault.upgrades['Vial Overtune'].total_value
-            + ((account.maxed_vials * .02) if account.rift['VialMastery'].unlocked else 0)
-        ),
-        'mgb': account.labBonuses['My 1st Chemistry Set']['Value']
-    }
-    account.alchemy_vials_calcs['Total Multi'] = account.alchemy_vials_calcs['mga'] * account.alchemy_vials_calcs['mgb']
-    for vial_name, vial_details in account.alchemy_vials.items():
-        try:
-            account.alchemy_vials[vial_name]['Value'] = account.alchemy_vials_calcs['Total Multi'] * account.alchemy_vials[vial_name]['BaseValue']
-        except:
-            logger.warning(f"Could not increase {vial_name} value")
-
-def _calculate_w2_cauldrons(account):
-    perCauldronBubblesUnlocked = [
-        account.alchemy_cauldrons['OrangeUnlocked'],
-        account.alchemy_cauldrons['GreenUnlocked'],
-        account.alchemy_cauldrons['PurpleUnlocked'],
-        account.alchemy_cauldrons['YellowUnlocked']
-    ]
-    bubbleUnlockListByWorld = [20, 0, 0, 0, 0, 0, 0, 0, 0]
-    for bubbleColorCount in perCauldronBubblesUnlocked:
-        worldCounter = 1
-        while bubbleColorCount >= 5 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
-            bubbleUnlockListByWorld[worldCounter] += 5
-            bubbleColorCount -= 5
-            worldCounter += 1
-        if bubbleColorCount > 0 and worldCounter <= len(bubbleUnlockListByWorld) - 1:
-            bubbleUnlockListByWorld[worldCounter] += bubbleColorCount
-    account.alchemy_cauldrons['BubblesPerWorld'] = bubbleUnlockListByWorld
-
-    account.alchemy_cauldrons['NextWorldMissingBubbles'] = min(
-        [cauldronValue // 5 for cauldronValue in perCauldronBubblesUnlocked],
-        default=0
-    ) + 1
+    account.alchemy_vials.calculate_values(account.vault, account.rift, account.labBonuses)
 
 def _calculate_w2_sigils(account):
-    for sigilName in account.alchemy_p2w["Sigils"]:
-        if account.alchemy_p2w["Sigils"][sigilName]["Level"] == 2:
-            if account.sneaking.emporium['Ionized Sigils'].obtained:
-                # If you have purchased Ionized Sigils, the numbers needed to Gold get subtracted from your hours already
-                red_Hours = account.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-            else:
-                # To precharge Red sigils before buying the upgreade, you need Gold + Red hours
-                red_Hours = account.alchemy_p2w["Sigils"][sigilName]["Requirements"][1] + account.alchemy_p2w["Sigils"][sigilName]["Requirements"][2]
-            if account.alchemy_p2w["Sigils"][sigilName]["PlayerHours"] >= red_Hours:
-                account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-            else:
-                account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = account.alchemy_p2w["Sigils"][sigilName]["Level"]
-        elif account.alchemy_p2w["Sigils"][sigilName]["Level"] == 3:
-            account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = 3
-        else:
-            account.alchemy_p2w["Sigils"][sigilName]["PrechargeLevel"] = account.alchemy_p2w["Sigils"][sigilName]["Level"]
-        # Before the +1, -1 would mean not unlocked, 0 would mean Blue tier, 1 would be Yellow tier, and 2 would mean Red tier
-        # After the +1, 0/1/2/3
+    account.alchemy_p2w.sigils.calculate_precharge_levels(
+        account.sneaking.emporium['Ionized Sigils'].obtained
+    )
 
 def _calculate_w2_ballot(account):
     # Dependency: legend talents
@@ -600,7 +549,7 @@ def _calculate_w3_collider_cost_reduction(account):
         + (account.construction_buildings['Atom Collider']['Level'] / 10)
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
         + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
-        + account.alchemy_bubbles['Atom Split']['BaseValue']
+        + account.alchemy_bubbles['Atom Split'].base_value
         + account.stamps['Atomic Stamp'].total_value
         + account.grimoire.upgrades['Death of the Atom Price'].total_value
         + account.compass.upgrades['Atomic Cost Crash'].total_value
@@ -1059,7 +1008,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         # Arctis minor link
         if account.divinity['AccountWideArctis'] or char.isArctisLinked():
             arctis_base = 15
-            bigp_value = account.alchemy_bubbles['Big P']['BaseValue']
+            bigp_value = account.alchemy_bubbles['Big P'].base_value
             div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
             final_arctis_result = ceil(arctis_base * bigp_value * div_minorlink_value)
             character_specific_bonuses += final_arctis_result

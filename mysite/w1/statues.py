@@ -74,16 +74,12 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     ))
 
     #Statue Value
-    deposit_Advices.append(Advice(
-        label=f"Startue Exp bubble: "
-              f"{session_data.account.alchemy_bubbles['Startue Exp']['BaseValue']:.3f}/20%+ minimum",
-        picture_class='startue-exp',
-        progression=session_data.account.alchemy_bubbles['Startue Exp']['Level'],
-        goal=240,
-        resource=session_data.account.alchemy_bubbles['Startue Exp']['Material']
+    deposit_Advices.append(session_data.account.alchemy_bubbles['Startue Exp'].get_advice(
+        f" bubble: {session_data.account.alchemy_bubbles['Startue Exp'].base_value:.3f}/20%+ minimum",
+        goal=240
     ))
 
-    vial_value = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)']['Value']
+    vial_value = session_data.account.alchemy_vials['Skinny 0 Cal (Snake Skin)'].value
 
     deposit_Advices.append(Advice(
         label=f"Total Skinny 0 Cal (Snake Skin) {{{{ Vial|#vials }}}} value (100% hardcap)",

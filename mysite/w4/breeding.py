@@ -45,7 +45,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 
-    if all([session_data.account.alchemy_vials[vial_name]['Level'] >= max_vial_level for vial_name in maxable_critter_vials_list]):
+    if all([session_data.account.alchemy_vials[vial_name].maxed for vial_name in maxable_critter_vials_list]):
         shinyExclusionsDict['Base Critter Per Trap'] = True
 
     shinyExclusionsDict['Faster Shiny Pet Lv Up Rate'] = session_data.account.sneaking.emporium["Science Crayon"].obtained
@@ -574,7 +574,7 @@ def getPetDamageAdviceGroup():
 
     # Multi Group B
     electrolyte_vial = session_data.account.alchemy_vials['Electrolyte (Condensed Zap)']
-    electrolyte_vial_bonus = electrolyte_vial['Value']
+    electrolyte_vial_bonus = electrolyte_vial.value
 
     barley_lost_achievement = session_data.account.achievements['Barley Lost']
     barley_lost_achievement_bonus = int(barley_lost_achievement['Complete']) * 5
@@ -640,7 +640,7 @@ def getPetDamageAdviceGroup():
             Advice(
                 label=f'{{{{ Vial|#vials }}}} - Electrolyte: +{electrolyte_vial_bonus:.2f}%',
                 picture_class='condensed-zap',
-                progression=electrolyte_vial['Level'],
+                progression=electrolyte_vial.level,
                 goal=max_vial_level
             ),
             Advice(

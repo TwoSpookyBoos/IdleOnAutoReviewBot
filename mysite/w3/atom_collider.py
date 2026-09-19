@@ -203,11 +203,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
     ))
 
-    cr_advice.append(Advice(
-        label=f"Atom Split bubble: {session_data.account.alchemy_bubbles['Atom Split']['BaseValue']:.2f}/14%",
-        picture_class='atom-split',
-        progression=session_data.account.alchemy_bubbles['Atom Split']['Level'],
-        resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
+    cr_advice.append(session_data.account.alchemy_bubbles['Atom Split'].get_advice(
+        f" bubble: {session_data.account.alchemy_bubbles['Atom Split'].base_value:.2f}/14%"
     ))
 
     cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
