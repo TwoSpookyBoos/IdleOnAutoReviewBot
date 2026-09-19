@@ -12,7 +12,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_guild_bonus_advice, get_gem_shop_purchase_advice
+from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
@@ -98,14 +98,8 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         capacity_Advices['Stamps'].append(session_data.account.stamps[cap_stamp.name].get_advice(link_to_section=False))
 
     # Account-Wide
-    capacity_Advices['Account Wide'].append(Advice(
-        label=f"{{{{ Bribe|#bribes }}}}: Bottomless Bags: "
-              f"{'5' if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else '0'}/5%",
-        picture_class='bottomless-bags',
-        progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
-        goal=1
-    ))
-    capacity_Advices['Account Wide'].append(get_guild_bonus_advice('Rucksack'))
+    capacity_Advices['Account Wide'].append(session_data.account.bribes['Bottomless Bags'].get_bonus_advice())
+    capacity_Advices['Account Wide'].append(session_data.account.guild_bonuses['Rucksack'].get_advice())
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
     capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
     gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']

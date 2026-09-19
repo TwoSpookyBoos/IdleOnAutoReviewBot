@@ -12,7 +12,6 @@ from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_guild_bonus_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
@@ -52,7 +51,8 @@ def getCardDropChanceAdviceGroup(groups):
     multi_group_b = round(multi_group_b, 2)
 
     # Multi Group A: all other bonuses
-    bribe_bonus = session_data.account.bribes['W2']['Five Aces in the Deck'] * 20
+    five_aces = session_data.account.bribes['Five Aces in the Deck']
+    bribe_bonus = five_aces.bonus
 
     pokaminni = session_data.account.star_signs['Pokaminni']
 
@@ -77,7 +77,7 @@ def getCardDropChanceAdviceGroup(groups):
     cards_galore_talent_bonus = lava_func(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
 
     guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
-    guild_bonus_bonus = guild_bonus['Value']
+    guild_bonus_bonus = guild_bonus.value
 
     max_obol_card_drop_chance = obols_max_bonuses_dict["PlayerCardDropChanceTrue"] + obols_max_bonuses_dict["FamilyCardDropChanceTrue"]
     max_8ball_keychain_card_drop_chance = 2 * 10
@@ -132,13 +132,7 @@ def getCardDropChanceAdviceGroup(groups):
         ],
         f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
         f'Multi Group A - account-wide': [
-            Advice(
-                label=f"{{{{ Bribe|#bribes }}}}: Five Aces in the Deck: "
-                      f"+{bribe_bonus}/20%",
-                picture_class='bottomless-bags',
-                progression=1 if session_data.account.bribes['W4']['Bottomless Bags'] >= 1 else 0,
-                goal=1
-            ),
+            five_aces.get_bonus_advice(),
             Advice(
                 label=f"{{{{ Vial|#vials }}}}: Anearful: +{anearful_vial['Value']:.2f}%",
                 picture_class='glublin-ear',
@@ -153,7 +147,7 @@ def getCardDropChanceAdviceGroup(groups):
                 progression=card_champ_bubble['Level'],
                 goal=3960
             ),
-            get_guild_bonus_advice('C2 Card Spotter')
+            guild_bonus.get_advice()
         ],
         f'Multi Group A - character-specific': [
             gigafrog.getAdvice(),
