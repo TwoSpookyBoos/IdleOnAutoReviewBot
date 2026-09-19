@@ -145,8 +145,20 @@ async function exchangeSteamUrl(pastedUrl) {
     }
 }
 
+function parseSteamUrl(pasted) {
+    const withScheme = /^https?:\/\//i.test(pasted) ? pasted : `https://${pasted}`;
+    try {
+        const url = new URL(withScheme);
+        const host = url.hostname.replace(/^www\./, "");
+        return host === "legendsofidleon.com" && url.pathname.startsWith("/steamsso") ? url : null;
+    } catch {
+        return null;
+    }
+}
+
 async function runSteamExchange(pastedUrl) {
-    if (!pastedUrl.startsWith(STEAM_REALM)) {
+    const url = parseSteamUrl(pastedUrl);
+    if (!url) {
         showFriendlyError(
             `That doesn't look like the right page. The URL should start with <code>${STEAM_REALM}</code> — ` +
             `make sure you copied it from the tab Steam redirected you to, not the Steam login page itself.`
@@ -154,21 +166,14 @@ async function runSteamExchange(pastedUrl) {
         return;
     }
 
-    let steamParams;
-    try {
-        const url = new URL(pastedUrl);
-        const claimedId = url.searchParams.get("openid.claimed_id") || "";
-        steamParams = {
-            claimedId: (claimedId.match(/\/(\d+)$/) || [])[1],
-            nonce: url.searchParams.get("openid.response_nonce"),
-            assocHandle: url.searchParams.get("openid.assoc_handle"),
-            sig: url.searchParams.get("openid.sig"),
-            signed: url.searchParams.get("openid.signed"),
-        };
-    } catch {
-        showFriendlyError("Couldn't read that as a URL — make sure the whole address bar contents got pasted in.");
-        return;
-    }
+    const claimedId = url.searchParams.get("openid.claimed_id") || "";
+    const steamParams = {
+        claimedId: (claimedId.match(/\/(\d+)$/) || [])[1],
+        nonce: url.searchParams.get("openid.response_nonce"),
+        assocHandle: url.searchParams.get("openid.assoc_handle"),
+        sig: url.searchParams.get("openid.sig"),
+        signed: url.searchParams.get("openid.signed"),
+    };
 
     let response, json;
     try {
