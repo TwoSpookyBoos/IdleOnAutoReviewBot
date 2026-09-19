@@ -1,5 +1,4 @@
 from models.general.session_data import session_data
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
@@ -18,29 +17,18 @@ def getProgressionTiersAdviceGroup():
     tier_BribesPurchased = 0
 
     player_bribes = session_data.account.bribes
-    sum_bribes_list = {}
-    for set_name, bribe_set in player_bribes.items():
-        set_sum = 0
-        for bribe in bribe_set.values():
-            set_sum += max(0, bribe)  # Int representing purchase status. -1 = unavailable, 0 = available but unpurchased, 1 = purchased
-        sum_bribes_list[set_name] = set_sum
 
     #Assess Tiers
     for tier, requirements in bribes_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier, max_tier)
         for set_name, specific_bribes in requirements.items():
-            if len(specific_bribes) > sum_bribes_list[set_name]:
+            if len(specific_bribes) > player_bribes.purchased_count(set_name):
                 add_subgroup_if_available_slot(bribe_AdviceDict, subgroup_label)
                 if subgroup_label in bribe_AdviceDict:
-                    for bribe in specific_bribes:
-                        if player_bribes[set_name][bribe] <= 0:
-                            bribe_AdviceDict[subgroup_label].append(Advice(
-                                label=f"{set_name}: {bribe}"
-                                      f"{'<br>Unavailable for Purchase!' if player_bribes[set_name][bribe] == -1 else ''}",
-                                picture_class=bribe,
-                                progression=0,
-                                goal=1
-                            ))
+                    for bribe_name in specific_bribes:
+                        bribe = player_bribes[bribe_name]
+                        if not bribe.purchased:
+                            bribe_AdviceDict[subgroup_label].append(bribe.get_advice())
         if subgroup_label not in bribe_AdviceDict and tier_BribesPurchased >= tier - 1:
             tier_BribesPurchased = tier
 

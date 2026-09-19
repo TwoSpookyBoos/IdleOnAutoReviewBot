@@ -120,7 +120,6 @@ def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
     account.highest_world_reached = _calculate_general_highest_world_reached(account)
-    _calculate_general_guild_bonuses(account)
     _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
@@ -218,16 +217,6 @@ def _calculate_general_highest_world_reached(account):
         return 2
     else:
         return 1
-
-def _calculate_general_guild_bonuses(account):
-    for bonus_name, bonus in account.guild_bonuses.items():
-        if '{' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('{', f"{bonus['Value']:.2f}")
-        if '}' in bonus['Description']:
-            bonus['Description'] = bonus['Description'].replace('}',f"{100 - bonus['Value']:.2f}")
-        if ']' in bonus['Description']:
-            if bonus_name == 'Bonus GP for small guilds':
-                bonus['Description'] = bonus['Description'].replace(']', f"{10 + bonus['Level']}")
 
 def _calculate_general_storage_slots(account):
     #Dependencies: none
@@ -493,7 +482,7 @@ def _calculate_w2_islands_trash(account):
     account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp'].delivered or account.stored_assets.get('StampB32').amount > 0
     account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp'].delivered or account.stored_assets.get('StampA38').amount > 0
     account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp'].delivered or account.stored_assets.get('StampA39').amount > 0
-    account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Trash Island']['Random Garbage'] >= 0
+    account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Random Garbage'].unlocked
 
     #Repeated purchases
     account.islands['Trash Island']['Garbage Purchases'] = safer_get(account.raw_optlacc_dict, 163, 0)
@@ -1015,13 +1004,13 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': 1
         },
         'ES Family': {
-            'Value': floor(account.family_bonuses["Elemental Sorcerer"]['Value']),
+            'Value': floor(account.family_bonuses['Elemental Sorcerer'].value),
             'Image': 'elemental-sorcerer-icon',
             'Label': f"ES Family Bonus: "
-                     f"+{floor(account.family_bonuses['Elemental Sorcerer']['Value'])}.<br>"
+                     f"+{floor(account.family_bonuses['Elemental Sorcerer'].value)}.<br>"
                      f"Next increase at Class Level: ",
-            'Progression': account.family_bonuses['Elemental Sorcerer']['Level'],
-            'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer']['Level'])
+            'Progression': account.family_bonuses['Elemental Sorcerer'].level,
+            'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer'].level)
         },
         'Equinox Symbols': {
             'Value': account.equinox.upgrades['Equinox Symbols'].level,
@@ -1099,8 +1088,8 @@ def _calculate_general_character_bonus_talent_levels(account):
                 )
                 family_guy_multi = ValueToMulti(family_guy_bonus)
                 final_fg_value = (
-                    floor(account.family_bonuses['Elemental Sorcerer']['Value'] * family_guy_multi)
-                    - floor(account.family_bonuses['Elemental Sorcerer']['Value'])
+                    floor(account.family_bonuses['Elemental Sorcerer'].value * family_guy_multi)
+                    - floor(account.family_bonuses['Elemental Sorcerer'].value)
                 )
                 char.max_talents_over_books += final_fg_value
                 char.setFamilyGuyBonus(final_fg_value)
