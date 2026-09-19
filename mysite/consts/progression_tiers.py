@@ -414,6 +414,101 @@ grimoire_progressionTiers = {
         'Stacks': {'Knockout': 78, 'Elimination': 78, 'Annihilation': 78},  #Target: Samurai Guardians
     },
 }
+compass_progressionTiers = {
+    0: {},
+    1: {
+        'Specific Upgrades': {'Pathfinder': 1, 'Worldfinder': 1},
+        'Abominations': 0,
+        'Medallions': 0,
+    },
+    2: {
+        'Specific Upgrades': {
+            'Elemental Path': 4, 'Fighter Path': 2, 'Survival Path': 3,
+            'Weapon Drop': 1, 'Elemental Vision': 1, 'Stone Drop': 1, 'Medallion Collection': 1,
+        },
+        'Abominations': 6,  #W1 cleared
+        'Medallions': 10,
+    },
+    3: {
+        'Specific Upgrades': {
+            'Elemental Path': 7, 'Fighter Path': 6, 'Survival Path': 8, 'Nomadic Path': 4,
+            'Ring Drop': 1, 'Exalted Stamps': 1,
+        },
+        'Abominations': 13,  #W2 cleared
+        'Medallions': 24,
+    },
+    4: {
+        'Specific Upgrades': {
+            'Elemental Path': 15, 'Fighter Path': 13, 'Survival Path': 13, 'Nomadic Path': 8,
+            'Magnesium Atom': 1,
+            'Exalted Stamps': 3, 'Medallion Magnate': 2,
+        },
+        'Abominations': 19,  #W3 cleared
+        'Medallions': 39,
+    },
+    5: {
+        'Specific Upgrades': {
+            'Elemental Path': 20, 'Fighter Path': 22, 'Survival Path': 18, 'Nomadic Path': 20,
+            'Exalted Stamps': 6, 'Medallion Magnate': 4,
+            'Moon of Damage': 120, 'Opa Opa Opa!': 8,
+        },
+        'Abominations': 25,  #W4 cleared
+        'Medallions': 50,
+    },
+    6: {
+        'Specific Upgrades': {
+            'Elemental Path': 24, 'Fighter Path': 31, 'Survival Path': 26, 'Nomadic Path': 38,
+            'Aluminium Atom': 1,
+            'Exalted Stamps': 8, 'Medallion Magnate': 6, 'Opa Opa Opa!': 16,
+            'Moon of Damage': 220, 'Novadust Discovery': 25,
+            'Atomic Cost Crash': 55, 'Atomic Potential': 12,
+        },
+        'Abominations': 28,
+        'Medallions': 57,
+    },
+    7: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 10, 'Medallion Magnate': 8, 'Opa Opa Opa!': 25, 'Atomic Potential': 20,
+            'Abomination Slayer XVII': 3, 'Abomination Slayer XXI': 9, 'Abomination Slayer XXVII': 90,
+            'Moon of Damage': 300, 'Novadust Discovery': 50, 'Talented Masters': 85,
+            'Atomic Cost Crash': 95, 'Monument Homage': 30,
+        },
+        'Abominations': 30,
+        'Medallions': 64,
+    },
+    8: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 13, 'Medallion Magnate': 10,
+            'Abomination Slayer XVII': 4, 'Abomination Slayer XXI': 10, 'Abomination Slayer XXVII': 95,
+            'Moon of Damage': 320, 'Novadust Discovery': 72, 'Talented Masters': 150,
+            'Atomic Cost Crash': 135, 'Monument Homage': 60,
+            'Moon of Sleep': 25, 'Circle Supremacy': 8, 'Mastery Destruction': 5,
+        },
+        'Abominations': 32,
+        'Medallions': 84,
+    },
+    9: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 15, 'Medallion Magnate': 12,
+            'Abomination Slayer XVII': 8, 'Abomination Slayer XXI': 18, 'Abomination Slayer XXVII': 240,
+            'Moon of Damage': 550, 'Novadust Discovery': 130, 'Talented Masters': 185,
+            'Atomic Cost Crash': 165, 'Monument Homage': 90,
+            'Moon of Sleep': 33, 'Circle Supremacy': 11, 'Mastery Destruction': 14,
+        },
+        'Abominations': 35,  #All abominations slain
+        'Medallions': 104,
+    },
+    10: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 16, 'Medallion Magnate': 14,
+            'Abomination Slayer XVII': 12, 'Abomination Slayer XXI': 24, 'Abomination Slayer XXVII': 320,
+            'Moon of Damage': 700, 'Novadust Discovery': 170, 'Talented Masters': 200,
+            'Atomic Cost Crash': 185, 'Monument Homage': 105,
+            'Moon of Sleep': 38, 'Circle Supremacy': 13, 'Mastery Destruction': 20,
+        },
+        'Medallions': 121,  #131 obtainable, less slack for event-gated ones
+    },
+}
 
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = {
@@ -2426,7 +2521,7 @@ true_max_tiers = {
 
     # Master Classes
     'The Grimoire': max(grimoire_progressionTiers.keys()),
-    'Compass': 0,
+    'Compass': max(compass_progressionTiers.keys()),
     'The Tesseract': max(tesseract_progressionTiers.keys()),
     'Royal Armory': 0,
 
