@@ -49,10 +49,21 @@
                 maxlength="10000000"></textarea>
             <input type="submit" value="submit">
         </div>
-        <button type="button" id="steam-login-open" hidden>Or log in with Steam</button>
-        <div id="steam-signed-in" hidden>
-            <button type="button" id="steam-sync">Sync Steam</button>
-            <button type="button" id="steam-sign-out">Sign out of Steam</button>
+        <div id="signin-buttons" hidden>
+            <span>Or log in with</span>
+            <button type="button" id="steam-login-open">
+                <img src="{{ "steam-logo.svg"|img }}" alt="" aria-hidden="true">Steam
+            </button>
+            <button type="button" id="google-login-open">
+                <img src="{{ "google-logo.svg"|img }}" alt="" aria-hidden="true">Google
+            </button>
+            <button type="button" id="apple-login-open">
+                <img src="{{ "apple-logo.svg"|img }}" alt="" aria-hidden="true">Apple
+            </button>
+        </div>
+        <div id="signed-in" hidden>
+            <button type="button" id="cloud-sync">Sync save</button>
+            <button type="button" id="sign-out">Sign out</button>
         </div>
         <div id="steam-login-wrapper">
             <div id="steam-login-panel">
@@ -63,6 +74,19 @@
                 </p>
                 <input type="text" id="steam-login-url" placeholder="paste the legendsofidleon.com/steamsso/... URL here">
                 <button type="button" id="steam-login-submit">Continue</button>
+            </div>
+        </div>
+        <div id="device-login-wrapper">
+            <div id="device-login-panel">
+                <p>
+                    <span id="device-login-provider"></span> opened in a new tab. Finish signing in
+                    there and this page will pick it up on its own.
+                </p>
+                <div id="device-login-code-box" hidden>
+                    <p>Enter this code when it asks for one:</p>
+                    <p id="device-login-code"></p>
+                </div>
+                <p>If the tab didn't open, go to <a id="device-login-link" target="_blank" rel="noopener noreferrer"></a></p>
             </div>
         </div>
     </form>
