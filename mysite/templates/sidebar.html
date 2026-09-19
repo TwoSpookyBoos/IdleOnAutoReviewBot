@@ -60,6 +60,7 @@
             <button type="button" id="apple-login-open">
                 <img src="{{ "apple-logo.svg"|img }}" alt="" aria-hidden="true">Apple
             </button>
+            <button type="button" id="email-login-open">Email</button>
         </div>
         <div id="signed-in" hidden>
             <button type="button" id="cloud-sync">Sync save</button>
@@ -74,6 +75,17 @@
                 </p>
                 <input type="text" id="steam-login-url" placeholder="paste the legendsofidleon.com/steamsso/... URL here">
                 <button type="button" id="steam-login-submit">Continue</button>
+            </div>
+        </div>
+        <div id="email-login-wrapper">
+            <div id="email-login-panel">
+                <p>
+                    Use the email and password you log into IdleOn with. They're sent
+                    straight to Lava's login service — this site never sees or stores them.
+                </p>
+                <input type="email" id="email-login-address" autocomplete="off" placeholder="email">
+                <input type="password" id="email-login-password" autocomplete="off" placeholder="password">
+                <button type="button" id="email-login-submit">Log in</button>
             </div>
         </div>
         <div id="device-login-wrapper">

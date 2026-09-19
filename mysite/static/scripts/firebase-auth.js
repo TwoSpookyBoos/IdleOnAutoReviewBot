@@ -9,7 +9,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
     getAuth, onAuthStateChanged, signInWithCustomToken, signInWithCredential,
-    GoogleAuthProvider, OAuthProvider, signOut
+    signInWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, signOut
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
@@ -95,8 +95,9 @@ function setLoginBusy(busy) {
 function closeAllPanels() {
     devicePoll++;
     setLoginBusy(false);
-    document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper")
+    document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper, #email-login-wrapper")
         .forEach((panel) => panel.classList.remove("open"));
+    document.querySelector("#email-login-password").value = "";
 }
 
 // give up if the panel was dismissed or the user closed the provider's tab,
@@ -382,6 +383,59 @@ async function runAppleLogin(popup) {
     );
 }
 
+/* ---------- email ---------- */
+
+const EMAIL_ERRORS = {
+    "auth/invalid-email": "That doesn't look like an email address.",
+    "auth/invalid-credential": "Email or password is incorrect.",
+    "auth/wrong-password": "Email or password is incorrect.",
+    "auth/user-not-found": "Email or password is incorrect.",
+    "auth/user-disabled": "That account has been disabled.",
+    "auth/too-many-requests": "Too many attempts. Wait a few minutes and try again.",
+    "auth/network-request-failed": "Couldn't reach the login service. Please check your connection and try again.",
+};
+
+function openEmailPanel() {
+    if (deviceLoginInFlight) return;
+    document.querySelector("#email-login-wrapper").classList.add("open");
+    document.querySelector("#email-login-address").focus();
+}
+
+let emailSigningIn = false;
+
+async function runEmailLogin() {
+    if (emailSigningIn) return;
+
+    const address = document.querySelector("#email-login-address").value.trim();
+    const passwordField = document.querySelector("#email-login-password");
+    const password = passwordField.value;
+    if (!address || !password) {
+        showFriendlyError("Enter the email and password you use for IdleOn.");
+        return;
+    }
+
+    emailSigningIn = true;
+    const submitButton = document.querySelector("#email-login-submit");
+    submitButton.disabled = true;
+
+    let uid;
+    try {
+        const result = await signInWithEmailAndPassword(auth, address, password);
+        uid = result.user.uid;
+    } catch (e) {
+        // code only: the error object carries what was typed
+        console.error("Email sign-in failed:", e?.code);
+        showFriendlyError(EMAIL_ERRORS[e?.code] ?? "Couldn't complete the login. Please try again.");
+        return;
+    } finally {
+        passwordField.value = "";
+        emailSigningIn = false;
+        submitButton.disabled = false;
+    }
+
+    syncSave(uid);
+}
+
 /* ---------- shared ---------- */
 
 async function finishCredentialLogin(credential) {
@@ -465,11 +519,12 @@ function initFirebaseLogin() {
         .addEventListener("click", () => startDeviceLogin("Google", runGoogleLogin));
     document.querySelector("#apple-login-open")
         .addEventListener("click", () => startDeviceLogin("Apple", runAppleLogin));
+    document.querySelector("#email-login-open").addEventListener("click", openEmailPanel);
 
     // Same close-on-backdrop-click idiom as the existing settings panel
     // (main.js: setupSwitchBox) — clicking the overlay itself closes it,
     // clicking the panel content inside it does not.
-    document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper").forEach((wrapper) => {
+    document.querySelectorAll("#steam-login-wrapper, #device-login-wrapper, #email-login-wrapper").forEach((wrapper) => {
         wrapper.addEventListener("click", (e) => {
             if (e.target !== e.currentTarget) return;
             closePopup(devicePopup);
@@ -485,6 +540,16 @@ function initFirebaseLogin() {
         if (e.key !== "Enter") return;
         e.preventDefault(); // don't let Enter submit the outer form with an empty #player
         exchangeSteamUrl(e.target.value.trim());
+    });
+
+    document.querySelector("#email-login-submit").addEventListener("click", runEmailLogin);
+
+    document.querySelectorAll("#email-login-address, #email-login-password").forEach((field) => {
+        field.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault(); // don't let Enter submit the outer form with an empty #player
+            runEmailLogin();
+        });
     });
 
     document.querySelector("#cloud-sync").addEventListener("click", () => {
