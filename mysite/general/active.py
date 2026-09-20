@@ -174,7 +174,7 @@ def getShortTermAdviceList() -> list[Advice]:
                 158: [4, 'weekly-boss-action-y'],  # Choccies
                 205: [5, 'weekly-boss-action-v'],  # Stiltmoles
             }.items():
-                enemy_map = session_data.account.enemy_worlds[details[0]].maps_dict[mapNumber]
+                enemy_map = session_data.account.death_note.worlds[details[0]].maps_dict[mapNumber]
                 goal = 1000000
                 try:
                     char_kills = enemy_map.portal_requirement - char.kill_dict.get(mapNumber, [0])[0]
@@ -234,15 +234,15 @@ def getLongTermAdviceList() -> list[Advice]:
         ))
     # Gmush Farming
     for killTarget in [1e6, 500e6, 1e9, 100e9, 500e9, 1e12]:
-        if killTarget > session_data.account.enemy_worlds[1].maps_dict[1].kill_count:
+        if killTarget > session_data.account.death_note.worlds[1].maps_dict[1].kill_count:
             goalString = notateNumber('Basic', killTarget, 0)
             longterm.append(Advice(
                 label=f"Kill more Gmush for Money multi"
                       f"<br>AFK or Candy kills with highest KPH character",
                 picture_class='fungi-finger-pocketer',
-                progression=notateNumber("Match", session_data.account.enemy_worlds[1].maps_dict[1].kill_count, 2, '', goalString),
+                progression=notateNumber("Match", session_data.account.death_note.worlds[1].maps_dict[1].kill_count, 2, '', goalString),
                 goal=notateNumber("Match", killTarget, 0, '', goalString),
-                resource=session_data.account.enemy_worlds[1].maps_dict[1].monster_image
+                resource=session_data.account.death_note.worlds[1].maps_dict[1].monster_image
             ))
             break  # Only show the next closest target
 
@@ -438,16 +438,16 @@ def getConsumablesAdviceList() -> list[Advice]:
             ))
     if session_data.account.highest_world_reached >= 6:
         for worldIndex in range(1, current_world):
-            if session_data.account.enemy_worlds[worldIndex].lowest_skull_value < dn_skull_value_list[-1]:
+            if session_data.account.death_note.worlds[worldIndex].lowest_skull_value < dn_skull_value_list[-1]:
                 consumables.append(Advice(
                     label=f"Candy World {worldIndex} kills for {{{{ Death Note|#death-note }}}}",
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))
-        if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.apocalypse_character_index is not None:
-            if session_data.account.all_characters[session_data.account.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
+        if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.death_note.apocalypse_character_index is not None:
+            if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
                 consumables.append(Advice(
-                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.apocalypse_character_index].character_name}",
+                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}",
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))

@@ -20,6 +20,7 @@ from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
 from models.w2.arcade import Arcade
 from models.w2.post_office import PostOffice
+from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
 from models.w3.library import Library
 from models.w3.salt_lick import SaltLick
@@ -158,6 +159,7 @@ class Account:
         self.library: Library = Library(self.raw_data)
         self.worship: Worship = Worship(self.raw_data)
         self.equinox: Equinox = Equinox(self.raw_data)
+        self.death_note: DeathNote = DeathNote(self.raw_data)
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)

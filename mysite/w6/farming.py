@@ -341,7 +341,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 #Bubbles
 
     evo_advices[alch].append(Advice(
-        label=f"Cropius Mapper: {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.enemy_maps[6]) - 1)} maps"
+        label=f"Cropius Mapper: {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.death_note.maps[6]) - 1)} maps"
               f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
         picture_class='cropius-mapper',
         progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],

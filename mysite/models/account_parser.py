@@ -26,9 +26,7 @@ from consts.consts_w2 import (
 )
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
-    collider_storage_limit_list, prayers_dict, dn_miniboss_skull_requirement_list, dn_miniboss_names, dn_skull_value_list,
-    apocable_map_index_dict,
-    apoc_amounts_list, apoc_names_list, getSkullNames, printer_all_indexes_being_printed, equipment_sets_dict
+    collider_storage_limit_list, prayers_dict, printer_all_indexes_being_printed, equipment_sets_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -41,7 +39,6 @@ from consts.consts_w5 import (
 )
 from models.general.models_consumables import Bag, StorageChest
 from models.general.assets import Assets
-from models.general.enemies import EnemyWorld, buildMaps
 from models.general.character import Character
 from models.general.cards import Card
 from models.w1.stamps import Stamp
@@ -239,7 +236,6 @@ def _parse_general(account):
     _parse_general_achievements(account)
     _parse_general_merits(account)
     _parse_general_printer(account)
-    _parse_general_maps(account)
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
@@ -481,10 +477,6 @@ def _parse_general_item_filter(account, raw_printer_xtra):
         for codeName in raw_printer_xtra[120:]:
             if codeName != 'Blank':
                 account.item_filter.append(codeName)
-
-def _parse_general_maps(account):
-    account.enemy_maps = buildMaps()
-    account.enemy_worlds = {}
 
 def _parse_general_event_points_shop(account):
     account.event_points_shop = {
@@ -1150,143 +1142,10 @@ def _parse_w3_buildings(account):
             }
 
 def _parse_w3_deathnote(account):
-    account.apocCharactersIndexList = [c.character_index for c in account.barbs]
-    account.bbCharactersIndexList = [c.character_index for c in account.bbs]
-    account.apocalypse_character_index = _parse_w3_apocalypse_BBIndex(account)
-    account.rift_meowed = _parse_w3_deathnote_rift_meowed(account)
-    _parse_w3_deathnote_kills(account)
-    _parse_w3_deathnote_miniboss_kills(account)
-
-def _parse_w3_apocalypse_BBIndex(account):
-    # Super CHOW/WOW progress is tracked on whichever Blood Berserker/Death Bringer
-    # is last in your character roster, not specifically your 2nd one.
-    if len(account.bbCharactersIndexList) >= 1:
-        return account.bbCharactersIndexList[-1]
-    else:
-        return None
-
-def _parse_w3_deathnote_rift_meowed(account):
-    if account.apocalypse_character_index is not None:
-        riftPresent = False
-        for remainingMap in account.all_characters[account.apocalypse_character_index].apoc_dict['MEOW']['Medium Extras']:
-            if remainingMap[0] == 'The Rift':
-                riftPresent = True
-                break
-        if not riftPresent:
-            account.rift_meowed = True
-    else:
-        riftPresent = True
-    return not riftPresent
-
-def _parse_w3_deathnote_kills(account):
-    # total up all kills across characters
-    for characterIndex, characterData in enumerate(account.all_characters):
-        characterKillsDict = characterData.kill_dict
-
-        # If the character's subclass is Barbarian, add their special Apoc-Only kills to EnemyMap's zow_dict
-        if characterIndex in account.apocCharactersIndexList:
-            for worldIndex in range(0, len(apocable_map_index_dict)):
-                for mapIndex in apocable_map_index_dict[worldIndex]:
-                    try:
-                        account.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, characterKillsDict.get(mapIndex, [0])[0])
-                    except:
-                        account.enemy_maps[worldIndex][mapIndex].updateZOWDict(characterIndex, 0)
-
-        # Regardless of class, for each map within each world, add this player's kills to EnemyMap's kill_count
-        for worldIndex in range(1, len(apocable_map_index_dict)):
-            for mapIndex in apocable_map_index_dict[worldIndex]:
-                try:
-                    account.enemy_maps[worldIndex][mapIndex].addRawKLA(characterKillsDict.get(mapIndex, [0])[0])
-                except:
-                    account.enemy_maps[worldIndex][mapIndex].addRawKLA(0)
-
-    # Have each EnemyMap calculate its Skull Value, Name, Count to Next, and Percent to Next now that all kills are totaled
-    # Barbarian Only in worldIndex 0
-    for worldIndex in range(1, len(account.enemy_maps)):
-        for enemy_map in account.enemy_maps[worldIndex]:
-            account.enemy_maps[worldIndex][enemy_map].generateDNSkull()
-        # After each Map in that World has its Skull Info, create the corresponding EnemyWorld
-        account.enemy_worlds[worldIndex] = EnemyWorld(worldIndex, account.enemy_maps[worldIndex])
-
-    # Barbarian Only in 0
-    for barbCharacterIndex in account.apocCharactersIndexList:
-        for worldIndex in range(0, len(account.enemy_maps)):
-            for enemy_map in account.enemy_maps[worldIndex]:
-                if barbCharacterIndex in account.enemy_maps[worldIndex][enemy_map].zow_dict:
-                    kill_count = account.enemy_maps[worldIndex][enemy_map].zow_dict[barbCharacterIndex]
-                    for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
-                        if (
-                            kill_count < apoc_amount  #normal trigger for not meeting the apocalypse amount
-                            or apoc_index+1 == len(apoc_amounts_list)  #secondary trigger to make sure every map shows up in Unfiltered
-                        ):
-                            # characterDict[barbCharacterIndex].apoc_dict[apoc_names_list[apoc_index]][enemyMaps[worldIndex][enemy_map].zow_rating].append([
-                            account.all_characters[barbCharacterIndex].addUnmetApoc(
-                                apoc_names_list[apoc_index],
-                                account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
-                                [
-                                    account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                    apoc_amount - kill_count if apoc_index < len(apoc_amounts_list) - 1 else kill_count,  # kills short of Apoc stack
-                                    # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
-                                    min(99, floor(round((kill_count / apoc_amount) * 100))),  # percent toward Apoc stack
-                                    account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                    worldIndex,
-                                    account.enemy_maps[worldIndex][enemy_map].monster_name
-                                ]
-                            )
-                        else:
-                            account.all_characters[barbCharacterIndex].increaseApocTotal(apoc_names_list[apoc_index])
-                else:
-                    # This condition can be hit when reviewing data from before a World release
-                    # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
-                    # If you get this right after a new world, check that the new world and map indexes are added in consts_w3.apocable_map_index_dict
-                    logger.debug(f"barbCharacterIndex {barbCharacterIndex} not in account.enemy_maps[{worldIndex}][{enemy_map}].zow_dict")
-                    for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
-                        account.all_characters[barbCharacterIndex].addUnmetApoc(
-                            apoc_names_list[apoc_index],
-                            account.enemy_maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
-                            [
-                                account.enemy_maps[worldIndex][enemy_map].map_name,  # map name
-                                apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
-                                0,  # percent toward zow/chow/meow
-                                account.enemy_maps[worldIndex][enemy_map].monster_image,  # monster image
-                                worldIndex,
-                                account.enemy_maps[worldIndex][enemy_map].monster_name
-                            ]
-                        )
-        # Sort them
-        account.all_characters[barbCharacterIndex].sortApocByProgression()
-
-def _parse_w3_deathnote_miniboss_kills(account):
-    account.miniboss_deathnote = {
-        'Minis': {}
-    }
-
-    raw_ninja = safe_loads(account.raw_data.get('Ninja', []))
-    raw_mb_kills = raw_ninja[105] if len(raw_ninja) >= 106 else [0] * len(dn_miniboss_names)
-    for mb_index, mb_name in enumerate(dn_miniboss_names):
-        try:
-            kill_count = safer_convert(raw_mb_kills[mb_index] if len(raw_mb_kills) >= mb_index+1 else 0, 0)
-        except:
-            logger.warning(f"Unable to parse Miniboss Deathnote killcount for {mb_name} in index {mb_index}: {raw_mb_kills}. Setting to the default of 0.")
-        skull_number = 0
-        kills_to_next_skull = 0
-        percent_to_next_skull = 0.0
-        for requirement_index, skull_requirement in enumerate(dn_miniboss_skull_requirement_list):
-            if kill_count >= skull_requirement:
-                skull_number = requirement_index
-            elif kill_count < skull_requirement and kills_to_next_skull == 0:
-                kills_to_next_skull = skull_requirement - kill_count
-                percent_to_next_skull = 100 * (kills_to_next_skull / skull_requirement)
-        skull_mk_value = dn_skull_value_list[skull_number] if len(dn_skull_value_list) >= skull_number else 0
-        skull_name = getSkullNames(skull_mk_value)
-        account.miniboss_deathnote['Minis'][mb_name] = {
-            'Kills': kill_count,
-            'Skull Name': skull_name,
-            'Skull MK': skull_mk_value,
-            'Progress Percent': percent_to_next_skull
-        }
-    # Sum up all the MK value of the individual skulls
-    account.miniboss_deathnote['TotalMK'] = sum(mb_values['Skull MK'] for mb_values in account.miniboss_deathnote['Minis'].values())
+    # Dependency: _parse_character_class_lists
+    account.death_note.calculate_apocalypse_characters(account.barbs, account.bbs)
+    account.death_note.calculate_kills(account.all_characters)
+    account.death_note.calculate_rift_meowed(account.all_characters)
 
 def _parse_w3_equinox(account):
     account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
