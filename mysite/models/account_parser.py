@@ -235,7 +235,6 @@ def _parse_general(account):
     _parse_general_gem_shop_optlacc(account)
     _parse_general_gem_shop_bundles(account)
     account.family_bonuses.calculate_levels(account.safe_characters)
-    _parse_dungeon_upgrades(account)
     _parse_general_achievements(account)
     _parse_general_merits(account)
     _parse_general_printer(account)
@@ -346,50 +345,6 @@ def _parse_general_quests(account):
                 status = 'Unaccepted'
             account.compiled_quests[questName][f'{status}Count'] += 1
             account.compiled_quests[questName][f'{status}Chars'].append(charIndex)
-
-def _parse_dungeon_upgrades(account):
-    account.dungeon_upgrades = {}
-    raw_dungeon_upgrades = safe_loads(account.raw_data.get('DungUpg', []))
-    try:
-        account.dungeon_upgrades["MaxWeapon"] = raw_dungeon_upgrades[3][0]
-    except Exception as e:
-        logger.warning(f"Dungeon Upgrade Max Weapon Parse error: {e}. Defaulting to 0")
-        account.dungeon_upgrades["MaxWeapon"] = 0
-
-    try:
-        account.dungeon_upgrades["MaxArmor"] = [
-            raw_dungeon_upgrades[3][4], raw_dungeon_upgrades[3][5], raw_dungeon_upgrades[3][6], raw_dungeon_upgrades[3][7]
-        ]
-    except Exception as e:
-        logger.warning(f"Dungeon Upgrade Max Armor Parse error: {e}. Defaulting to 0")
-        account.dungeon_upgrades["MaxArmor"] = [0, 0, 0, 0]
-
-    try:
-        account.dungeon_upgrades["MaxJewelry"] = [raw_dungeon_upgrades[3][8], raw_dungeon_upgrades[3][9]]
-    except Exception as e:
-        logger.warning(f"Dungeon Upgrade Max Jewelry Parse error: {e}. Defaulting to 0")
-        account.dungeon_upgrades["MaxJewelry"] = [0, 0]
-
-    try:
-        account.dungeon_upgrades["FlurboShop"] = raw_dungeon_upgrades[5]
-        account.dungeon_upgrades["CreditShop"] = raw_dungeon_upgrades[1]
-    except Exception as e:
-        logger.warning(f"Dungeon UFlurbo+Credit Shops Parse error: {e}. Defaulting to 0")
-        account.dungeon_upgrades["FlurboShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
-        account.dungeon_upgrades["CreditShop"] = [0, 0, 0, 0, 0, 0, 0, 0]
-
-    ##Blatantly stolen list from IE lol
-    # https://github.com/Sludging/idleon-efficiency/blob/74f83dd4c0b15f399ffb1f87bc2bc8c9bc9b924c/data/domain/dungeons.tsx#L16
-    dungeonLevelsList = [0, 4, 10, 18, 28, 40, 70, 110, 160, 230, 320, 470, 670, 940, 1310, 1760, 2400, 3250, 4000, 5000, 6160, 8000, 10000, 12500,
-                         15000, 18400, 21000, 25500, 30500, 36500, 45400, 52000, 61000, 72500, 85000, 110000, 125000, 145000, 170000, 200000, 250000,
-                         275000, 325000, 400000, 490000, 600000, 725000, 875000, 1000000, 1200000, 1500000, 3000000, 5000000, 10000000, 20000000,
-                         30000000, 40000000, 50000000, 60000000, 80000000, 100000000, 999999999, 999999999, 999999999, 999999999, 999999999, 1999999999,
-                         1999999999, 1999999999, 1999999999, 1999999999]
-    playerDungeonXP = safer_get(account.raw_optlacc_dict, 71, 0)
-    account.playerDungeonRank = 0
-    for xpRequirement in dungeonLevelsList:
-        if playerDungeonXP >= xpRequirement:
-            account.playerDungeonRank += 1
 
 def _parse_general_achievements(account):
     account.achievements = {}

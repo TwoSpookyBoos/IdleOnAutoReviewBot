@@ -152,7 +152,7 @@ def getSlabProgressionTierAdviceGroups():
                 ))
                 continue
             # If the item is a Dungeon Weapon AND the player has purchased all MaxWeapons
-            if item_codename in dungeon_weapons_list and account.dungeon_upgrades.get("MaxWeapon", 0) >= max_dungeon_weapons_available:
+            if item_codename in dungeon_weapons_list and account.dungeons.max_weapon >= max_dungeon_weapons_available:
                 slab_AdviceDict["Dungeon"]["Weapons"].append(Advice(
                     label=item_displayname,
                     picture_class=item_displayname,
@@ -165,7 +165,7 @@ def getSlabProgressionTierAdviceGroups():
                 try:
                     if (
                         item_codename in equipment_list
-                        and account.dungeon_upgrades['MaxArmor'][equipment_type_index] >= max_dungeon_armors_available[equipment_type_index]
+                        and account.dungeons.max_armor[equipment_type_index] >= max_dungeon_armors_available[equipment_type_index]
                     ):
                         slab_AdviceDict['Dungeon']['Armor'].append(Advice(
                             label=item_displayname,
@@ -181,7 +181,7 @@ def getSlabProgressionTierAdviceGroups():
                 try:
                     if (
                         item_codename in jewelry_list
-                        and account.dungeon_upgrades['MaxJewelry'][jewelry_type_index] >= max_dungeon_jewelry_available[jewelry_type_index]
+                        and account.dungeons.max_jewelry[jewelry_type_index] >= max_dungeon_jewelry_available[jewelry_type_index]
                     ):
                         slab_AdviceDict['Dungeon']['Armor'].append(Advice(
                             label=item_displayname,

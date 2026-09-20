@@ -20,11 +20,8 @@ def getAchievementExclusions() -> set[str]:
         exclusionsSet.add('Golden Fly')
 
     if (
-        session_data.account.playerDungeonRank >= 40 or
-        (
-            sum(session_data.account.dungeon_upgrades.get("CreditShop", [0])) == 100*8
-            and sum(session_data.account.dungeon_upgrades.get("FlurboShop", [0])) == 50*8
-        )
+        session_data.account.dungeons.rank >= 40
+        or (session_data.account.dungeons.credit_shop.maxed and session_data.account.dungeons.flurbo_shop.maxed)
     ):
         # This achievement is Steam only- This gives other platforms a way around the requirement
         exclusionsSet.add('Mutant Massacrer')
