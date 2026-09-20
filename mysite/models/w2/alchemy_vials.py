@@ -10,6 +10,8 @@ logger = get_logger(__name__)
 
 
 class Vial:
+    value: float  # set by calculate_value
+
     def __init__(self, index: int, info: dict, level: int):
         self.index: int = index
         self.name: str = getReadableVialNames(index)
@@ -18,7 +20,6 @@ class Vial:
         self.material: str = info['Material']
         self.image: str = getItemDisplayName(info['Material'])
         self.base_value: float = lava_func(info['funcType'], level, info['x1'], info['x2'])
-        self.value: float = self.base_value
 
     @property
     def maxed(self) -> bool:
@@ -27,10 +28,10 @@ class Vial:
     def calculate_value(self, total_multi: float):
         self.value = total_multi * self.base_value
 
-    def get_advice(self, additional_text: str = '', include_material: bool = True,
+    def get_advice(self, additional_text: str = '', full_name: bool = True,
                    picture_class: str = '', resource: str = '') -> Advice:
         return Advice(
-            label=f"{{{{ Vial|#vials }}}}: {self.name if include_material else self.short_name}: {additional_text}",
+            label=f"{{{{ Vial|#vials }}}}: {self.name if full_name else self.short_name}: {additional_text}",
             picture_class=picture_class or self.image,
             progression=self.level,
             goal=max_vial_level,

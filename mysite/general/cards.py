@@ -134,7 +134,7 @@ def getCardDropChanceAdviceGroup(groups):
         f'Multi Group A - account-wide': [
             five_aces.get_bonus_advice(),
             anearful_vial.get_advice(
-                f"+{anearful_vial.value:.2f}%", include_material=False
+                f"+{anearful_vial.value:.2f}%", full_name=False
             ),
             session_data.account.stamps['Card Stamp'].get_advice(),
             card_champ_bubble.get_bonus_advice(

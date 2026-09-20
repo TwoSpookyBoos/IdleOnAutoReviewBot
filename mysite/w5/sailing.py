@@ -345,7 +345,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 goal=max_meal_plate_level
             ),
             oj_jooce_vial.get_advice(
-                f"+{oj_jooce_vial.value:.2f}%", include_material=False
+                f"+{oj_jooce_vial.value:.2f}%", full_name=False
             ),
             Advice(
                 label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",

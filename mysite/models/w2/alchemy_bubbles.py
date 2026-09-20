@@ -49,6 +49,15 @@ class Bubble:
             resource=self.material
         )
 
+    def get_tier_advice(self, goal, additional_text: str = '') -> Advice:
+        return Advice(
+            label=f"Level {self.name} {additional_text}",
+            picture_class=self.name,
+            progression=self.level,
+            goal=goal,
+            resource=self.material
+        )
+
     def get_bonus_advice(self, additional_text: str = '', goal='') -> Advice:
         """Linked framing, for sections that only cite the bubble's bonus."""
         return Advice(

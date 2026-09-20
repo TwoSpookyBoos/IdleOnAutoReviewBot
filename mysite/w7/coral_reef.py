@@ -96,7 +96,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     scale_on_ice = session_data.account.alchemy_vials['Scale On Ice (Scaled Fragment)']
     scale_on_ice_value = scale_on_ice.value
     scale_on_ice_advice = scale_on_ice.get_advice(
-        f"+{scale_on_ice.value:.2f}% Daily Corals", include_material=False,
+        f"+{scale_on_ice.value:.2f}% Daily Corals", full_name=False,
         resource='scaled-fragment'
     )
     multi_group_d_advice.append(scale_on_ice_advice)

@@ -212,7 +212,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_calc['mgf'])}x"
     vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
     currency_advices[mgf_label] = [vial.get_advice(
-        f"+{round_and_trim(vial.value)}%", include_material=False,
+        f"+{round_and_trim(vial.value)}%", full_name=False,
         picture_class='spelunking-chapter-3'
     )]
 
