@@ -20,9 +20,7 @@ logger = get_logger(__name__)
 
 def try_exclude_DungeonTickets(exclusionLists):
     #Scenario 1: All Credit and Flurbo upgrades maxed
-    #8 Credit Upgrades with max Rank 100 in [1]
-    #8 Flurbo Upgrades with max Rank 50 in [5]
-    if sum(session_data.account.dungeon_upgrades.get('CreditShop', [0])) == 100*8 and sum(session_data.account.dungeon_upgrades.get('FlurboShop', [0])) == 50*8:
+    if session_data.account.dungeons.credit_shop.maxed and session_data.account.dungeons.flurbo_shop.maxed:
         if 'Weekly Dungeon Boosters' not in exclusionLists:
             for sublist in exclusionLists:
                 sublist.append('Weekly Dungeon Boosters')
@@ -33,7 +31,7 @@ def try_exclude_DungeonTickets(exclusionLists):
         playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
     except:
         playerBoosters = 0
-    if session_data.account.playerDungeonRank >= 40 or playerBoosters >= 100:
+    if session_data.account.dungeons.rank >= 40 or playerBoosters >= 100:
         if 'Weekly Dungeon Boosters' not in exclusionLists:
             for sublist in exclusionLists:
                 sublist.append('Weekly Dungeon Boosters')
