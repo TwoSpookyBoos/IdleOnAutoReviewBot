@@ -1,4 +1,5 @@
-from consts.consts_w3 import dreams_that_unlock_new_bonuses, library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
+from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
 from utils.logging import get_logger
 logger = get_logger(__name__)
@@ -413,6 +414,101 @@ grimoire_progressionTiers = {
         'Stacks': {'Knockout': 78, 'Elimination': 78, 'Annihilation': 78},  #Target: Samurai Guardians
     },
 }
+compass_progressionTiers = {
+    0: {},
+    1: {
+        'Specific Upgrades': {'Pathfinder': 1, 'Worldfinder': 1},
+        'Abominations': 0,
+        'Medallions': 0,
+    },
+    2: {
+        'Specific Upgrades': {
+            'Elemental Path': 4, 'Fighter Path': 2, 'Survival Path': 3,
+            'Weapon Drop': 1, 'Elemental Vision': 1, 'Stone Drop': 1, 'Medallion Collection': 1,
+        },
+        'Abominations': 6,  #W1 cleared
+        'Medallions': 10,
+    },
+    3: {
+        'Specific Upgrades': {
+            'Elemental Path': 7, 'Fighter Path': 6, 'Survival Path': 8, 'Nomadic Path': 4,
+            'Ring Drop': 1, 'Exalted Stamps': 1,
+        },
+        'Abominations': 13,  #W2 cleared
+        'Medallions': 24,
+    },
+    4: {
+        'Specific Upgrades': {
+            'Elemental Path': 15, 'Fighter Path': 13, 'Survival Path': 13, 'Nomadic Path': 8,
+            'Magnesium Atom': 1,
+            'Exalted Stamps': 3, 'Medallion Magnate': 2,
+        },
+        'Abominations': 19,  #W3 cleared
+        'Medallions': 39,
+    },
+    5: {
+        'Specific Upgrades': {
+            'Elemental Path': 20, 'Fighter Path': 22, 'Survival Path': 18, 'Nomadic Path': 20,
+            'Exalted Stamps': 6, 'Medallion Magnate': 4,
+            'Moon of Damage': 120, 'Opa Opa Opa!': 8,
+        },
+        'Abominations': 25,  #W4 cleared
+        'Medallions': 50,
+    },
+    6: {
+        'Specific Upgrades': {
+            'Elemental Path': 24, 'Fighter Path': 31, 'Survival Path': 26, 'Nomadic Path': 38,
+            'Aluminium Atom': 1,
+            'Exalted Stamps': 8, 'Medallion Magnate': 6, 'Opa Opa Opa!': 16,
+            'Moon of Damage': 220, 'Novadust Discovery': 25,
+            'Atomic Cost Crash': 55, 'Atomic Potential': 12,
+        },
+        'Abominations': 28,
+        'Medallions': 57,
+    },
+    7: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 10, 'Medallion Magnate': 8, 'Opa Opa Opa!': 25, 'Atomic Potential': 20,
+            'Abomination Slayer XVII': 3, 'Abomination Slayer XXI': 9, 'Abomination Slayer XXVII': 90,
+            'Moon of Damage': 300, 'Novadust Discovery': 50, 'Talented Masters': 85,
+            'Atomic Cost Crash': 95, 'Monument Homage': 30,
+        },
+        'Abominations': 30,
+        'Medallions': 64,
+    },
+    8: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 13, 'Medallion Magnate': 10,
+            'Abomination Slayer XVII': 4, 'Abomination Slayer XXI': 10, 'Abomination Slayer XXVII': 95,
+            'Moon of Damage': 320, 'Novadust Discovery': 72, 'Talented Masters': 150,
+            'Atomic Cost Crash': 135, 'Monument Homage': 60,
+            'Moon of Sleep': 25, 'Circle Supremacy': 8, 'Mastery Destruction': 5,
+        },
+        'Abominations': 32,
+        'Medallions': 84,
+    },
+    9: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 15, 'Medallion Magnate': 12,
+            'Abomination Slayer XVII': 8, 'Abomination Slayer XXI': 18, 'Abomination Slayer XXVII': 240,
+            'Moon of Damage': 550, 'Novadust Discovery': 130, 'Talented Masters': 185,
+            'Atomic Cost Crash': 165, 'Monument Homage': 90,
+            'Moon of Sleep': 33, 'Circle Supremacy': 11, 'Mastery Destruction': 14,
+        },
+        'Abominations': 35,  #All abominations slain
+        'Medallions': 104,
+    },
+    10: {
+        'Specific Upgrades': {
+            'Exalted Stamps': 16, 'Medallion Magnate': 14,
+            'Abomination Slayer XVII': 12, 'Abomination Slayer XXI': 24, 'Abomination Slayer XXVII': 320,
+            'Moon of Damage': 700, 'Novadust Discovery': 170, 'Talented Masters': 200,
+            'Atomic Cost Crash': 185, 'Monument Homage': 105,
+            'Moon of Sleep': 38, 'Circle Supremacy': 13, 'Mastery Destruction': 20,
+        },
+        'Medallions': 121,  #131 obtainable, less slack for event-gated ones
+    },
+}
 
 ###WORLD 1 PROGRESSION TIERS###
 bribes_progressionTiers = {
@@ -786,12 +882,63 @@ vault_progressionTiers = {
         ]  #This list generated from Acecow's alt account when they first entered World 6 and may need to be adjusted in the future
     },
     3: {
+        'Max Index': 61,  #Mastery III section handled by tiers 4+
         'Exclude': [
-            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too Expensive
+            'Bullseye', 'Wicked Smart', 'Kitchen Dream-mare', 'Teh TOM', 'Cooking Knowledge',  #Too expensive to max, tiered by level in 4+
             'Beeg Forge',  #Having too large of Ore capacity can be annoying. Not maxing this is one way player's have chosen to keep capacity down
             'Card Retirement'  #Passive cards cannot be doubled. I don't care, but some people like the option
-        ]  #You're probably going to regret doing an exclude after Vault3 gets added, RIP
-    }
+        ]
+    },
+    #Tiers 4-7: Mastery III section + tier 3's too-expensive excludes.
+    #Budget per tier = Raw Damage at lv 50/100/150/200, everything else cost-matched to that
+    4: {
+        'Levels': {
+            'Wicked Smart': 278, 'Bullseye': 359, 'Kitchen Dream-mare': 215, 'Teh TOM': 170, 'Cooking Knowledge': 273,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 176, 'Skulltrick': 100, 'Go Go Bubba the Seal': 149,
+            'Ocean Knowledge': 100, 'Sailing Loot': 132, 'Mega Bits': 144, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 93, 'Divine Knowledge': 87, 'Smarter Villagers': 24,
+            'Super Slab': 10, 'Better Captains': 82, 'Big Blessings': 20, 'Farming Knowledge': 81,
+            'Croppius Evolvius': 105, 'Properly Funded Research': 7, 'Raw Damage': 50, 'Finders Keepers': 91,
+            'Sneaking Knowledge': 66, 'White Essentials': 85, 'Summoning Knowledge': 54, 'Bigger Better Beans': 15,
+            '24 Karat Foods': 8, 'Rest of the Essentials': 39, 'Topheavy Charms': 16, 'Vault Mastery III': 4,
+        }
+    },
+    5: {
+        'Levels': {
+            'Wicked Smart': 387, 'Bullseye': 500, 'Kitchen Dream-mare': 327, 'Teh TOM': 261, 'Cooking Knowledge': 428,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 247,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 246, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 41,
+            'Super Slab': 18, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 203, 'Properly Funded Research': 10, 'Raw Damage': 100, 'Finders Keepers': 193,
+            'Sneaking Knowledge': 100, 'White Essentials': 196, 'Summoning Knowledge': 100, 'Bigger Better Beans': 37,
+            '24 Karat Foods': 22, 'Rest of the Essentials': 150, 'Topheavy Charms': 93, 'Vault Mastery III': 21,
+        }
+    },
+    6: {
+        'Levels': {
+            'Wicked Smart': 497, 'Bullseye': 500, 'Kitchen Dream-mare': 438, 'Teh TOM': 352, 'Cooking Knowledge': 500,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 345,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 300, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 50,
+            'Super Slab': 20, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 250, 'Properly Funded Research': 10, 'Raw Damage': 150, 'Finders Keepers': 250,
+            'Sneaking Knowledge': 100, 'White Essentials': 200, 'Summoning Knowledge': 100, 'Bigger Better Beans': 50,
+            '24 Karat Foods': 37, 'Rest of the Essentials': 200, 'Topheavy Charms': 100, 'Vault Mastery III': 38,
+        }
+    },
+    7: {
+        'Levels': {
+            'Wicked Smart': 500, 'Bullseye': 500, 'Kitchen Dream-mare': 500, 'Teh TOM': 443, 'Cooking Knowledge': 500,
+            'Speedy Sailing': 100, 'Artifact Find Chance': 250, 'Skulltrick': 100, 'Go Go Bubba the Seal': 443,
+            'Ocean Knowledge': 100, 'Sailing Loot': 200, 'Mega Bits': 300, 'Gamer Knowledge': 100,
+            'Collection Cashout': 20, 'Divinity Points': 100, 'Divine Knowledge': 100, 'Smarter Villagers': 50,
+            'Super Slab': 20, 'Better Captains': 100, 'Big Blessings': 30, 'Farming Knowledge': 100,
+            'Croppius Evolvius': 250, 'Properly Funded Research': 10, 'Raw Damage': 200, 'Finders Keepers': 250,
+            'Sneaking Knowledge': 100, 'White Essentials': 200, 'Summoning Knowledge': 100, 'Bigger Better Beans': 50,
+            '24 Karat Foods': 50, 'Rest of the Essentials': 200, 'Topheavy Charms': 100, 'Vault Mastery III': 50,
+        }
+    },
 }
 
 ###WORLD 2 PROGRESSION TIERS###
@@ -1459,7 +1606,7 @@ prayers_progressionTiers = {
 equinox_progressionTiers = {
     'Recommended': [
         'Equinox Symbols', 'Equinox Resources', 'Metal Detector', 'Slow Roast Wiz',
-        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights'
+        'Liquidvestment', 'Faux Jewels', 'Matching Scims', 'Equinox Dreams', 'Voter Rights', 'Nonstop Studies'
     ],
     'Optional': [
         'Shades of K', 'Laboratory Fuse', 'Food Lust'
@@ -2374,7 +2521,7 @@ true_max_tiers = {
 
     # Master Classes
     'The Grimoire': max(grimoire_progressionTiers.keys()),
-    'Compass': 0,
+    'Compass': max(compass_progressionTiers.keys()),
     'The Tesseract': max(tesseract_progressionTiers.keys()),
     'Royal Armory': 0,
 
@@ -2403,7 +2550,7 @@ true_max_tiers = {
     'Atom Collider': max(atoms_progressionTiers.keys()),
     'Buildings': 0,
     'Death Note': deathNote_progressionTiers[-1][0],
-    'Equinox': len(dreams_that_unlock_new_bonuses) + 1,
+    'Equinox': len(equinox_unlock_dreams) + 1,
     'Library': len(library_subgroup_tiers),
     'Library Characters': len(old_library_subgroup_tiers),
     'Refinery': 1,  #Pass or Fail

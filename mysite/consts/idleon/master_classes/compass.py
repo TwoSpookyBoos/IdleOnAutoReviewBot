@@ -10,7 +10,7 @@ compass_path_names = {0: 'Elemental', 1: 'Fighter', 2: 'Survival', 3: 'Nomadic',
 # `Titans = function`. Last updated in v2.528.0
 compass_titans = ["Mushgloom 100 1 3 600 1 1 1 1 0 10 9 17".split(" "),"Bean_of_Eternal_Boredom 100 14 3 520 1 1 1 1 0 15 13 0".split(" ",),"Caroot_the_Sorrowful 100 24 1 600 1 1 1 1 0 20 25 11".split(" ",),"Croakmaw 100 28 2 420 1 1 1 1 0 25 31 1".split(" "),"Oakguard_the_Large 100 30 3 480 1 1 1 1 0 10 82 54".split(" "),"Coilfur_the_Malformed 100 15 7 520 1 1 1 1 0 500 10 7".split(" ",),"Puttputt_the_Ashen 100 51 0 200 1 1 1 1 0 75 22 0".split(" "),"The_Baker 100 53 6 925 1 1 1 1 0 100 35 47".split(" "),"Dunecastle_Duo 100 58 3 500 1 1 1 1 0 130 161 72".split(" "),"Dreadlord_Pringle 100 60 3 1050 1 1 1 1 0 160 25 50".split(" ",),"Astralis_the_Forsaken 100 63 5 450 1 1 1 1 0 200 47 10".split(" ",),"The_Trapped_Dozen 100 61 0 770 1 1 1 1 0 2500 38 2".split(" "),"Grand_Old_Snelbie 100 65 4 690 1 1 1 1 0 350 68 26".split(" "),"Frostmire_the_Jagged 100 103 2 175 1 1 1 1 0 400 31 40".split(" ",),"Baloqui_the_Melted 100 105 7 200 1 1 1 1 0 600 28 61".split(" ",),"The_Snowmatron 100 107 3 1135 1 1 1 1 0 800 84 29".split(" "),"Bobo_the_Fractured 100 110 4 676 1 1 1 1 0 900 42 66".split(" ",),"Overlord_Oculon 100 113 4 480 1 1 1 1 0 1050 47 34".split(" "),"Bloodbane_the_Conglomerate 100 117 0 630 1 1 1 1 0 1200 64 24".split(" ",),"Blightcap 100 151 3 320 1 1 1 1 0 1500 30 33".split(" "),"Doughdough_the_Tired 100 153 1 380 1 1 1 1 0 2000 19 0".split(" ",),"Purple_Flurp 100.0 155 10 400 1 1 1 1 0 3000 38 24".split(" "),"Goregloop 100.0 157 5 560 1 1 1 1 0 4500 29 21".split(" "),"The_Watchful_Spire 100.0 159 11 1346 1 1 1 1 0 7000 20 11".split(" ",),"The_Unblinking_Eye 100.0 163 7 427 1 1 1 1 0 10000 89 7".split(" ",),"Cheezer_Deluxe 100 202 2 322 1 1 1 1 0 12000 122 5".split(" "),"Bignose_the_Fallen 100 205 9 720 1 1 1 1 0 14000 76 4".split(" ",),"Moltix_and_Cragg 100 207 7 210 1 1 1 1 0 17000 31 15".split(" ",),"Lyvii_the_Broken 100 209 4 400 1 1 1 1 0 20000 39 1".split(" ",),"Ouroboros_the_Consumer 100 213 7 222 1 1 1 1 0 25000 84 5".split(" ",),"Gigadew_of_the_Valley 100 251 2 554 1 1 1 1 0 35000 41 35".split(" ",),"Splinteroot 100 255 4 1018 1 1 1 1 0 50000 48 19".split(" "),"Glanceron_the_Illuminator 100 257 4 1115 1 1 1 1 0 100000 9 26".split(" ",),"Wisperius_the_Forgotten 100 260 4 300 1 1 1 1 0 200000 70 0".split(" ",),"Pyol_the_Estranged 100 262 15 740 1 1 1 1 0 500000 57 7".split(" ",),]
 compass_path_ordering = {
-    'Default': [0, 170],
+    'Default': [0, 170, 171, 172],
     'Elemental': [1] + [int(v) for v in RANDOlist[105]],
     'Fighter': [13] + [int(v) for v in RANDOlist[106]],
     'Survival': [27] + [int(v) for v in RANDOlist[107]],
@@ -18,6 +18,7 @@ compass_path_ordering = {
     'Abomination': [int(v) for v in RANDOlist[109]],
 }
 compass_medallions = RANDOlist[112]
+compass_path_tab_images = {'Default': 'compass', 'Abomination': 'slayer-abominator'}
 
 
 # Account-independent per-upgrade data, derived once from compass_upgrades_list/compass_path_ordering above.

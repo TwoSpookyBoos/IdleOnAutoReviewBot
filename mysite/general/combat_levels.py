@@ -79,15 +79,15 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
         advices=advices
     )
 
-    if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and not session_data.account.equinox_dreams[3]:
+    if len(parsedCombatLevels['equinoxDict']['under100']) > 0 and not session_data.account.equinox.dreams[3].completed:
         advice_PersonalLevels = "Level the following characters to 100+ to complete Equinox Dream 3"
         goal = 100
 
-    elif len(parsedCombatLevels['equinoxDict']['under250']) > 0 and not session_data.account.equinox_dreams[11]:
+    elif len(parsedCombatLevels['equinoxDict']['under250']) > 0 and not session_data.account.equinox.dreams[11].completed:
         advice_PersonalLevels = "Level the following characters to 250+ to complete Equinox Dream 11 and unlock their Personal Sparkle Obol slot"
         goal = 250
 
-    elif len(parsedCombatLevels['equinoxDict']['under500']) > 0 and not session_data.account.equinox_dreams[23]:
+    elif len(parsedCombatLevels['equinoxDict']['under500']) > 0 and not session_data.account.equinox.dreams[23].completed:
         advice_PersonalLevels = "Level the following characters to 500+ to complete Equinox Dream 23"
         goal = 500
 
@@ -102,7 +102,7 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
             picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
             progression=level,
             goal=goal)
-        for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items() if session_data.account.equinox_unlocked
+        for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items() if session_data.account.equinox.unlocked
     ]
 
     lvlup_group = AdviceGroup(

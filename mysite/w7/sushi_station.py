@@ -40,7 +40,7 @@ def get_section():
             name="Sushi Station",
             tier="Not Yet Evaluated",
             header="Come back after unlocking Sushi Station in W7!",
-            picture="data/Sushi62.png",
+            picture="data/Sushi63.png",
             unreached=True,
         )
 
@@ -49,7 +49,7 @@ def get_section():
         name="Sushi Station",
         tier="",
         header="Sushi Station",
-        picture="data/Sushi62.png",
+        picture="data/Sushi63.png",
         groups=groups,
         informational=True,
         unrated=True,

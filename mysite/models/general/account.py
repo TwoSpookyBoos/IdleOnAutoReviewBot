@@ -7,15 +7,20 @@ from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.colo_scores import ColoScores
 from models.general.companions import Companions
+from models.general.family_bonuses import FamilyBonuses
 from models.general.greenstacks import GreenStacks
+from models.general.guild_bonuses import GuildBonuses
 from models.general.npc_tokens import NpcTokens
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
+from models.w1.bribes import Bribes
 from models.w1.darts import Darts
+from models.w1.forge import ForgeUpgrades
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
 from models.w2.arcade import Arcade
 from models.w2.post_office import PostOffice
+from models.w3.equinox import Equinox
 from models.w3.library import Library
 from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
@@ -41,6 +46,7 @@ from models.w7.advice_fish import AdviceFish
 from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
+from models.w7.jelly_operator import JellyOperator
 from models.w7.legend_talents import LegendTalents
 from models.w7.zenith_market import ZenithMarket
 from models.caverns import Caverns
@@ -107,6 +113,8 @@ class Account:
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         self.colo_scores: ColoScores = ColoScores(self.raw_data)
         self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)
+        self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
+        self.family_bonuses: FamilyBonuses = FamilyBonuses()
         #Class lists
         self.beginners = []
         self.jmans = []
@@ -138,6 +146,8 @@ class Account:
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
         self.vault: Vault = Vault(self.raw_data)
+        self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
+        self.bribes: Bribes = Bribes(self.raw_data)
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
@@ -147,6 +157,7 @@ class Account:
         self.saltlick: SaltLick = SaltLick(self.raw_data)
         self.library: Library = Library(self.raw_data)
         self.worship: Worship = Worship(self.raw_data)
+        self.equinox: Equinox = Equinox(self.raw_data)
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)
@@ -197,6 +208,7 @@ class Account:
         self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
+        self.jelly_operator = JellyOperator(self.raw_data)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

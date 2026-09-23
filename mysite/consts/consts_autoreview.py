@@ -109,6 +109,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Manually enter Tome score",
+        "name": "manual_tome",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Handedness",
         "name": "handedness",
         "true": "L",
@@ -117,6 +124,7 @@ switches = [
     },
     # {"label": "Legacy style", "name": "legacy", "true": "", "false": ""},
 ]
+max_manual_tome_score = 100000
 
 ###AutoReview consts###
 class AdviceType(Enum):
@@ -181,7 +189,8 @@ versions_patches = {
     306: "v2.46 Bubba Clicker",
     # TODO: some are missing here
     380: "v2.528.0 Royal Guardian",
-    385: "v2.530.0 W7 Tasks"
+    385: "v2.530.0 W7 Tasks",
+    389: "v2.531.0 Jelly Operator"
 }
 lowest_accepted_version = 297  # 297.x was the W7 release patch
 ignorable_labels: tuple = ('Weekly Ballot',)

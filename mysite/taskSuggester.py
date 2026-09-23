@@ -1,3 +1,4 @@
+import functools
 from pathlib import Path
 
 import yaml
@@ -38,13 +39,20 @@ from w7 import (
     the_button,
     dancing_coral,
     coral_kid,
+    jelly_operator,
 )
 
 logger = get_logger(__name__)
 
 
+@functools.lru_cache(maxsize=1)
+def _load_banned_accounts(mtime):  # mtime is the cache key
+    with open(Path(app.static_folder) / "banned.yaml") as f:
+        return yaml.load(f, yaml.Loader)
+
+
 def maybe_ban(username, runType):
-    bannedAccountsList = yaml.load(open(Path(app.static_folder) / "banned.yaml"), yaml.Loader)
+    bannedAccountsList = _load_banned_accounts((Path(app.static_folder) / "banned.yaml").stat().st_mtime)
 
     if username in bannedAccountsList:
         if runType == "consoleTest":
@@ -185,6 +193,7 @@ def main(inputData, source_string, runType="web"):
             dancing_coral.get_dancing_coral_section(),
             coral_kid.get_coral_kid_section(),
             clam_work.get_section(),
+            jelly_operator.get_section(),
         ]
     ]
 

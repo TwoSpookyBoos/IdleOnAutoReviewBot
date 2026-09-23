@@ -1,3 +1,6 @@
+DATASET_ATTRS = ("optional", "completed", "informational", "unrated", "unreached", "overwhelming")
+
+
 class AdviceBase:
     """
     Args:
@@ -34,4 +37,4 @@ class AdviceBase:
 
     @property
     def dataset(self) -> list:
-        return [[attr, getattr(self, attr, False)] for attr in ["optional", "completed", "informational", "unrated", "unreached", "overwhelming"]]
+        return [[attr, getattr(self, attr, False)] for attr in DATASET_ATTRS]

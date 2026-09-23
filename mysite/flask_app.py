@@ -1,11 +1,14 @@
 import json
+import re
 import traceback
 import uuid
+import zlib
 from datetime import datetime
 from pathlib import Path
 
 import requests
 from flask import g, render_template, request, redirect, Response, send_from_directory
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from utils.logging import (
     ResponseCache,
@@ -53,8 +56,33 @@ from utils.text_formatting import (
 logger = get_logger(__name__)
 
 
+MAX_REQUEST_BYTES = app.config["MAX_CONTENT_LENGTH"]
+
+
+def get_request_json() -> dict:
+    # parsed once per request; the browser gzips large bodies
+    if "request_json" not in g:
+        try:
+            body = request.get_data()
+        except RequestEntityTooLarge:
+            raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
+        if body[:2] == b"\x1f\x8b":
+            decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS | 16)
+            try:
+                body = decompressor.decompress(body, MAX_REQUEST_BYTES)
+            except zlib.error:
+                raise JSONDecodeError("")
+            if decompressor.unconsumed_tail:
+                raise DataTooLong("Submitted data is too long. Are you sure you're pasting IdleOn save data?", "")
+        try:
+            g.request_json = json.loads(body)
+        except json.JSONDecodeError:
+            raise JSONDecodeError("")
+    return g.request_json
+
+
 def get_user_input() -> str:
-    return (request.args.get("player") or json.loads(request.data).get("player", "")).strip()
+    return (request.args.get("player") or get_request_json().get("player", "")).strip()
 
 
 def parse_user_input():
@@ -86,7 +114,7 @@ def parse_user_input():
 
 def store_user_preferences():
     if request.method == "POST":
-        args = json.loads(request.data)
+        args = get_request_json()
     elif request.method == "GET":
         args = request.args.to_dict()
     else:
@@ -94,6 +122,15 @@ def store_user_preferences():
 
     for switch in consts.consts_autoreview.switches:
         setattr(g, switch["name"], args.get(switch["name"], False) in ["on", "True", "true", True])
+
+    g.tome_score = parse_tome_score(args.get("tome_score"))
+
+
+def parse_tome_score(value) -> int | None:
+    text = str(value).strip() if value is not None else ""
+    if not re.fullmatch(r"[0-9]{1,6}", text):
+        return None
+    return min(int(text), consts.consts_autoreview.max_manual_tome_score)
 
 
 def get_user_preferences():
@@ -115,13 +152,12 @@ def results() -> Response | str:
     is_beta: bool = app.config["DOMAIN_BETA"] in request.host
     g.request_id = uuid.uuid4().hex[:8]
 
-    store_user_preferences()
-
     live_link = "live"
     beta_link = "beta"
 
     name_or_data: str | dict = ""
     try:
+        store_user_preferences()
         name_or_data, source_string = parse_user_input()
 
         if name_or_data:
@@ -228,6 +264,38 @@ def index() -> Response:
         switches=switches(),
     )
     return Response(page, headers={"Cache-Control": "must-revalidate"})
+
+
+# Apple sign-in only. Lava's tspa/capsc send no CORS headers, so the browser
+# can't call them directly. Fixed targets, never a caller-supplied URL.
+APPLE_AUTH_ENDPOINTS = {
+    "start": "https://us-central1-idlemmo.cloudfunctions.net/tspa",
+    "status": "https://us-central1-idlemmo.cloudfunctions.net/capsc",
+}
+
+
+@app.route("/apple-auth/<step>", methods=["POST"])
+def apple_auth(step: str) -> Response:
+    target = APPLE_AUTH_ENDPOINTS.get(step)
+    if not target:
+        return Response('{"error":"unknown step"}', status=404, content_type="application/json")
+
+    try:
+        upstream = requests.post(
+            target,
+            data=request.get_data(),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=20,
+        )
+    except requests.RequestException as e:
+        logger.warning(f"Apple auth proxy to {step} failed: {e}")
+        return Response('{"error":"upstream"}', status=502, content_type="application/json")
+
+    return Response(
+        upstream.content,
+        status=upstream.status_code,
+        content_type=upstream.headers.get("Content-Type", "application/json"),
+    )
 
 
 __handled_log_keys = ResponseCache()

@@ -291,7 +291,7 @@ def getLongTermAdviceList() -> list[Advice]:
     # Bubo Liquid Decants
     equinox_note = (
         f"<br>Whoa, get maxed Liquidvestment from {{{{ Equinox|#equinox }}}} first!"
-        if session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel'] < session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']
+        if session_data.account.equinox.upgrades['Liquidvestment'].level < session_data.account.equinox.upgrades['Liquidvestment'].final_max_level
         else ''
     )
     for levelTarget in [100, 200, 400, 600, 800, 1000]:
@@ -746,13 +746,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
         #Other / Misc stuff
         # Equinox liquid vestment
-        bubo_advice[other].append(Advice(
-            label=f"{{{{ Equinox|#equinox}}}}: Invest {9 * session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel']}"
-                  f"/{9 * session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']}% of overflow liquid to Decant levels.",
-            picture_class='liquidvestment',
-            progression=session_data.account.equinox_bonuses['Liquidvestment']['CurrentLevel'],
-            goal=session_data.account.equinox_bonuses['Liquidvestment']['FinalMaxLevel']
-        ))
+        bubo_advice[other].append(session_data.account.equinox.upgrades['Liquidvestment'].get_bonus_advice())
         # Crystal stuff
         bubo_advice[other].append(Advice(
             label=f"Chocolately Chip equipped in Lab?"

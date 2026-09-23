@@ -61,9 +61,9 @@ class Threshold:
     EARLY_W6 = "Early W6"
     MID_W6 = "Mid W6"
     LATE_W6 = "Late W6"
-    EARLY_W7_PREP = "Early W7 Prep"
-    SOLID_W7_PREP = "Solid W7 Prep"
-    W7_WAITING_ROOM = "W7 Waiting Room"
+    EARLY_W7 = "Early W7"
+    MID_W7 = "Mid W7"
+    LATE_W7 = "Late W7"
     MAX_TIER = "Practical Max"
     TRUE_MAX = "True Max"
     PLACEHOLDER = "Placeholder"
@@ -75,7 +75,7 @@ class Threshold:
         EARLY_W4, MID_W4, LATE_W4,
         EARLY_W5, MID_W5, LATE_W5,
         EARLY_W6, MID_W6, LATE_W6,
-        EARLY_W7_PREP, SOLID_W7_PREP, W7_WAITING_ROOM,
+        EARLY_W7, MID_W7, LATE_W7,
         MAX_TIER, TRUE_MAX,
         PLACEHOLDER
     ]
@@ -179,6 +179,7 @@ class Placements(dict):
     BEANSTALK = "Beanstalk"
     TESSERACT = "The Tesseract"
     GRIMOIRE = "The Grimoire"
+    COMPASS = "Compass"
     sections = [
         COMBAT_LEVELS, SECRET_CLASS_PATH, ACHIEVEMENTS, GSTACKS, Q_GSTACKS,
         VAULT, STAMPS, BRIBES, SMITHING, STATUES, STAR_SIGNS, OWL,
@@ -186,7 +187,7 @@ class Placements(dict):
         ARMOR_SETS, REFINERY, SAMPLING, SALT_LICK, DEATH_NOTE, COLLIDER, PRAYERS, TRAPPING, EQUINOX,
         BREEDING, COOKING, RIFT,
         DIVINITY, SAILING,  #GAMING,
-        FARMING, BEANSTALK, TESSERACT, GRIMOIRE
+        FARMING, BEANSTALK, TESSERACT, GRIMOIRE, COMPASS
     ]
 
     sectionThresholds = {
@@ -197,7 +198,7 @@ class Placements(dict):
         ACHIEVEMENTS:       [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  1,  1,      1,  2,  3,      4,          true_max_tiers[ACHIEVEMENTS], 99],
         GSTACKS:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  2,      2,  3,  3,      3,          true_max_tiers[GSTACKS], 99],
         Q_GSTACKS:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,          true_max_tiers[Q_GSTACKS], 99],
-        VAULT:              [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      2,  3,  3,      3,          true_max_tiers[VAULT], 99],
+        VAULT:              [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      2,  2,  2,      2,  3,  4,      5,          true_max_tiers[VAULT], 99],
         STAMPS:             [0,     1, 2, 2,    3,  4,  5,      6,  7,  8,      9, 10, 11,      12, 13, 14,     15, 16, 17,     20,         true_max_tiers[STAMPS], 99],
         BRIBES:             [0,     1, 1, 1,    2,  2,  2,      3,  3,  3,      4,  4,  4,      4,  5,  5,      5,  5,  5,      6,          true_max_tiers[BRIBES], 99],
         SMITHING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      1,  1,  1,      1,  2,  2,      3,  4,  5,      6,          true_max_tiers[SMITHING], 99],
@@ -218,7 +219,7 @@ class Placements(dict):
         COLLIDER:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  10,     13,         true_max_tiers[COLLIDER], 99],
         PRAYERS:            [0,     0, 0, 0,    0,  0,  0,      0,  1,  1,      2,  3,  4,      4,  5,  6,      7,  7,  7,      7,          true_max_tiers[PRAYERS], 99],
         TRAPPING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      7,  7,  7,      7,  10, 10,     12, 12, 12,     12,         true_max_tiers[TRAPPING], 99],
-        EQUINOX:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      11,         true_max_tiers[EQUINOX], 99],
+        EQUINOX:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      3,  4,  5,      6,  7,  8,      12,         true_max_tiers[EQUINOX], 99],
         BREEDING:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  1,      1,  2,  2,      3,  4,  5,      6,  8,  9,      11,         true_max_tiers[BREEDING], 99],
         COOKING:            [0,     0, 0, 0,    0,  0,  0,      1,  1,  1,      1,  1,  2,      4,  5,  6,      7,  7,  8,      12,         true_max_tiers[COOKING], 99],
         RIFT:               [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  1,  2,      4,  6,  8,      9,  10, 11,     11,         true_max_tiers[RIFT], 99],
@@ -229,6 +230,7 @@ class Placements(dict):
         BEANSTALK:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  0,  0,      1,  2,  3,      4,          true_max_tiers[BEANSTALK], 99],
         TESSERACT:          [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[TESSERACT], 99],
         GRIMOIRE:           [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[GRIMOIRE], 99],
+        COMPASS:            [0,     0, 0, 0,    0,  0,  0,      0,  0,  0,      0,  0,  0,      0,  2,  4,      6,  8,  9,      10,         true_max_tiers[COMPASS], 99],
     }
     section_count = len(sectionThresholds)
 
@@ -334,7 +336,9 @@ def sort_pinchy_reviews(dictOfPRs) -> Placements:
 
 # https://idleon.wiki/wiki/Portal_Requirements
 mapThresholds = [
-    (Threshold.EARLY_W7_PREP, 6,    264),  # W6 Samurai Spirits
+    (Threshold.LATE_W7,       7,    323),  # W7 Ancientfish
+    (Threshold.MID_W7,        7,    312),  # W7 Coralcave Guardians
+    (Threshold.EARLY_W7,      7,    301),  # W7 Equinox Broadbass
     (Threshold.LATE_W6,       6,    260),  # W6 Ceramic Spirits
     (Threshold.MID_W6,        6,    256),  # W6 Bamboo Spirits
     (Threshold.EARLY_W6,      6,    251),  # W6 Sprout Spirits
@@ -376,9 +380,9 @@ def tier_from_monster_kills(dictOfPRs) -> Threshold:
         if dictOfPRs[Placements.SAMPLING][0] >= 10:
             expectedThreshold = Threshold.fromname(Threshold.MAX_TIER)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 21:
-            expectedThreshold = Threshold.fromname(Threshold.W7_WAITING_ROOM)
+            expectedThreshold = Threshold.fromname(Threshold.LATE_W7)
         elif dictOfPRs[Placements.DEATH_NOTE][0] >= 17:
-            expectedThreshold = Threshold.fromname(Threshold.SOLID_W7_PREP)
+            expectedThreshold = Threshold.fromname(Threshold.MID_W7)
         else:
             threshold = threshold_for_highest_portal_opened()
             mobKillThresholds.append(threshold)
