@@ -253,9 +253,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     )
     droppin_loads_value = dropin_loads_bubble.base_value # TODO: this currently does not account for Prismatic Bubbles. Should either be auto-fixed once those are implemented, or might need to swap 'BaseValue' for 'PrismaticValue' or whatever we come up with
     drop_rate_aw_advice[w2].append(dropin_loads_bubble.get_bonus_advice(
-        f"<br>+{round(droppin_loads_value, 1):g}/{droppin_loads_value_breakpoints[-1][1]}% Drop Rate"
-        f"{droppin_loads_breakpoint_txt}",
-        goal=droppin_loads_value_breakpoints[-1][0]
+        f" Drop Rate{droppin_loads_breakpoint_txt}",
+        goal=droppin_loads_value_breakpoints[-1][0],
+        cap=droppin_loads_value_breakpoints[-1][1]
     ))
     world_2_bonus += droppin_loads_value
 

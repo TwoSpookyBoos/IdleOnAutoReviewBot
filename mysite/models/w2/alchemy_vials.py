@@ -1,6 +1,7 @@
 from consts.consts_w2 import vials_dict, max_index_of_vials, max_vial_level, getReadableVialNames
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
+from utils.number_formatting import round_and_trim
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import getItemDisplayName
@@ -28,10 +29,13 @@ class Vial:
     def calculate_value(self, total_multi: float):
         self.value = total_multi * self.base_value
 
-    def get_advice(self, additional_text: str = '', full_name: bool = True,
-                   picture_class: str = '', resource: str = '') -> Advice:
+    def get_advice(self, value_text: str = '', additional_text: str = '',
+                   full_name: bool = True, picture_class: str = '',
+                   resource: str = '') -> Advice:
+        value_text = value_text or f"+{round_and_trim(self.value)}%"
+        name = self.name if full_name else self.short_name
         return Advice(
-            label=f"{{{{ Vial|#vials }}}}: {self.name if full_name else self.short_name}: {additional_text}",
+            label=f"{{{{ Vial|#vials }}}}: {name}: {value_text}{additional_text}",
             picture_class=picture_class or self.image,
             progression=self.level,
             goal=max_vial_level,

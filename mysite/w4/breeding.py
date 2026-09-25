@@ -637,9 +637,7 @@ def getPetDamageAdviceGroup():
             )
         ],
         f'Multi Group B: {round(multi_group_b, 2)}x': [
-            electrolyte_vial.get_advice(
-                f"+{electrolyte_vial_bonus:.2f}%", full_name=False
-            ),
+            electrolyte_vial.get_advice(full_name=False),
             Advice(
                 label=f'{{{{ Achievement|#achievements }}}} - Barley Lost: +{barley_lost_achievement_bonus}%',
                 picture_class='barley-lost',

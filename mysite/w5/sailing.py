@@ -287,10 +287,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             ),
             crawler.getAdvice(),
             kattlekruk.getAdvice(),
-            boaty_bubble.get_bonus_advice(
-                f"+{boaty_bubble.base_value:.2f}/135%",
-                goal=max_NBLB
-            )
+            boaty_bubble.get_bonus_advice(goal=max_NBLB)
         ],
         f'Multi Group B: {multi_group_b}x': [
             Advice(
@@ -344,9 +341,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 progression=popped_corn['Level'],
                 goal=max_meal_plate_level
             ),
-            oj_jooce_vial.get_advice(
-                f"+{oj_jooce_vial.value:.2f}%", full_name=False
-            ),
+            oj_jooce_vial.get_advice(full_name=False),
             Advice(
                 label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",
                 picture_class='skill-mastery',

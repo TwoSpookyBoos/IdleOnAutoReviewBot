@@ -133,14 +133,9 @@ def getCardDropChanceAdviceGroup(groups):
         f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
         f'Multi Group A - account-wide': [
             five_aces.get_bonus_advice(),
-            anearful_vial.get_advice(
-                f"+{anearful_vial.value:.2f}%", full_name=False
-            ),
+            anearful_vial.get_advice(full_name=False),
             session_data.account.stamps['Card Stamp'].get_advice(),
-            card_champ_bubble.get_bonus_advice(
-                f"+{card_champ_bubble.base_value:.2f}/100%",
-                goal=3960
-            ),
+            card_champ_bubble.get_bonus_advice(goal=3960),
             guild_bonus.get_advice()
         ],
         f'Multi Group A - character-specific': [

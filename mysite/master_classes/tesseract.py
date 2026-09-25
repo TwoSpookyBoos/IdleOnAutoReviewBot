@@ -178,10 +178,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     currency_advices[mgb_label] = [
         emperor_tachyon_bonus.get_bonus_advice(),
-        tachyon_bubble.get_bonus_advice(
-            f"+{round_and_trim(tachyon_bubble.base_value)}/250%",
-            goal=max_NBLB
-        )
+        tachyon_bubble.get_bonus_advice(goal=max_NBLB)
     ]
 
     mgc_label = f"Bone Multi Group C: {tesseract.tachyon_calc['mgc']:.2f}x"
@@ -212,8 +209,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_calc['mgf'])}x"
     vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
     currency_advices[mgf_label] = [vial.get_advice(
-        f"+{round_and_trim(vial.value)}%", full_name=False,
-        picture_class='spelunking-chapter-3'
+        full_name=False, picture_class='spelunking-chapter-3'
     )]
 
     mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_calc['mgg'])}x"
