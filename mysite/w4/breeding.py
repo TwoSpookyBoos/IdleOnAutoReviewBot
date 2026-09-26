@@ -17,7 +17,7 @@ from utils.number_formatting import number_to_roman
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
-from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
+from consts.consts_w2 import maxable_critter_vials_list
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)

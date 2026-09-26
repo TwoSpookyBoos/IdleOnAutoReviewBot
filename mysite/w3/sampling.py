@@ -13,7 +13,6 @@ from consts.idleon.consts_idleon import skill_index_list
 from consts.idleon.lava_func import lava_func
 from consts.consts_w5 import goldrelic_multis_dict
 from consts.consts_w3 import max_printer_sample_rate
-from consts.consts_w2 import max_vial_level
 from consts.progression_tiers import sampling_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
