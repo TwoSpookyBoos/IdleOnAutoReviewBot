@@ -27,12 +27,12 @@ def getVialsProgressionTiersAdviceGroup():
     tier_TotalVialsMaxed = 0
 
     player_alchemy_vials = session_data.account.alchemy_vials
-    virile_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value['Level'] >= 4]
+    virile_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value.level >= 4]
     max_expected_vv = max_index_of_vials - 4  # Exclude both pickle and both rare drop vials
-    maxed_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value['Level'] >= max_vial_level]
+    maxed_vials_list = [vial_name for vial_name, vial_value in player_alchemy_vials.items() if vial_value.maxed]
     # unmaxed_vials_list = [vial_name for vial_name in player_alchemy_vials if vial_name not in maxed_vials_list]
     # lockedVialsList = [vial_name for vial_name, vialValue in player_alchemy_vials.items() if vialValue['Level'] == 0]
-    unlocked_vials = sum(1 for vial in player_alchemy_vials.values() if vial['Level'] > 0)
+    unlocked_vials = sum(1 for vial in player_alchemy_vials.values() if vial.level > 0)
 
     #Assess Tiers
     advice_TrailingMaxedVials = ''
@@ -74,7 +74,7 @@ def getVialsProgressionTiersAdviceGroup():
         #Particular Vials Maxed
         vials_shown_this_tier = False
         for required_vial in requirements.get('Recommended', []):
-            if player_alchemy_vials[required_vial]['Level'] < max_vial_level:
+            if player_alchemy_vials[required_vial].level < max_vial_level:
                 # Rule breaker here. Instead of requiring exact Vials per level, I only require a total amount.
                 # So instead of the usual subgroup_label, I just display up to a particular number
                 if (
@@ -82,20 +82,20 @@ def getVialsProgressionTiersAdviceGroup():
                     or vials_shown_this_tier  #All vials in a tier are roughly the same difficulty, not perfectly ordered. Show 1, show all
                 ):
                     vials_shown_this_tier = True
-                    goal = int(vial_costs[player_alchemy_vials[required_vial]['Level']])
-                    prog = 100 * ( max(0, session_data.account.all_assets.get(player_alchemy_vials[required_vial]['Material']).amount - 10_000_000) / max(1, goal))
+                    goal = int(vial_costs[player_alchemy_vials[required_vial].level])
+                    prog = 100 * ( max(0, session_data.account.all_assets.get(player_alchemy_vials[required_vial].material).amount - 10_000_000) / max(1, goal))
                     # Generate Alerts
-                    if prog >= 100 and player_alchemy_vials[required_vial]['Level'] == max_vial_level-1:
+                    if prog >= 100 and player_alchemy_vials[required_vial].level == max_vial_level-1:
                         session_data.account.alerts_Advices['World 2'].append(Advice(
                             label=f"{required_vial} {{{{ Vial|#vials }}}} ready to be maxed!",
                             picture_class="vial-13"
                         ))
                     vial_Advices['Vials to max next (preserves Greenstacks)'].append(Advice(
                         label=f"{required_vial}"
-                              f"{'<br>NEEDS TO BE UNLOCKED!' if player_alchemy_vials[required_vial]['Level'] == 0 else ''}"
+                              f"{'<br>NEEDS TO BE UNLOCKED!' if player_alchemy_vials[required_vial].level == 0 else ''}"
                               f"{'<br>Ready for level ' if prog >= 100 else ' toward level '}"
-                              f"{player_alchemy_vials[required_vial]['Level'] + 1 if prog >= 100 else player_alchemy_vials[required_vial]['Level'] + 1}",
-                        picture_class=player_alchemy_vials[required_vial]['Image'],
+                              f"{player_alchemy_vials[required_vial].level + 1 if prog >= 100 else player_alchemy_vials[required_vial].level + 1}",
+                        picture_class=player_alchemy_vials[required_vial].image,
                         progression=f"{min(1000, prog):.1f}{'+' if min(1000, prog) == 1000 else ''}",
                         goal=100,
                         unit='%'
@@ -141,7 +141,7 @@ def getVialsProgressionTiersAdviceGroup():
 
 def getVialBonusesAdviceGroup() -> AdviceGroup:
     #Player's values
-    total = session_data.account.alchemy_vials_calcs['Total Multi']
+    total = session_data.account.alchemy_vials.total_multi
 
     max_mga = session_data.account.vault.upgrades['Vial Overtune'].max_value + (0.02 * max_maxable_vials)
     max_mgb = session_data.account.labBonuses['My 1st Chemistry Set']['BaseValue']
@@ -157,19 +157,19 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
                 unit='x'
             )
         ],
-        f"Multi Group A: {session_data.account.alchemy_vials_calcs['mga']:.2f}x": [
+        f"Multi Group A: {session_data.account.alchemy_vials.mga:.2f}x": [
             get_upgrade_vault_advice('Vial Overtune'),
             session_data.account.rift['VialMastery'].get_bonus_advice(
-                f": +{(2 * session_data.account.maxed_vials) if session_data.account.rift['VialMastery'].unlocked else 0}%"
+                f": +{(2 * session_data.account.alchemy_vials.maxed_count) if session_data.account.rift['VialMastery'].unlocked else 0}%"
             ),
             Advice(
-                label=f"You have {session_data.account.maxed_vials}/{max_maxable_vials} maxed Vials",
+                label=f"You have {session_data.account.alchemy_vials.maxed_count}/{max_maxable_vials} maxed Vials",
                 picture_class='vial-13',
-                progression=session_data.account.maxed_vials,
+                progression=session_data.account.alchemy_vials.maxed_count,
                 goal=max_maxable_vials
             )
         ],
-        f"Multi Group B: {session_data.account.alchemy_vials_calcs['mgb']:.2f}x": [
+        f"Multi Group B: {session_data.account.alchemy_vials.mgb:.2f}x": [
             Advice(
                 label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x",
                 picture_class="my-1st-chemistry-set",

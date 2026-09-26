@@ -17,7 +17,7 @@ from utils.number_formatting import number_to_roman
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
-from consts.consts_w2 import maxable_critter_vials_list, max_vial_level
+from consts.consts_w2 import maxable_critter_vials_list
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -45,7 +45,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 
-    if all([session_data.account.alchemy_vials[vial_name]['Level'] >= max_vial_level for vial_name in maxable_critter_vials_list]):
+    if all([session_data.account.alchemy_vials[vial_name].maxed for vial_name in maxable_critter_vials_list]):
         shinyExclusionsDict['Base Critter Per Trap'] = True
 
     shinyExclusionsDict['Faster Shiny Pet Lv Up Rate'] = session_data.account.sneaking.emporium["Science Crayon"].obtained
@@ -574,7 +574,7 @@ def getPetDamageAdviceGroup():
 
     # Multi Group B
     electrolyte_vial = session_data.account.alchemy_vials['Electrolyte (Condensed Zap)']
-    electrolyte_vial_bonus = electrolyte_vial['Value']
+    electrolyte_vial_bonus = electrolyte_vial.value
 
     barley_lost_achievement = session_data.account.achievements['Barley Lost']
     barley_lost_achievement_bonus = int(barley_lost_achievement['Complete']) * 5
@@ -637,12 +637,7 @@ def getPetDamageAdviceGroup():
             )
         ],
         f'Multi Group B: {round(multi_group_b, 2)}x': [
-            Advice(
-                label=f'{{{{ Vial|#vials }}}} - Electrolyte: +{electrolyte_vial_bonus:.2f}%',
-                picture_class='condensed-zap',
-                progression=electrolyte_vial['Level'],
-                goal=max_vial_level
-            ),
+            electrolyte_vial.get_advice(full_name=False),
             Advice(
                 label=f'{{{{ Achievement|#achievements }}}} - Barley Lost: +{barley_lost_achievement_bonus}%',
                 picture_class='barley-lost',

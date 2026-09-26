@@ -1,6 +1,6 @@
 from consts.consts_autoreview import EmojiType, break_you_best, build_subgroup_label
 from consts.idleon.master_classes.tesseract import tesseract_tachyon_list
-from consts.consts_w2 import max_NBLB, max_vial_level
+from consts.consts_w2 import max_NBLB
 from consts.progression_tiers import true_max_tiers, tesseract_progressionTiers
 from models.general.session_data import session_data
 from models.advice.advice import Advice
@@ -178,13 +178,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     currency_advices[mgb_label] = [
         emperor_tachyon_bonus.get_bonus_advice(),
-        Advice(
-            label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Tachyon Bubble: +{round_and_trim(tachyon_bubble['BaseValue'])}/250%",
-            picture_class='tachyon-bubble',
-            resource=tachyon_bubble['Material'],
-            progression=tachyon_bubble['Level'],
-            goal=max_NBLB
-        )
+        tachyon_bubble.get_bonus_advice(goal=max_NBLB)
     ]
 
     mgc_label = f"Bone Multi Group C: {tesseract.tachyon_calc['mgc']:.2f}x"
@@ -214,11 +208,8 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_calc['mgf'])}x"
     vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
-    currency_advices[mgf_label] = [Advice(
-        label=f"{{{{ Vial|#vials }}}}: Paper Pint: +{round_and_trim(vial['Value'])}%",
-        picture_class='spelunking-chapter-3',
-        progression=vial['Level'],
-        goal=max_vial_level
+    currency_advices[mgf_label] = [vial.get_advice(
+        full_name=False, picture_class='spelunking-chapter-3'
     )]
 
     mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_calc['mgg'])}x"

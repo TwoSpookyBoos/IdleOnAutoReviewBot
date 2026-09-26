@@ -21,8 +21,7 @@ from consts.consts_w1 import (
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
-    max_index_of_vials, max_vial_level, max_implemented_bubble_index, vials_dict, sigils_dict, bubbles_dict,
-    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, getReadableVialNames, get_obol_totals
+    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, get_obol_totals
 )
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -739,195 +738,13 @@ def _parse_w1_statues(account):
 
 
 def _parse_w2(account):
-    _parse_w2_vials(account)
-    _parse_w2_cauldrons(account)
-    _parse_w2_bubbles(account)
-    _parse_w2_p2w(account)
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
     _parse_w2_islands(account)
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
-def _parse_w2_vials(account):
-    account.alchemy_vials = {}
-    raw_alchemy_vials = safe_loads(account.raw_data.get('CauldronInfo', [0, 0, 0, 0, {}])[4])
-    if 'length' in raw_alchemy_vials:
-        del raw_alchemy_vials['length']
-    if len(raw_alchemy_vials) < max_index_of_vials:
-        logger.warning(f'Vials list shorter than expected by {max_index_of_vials - len(raw_alchemy_vials)}')
 
-    #Normalize Vial data
-    cleaner_alchemy_vials = {}
-    for key, value in raw_alchemy_vials.items():
-        try:
-            # Attempts to normalize the data, which may otherwise have strings or floats as keys and values
-            cleaner_alchemy_vials[int(key)] = int(value)
-        except:
-            logger.warning(f'Unable to normalize Vials level to int: {type(value)}: {value}. Replacing with 0.')
-            cleaner_alchemy_vials[int(key)] = 0
-
-    for vial_index, vial_values in vials_dict.items():
-        try:
-            account.alchemy_vials[getReadableVialNames(vial_index)] = {
-                'Level': cleaner_alchemy_vials[vial_index],
-                'BaseValue': lava_func(
-                    vials_dict[vial_index]['funcType'],
-                    cleaner_alchemy_vials[vial_index],
-                    vials_dict[vial_index]['x1'],
-                    vials_dict[vial_index]['x2'],
-                ),
-                'Material': vials_dict[vial_index]['Material'],
-                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
-            }
-        except Exception as e:
-            logger.warning(f"Alchemy Vial Parse error at vial_index {vial_index}: {e}. Defaulting to level 0")
-            account.alchemy_vials[getReadableVialNames(vial_index)] = {
-                'Level': 0,
-                'BaseValue': 0,
-                'Material': vials_dict[vial_index]['Material'],
-                'Image': getItemDisplayName(vials_dict[vial_index]['Material'])
-            }
-
-    account.maxed_vials = sum([details['Level'] >= max_vial_level for name, details in account.alchemy_vials.items()])
-
-def _parse_w2_cauldrons(account):
-    raw_cauldron_upgrades = account.raw_data.get('CauldUpgLVs', [])
-    account.alchemy_cauldrons = {
-        'OrangeUnlocked': 0,
-        'GreenUnlocked': 0,
-        'PurpleUnlocked': 0,
-        'YellowUnlocked': 0,
-        'TotalUnlocked': 0,
-    }
-    try:
-        account.alchemy_cauldrons["OrangeBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[0], 0),
-            safer_convert(raw_cauldron_upgrades[1], 0),
-            safer_convert(raw_cauldron_upgrades[2], 0),
-            safer_convert(raw_cauldron_upgrades[3], 0),
-        ]
-        account.alchemy_cauldrons["GreenBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[4], 0),
-            safer_convert(raw_cauldron_upgrades[5], 0),
-            safer_convert(raw_cauldron_upgrades[6], 0),
-            safer_convert(raw_cauldron_upgrades[7], 0),
-        ]
-        account.alchemy_cauldrons["PurpleBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[8], 0),
-            safer_convert(raw_cauldron_upgrades[9], 0),
-            safer_convert(raw_cauldron_upgrades[10], 0),
-            safer_convert(raw_cauldron_upgrades[11], 0),
-        ]
-        account.alchemy_cauldrons["PurpleBoosts"] = [
-            safer_convert(raw_cauldron_upgrades[12], 0),
-            safer_convert(raw_cauldron_upgrades[13], 0),
-            safer_convert(raw_cauldron_upgrades[14], 0),
-            safer_convert(raw_cauldron_upgrades[15], 0),
-        ]
-    except Exception as e:
-        logger.warning(f"Alchemy bubble cauldron Boosts Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["OrangeBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["GreenBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["PurpleBoosts"] = [0, 0, 0, 0]
-        account.alchemy_cauldrons["YellowBoosts"] = [0, 0, 0, 0]
-    try:
-        account.alchemy_cauldrons["WaterDroplets"] = [safer_convert(raw_cauldron_upgrades[18], 0), safer_convert(raw_cauldron_upgrades[19], 0)]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [safer_convert(raw_cauldron_upgrades[22], 0), safer_convert(raw_cauldron_upgrades[23], 0)]
-        account.alchemy_cauldrons["TrenchSeawater"] = [safer_convert(raw_cauldron_upgrades[26], 0), safer_convert(raw_cauldron_upgrades[27], 0)]
-        account.alchemy_cauldrons["ToxicMercury"] = [safer_convert(raw_cauldron_upgrades[30], 0), safer_convert(raw_cauldron_upgrades[31], 0)]
-    except Exception as e:
-        logger.warning(f"Alchemy Water Cauldron decants Parse error: {e}. Defaulting to 0s")
-        account.alchemy_cauldrons["WaterDroplets"] = [0, 0]
-        account.alchemy_cauldrons["LiquidNitrogen"] = [0, 0]
-        account.alchemy_cauldrons["TrenchSeawater"] = [0, 0]
-        account.alchemy_cauldrons["ToxicMercury"] = [0, 0]
-
-def _parse_w2_bubbles(account):
-    account.alchemy_bubbles = {}
-
-    try:
-        all_raw_bubbles = [
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][0].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][1].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][2].items() if k != 'length'},
-            {int(k):safer_convert(v, 0) for k,v in account.raw_data["CauldronInfo"][3].items() if k != 'length'},
-        ]
-    except:
-        all_raw_bubbles = [
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},  #+1 to compensate for range() stopping before max
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-            {k:0 for k in range(0, max_implemented_bubble_index + 1)},
-        ]
-
-    account.alchemy_cauldrons['OrangeUnlocked'] = sum([1 for v in all_raw_bubbles[0].values() if v > 0])
-    account.alchemy_cauldrons['GreenUnlocked'] = sum([1 for v in all_raw_bubbles[1].values() if v > 0])
-    account.alchemy_cauldrons['PurpleUnlocked'] = sum([1 for v in all_raw_bubbles[2].values() if v > 0])
-    account.alchemy_cauldrons['YellowUnlocked'] = sum([1 for v in all_raw_bubbles[3].values() if v > 0])
-    account.alchemy_cauldrons['TotalUnlocked'] = (
-        account.alchemy_cauldrons['OrangeUnlocked']
-        + account.alchemy_cauldrons['GreenUnlocked']
-        + account.alchemy_cauldrons['PurpleUnlocked']
-        + account.alchemy_cauldrons['YellowUnlocked']
-    )
-
-    for cauldronIndex in bubbles_dict:
-        for bubbleIndex in bubbles_dict[cauldronIndex]:
-            if bubbleIndex <= max_implemented_bubble_index:  #Don't waste time calculating unimplemented bubbles
-                try:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        'CauldronIndex': cauldronIndex,
-                        'BubbleIndex': bubbleIndex,
-                        'Level': all_raw_bubbles[cauldronIndex][bubbleIndex],
-                        'BaseValue': lava_func(
-                            bubbles_dict[cauldronIndex][bubbleIndex]['funcType'],
-                            all_raw_bubbles[cauldronIndex][bubbleIndex],
-                            bubbles_dict[cauldronIndex][bubbleIndex]['x1'],
-                            bubbles_dict[cauldronIndex][bubbleIndex]['x2']),
-                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
-                    }
-                except:
-                    account.alchemy_bubbles[bubbles_dict[cauldronIndex][bubbleIndex]['Name']] = {
-                        'CauldronIndex': cauldronIndex,
-                        'BubbleIndex': bubbleIndex,
-                        'Level': 0,
-                        'BaseValue': 0.0,
-                        'Material': getItemDisplayName(bubbles_dict[cauldronIndex][bubbleIndex]['Material'])
-                    }
-
-def _parse_w2_p2w(account):
-    account.alchemy_p2w = {
-        'Sigils': copy.deepcopy(sigils_dict)
-    }
-    raw_p2w_list = safe_loads(account.raw_data.get('CauldronP2W', []))
-    for subElementIndex, subElementValue in enumerate(raw_p2w_list):
-        if not isinstance(subElementValue, list):
-            raw_p2w_list[subElementIndex] = [subElementValue]
-    try:
-        account.alchemy_p2w['Cauldrons'] = raw_p2w_list[0]
-    except:
-        account.alchemy_p2w['Cauldrons'] = [0] * 12
-    try:
-        account.alchemy_p2w['Liquids'] = raw_p2w_list[1]
-    except:
-        account.alchemy_p2w['Liquids'] = [0] * 8
-    try:
-        account.alchemy_p2w['Vials'] = raw_p2w_list[2]
-    except:
-        account.alchemy_p2w['Vials'] = [0] * 2
-    try:
-        account.alchemy_p2w['Player'] = raw_p2w_list[3]
-    except:
-        account.alchemy_p2w['Player'] = [0] * 2
-
-    for sigilName in account.alchemy_p2w['Sigils']:
-        try:
-            account.alchemy_p2w['Sigils'][sigilName]['PlayerHours'] = float(raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"]])
-            account.alchemy_p2w['Sigils'][sigilName]['Level'] = raw_p2w_list[4][account.alchemy_p2w["Sigils"][sigilName]["Index"] + 1] + 1
-        except:
-            pass  # Already defaulted to 0s in consts.sigils_dict
-        
 def _parse_w2_ballot(account):
     raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
     raw_vote_categories = [safer_convert(v, 0) for v in raw_vote_categories]  #Convert any None to 0 as a default

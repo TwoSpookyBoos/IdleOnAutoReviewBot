@@ -19,6 +19,10 @@ from models.w1.darts import Darts
 from models.w1.forge import ForgeUpgrades
 from models.w1.owl import Owl
 from models.w1.upgrade_vault import Vault
+from models.w2.alchemy_bubbles import AlchemyBubbles
+from models.w2.alchemy_cauldrons import AlchemyCauldrons
+from models.w2.alchemy_p2w import AlchemyP2W
+from models.w2.alchemy_vials import AlchemyVials
 from models.w2.arcade import Arcade
 from models.w2.post_office import PostOffice
 from models.w3.death_note import DeathNote
@@ -155,6 +159,10 @@ class Account:
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
         self.post_office: PostOffice = PostOffice(self.raw_data)
+        self.alchemy_vials: AlchemyVials = AlchemyVials(self.raw_data)
+        self.alchemy_bubbles: AlchemyBubbles = AlchemyBubbles(self.raw_data)
+        self.alchemy_cauldrons: AlchemyCauldrons = AlchemyCauldrons(self.raw_data)
+        self.alchemy_p2w: AlchemyP2W = AlchemyP2W(self.raw_data)
 
         # W3
         self.saltlick: SaltLick = SaltLick(self.raw_data)

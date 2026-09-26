@@ -1,5 +1,4 @@
 from consts.consts_autoreview import ValueToMulti, EmojiType
-from consts.consts_w2 import max_vial_level
 
 from models.general.cards import Card
 from models.advice.advice import Advice
@@ -95,13 +94,9 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_value += corale_stamp_value
 
     scale_on_ice = session_data.account.alchemy_vials['Scale On Ice (Scaled Fragment)']
-    scale_on_ice_value = scale_on_ice['Value']
-    scale_on_ice_advice = Advice(
-        label=f"{{{{ Vial|#vials }}}}: Scale On Ice: +{scale_on_ice['Value']:.2f}% Daily Corals",
-        picture_class='scaled-fragment',
-        progression=scale_on_ice['Level'],
-        resource='scaled-fragment',
-        goal=max_vial_level
+    scale_on_ice_value = scale_on_ice.value
+    scale_on_ice_advice = scale_on_ice.get_advice(
+        additional_text=' Daily Corals', full_name=False, resource='scaled-fragment'
     )
     multi_group_d_advice.append(scale_on_ice_advice)
     multi_group_d_value += scale_on_ice_value

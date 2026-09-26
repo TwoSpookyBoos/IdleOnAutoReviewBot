@@ -244,22 +244,18 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
         [6930, 39.6, 99]
     ]
     droppin_loads_next_breakpoint = next(
-        (b for b in droppin_loads_value_breakpoints if b[0] > dropin_loads_bubble['Level']),
+        (b for b in droppin_loads_value_breakpoints if b[0] > dropin_loads_bubble.level),
         None
     )
     droppin_loads_breakpoint_txt = (
         f"<br>Next breakpoint: {droppin_loads_next_breakpoint[2]}% value at level {droppin_loads_next_breakpoint[0]}"
         if droppin_loads_next_breakpoint is not None else ''
     )
-    droppin_loads_value = dropin_loads_bubble['BaseValue'] # TODO: this currently does not account for Prismatic Bubbles. Should either be auto-fixed once those are implemented, or might need to swap 'BaseValue' for 'PrismaticValue' or whatever we come up with
-    drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Alchemy Bubbles|#bubbles }}}}- Droppin Loads:"
-              f"<br>+{round(droppin_loads_value, 1):g}/{droppin_loads_value_breakpoints[-1][1]}% Drop Rate"
-              f"{droppin_loads_breakpoint_txt}",
-        picture_class='droppin-loads',
-        progression=dropin_loads_bubble['Level'],
-        resource=dropin_loads_bubble['Material'],
-        goal=droppin_loads_value_breakpoints[-1][0]
+    droppin_loads_value = dropin_loads_bubble.base_value # TODO: this currently does not account for Prismatic Bubbles. Should either be auto-fixed once those are implemented, or might need to swap 'BaseValue' for 'PrismaticValue' or whatever we come up with
+    drop_rate_aw_advice[w2].append(dropin_loads_bubble.get_bonus_advice(
+        f" Drop Rate{droppin_loads_breakpoint_txt}",
+        goal=droppin_loads_value_breakpoints[-1][0],
+        cap=droppin_loads_value_breakpoints[-1][1]
     ))
     world_2_bonus += droppin_loads_value
 
@@ -278,7 +274,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
             goal=max_sailing_artifact_level
         ))
     # Alchemy - Sigils - Trove
-    trove_sigil_level = session_data.account.alchemy_p2w['Sigils']['Trove']['Level']
+    trove_sigil_level = session_data.account.alchemy_p2w.sigils['Trove'].level
     try:
         trove_sigil_value = sigils_dict['Trove']['Values'][trove_sigil_level] * chilled_yarn_multi
     except:

@@ -114,7 +114,7 @@ def getCharactersWithUnplacedTraps(trapping_levels, placed_traps):
     #Step 1 = Get number of expected traps
     #Bonus trap slot comes from the Call Me Ash bubble, which is an Int stored at ["CauldronInfo"][1][11]. If it is level 1 or higher, the extra trap slot is always given. Does not need to be equipped.
     bonus_trap_slot = 0
-    if session_data.account.alchemy_bubbles['Call Me Ash']['Level'] >= 1:
+    if session_data.account.alchemy_bubbles['Call Me Ash'].level >= 1:
         bonus_trap_slot = 1
 
     for char in session_data.account.all_characters:
@@ -156,7 +156,7 @@ def getSecretClassTrapStatus(placed_traps):
 def getUnmaxedCritterVialStatus():
     unmaxed_critter_vials_count = 0
     for vial_name in maxable_critter_vials_list:
-        if session_data.account.alchemy_vials[vial_name]['Level'] < max_vial_level:
+        if session_data.account.alchemy_vials[vial_name].level < max_vial_level:
             unmaxed_critter_vials_count += 1
     return unmaxed_critter_vials_count != 0
 

@@ -295,13 +295,13 @@ def getLongTermAdviceList() -> list[Advice]:
         else ''
     )
     for levelTarget in [100, 200, 400, 600, 800, 1000]:
-        if levelTarget > session_data.account.alchemy_cauldrons["WaterDroplets"][1]:
+        if levelTarget > session_data.account.alchemy_cauldrons.water_droplets[1]:
             longterm.append(Advice(
                 label=f"Increase Water Droplet Rate via Active Bubo."
                       f"<br>W5 Wurms or W6 Minichiefs recommended."
                       f"{equinox_note}",
                 picture_class='cranium-cooking',
-                progression=session_data.account.alchemy_cauldrons["WaterDroplets"][1],
+                progression=session_data.account.alchemy_cauldrons.water_droplets[1],
                 goal=levelTarget,
                 resource='Water Droplets'
             ))
@@ -489,7 +489,7 @@ def getConsumablesAdviceList() -> list[Advice]:
             goal=stamp_maxes['Mason Jar Stamp'],
             resource='x1-hr-time-candy'
         ))
-    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)']['Level'] < max_vial_level:
+    if 0 < session_data.account.alchemy_vials['Dabar Special (Godshard Bar)'].level < max_vial_level:
         consumables.append(Advice(
             label=f"2 minute Archer AFK claims (or candy) to smelt Metal bars"
                   f"<br>{{{{ Smithing|#smithing }}}} has Forge Ore Capacity sources"
@@ -617,7 +617,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
         }
         cookin_roadkill_equipped = session_data.account.companions.has('Sheepie') or 'b7' in best_bubo.big_alch_bubbles
         bubo_advice[alch_talents].append(Advice(
-            label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill']['Level']} Cookin Roadkill big bubble equipped "
+            label=f"Level {session_data.account.alchemy_bubbles['Cookin Roadkill'].level} Cookin Roadkill big bubble equipped "
                   f"{' (Thanks Sheepie!)' if session_data.account.companions.has('Sheepie') else ''}"
                   f"<br>See {{{{ Bubbles|#bubbles}}}} for recommended levels",
             picture_class='cookin-roadkill',

@@ -3,7 +3,6 @@ from math import ceil
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import arbitrary_es_family_goal
 from consts.idleon.consts_idleon import expected_talents_dict, current_world
-from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, max_overall_book_levels, \
     library_subgroup_tiers, old_library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
@@ -146,7 +145,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 
     #Character Specific
     for char in session_data.account.safe_characters:
-        arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P']['BaseValue'] * (char.divinity_level / (char.divinity_level + 60)))
+        arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P'].base_value * (char.divinity_level / (char.divinity_level + 60)))
         arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
 
         char_bonus_levels = int(char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library.max_book_level)
@@ -240,21 +239,13 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     ))
 
     # Bubble
-    speed_Advices.append(Advice(
-        label=f"Ignore Overdues bubble: {session_data.account.alchemy_bubbles['Ignore Overdues']['BaseValue']:.1f}/100%",
-        picture_class='ignore-overdues',
-        progression=session_data.account.alchemy_bubbles['Ignore Overdues']['Level'],
-        resource=session_data.account.alchemy_bubbles['Ignore Overdues']['Material']
+    speed_Advices.append(session_data.account.alchemy_bubbles['Ignore Overdues'].get_advice(
+        f" bubble: {session_data.account.alchemy_bubbles['Ignore Overdues'].base_value:.1f}/100%"
     ))
 
     # Vial
-    vialBonus = session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Value']
-    speed_Advices.append(Advice(
-        label=f"Chonker Chug vial: +{vialBonus:.1f}%",
-        picture_class=session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Image'],
-        progression=session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']['Level'],
-        goal=max_vial_level
-    ))
+    chonker_chug = session_data.account.alchemy_vials['Chonker Chug (Dune Soul)']
+    speed_Advices.append(chonker_chug.get_advice(full_name=False))
 
     # Stamp
     speed_Advices.append(session_data.account.stamps['Biblio Stamp'].get_advice())
@@ -350,7 +341,7 @@ def getTalentExclusions() -> list:
         #  59: Blood Marrow
 
     #If all bubbles for current max world are unlocked, exclude Shaman's Bubble Breakthrough
-    if session_data.account.alchemy_cauldrons['NextWorldMissingBubbles'] > current_world:
+    if session_data.account.alchemy_cauldrons.next_world_missing_bubbles > current_world:
         talentExclusions.extend([492, 493])
         #492: {"Name": "Bubble Breakthrough", "Tab": "Shaman"},
         #493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},

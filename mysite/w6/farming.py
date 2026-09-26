@@ -1,7 +1,6 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_w2 import max_vial_level
 from consts.consts_w4 import max_meal_plate_level
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.w6.farming import landrank_list
@@ -340,31 +339,25 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     #Add Advice lines
 #Bubbles
 
-    evo_advices[alch].append(Advice(
-        label=f"Cropius Mapper: {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.death_note.maps[6]) - 1)} maps"
-              f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
-        picture_class='cropius-mapper',
-        progression=session_data.account.alchemy_bubbles['Cropius Mapper']['Level'],
-        goal=EmojiType.INFINITY.value,
-        resource=session_data.account.alchemy_bubbles['Cropius Mapper']['Material']
+    cropius_mapper = session_data.account.alchemy_bubbles['Cropius Mapper']
+    evo_advices[alch].append(cropius_mapper.get_advice(
+        f": {evo_multi['Maps Opened']}/{max_characters * (len(session_data.account.death_note.maps[6]) - 1)} maps"
+        f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
+        goal=EmojiType.INFINITY.value
     ))
     crop_chapter_stacks = max(0, (session_data.account.tome['Total Points'] - 5000) // 2000)
-    evo_advices[alch].append(Advice(
-        label=f"Crop Chapter: {session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue']:.3}% per 2k Tome Points above 5k"
-              f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
-              f"<br>Total: +{round(session_data.account.alchemy_bubbles['Crop Chapter']['BaseValue'] * crop_chapter_stacks, 3):g}%",
-        picture_class='crop-chapter',
-        progression=session_data.account.alchemy_bubbles['Crop Chapter']['Level'],
-        goal=EmojiType.INFINITY.value,
-        resource=session_data.account.alchemy_bubbles['Crop Chapter']['Material']
+    crop_chapter = session_data.account.alchemy_bubbles['Crop Chapter']
+    evo_advices[alch].append(crop_chapter.get_advice(
+        f": {crop_chapter.base_value:.3}% per 2k Tome Points above 5k"
+        f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
+        f"<br>Total: +{round(crop_chapter.base_value * crop_chapter_stacks, 3):g}%",
+        goal=EmojiType.INFINITY.value
     ))
 #Vial
-    evo_advices[alch].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Flavorgil (Caulifish): {session_data.account.alchemy_vials['Flavorgil (Caulifish)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {evo_multi['Vial Value']:.2f}%",
-        picture_class="caulifish",
-        progression=session_data.account.alchemy_vials['Flavorgil (Caulifish)']['Level'],
-        goal=max_vial_level
+    flavorgil = session_data.account.alchemy_vials['Flavorgil (Caulifish)']
+    evo_advices[alch].append(flavorgil.get_advice(
+        f"{flavorgil.base_value:.2f}%"
+        f"<br>Total Value after multis: {evo_multi['Vial Value']:.2f}%"
     ))
 
 #Stamp
@@ -540,12 +533,10 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     speed_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Vial and Market
     # Vial
-    speed_advices[vm].append(Advice(
-        label=f"{{{{ Vial|#vials }}}}: Ricecakorade (Rice Cake): {session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['BaseValue']:.2f}%"
-              f"<br>Total Value after multis: {farming.multi['Speed']['Vial Value']:.2f}%",
-        picture_class="rice-cake",
-        progression=session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']['Level'],
-        goal=max_vial_level
+    ricecakorade = session_data.account.alchemy_vials['Ricecakorade (Rice Cake)']
+    speed_advices[vm].append(ricecakorade.get_advice(
+        f"{ricecakorade.base_value:.2f}%"
+        f"<br>Total Value after multis: {farming.multi['Speed']['Vial Value']:.2f}%"
     ))
     # Day Market
     speed_advices[vm].append(
@@ -872,16 +863,12 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
         #Alchemy Bubbles
         if 'Alchemy Bubbles' in requirements:
             for r_name, r_level in requirements['Alchemy Bubbles'].items():
-                if r_level > session_data.account.alchemy_bubbles[r_name]['Level']:
+                if r_level > session_data.account.alchemy_bubbles[r_name].level:
                     add_subgroup_if_available_slot(farming_Advices['Tiers'], subgroup_label)
                     if subgroup_label in farming_Advices['Tiers']:
                         advice_types_added.add('Alchemy Bubbles')
-                        farming_Advices['Tiers'][subgroup_label].append(Advice(
-                            label=f'Level {r_name} to 99% value',
-                            picture_class=r_name,
-                            progression=session_data.account.alchemy_bubbles[r_name]['Level'],
-                            goal=r_level,
-                            resource=session_data.account.alchemy_bubbles[r_name]['Material']
+                        farming_Advices['Tiers'][subgroup_label].append(session_data.account.alchemy_bubbles[r_name].get_tier_advice(
+                            r_level, 'to 99% value'
                         ))
 
         #Final tier check
