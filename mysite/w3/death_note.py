@@ -19,8 +19,8 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
     ags = []
     apoc_name = apoc_names_list[-1]  #This is the Unfiltered placeholder that stores just kill_count without any goal
     difficulty_name = apoc_difficulty_name_list[-2]
-    #logger.debug(f"apocCharactersIndexList: {session_data.account.apocCharactersIndexList}")
-    for character_index in session_data.account.apocCharactersIndexList:
+    #logger.debug(f"apocCharactersIndexList: {session_data.account.death_note.apoc_character_indexes}")
+    for character_index in session_data.account.death_note.apoc_character_indexes:
         char = session_data.account.all_characters[character_index]
         #logger.debug(f"Generating AdviceGroup for: {char.character_name}")
         advices[char.character_name] = {
@@ -98,9 +98,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     wows_for_next_tier = 0
 
     # Just shortening the paths
-    apoc_characters_index_list = session_data.account.apocCharactersIndexList
-    apocalypse_character_Index = session_data.account.apocalypse_character_index
-    full_death_note_dict = session_data.account.enemy_worlds
+    apoc_characters_index_list = session_data.account.death_note.apoc_character_indexes
+    apocalypse_character_Index = session_data.account.death_note.apocalypse_character_index
+    full_death_note_dict = session_data.account.death_note.worlds
 
     highest_zow_count = 0
     highest_zow_count_index = None
@@ -421,7 +421,7 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         note=(
             "Important! Since you already have 2+ Blood Berserkers, you must complete Super CHOWs and WOWs"
             " with the last one in your character roster, regardless of the platform you play on."
-        ) if len(session_data.account.bbCharactersIndexList) > 1 else ''
+        ) if len(session_data.account.death_note.bb_character_indexes) > 1 else ''
     )
 
     return deathnote_AdviceSection

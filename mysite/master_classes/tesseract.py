@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 def find_enemy_map(world_number: int, map_name: str):
     #Look up the account's EnemyMap data for a zone by name, if it's been parsed
-    world = session_data.account.enemy_worlds.get(world_number)
+    world = session_data.account.death_note.worlds.get(world_number)
     if not world:
         return None
     return next((enemy_map for enemy_map in world.maps_dict.values() if enemy_map.map_name == map_name), None)

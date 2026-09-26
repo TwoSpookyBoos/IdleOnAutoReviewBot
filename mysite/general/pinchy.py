@@ -358,7 +358,7 @@ mapThresholds = [
 maxExpectedThresholdFromMaps = mapThresholds[0][0]
 
 def is_portal_opened(worldNumber, mapNumber):
-    return session_data.account.enemy_worlds[worldNumber].maps_dict[mapNumber].kill_count > 0
+    return session_data.account.death_note.worlds[worldNumber].maps_dict[mapNumber].kill_count > 0
 
 def threshold_for_highest_portal_opened():
     threshold = next((

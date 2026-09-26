@@ -217,9 +217,9 @@ class Minau(Villager):
             0,
             # Deathnote Pts
             sum(
-                [account.enemy_worlds[world].total_mk for world in account.enemy_worlds]
+                [account.death_note.worlds[world].total_mk for world in account.death_note.worlds]
             )
-            + account.miniboss_deathnote["TotalMK"],
+            + account.death_note.minibosses.total_mk,
             # Highest Dmg
             account.highest_dmg,
             # Slab Items

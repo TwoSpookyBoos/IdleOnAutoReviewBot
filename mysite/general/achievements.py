@@ -73,7 +73,7 @@ def getAchievementStatus(achievementName):
             case 'Two-Time Savior':
                 return min(2, session_data.account.all_assets.get('Trophy6').amount), 2, 'blunder-hero'
             case 'Lavathian Skulls':
-                return min(130, session_data.account.enemy_worlds[5].total_mk), 130, 'death-note'
+                return min(130, session_data.account.death_note.worlds[5].total_mk), 130, 'death-note'
             case 'Two Desserts!':
                 return int(min(2, session_data.account.all_assets.get('Trophy11').amount)), 2, 'yumyum-sheriff'
 

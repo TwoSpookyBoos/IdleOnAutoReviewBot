@@ -186,33 +186,33 @@ def _calculate_general_highest_world_reached(account):
     if (
         safer_get(account.raw_optlacc_dict, 408, 0) > 0
         # TODO: add Achievement as another condition once those exist
-        or account.enemy_worlds[7].maps_dict[301].kill_count > 0
+        or account.death_note.worlds[7].maps_dict[301].kill_count > 0
     ):
         return 7
     elif (
         safer_get(account.raw_optlacc_dict, 194, 0) > 0
         or account.achievements['Valley Visitor']['Complete']
-        or account.enemy_worlds[6].maps_dict[251].kill_count > 0
+        or account.death_note.worlds[6].maps_dict[251].kill_count > 0
     ):
         return 6
     elif (
         account.achievements['The Plateauourist']['Complete']
-        or account.enemy_worlds[5].maps_dict[201].kill_count > 0
+        or account.death_note.worlds[5].maps_dict[201].kill_count > 0
     ):
         return 5
     elif (
         account.achievements['Milky Wayfarer']['Complete']
-        or account.enemy_worlds[4].maps_dict[151].kill_count > 0
+        or account.death_note.worlds[4].maps_dict[151].kill_count > 0
     ):
         return 4
     elif (
         account.achievements['Snowy Wonderland']['Complete']
-        or account.enemy_worlds[3].maps_dict[101].kill_count > 0
+        or account.death_note.worlds[3].maps_dict[101].kill_count > 0
     ):
         return 3
     elif (
         account.achievements['Down by the Desert']['Complete']
-        or account.enemy_worlds[2].maps_dict[51].kill_count > 0
+        or account.death_note.worlds[2].maps_dict[51].kill_count > 0
     ):
         return 2
     else:
