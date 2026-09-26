@@ -1,6 +1,7 @@
 from functools import cached_property
 from math import ceil, floor, log
 
+from consts.consts_autoreview import MultiToValue, ValueToMulti
 from consts.consts_w4 import tomepct
 from consts.idleon.consts_idleon import (
     DeathNoteMobs,
@@ -22,6 +23,8 @@ from consts.w4.tome import (
     tome_star_talent_indexes,
 )
 from models.advice.advice import Advice
+from models.master_classes.grimoire import Grimoire
+from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
 from utils.text_formatting import numberToLetter
 
@@ -125,6 +128,8 @@ class Tome(list[TomeChallenge]):
         self.score: int = 0
         self.percent: float = 100
         self.drop_rate_bonus: float = 0
+        self.drop_rate_multi_bonus: float = 0
+        self.singed_tome_owned: bool = False
         super().__init__(
             TomeChallenge(details, quantities[index], self._account_level)
             for index, details in enumerate(tome_challenge_details)
@@ -179,11 +184,27 @@ class Tome(list[TomeChallenge]):
                 self.percent = min(self.percent, percent)
 
     # "TomeBonus" 2 in `_customBlock_Summoning`. Last updated in v2.531.0
-    def calculate_bonuses(self, bonus_multi: float):
+    def calculate_bonuses(
+        self, grimoire: Grimoire, armor_sets: dict, event_points_shop: dict
+    ):
+        # (1 + (Grimoire(17) + TROLL_SET) / 100) in source. Last updated in v2.531.0
+        bonus_multi = ValueToMulti(
+            MultiToValue(grimoire.upgrades['Grey Tome Book'].total_value)
+            + MultiToValue(armor_sets['Sets']['TROLL SET']['Total Value'])
+        )
+        singed_tome_owned = event_points_shop['Bonuses']['Singed Tome']['Owned']
+        self.singed_tome_owned = singed_tome_owned
         self.drop_rate_bonus = (
             self.red_pages_unlocked
             * 2
             * safer_math_pow(floor(max(0, self.score - 8000) / 100), 0.7)
+            * bonus_multi
+        )
+        # Singed Tome, "TomeBonus" 7 in source. Last updated in v2.531.0
+        self.drop_rate_multi_bonus = (
+            singed_tome_owned
+            * 3
+            * safer_math_pow(floor(self.score / 1000), 0.3)
             * bonus_multi
         )
 
@@ -195,6 +216,19 @@ class Tome(list[TomeChallenge]):
                   f"<br>Increases every 100 points over 8000",
             picture_class='red-tome-pages',
             progression=int(self.red_pages_unlocked),
+            goal=1
+        )
+
+    def get_drop_rate_multi_advice(self) -> Advice:
+        multi = round_and_trim(ValueToMulti(self.drop_rate_multi_bonus), 3)
+        unlock_note = (
+            "" if self.singed_tome_owned
+            else "<br>Requires Singed Tome from the {{ Event Shop|#event-shop }}"
+        )
+        return Advice(
+            label=f"Tome - Drop Rate Multi: {multi}x Drop Rate MULTI{unlock_note}",
+            picture_class='red-tome-pages',
+            progression=int(self.singed_tome_owned),
             goal=1
         )
 

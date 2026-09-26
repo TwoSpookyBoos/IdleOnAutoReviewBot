@@ -33,18 +33,34 @@ equinox_bonus_descriptions = {
 
 _unlock_reward = 'Unlock_next_Equinox_upgrade'
 _max_level_reward = re.compile(r"^\+(\d+)_Max_LV_for_(?:Equinox_Upgrade_)?'([^']+)'")
+# e.g. "1.05x_Drop_Rate_multi"
+_multi_reward = re.compile(r"^(\d+(?:\.\d+)?)x_(.+)$")
 
-equinox_dreams = [
-    {
+
+def _dream_info(index: int, reward: str) -> dict:
+    match = _multi_reward.match(reward)
+    return {
         'Number': index + 1,
         'Display Name': (
             f"Nightmare {index + 2 - equinox_first_nightmare}" if index + 1 >= equinox_first_nightmare
             else f"Dream {index + 1}"
         ),
         'Nightmare': index + 1 >= equinox_first_nightmare,
+        'Reward Multi': float(match[1]) if match else None,
+        'Reward Stat': (
+            match[2].replace('_', ' ').replace(' multi', ' MULTI') if match else ''
+        ),
     }
-    for index in range(len(DreamChallenge))
+
+
+equinox_dreams = [
+    _dream_info(index, reward) for index, (_, _, reward, _) in enumerate(DreamChallenge)
 ]
+# "CloudBonus"(73) in source: ribbon bonus cloud. Last updated in v2.531.0
+ribbon_cloud_dream_number = 74
+# "CloudBonus"(69) in source: Nightmare 34, 1.05x Drop Rate.
+# Last updated in v2.531.0
+drop_rate_dream_number = 70
 # Dream 77's Killroy Prime challenge isn't completable yet
 equinox_impossible_dreams = [77]
 equinox_possible_dream_count = len(DreamChallenge) - len(equinox_impossible_dreams)

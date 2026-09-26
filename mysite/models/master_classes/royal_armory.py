@@ -1,5 +1,6 @@
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_w1 import statues_dict
+from consts.general.talents import graded_rate_talent_index
 from consts.idleon.master_classes.royal_armory import (
     royal_armory_upgrades, royal_armory_upgrades_list,
     royal_armory_orblet_market_upgrades, royal_armory_orblet_market_glorification_index,
@@ -10,7 +11,9 @@ from consts.idleon.master_classes.royal_armory import (
     royal_armory_statue_flair_names, royal_armory_statue_flair_max_level,
 )
 from models.advice.advice import Advice
+from models.general.character import Character
 from utils.logging import get_logger
+from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert
 
 logger = get_logger(__name__)
@@ -177,6 +180,9 @@ class RoyalArmory:
             resource_index: safer_convert(safer_index(raw_resources, resource_index, 0), 0.0)
             for resource_index in range(len(raw_resources))
         }
+        # Sum of RoyalG[5] grades, "TotalStatz" in source. Last updated in v2.531.0
+        raw_grades = raw_royalg[5] if isinstance(raw_royalg[5], list) else []
+        self.total_grades: float = sum(safer_convert(grade, 0) for grade in raw_grades)
 
         # Upgrades (`RoyalG[2]`, indexed by ArmoryUpg's own array index). Total sums ALL 83 real
         # entries, not just the 69 with a tree slot.
@@ -261,6 +267,34 @@ class RoyalArmory:
         self.outposts_built = sum(1 for row in raw_maps if isinstance(row, list) and len(row) >= 3)
         self.outposts_glorified = sum(
             1 for row in raw_maps if isinstance(row, list) and len(row) >= 13 and safer_convert(row[12], 0) == 1
+        )
+
+    @property
+    def talent_bonus_level_cap(self) -> float:
+        # "ArmoryUpgBonus"(55) in source. Last updated in v2.531.0
+        reattainment = self.upgrades.get('Talent Reattainment')
+        return reattainment.level * reattainment.value_per_level if reattainment else 0
+
+    def get_graded_rate_level(self, character: Character) -> int:
+        return character.get_talent_level(
+            graded_rate_talent_index, bonus_cap=self.talent_bonus_level_cap
+        )
+
+    def get_graded_rate_value(self, character: Character) -> float:
+        talent_value = character.get_talent_value(
+            graded_rate_talent_index, bonus_cap=self.talent_bonus_level_cap
+        )
+        return talent_value * self.total_grades
+
+    def get_graded_rate_advice(self, character: Character) -> Advice:
+        value = round_and_trim(self.get_graded_rate_value(character))
+        return Advice(
+            label=f"{{{{ Royal Armory|#royal-armory }}}} - Graded Rate: "
+                  f"+{value}% Drop Rate"
+                  f"<br>From {round(self.total_grades):,} total grades",
+            picture_class='royal-guardian-icon',
+            progression=self.get_graded_rate_level(character),
+            goal=EmojiType.INFINITY.value
         )
 
     def calculate_upgrades(self):

@@ -3,7 +3,13 @@ from math import floor
 from consts.consts_autoreview import ValueToMulti
 from consts.progression_tiers import owl_bonuses_of_orion
 from models.advice.advice import Advice
-from utils.safer_data_handling import safe_loads, safer_index, safer_convert, logger
+from models.general.companions import Companions
+from models.w7.legend_talents import LegendTalents
+from utils.logging import get_logger
+from utils.number_formatting import round_and_trim
+from utils.safer_data_handling import safe_loads, safer_index, safer_convert
+
+logger = get_logger(__name__)
 
 
 class OwlBonus:
@@ -13,14 +19,27 @@ class OwlBonus:
         self.num_unlocked = 0
         self.value = 0
 
-    def calculate(self, num_unlocked: int, megafeather_mod: float, legend_talent_multi: float):
+    def calculate(
+        self,
+        num_unlocked: int,
+        megafeather_mod: float,
+        legend_talent_multi: float,
+        companion_multi: float
+    ):
         self.num_unlocked = num_unlocked
-        self.value = safer_convert(self.base_value * num_unlocked * megafeather_mod * legend_talent_multi, 0)
+        self.value = safer_convert(
+            self.base_value * num_unlocked * megafeather_mod
+            * legend_talent_multi * companion_multi,
+            0.0
+        )
 
     def get_bonus_advice(self, link_to_section: bool = True, progression: int = 0, resource: str = "", goal=None) -> Advice:
-        link_to_section_text = f"{{{{ Owl|#owl }}}}- " if link_to_section else ""
+        link_to_section_text = f"{{{{ Owl|#owl }}}} - " if link_to_section else ""
         return Advice(
-            label=f"{link_to_section_text}{self.name}:<br>+{self.value}% {self.name}",
+            label=(
+                f"{link_to_section_text}{self.name}:<br>"
+                f"+{round_and_trim(self.value)}% {self.name}"
+            ),
             picture_class='the-great-horned-owl',
             progression=progression,
             resource=resource,
@@ -43,9 +62,15 @@ class Owl:
             for bonus_name, bonus in owl_bonuses_of_orion.items()
         }
 
-    def calculate(self, legend_talent_value: float):
-        # Dependency: _calculate_w7_legend_talents must run first to populate legend_talent_value's source
-        legend_talent_multi = ValueToMulti(legend_talent_value)
+    def calculate(self, legend_talents: LegendTalents, companions: Companions):
+        # Dependency: _calculate_w7_legend_talents must run first
+        legend_talent_multi = ValueToMulti(
+            legend_talents['Furry Friends Forever'].value
+        )
+        # "Companions(51)" in source. Last updated in v2.531.0
+        companion_multi = companions.get_multi(
+            'Santas Little Helper', 'Clicker Bonuses'
+        )
         bonuses_of_orion_num = len(self.bonuses)
         megafeather_mod = 0
         if self.mega_feathers_owned >= 10:
@@ -67,4 +92,6 @@ class Owl:
                 )
             else:
                 num_unlocked = 0
-            bonus.calculate(num_unlocked, megafeather_mod, legend_talent_multi)
+            bonus.calculate(
+                num_unlocked, megafeather_mod, legend_talent_multi, companion_multi
+            )

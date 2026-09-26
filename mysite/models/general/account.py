@@ -2,13 +2,16 @@ from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
+from consts.idleon.lava_func import lava_func
 from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.colo_scores import ColoScores
+from models.general.character import Character, talent_bonus_banned
 from models.general.companions import Companions
 from models.general.dungeons import Dungeons
 from models.general.family_bonuses import FamilyBonuses
+from models.general.friend_bonuses import FriendBonuses
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
 from models.general.npc_tokens import NpcTokens
@@ -54,6 +57,8 @@ from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
 from models.w7.jelly_operator import JellyOperator
+from models.w7.glimbo import Glimbo
+from models.w7.minehead import Minehead
 from models.w7.legend_talents import LegendTalents
 from models.w7.zenith_market import ZenithMarket
 from models.caverns import Caverns
@@ -146,6 +151,7 @@ class Account:
         self.companions: Companions = Companions(
             self.raw_data, doot=g.doot, riftslug=g.riftslug, sheepie=g.sheepie
         )
+        self.friend_bonuses: FriendBonuses = FriendBonuses(self.raw_data)
 
         #W1
         self.stamps: Stamps = Stamps()
@@ -153,7 +159,7 @@ class Account:
         self.basketball: Basketball = Basketball(self.raw_data)
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
-        self.vault: Vault = Vault(self.raw_data)
+        self.vault: Vault = Vault(self.raw_data, potluck_pack=g.potluck_pack)
         self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
         self.bribes: Bribes = Bribes(self.raw_data)
 
@@ -217,7 +223,11 @@ class Account:
         self.meritocracy = Meritocracy(self.raw_data)
         self.gallery = Gallery(self.raw_data)
         self.zenith_market = ZenithMarket(self.raw_data)
-        self.research = Research(self.raw_data, self.companions.has('King Doot'))
+        self.glimbo = Glimbo(self.raw_data)
+        self.research = Research(
+            self.raw_data, self.companions.has('King Doot'), self.glimbo.total_trades
+        )
+        self.minehead = Minehead(self.raw_data)
         self.sushi_station = SushiStation(self.raw_data)
         self.the_button = TheButton(self.raw_data)
         self.dancing_coral = DancingCoral(self.raw_data)
@@ -248,10 +258,65 @@ class Account:
         return max(
             [
                 talent_level + char.total_bonus_talent_levels
+                + self.super_talent_levels * self.spelunk.has_super_talent(
+                    char.character_index, int(talent_num)
+                )
                 for char in char_list
                 if (talent_level := char.current_preset_talents.get(talent_num, 0)) > 0
             ],
             default=0,
+        )
+
+    def get_class_kill_talent_level(
+        self,
+        talent_name: str,
+        character: Character
+    ) -> int:
+        return self.get_best_talent_level(
+            self.class_kill_talents[talent_name]['Talent Number'], character
+        )
+
+    def get_best_talent_level(self, talent_index: int, character: Character) -> int:
+        # "getbonus2"(1, t, -1) in source: best base across chars + current char's
+        # bonus levels. Last updated in v2.531.0
+        # Super levels if in either preset, unlike AllTalentLV's active one
+        # Talents under 100 and banned ones get no bonus or super levels
+        gets_bonus = talent_index >= 100 and not talent_bonus_banned(talent_index)
+        bonus = character.get_bonus_levels(talent_index) if gets_bonus else 0
+        return max(
+            [
+                base + bonus
+                + gets_bonus * self.super_talent_levels * self.spelunk.has_super_talent(
+                    char.character_index, talent_index
+                )
+                for char in self.safe_characters
+                if (base := char.current_preset_talents.get(str(talent_index), 0)) > 0
+            ],
+            default=0,
+        )
+
+    def get_class_kill_talent_value(
+        self,
+        talent_name: str,
+        character: Character
+    ) -> float:
+        talent = self.class_kill_talents[talent_name]
+        level = self.get_class_kill_talent_level(talent_name, character)
+        return (
+            lava_func(talent['funcType'], level, talent['x1'], talent['x2'])
+            * talent['Kill Stacks']
+            if level > 0
+            else 0
+        )
+
+    @property
+    def super_talent_levels(self) -> int:
+        # "SuperTalentPTS_LVgiven" in source. Last updated in v2.531.0
+        return round(
+            50
+            + self.legend_talents['Super Duper Talents'].value
+            + self.zenith_market['SUPER DUPERS'].level
+            * self.zenith_market['SUPER DUPERS'].bonus_per_level
         )
 
     @cached_property

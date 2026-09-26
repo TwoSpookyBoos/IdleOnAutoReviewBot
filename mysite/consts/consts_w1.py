@@ -61,13 +61,13 @@ def get_seraph_cosmos_multi(astrology_cultism_level: int, character_summoning_le
     if character_summoning_level is not None:
         result = min(seraph_max, safer_math_pow(
             1.1 + min(0.01 * astrology_cultism_level, 0.10),
-            ceil(character_summoning_level + 1) / 20)
+            ceil((character_summoning_level + 1) / 20))
         )
         return result
     elif all_summoning_levels is not None:
         result = min(seraph_max, safer_math_pow(
             1.1 + min(0.01 * astrology_cultism_level, 0.10),
-            ceil(max(all_summoning_levels, default=0) + 1) / 20)
+            ceil((max(all_summoning_levels, default=0) + 1) / 20))
         )
         return result
     else:

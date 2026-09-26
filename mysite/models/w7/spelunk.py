@@ -1,13 +1,23 @@
 from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.general.common import percent_break_point
 from consts.idleon.lava_func import lava_func
-from consts.idleon.w7.spelunk import spelunking_cave_list, spelunk_chapters
-from consts.w7.spelunk import chapter_name, chapter_bonus_img
+from consts.idleon.w7.spelunk import (
+    spelunking_cave_list,
+    spelunk_chapters,
+    spelunk_shop_upgrades
+)
+from consts.w7.spelunk import (
+    chapter_name,
+    chapter_bonus_img,
+    shop_upgrade_image_indexes,
+    super_talent_preset_offsets,
+    super_talent_preset_slots,
+)
 
 from models.advice.advice import Advice
 
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_index, safer_convert
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -119,6 +129,41 @@ class LoreBonus:
         return next_level, next_bonus
 
 
+class SpelunkShopUpgrade:
+    # Raw per-level value only; rows 0-3, 7-10, 19, 25, 38, 54-56, 59-61
+    # scale further in source. Last updated in v2.531.0
+    def __init__(self, index: int, info: dict, level: int):
+        self.index = index
+        self.name = info["Name"]
+        self.max_level = info["Max Level"]
+        self.value_per_level = info["Value Per Level"]
+        self._template = info["Description"]
+        self.level = max(0, level)
+        # "ShopUpgBonus" in source. Last updated in v2.531.0
+        self.value = self.value_per_level * self.level
+
+    def get_bonus_advice(self, link_to_section: bool = True) -> Advice:
+        label = ""
+        if link_to_section:
+            label += "{{ Spelunking|#spelunking }} - "
+        is_multi = "}" in self._template and "{" not in self._template
+        value = ValueToMulti(self.value) if is_multi else self.value
+        max_value = self.value_per_level * self.max_level
+        max_value = ValueToMulti(max_value) if is_multi else max_value
+        bonus = f"{round_and_trim(value)}/{round_and_trim(max_value)}"
+        description = self._template.replace('{', bonus).replace('}', bonus)
+        label += f"{self.name}:<br>{description}"
+        return Advice(
+            label=label,
+            picture_class=(
+                f"spelunking-shop-upgrade-{self.index}"
+                if self.index in shop_upgrade_image_indexes else "placeholder"
+            ),
+            progression=self.level,
+            goal=self.max_level,
+        )
+
+
 class Spelunk:
     def __init__(self, raw_data: dict):
         spelunk_info = safe_loads(raw_data.get("Spelunk", []))
@@ -132,6 +177,42 @@ class Spelunk:
             self.caves[cave.name] = cave
         self.lore: dict[str, list[LoreBonus]] = {name: [] for name in chapter_name}
         self._parse_chapter_lore(spelunk_info)
+        # "Spelunk[5]" in source. Last updated in v2.531.0
+        raw_shop_levels: list = safer_index(spelunk_info, 5, [])
+        self.shop: dict[str, SpelunkShopUpgrade] = {}
+        for index, info in enumerate(spelunk_shop_upgrades):
+            level = safer_convert(safer_index(raw_shop_levels, index, 0), 0)
+            upgrade = SpelunkShopUpgrade(index, info, level)
+            self.shop[upgrade.name] = upgrade
+        # "Spelunk[4][3]" in source: exalts found. Last updated in v2.531.0
+        raw_exalts = safer_index(spelunk_info, 4, [])
+        self.exalt_stamp_bonus = round(
+            safer_convert(safer_index(raw_exalts, 3, 0), 0.0)
+        )
+        self.super_talent_presets: dict[int, list[list[int]]] = {
+            char_index: [
+                safer_index(spelunk_info, offset + char_index, []) or []
+                for offset in super_talent_preset_offsets
+            ]
+            for char_index in range(super_talent_preset_slots)
+        }
+
+    def get_exalt_stamp_bonus_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Spelunking|#spelunking }}}} - Exalts Found: "
+            f"+{round_and_trim(self.exalt_stamp_bonus)}%",
+            picture_class="spelunking",
+        )
+
+    def get_super_talents(self, char_index: int, preset: int) -> set[int]:
+        presets = self.super_talent_presets.get(char_index, [])
+        return set(safer_index(presets, preset, []))
+
+    def has_super_talent(self, char_index: int, talent_index: int) -> bool:
+        return any(
+            talent_index in preset
+            for preset in self.super_talent_presets.get(char_index, [])
+        )
 
     def _parse_chapter_lore(self, spelunk_info: list):
         raw_chapter_bonus_level: list[int] = safer_index(spelunk_info, 8, [])
