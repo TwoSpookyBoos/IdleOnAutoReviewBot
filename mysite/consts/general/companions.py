@@ -29,8 +29,18 @@ companion_bonuses = {
     'Mallay': {'Drop Rate': ('multi', 1.30, 1.50)},
     # `min(1, Companions(28)) + min(1, CompLV2(28))` on PodiumsOwned_Lv4
     'RIP Tide': {'Showcase Slot': ('value', 1.0, 2.0)},
-    # `FriendBonusXtraMulti`: `1 + 100 * Companions(30) / 100`
-    'Mr Pig': {'Friend Bonuses': ('multi', 2.0, 2.5)},
+    # `FriendBonusXtraMulti`: `1 + (100 * Companions(30) + 25 * CompLV2(44)) / 100`
+    # `FriendBonusSlots`: `2 + Companions(44) + 2 * Companions(30) + EventShop(22)`
+    'Mr Pig': {
+        'Friend Bonuses': ('multi', 2.0, 2.5),
+        'Friend Bonus Slots': ('value', 2.0, 3.0),
+    },
+    # Owl/Orion/Poppy/Bubba bonuses: `1 + Companions(51)`
+    'Santas Little Helper': {'Clicker Bonuses': ('multi', 3.0, 5.0)},
+    'Spearfish': {
+        'Friend Bonuses': ('multi', 1.0, 1.25),
+        'Friend Bonus Slots': ('value', 1.0, 1.0),
+    },
     # `1 + Companions(32)`
     'Whale': {'Class EXP': ('multi', 2.0, 2.5), 'Skill EXP': ('multi', 2.0, 2.5)},
     # `1 + Companions(33)`

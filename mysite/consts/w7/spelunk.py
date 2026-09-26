@@ -7,6 +7,14 @@ chapter_name = [
     "Sunken Plunder",
     "Kelp Primeval",
 ]
+# "Spelunk[20+c]" and "Spelunk[32+c]" in source: two 12-slot preset blocks.
+# Last updated in v2.531.0
+super_talent_preset_offsets = (20, 32)
+super_talent_preset_slots = 12
+
+# Shop upgrades with an image
+shop_upgrade_image_indexes = {4, 5, 6, 43, 50}
+
 chapter_bonus_img = [
     "spelunking",
     "spelunking",

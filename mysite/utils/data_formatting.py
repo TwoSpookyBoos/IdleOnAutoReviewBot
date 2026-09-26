@@ -16,7 +16,7 @@ from models.custom_exceptions import ProfileNotFound, APIConnectionFailed, WtfDa
 
 from utils.logging import get_logger
 from config import app
-from .safer_data_handling import safe_loads
+from .safer_data_handling import safe_loads, safer_convert, safer_index
 from .text_formatting import InputType
 
 logger = get_logger(__name__)
@@ -321,7 +321,10 @@ def getCharacterDetails(inputJSON, runType):
             equipped_cards_codenames=equipped_cards_codenames[character_index],
             equipped_cardset=equipped_cardset[character_index],
             equipped_star_signs=equipped_star_signs[character_index],
-            main_stats=main_stats[character_index]
+            main_stats=main_stats[character_index],
+            active_talent_preset=safer_convert(safer_index(
+                safe_loads(inputJSON.get(f'PlayerStuff_{character_index}', [])), 1, 0
+            ), 0)
         )
 
     return [character_count, character_names, character_classes, characterDict, perSkillDict]

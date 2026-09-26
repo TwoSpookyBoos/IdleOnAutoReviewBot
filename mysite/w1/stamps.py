@@ -307,6 +307,24 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     exalted_advice[boni].append(session_data.account.legend_talents['Wowa Woowa'].get_advice())
 
+    exalted_advice[boni].append(
+        session_data.account.gallery.get_exalted_palette_advice()
+    )
+    exalted_advice[boni].append(
+        session_data.account.farming.exotic_market['EXALTED ELDOU'].get_bonus_advice()
+    )
+    exalted_advice[boni].append(
+        session_data.account.spelunk.get_exalt_stamp_bonus_advice()
+    )
+    exalted_advice[boni].append(
+        session_data.account.sushi_station.milestones[
+            'Exalted Stamp Bonus'
+        ].get_advice()
+    )
+    exalted_advice[boni].append(
+        session_data.account.jelly_operator.obstructions['Fancy Facet'].get_advice()
+    )
+
     tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
 
     exalted_advice[tot].append(Advice(
