@@ -57,6 +57,8 @@ class Character:
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
+        self.arctis_bonus_max = 0
+        self.timmy_talented_bonus = 0
         self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents

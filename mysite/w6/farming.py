@@ -345,11 +345,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
         goal=EmojiType.INFINITY.value
     ))
-    crop_chapter_stacks = max(0, (session_data.account.tome['Total Points'] - 5000) // 2000)
+    crop_chapter_stacks = max(0, (session_data.account.tome.score - 5000) // 2000)
     crop_chapter = session_data.account.alchemy_bubbles['Crop Chapter']
     evo_advices[alch].append(crop_chapter.get_advice(
         f": {crop_chapter.base_value:.3}% per 2k Tome Points above 5k"
-        f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
+        f"<br>{session_data.account.tome.score:,} Tome Points = {crop_chapter_stacks} stacks"
         f"<br>Total: +{round(crop_chapter.base_value * crop_chapter_stacks, 3):g}%",
         goal=EmojiType.INFINITY.value
     ))
