@@ -42,8 +42,8 @@ def getMissableGStacksAdviceSection(owned_stuff: Assets) -> AdviceSection:
 
     quests_completed_on_all_toons = [
         name
-        for name in session_data.account.compiled_quests
-        if session_data.account.compiled_quests[name]['CompletedCount'] == session_data.account.character_count
+        for name, quest in session_data.account.quests.items()
+        if quest.completed_count == session_data.account.character_count
     ]
 
     advice_EndangeredQuestGStacks = []

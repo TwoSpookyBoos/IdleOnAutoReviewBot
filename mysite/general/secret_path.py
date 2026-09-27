@@ -186,16 +186,16 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
         bush3_complete = False
         rock1_complete = False
         rock2_complete = False
-        for characterIndex in range(0, len(session_data.account.all_quests)):
-            if session_data.account.all_quests[characterIndex].get('Bushlyte1', 0) == 1:
+        for characterIndex in range(0, len(session_data.account.quests.by_character)):
+            if session_data.account.quests.by_character[characterIndex].get('Bushlyte1', 0) == 1:
                 bush1_complete = True
-            if session_data.account.all_quests[characterIndex].get('Bushlyte2', 0) == 1:
+            if session_data.account.quests.by_character[characterIndex].get('Bushlyte2', 0) == 1:
                 bush2_complete = True
-            if session_data.account.all_quests[characterIndex].get('Bushlyte3', 0) == 1:
+            if session_data.account.quests.by_character[characterIndex].get('Bushlyte3', 0) == 1:
                 bush3_complete = True
-            if session_data.account.all_quests[characterIndex].get('Rocklyte1', 0) == 1:
+            if session_data.account.quests.by_character[characterIndex].get('Rocklyte1', 0) == 1:
                 rock1_complete = True
-            if session_data.account.all_quests[characterIndex].get('Rocklyte2', 0) == 1:
+            if session_data.account.quests.by_character[characterIndex].get('Rocklyte2', 0) == 1:
                 rock2_complete = True
         total_quest_peanuts = 1651 - (51 * bush1_complete) - (200 * bush2_complete) - (400 * bush3_complete) - (500 * rock1_complete) - (500 * rock2_complete)
         golden_peanuts_owned = session_data.account.all_assets.get('PeanutG').amount
@@ -281,27 +281,27 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
         for jman in jmans:
             if not cact1Started:
                 try:
-                    cact1Started = session_data.account.all_quests[jman.character_index]["Cactolyte1"] >= 0
+                    cact1Started = session_data.account.quests.by_character[jman.character_index]["Cactolyte1"] >= 0
                 except:
                     continue
             if not cact1complete:
                 try:
-                    cact1complete = session_data.account.all_quests[jman.character_index]["Cactolyte1"] >= 1
+                    cact1complete = session_data.account.quests.by_character[jman.character_index]["Cactolyte1"] >= 1
                 except:
                     continue
             if not cact2complete:
                 try:
-                    cact2complete = session_data.account.all_quests[jman.character_index]["Cactolyte2"] >= 1
+                    cact2complete = session_data.account.quests.by_character[jman.character_index]["Cactolyte2"] >= 1
                 except:
                     continue
             if not cact3Started:
                 try:
-                    cact3Started = session_data.account.all_quests[jman.character_index]["Cactolyte3"] >= 0
+                    cact3Started = session_data.account.quests.by_character[jman.character_index]["Cactolyte3"] >= 0
                 except:
                     continue
             if not cact3complete:
                 try:
-                    cact3complete = session_data.account.all_quests[jman.character_index]["Cactolyte3"] >= 1
+                    cact3complete = session_data.account.quests.by_character[jman.character_index]["Cactolyte3"] >= 1
                 except:
                     continue
         if not cact1Started:
@@ -398,7 +398,7 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
         for maestro in maestros:
             if neb1status == -1:
                 try:
-                    neb1status = session_data.account.all_quests[maestro.character_index]["Nebulyte1"] if "Nebulyte1" in session_data.account.all_quests[
+                    neb1status = session_data.account.quests.by_character[maestro.character_index]["Nebulyte1"] if "Nebulyte1" in session_data.account.quests.by_character[
                         maestro.character_index] else -1
                 except:
                     continue
@@ -419,8 +419,8 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
             if neb2status == -1:
                 try:
                     neb2status = (
-                        session_data.account.all_quests[maestro.character_index]['Nebulyte2']
-                        if 'Nebulyte2' in session_data.account.all_quests[maestro.character_index]
+                        session_data.account.quests.by_character[maestro.character_index]['Nebulyte2']
+                        if 'Nebulyte2' in session_data.account.quests.by_character[maestro.character_index]
                         else -1
                     )
                 except:
@@ -428,8 +428,8 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
             if neb3status == -1:
                 try:
                     neb3status = (
-                        session_data.account.all_quests[maestro.character_index]['Nebulyte3']
-                        if 'Nebulyte3' in session_data.account.all_quests[maestro.character_index]
+                        session_data.account.quests.by_character[maestro.character_index]['Nebulyte3']
+                        if 'Nebulyte3' in session_data.account.quests.by_character[maestro.character_index]
                         else -1
                     )
                 except:
@@ -449,8 +449,8 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
             if neb4status == -1:
                 try:
                     neb4status = (
-                        session_data.account.all_quests[maestro.character_index]['Nebulyte4']
-                        if 'Nebulyte4' in session_data.account.all_quests[maestro.character_index]
+                        session_data.account.quests.by_character[maestro.character_index]['Nebulyte4']
+                        if 'Nebulyte4' in session_data.account.quests.by_character[maestro.character_index]
                         else -1
                     )
                 except:

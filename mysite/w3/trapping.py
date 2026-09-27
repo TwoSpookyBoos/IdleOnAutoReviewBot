@@ -57,7 +57,7 @@ def getUnlockedCritterStatus():
         quest_index = 0
         for character_index in range(0, session_data.account.character_count):
             try:
-                char_quests = session_data.account.all_quests[character_index]
+                char_quests = session_data.account.quests.by_character[character_index]
                 for quest_index in range(0, len(reversedQuestIndexList)):
                     if (
                         char_quests[reversedQuestIndexList[quest_index]] >= reversed_required_status_quest_index_list[quest_index]

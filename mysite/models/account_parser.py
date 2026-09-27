@@ -11,6 +11,7 @@ from consts.consts_monster_data import decode_monster_name
 from models.w1.statues import Statues
 from models.general.assets import Assets
 from models.general.character import Character
+from models.general.quests import Quests
 from models.general.cards import Card
 from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
@@ -166,7 +167,7 @@ def _parse_characters(account, run_type):
     account.safe_characters = [char for char in account.all_characters if char]  # Use this if touching raw_data instead of all_characters
     account.safe_character_indexes = [char.character_index for char in account.all_characters if char]
     account.all_skills = perSkillDict
-    account.all_quests = [safe_loads(account.raw_data.get(f"QuestComplete_{i}", {})) for i in range(account.character_count)]
+    account.quests = Quests(account.raw_data, account.character_count)
     account.max_toon_count = max(max_characters, character_count)  # OPTIMIZE: find a way to read this from somewhere
 
     _parse_character_class_lists(account)
@@ -205,30 +206,7 @@ def _parse_general(account):
 
     account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_general_item_filter(account)
-    _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
-
-def _parse_general_quests(account):
-    account.compiled_quests = {}
-    for charIndex, questsDict in enumerate(account.all_quests):
-        for questName, questStatus in questsDict.items():
-            if questName not in account.compiled_quests:
-                account.compiled_quests[questName] = {
-                    'CompletedCount': 0,
-                    'CompletedChars': [],
-                    'AcceptedCount': 0,
-                    'AcceptedChars': [],
-                    'UnacceptedCount': 0,
-                    'UnacceptedChars': []
-                }
-            if questStatus == 1:
-                status = 'Completed'
-            elif questStatus == 0:
-                status = 'Accepted'
-            else:  # Won't be reliable. If they haven't interacted with the NPC, their quest may not appear here at all.
-                status = 'Unaccepted'
-            account.compiled_quests[questName][f'{status}Count'] += 1
-            account.compiled_quests[questName][f'{status}Chars'].append(charIndex)
 
 def _parse_general_item_filter(account):
     account.item_filter = []
@@ -268,7 +246,7 @@ def _parse_w4(account):
 
 def _parse_w4_rift(account):
     # Seam: hands the model the already-parsed quest data it needs
-    account.rift.calculate_unlocked(account.all_quests)
+    account.rift.calculate_unlocked(account.quests.by_character)
 
 def _parse_w4_breeding(account):
     # Seam: egg slots need gem shop and merits

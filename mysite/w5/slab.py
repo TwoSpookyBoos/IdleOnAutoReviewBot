@@ -83,7 +83,7 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item is a reclaimable quest item AND the quest has been completed by at least 1 character
             if item_codename in reclaimable_quest_items.keys():
-                if account.compiled_quests.get(reclaimable_quest_items[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) > 0:
+                if account.quests.completed_count(reclaimable_quest_items[item_codename]['QuestNameCoded']) > 0:
                     slab_AdviceDict['Reclaims'].append(Advice(
                         label=f"{item_displayname} ({reclaimable_quest_items[item_codename]['QuestGiver'].replace('_', ' ')}: {reclaimable_quest_items[item_codename]['QuestName']})",
                         picture_class=item_displayname,
@@ -94,8 +94,7 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item comes from a quest that all characters can complete AND at least 1 character hasn't completed it
             if item_codename in slab_quest_rewards_all_chars.keys():
-                if account.compiled_quests.get(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded'], {}).get('CompletedCount',
-                                                                                                                              0) < max_characters:
+                if account.quests.completed_count(slab_quest_rewards_all_chars[item_codename]['QuestNameCoded']) < max_characters:
                     slab_AdviceDict["Quests"].append(Advice(
                         label=f"{item_displayname} ({slab_quest_rewards_all_chars[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_all_chars[item_codename]['QuestName']})",
                         picture_class=item_displayname,
@@ -106,7 +105,7 @@ def getSlabProgressionTierAdviceGroups():
                 continue
             # If the item comes from a quest that generally only 1 character can complete AND hasn't been completed by ANY characters yet
             if item_codename in slab_quest_rewards_once.keys():
-                if account.compiled_quests.get(slab_quest_rewards_once[item_codename]['QuestNameCoded'], {}).get('CompletedCount', 0) < 1:
+                if account.quests.completed_count(slab_quest_rewards_once[item_codename]['QuestNameCoded']) < 1:
                     slab_AdviceDict["Quests"].append(Advice(
                         label=f"{item_displayname} ({slab_quest_rewards_once[item_codename]['QuestGiver'].replace('_', ' ')}: {slab_quest_rewards_once[item_codename]['QuestName']})",
                         picture_class=item_displayname,
