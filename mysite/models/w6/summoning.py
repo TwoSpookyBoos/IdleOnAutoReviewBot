@@ -362,7 +362,7 @@ class Summoning:
             + account.merits[5][4]["MaxLevel"]  # World 6 Merit Shop
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
-            + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
             + 50  # Gem Shop - Daydreamer Pack (ban_i)
             # Not for Library
             + self.bonuses["Winner Bonuses"].value
@@ -374,7 +374,7 @@ class Summoning:
             + account.merits[5][4]["MaxLevel"]  # World 6 Merit Shop
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
-            + 15  # max value of account.armor_sets['Sets']['GODSHARD SET']
+            + 15  # max value of account.armor_sets['GODSHARD SET']
             + 50  # Gem Shop - Daydreamer Pack (ban_i)
         )
         player_mgc_rest = ValueToMulti(
@@ -382,7 +382,7 @@ class Summoning:
             + account.merits[5][4]["Level"]
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
-            + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
             + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
             # Not for library
             + self.bonuses["Winner Bonuses"].value
@@ -393,7 +393,7 @@ class Summoning:
             + account.merits[5][4]["Level"]
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
-            + MultiToValue(account.armor_sets["Sets"]["GODSHARD SET"]["Total Value"])
+            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
             + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
         )
         self.multi = {}

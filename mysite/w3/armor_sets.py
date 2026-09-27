@@ -4,6 +4,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
+from models.w3.armor_sets import ArmorSets
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 
@@ -11,7 +12,7 @@ from consts.consts_autoreview import break_you_best, build_subgroup_label
 
 logger = get_logger(__name__)
 
-def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int, int, int]:
+def getProgressionTiersAdviceGroup(player_sets: ArmorSets) -> tuple[AdviceGroup, int, int, int]:
     armor_sets_Advices = {
         'Tiers': {},
     }
@@ -20,8 +21,8 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
     max_tier = true_max - optional_tiers
     tier_ArmorSets = 0
 
-    smithy_unlocked = session_data.account.armor_sets['Unlocked']
-    unlock_days_remaining = session_data.account.armor_sets['Days Remaining']
+    smithy_unlocked = session_data.account.armor_sets.smithy_unlocked
+    unlock_days_remaining = session_data.account.armor_sets.smithy_days_remaining
 
     if (
         not smithy_unlocked
@@ -52,15 +53,10 @@ def getProgressionTiersAdviceGroup(player_sets: dict) -> tuple[AdviceGroup, int,
 
         # Unlock particular sets
         for set_name in requirements.get('Sets', []):
-            if not player_sets[set_name]['Owned']:
+            if not player_sets[set_name].owned:
                 add_subgroup_if_available_slot(armor_sets_Advices['Tiers'], subgroup_label)
                 if subgroup_label in armor_sets_Advices['Tiers']:
-                    armor_sets_Advices['Tiers'][subgroup_label].append(Advice(
-                        label=f"Complete the {set_name.title()}: {player_sets[set_name]['Description']}",
-                        picture_class=player_sets[set_name]['Image'],
-                        progression=0,
-                        goal=1
-                    ))
+                    armor_sets_Advices['Tiers'][subgroup_label].append(player_sets[set_name].get_tier_advice())
 
         if subgroup_label not in armor_sets_Advices['Tiers'] and tier_ArmorSets == tier_number - 1:
             tier_ArmorSets = tier_number
@@ -81,15 +77,15 @@ def getSetAlertExclusions():
     # such as having all Godshard Tools on their Vman but not the Vman Weapon
     return exclusions
 
-def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
+def getAllSetsAdviceGroups(player_sets: ArmorSets) -> dict[str, AdviceGroup]:
     sets_Advices = {}
-    smithy_unlocked = session_data.account.armor_sets['Unlocked']
+    smithy_unlocked = session_data.account.armor_sets.smithy_unlocked
 
     for name, details in player_sets.items():
-        if not details['Owned']:
+        if not details.owned:
             # Armors
             all_armors = []
-            for item_codename in details['Armor']:
+            for item_codename in details.armor:
                 if item_codename != 'none':
                     item = session_data.account.all_assets.get(item_codename)
                     all_armors.append(Advice(
@@ -102,7 +98,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
 
             # Tools
             all_tools = []
-            for item_codename in details['Tools']:
+            for item_codename in details.tools:
                 if item_codename != 'none':
                     item = session_data.account.all_assets.get(item_codename)
                     all_tools.append(Advice(
@@ -115,7 +111,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
 
             # Weapons
             all_weapons = []
-            for item_codename in details['Weapons']:
+            for item_codename in details.weapons:
                 if item_codename != 'none':
                     item = session_data.account.all_assets.get(item_codename)
                     all_weapons.append(Advice(
@@ -127,22 +123,22 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
             obtained_weapons = sum([int(advice.progression) > 0 for advice in all_weapons])
 
             sets_Advices[name] = {
-                f"Required Armor: {obtained_armors}/{len(details['Armor'])}": all_armors,
-                f"Required Tools: {obtained_tools}/{details['Required Tools']}": all_tools,
-                f"Required Weapons: {obtained_weapons}/{details['Required Weapons']}": all_weapons
+                f"Required Armor: {obtained_armors}/{len(details.armor)}": all_armors,
+                f"Required Tools: {obtained_tools}/{details.required_tools}": all_tools,
+                f"Required Weapons: {obtained_weapons}/{details.required_weapons}": all_weapons
             }
 
             # Generate alert if set ready
             if (
-                obtained_armors >= len(details['Armor'])
-                and obtained_tools >= details['Required Tools']
-                and obtained_weapons >= details['Required Weapons']
+                obtained_armors >= len(details.armor)
+                and obtained_tools >= details.required_tools
+                and obtained_weapons >= details.required_weapons
                 and smithy_unlocked
                 and name not in getSetAlertExclusions()
             ):
                 session_data.account.alerts_Advices['World 3'].append(Advice(
                     label=f"All required items owned to {{{{Complete|#armor-sets}}}} the {name.title()}",
-                    picture_class=details['Image']
+                    picture_class=details.image
                 ))
 
     for set_name in sets_Advices:
@@ -161,12 +157,7 @@ def getAllSetsAdviceGroups(player_sets: dict) -> dict[str, AdviceGroup]:
     }
 
     set_bonuses_Advice = [
-        Advice(
-            label=f"{set_name.title()}: {player_sets[set_name]['Description']}",
-            picture_class=player_sets[set_name]['Image'],
-            progression=int(details['Owned']),
-            goal=1
-        ) for set_name, details in player_sets.items()
+        armor_set.get_bonus_advice(link_to_section=False) for armor_set in player_sets.values()
     ]
 
     for advice in set_bonuses_Advice:
@@ -197,7 +188,7 @@ def getArmorSetsAdviceSection() -> AdviceSection:
         )
         return armor_sets_AdviceSection
 
-    player_sets = session_data.account.armor_sets['Sets']
+    player_sets = session_data.account.armor_sets
 
     #Generate Alert Advice
 

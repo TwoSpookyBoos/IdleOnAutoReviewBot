@@ -147,10 +147,10 @@ def get_bonuses_multi() -> AdviceGroup:
     ))
     multi_advices[mgc].append(Advice(
         label=f"{{{{Armor Set|#armor-sets}}}}: Godshard Set: "
-              f"+{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']), 1):g}"
-              f"/{round(account.armor_sets['Sets']['GODSHARD SET']['Base Value'], 1):g}%",
-        picture_class=account.armor_sets['Sets']['GODSHARD SET']['Image'],
-        progression=int(account.armor_sets['Sets']['GODSHARD SET']['Owned']),
+              f"+{round(MultiToValue(account.armor_sets['GODSHARD SET'].total_value), 1):g}"
+              f"/{round(account.armor_sets['GODSHARD SET'].base_value, 1):g}%",
+        picture_class=account.armor_sets['GODSHARD SET'].image,
+        progression=int(account.armor_sets['GODSHARD SET'].owned),
         goal=1
     ))
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop['Bundle Data Present'] else ''

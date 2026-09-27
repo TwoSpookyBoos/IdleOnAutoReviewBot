@@ -280,13 +280,9 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     exalted_advice[boni].append(
         session_data.account.sneaking.pristine_charms['Jellypick'].get_obtained_advice()
     )
-    emp_set = session_data.account.armor_sets['Sets']['EMPEROR SET']
-    exalted_advice[boni].append(Advice(
-        label=f"{{{{Armor Set|#armor-sets}}}}: Emperor Set: {emp_set['Description']}",
-        picture_class=emp_set['Image'],
-        progression=int(emp_set['Owned']),
-        goal=1
-    ))
+    exalted_advice[boni].append(
+        session_data.account.armor_sets['EMPEROR SET'].get_bonus_advice()
+    )
 
     compass_abs = compass.upgrades['Abomination Slayer XVII']
     exalted_advice[boni].append(Advice(

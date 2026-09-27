@@ -16,7 +16,7 @@ from consts.consts_w1 import starsigns_dict, event_points_shop_dict
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import ballot_dict, killroy_dict
 from consts.consts_w3 import (
-    refinery_dict, buildings_dict, buildings_shrines, prayers_dict, equipment_sets_dict
+    refinery_dict, buildings_dict, buildings_shrines, prayers_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -34,7 +34,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import getItemDisplayName, numberToLetter, kebab, letterToNumber
+from utils.text_formatting import numberToLetter, kebab, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -602,7 +602,6 @@ def _parse_w3(account):
     _parse_w3_equinox(account)
     _parse_w3_shrines(account)
     _parse_w3_prayers(account)
-    _parse_w3_armor_sets(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -735,32 +734,6 @@ def _parse_w3_prayers(account):
             )
         except:
             pass
-
-def _parse_w3_armor_sets(account):
-    account.armor_sets = {
-        'Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 380, False), False),
-        'Days Remaining': 30 - max(0, safer_convert(safer_get(account.raw_optlacc_dict, 381, 0), 0)),
-        'Sets': {}
-    }
-    raw_armor_sets = safer_get(account.raw_optlacc_dict, 379, "")
-    try:
-        raw_armor_sets_list = raw_armor_sets.split(',')
-    except:
-        raw_armor_sets_list = []
-    for set_name, requirements in equipment_sets_dict.items():
-        clean_name = set_name.replace('_', ' ')
-        account.armor_sets['Sets'][clean_name] = {
-            'Owned': set_name in raw_armor_sets_list,
-            'Image': getItemDisplayName(requirements[0][0]),
-            'Armor': requirements[0],
-            'Tools': requirements[1],
-            'Required Tools': safer_convert(requirements[3][0], 0),
-            'Weapons': requirements[2],
-            'Required Weapons': safer_convert(requirements[3][1], 0),
-            'Bonus Type': requirements[3][3].replace('|', ' ').replace('_', ' '),
-            'Base Value': safer_convert(requirements[3][2], 0)
-        }
-
 
 def _parse_w4(account):
     _parse_w4_cooking(account)

@@ -31,7 +31,6 @@ def calculate_account(account):
 def _calculate_wave_1(account):
     # These numbers are used by formulas in _calculate_wave_2, so must be calculated first
     _calculate_caverns_majiks(account)
-    _calculate_w3_armor_sets(account)
     _calculate_w2_arcade(account)
     account.tesseract.calculate_upgrades()
     _calculate_w6_emperor(account)
@@ -53,29 +52,6 @@ def _calculate_caverns_majiks(account):
     have_doot = account.companions.has("King Doot")
     account.caverns.villagers["Cosmos"].calculate_bonuses(have_doot)
 
-
-def _calculate_w3_armor_sets(account):
-    armor_set_multi = ValueToMulti(0)
-    for set_name, set_details in account.armor_sets['Sets'].items():
-        # Calculate the Total Value and Generate Description
-        if '{' in account.armor_sets['Sets'][set_name]['Bonus Type']:
-            account.armor_sets['Sets'][set_name]['Total Value'] = (
-                account.armor_sets['Sets'][set_name]['Owned']
-                * account.armor_sets['Sets'][set_name]['Base Value']
-                * armor_set_multi
-            )
-            account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
-                '{', f"{account.armor_sets['Sets'][set_name]['Total Value']}"
-            )
-        if '}' in account.armor_sets['Sets'][set_name]['Bonus Type']:
-            account.armor_sets['Sets'][set_name]['Total Value'] = ValueToMulti(
-                account.armor_sets['Sets'][set_name]['Owned']
-                * account.armor_sets['Sets'][set_name]['Base Value']
-                * armor_set_multi
-            )
-            account.armor_sets['Sets'][set_name]['Description'] = account.armor_sets['Sets'][set_name]['Bonus Type'].replace(
-                '}', f"{account.armor_sets['Sets'][set_name]['Total Value']:.2f}"
-            )
 
 def _calculate_w6_emperor(account):
     # Dependency: _calculate_master_classes_tesseract_upgrades, sneaking, _calculate_w2_arcade, gemshop
@@ -309,7 +285,7 @@ def _calculate_w1_stamps(account):
         )
         + account.sneaking.pristine_charms['Jellypick'].value
         + account.compass.upgrades['Abomination Slayer XVII'].total_value
-        + MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value'])
+        + MultiToValue(account.armor_sets['EMPEROR SET'].total_value)
         + (20 * account.event_points_shop['Bonuses']['Extra Exaltedness']['Owned'])
         # "PaletteBonus"(23) in source. Last updated in v2.531.0
         + account.gallery.exalted_palette_bonus
@@ -620,7 +596,7 @@ def _calculate_w4_meal_multi(account):
                 (5 * tier)
                 + (floor(tier / 2) * (4 + 6.5 * floor(tier / 5)))
             )
-            + (floor(tier / 4) * (MultiToValue(account.armor_sets['Sets']['EMPEROR SET']['Total Value']) / 4))
+            + (floor(tier / 4) * (MultiToValue(account.armor_sets['EMPEROR SET'].total_value) / 4))
             + (floor(tier / 10) * cloud_73)
             + (floor(tier / 20) * jelly_rog_60)
         ))
@@ -808,12 +784,12 @@ def _calculate_general_character_bonus_talent_levels(account):
     universe_talent = account.tesseract.upgrades['Universe Talent']
     account.bonus_talents = {
         'Kattelkruk Set': {
-            'Value': account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value'],
-            'Image': account.armor_sets['Sets']['KATTLEKRUK SET']['Image'],
+            'Value': account.armor_sets['KATTLEKRUK SET'].total_value,
+            'Image': account.armor_sets['KATTLEKRUK SET'].image,
             'Label': f"{{{{Set bonus|#armor-sets}}}}: Kattlekruk Set: "
-                     f"+{account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value']:g}"
-                     f"/{account.armor_sets['Sets']['KATTLEKRUK SET']['Base Value']:g}",
-            'Progression': int(account.armor_sets['Sets']['KATTLEKRUK SET']['Owned']),
+                     f"+{account.armor_sets['KATTLEKRUK SET'].total_value:g}"
+                     f"/{account.armor_sets['KATTLEKRUK SET'].base_value:g}",
+            'Progression': int(account.armor_sets['KATTLEKRUK SET'].owned),
             'Goal': 1
         },
         'Rift Slug': {

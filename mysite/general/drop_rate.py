@@ -360,15 +360,9 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
     world_3_bonus += faux_jewels.value
 
-    efaunt_set = session_data.account.armor_sets['Sets']['EFAUNT SET']
-    drop_rate_aw_advice[w3].append(Advice(
-        label=f"{{{{Set bonus|#armor-sets}}}}- Efaunt Set:"
-              f"<br>{efaunt_set['Description']}",
-        picture_class=efaunt_set['Image'],
-        progression=int(efaunt_set['Owned']),
-        goal=1
-    ))
-    world_3_bonus += efaunt_set['Total Value']
+    efaunt_set = session_data.account.armor_sets['EFAUNT SET']
+    drop_rate_aw_advice[w3].append(efaunt_set.get_bonus_advice())
+    world_3_bonus += efaunt_set.total_value
 
     drop_rate_aw_advice[f"{w3} - +{round(world_3_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w3)
 
@@ -410,15 +404,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     grey_tome_book = session_data.account.grimoire.upgrades['Grey Tome Book']
     if grey_tome_book.level < grey_tome_book.max_level:
         drop_rate_aw_advice[w4].append(grey_tome_book.get_advice(session_data.account.grimoire.total_upgrades))
-    troll_set = session_data.account.armor_sets['Sets']['TROLL SET']
-    if not troll_set['Owned']:
-        drop_rate_aw_advice[w4].append(Advice(
-            label=f"{{{{Set bonus|#armor-sets}}}}- Troll Set:"
-                  f"<br>{troll_set['Description']}"
-                  f"<br>Note: Increases the Tome bonus below",
-            picture_class=troll_set['Image'],
-            progression=int(troll_set['Owned']),
-            goal=1
+    troll_set = session_data.account.armor_sets['TROLL SET']
+    if not troll_set.owned:
+        drop_rate_aw_advice[w4].append(troll_set.get_bonus_advice(
+            additional_text="<br>Note: Increases the Tome bonus below"
         ))
     drop_rate_aw_advice[w4].append(session_data.account.tome.get_bonus_advice())
     world_4_bonus += session_data.account.tome.drop_rate_bonus
@@ -494,16 +483,11 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drop_rate_aw_advice[w6].append(pommelion_seed.get_bonus_advice())
     world_6_bonus += pommelion_seed.value
 
-    secret_set = session_data.account.armor_sets['Sets']['SECRET SET']
-    if not secret_set['Owned']:
-        drop_rate_aw_advice[w6].append(Advice(
-            label=f"{{{{Set bonus|#armor-sets}}}}- Secret Set:"
-                  f"<br>{secret_set['Description']}"
-                  f"<br>Note: Increases Golden Food bonus. "
-                  f"See character-specific sections",
-            picture_class=secret_set['Image'],
-            progression=int(secret_set['Owned']),
-            goal=1
+    secret_set = session_data.account.armor_sets['SECRET SET']
+    if not secret_set.owned:
+        drop_rate_aw_advice[w6].append(secret_set.get_bonus_advice(
+            additional_text="<br>Note: Increases Golden Food bonus. "
+                            "See character-specific sections"
         ))
 
     # Summoning - Bonuses

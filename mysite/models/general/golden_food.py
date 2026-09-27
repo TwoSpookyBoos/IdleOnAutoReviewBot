@@ -106,7 +106,7 @@ class GoldenFoodMulti:
 def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     # "GfoodBonusMULTI" in source, per character. Last updated in v2.531.0
     companions = account.companions
-    secret_set = MultiToValue(account.armor_sets["Sets"]["SECRET SET"]["Total Value"])
+    secret_set = MultiToValue(account.armor_sets["SECRET SET"].total_value)
     verminous_multi = companions.get_multi("Verminous", "Gold Food")
     outer = ValueToMulti(secret_set + MultiToValue(verminous_multi))
     family = max(1, account.family_bonuses["Shaman"].value)
