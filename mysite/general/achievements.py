@@ -115,19 +115,19 @@ def getAchievementStatus(achievementName):
                 return min(12, session_data.account.breeding.egg_slots), 12, 'egg-nest'
             #W5
             case 'Artifact Finder':
-                return min(15, sum(1 for artifact in session_data.account.sailing['Artifacts'].values() if artifact['Level'] > 0)), 15, ''
+                return min(15, session_data.account.sailing.artifacts.found_count), 15, ''
             case 'Gilded Vessel':
-                return min(100, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 100, 'sailing-ship-tier-4'
+                return min(100, session_data.account.sailing.max_boat_upgrades), 100, 'sailing-ship-tier-4'
             case 'True Naval Captain':
-                return min(20, session_data.account.sailing['BoatsOwned']), 20, ''
+                return min(20, session_data.account.sailing.boats_owned), 20, ''
             case 'Grand Captain':
-                return min(10, max([captain['Level'] for captain in session_data.account.sailing['Captains'].values()], default=0)), 10, 'captain-0-idle'
+                return min(10, session_data.account.sailing.max_captain_level), 10, 'captain-0-idle'
             case 'Voraci Vantasia':
                 return min(500, session_data.account.achievements[achievementName]['Raw']), 500, 'voraci'
             case 'Vitamin D-licious':
                 return notateNumber('Match', min(5000000, session_data.account.all_assets.get('LavaB3').amount), 0, 'K'), '5000K', 'orange-slice'
             case 'Maroon Warship':
-                return min(300, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 300, 'sailing-ship-tier-6'
+                return min(300, session_data.account.sailing.max_boat_upgrades), 300, 'sailing-ship-tier-6'
             #W6
             case 'Big Time Land Owner':
                 return min(27, session_data.account.farming.total_plots), 27, ''

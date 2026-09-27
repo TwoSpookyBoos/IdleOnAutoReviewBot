@@ -68,19 +68,19 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         progression=1 if 0 < session_data.account.atom_collider['Oxygen - Library Booker'].level else 0,
         goal=1
     ))
-    if not session_data.account.rift['EldritchArtifact'].unlocked and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
+    if not session_data.account.rift['EldritchArtifact'].unlocked and session_data.account.sailing.artifacts['Fury Relic'].level == 2:
         furyPostString = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
-    elif not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 3:
+    elif not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained and session_data.account.sailing.artifacts['Fury Relic'].level == 3:
         furyPostString = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
-    elif not session_data.account.spelunk.caves["Pebble Cove"].bonus_obtained and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 4:
+    elif not session_data.account.spelunk.caves["Pebble Cove"].bonus_obtained and session_data.account.sailing.artifacts['Fury Relic'].level == 4:
         furyPostString = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
     else:
         furyPostString = ''
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
-              f"+{25 * session_data.account.sailing['Artifacts']['Fury Relic']['Level']}/{25 * max_sailing_artifact_level}{furyPostString}",
+              f"+{25 * session_data.account.sailing.artifacts['Fury Relic'].level}/{25 * max_sailing_artifact_level}{furyPostString}",
         picture_class='fury-relic',
-        progression=session_data.account.sailing['Artifacts']['Fury Relic']['Level'],
+        progression=session_data.account.sailing.artifacts['Fury Relic'].level,
         goal=max_sailing_artifact_level
     ))
 

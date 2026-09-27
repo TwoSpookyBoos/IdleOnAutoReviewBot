@@ -73,7 +73,7 @@ def _calculate_w4_tome(account):
         + floor(account.guild_bonuses['Star Dazzle'].value)
         # "SigilBonus" in source, v2.531.0: Chilled Yarn's bonus is its tier
         + two_starz.values[two_starz.level]
-        * (1 + account.sailing['Artifacts']['Chilled Yarn']['Level'])
+        * account.sailing.artifacts.chilled_yarn_multi
         * ValueToMulti(account.meritocracy[21].value)
         + star_scraper.value * star_scraper.purchased
         + account.companions['Flying Worm'].bonus
@@ -398,7 +398,7 @@ def _calculate_w4(account):
 
 def _calculate_w4_cooking_max_plate_levels(account):
     account.cooking.calculate_max_plate_level(
-        account.sailing['Artifacts'].get('Causticolumn', {}).get('Level', 0),
+        account.sailing.artifacts['Causticolumn'].level,
         account.rift['EldritchArtifact'].unlocked,
         account.sneaking.emporium,
         account.grimoire.upgrades['Supreme Head Chef Status'],
@@ -437,7 +437,7 @@ def _calculate_w4_meal_multi(account):
 def _calculate_w4_lab_bonuses(account):
     account.lab_bonuses.calculate_nblb(
         account.lab_jewels['Pyrite Rhinestone'].enabled,
-        account.sailing['Artifacts']['Amberite']['Level'],
+        account.sailing.artifacts['Amberite'].level,
         account.gaming.superbits['Moar Bubbles'].unlocked,
         account.gaming.superbits['Even Moar Bubbles'].unlocked,
         account.merits[3][6]['Level'],
@@ -778,7 +778,7 @@ def _calculate_wave_4(account):
 def _calculate_w1_statues(account):
     account.statues.calculate_values(
         [char.max_talents.get('56', 0) for char in account.vmans],
-        account.sailing['Artifacts']['The Onyx Lantern']['Level'],
+        account.sailing.artifacts['The Onyx Lantern'].level,
         account.zenith_market['TRUE ZEN'].value,
         account.meritocracy[26].value,
         account.event_points_shop['Smiley Statue'].owned,
@@ -794,7 +794,7 @@ def _calculate_w6_beanstalk(account):
 
 
 def _calculate_w7(account):
-    account.spelunk.calculate_lore_bonus(account.sailing["Artifacts"]["Pointagon"])
+    account.spelunk.calculate_lore_bonus(account.sailing.artifacts["Pointagon"])
     account.advice_fish.calculate_bonuses()
     account.meritocracy.calculate_bonuses()
     account.zenith_market.calculate_bonuses()

@@ -42,7 +42,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
         shinyExclusionsDict['Infinite Star Signs'] = False
 
     # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
-    if session_data.account.sum_artifact_tiers >= (sailing_artifacts_count * max_sailing_artifact_level):
+    if session_data.account.sailing.artifacts.total_tiers >= (sailing_artifacts_count * max_sailing_artifact_level):
         shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
         shinyExclusionsDict['Higher Artifact Find Chance'] = True
 

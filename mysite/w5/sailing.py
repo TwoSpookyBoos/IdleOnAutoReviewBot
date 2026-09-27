@@ -8,7 +8,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.advice.generators.general import get_gem_shop_purchase_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
@@ -60,14 +59,14 @@ def get_sailing_progression_tier_advicegroups():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         # Islands
         if 'Islands Discovered' in requirements:
-            if session_data.account.sailing['Islands Discovered'] < requirements['Islands Discovered']:
-                shortBy = requirements['Islands Discovered'] - session_data.account.sailing['Islands Discovered']
+            if session_data.account.sailing.islands_discovered < requirements['Islands Discovered']:
+                shortBy = requirements['Islands Discovered'] - session_data.account.sailing.islands_discovered
                 add_subgroup_if_available_slot(sailing_Advices['Islands Discovered'], subgroup_label)
                 if subgroup_label in sailing_Advices['Islands Discovered']:
                     sailing_Advices['Islands Discovered'][subgroup_label].append(Advice(
                         label=f"Discover {shortBy} more Island{pl(shortBy)}",
                         picture_class='cloud-discover-rate',
-                        progression=session_data.account.sailing['Islands Discovered'],
+                        progression=session_data.account.sailing.islands_discovered,
                         goal=requirements['Islands Discovered']
                     ))
         if subgroup_label not in sailing_Advices['Islands Discovered'] and tier_Islands == tier_number - 1:
@@ -75,31 +74,31 @@ def get_sailing_progression_tier_advicegroups():
 
         # Captains and Boats
         if 'Captains And Boats' in requirements:
-            if session_data.account.sailing['CaptainsOwned'] < requirements['Captains And Boats']:
-                shortBy = requirements['Captains And Boats'] - session_data.account.sailing['CaptainsOwned']
+            if session_data.account.sailing.captains_owned < requirements['Captains And Boats']:
+                shortBy = requirements['Captains And Boats'] - session_data.account.sailing.captains_owned
                 add_subgroup_if_available_slot(sailing_Advices['Captains And Boats'], subgroup_label)
                 if subgroup_label in sailing_Advices['Captains And Boats']:
                     sailing_Advices['Captains And Boats'][subgroup_label].append(Advice(
                         label=f"Hire {shortBy} more Captain{pl(shortBy)}",
                         picture_class='captain-0-idle',
-                        progression=session_data.account.sailing['CaptainsOwned'],
+                        progression=session_data.account.sailing.captains_owned,
                         goal=requirements['Captains And Boats']
                     ))
-            if session_data.account.sailing['BoatsOwned'] < requirements['Captains And Boats']:
-                shortBy = requirements['Captains And Boats'] - session_data.account.sailing['BoatsOwned']
+            if session_data.account.sailing.boats_owned < requirements['Captains And Boats']:
+                shortBy = requirements['Captains And Boats'] - session_data.account.sailing.boats_owned
                 add_subgroup_if_available_slot(sailing_Advices['Captains And Boats'], subgroup_label)
                 if subgroup_label in sailing_Advices['Captains And Boats']:
                     sailing_Advices['Captains And Boats'][subgroup_label].append(Advice(
                         label=f"Purchase {shortBy} more Boat{pl(shortBy)}",
                         picture_class='sailing-ship-tier-1',
-                        progression=session_data.account.sailing['BoatsOwned'],
+                        progression=session_data.account.sailing.boats_owned,
                         goal=requirements['Captains And Boats']
                     ))
         if subgroup_label not in sailing_Advices['Captains And Boats'] and tier_CaptainsAndBoats == tier_number - 1:
             tier_CaptainsAndBoats = tier_number
 
         # Outside requirement checks should be at the top of the list
-        if session_data.account.sum_artifact_tiers < total_artifacts:
+        if session_data.account.sailing.artifacts.total_tiers < total_artifacts:
             if 'Eldritch' in requirements:
                 if not session_data.account.rift['EldritchArtifact'].unlocked:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
@@ -143,14 +142,14 @@ def get_sailing_progression_tier_advicegroups():
             # Artifacts
             if 'Artifacts' in requirements:
                 for artifact_name, artifact_tier in requirements['Artifacts'].items():
-                    if session_data.account.sailing['Artifacts'].get(artifact_name, {}).get('Level', 0) < artifact_tier:
+                    if session_data.account.sailing.artifacts[artifact_name].level < artifact_tier:
                         if artifact_name not in delays_dict.get(tier_number, []):
                             add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                             if subgroup_label in sailing_Advices['Artifacts']:
                                 sailing_Advices['Artifacts'][subgroup_label].append(Advice(
                                     label=artifact_name,
                                     picture_class=artifact_name,
-                                    progression=session_data.account.sailing['Artifacts'].get(artifact_name, {}).get('Level', 0),
+                                    progression=session_data.account.sailing.artifacts[artifact_name].level,
                                     goal=artifact_tier
                                 ))
         if subgroup_label not in sailing_Advices['Artifacts'] and tier_Artifacts == tier_number - 1:
@@ -226,7 +225,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     # Multi Group E -- All other bonuses
     bagur = session_data.account.divinity.named('Bagur')
 
-    ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
+    ad_tablet_level = session_data.account.sailing.artifacts['10 AD Tablet'].level
     registered_slab_count = len(session_data.account.registered_slab)
     lab_bonus_slab_sovereignty = session_data.account.lab_bonuses['Slab Sovereignty']
     lab_bonus_slab_sovereignty_mult = ValueToMulti(lab_bonus_slab_sovereignty.value) * lab_bonus_slab_sovereignty.enabled
@@ -309,7 +308,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             Advice(
                 label=f'{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%',
                 picture_class='10-ad-tablet',
-                progression=session_data.account.sailing['Artifacts']['10 AD Tablet']['Level'],
+                progression=session_data.account.sailing.artifacts['10 AD Tablet'].level,
                 goal=max_sailing_artifact_level
             ),
             session_data.account.stamps['Sailboat Stamp'].get_advice(),
@@ -359,8 +358,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
 def get_sailing_artifacts_advicegroup() -> AdviceGroup:
     arti_advices = defaultdict(list)
-    for artifact_name, details in session_data.account.sailing['Artifacts'].items():
-        arti_advices[details['Island']].append(get_sailing_artifact_advice(artifact_name, False, False))
+    for artifact in session_data.account.sailing.artifacts.values():
+        arti_advices[artifact.island].append(artifact.get_advice(link_to_section=False))
 
     for island_name in arti_advices:
         for advice in arti_advices[island_name]:

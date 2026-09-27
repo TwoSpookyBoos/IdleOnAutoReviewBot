@@ -122,7 +122,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
 
     sigil = account.alchemy_p2w.sigils["Emoji Veggie"]
     sigil_multi = (
-        (1 + account.sailing["Artifacts"]["Chilled Yarn"]["Level"])
+        account.sailing.artifacts.chilled_yarn_multi
         * ValueToMulti(account.meritocracy[21].value)
     )
     sigil_value = sigils_dict["Emoji Veggie"]["Values"][

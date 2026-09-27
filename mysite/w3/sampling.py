@@ -191,7 +191,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     sm_sum = sm_base + sm_bonus
     sm_multi = ValueToMulti(sm_sum)
 
-    gr_level = session_data.account.sailing['Artifacts']['Gold Relic']['Level']
+    gr_level = session_data.account.sailing.artifacts['Gold Relic'].level
     gr_days = safer_get(session_data.account.raw_optlacc_dict, 125, 0)
     gr_max_days = (
         160 if gr_level == 4

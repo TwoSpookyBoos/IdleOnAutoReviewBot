@@ -15,10 +15,6 @@ from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
-from consts.consts_w5 import (
-    sailing_list, captain_buffs,
-    sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
-)
 from models.w1.statues import Statues
 from models.general.assets import Assets
 from models.general.character import Character
@@ -28,7 +24,7 @@ from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.text_formatting import numberToLetter, kebab, letterToNumber
+from utils.text_formatting import numberToLetter, letterToNumber
 
 logger = get_logger(__name__)
 
@@ -577,104 +573,10 @@ def _parse_w4_breeding(account):
 
 def _parse_w5(account):
     _parse_w5_slab(account)
-    _parse_w5_sailing(account)
     _parse_w5_divinity(account)
 
 def _parse_w5_slab(account):
     account.registered_slab = set(safe_loads(account.raw_data.get("Cards1", [])))
-
-def _parse_w5_sailing(account):
-    account.sailing = {"Artifacts": {}, "Boats": {}, "Captains": {}, "Islands": {}, 'Islands Discovered': 1, 'CaptainsOwned': 1, 'BoatsOwned': 1}
-    raw_sailing_list = safe_loads(safe_loads(account.raw_data.get("Sailing", [])))  # Some users have needed to have data converted twice
-    if not raw_sailing_list:
-        logger.warning(f"Sailing data not present")
-    try:
-        account.sailing['CaptainsOwned'] += raw_sailing_list[2][0]
-        account.sailing['BoatsOwned'] += raw_sailing_list[2][1]
-        account.sum_artifact_tiers = sum(raw_sailing_list[3])
-    except:
-        account.sum_artifact_tiers = 0
-    #Islands
-    for island_index, island_values_dict in enumerate(sailing_list):
-        try:
-            account.sailing['Islands'][island_values_dict['Name']] = {
-                'Unlocked': raw_sailing_list[0][island_index] == -1,
-                'Distance': island_values_dict['Distance'],
-                'NormalTreasure': island_values_dict['NormalTreasure'],
-                'RareTreasure': island_values_dict['RareTreasure']
-            }
-        except:
-            account.sailing['Islands'][island_values_dict['Name']] = {
-                'Unlocked': False,
-                'Distance': island_values_dict['Distance'],
-                'NormalTreasure': island_values_dict['NormalTreasure'],
-                'RareTreasure': island_values_dict['RareTreasure']
-            }
-    account.sailing['Islands Discovered'] = sum([details['Unlocked'] for details in account.sailing['Islands'].values()])
-    #Artifacts
-    for artifact_index, artifact_values_dict in sailing_artifacts_dict.items():
-        try:
-            artifact_level = parse_number(raw_sailing_list[3][artifact_index], 0)
-        except:
-            artifact_level = 0
-        description = sailing_artifacts_description_overrides.get(artifact_values_dict['Name'], {}).get(artifact_level, artifact_values_dict['Description'])
-        account.sailing['Artifacts'][artifact_values_dict['Name']] = {
-            'Level': artifact_level,
-            'Description': description,
-            'FormBonuses': {index: description for index, description in enumerate(artifact_values_dict['FormBonuses'])},
-            'FormBonus': artifact_values_dict['FormBonuses'].get(artifact_level, 'Unknown Bonus'),
-            'Form': artifact_tier_names.get(artifact_level),
-            'Values': {index: value for index, value in enumerate(artifact_values_dict['Values'])},
-            'Island': artifact_values_dict['Island'],
-            'Image': kebab(artifact_values_dict['Name'])
-        }
-
-    _parse_w5_sailing_boats(account)
-    _parse_w5_sailing_captains(account)
-
-def _parse_w5_sailing_boats(account):
-    raw_sailing_boats = safe_loads(safe_loads(account.raw_data.get("Boats", [])))  # Some users have needed to have data converted twice
-    for boatIndex, boatDetails in enumerate(raw_sailing_boats):
-        try:
-            account.sailing['Boats'][boatIndex] = {
-                'Captain': boatDetails[0],
-                'Destination': boatDetails[1],
-                'LootUpgrades': boatDetails[3],
-                'SpeedUpgrades': boatDetails[5],
-                'TotalUpgrades': boatDetails[3] + boatDetails[5]
-            }
-        except:
-            account.sailing['Boats'][boatIndex] = {
-                'Captain': -1,
-                'Destination': -1,
-                'LootUpgrades': 0,
-                'SpeedUpgrades': 0,
-                'TotalUpgrades': 0
-            }
-
-def _parse_w5_sailing_captains(account):
-    raw_sailing_captains = safe_loads(safe_loads(account.raw_data.get("Captains", [])))  # Some users have needed to have data converted twice
-    for captainIndex, captainDetails in enumerate(raw_sailing_captains):
-        try:
-            account.sailing['Captains'][captainIndex] = {
-                'Tier': captainDetails[0],
-                'TopBuff': captain_buffs[captainDetails[1]],
-                'BottomBuff': captain_buffs[captainDetails[2]],
-                'Level': captainDetails[3],
-                # 'EXP': captainDetails[4],
-                'TopBuffBaseValue': captainDetails[5],
-                'BottomBuffBaseValue': captainDetails[6],
-            }
-        except:
-            account.sailing['Captains'][captainIndex] = {
-                'Tier': 0,
-                'TopBuff': 'None',
-                'BottomBuff': 'None',
-                'Level': 0,
-                # 'EXP': 0,
-                'TopBuffBaseValue': 0,
-                'BottomBuffBaseValue': 0,
-            }
 
 def _parse_w5_divinity(account):
     account.divinity.link_characters(account.safe_characters)

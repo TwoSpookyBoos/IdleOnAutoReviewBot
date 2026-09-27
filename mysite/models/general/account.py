@@ -52,6 +52,7 @@ from models.w4.rift import Rift
 from models.w4.tome import Tome
 from models.w5.divinity import Divinity
 from models.w5.gaming import Gaming
+from models.w5.sailing import Sailing
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
@@ -206,6 +207,7 @@ class Account:
         # W5
         self.gaming: Gaming = Gaming(self.raw_data)
         self.divinity: Divinity = Divinity(self.raw_data)
+        self.sailing: Sailing = Sailing(self.raw_data)
 
         # The Caverns Below
         self.caverns: Caverns = Caverns(self.raw_data)

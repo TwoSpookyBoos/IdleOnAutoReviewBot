@@ -9,7 +9,6 @@ from models.advice.advice import Advice
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_section import AdviceSection
 from models.advice.generators.general import get_gem_shop_purchase_advice
-from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.general.session_data import session_data
 
 from utils.logging import get_logger
@@ -123,7 +122,7 @@ def get_bonuses_multi() -> AdviceGroup:
     multi_advices[mgc].append(
         summoning.bonuses["Winner Bonuses"].get_bonus_advice(False)
     )
-    multi_advices[mgc].append(get_sailing_artifact_advice('The Winz Lantern'))
+    multi_advices[mgc].append(session_data.account.sailing.artifacts['The Winz Lantern'].get_advice())
     multi_advices[mgc].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
               f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",

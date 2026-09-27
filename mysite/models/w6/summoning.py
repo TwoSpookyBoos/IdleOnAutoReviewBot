@@ -378,7 +378,7 @@ class Summoning:
             + 50  # Gem Shop - Daydreamer Pack (ban_i)
         )
         player_mgc_rest = ValueToMulti(
-            (25 * account.sailing["Artifacts"]["The Winz Lantern"]["Level"])
+            (25 * account.sailing.artifacts["The Winz Lantern"].level)
             + account.merits[5][4]["Level"]
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
@@ -389,7 +389,7 @@ class Summoning:
             + account.emperor["Summoning Winner Bonuses"].value
         )
         player_mgc_library = ValueToMulti(
-            (25 * account.sailing["Artifacts"]["The Winz Lantern"]["Level"])
+            (25 * account.sailing.artifacts["The Winz Lantern"].level)
             + account.merits[5][4]["Level"]
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])

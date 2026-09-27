@@ -293,9 +293,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
 
     # Artifacts- Chilled Yarn
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    chilled_yarn_artifact_level = session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']
-    chilled_yarn_multi = ValueToMulti(100 * session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'])
-    chilled_yarn_max = ValueToMulti(100 * max_sailing_artifact_level)
+    artifacts = session_data.account.sailing.artifacts
+    chilled_yarn_artifact_level = artifacts['Chilled Yarn'].level
+    chilled_yarn_multi = artifacts.chilled_yarn_multi
+    chilled_yarn_max = artifacts.max_chilled_yarn_multi
     if chilled_yarn_artifact_level < max_sailing_artifact_level:
         drop_rate_aw_advice[w2].append(Advice(
             label=f"{{{{ Artifacts|#artifacts }}}}- Chilled Yarn:"
@@ -1131,7 +1132,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         if chaotic_chizoar_card.getStars() < (cards_max_level - 1):
             shrine_extra_bonus_text = '<br>Note: Can be increased by getting more Chaotic Chizoar card stars'
 
-        if session_data.account.sailing['Artifacts']['Moai Head']['Level'] > 0:
+        if session_data.account.sailing.artifacts['Moai Head'].level > 0:
             clover_shrine_affects_character = True
         else:
             char_map = character.current_map_index

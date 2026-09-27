@@ -40,6 +40,7 @@ sailing_artifacts_dict = {
             3: elddesc.replace('_', ' '),
             4: sovdesc.replace('_', ' '),
             5: omnidesc.replace('_', ' '),
+            6: transdesc.replace('_', ' '),
         },
         'Values': {
             0: 0,
@@ -47,7 +48,8 @@ sailing_artifacts_dict = {
             2: parse_number(ancientvalue),
             3: parse_number(eldvalue),
             4: parse_number(sovvalue),
-            5: parse_number(omnivalue)
+            5: parse_number(omnivalue),
+            6: parse_number(transvalue),
         },
         'Island': 'Unknown'  #Filled in below
     }

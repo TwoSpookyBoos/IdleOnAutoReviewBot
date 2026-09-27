@@ -307,7 +307,7 @@ class Gallery:
         )
         codfrey_prisma = account.alchemy_bubbles.get_prisma_value("Codfrey Rulz Ok")
         paragorgia_level = account.coral_reef["Paragorgia Coral"].level
-        deathskull_level = account.sailing["Artifacts"]["Deathskull"]["Level"]
+        deathskull_level = account.sailing.artifacts["Deathskull"].level
         showcases_owned = account.gemshop["Purchases"]["Gallery Showcases"]["Owned"]
         emporium_podium = account.sneaking.emporium["Another Gallery Podium"].value
         lunarheim_obtained = account.spelunk.caves["Lunarheim"].bonus_obtained

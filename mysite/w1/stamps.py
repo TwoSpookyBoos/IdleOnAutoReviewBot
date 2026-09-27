@@ -218,9 +218,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         session_data.account.sneaking.emporium['Ionized Sigils'].get_obtained_advice()
     )
     costReduction_Advices['Uncapped'].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",
+        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {session_data.account.sailing.artifacts.chilled_yarn_multi}x",
         picture_class='chilled-yarn',
-        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
+        progression=session_data.account.sailing.artifacts['Chilled Yarn'].level,
         goal=max_sailing_artifact_level
     ))
 

@@ -48,7 +48,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_Advice[aw].append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class="moai-head",
-        progression=session_data.account.sailing['Artifacts']['Moai Head']['Level'],
+        progression=session_data.account.sailing.artifacts['Moai Head'].level,
         goal=1
     ))
 

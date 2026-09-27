@@ -3,7 +3,6 @@ from consts.progression_tiers import true_max_tiers
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
 from models.advice.advice_section import AdviceSection
-from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.general.session_data import session_data
 
 from utils.number_formatting import round_and_trim
@@ -58,7 +57,7 @@ def get_lore_multi_advicegroup() -> AdviceGroup:
     spelunk = session_data.account.spelunk
     total = f"Total Bonus Multi: {round_and_trim(spelunk.lore_multi)}x"
     mga = f"Multi Group A: {round_and_trim(spelunk.lore_multi)}x"
-    lb_Advices = {total: [], mga: [get_sailing_artifact_advice("Pointagon")]}
+    lb_Advices = {total: [], mga: [session_data.account.sailing.artifacts["Pointagon"].get_advice()]}
     for advice_list in lb_Advices.values():
         for advice in advice_list:
             advice.mark_advice_completed()
