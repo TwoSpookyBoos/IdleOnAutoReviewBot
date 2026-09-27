@@ -216,7 +216,7 @@ def getCurrentTierStrategyAdviceGroup(cooking, dchef_level, atom_fluoride_level,
             goal=max_meal_count,
         ))
     for world in range(0, 9):
-        if session_data.account.highest_world_reached >= world and cooking.meals_unlocked_by_world[world] < meal_counts_by_world[world]:
+        if session_data.account.world_progress.highest_reached >= world and cooking.meals_unlocked_by_world[world] < meal_counts_by_world[world]:
             currenttier_Advices.append(Advice(
                 label=f"Unlock All W{world} Meals",
                 picture_class='taste-test',

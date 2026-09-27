@@ -4,12 +4,11 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue
 from consts.consts_general import greenstack_amount
 from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import fishing_toolkit_dict
-from consts.consts_w5 import divinity_DivCostAfter3, \
-    filter_recipes, filter_never, filter_only_after_gstack
+from consts.consts_w5 import filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.advice.advice import Advice
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_get
+from utils.safer_data_handling import safe_loads
 from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
@@ -110,7 +109,7 @@ def _calculate_wave_2(account):
 def _calculate_general(account):
     _calculate_general_alerts(account)
     _calculate_general_item_filter(account)
-    account.highest_world_reached = _calculate_general_highest_world_reached(account)
+    account.world_progress.calculate(account.achievements, account.death_note)
     _calculate_general_storage_slots(account)
 
 def _calculate_general_alerts(account):
@@ -172,42 +171,6 @@ def _calculate_general_item_filter(account):
                     label=f"{filtered_displayname} filtered, not in Fishing Toolkit",
                     picture_class=filtered_displayname,
                 ))
-
-def _calculate_general_highest_world_reached(account):
-    if (
-        safer_get(account.raw_optlacc_dict, 408, 0) > 0
-        # TODO: add Achievement as another condition once those exist
-        or account.death_note.worlds[7].maps_dict[301].kill_count > 0
-    ):
-        return 7
-    elif (
-        safer_get(account.raw_optlacc_dict, 194, 0) > 0
-        or account.achievements['Valley Visitor'].complete
-        or account.death_note.worlds[6].maps_dict[251].kill_count > 0
-    ):
-        return 6
-    elif (
-        account.achievements['The Plateauourist'].complete
-        or account.death_note.worlds[5].maps_dict[201].kill_count > 0
-    ):
-        return 5
-    elif (
-        account.achievements['Milky Wayfarer'].complete
-        or account.death_note.worlds[4].maps_dict[151].kill_count > 0
-    ):
-        return 4
-    elif (
-        account.achievements['Snowy Wonderland'].complete
-        or account.death_note.worlds[3].maps_dict[101].kill_count > 0
-    ):
-        return 3
-    elif (
-        account.achievements['Down by the Desert'].complete
-        or account.death_note.worlds[2].maps_dict[51].kill_count > 0
-    ):
-        return 2
-    else:
-        return 1
 
 def _calculate_general_storage_slots(account):
     account.storage.calculate_other_sources(
@@ -412,8 +375,7 @@ def _calculate_w4_tome_bonuses(account):
 def _calculate_w5(account):
     account.divinity.calculate(
         account.companions.has('King Doot')
-        or 'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link,
-        safer_get(account.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3),
+        or 'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
     )
 
 def _calculate_caverns(account):

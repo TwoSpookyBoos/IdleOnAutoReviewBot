@@ -70,7 +70,7 @@ def getBallotMultiAdviceGroup():
     return multis_ag
 
 def getBonus_BallotAdviceSection() -> AdviceSection:
-    if session_data.account.highest_world_reached < 2:
+    if session_data.account.world_progress.highest_reached < 2:
         bonus_ballot_AdviceSection = AdviceSection(
             name="Bonus Ballot",
             tier='0/0',

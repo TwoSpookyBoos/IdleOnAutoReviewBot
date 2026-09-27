@@ -25,6 +25,7 @@ from models.general.npc_tokens import NpcTokens
 from models.general.quests import Quests
 from models.general.reset_counters import ResetCounters
 from models.general.storage import Storage
+from models.general.world_progress import WorldProgress
 from models.w1.stamps import Stamps
 from models.w1.star_signs import StarSigns
 from models.w1.basketball import Basketball
@@ -133,7 +134,7 @@ class Account:
             'World 6': []
         }
         #General
-        self.highest_world_reached = 1
+        self.world_progress: WorldProgress = WorldProgress(self.raw_data)
         self.inventory: Inventory = Inventory()
         self.gemshop: GemShop = GemShop(self.raw_data)
         # Save data can turn Autoloot on, shown on the switch too

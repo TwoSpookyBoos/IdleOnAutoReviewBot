@@ -1,6 +1,6 @@
 from consts.consts_w3 import printer_all_indexes_being_printed
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads
+from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
@@ -11,6 +11,12 @@ class Printer:
         # Stored samples, best first
         self.samples: dict[str, list[float]] = {}
         self.printing: dict[str, list] = {}
+
+        raw_optlacc = dict(enumerate(safe_loads(raw_data.get("OptLacc", []))))
+        self.gold_relic_days: int = safer_get(raw_optlacc, 125, 0)
+        self.supreme_wiring_days: int = safer_get(raw_optlacc, 323, 0)
+        self.biggole_mole_days: int = safer_get(raw_optlacc, 354, 0)
+        self.moon_of_print_days: int = safer_get(raw_optlacc, 364, 0)
 
         raw_print = safe_loads(raw_data.get("Print", [0, 0, 0, 0, 0, "Blank"]))[5:]
         raw_printer_xtra = safe_loads(raw_data.get("PrinterXtra", []))

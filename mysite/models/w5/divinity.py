@@ -2,6 +2,7 @@ from math import ceil
 
 from consts.consts_autoreview import default_huge_number_replacement
 from consts.consts_w5 import (
+    divinity_DivCostAfter3,
     divinity_divinities_dict,
     divinity_offerings_dict,
     getDivinityNameFromIndex,
@@ -10,7 +11,7 @@ from consts.consts_w5 import (
 from models.advice.advice import Advice
 from models.general.character import Character
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_math_pow
+from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow
 
 logger = get_logger(__name__)
 
@@ -42,6 +43,13 @@ class Divinity(dict[int, God]):
         while len(raw_divinity) < 40:
             raw_divinity.append(0)
         self._raw_divinity: list = raw_divinity
+        # Toolbox provides serverVars, Efficiency provides servervars
+        raw_server_vars = safe_loads(
+            raw_data.get("serverVars", raw_data.get("servervars", {}))
+        )
+        self.div_cost_after_3: float = safer_get(
+            raw_server_vars, "DivCostAfter3", divinity_DivCostAfter3
+        )
 
         self.points = raw_divinity[24]
         if isinstance(self.points, str):
@@ -83,14 +91,14 @@ class Divinity(dict[int, God]):
             except (IndexError, TypeError):
                 continue
 
-    def calculate(self, account_wide_arctis: bool, div_cost_after_3: float):
+    def calculate(self, account_wide_arctis: bool):
         self.account_wide_arctis = account_wide_arctis
         unlocked = self.gods_unlocked + self.god_rank
         self.low_offering_goal = offering_cost(
-            div_cost_after_3, self.low_offering, unlocked
+            self.div_cost_after_3, self.low_offering, unlocked
         )
         self.high_offering_goal = offering_cost(
-            div_cost_after_3, self.high_offering, unlocked
+            self.div_cost_after_3, self.high_offering, unlocked
         )
 
 

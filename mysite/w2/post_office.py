@@ -122,7 +122,7 @@ def getBoxesAdviceGroup() -> TabbedAdviceGroup:
 
 
 def getPostOfficeAdviceSection() -> AdviceSection:
-    if session_data.account.highest_world_reached < 2:
+    if session_data.account.world_progress.highest_reached < 2:
         postOffice_AdviceSection = AdviceSection(
             name='Post Office',
             tier='0/0',

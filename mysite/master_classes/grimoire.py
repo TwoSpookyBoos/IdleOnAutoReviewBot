@@ -306,7 +306,7 @@ def getGrimoireAdviceSection() -> AdviceSection:
             header="Come back after unlocking a Death Bringer in World 6!",
             picture='customized/Wraith.gif',
             unrated=True,
-            unreached=session_data.account.highest_world_reached < 6,
+            unreached=session_data.account.world_progress.highest_reached < 6,
             completed=False
         )
         return grimoire_AdviceSection

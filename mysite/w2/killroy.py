@@ -152,7 +152,7 @@ def getKillroyUpgradeRecommendationsAdviceGroup():
     return future_ag
 
 def getKillroyAdviceSection() -> AdviceSection:
-    if session_data.account.highest_world_reached < 2:
+    if session_data.account.world_progress.highest_reached < 2:
         killroy_AdviceSection = AdviceSection(
             name='Killroy',
             tier='0/0',

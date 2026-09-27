@@ -2,7 +2,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert
+from utils.safer_data_handling import safe_loads, safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.consts_general import gem_shop_optlacc_dict
@@ -26,11 +26,7 @@ def try_exclude_DungeonTickets(exclusionLists):
             return
 
     #Scenario 2: Over Rank 40 or 100+ tickets
-    try:
-        playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
-    except:
-        playerBoosters = 0
-    if session_data.account.dungeons.rank >= 40 or playerBoosters >= 100:
+    if session_data.account.dungeons.rank >= 40 or session_data.account.dungeons.weekly_boosters >= 100:
         if 'Weekly Dungeon Boosters' not in exclusionLists:
             for sublist in exclusionLists:
                 sublist.append('Weekly Dungeon Boosters')

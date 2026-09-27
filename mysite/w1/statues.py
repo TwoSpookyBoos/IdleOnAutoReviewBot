@@ -7,7 +7,6 @@ from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from models.advice.generators.general import get_upgrade_vault_advice
 from models.general.session_data import session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.safer_data_handling import safer_get
 from utils.logging import get_logger
 
 
@@ -66,7 +65,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=best_orb_book,
         goal=session_data.account.library.max_book_level
     ))
-    tome_DropChance = safer_get(session_data.account.raw_optlacc_dict, 200, 1)
+    tome_DropChance = session_data.account.statues.tome_drop_chance
     crystal_Advices.append(Advice(
         label=f"Minimum 10x Drop Rate (per Tome): {tome_DropChance:.2f}x",
         picture_class='drop-rate',

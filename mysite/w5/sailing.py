@@ -134,7 +134,7 @@ def get_sailing_progression_tier_advicegroups():
                 'Beanstacked' in requirements
                 and session_data.account.beanstalk["Golden Hampter Gummy Candy"].tier < 1
                 and session_data.account.lab_chips['Chocolatey Chip'].owned
-                and session_data.account.highest_world_reached >= 6
+                and session_data.account.world_progress.highest_reached >= 6
                 and tier_Artifacts >= tier_number - 1
             ):
                 golden_hampter_note = 'Reminder: Golden Hampters can be deposited to the Beanstalk in World 6!'

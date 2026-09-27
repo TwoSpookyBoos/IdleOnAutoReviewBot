@@ -22,7 +22,7 @@ def get_upgrades_info_group() -> AdviceGroup:
 
 def get_zenith_market_section():
     # Check if player has reached this section
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         zenith_AdviceSection = AdviceSection(
             name='Zenith Market',
             tier='Not Yet Evaluated',

@@ -294,7 +294,7 @@ class Gallery:
 
     def calculate_bonuses(self, account: "Account"):
         # Section view: any wearer. Drop rate uses each character's chip
-        has_motherboard_chip = account.highest_world_reached >= 7 and any(
+        has_motherboard_chip = account.world_progress.highest_reached >= 7 and any(
             "Silkrode Motherboard" in character.equipped_lab_chips
             for character in account.characters
         )

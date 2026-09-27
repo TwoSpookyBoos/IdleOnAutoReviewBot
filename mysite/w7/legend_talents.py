@@ -19,7 +19,7 @@ def get_legend_talents_info_group() -> AdviceGroup:
 
 def get_legend_talents_section():
     # Check if player has reached this section
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         lt_AdviceSection = AdviceSection(
             name="Legend Talents",
             tier="Not Yet Evaluated",

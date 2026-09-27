@@ -177,7 +177,7 @@ def getAllSetsAdviceGroups(player_sets: ArmorSets) -> dict[str, AdviceGroup]:
 
 def getArmorSetsAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if session_data.account.highest_world_reached < 3:
+    if session_data.account.world_progress.highest_reached < 3:
         armor_sets_AdviceSection = AdviceSection(
             name='Armor Sets',
             tier='0/0',

@@ -6,7 +6,6 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safer_get
 
 
 def get_corals_info_group() -> AdviceGroup:
@@ -74,7 +73,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_advice.append(clamwork_advice)
     multi_group_d_value += clamwork_value
 
-    killroy_coral_level = safer_get(session_data.account.raw_optlacc_dict, 470, 0)
+    killroy_coral_level = session_data.account.killroy.coral_level
     killroy_coral_value = round_and_trim(killroy_coral_level / (250 + killroy_coral_level) * 25, 0)
     killroy_advice = Advice(
         label=f"Killroy: +{killroy_coral_value:g}% Daily Corals",
@@ -158,7 +157,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
 
 def get_coral_reef_section():
     # Check if player has reached this section
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         reef_AdviceSection = AdviceSection(
             name='Coral Reef',
             tier='Not Yet Evaluated',

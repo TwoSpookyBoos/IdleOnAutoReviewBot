@@ -17,7 +17,7 @@ from models.general.event_shop import EventShopBonus
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import kebab
 
 logger = get_logger(__name__)
@@ -68,6 +68,7 @@ class Statues(dict[str, Statue]):
             raw_types += [0] * (statue_count - len(raw_types))
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
         monolith_progress = parse_number(safer_index(raw_optlacc, 69, 0), 0)
+        self.tome_drop_chance: int = safer_convert(safer_index(raw_optlacc, 200, 1), 1)
         self.onyx_unlocked: bool = (
             max(raw_types, default=0) >= onyx_type_number or monolith_progress >= 2
         )

@@ -363,7 +363,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     gallery = session_data.account.gallery
     hatrack_drop_rate_value = gallery.get_hatrack_bonus_value('Drop Rate')
     hatrack_drop_rate_multi_value = gallery.get_hatrack_bonus_value('Drop Rate Multi')
-    if session_data.account.highest_world_reached >= 3:
+    if session_data.account.world_progress.highest_reached >= 3:
         drop_rate_aw_advice[hatrack_group].extend([
             gallery.get_hatrack_bonus_advice('Drop Rate'),
             gallery.get_hatrack_bonus_advice('Drop Rate Multi'),
@@ -515,7 +515,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Gallery - Trophies & Nametags, applied per character
     gallery_drop_rate_value = 0
     gallery_drop_rate_multi_value = 0
-    if session_data.account.highest_world_reached >= 7:
+    if session_data.account.world_progress.highest_reached >= 7:
         drop_rate_aw_advice[gallery_group].extend(get_gallery_item_advice())
         gallery_drop_rate_value = gallery.bonuses['Drop Rate'][1]
         gallery_drop_rate_multi_value = gallery.bonuses['Drop Rate Multi'][1]
@@ -974,7 +974,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
                 ('Hat Rack', 3, hatrack_active, hatrack_value, hatrack_multi_value),
                 ('Gallery', 7, gallery_active, gallery_value, gallery_multi_value),
             )
-            if session_data.account.highest_world_reached >= world
+            if session_data.account.world_progress.highest_reached >= world
         }
         gown_multi = ValueToMulti(
             character.get_gear_misc_bonus('%_BONUS_DROP_RATE', well_dressed)
@@ -1410,7 +1410,7 @@ def get_equipment_advice_for_stat(
     motherboard_equipped = "Silkrode Motherboard" in character.equipped_lab_chips
     software_equipped = "Silkrode Software" in character.equipped_lab_chips
     processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
-    motherboard_boosts_gallery = session_data.account.highest_world_reached >= 7
+    motherboard_boosts_gallery = session_data.account.world_progress.highest_reached >= 7
     # Gallery/Hatrack take over these slots once open for this character
     showcased_types = (
         ('Trophy', 'Nametag') * character.gallery_bonus_active

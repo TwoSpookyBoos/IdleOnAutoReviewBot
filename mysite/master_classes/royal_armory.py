@@ -121,7 +121,7 @@ def getRoyalArmoryAdviceSection() -> AdviceSection:
             header="Come back after unlocking a Royal Guardian (Divine Knight's master class)!",
             picture='extracted_sprites/OrbOfVerisimilitude.gif',
             unrated=True,
-            unreached=session_data.account.highest_world_reached < 6,
+            unreached=session_data.account.world_progress.highest_reached < 6,
             completed=False
         )
         return royal_armory_AdviceSection

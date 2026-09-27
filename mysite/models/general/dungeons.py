@@ -29,6 +29,8 @@ class Dungeons:
         raw_dungeon_upgrades = safe_loads(raw_data.get('DungUpg', []))
         raw_optlacc = safe_loads(raw_data.get('OptLacc', []))
         raw_max_purchases = safer_index(raw_dungeon_upgrades, 3, [])
+        # Stored as 1 more than the true count
+        self.weekly_boosters: int = safer_convert(safer_index(raw_optlacc, 76, 1), 1) - 1
 
         self.max_weapon: int = safer_convert(safer_index(raw_max_purchases, 0, 0), 0)
         self.max_armor: list[int] = [safer_convert(safer_index(raw_max_purchases, index, 0), 0) for index in range(4, 8)]

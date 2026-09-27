@@ -5,7 +5,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
-from utils.safer_data_handling import safer_get
 from utils.text_formatting import notateNumber
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
 from consts.idleon.consts_idleon import skill_index_list
@@ -192,7 +191,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     sm_multi = ValueToMulti(sm_sum)
 
     gr_level = session_data.account.sailing.artifacts['Gold Relic'].level
-    gr_days = safer_get(session_data.account.raw_optlacc_dict, 125, 0)
+    gr_days = session_data.account.printer.gold_relic_days
     gr_max_days = (
         160 if gr_level == 4
         else 80 if gr_level == 3
@@ -202,18 +201,18 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     gr_multi = ValueToMulti(gr_days * goldrelic_multis_dict.get(gr_level, 0))
 
     supreme_wiring_max_days = 50
-    supreme_wiring_days = min(supreme_wiring_max_days, safer_get(session_data.account.raw_optlacc_dict, 323, 0))
+    supreme_wiring_days = min(supreme_wiring_max_days, session_data.account.printer.supreme_wiring_days)
     supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Supreme Wiring'].owned)
     supreme_wiring_multi = ValueToMulti(supreme_wiring_value)
 
     biggole_mole_max_days = 100
-    biggole_mole_days = min(biggole_mole_max_days, safer_get(session_data.account.raw_optlacc_dict, 354, 0))
+    biggole_mole_days = min(biggole_mole_max_days, session_data.account.printer.biggole_mole_days)
     biggole_mole_value = biggole_mole_days * session_data.account.companions['Biggole Mole'].bonus
     biggole_mole_multi = ValueToMulti(biggole_mole_value)
 
     mop = session_data.account.compass.upgrades['Moon of Print']
     compass_moon_of_print_max_days = 100
-    compass_moon_of_print_days = min(compass_moon_of_print_max_days, safer_get(session_data.account.raw_optlacc_dict, 364, 0))
+    compass_moon_of_print_days = min(compass_moon_of_print_max_days, session_data.account.printer.moon_of_print_days)
     compass_moon_of_print_value = (
         compass_moon_of_print_max_days
         * mop.unlocked

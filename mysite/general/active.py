@@ -205,7 +205,7 @@ def getCardsAdviceList() -> list[Advice]:
         "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
-    if session_data.account.highest_world_reached >= 7:
+    if session_data.account.world_progress.highest_reached >= 7:
         all_cards["Drop Multi"] = ["Coralcave Guardian", "Mantaray"]
         all_cards["Gallery Bonus"] = ["Coralcave Crab"]
     card_advice_limit = 10
@@ -308,7 +308,7 @@ def getConsumablesAdviceList() -> list[Advice]:
 
     #If 30+ Colo tickets owned
     total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
-    if total_colo_tickets > 300 and session_data.account.highest_world_reached >= 6:
+    if total_colo_tickets > 300 and session_data.account.world_progress.highest_reached >= 6:
         consumables.append(Advice(
             label=f"{total_colo_tickets} Colo Tickets available",
             picture_class='colosseum-ticket',
@@ -333,7 +333,7 @@ def getConsumablesAdviceList() -> list[Advice]:
         ))
 
     #Pearls and Balloons
-    if session_data.account.highest_world_reached >= 4:
+    if session_data.account.world_progress.highest_reached >= 4:
         # Black Pearls
         if session_data.account.stored_assets.get('Pearl4').amount > 0:
             black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.characters.all_skills.get(skillName, [0])) < 30]
@@ -370,7 +370,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
 
     # Candy options
-    if session_data.account.highest_world_reached >= 2:
+    if session_data.account.world_progress.highest_reached >= 2:
         if not session_data.account.characters.maestros and session_data.account.characters.jmans:
             consumables.append(Advice(
                 label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
@@ -378,7 +378,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 picture_class='maestro-icon',
                 resource='x1-hr-time-candy'
             ))
-    if session_data.account.highest_world_reached >= 4:
+    if session_data.account.world_progress.highest_reached >= 4:
         for character in session_data.account.characters:
             try:
                 if (
@@ -400,7 +400,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 picture_class='voidwalker-icon',
                 resource='x1-hr-time-candy'
             ))
-    if session_data.account.highest_world_reached >= 6:
+    if session_data.account.world_progress.highest_reached >= 6:
         for worldIndex in range(1, current_world):
             if session_data.account.death_note.worlds[worldIndex].lowest_skull_value < dn_skull_value_list[-1]:
                 consumables.append(Advice(
@@ -773,7 +773,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
 
 def getActiveAdviceSection() -> AdviceSection:
-    # if session_data.account.highest_world_reached < 4:
+    # if session_data.account.world_progress.highest_reached < 4:
     #     active_AdviceSection = AdviceSection(
     #         name="Active",
     #         tier="Not Yet Evaluated",

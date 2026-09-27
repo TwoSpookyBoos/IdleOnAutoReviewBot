@@ -46,6 +46,7 @@ class Killroy(dict[str, KillroyUpgrade]):
         super().__init__()
         raw_optlacc = dict(enumerate(safe_loads(raw_data.get("OptLacc", []))))
         self.total_fights: int = safer_get(raw_optlacc, 112, 0)
+        self.coral_level: int = safer_get(raw_optlacc, 470, 0)
         self.skull_shop: SkullShop = SkullShop(raw_optlacc)
         for name, info in killroy_dict.items():
             upgrades = safer_get(raw_optlacc, info["UpgradesIndex"], 0)

@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 def getAchievementExclusions() -> set[str]:
     exclusionsSet = set()
-    if session_data.account.highest_world_reached >= 6:
+    if session_data.account.world_progress.highest_reached >= 6:
         exclusionsSet.add('Golden Fly')
 
     if (

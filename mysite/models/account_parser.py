@@ -14,11 +14,6 @@ def _parse_wave_1(account):
     _parse_w5(account)
 
 def _parse_general(account):
-    # General / Multiple uses
-    account.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(account.raw_data.get("OptLacc", [])))}
-    # Toolbox provides serverVars,Efficiency provides servervars, otherwise return an empty dict if neither present
-    account.raw_serverVars_dict = safe_loads(account.raw_data.get("serverVars", account.raw_data.get("servervars", {})))
-
     account.family_bonuses.calculate_levels(account.characters.safe)
     _parse_general_item_filter(account)
     _parse_general_inventory_slots_account_wide(account)

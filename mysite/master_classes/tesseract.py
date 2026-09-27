@@ -260,7 +260,7 @@ def get_tesseract_advice_section() -> AdviceSection:
             header="Come back after unlocking an Arcane Cultist in World 6!",
             picture='customized/Tesseract.gif',
             unrated=True,
-            unreached=session_data.account.highest_world_reached < 6,
+            unreached=session_data.account.world_progress.highest_reached < 6,
             completed=False
         )
         return tesseract_advice_section
