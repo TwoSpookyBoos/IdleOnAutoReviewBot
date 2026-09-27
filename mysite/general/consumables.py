@@ -133,26 +133,19 @@ def get_inventory_advicegroup() -> AdviceGroup:
 def get_storage_advicegroup() -> AdviceGroup:
     storage = session_data.account.storage
 
-    ob_label = f"Other Bonuses: {storage['Other Slots Owned']}/{storage['Other Slots Max']} slots"
-    chests_label = f"Store Chests: {storage['Used Chest Slots']}/{storage_chests_item_slots_max} slots"
+    ob_label = f"Other Bonuses: {storage.other_slots_owned}/{storage.other_slots_max} slots"
+    chests_label = f"Store Chests: {storage.used_chest_slots}/{storage_chests_item_slots_max} slots"
     advices = {
         ob_label: [],
         chests_label: []
     }
 
-    for name, details in storage['Other Storage'].items():
-        if details['Owned Slots'] < details['Max Slots']:
-            if details['Source'] == 'Vault':
+    for name, source in storage.items():
+        if source.owned_slots < source.max_slots:
+            if source.source == 'Vault':
                 advices[ob_label].append(get_upgrade_vault_advice(name))
             else:
-                #Expected: Event Shop, Construction Building, Gem Shop
-                advices[ob_label].append(Advice(
-                    label=details['Label'],
-                    picture_class=details['Image'],
-                    progression=details['Progression'],
-                    goal=details['Goal'],
-                    resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
-                ))
+                advices[ob_label].append(source.get_advice())
 
     advices[chests_label] = [
             Advice(
@@ -162,10 +155,10 @@ def get_storage_advicegroup() -> AdviceGroup:
                 goal=1,
                 completed=False,
                 resource='coins' if chest.type == 'Vendor' else ''
-            ) for chest in storage['Missing Chests']
+            ) for chest in storage.missing_chests
         ]
 
-    total_remaining_slots = max(0, storage['Total Slots Max'] - storage['Total Slots Owned'])
+    total_remaining_slots = max(0, storage.total_slots_max - storage.total_slots_owned)
     group = AdviceGroup(
         tier='',
         pre_string=(

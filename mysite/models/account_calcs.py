@@ -1,8 +1,7 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
-from consts.consts_general import getNextESFamilyBreakpoint, storage_chests_item_slots_max, \
-    greenstack_amount
+from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
 from consts.consts_w1 import get_seraph_cosmos_summ_level_goal, \
@@ -231,78 +230,9 @@ def _calculate_general_highest_world_reached(account):
         return 1
 
 def _calculate_general_storage_slots(account):
-    #Dependencies: none
-    #Event Shop bonuses only have a description in the source
-    event_shop_bonuses = {
-        'Storage Chest': 12,
-        'Storage Vault': 16
-    }
-    vault_bonuses = ['Storage Slots']
-    construction_buildings = {
-        'Chest Space': 2
-    }
-    gem_shop_purchases = {
-        'Storage Chest Space': {
-            'Slots': 9,
-        },
-        'More Storage Space': {
-            'Slots': 9,
-        }
-    }
-    for name, slots in event_shop_bonuses.items():
-        account.storage['Other Storage'][name] = {
-            'Source': 'Event Shop',
-            'Label': f"{{{{ Event Shop|#event-shop }}}}: {name}: {slots} slots",
-            'Owned Slots': slots * account.event_points_shop['Bonuses'][name]['Owned'],
-            'Max Slots': slots,
-            'Progression': int(account.event_points_shop['Bonuses'][name]['Owned']),
-            'Goal': 1,
-            'Image': account.event_points_shop['Bonuses'][name]['Image'],
-            'Resource': 'event-point'
-        }
-    for name in vault_bonuses:
-        account.storage['Other Storage'][name] = {
-            'Source': 'Vault',
-            # Vault bonus Advice is standardized in get_upgrade_vault_advice. Extra entries not needed here.
-            'Owned Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].level,
-            'Max Slots': account.vault.upgrades[name].value_per_level * account.vault.upgrades[name].max_level,
-        }
-    for name, slots_per_level in construction_buildings.items():
-        account.storage['Other Storage'][name] = {
-            'Source': 'Construction Building',
-            'Label': f"{{{{ Construction Building|#buildings }}}}: {name}: {slots_per_level * (account.construction_buildings[name]['Level'] - 1)} total slots",
-            'Owned Slots': slots_per_level * (account.construction_buildings[name]['Level'] - 1),
-            'Max Slots': slots_per_level * (account.construction_buildings[name]['MaxLevel'] - 1),
-            'Progression': account.construction_buildings[name]['Level'],
-            'Goal': account.construction_buildings[name]['MaxLevel'],
-            'Image': account.construction_buildings[name]['Image'],
-
-        }
-    for name, details in gem_shop_purchases.items():
-        gs = account.gemshop['Purchases'][name]
-        account.storage['Other Storage'][name] = {
-            'Source': 'Gem Shop',
-            'Label': f"{{{{ Gem Shop|#gem-shop }}}}: {name} ({gs['Subsection']}): "
-                     f"{details['Slots'] * gs['Owned']}/{details['Slots'] * gs['MaxLevel']} total slots",
-            'Owned Slots': details['Slots'] * gs['Owned'],
-            'Max Slots': details['Slots'] * gs['MaxLevel'],
-            'Progression': gs['Owned'],
-            'Goal': gs['MaxLevel'],
-            'Image': name,
-            'Resource': 'gem'
-        }
-
-    #Calculate total storage slots
-    account.storage['Other Slots Owned'] = sum([details['Owned Slots'] for details in account.storage['Other Storage'].values()])
-    account.storage['Total Slots Owned'] = sum([
-        account.storage['Used Chest Slots'],
-        account.storage['Other Slots Owned']
-    ])
-    account.storage['Other Slots Max'] = sum([details['Max Slots'] for details in account.storage['Other Storage'].values()])
-    account.storage['Total Slots Max'] = sum([
-        storage_chests_item_slots_max,
-        account.storage['Other Slots Max']
-    ])
+    account.storage.calculate_other_sources(
+        account.event_points_shop, account.vault, account.construction_buildings, account.gemshop
+    )
 
 
 def _calculate_master_classes(account):

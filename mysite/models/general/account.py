@@ -16,6 +16,7 @@ from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
 from models.general.inventory import Inventory
 from models.general.npc_tokens import NpcTokens
+from models.general.storage import Storage
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
 from models.w1.bribes import Bribes
@@ -109,17 +110,7 @@ class Account:
             'Bundle Data Present': None,
             'Bundles': {}
         }
-        self.storage = {
-            'Used Chests': [],
-            'Used Chests Slots': 0,
-            'Missing Chests': [],
-            'Missing Chests Slots': 0,
-            'Other Storage': {},
-            'Other Slots Owned': 0,
-            'Other Slots Max': 0,
-            'Total Slots Owned': 0,
-            'Total Slots Max': 0
-        }
+        self.storage: Storage = Storage(self.raw_data)
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         self.colo_scores: ColoScores = ColoScores(self.raw_data)
         self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)

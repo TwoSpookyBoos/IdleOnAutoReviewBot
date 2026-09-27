@@ -1022,6 +1022,19 @@ storage_chests_dict = {
 storage_chests_item_slots_max = (
     sum(storage_chests_dict.values())
 )
+# Event Shop bonuses only have a description in the source
+storage_event_shop_slots = {
+    'Storage Chest': 12,
+    'Storage Vault': 16,
+}
+storage_vault_upgrades = ['Storage Slots']
+storage_building_slots_per_level = {
+    'Chest Space': 2,
+}
+storage_gem_shop_slots = {
+    'Storage Chest Space': 9,
+    'More Storage Space': 9,
+}
 
 #Gem Shop
 gem_shop_section_names = ['Oddities', 'Usables', 'Bonuses']
