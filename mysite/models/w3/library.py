@@ -1,4 +1,5 @@
 from models.advice.advice import Advice
+from models.general.achievements import Achievements
 from models.general.merits import Merits
 from models.w3.atom_collider import AtomCollider
 from models.w3.buildings import Buildings
@@ -15,13 +16,13 @@ class Library:
         self.max_book_level: int = 100
 
     def calculate_max_book_levels(
-        self, construction_buildings: Buildings, achievements: dict, atom_collider: AtomCollider,
+        self, construction_buildings: Buildings, achievements: Achievements, atom_collider: AtomCollider,
         sailing: Sailing, merits: Merits, saltlick, summoning
     ):
         self.static_sum = (
             0
             + (25 * (0 < construction_buildings['Talent Book Library'].level))
-            + (5 * achievements['Checkout Takeout']['Complete'])
+            + (5 * achievements['Checkout Takeout'].complete)
             + (10 * (0 < atom_collider['Oxygen - Library Booker'].level))
             + (25 * sailing.artifacts['Fury Relic'].level)
         )

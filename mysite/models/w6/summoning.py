@@ -380,8 +380,8 @@ class Summoning:
         player_mgc_rest = ValueToMulti(
             (25 * account.sailing.artifacts["The Winz Lantern"].level)
             + account.merits[5][4].level
-            + int(account.achievements["Spectre Stars"]["Complete"])
-            + int(account.achievements["Regalis My Beloved"]["Complete"])
+            + int(account.achievements["Spectre Stars"].complete)
+            + int(account.achievements["Regalis My Beloved"].complete)
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
             + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
             # Not for library
@@ -391,8 +391,8 @@ class Summoning:
         player_mgc_library = ValueToMulti(
             (25 * account.sailing.artifacts["The Winz Lantern"].level)
             + account.merits[5][4].level
-            + int(account.achievements["Spectre Stars"]["Complete"])
-            + int(account.achievements["Regalis My Beloved"]["Complete"])
+            + int(account.achievements["Spectre Stars"].complete)
+            + int(account.achievements["Regalis My Beloved"].complete)
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
             + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
         )

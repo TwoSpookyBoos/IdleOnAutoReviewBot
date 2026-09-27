@@ -438,7 +438,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus = 0.0
 
     # Achievements - Big Big Hampter
-    big_hampter_completed = session_data.account.achievements['Big Big Hampter']['Complete']
+    big_hampter_completed = session_data.account.achievements['Big Big Hampter'].complete
     big_hampter_value = 4 if big_hampter_completed else 0
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Achievements|#achievements }}}}- Big Big Hampter:"
@@ -450,7 +450,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_6_bonus += big_hampter_value
 
     # Achievements - Summoning GM
-    summoning_gm_completed = session_data.account.achievements['Summoning GM']['Complete']
+    summoning_gm_completed = session_data.account.achievements['Summoning GM'].complete
     summoning_gm_value = 6 if summoning_gm_completed else 0
     drop_rate_aw_advice[w6].append(Advice(
         label=f"{{{{ Achievements|#achievements }}}}- Summoning GM:"

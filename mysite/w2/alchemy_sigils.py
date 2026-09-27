@@ -43,7 +43,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
 
     mga = ValueToMulti(
-        (20 * session_data.account.achievements['Vial Junkee']['Complete'])
+        (20 * session_data.account.achievements['Vial Junkee'].complete)
         + (20 * session_data.account.gemshop.purchases['Sigil Supercharge'].owned)
         + player_peapod_value
         + willow_vial_value
@@ -92,9 +92,9 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     # Multi Group A
     speed_Advice[mga_label].append(Advice(
         label=f"W2 Achievement: Vial Junkee: "
-              f"+{20 * session_data.account.achievements['Vial Junkee']['Complete']}/20%",
+              f"+{20 * session_data.account.achievements['Vial Junkee'].complete}/20%",
         picture_class='vial-junkee',
-        progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
+        progression=int(session_data.account.achievements['Vial Junkee'].complete),
         goal=1
     ))
     sigil_supercharge = session_data.account.gemshop.purchases['Sigil Supercharge']

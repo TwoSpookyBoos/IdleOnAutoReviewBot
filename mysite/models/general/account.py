@@ -4,6 +4,7 @@ from consts.consts_autoreview import lowest_accepted_version
 from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
+from models.general.achievements import Achievements
 from models.general.class_kill_talents import ClassKillTalents
 from models.general.colo_scores import ColoScores
 from models.general.character import Character, talent_bonus_banned
@@ -124,6 +125,7 @@ class Account:
         self.highest_world_reached = 1
         self.inventory: Inventory = Inventory()
         self.gemshop: GemShop = GemShop(self.raw_data)
+        self.achievements: Achievements = Achievements(self.raw_data)
         self.merits: Merits = Merits(self.raw_data)
         self.storage: Storage = Storage(self.raw_data)
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)

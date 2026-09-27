@@ -9,6 +9,7 @@ from consts.w3.equinox import (
     equinox_upgrades,
 )
 from models.advice.advice import Advice
+from models.general.achievements import Achievements
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -165,8 +166,8 @@ class Equinox:
         self.dreams: EquinoxDreams = EquinoxDreams(safe_loads(raw_data.get('WeeklyBoss', {})) or {})
         self.upgrades: EquinoxUpgrades = EquinoxUpgrades(safe_loads(raw_data.get('Dream', [])) or [], self.dreams)
 
-    def calculate_unlocked(self, achievements: dict, nightmares_research_level: int):
-        self.unlocked = achievements['Equinox Visitor']['Complete']
+    def calculate_unlocked(self, achievements: Achievements, nightmares_research_level: int):
+        self.unlocked = achievements['Equinox Visitor'].complete
         for dream in self.dreams.values():
             dream.locked = dream.nightmare and nightmares_research_level < 1
 

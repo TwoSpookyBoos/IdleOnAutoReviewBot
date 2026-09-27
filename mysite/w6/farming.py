@@ -431,9 +431,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 # MISC
     # Achievement
     evo_advices[misc].append(Advice(
-        label=f"""W6 Achievement: Lil' Overgrowth: {1.05 * session_data.account.achievements["Lil' Overgrowth"]['Complete']:.2f}/1.05x""",
+        label=f"""W6 Achievement: Lil' Overgrowth: {1.05 * session_data.account.achievements["Lil' Overgrowth"].complete:.2f}/1.05x""",
         picture_class='lil-overgrowth',
-        progression=int(session_data.account.achievements["Lil' Overgrowth"]['Complete']),
+        progression=int(session_data.account.achievements["Lil' Overgrowth"].complete),
         goal=1
     ))
     #Killroy
@@ -562,9 +562,9 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     #Achievement - Crop Flooding
     bm_advices[mgb].append(Advice(
         label=f"W6 Achievement: Crop Flooding: "
-              f"+{5 * session_data.account.achievements['Crop Flooding']['Complete']}/5%",
+              f"+{5 * session_data.account.achievements['Crop Flooding'].complete}/5%",
         picture_class='crop-flooding',
-        progression=int(session_data.account.achievements['Crop Flooding']['Complete']),
+        progression=int(session_data.account.achievements['Crop Flooding'].complete),
         goal=1
     ))
     bm_ag = AdviceGroup(
@@ -603,9 +603,9 @@ def getOGAdviceGroup(farming):
 #Achievement- Big Time Land Owner = 1.15x
     og_advices[ach].append(Advice(
         label=f"W6 Achievement: Big Time Land Owner: "
-              f"{ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner']['Complete']):.2f}/1.15x",
+              f"{ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner'].complete):.2f}/1.15x",
         picture_class='big-time-land-owner',
-        progression=int(session_data.account.achievements['Big Time Land Owner']['Complete']),
+        progression=int(session_data.account.achievements['Big Time Land Owner'].complete),
         goal=1
     ))
 #Star Sign

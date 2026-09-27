@@ -6,7 +6,7 @@ from consts.consts_autoreview import items_codes_and_names
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, achievements_list
+    key_cards, cardset_names, card_raw_data
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
@@ -215,7 +215,6 @@ def _parse_general(account):
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
     account.family_bonuses.calculate_levels(account.safe_characters)
-    _parse_general_achievements(account)
     _parse_general_item_filter(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
@@ -241,30 +240,6 @@ def _parse_general_quests(account):
                 status = 'Unaccepted'
             account.compiled_quests[questName][f'{status}Count'] += 1
             account.compiled_quests[questName][f'{status}Chars'].append(charIndex)
-
-def _parse_general_achievements(account):
-    account.achievements = {}
-    raw_reg_achieves = safe_loads(account.raw_data.get('AchieveReg', []))
-    if len(raw_reg_achieves) < len(achievements_list):
-        logger.warning(f"Achievements list shorter than expected by {len(achievements_list) - len(raw_reg_achieves)}. "
-                       f"Likely old data. Defaulting them all to Incomplete.")
-        while len(raw_reg_achieves) < len(achievements_list):
-            raw_reg_achieves.append(0)
-
-    for achieveIndex, achieveData in enumerate(achievements_list):
-        ach_name = achieveData[0].replace('_', ' ')
-        try:
-            if ach_name != "FILLERZZZ ACH":
-                account.achievements[ach_name] = {
-                    'Complete': raw_reg_achieves[achieveIndex] == -1,
-                    'Raw': raw_reg_achieves[achieveIndex]
-                }
-        except Exception as e:
-            logger.warning(f"Achievements Parse error for {ach_name} at Index {achieveIndex}: {e}. Defaulting to Incomplete")
-            account.achievements[ach_name] = {
-                'Complete': False,
-                'Raw': 0
-            }
 
 def _parse_general_item_filter(account):
     account.item_filter = []

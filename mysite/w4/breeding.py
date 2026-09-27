@@ -188,7 +188,7 @@ def getBreedabilityAdviceGroup():
     b_advices.insert(1, Advice(
         label=f"I LOVE These Mobs achievement: {achievement_7s}/15",
         picture_class='i-love-these-pets',
-        progression=int(session_data.account.achievements['I LOVE These Mobs']['Complete']),
+        progression=int(session_data.account.achievements['I LOVE These Mobs'].complete),
         goal=1,
     ))
 
@@ -200,7 +200,7 @@ def getBreedabilityAdviceGroup():
         pre_string="Breedability Multi and Heart Progress",
         post_string=(
             f"Note: W4 pets don't count toward the achievement {EmojiType.FROWN.value}"
-            if not session_data.account.achievements['I LOVE These Mobs']['Complete'] else
+            if not session_data.account.achievements['I LOVE These Mobs'].complete else
             ''
         ),
         advices=b_advices,
@@ -566,7 +566,7 @@ def getPetDamageAdviceGroup():
     electrolyte_vial_bonus = electrolyte_vial.value
 
     barley_lost_achievement = session_data.account.achievements['Barley Lost']
-    barley_lost_achievement_bonus = int(barley_lost_achievement['Complete']) * 5
+    barley_lost_achievement_bonus = int(barley_lost_achievement.complete) * 5
 
     croissant_meal = session_data.account.meals['Croissant']
     croissant_meal_bonus = croissant_meal.value
@@ -625,7 +625,7 @@ def getPetDamageAdviceGroup():
             Advice(
                 label=f'{{{{ Achievement|#achievements }}}} - Barley Lost: +{barley_lost_achievement_bonus}%',
                 picture_class='barley-lost',
-                progression=int(barley_lost_achievement['Complete']),
+                progression=int(barley_lost_achievement.complete),
                 goal=1
             ),
             Advice(

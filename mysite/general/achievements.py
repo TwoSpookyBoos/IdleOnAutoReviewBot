@@ -1,5 +1,4 @@
 from models.general.session_data import session_data
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
@@ -67,7 +66,7 @@ def getAchievementStatus(achievementName):
             case 'Good Plate':
                 return min(11, max([meal.level for meal in session_data.account.meals.values()], default=0)), 11, ''
             case 'Bonsai Bonanza':
-                return min(100, session_data.account.achievements[achievementName]['Raw']), 100, 'bonsai'
+                return min(100, session_data.account.achievements[achievementName].raw), 100, 'bonsai'
 
             #Monster Respawn
             case 'Two-Time Savior':
@@ -92,14 +91,14 @@ def getAchievementStatus(achievementName):
             #Other Nice Rewards
             #W2
             case 'Ink Blot':
-                return min(101, session_data.account.achievements[achievementName]['Raw']), 101, 'silver-pen'
+                return min(101, session_data.account.achievements[achievementName].raw), 101, 'silver-pen'
             case 'Vial Junkee':
                 return sum(1 for vial in session_data.account.alchemy_vials.values() if vial.level >= 9), 10, 'vial-9'
             case 'Fruit Salad':
                 return notateNumber('Match', min(1000000, session_data.account.all_assets.get('Bug4').amount), 0, 'K'), '1000K', 'fruitfly'
             #W3
             case 'Checkout Takeout':
-                return min(1000, session_data.account.achievements[achievementName]['Raw']), 1000, 'talent-book-library'
+                return min(1000, session_data.account.achievements[achievementName].raw), 1000, 'talent-book-library'
             #W4
             case 'Cabbage Patch':
                 if session_data.account.meals['Cabbage'].level > 0:
@@ -123,7 +122,7 @@ def getAchievementStatus(achievementName):
             case 'Grand Captain':
                 return min(10, session_data.account.sailing.max_captain_level), 10, 'captain-0-idle'
             case 'Voraci Vantasia':
-                return min(500, session_data.account.achievements[achievementName]['Raw']), 500, 'voraci'
+                return min(500, session_data.account.achievements[achievementName].raw), 500, 'voraci'
             case 'Vitamin D-licious':
                 return notateNumber('Match', min(5000000, session_data.account.all_assets.get('LavaB3').amount), 0, 'K'), '5000K', 'orange-slice'
             case 'Maroon Warship':
@@ -143,7 +142,7 @@ def getAchievementStatus(achievementName):
                 return min(58, session_data.account.summoning.regular.total_win), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
-                return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''
+                return session_data.account.achievements[achievementName].raw, 'IDK', ''
     except Exception as reason:
         logger.exception(f"Defaulting {achievementName} because {reason}")
         return 0, 1, ''
@@ -160,19 +159,15 @@ def getProgressionTiersAdviceGroup():
     for tierNumber, tierRequirements in achievements_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for categoryName, categoryAchievementsDict in tierRequirements.items():
-            for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
-                if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
+            for achievementName in categoryAchievementsDict:
+                if not session_data.account.achievements.get(achievementName).complete and achievementName not in exclusionsSet:
                     add_subgroup_if_available_slot(achievements_AdviceDict[categoryName], subgroupName)
                     if subgroupName in achievements_AdviceDict[categoryName]:
-                        prog, goal, resource = getAchievementStatus(achievementName)
-                        achievements_AdviceDict[categoryName][subgroupName].append(Advice(
-                            label=f"W{achievementDetailsDict['World']} {achievementName}: {achievementDetailsDict['Reward']}",
-                            picture_class=achievementName,
-                            progression=prog,
-                            goal=goal,
-                            resource=resource,
-                            completed=False
-                        ))
+                        achievements_AdviceDict[categoryName][subgroupName].append(
+                            session_data.account.achievements[achievementName].get_tier_advice(
+                                *getAchievementStatus(achievementName)
+                            )
+                        )
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber
 

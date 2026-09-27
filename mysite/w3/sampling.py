@@ -44,8 +44,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += stample_value
     account_sum += amplestample_value
     account_sum += session_data.account.arcade[5].value
-    account_sum += session_data.account.achievements['Saharan Skull']['Complete']
-    #achievementStatus = session_data.account.achievements['Saharan Skull']['Complete']
+    account_sum += session_data.account.achievements['Saharan Skull'].complete
+    #achievementStatus = session_data.account.achievements['Saharan Skull'].complete
     star_talent_one_point = lava_func('bigBase', 1, 10, 0.075)
     account_sum += star_talent_one_point
 
@@ -85,9 +85,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     )
     psr_Advices[account_subgroup].append(session_data.account.arcade[5].get_advice())
     psr_Advices[account_subgroup].append(Advice(
-        label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull']['Complete'])}/1%",
+        label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull'].complete)}/1%",
         picture_class='saharan-skull',
-        progression=int(session_data.account.achievements['Saharan Skull']['Complete']),
+        progression=int(session_data.account.achievements['Saharan Skull'].complete),
         goal=1
     ))
     psr_Advices[account_subgroup].append(Advice(

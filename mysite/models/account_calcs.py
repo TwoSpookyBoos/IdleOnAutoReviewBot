@@ -174,27 +174,27 @@ def _calculate_general_highest_world_reached(account):
         return 7
     elif (
         safer_get(account.raw_optlacc_dict, 194, 0) > 0
-        or account.achievements['Valley Visitor']['Complete']
+        or account.achievements['Valley Visitor'].complete
         or account.death_note.worlds[6].maps_dict[251].kill_count > 0
     ):
         return 6
     elif (
-        account.achievements['The Plateauourist']['Complete']
+        account.achievements['The Plateauourist'].complete
         or account.death_note.worlds[5].maps_dict[201].kill_count > 0
     ):
         return 5
     elif (
-        account.achievements['Milky Wayfarer']['Complete']
+        account.achievements['Milky Wayfarer'].complete
         or account.death_note.worlds[4].maps_dict[151].kill_count > 0
     ):
         return 4
     elif (
-        account.achievements['Snowy Wonderland']['Complete']
+        account.achievements['Snowy Wonderland'].complete
         or account.death_note.worlds[3].maps_dict[101].kill_count > 0
     ):
         return 3
     elif (
-        account.achievements['Down by the Desert']['Complete']
+        account.achievements['Down by the Desert'].complete
         or account.death_note.worlds[2].maps_dict[51].kill_count > 0
     ):
         return 2
@@ -583,11 +583,11 @@ def _calculate_general_character_bonus_talent_levels(account):
             'Goal': account.equinox.upgrades['Equinox Symbols'].final_max_level
         },
         'Maroon Warship': {
-            'Value': 1 * account.achievements['Maroon Warship']['Complete'],
+            'Value': 1 * account.achievements['Maroon Warship'].complete,
             'Image': 'maroon-warship',
             'Label': f"W5 Achievement: Maroon Warship: "
-                     f"+{1 * account.achievements['Maroon Warship']['Complete']}/1",
-            'Progression': 1 if account.achievements['Maroon Warship']['Complete'] else 0,
+                     f"+{1 * account.achievements['Maroon Warship'].complete}/1",
+            'Progression': 1 if account.achievements['Maroon Warship'].complete else 0,
             'Goal': 1
         },
         'Sneaking Mastery': {

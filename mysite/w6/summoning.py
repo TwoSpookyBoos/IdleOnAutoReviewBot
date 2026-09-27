@@ -129,16 +129,16 @@ def get_bonuses_multi() -> AdviceGroup:
     ))
     multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Spectre Stars: "
-              f"+{int(account.achievements['Spectre Stars']['Complete'])}/1%",
+              f"+{int(account.achievements['Spectre Stars'].complete)}/1%",
         picture_class="spectre-stars",
-        progression=int(account.achievements['Spectre Stars']['Complete']),
+        progression=int(account.achievements['Spectre Stars'].complete),
         goal=1
     ))
     multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Regalis My Beloved: "
-              f"+{int(account.achievements['Regalis My Beloved']['Complete'])}/1%",
+              f"+{int(account.achievements['Regalis My Beloved'].complete)}/1%",
         picture_class="regalis-my-beloved",
-        progression=summoning.sanctuary_count if not account.achievements['Regalis My Beloved']['Complete'] else 360,
+        progression=summoning.sanctuary_count if not account.achievements['Regalis My Beloved'].complete else 360,
         goal=360
     ))
     multi_advices[mgc].append(Advice(

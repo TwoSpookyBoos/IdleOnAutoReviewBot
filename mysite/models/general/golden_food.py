@@ -142,7 +142,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
         # EtcBonuses("8") not modelled
         "Haungry For Gold Talent": 0,
         "Golden Apple Stamp": account.stamps["Golden Apple Stamp"].total_value,
-        "Nutty Crafter Achievement": 5 * achievements["Nutty Crafter"]["Complete"],
+        "Nutty Crafter Achievement": 5 * achievements["Nutty Crafter"].complete,
         "Shimmeron Bubble": 0,
         "Emoji Veggie Sigil": sigil_value * sigil_multi,
         "Yumi Peachring Meal": account.meals["Yumi Peachring"].value,
@@ -152,8 +152,8 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
             account.sneaking.pristine_charms["Gumm Stick"].value
         ),
         "Beanstacker Achievements": (
-            2 * achievements["Beanstacker Trainee"]["Complete"]
-            + 3 * achievements["Beanstacker Prodigy"]["Complete"]
+            2 * achievements["Beanstacker Trainee"].complete
+            + 3 * achievements["Beanstacker Prodigy"].complete
         ),
         "Ballot": (
             account.ballot[26].value

@@ -766,7 +766,7 @@ class Farming:
         evo_multi["Ballot Multi Max"] = account.ballot[29].multi
         evo_multi["Ballot Multi Current"] = account.ballot[29].active_multi
         evo_multi["Misc Multi"] = (
-            ValueToMulti(5 * account.achievements["Lil' Overgrowth"]["Complete"])
+            ValueToMulti(5 * account.achievements["Lil' Overgrowth"].complete)
             * account.killroy.skull_shop.crop_multi
             * ValueToMulti(
                 15
@@ -814,7 +814,7 @@ class Farming:
         bean_multi["mga"] = self.market["More Beenz"].as_multi
         bean_multi["mgb"] = ValueToMulti(
             account.sneaking.emporium["Deal Sweetening"].value
-            + (5 * account.achievements["Crop Flooding"]["Complete"])
+            + (5 * account.achievements["Crop Flooding"].complete)
         )
         bean_multi["Total Multi"] = bean_multi["mga"] * bean_multi["mgb"]
         self.multi["Bean"] = bean_multi
@@ -823,7 +823,7 @@ class Farming:
         # Fun calculations
         og_multi = {}
         og_multi["Ach Multi"] = ValueToMulti(
-            15 * account.achievements["Big Time Land Owner"]["Complete"]
+            15 * account.achievements["Big Time Land Owner"].complete
         )
         og_multi["Starsign Final Value"] = (
             15

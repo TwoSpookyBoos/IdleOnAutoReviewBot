@@ -56,9 +56,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"W3 Achievement: Checkout Takeout: "
-              f"+{5 * session_data.account.achievements['Checkout Takeout']['Complete']}/5",
+              f"+{5 * session_data.account.achievements['Checkout Takeout'].complete}/5",
         picture_class="checkout-takeout",
-        progression=int(session_data.account.achievements['Checkout Takeout']['Complete']),
+        progression=int(session_data.account.achievements['Checkout Takeout'].complete),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
@@ -258,9 +258,9 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Achievement
     speed_Advices.append(Advice(
-        label=f"W3 Achievement: Checkout Takeout: +{30 * session_data.account.achievements['Checkout Takeout']['Complete']}%",
+        label=f"W3 Achievement: Checkout Takeout: +{30 * session_data.account.achievements['Checkout Takeout'].complete}%",
         picture_class='checkout-takeout',
-        progression=int(session_data.account.achievements['Checkout Takeout']['Complete']),
+        progression=int(session_data.account.achievements['Checkout Takeout'].complete),
         goal=1
     ))
     
