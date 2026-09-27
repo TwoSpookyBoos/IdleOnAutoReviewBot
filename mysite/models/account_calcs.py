@@ -14,9 +14,8 @@ from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.advice.advice import Advice
-from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_get, safer_math_log
+from utils.safer_data_handling import safe_loads, safer_get
 from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
@@ -954,44 +953,9 @@ def _calculate_general_crystal_spawn_chance(account):
     )
 
 def _calculate_class_unique_kill_stacks(account):
-    abc = {
-        'King of the Remembered': {
-            'Talent Number': 178,
-            'Bonus': 'Printer Output',
-        },
-        'Archlord of the Pirates': {
-            'Talent Number': 328,
-            'Bonus': 'Drop Rate and Class EXP',
-        },
-        'Wormhole Emperor': {
-            'Talent Number': 508,
-            'Bonus': 'Damage',
-        }
-    }
-    for talent_name, talent_details in abc.items():
-        talent = account.class_kill_talents[talent_name]
-        talent['Talent Number'] = talent_details['Talent Number']
-        talent['Bonus Type'] = talent_details['Bonus']
-        talent['funcType'] = all_talentsDict[talent_details['Talent Number']]['funcX']
-        talent['x1'] = all_talentsDict[talent_details['Talent Number']]['x1']
-        talent['x2'] = all_talentsDict[talent_details['Talent Number']]['x2']
-        talent['Kill Stacks'] = safer_math_log(talent['Kills'], 'Lava')
-        # Per current char; account-wide shows the best char
-        talent['Highest Preset Level'] = max(
-            [
-                account.get_class_kill_talent_level(talent_name, char)
-                for char in account.safe_characters
-            ],
-            default=0
-        )
-        talent['Talent Value'] = lava_func(
-            talent['funcType'],
-            talent['Highest Preset Level'],
-            talent['x1'],
-            talent['x2']
-        )
-        talent['Total Value'] = talent['Talent Value'] * talent['Kill Stacks']
-        # logger.debug(f"{account.class_kill_talents[talent_name] = }")
+    account.class_kill_talents.calculate_values(
+        account.safe_characters, account.get_best_talent_level
+    )
 
 def _calculate_wave_4(account):
     # Mostly stuff that relies on Talent Level calculations that happen in Wave 3

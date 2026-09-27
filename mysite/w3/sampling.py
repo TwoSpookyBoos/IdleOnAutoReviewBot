@@ -248,7 +248,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
             best_kotr_preset_level = dk.secondary_preset_talents.get("178", 0) + levels_above_max
 
     talent_value = lava_func('decay', best_kotr_preset_level, 5, 150)
-    orb_kills = session_data.account.class_kill_talents['King of the Remembered']['Kills']
+    orb_kills = session_data.account.class_kill_talents['King of the Remembered'].kills
     pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
     kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
 

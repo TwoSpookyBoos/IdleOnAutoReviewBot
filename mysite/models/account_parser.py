@@ -228,7 +228,6 @@ def _parse_general(account):
     account.daily_world_boss_kills = safer_get(account.raw_optlacc_dict, 195, 0)
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
-    _parse_class_unique_kill_stacks(account)
     _parse_general_gem_shop(account)
     _parse_general_gem_shop_optlacc(account)
     _parse_general_gem_shop_bundles(account)
@@ -239,19 +238,6 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
-
-def _parse_class_unique_kill_stacks(account):
-    account.class_kill_talents = {
-        'Archlord of the Pirates': {
-            'Kills': safer_get(account.raw_optlacc_dict, 139, 0),
-        },
-        'King of the Remembered': {
-            'Kills': safer_get(account.raw_optlacc_dict, 138, 0),
-        },
-        'Wormhole Emperor': {
-            'Kills': safer_get(account.raw_optlacc_dict, 152, 0),
-        }
-    }
 
 def _parse_general_gem_shop(account):
     raw_gem_items_purchased = safe_loads(account.raw_data.get('GemItemsPurchased', []))

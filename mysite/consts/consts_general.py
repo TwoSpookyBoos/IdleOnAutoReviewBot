@@ -1036,6 +1036,34 @@ storage_gem_shop_slots = {
     'More Storage Space': 9,
 }
 
+# Class talents that stack per kill
+class_kill_talents_dict = {
+    'Archlord of the Pirates': {
+        'Talent Number': 328,
+        'Bonus': 'Drop Rate and Class EXP',
+        'Kills OptLacc': 139,
+        'Farm Label': "Farm more Plunder Kills with Siege Breaker for Drop Rate"
+                      "<br>Crystal Setup at W5 Citringes for ~20k per day",
+        'Resource': 'pirate-flag',
+    },
+    'King of the Remembered': {
+        'Talent Number': 178,
+        'Bonus': 'Printer Output',
+        'Kills OptLacc': 138,
+        'Farm Label': "Farm more Orb stacks with Divine Knight for Printer Output"
+                      "<br>Crystal Setup at any world you need Crystal loot from",
+        'Resource': 'orb-of-remembrance',
+    },
+    'Wormhole Emperor': {
+        'Talent Number': 508,
+        'Bonus': 'Damage',
+        'Kills OptLacc': 152,
+        'Farm Label': "Farm more Wormhole kills with Elemental Sorcerer for Damage"
+                      "<br>Generally alongside farming Rare Drops, such as Dark Lanterns",
+        'Resource': 'dimensional-wormhole',
+    },
+}
+
 #Gem Shop
 gem_shop_section_names = ['Oddities', 'Usables', 'Bonuses']
 gem_shop_subsection_names = [

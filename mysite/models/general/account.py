@@ -2,10 +2,10 @@ from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
 from consts.consts_w4 import max_meal_count, max_meal_plate_level
-from consts.idleon.lava_func import lava_func
 from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
+from models.general.class_kill_talents import ClassKillTalents
 from models.general.colo_scores import ColoScores
 from models.general.character import Character, talent_bonus_banned
 from models.general.companions import Companions
@@ -123,6 +123,7 @@ class Account:
         self.dungeons: Dungeons = Dungeons(self.raw_data)
         self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
         self.family_bonuses: FamilyBonuses = FamilyBonuses()
+        self.class_kill_talents: ClassKillTalents = ClassKillTalents(self.raw_data)
         #Class lists
         self.beginners = []
         self.jmans = []
@@ -278,7 +279,7 @@ class Account:
         character: Character
     ) -> int:
         return self.get_best_talent_level(
-            self.class_kill_talents[talent_name]['Talent Number'], character
+            self.class_kill_talents[talent_name].talent_number, character
         )
 
     def get_best_talent_level(self, talent_index: int, character: Character) -> int:
@@ -305,11 +306,9 @@ class Account:
         talent_name: str,
         character: Character
     ) -> float:
-        talent = self.class_kill_talents[talent_name]
         level = self.get_class_kill_talent_level(talent_name, character)
         return (
-            lava_func(talent['funcType'], level, talent['x1'], talent['x2'])
-            * talent['Kill Stacks']
+            self.class_kill_talents[talent_name].value_at_level(level)
             if level > 0
             else 0
         )
