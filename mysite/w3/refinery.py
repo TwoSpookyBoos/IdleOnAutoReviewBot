@@ -7,126 +7,9 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from math import floor, ceil
 from utils.logging import get_logger
-from utils.safer_data_handling import safer_math_pow
 
 logger = get_logger(__name__)
-
-class Salt:
-    def __init__(self, salt_name: str, auto_refine: int, salt_rank: int, next_salt_rank: int, previousSalt, merit_purchased: bool = True, running: bool = False):
-        self.salt_name: str = salt_name
-        self.salt_rank: int = salt_rank
-        self.auto_refine: int = auto_refine
-        self.max_rank_with_excess: int = salt_rank
-        self.merit_purchased: bool = merit_purchased
-        self.running: bool = running
-        if self.merit_purchased is True:
-            self.salt_consumption_scaling: float = 1.3
-        else:
-            self.salt_consumption_scaling: float = 1.5
-        if salt_name in session_data.account.refinery:
-            self.image: str = session_data.account.refinery[salt_name]['Image']
-            self.cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['CyclesPerSynthCycle']
-            self.consumption_of_previous_salt: int = session_data.account.refinery[salt_name]['PreviousSaltConsumption']
-            self.next_salt_consumption: int = session_data.account.refinery[salt_name]['NextSaltConsumption']
-            self.next_salt_cycles_per_Synthesis_cycle: int = session_data.account.refinery[salt_name]['NextSaltCyclesPerSynthCycle']
-            self._output_per_cycle: int = int(floor(min(refinery_max_powerpercycle, safer_math_pow(self.salt_rank, 1.3) * (1 + session_data.account.companions['Panda'].bonus))))
-            self.output: int = self._output_per_cycle * self.cycles_per_Synthesis_cycle
-            self.output_maxed = self._output_per_cycle >= refinery_max_powerpercycle
-            if next_salt_rank != 0:
-                self.consumed: int = int(floor(safer_math_pow(next_salt_rank, self.salt_consumption_scaling)) * self.next_salt_consumption * self.next_salt_cycles_per_Synthesis_cycle)
-            else:
-                self.consumed: int = 0
-            self.excess: bool = self.output >= self.consumed
-            if self.excess:
-                self.excess_or_deficit: str = 'excess'
-            else:
-                self.excess_or_deficit: str = 'deficit'
-            self.excess_amount: int = self.output - self.consumed
-            if previousSalt is not None:
-                if previousSalt.excess is True:
-                    if next_salt_rank != 0 or salt_name == 'Nullo':
-                        self.max_rank_with_excess: int = (
-                            max(0, ceil(safer_math_pow(
-                                (previousSalt.output / (self.consumption_of_previous_salt * self.cycles_per_Synthesis_cycle)),
-                                (1 / self.salt_consumption_scaling)) - 1))
-                        )
-                    if self.output_maxed:
-                        self.max_rank_with_excess = salt_rank
-                        self.canBeLeveled = False
-                    elif self.max_rank_with_excess >= salt_rank:
-                        self.canBeLeveled = True
-                    else:
-                        self.max_rank_with_excess = salt_rank
-                        self.canBeLeveled = False
-                else:
-                    self.max_rank_with_excess = salt_rank
-                    self.canBeLeveled = False
-
-    def __str__(self) -> str:
-        return self.salt_name
-
-    def __bool__(self) -> bool:
-        return self.excess
-
-def getSaltDict() -> dict[str, Salt]:
-    saltDict = {}
-    saltDict['RedSalt'] = Salt(
-        salt_name='Red',
-        auto_refine=session_data.account.refinery['Red']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Red']['Rank'],
-        next_salt_rank=session_data.account.refinery['Orange']['Rank'],
-        previousSalt=None,
-        merit_purchased=True,
-        running=session_data.account.refinery['Red']['Running'],
-    )
-    saltDict['OrangeSalt'] = Salt(
-        salt_name='Orange',
-        auto_refine=session_data.account.refinery['Orange']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Orange']['Rank'],
-        next_salt_rank=session_data.account.refinery['Blue']['Rank'],
-        previousSalt=saltDict['RedSalt'],
-        merit_purchased=session_data.account.merits[2][6].level >= 1,
-        running=session_data.account.refinery['Orange']['Running'],
-    )
-    saltDict['BlueSalt'] = Salt(
-        salt_name='Blue',
-        auto_refine=session_data.account.refinery['Blue']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Blue']['Rank'],
-        next_salt_rank=session_data.account.refinery['Green']['Rank'],
-        previousSalt=saltDict['OrangeSalt'],
-        merit_purchased=session_data.account.merits[2][6].level >= 2,
-        running=session_data.account.refinery['Blue']['Running'],
-    )
-    saltDict['GreenSalt'] = Salt(
-        salt_name='Green',
-        auto_refine=session_data.account.refinery['Green']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Green']['Rank'],
-        next_salt_rank=session_data.account.refinery['Purple']['Rank'],
-        previousSalt=saltDict['BlueSalt'],
-        merit_purchased=session_data.account.merits[2][6].level >= 3,
-        running=session_data.account.refinery['Green']['Running'],
-    )
-    saltDict['PurpleSalt'] = Salt(
-        salt_name='Purple',
-        auto_refine=session_data.account.refinery['Purple']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Purple']['Rank'],
-        next_salt_rank=session_data.account.refinery['Nullo']['Rank'],
-        previousSalt=saltDict['GreenSalt'],
-        merit_purchased=session_data.account.merits[2][6].level >= 4,
-        running=session_data.account.refinery['Purple']['Running'],
-    )
-    saltDict['NulloSalt'] = Salt(
-        salt_name='Nullo',
-        auto_refine=session_data.account.refinery['Nullo']['AutoRefine'],
-        salt_rank=session_data.account.refinery['Nullo']['Rank'],
-        next_salt_rank=0,
-        previousSalt=saltDict['PurpleSalt'],
-        merit_purchased=session_data.account.merits[2][6].level >= 5,
-        running=session_data.account.refinery['Nullo']['Running'],
-    )
-    return saltDict
 
 def getRefineryProgressionTierAdviceGroups():
     refinery_AdviceDict = {
@@ -142,74 +25,74 @@ def getRefineryProgressionTierAdviceGroups():
     max_tier = true_max - optional_tiers
     tier_AutoRefine = 1
     tier_W3Merits = 1
-    salt_dict: dict[str, Salt] = getSaltDict()
+    refinery = session_data.account.refinery
 
     # AutoRefine and On/Off Advice
-    if not salt_dict['RedSalt'].running:
-        if salt_dict['RedSalt'].salt_rank < 100:
+    if not refinery['Red'].running:
+        if refinery['Red'].rank < 100:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['RedSalt'].salt_name} Production: Off",
-                picture_class=salt_dict['RedSalt'].image,
+                label=f"{refinery['Red'].name} Production: Off",
+                picture_class=refinery['Red'].image,
                 progression='Off',
                 goal='On'
             ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Red Salt|#refinery }}}} is not producing",
-                picture_class=salt_dict['RedSalt'].image
+                picture_class=refinery['Red'].image
             ))
-    if salt_dict['RedSalt'].auto_refine != 0:
-        if salt_dict['RedSalt'].salt_rank < 100:
+    if refinery['Red'].auto_refine != 0:
+        if refinery['Red'].rank < 100:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['RedSalt'].salt_name} Auto Refine: ON",
-                picture_class=salt_dict['RedSalt'].image,
+                label=f"{refinery['Red'].name} Auto Refine: ON",
+                picture_class=refinery['Red'].image,
                 progression='ON',
                 goal='OFF'
             ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Red Salt|#refinery }}}} is set to Auto Refine: ON. Recommended to reach Rank 100+ before enabling Auto Refine.",
-                picture_class=salt_dict['RedSalt'].image
+                picture_class=refinery['Red'].image
             ))
 
-    if not salt_dict['GreenSalt'].running:
-        if salt_dict['GreenSalt'].salt_rank < 30:
+    if not refinery['Green'].running:
+        if refinery['Green'].rank < 30:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['GreenSalt'].salt_name} Production: Off",
-                picture_class=salt_dict['GreenSalt'].image,
+                label=f"{refinery['Green'].name} Production: Off",
+                picture_class=refinery['Green'].image,
                 progression='Off',
                 goal='On'
             ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Green Salt|#refinery }}}} is not producing",
-                picture_class=salt_dict['GreenSalt'].image
+                picture_class=refinery['Green'].image
             ))
-    if salt_dict['GreenSalt'].auto_refine != 0:
-        if salt_dict['GreenSalt'].salt_rank < 30:
+    if refinery['Green'].auto_refine != 0:
+        if refinery['Green'].rank < 30:
             tier_AutoRefine = 0
             refinery_AdviceDict['AutoRefine'].append(Advice(
-                label=f"{salt_dict['GreenSalt'].salt_name} Auto Refine: ON",
-                picture_class=salt_dict['GreenSalt'].image,
+                label=f"{refinery['Green'].name} Auto Refine: ON",
+                picture_class=refinery['Green'].image,
                 progression='ON',
                 goal='OFF'
             ))
             session_data.account.alerts_Advices['World 3'].append(Advice(
                 label=f"{{{{ Green Salt|#refinery }}}} is set to Auto Refine: ON. Recommended to reach Rank 30+ before enabling Auto Refine.",
-                picture_class=salt_dict['GreenSalt'].image
+                picture_class=refinery['Green'].image
             ))
 
     # W3Merits Advice
     sum_salts_rank2_plus = 0
-    if salt_dict['OrangeSalt'].salt_rank >= 2:
+    if refinery['Orange'].rank >= 2:
         sum_salts_rank2_plus += 1
-    if salt_dict['BlueSalt'].salt_rank >= 2:
+    if refinery['Blue'].rank >= 2:
         sum_salts_rank2_plus += 1
-    if salt_dict['GreenSalt'].salt_rank >= 2:
+    if refinery['Green'].rank >= 2:
         sum_salts_rank2_plus += 1
-    if salt_dict['PurpleSalt'].salt_rank >= 2:
+    if refinery['Purple'].rank >= 2:
         sum_salts_rank2_plus += 1
-    if salt_dict['NulloSalt'].salt_rank >= 2:
+    if refinery['Nullo'].rank >= 2:
         sum_salts_rank2_plus += 1
     if session_data.account.merits[2][6].level < sum_salts_rank2_plus:
         tier_W3Merits = 0
@@ -221,7 +104,7 @@ def getRefineryProgressionTierAdviceGroups():
         ))
 
     # Excess and Deficits Advice
-    for salt in salt_dict.values():
+    for salt in refinery.values():
         output_maxed_note = (
             f"<br>Power Per Cycle max of {int(refinery_max_powerpercycle):,} has been reached! "
             f"Ranking up won't create any more Salts per cycle."
@@ -229,7 +112,7 @@ def getRefineryProgressionTierAdviceGroups():
             else ''
         )
         refinery_AdviceDict['ExcessAndDeficits'].append(Advice(
-            label=f"Rank {salt.salt_rank} {salt.salt_name} Salt: {salt.excess_or_deficit}"
+            label=f"Rank {salt.rank} {salt.name} Salt: {salt.excess_or_deficit}"
                   f"{output_maxed_note}",
             picture_class=salt.image,
             goal=f"{salt.excess_amount:,}"
@@ -238,47 +121,47 @@ def getRefineryProgressionTierAdviceGroups():
     # Ranks Advice
     refinery_AdviceDict['Tab1Ranks'].append(Advice(
         label='Red Salt',
-        picture_class=salt_dict['RedSalt'].image,
-        progression=salt_dict['RedSalt'].salt_rank,
+        picture_class=refinery['Red'].image,
+        progression=refinery['Red'].rank,
         goal=(
-            salt_dict['RedSalt'].salt_rank if salt_dict['RedSalt'].output_maxed
+            refinery['Red'].rank if refinery['Red'].output_maxed
             else refinery_max_rank_panda if session_data.account.companions.has('Panda')
             else refinery_max_rank_no_panda
         )
     ))
     refinery_AdviceDict['Tab1Ranks'].append(Advice(
         label='Orange Salt',
-        picture_class=salt_dict['OrangeSalt'].image,
-        progression=salt_dict['OrangeSalt'].salt_rank,
-        goal=salt_dict['OrangeSalt'].max_rank_with_excess
+        picture_class=refinery['Orange'].image,
+        progression=refinery['Orange'].rank,
+        goal=refinery['Orange'].max_rank_with_excess
     ))
     refinery_AdviceDict['Tab1Ranks'].append(Advice(
         label='Blue Salt',
-        picture_class=salt_dict['BlueSalt'].image,
-        progression=salt_dict['BlueSalt'].salt_rank,
-        goal=salt_dict['BlueSalt'].max_rank_with_excess
+        picture_class=refinery['Blue'].image,
+        progression=refinery['Blue'].rank,
+        goal=refinery['Blue'].max_rank_with_excess
     ))
     refinery_AdviceDict['Tab2Ranks'].append(Advice(
         label='Green Salt',
-        picture_class=salt_dict['GreenSalt'].image,
-        progression=salt_dict['GreenSalt'].salt_rank,
+        picture_class=refinery['Green'].image,
+        progression=refinery['Green'].rank,
         goal=(
-            salt_dict['GreenSalt'].salt_rank if salt_dict['GreenSalt'].output_maxed
+            refinery['Green'].rank if refinery['Green'].output_maxed
             else refinery_max_rank_panda if session_data.account.companions.has('Panda')
             else refinery_max_rank_no_panda
         )
     ))
     refinery_AdviceDict['Tab2Ranks'].append(Advice(
         label='Purple Salt',
-        picture_class=salt_dict['PurpleSalt'].image,
-        progression=salt_dict['PurpleSalt'].salt_rank,
-        goal=salt_dict['PurpleSalt'].max_rank_with_excess
+        picture_class=refinery['Purple'].image,
+        progression=refinery['Purple'].rank,
+        goal=refinery['Purple'].max_rank_with_excess
     ))
     refinery_AdviceDict['Tab2Ranks'].append(Advice(
         label='Nullo Salt',
-        picture_class=salt_dict['NulloSalt'].image,
-        progression=salt_dict['NulloSalt'].salt_rank,
-        goal=salt_dict['NulloSalt'].max_rank_with_excess
+        picture_class=refinery['Nullo'].image,
+        progression=refinery['Nullo'].rank,
+        goal=refinery['Nullo'].max_rank_with_excess
     ))
 
     # Generate AdviceGroups

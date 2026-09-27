@@ -11,7 +11,7 @@ from consts.consts_general import (
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
-from consts.consts_w3 import refinery_dict, buildings_dict
+from consts.consts_w3 import buildings_dict
 from models.w1.statues import Statues
 from models.general.assets import Assets
 from models.general.character import Character
@@ -387,37 +387,9 @@ def _parse_w2_weekly_boss(account):
 
 
 def _parse_w3(account):
-    _parse_w3_refinery(account)
     _parse_w3_buildings(account)
     _parse_w3_deathnote(account)
     _parse_w3_equinox(account)
-
-def _parse_w3_refinery(account):
-    account.refinery = {}
-    raw_refinery_list = safe_loads(account.raw_data.get("Refinery", []))
-    for saltColor, saltDetails in refinery_dict.items():
-        try:
-            account.refinery[saltColor] = {
-                'Rank': parse_number(raw_refinery_list[saltDetails[0]][1]),
-                'Running': parse_number(raw_refinery_list[saltDetails[0]][3]),
-                'AutoRefine': parse_number(raw_refinery_list[saltDetails[0]][4]),
-                'Image': saltDetails[1],
-                'CyclesPerSynthCycle': saltDetails[2],
-                'PreviousSaltConsumption': saltDetails[3],
-                'NextSaltConsumption': saltDetails[4],
-                'NextSaltCyclesPerSynthCycle': saltDetails[5]
-            }
-        except:
-            account.refinery[saltColor] = {
-                'Rank': 0,
-                'Running': False,
-                'AutoRefine': 0,
-                'Image': saltDetails[1],
-                'CyclesPerSynthCycle': saltDetails[2],
-                'PreviousSaltConsumption': saltDetails[3],
-                'NextSaltConsumption': saltDetails[4],
-                'NextSaltCyclesPerSynthCycle': saltDetails[5]
-            }
 
 def _parse_w3_buildings(account):
     account.construction_buildings = {}

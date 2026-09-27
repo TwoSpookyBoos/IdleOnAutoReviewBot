@@ -322,6 +322,7 @@ def _calculate_w2_killroy(account):
 
 
 def _calculate_w3(account):
+    _calculate_w3_refinery(account)
     _calculate_w3_building_max_levels(account)
     _calculate_w3_atom_collider(account)
     _calculate_w3_shrines(account)
@@ -364,6 +365,9 @@ def _calculate_w3_building_max_levels(account):
         _update_w3_building_max_levels(account, 'All Towers', 2 * account.atom_collider['Carbon - Wizard Maximizer'].level, 'Atom Collider - Carbon - Wizard Maximizer')
 
     #+100 levels from Gambit occurs in _calculate_caverns_gambit
+
+def _calculate_w3_refinery(account):
+    account.refinery.calculate(account.companions['Panda'].bonus, account.merits[2][6].level)
 
 def _calculate_w3_atom_collider(account):
     account.atom_collider.calculate_max_levels(

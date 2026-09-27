@@ -87,7 +87,7 @@ def getAchievementStatus(achievementName):
             case "Croakin' Froge":
                 return min(250, session_data.account.all_assets.get('Critter1').amount), 250, 'froge'
             case 'Souped Up Salts':
-                return min(10, session_data.account.refinery['Red']['Rank']), 10, session_data.account.refinery['Red']['Image']
+                return min(10, session_data.account.refinery['Red'].rank), 10, session_data.account.refinery['Red'].image
 
             #Other Nice Rewards
             #W2
