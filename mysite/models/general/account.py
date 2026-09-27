@@ -279,6 +279,11 @@ class Account:
         self._calculate_wave_4()
 
     def _calculate_setup(self):
+        self.caverns.link_account_systems(
+            self.legend_talents["Whats in your Jar?"],
+            self.stamps,
+            self.gemshop.purchases["Conjuror Pts"],
+        )
         self.family_bonuses.calculate_levels(self.characters.safe)
         self.inventory.calculate_owned(
             self.characters,

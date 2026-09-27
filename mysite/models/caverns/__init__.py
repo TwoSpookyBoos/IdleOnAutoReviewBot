@@ -24,6 +24,12 @@ class Caverns:
         for part in [*self.villagers.values(), *self.caves.values()]:
             part.caverns = self
 
+    def link_account_systems(self, jar_talent, stamps, conjuror_pts):
+        # Systems outside Caverns that caves and villagers read
+        self.caves["The Jar"].jar_talent = jar_talent
+        self.caves["The Temple"].stamps = stamps
+        self.villagers["Cosmos"].conjuror_pts = conjuror_pts
+
     @cached_property
     def skilling_resource_discount(self) -> float:
         # Depends on: Bolaia's studies, each SkillingCavern's layers_destroyed,

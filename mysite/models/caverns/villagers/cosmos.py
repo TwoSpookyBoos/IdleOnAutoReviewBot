@@ -71,6 +71,7 @@ class Majiks:
 class Cosmos(Villager):
     def __init__(self, **kwargs):
         super().__init__(name="Cosmos", unlock_at=5, role=villager_roles["Cosmos"], **kwargs)
+        self.conjuror_pts = None  # set by Caverns
 
     def parse_feature(self, raw_caverns_list: list):
         hole_majiks = raw_caverns_list[4]
@@ -126,9 +127,7 @@ class Cosmos(Villager):
                 bonus.calculate_bonus()
 
     def stat_advices(self) -> list[Advice]:
-        from models.general.session_data import session_data
-
-        gscp = session_data.account.gemshop.purchases["Conjuror Pts"]
+        gscp = self.conjuror_pts
         # Practical Max Level
         advice_list = self.base_stat_advice(self.majiks.max_point - gscp.owned)
         advice_list.append(

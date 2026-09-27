@@ -8,6 +8,7 @@ from utils.text_formatting import notateNumber
 class TheTemple(Cavern):
     def __init__(self):
         super().__init__(name="The Temple", cavern_number=15)
+        self.stamps = None  # set by Caverns
 
     def parse(self, raw_caverns_list: list):
         try:
@@ -44,8 +45,6 @@ class TheTemple(Cavern):
         )
 
     def advice_groups(self) -> dict[str, list[Advice]]:
-        from models.general.session_data import session_data
-
         cavern_stats = [
             self.objective_advice(
                 "Fight Ancient Golems, collect Temple Torches, and Search for "
@@ -61,7 +60,7 @@ class TheTemple(Cavern):
             ),
         ]
         for stamp_name in ["Cavern Resource Stamp", "Study Hall Stamp"]:
-            stamp = session_data.account.stamps[stamp_name]
+            stamp = self.stamps[stamp_name]
             if not stamp.delivered:
                 cavern_stats.append(
                     Advice(

@@ -19,7 +19,8 @@ from utils.text_formatting import notateNumber
 
 
 class CollectibleBonus:
-    def __init__(self, index: int, entry: dict, level: int):
+    def __init__(self, cavern: "TheJar", index: int, entry: dict, level: int):
+        self.cavern = cavern
         self.index = index
         self.name = entry["Name"]
         self.level = level
@@ -29,11 +30,7 @@ class CollectibleBonus:
 
     @cached_property
     def value(self) -> float:
-        from models.general.session_data import session_data
-
-        legend_talent_multi = ValueToMulti(
-            session_data.account.legend_talents["Whats in your Jar?"].value
-        )
+        legend_talent_multi = ValueToMulti(self.cavern.jar_talent.value)
         return self.level * self.scaling_value * legend_talent_multi
 
     @cached_property
@@ -74,6 +71,7 @@ class CollectibleBonus:
 class TheJar(Cavern):
     def __init__(self):
         super().__init__(name="The Jar", cavern_number=11)
+        self.jar_talent = None  # set by Caverns
 
     def parse(self, raw_caverns_list: list):
         offset = max_sediments + max_harp_notes
@@ -99,7 +97,7 @@ class TheJar(Cavern):
                 level = safer_convert(raw_caverns_list[24][index], 0)
             except Exception:
                 level = 0
-            bonus = CollectibleBonus(index, entry, level)
+            bonus = CollectibleBonus(self, index, entry, level)
             self.collectibles[bonus.name] = bonus
 
     def _rupies_stats_advice(self) -> list[Advice]:
@@ -156,8 +154,6 @@ class TheJar(Cavern):
         return advices
 
     def advice_groups(self) -> dict[str, list[Advice]]:
-        from models.general.session_data import session_data
-
         total_collectible_levels = sum(
             bonus.level for bonus in self.collectibles.values()
         )
@@ -177,6 +173,6 @@ class TheJar(Cavern):
                 bonus.get_advice() for bonus in self.collectibles.values()
             ],
             "Collectibles bonus Multi": [
-                session_data.account.legend_talents["Whats in your Jar?"].get_advice()
+                self.jar_talent.get_advice()
             ],
         }
