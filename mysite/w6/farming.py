@@ -24,19 +24,19 @@ logger = get_logger(__name__)
 
 
 def get_depot_tabbed(farming) -> TabbedAdviceGroup:
-    navette_value = session_data.account.labJewels['Pure Opal Navette']['Value'] * session_data.account.labJewels['Pure Opal Navette']['Enabled']
-    navette_max = session_data.account.labJewels['Pure Opal Navette']['BaseValue']
+    navette_value = session_data.account.lab_jewels['Pure Opal Navette'].active_value
+    navette_max = session_data.account.lab_jewels['Pure Opal Navette'].base_value
 
-    spelunker_multi = max(1, session_data.account.labBonuses['Spelunker Obol']['Value'])
-    spelunker_max = session_data.account.labBonuses['Spelunker Obol']['BaseValue']
+    spelunker_multi = max(1, session_data.account.lab_bonuses['Spelunker Obol'].value)
+    spelunker_max = session_data.account.lab_bonuses['Spelunker Obol'].base_value
 
-    rhombol_value = session_data.account.labJewels['Pure Opal Rhombol']['Value'] * session_data.account.labJewels['Pure Opal Rhombol']['Enabled']
-    rhombol_max = session_data.account.labJewels['Pure Opal Rhombol']['BaseValue']
+    rhombol_value = session_data.account.lab_jewels['Pure Opal Rhombol'].active_value
+    rhombol_max = session_data.account.lab_jewels['Pure Opal Rhombol'].base_value
     rhombol_enhanced_max = rhombol_max * (spelunker_max + (navette_max/100))
 
-    studies_value = max(1, ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['Value'] + rhombol_value))
-    studies_max = ValueToMulti(session_data.account.labBonuses['Depot Studies PhD']['BaseValue'])
-    studies_enhanced_max_value = session_data.account.labBonuses['Depot Studies PhD']['BaseValue']
+    studies_value = max(1, ValueToMulti(session_data.account.lab_bonuses['Depot Studies PhD'].value + rhombol_value))
+    studies_max = ValueToMulti(session_data.account.lab_bonuses['Depot Studies PhD'].base_value)
+    studies_enhanced_max_value = session_data.account.lab_bonuses['Depot Studies PhD'].base_value
 
     lab_multi = round_and_trim(farming.multi["Depot"]["Lab"])
     lab_max = round_and_trim(ValueToMulti(studies_enhanced_max_value + rhombol_enhanced_max))
@@ -49,25 +49,25 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
             label=f"Lab Jewel: Pure Opal Navette: Increases the value of Spelunker Obol by +{navette_value/100:.1f}/{navette_max/100:.1f}"
                   f"<br>(Yes, this jewel is bugged)",
             picture_class='pure-opal-navette',
-            progression=int(session_data.account.labJewels['Pure Opal Navette']['Enabled']),
+            progression=int(session_data.account.lab_jewels['Pure Opal Navette'].enabled),
             goal=1
         ),
         Advice(
             label=f"Lab Bonus: Spelunker Obol: Multiplies the value of Pure Opal Rhombol by {spelunker_multi:.1f}/{spelunker_max:.1f}x",
             picture_class='spelunker-obol',
-            progression=int(session_data.account.labBonuses['Spelunker Obol']['Enabled']),
+            progression=int(session_data.account.lab_bonuses['Spelunker Obol'].enabled),
             goal=1
         ),
         Advice(
             label=f"Lab Jewel: Pure Opal Rhombol: Increases Depot Studies by +.{rhombol_value:.0f}/.{rhombol_max:.0f}",
             picture_class='pure-opal-rhombol',
-            progression=int(session_data.account.labJewels['Pure Opal Rhombol']['Enabled']),
+            progression=int(session_data.account.lab_jewels['Pure Opal Rhombol'].enabled),
             goal=1
         ),
         Advice(
             label=f"Lab Bonus: Depot Studies PhD: {studies_value:.2f}/{studies_max:.2f}x",
             picture_class='depot-studies-phd',
-            progression=int(session_data.account.labBonuses['Depot Studies PhD']['Enabled']),
+            progression=int(session_data.account.lab_bonuses['Depot Studies PhD'].enabled),
             goal=1
         ),
         Advice(
@@ -359,13 +359,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     ))
 
 #Stamp
-    evo_advices[stamp].append(Advice(
-        label=f"Lab: Certified Stamp Book: "
-              f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
-        picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
-        goal=1
-    ))
+    evo_advices[stamp].append(
+        session_data.account.lab_bonuses['Certified Stamp Book'].get_bonus_advice()
+    )
     evo_advices[stamp].append(
         session_data.account.sneaking.pristine_charms[
             'Liqorice Rolle'

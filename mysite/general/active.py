@@ -119,7 +119,7 @@ def getShortTermAdviceList() -> list[Advice]:
                 goal=divinity
             ))
             break
-    if not session_data.account.labBonuses['No Bubble Left Behind']['Enabled']:
+    if not session_data.account.lab_bonuses['No Bubble Left Behind'].enabled:
         shortterm.append(Advice(
             label=f"Lab jail until you unlock No Bubble Left Behind 🙁",
             picture_class='no-bubble-left-behind',

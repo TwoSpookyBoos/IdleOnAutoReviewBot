@@ -206,7 +206,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Lab Nodes- Certified Stamp Book
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     golden_sixes_buffs = []
-    has_certified_stamp_book = session_data.account.labBonuses['Certified Stamp Book']['Enabled']
+    has_certified_stamp_book = session_data.account.lab_bonuses['Certified Stamp Book'].enabled
     if not has_certified_stamp_book:
         golden_sixes_buffs.append('Laboratory')
         drop_rate_aw_advice[w1].append(Advice(
@@ -1141,7 +1141,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             shrine_map = shrine_data.map_index
             shrine_world = (shrine_map // 50) + 1
 
-            if session_data.account.labBonuses['Shrine World Tour']['Enabled']:
+            if session_data.account.lab_bonuses['Shrine World Tour'].enabled:
                 clover_shrine_affects_character = char_world == shrine_world
             else:
                 clover_shrine_affects_character = char_map == shrine_map

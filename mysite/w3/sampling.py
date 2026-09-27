@@ -76,12 +76,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psr_Advices[account_subgroup].append(session_data.account.family_bonuses['Maestro'].get_bonus_advice(goal_level=328))
     psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice(goal_override=32))
     psr_Advices[account_subgroup].append(session_data.account.stamps['Stample Stamp'].get_advice(goal_override=60))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"Lab Bonus: Certified Stamp Book: "
-              f"{'2/2x<br>(Already applied to Stamps above)' if session_data.account.labBonuses['Certified Stamp Book']['Enabled'] else '1/2x'}",
-        picture_class='certified-stamp-book',
-        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
-        goal=1
+    stamp_book = session_data.account.lab_bonuses['Certified Stamp Book']
+    psr_Advices[account_subgroup].append(stamp_book.get_bonus_advice(
+        '<br>(Already applied to Stamps above)' if stamp_book.enabled else ''
     ))
     psr_Advices[account_subgroup].append(
         session_data.account.sneaking.pristine_charms['Liqorice Rolle'].get_obtained_advice()
@@ -259,7 +256,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     ballot_multi_active = ballot_buff.active_multi
 
     lab_multi_aw = 2 if session_data.account.companions.has('King Doot') else 1
-    lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
+    lab_multi_cs = 2 if session_data.account.lab_bonuses['Wired In'].enabled else 1
 
     harriep_multi_aw = 3 if session_data.account.companions.has('King Doot') else 1
     harriep_multi_cs = 3 if session_data.account.divinity[4].unlocked else 1

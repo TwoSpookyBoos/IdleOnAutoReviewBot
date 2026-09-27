@@ -144,7 +144,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
     total = session_data.account.alchemy_vials.total_multi
 
     max_mga = session_data.account.vault.upgrades['Vial Overtune'].max_value + (0.02 * max_maxable_vials)
-    max_mgb = session_data.account.labBonuses['My 1st Chemistry Set']['BaseValue']
+    max_mgb = session_data.account.lab_bonuses['My 1st Chemistry Set'].base_value
     max_total = max_mga * max_mgb
 
     vb_advices = {
@@ -170,12 +170,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
             )
         ],
         f"Multi Group B: {session_data.account.alchemy_vials.mgb:.2f}x": [
-            Advice(
-                label=f"Lab Bonus: My 1st Chemistry Set: {session_data.account.labBonuses['My 1st Chemistry Set']['Value']}x",
-                picture_class="my-1st-chemistry-set",
-                progression=int(session_data.account.labBonuses['My 1st Chemistry Set']['Enabled']),
-                goal=1
-            )
+            session_data.account.lab_bonuses['My 1st Chemistry Set'].get_bonus_advice()
         ]
     }
 

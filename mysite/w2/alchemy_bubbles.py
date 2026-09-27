@@ -45,7 +45,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
         advanced_today: [],
         advanced: []
     }
-    nblbCount = session_data.account.labBonuses['No Bubble Left Behind']['Value']
+    nblbCount = session_data.account.lab_bonuses['No Bubble Left Behind'].value
     #Create a sorted list of every bubble, including the janky placeholders
     sorted_bubbles = sorted(
         session_data.account.alchemy_bubbles.items(),

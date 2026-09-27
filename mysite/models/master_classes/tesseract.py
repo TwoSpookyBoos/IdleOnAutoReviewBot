@@ -157,7 +157,7 @@ class Tesseract:
                 + self.upgrades['Verdon Hoarding'].total_value * safer_math_log(self.tachyons[2], 10)
                 + self.upgrades['Aurion Hoarding'].total_value * safer_math_log(self.tachyons[5], 10)
                 # + Extra Tachyon from Equipment
-                + lab_jewels['Eternal Energy Jewel']['Value'] * lab_jewels['Eternal Energy Jewel']['Owned']
+                + lab_jewels['Eternal Energy Jewel'].active_value
                 + arcade[50].value
             ),
             'mgb': ValueToMulti(

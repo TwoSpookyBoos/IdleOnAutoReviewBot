@@ -160,14 +160,9 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     # TODO: Tachyons from Equipment
 
-    lab_jewel = session_data.account.labJewels['Eternal Energy Jewel']
-    lab_jewel_active = lab_jewel['Enabled']
-    currency_advices[mga_label].append(Advice(
-        label=f"Lab Jewel 'Eternal Energy Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}% Tachyons",
-        picture_class='deadly-wrath-jewel',
-        progression=int(lab_jewel_active),
-        goal=1
-    ))
+    currency_advices[mga_label].append(
+        session_data.account.lab_jewels['Eternal Energy Jewel'].get_bonus_advice()
+    )
 
     currency_advices[mga_label].append(session_data.account.arcade[50].get_advice())
 

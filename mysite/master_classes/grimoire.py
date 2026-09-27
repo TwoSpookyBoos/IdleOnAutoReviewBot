@@ -205,14 +205,9 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     currency_advices[mge_label].append(bh.get_advice(grimoire.total_upgrades, bh_stacks_text))
     currency_advices[mge_label].append(session_data.account.arcade[40].get_advice())
 
-    lab_jewel = session_data.account.labJewels['Deadly Wrath Jewel']
-    lab_jewel_active = lab_jewel['Enabled']
-    currency_advices[mge_label].append(Advice(
-        label=f"Lab Jewel 'Deadly Wrath Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}%",
-        picture_class='deadly-wrath-jewel',
-        progression=int(lab_jewel_active),
-        goal=1
-    ))
+    currency_advices[mge_label].append(
+        session_data.account.lab_jewels['Deadly Wrath Jewel'].get_bonus_advice()
+    )
 
     mgf_label = f"Bone Multi Group F: {grimoire.bone_calc['mgf']:.2f}x"
     db_index = None

@@ -15,7 +15,6 @@ from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
-from consts.consts_w4 import lab_bonuses_dict, lab_jewels_dict
 from consts.consts_w5 import (
     sailing_list, captain_buffs,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
@@ -562,45 +561,8 @@ def _parse_w3_equinox(account):
     account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
 
 def _parse_w4(account):
-    _parse_w4_lab(account)
     _parse_w4_rift(account)
     _parse_w4_breeding(account)
-
-def _parse_w4_lab(account):
-    raw_lab = safe_loads(account.raw_data.get("Lab", []))
-    _parse_w4_lab_bonuses(account, raw_lab)
-    _parse_w4_jewels(account, raw_lab)
-
-def _parse_w4_lab_bonuses(account, raw_lab):
-    # TODO: Actually figure out lab :(
-    account.labBonuses = {}
-    for index, node in lab_bonuses_dict.items():
-        account.labBonuses[node["Name"]] = {
-            "Enabled": True,
-            "Owned": True,  # For W6 nodes
-            "Value": node["BaseValue"],  # Currently no modifiers available, might change if the pure opal navette changes
-            "BaseValue": node["BaseValue"]
-        }
-
-def _parse_w4_jewels(account, raw_lab):
-    # TODO: Account for if the jewel is actually connected.
-
-    account.labJewels = {}
-    for jewelIndex, jewelInfo in lab_jewels_dict.items():
-        try:
-            account.labJewels[jewelInfo["Name"]] = {
-                "Owned": bool(raw_lab[14][jewelIndex]),
-                "Enabled": bool(raw_lab[14][jewelIndex]),  # Same as owned until connection range is implemented
-                "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
-                "BaseValue": jewelInfo["BaseValue"]
-            }
-        except:
-            account.labJewels[jewelInfo["Name"]] = {
-                "Owned": False,
-                "Enabled": False,  # Same as owned until connection range is implemented
-                "Value": jewelInfo["BaseValue"],  # Jewelmulti added in calculate section
-                "BaseValue": jewelInfo["BaseValue"]
-            }
 
 def _parse_w4_rift(account):
     # Seam: hands the model the already-parsed quest data it needs

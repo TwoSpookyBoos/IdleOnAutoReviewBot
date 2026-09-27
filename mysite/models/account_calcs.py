@@ -6,7 +6,6 @@ from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
 from consts.consts_w3 import buildings_towers, buildings_shrines
-from consts.consts_w4 import max_nblb_bubbles
 from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
@@ -84,17 +83,19 @@ def _calculate_w4_tome(account):
 
 def _calculate_wave_2(account):
     _calculate_general(account)
+    # Lab connections gate bonuses read all through wave 2
+    _calculate_w5(account)
+    _calculate_w4_lab(account)
     _calculate_master_classes(account)
     _calculate_w1(account)
     _calculate_w2(account)
     account.tesseract.calculate_tachyon_sources(
-        account.acs, account.labJewels, account.arcade, account.emperor,
+        account.acs, account.lab_jewels, account.arcade, account.emperor,
         account.alchemy_bubbles, account.sneaking, account.gemshop, account.alchemy_vials,
         account.companions.has('Balloonfish')
     )
     _calculate_w3(account)
     _calculate_w4(account)
-    _calculate_w5(account)
     _calculate_caverns(account)
     _calculate_w6(account)
     _calculate_w7(account)
@@ -212,7 +213,7 @@ def _calculate_master_classes(account):
     # account.grimoire.calculate_bone_sources(...)  #Moved to wave3 as it relies on Caverns/Gambit
     account.compass.calculate_upgrades()
     account.compass.calculate_dust_sources(
-        account.wws, account.sneaking, account.all_assets, account.arcade, account.labJewels, account.emperor
+        account.wws, account.sneaking, account.all_assets, account.arcade, account.lab_jewels, account.emperor
     )
 
 def _calculate_w1(account):
@@ -263,7 +264,7 @@ def _calculate_w1_stamps(account):
         try:
             account.stamps[stamp_name].total_value = (
                 stamp.value
-                * (2 if account.labBonuses['Certified Stamp Book']['Enabled'] and stamp.stamp_type != 'Misc' else 1)
+                * (2 if account.lab_bonuses['Certified Stamp Book'].enabled and stamp.stamp_type != 'Misc' else 1)
                 * (ValueToMulti(account.sneaking.pristine_charms['Liqorice Rolle'].value) if stamp.stamp_type != 'Misc' else 1)
                 * (account.exalted_stamp_multi if stamp.exalted else 1)
             )
@@ -281,7 +282,7 @@ def _calculate_w2(account):
     _calculate_w2_killroy(account)
 
 def _calculate_w2_vials(account):
-    account.alchemy_vials.calculate_values(account.vault, account.rift, account.labBonuses)
+    account.alchemy_vials.calculate_values(account.vault, account.rift, account.lab_bonuses)
 
 def _calculate_w2_sigils(account):
     account.alchemy_p2w.sigils.calculate_precharge_levels(
@@ -393,8 +394,6 @@ def _calculate_w3_shrines(account):
 
 def _calculate_w4(account):
     _calculate_w4_cooking_max_plate_levels(account)
-    _calculate_w4_jewel_multi(account)
-    _calculate_w4_meal_multi(account)
     _calculate_w4_lab_bonuses(account)
 
 def _calculate_w4_cooking_max_plate_levels(account):
@@ -406,19 +405,26 @@ def _calculate_w4_cooking_max_plate_levels(account):
         account.spelunk.caves["Lunarheim"],
     )
 
-def _calculate_w4_jewel_multi(account):
-    jewelMulti = 1
-    if account.labBonuses["Spelunker Obol"]["Enabled"]:
-        jewelMulti = account.labBonuses["Spelunker Obol"]["Value"]
-        if account.labJewels["Pure Opal Navette"]["Enabled"]:  # Nested since jewel does nothing without spelunker
-            account.labBonuses["Spelunker Obol"]["Value"] += account.labJewels["Pure Opal Navette"]["BaseValue"] / 100
-            jewelMulti += account.labJewels["Pure Opal Navette"]["BaseValue"] / 100  # The displayed value does nothing since the effect is used before spelunker obol is accounted for
-    for jewel in account.labJewels:
-        account.labJewels[jewel]["Value"] *= jewelMulti if jewel != 'Pure Opal Navette' else 1
+def _calculate_w4_lab(account):
+    # Seam: connections need sibling systems, and meals rerun when Black Diamond lights
+    account.lab_mainframe.calculate(
+        account.safe_characters,
+        account.divinity.account_wide_arctis,
+        account.gemshop['Purchases']['Souped Up Tube']['Owned'],
+        account.sneaking.emporium,
+        account.meals,
+        next(card for card in account.cards if card.codename == 'Crystal3'),
+        account.lab_chips['Conductive Motherboard'],
+        account.breeding,
+        account.merits[3][4]['Level'],
+        account.equinox.upgrades['Laboratory Fuse'].level
+        + account.summoning.bonuses['Lab Con Range'].value,
+        lambda: _calculate_w4_meal_multi(account),
+    )
 
 def _calculate_w4_meal_multi(account):
     account.meals.calculate_values(
-        account.labJewels['Black Diamond Rhinestone']['Value'] * account.labJewels['Black Diamond Rhinestone']['Enabled'],
+        account.lab_jewels['Black Diamond Rhinestone'].active_value,
         account.breeding.total_shiny_levels['Bonuses from All Meals'],
         account.summoning.bonuses["Meal Bonuses"].as_multi,
         account.companions.get_multi('Wickerlight Spirit', 'Meal Bonus'),
@@ -429,19 +435,13 @@ def _calculate_w4_meal_multi(account):
     )
 
 def _calculate_w4_lab_bonuses(account):
-    account.labBonuses['No Bubble Left Behind']['Value'] = 3
-
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.labJewels['Pyrite Rhinestone']['Enabled']  #Up to +1
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.sailing['Artifacts']['Amberite']['Level']  #Up to +4 as of 2.11
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming.superbits['Moar Bubbles'].unlocked  #20% chance at +1
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming.superbits['Even Moar Bubbles'].unlocked  #30% chance at +1
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.merits[3][6]['Level']  #Up to 3
-    #Grand total: 3 + 1 + 4 + 1 + 1 + 3 = 13 possible. 11 guaranteed, 2 are chances
-
-    #Reduce this down to 0 if the lab bonus isn't enabled
-    account.labBonuses['No Bubble Left Behind']['Value'] *= account.labBonuses['No Bubble Left Behind']['Enabled']
-    #Now for the bullshit: Lava has a hidden cap of 10 bubbles
-    account.labBonuses['No Bubble Left Behind']['Value'] = min(max_nblb_bubbles, account.labBonuses['No Bubble Left Behind']['Value'])
+    account.lab_bonuses.calculate_nblb(
+        account.lab_jewels['Pyrite Rhinestone'].enabled,
+        account.sailing['Artifacts']['Amberite']['Level'],
+        account.gaming.superbits['Moar Bubbles'].unlocked,
+        account.gaming.superbits['Even Moar Bubbles'].unlocked,
+        account.merits[3][6]['Level'],
+    )
 
 def _calculate_w4_tome_bonuses(account):
     account.tome.calculate_bonuses(
@@ -503,7 +503,8 @@ def _calculate_w6_farming_land_ranks(account):
 
 def _calculate_w6_farming_crop_depot(account):
     lab_multi = ValueToMulti(
-        (account.labBonuses['Depot Studies PhD']['Value'] + account.labJewels['Pure Opal Rhombol']['Value']) * account.labBonuses['Depot Studies PhD']['Enabled']
+        (account.lab_bonuses['Depot Studies PhD'].value + account.lab_jewels['Pure Opal Rhombol'].value)
+        * account.lab_bonuses['Depot Studies PhD'].enabled
     )
     account.farming.calculate_crop_depot_bonus(
         lab_multi, account.grimoire, account.vault, account.sneaking.emporium
@@ -552,7 +553,7 @@ def _calculate_wave_3(account):
     _calculate_w6_sneaking_pristine_chance(account)
     account.grimoire.calculate_bone_sources(
         account.dbs, account.sneaking, account.caverns, account.all_assets,
-        account.arcade, account.labJewels, account.emperor
+        account.arcade, account.lab_jewels, account.emperor
     )
     _calculate_class_unique_kill_stacks(account)
     _calculate_w6_farming(account)

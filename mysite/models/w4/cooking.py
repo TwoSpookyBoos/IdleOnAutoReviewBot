@@ -31,6 +31,7 @@ class Meal:
         self.effect: str = info["Effect"]
         self.image: str = info["Image"]
         self.world: int = info["World"]
+        self.stat: str = info["Stat"]
         self.ribbon_tier: int = 0
         self.ribbon_multi: float = 1
         # "BonusMultiCook" in source: meal mastery. Last updated in v2.531.0
@@ -41,7 +42,11 @@ class Meal:
     def calculate_value(self, meal_multi: float, ribbon_multi: float):
         self.ribbon_multi = ribbon_multi
         self.value = (
-            float(self.value) * meal_multi * self.mastery_multi * self.ribbon_multi
+            self.level
+            * self.base_value
+            * meal_multi
+            * self.mastery_multi
+            * self.ribbon_multi
         )
         if "{" in self.effect:
             self.description = self.effect.replace("{", f"{self.value:,.3f}")
@@ -132,6 +137,9 @@ class Meals(dict[str, Meal]):
         for meal in self.values():
             counts[meal.world] += meal.level > 0
         return counts
+
+    def stat_total(self, stat: str) -> float:
+        return sum(meal.value for meal in self.values() if meal.stat == stat)
 
     def unlocked_below(self, level: int) -> int:
         return sum(0 < meal.level < level for meal in self.values())

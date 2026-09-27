@@ -46,6 +46,7 @@ from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
 from models.w4.cooking import Cooking, Meals
+from models.w4.lab import LabBonuses, LabJewels, LabMainframe
 from models.w4.lab_chips import LabChips
 from models.w4.rift import Rift
 from models.w4.tome import Tome
@@ -191,6 +192,11 @@ class Account:
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)
+        self.lab_bonuses: LabBonuses = LabBonuses()
+        self.lab_jewels: LabJewels = LabJewels(self.raw_data)
+        self.lab_mainframe: LabMainframe = LabMainframe(
+            self.raw_data, self.lab_bonuses, self.lab_jewels
+        )
         self.rift: Rift = Rift(self.raw_data)
         self.tome: Tome = Tome(self.raw_data)
         self.breeding: Breeding = Breeding(self.raw_data)

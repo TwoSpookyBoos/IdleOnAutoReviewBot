@@ -63,13 +63,14 @@ cooking_meal_dict = {
         'Effect': effect.replace('_', ' '),
         'Description': description.replace('_', ' '),
         'Image': f"{kebab(name.replace('_', ' '))}-meal",
+        'Stat': stat,
         'World': 4 if index < 50  #Kiwi Fruit is the first meal to require Molten Bay Spice
             else 5 if index < 57  #Large Pohayoh is the first meal to require Spirit Fields Spice
             else 6 if index < 67  #Tempura Shrimp is the first meal I don't recognize as a W7 meal
             else 7 if index < 74  #Divorce Cake is the last meal as of 2026-08-01 in W7
             else current_world
     }
-    for index, (name, basecost, basevalue, effect, description, _) in enumerate(MealINFO)
+    for index, (name, basecost, basevalue, effect, description, stat) in enumerate(MealINFO)
 }
 max_meal_count = len(cooking_meal_dict)
 meal_counts_by_world = {i:0 for i in range(0,9)}
@@ -111,25 +112,19 @@ lab_chips_dict = {
 #`LabMainBonus = function ()` in source. Last updated in v2.528.0
 LabMainBonus = ["0 91 353 90 0 1 Animal_Farm +1%_Total_Damage_for_every_different_species_you_have_bred_within_Mob_Breeding._You_just_need_to_breed_the_Mob_type_one_time_for_it_to_count!_@_-_@_Total_Bonus:_{%".split(" ",),"1 250 310 90 1 2 Wired_In All_Uploaded_Players_print_2x_more_resources_from_their_section_of_the_3D_Printer._The_displayed_amount_will_NOT_appear_doubled,_just_to_avoid_confusion_as_to_what_your_actual_base_Sampling_Rate_is,_but_it_will_be_displayed_in_blue.".split(" ",),"2 356 147 90 1 3 Gilded_Cyclical_Tubing All_refinery_cycles_occur_3x_faster._Faster_cycles_means_more_salts!".split(" ",),"3 450 220 90 0 1 No_Bubble_Left_Behind Every_24_hours,_your_3_lowest_level_Alchemy_Bubbles_gets_+1_Lv._This_only_applies_to_bubbles_Lv_5_or_higher,_so_it's_more_like_'your_lowest_level_bubble_that_is_at_least_level_5'._ALSO,_it_only_works_on_the_first_15_bubbles_of_each_colour!_@_Doesn't_trigger_on_days_that_you_don't_login.".split(" ",),"4 538 362 90 1 2 Killer's_Brightside All_monster_kills_count_for_2x_more_than_normal_for_things_like_opening_portals_and_Death_Note._Doesn't_increase_resource_drops_or_exp_gain.".split(" ",),"5 651 200 90 0 1 Shrine_World_Tour If_a_shrine_is_placed_within_town,_instead_of_in_a_monster_map,_it_will_act_as_though_it_is_placed_in_EVERY_map_in_that_entire_world!".split(" ",),"6 753 113 90 1 5 Viaduct_of_the_Gods All_alchemy_liquids_have_x5_higher_max_capacity._However,_you_regenerate_alchemy_liquids_-30%_slower.".split(" ",),"7 824 377 90 1 2 Certified_Stamp_Book All_Stamps,_except_for_MISC_tab_stamps,_give_DOUBLE_the_bonus.".split(" ",),"8 945 326 90 1 1.5 Spelunker_Obol 1.50x_higher_effects_from_all_active_Jewels_within_the_Mainframe,_and_gives_you_+50%_rememberance_of_the_game_Idle_Skilling._@_This_bonus_always_has_a_80px_connection_range_no_matter_what!".split(" ",),"9 990 148 90 0 2 Fungi_Finger_Pocketer +2%_extra_cash_from_monsters_for_every_1_million_Green_Mushroom_kills_your_account_has,_which_can_be_viewed_at_Death_Note._@_-_@_Total_Bonus:_{%".split(" ",),"10 1177 163 90 1 2 My_1st_Chemistry_Set All_Vials_in_Alchemy_give_DOUBLE_the_bonus._The_bonus_description_will_reflect_this_doubling.".split(" ",),"11 1300 380 90 0 2 Unadulterated_Banking_Fury +2%_Total_Damage_for_each_'green_stack'_of_resources_in_your_bank._A_'green_stack'_is_a_stack_in_your_Storage_Chest_with_10_million_or_more_items,_since_the_number_turns_Green_after_10M!_@_-_@_Total_Bonus:_{%".split(" ",),"12 400 390 90 0 1 Sigils_of_Olden_Alchemy Allows_you_to_level_up_Alchemy_Sigils_by_assigning_players_in_alchemy,_at_a_base_rate_of_1_sigil_xp_per_hour._@_Sigils_can_be_leveled_up_just_twice:_Once_to_unlock_their_bonus,_and_once_more_to_boost_their_bonus._Their_bonuses_are_passive,_and_apply_to_all_characters_always.".split(" ",),"13 1430 265 90 0 50 Viral_Connection All_mainframe_bonuses_and_jewels_have_a_50%_larger_connection_range,_unless_it_states_otherwise._@_This_bonus_always_has_a_80px_connection_range_no_matter_what!".split(" ",),]
 lab_bonuses_dict = {
-    index: {
+    int(index): {
         'Name': name.replace('_', ' '),
         'Description': description.replace('_', ' '),
-        'BaseValue': parse_number(basevalue),
-        'YCoord': parse_number(ycoord),
         'XCoord': parse_number(xcoord),
+        'YCoord': parse_number(ycoord),
+        'OffValue': parse_number(offvalue),
+        'BaseValue': parse_number(basevalue),
     }
-    for index, (_, xcoord, _, ycoord, _, basevalue, name, description) in enumerate(LabMainBonus)
+    # W6 bonuses are appended once their Jade Emporium Matrix is bought
+    for index, xcoord, ycoord, _, offvalue, basevalue, name, description in [
+        *LabMainBonus, *NinjaInfo[25:29]
+    ]
 }
-#Several additional lab bonuses unlocked through the Jade Emporium are tucked away in NinjaInfo
-NinjaInfo_lab_bonuses = NinjaInfo[25:29]
-for index, (_, xcoord, _, ycoord, _, basevalue, name, description) in enumerate(NinjaInfo_lab_bonuses):
-    lab_bonuses_dict[len(LabMainBonus) + index + 1] = {
-        'Name': name.replace('_', ' '),
-        'Description': description.replace('_', ' '),
-        'BaseValue': parse_number(basevalue),
-        'YCoord': parse_number(ycoord),
-        'XCoord': parse_number(xcoord),
-    }
 
 #`JewelDesc = function ()` in source. Last updated in v2.528.0
 JewelDesc = ["76 134 90 Meal_cooking_is_}x_faster._This_bonus_is_applied_TWICE_if_all_3_purple_jewels_are_active. Boosts_Meal_Cooking_speed Quest66 5 Meal1 2000 Spice0 200 Amethyst_Rhinestone 1.5".split(" ",),"164 412 90 'Animal_Farm'_mainframe_bonus_gives_an_additional_+}%_per_species._If_Animal_Farm_is_not_active,_then_this_does_nothing. Bolsters_'Animal_Farm' Quest35 5 Meal3 2000 Spice1 200 Purple_Navette 0.5".split(" ",),"163 218 90 All_players_get_+}%_Lab_EXP_gain. Boosts_Lab_EXP_gain Timecandy1 10 Meal5 2000 Spice2 200 Purple_Rhombol 40".split(" ",),"246 110 90 Construction_slot_1_is_now_trimmed_up,_and_has_}x_building_Speed._Also_trims_slot_2_if_all_4_blue_jewels_are_active. Trims_up_a_construction_slot Quest15 10 Meal7 5000 Spice3 400 Sapphire_Rhinestone 3".split(" ",),"277 394 90 All_players_get_+}%_All_Stat._STR,_AGI,_WIS,_and_LUCK_to_boot. Boosts_all_stats TreeInterior1b 25 Meal9 5000 Spice4 400 Sapphire_Navette 3".split(" ",),"470 294 90 Even_if_this_jewel_is_off,_all_players_within_a_150px_radius_of_this_jewel,_shown_by_the_circle,_have_+25%_Line_Width._@_Also_gives_+}%_Breeding_EXP,_but_only_when_active. Emits_a_'Line_Width'_Aura Sewers1b 30 Meal11 5000 Spice5 400 Sapphire_Rhombol 25".split(" ",),"490 112 90 Every_24_hours,_the_}_lowest_level_Kitchen_Upgrades_across_all_owned_kitchens_gain_+1_Lv. Automatically_levels_up_kitchens Quest38 2 Meal13 5000 Spice6 400 Sapphire_Pyramite 2".split(" ",),"552 163 90 'No_Bubble_Left_Behind'_mainframe_bonus_gives_+}_levels_instead_of_+1,_and_does_so_for_the_lowest_4_bubbles_instead_of_3. Bolsters_'No_Bubble_Left_Behind' DesertA1b 50 Meal15 10000 Spice7 1500 Pyrite_Rhinestone 2".split(" ",),"646 407 90 All_players_get_}x_'non-consume'_chance,_and_raises_the_max_chance_from_90%_to_98%,_allowing_for_longer_AFK_with_food. Boosts_'non-consume'_chance EquipmentPants19 2 Meal17 10000 Spice8 1500 Pyrite_Navette 3".split(" ",),"680 319 90 All_mainframe_bonuses_and_jewels_have_a_}%_larger_connection_range,_except_for_this_jewel._This_jewel_has_an_80px_connection_range_no_matter_what! Boosts_mainframe_connection_range DesertA3b 50 Meal19 10000 Spice9 1500 Pyrite_Rhombol 30".split(" ",),"847 105 90 All_players_deal_1.}x_more_damage._This_bonus_is_applied_TWICE_if_all_4_Orange_Jewels_are_active. Boosts_player_damage DesertC2b 50 Meal21 10000 Spice10 1500 Pyrite_Pyramite 10".split(" ",),"998 404 90 }%_reduced_incubation_egg_time._Mo_eggs_mo_problems_tho,_fo_sho. Reduces_egg_incubation_time BabaYagaETC 1 Meal23 25000 Spice11 5000 Emerald_Rhinestone 28".split(" ",),"1079 233 90 All_players_have_}_higher_base_efficiency_in_all_skills,_and_+10%_skill_action_speed._This_bonus_is_applied_TWICE_if_all_5_Green_Jewels_are_active. Boosts_player_efficiency SnowA2a 80 Meal25 25000 Spice12 5000 Emerald_Navette 200".split(" ",),"1085 121 90 'Fungi_Finger_Pocketer'_mainframe_bonus_gives_an_additional_+}%_cash_bonus_per_million_mushroom_kills Bolsters_'Fungi_Finger_Pocketer' SnowB2a 120 Meal27 25000 Spice13 5000 Emerald_Rhombol 1".split(" ",),"1167 390 90 Meal_cooking_is_}%_faster_for_every_25_total_upgrade_levels_across_all_kitchens._@_Total_Bonus:_{%_speed Boosts_Meal_Cooking_speed SnowC4a 150 Meal29 25000 Spice14 5000 Emerald_Pyramite 1".split(" ",),"1300 208 90 Shiny_Mobs_in_the_Fenceyard_level_up_their_Passive_Bonuses_+}%_faster Boosts_Shiny_Mob_level_up_rate GalaxyA2b 200 Meal31 25000 Spice15 5000 Emerald_Ulthurite 30".split(" ",),"1365 100 90 All_meals_now_give_a_1.}x_higher_bonus!_Go_ahead_and_check_it_out_at_the_Dinner_Menu!_@_Doesn't_apply_to_the_meal_that_gives_Line_Width_bonus. Bolsters_meals GalaxyC1b 300 Meal33 100000 Spice15 10000 Black_Diamond_Rhinestone 16".split(" ",),"1389 408 90 'Unadulterated_Banking_Fury'_gives_an_additional_+}%_Total_Damage_per_greened_stack. Bolsters_'Unadulterated_Banking_Fury' Critter10A 10000 Meal35 100000 Spice16 10000 Black_Diamond_Ulthurite 1".split(" ",),"1619 203 90 'Slab_Sovereignty'_gives_an_additional_}%_boost_to_all_Slab_Bonuses! Bolsters_'Slab_Sovereignty' SpiA1 3000000 Meal53 1000000 Spice20 10000 Pure_Opal_Rhinestone 20".split(" ",),"1846 410 80 +}%_higher_effects_from_all_active_bonuses_and_jewels_within_the_Mainframe,_except_for_Spelunker_Obol._@_This_is_a_multiplier,_so_+10%_would_be_1.10x,_ya_feel_me?_@_This_bonus_always_has_a_80px_connection_range_no_matter_what! Boosts_entire_Lab SpiB2b 1000 Meal58 10000000 Spice21 10000 Pure_Opal_Navette 10".split(" ",),"2040 96 90 'Depot_Studies_PhD'_gives_an_additional_}%_boost_to_all_Crop_Depot_bonuses! Bolsters_'Depot_Studies_PhD' Critter11A 5000 Meal62 100000000 Spice22 10000 Pure_Opal_Rhombol 10".split(" ",),"1815 96 100 +}%_extra_Deathbringer_Bones._@_This_bonus_always_has_a_100px_connection_range_no_matter_what! Boosts_entire_Lab SpiB2b 1000 Meal58 10000000 Spice21 10000 Deadly_Wrath_Jewel 50".split(" ",),"1728 421 100 +}%_extra_Windwalker_Dust._@_This_bonus_always_has_a_100px_connection_range_no_matter_what! Boosts_entire_Lab SpiB2b 1000 Meal58 10000000 Spice21 10000 North_Winds_Jewel 50".split(" ",),"2042 410 100 +}%_extra_Arcane_Cultist_Tachyons._@_This_bonus_always_has_a_100px_connection_range_no_matter_what! Boosts_entire_Lab SpiB2b 1000 Meal58 10000000 Spice21 10000 Eternal_Energy_Jewel 50".split(" ",),]
@@ -137,7 +132,9 @@ lab_jewels_dict = {
     index: {
         'Name': data[11].replace('_', ' '),
         'Description': data[3].replace('_', ' '),
-        'BaseValue': parse_number(data[12])
+        'XCoord': parse_number(data[0]),
+        'YCoord': parse_number(data[1]),
+        'BaseValue': parse_number(data[12]),
     }
     for index, data in enumerate(JewelDesc)
 }

@@ -32,7 +32,7 @@ def getSailingDelays() -> dict:
     if session_data.account.divinity[7].unlocked:
         delaysDict[5] = ['Jade Rock']
     # If NBLB is already increasing the max number of bubbles (10 as of v2.11), delay Amberite
-    if session_data.account.labBonuses['No Bubble Left Behind']['Value'] >= max_nblb_bubbles:
+    if session_data.account.lab_bonuses['No Bubble Left Behind'].value >= max_nblb_bubbles:
         delaysDict[4] = ['Amberite']
         delaysDict[13] = ['Amberite']
         delaysDict[16] = ['Amberite']
@@ -228,8 +228,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
     ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
     registered_slab_count = len(session_data.account.registered_slab)
-    lab_bonus_slab_sovereignty = session_data.account.labBonuses['Slab Sovereignty']
-    lab_bonus_slab_sovereignty_mult = ValueToMulti(lab_bonus_slab_sovereignty['Value']) * lab_bonus_slab_sovereignty['Enabled']
+    lab_bonus_slab_sovereignty = session_data.account.lab_bonuses['Slab Sovereignty']
+    lab_bonus_slab_sovereignty_mult = ValueToMulti(lab_bonus_slab_sovereignty.value) * lab_bonus_slab_sovereignty.enabled
     ad_tablet_bonus_percent = ((4 * ad_tablet_level * ((registered_slab_count - 500) // 10)) * lab_bonus_slab_sovereignty_mult) if registered_slab_count >= 500 else 0
 
     sailboat_stamp = session_data.account.stamps['Sailboat Stamp']

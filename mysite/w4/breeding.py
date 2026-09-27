@@ -91,12 +91,9 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     sps_adviceDict[mgc].append(
         session_data.account.farming.depot["Crayon"].get_bonus_advice()
     )
-    sps_adviceDict[mgc].append(Advice(
-        label=f"Lab Jewel: Emerald Ulthurite",
-        picture_class='emerald-ulthurite',
-        progression=int(session_data.account.labJewels['Emerald Ulthurite']['Enabled']),
-        goal=1
-    ))
+    sps_adviceDict[mgc].append(
+        session_data.account.lab_jewels['Emerald Ulthurite'].get_bonus_advice()
+    )
     sps_adviceDict[mgc].append(Advice(
         label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * faster_shiny_pet_total_levels}% total",
         picture_class='green-mushroom-shiny'

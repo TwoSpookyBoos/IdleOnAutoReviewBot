@@ -285,14 +285,9 @@ def getCompassCurrenciesAdviceGroup(compass):
     ))
     currency_advices[mgf_label].append(session_data.account.arcade[47].get_advice())
 
-    lab_jewel = session_data.account.labJewels['North Winds Jewel']
-    lab_jewel_active = lab_jewel['Enabled']
-    currency_advices[mgf_label].append(Advice(
-        label=f"Lab Jewel 'North Winds Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}%",
-        picture_class='north-winds-jewel',
-        progression=int(lab_jewel_active),
-        goal=1
-    ))
+    currency_advices[mgf_label].append(
+        session_data.account.lab_jewels['North Winds Jewel'].get_bonus_advice()
+    )
 
     # Compass Upgrades
     for bonus_name in [

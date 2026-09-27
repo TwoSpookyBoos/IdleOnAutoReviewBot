@@ -77,13 +77,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Stamps'].append(
         session_data.account.sneaking.emporium['Level Exemption'].get_obtained_advice()
     )
-    capacity_Advices['Stamps'].append(Advice(
-        label=f"Lab: Certified Stamp Book: "
-              f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
-        picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
-        goal=1
-    ))
+    capacity_Advices['Stamps'].append(
+        session_data.account.lab_bonuses['Certified Stamp Book'].get_bonus_advice()
+    )
     # I'm kinda doubting Lava ever fixes this bug, so hiding it
     # capacity_Advices['Stamps'].append(Advice(
     #     label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
