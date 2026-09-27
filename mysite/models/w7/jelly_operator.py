@@ -187,8 +187,8 @@ class JellyOperator:
     def _currency_multi(self, account) -> float:
         # "CurrencyMulti" in source
         grid_bonus = account.research.grid["Jelly Operator Linguistics"].value
-        atoms = account.atom_collider["Atoms"]
-        atom_bonus = atoms["Sulfur - Jelly Bloodcell Juicer"]["Value"]
+        atoms = account.atom_collider
+        atom_bonus = atoms["Sulfur - Jelly Bloodcell Juicer"].value
         return (
             (1 + (self._qty(23) + self._qty(24) + self._qty(25)
                   + self._qty(33) * self.cell_level_total) / 100)

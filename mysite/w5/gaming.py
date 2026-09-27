@@ -168,7 +168,7 @@ def getSnailInformationGroup() -> AdviceGroup:
         'General': [],
     }
 
-    sodium_level = session_data.account.atom_collider['Atoms']['Sodium - Snail Kryptonite']['Level']
+    sodium_level = session_data.account.atom_collider['Sodium - Snail Kryptonite'].level
     snail_data = session_data.account.gaming.snail
     sodium_safety_level = sodium_level * 5
     floored_envelopes = safer_convert(session_data.account.gaming.envelopes, 0)

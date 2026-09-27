@@ -155,7 +155,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     atriskLithium_AG = AdviceGroup(
         tier='',
         pre_string=lithium_prestring,
-        advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
+        advices=atriskLithium_AdviceList if session_data.account.atom_collider['Lithium - Bubble Insta Expander'].level >= 1 else [],
         post_string=lithium_poststring,
         informational=True
     )

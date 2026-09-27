@@ -16,8 +16,7 @@ from consts.consts_w1 import starsigns_dict, event_points_shop_dict
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import ballot_dict, killroy_dict
 from consts.consts_w3 import (
-    refinery_dict, buildings_dict, buildings_shrines, atoms_list,
-    collider_storage_limit_list, prayers_dict, equipment_sets_dict
+    refinery_dict, buildings_dict, buildings_shrines, prayers_dict, equipment_sets_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -604,7 +603,6 @@ def _parse_w3(account):
     _parse_w3_deathnote(account)
     _parse_w3_equinox(account)
     _parse_w3_shrines(account)
-    _parse_w3_atom_collider(account)
     _parse_w3_prayers(account)
     _parse_w3_armor_sets(account)
 
@@ -698,55 +696,6 @@ def _parse_w3_shrines(account):
                 "BaseValue": 0,
                 "Value": 0,
                 'Image': buildings_dict[18 + shrineIndex]['Image']
-            }
-
-def _parse_w3_atom_collider(account):
-    account.atom_collider = {
-        'OnOffStatus': safer_get(account.raw_optlacc_dict, 132, False),
-        'Magnesium Days': safer_get(account.raw_optlacc_dict, 363, 0)
-    }
-    try:
-        account.atom_collider['StorageLimit'] = collider_storage_limit_list[safer_get(account.raw_optlacc_dict, 133, -1)]
-    except:
-        account.atom_collider['StorageLimit'] = collider_storage_limit_list[-1]
-    try:
-        account.atom_collider['Particles'] = account.raw_data.get("Divinity", {})[39]
-    except:
-        account.atom_collider['Particles'] = "Unknown"  # 0.0
-
-    _parse_w3_atoms(account)
-
-def _parse_w3_atoms(account):
-    account.atom_collider['Atoms'] = {}
-    raw_atoms_list = safe_loads(account.raw_data.get("Atoms", []))
-    for atomIndex, atomInfoList in enumerate(atoms_list):
-        try:
-            account.atom_collider['Atoms'][atomInfoList[0]] = {
-                'Level': int(raw_atoms_list[atomIndex]),
-                'MaxLevel': 20,
-                'AtomInfo1': atomInfoList[1],
-                'AtomInfo2': atomInfoList[2],
-                'AtomInfo3': atomInfoList[3],
-                'Value per Level': atomInfoList[4],
-                'Description': atomInfoList[5],
-                'BaseCostToUpgrade': 0,
-                'DiscountedCostToUpgrade': 0,
-                'BaseCostToMax': 0,
-                'DiscountedCostToMax': 0
-            }
-        except:
-            account.atom_collider['Atoms'][atomInfoList[0]] = {
-                'Level': 0,
-                'MaxLevel': 20,
-                'AtomInfo1': atomInfoList[1],
-                'AtomInfo2': atomInfoList[2],
-                'AtomInfo3': atomInfoList[3],
-                'Value per Level': atomInfoList[4],
-                'Description': atomInfoList[5],
-                'BaseCostToUpgrade': 0,
-                'DiscountedCostToUpgrade': 0,
-                'BaseCostToMax': 0,
-                'DiscountedCostToMax': 0
             }
 
 def _parse_w3_prayers(account):

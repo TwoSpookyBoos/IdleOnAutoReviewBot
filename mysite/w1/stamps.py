@@ -269,12 +269,12 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     exalted_advice[boni].append(Advice(
         label=(
             f"{{{{Atom Collider|#atom-collider}}}}: Aluminium: "
-            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}"
-            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}%"
+            f"+{atom_collider['Aluminium - Stamp Supercharger'].level * atom_collider['Aluminium - Stamp Supercharger'].value_per_level}"
+            f"/{atom_collider['Aluminium - Stamp Supercharger'].max_level * atom_collider['Aluminium - Stamp Supercharger'].value_per_level}%"
         ),
         picture_class='aluminium',
-        progression=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'],
-        goal=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'],
+        progression=session_data.account.atom_collider['Aluminium - Stamp Supercharger'].level,
+        goal=session_data.account.atom_collider['Aluminium - Stamp Supercharger'].max_level,
         resource='particles'
     ))
     exalted_advice[boni].append(

@@ -1,4 +1,5 @@
 from models.advice.advice import Advice
+from models.w3.atom_collider import AtomCollider
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 
@@ -11,14 +12,14 @@ class Library:
         self.max_book_level: int = 100
 
     def calculate_max_book_levels(
-        self, construction_buildings: dict, achievements: dict, atom_collider: dict,
+        self, construction_buildings: dict, achievements: dict, atom_collider: AtomCollider,
         sailing: dict, merits: list, saltlick, summoning
     ):
         self.static_sum = (
             0
             + (25 * (0 < construction_buildings['Talent Book Library']['Level']))
             + (5 * achievements['Checkout Takeout']['Complete'])
-            + (10 * (0 < atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
+            + (10 * (0 < atom_collider['Oxygen - Library Booker'].level))
             + (25 * sailing['Artifacts']['Fury Relic']['Level'])
         )
         self.scaling_sum = (

@@ -16,7 +16,7 @@ def getInfluencers():
     honker_vial_level = session_data.account.alchemy_vials['Goosey Glug (Honker)'].level
     poisonic_level = session_data.account.construction_buildings['Poisonic Elder']['Level']
     cons_mastery = session_data.account.rift['ConstructMastery'].unlocked
-    carbon_unlocked = session_data.account.atom_collider['Atoms']['Carbon - Wizard Maximizer']['Level'] >= 1
+    carbon_unlocked = session_data.account.atom_collider['Carbon - Wizard Maximizer'].level >= 1
     results = [(cons_mastery or carbon_unlocked), honker_vial_level, poisonic_level]
     #logger.debug(f"Influencer results: EitherBuff: {results[0]}, Honker Vial Level: {results[1]}, Poisonic Tower Level: {results[2]}")
     return results

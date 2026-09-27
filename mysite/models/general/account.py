@@ -32,6 +32,7 @@ from models.w2.arcade import Arcade
 from models.w2.islands import Islands
 from models.w2.obols import Obols
 from models.w2.post_office import PostOffice
+from models.w3.atom_collider import AtomCollider
 from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
 from models.w3.library import Library
@@ -171,6 +172,7 @@ class Account:
         self.equinox: Equinox = Equinox(self.raw_data)
         self.death_note: DeathNote = DeathNote(self.raw_data)
         self.printer: Printer = Printer(self.raw_data)
+        self.atom_collider: AtomCollider = AtomCollider(self.raw_data)
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)

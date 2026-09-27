@@ -64,9 +64,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"{{{{Atom Collider|#atom-collider }}}}: Oxygen: "
-              f"+{10 * (0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'])}/10",
+              f"+{10 * (0 < session_data.account.atom_collider['Oxygen - Library Booker'].level)}/10",
         picture_class="oxygen",
-        progression=1 if 0 < session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level'] else 0,
+        progression=1 if 0 < session_data.account.atom_collider['Oxygen - Library Booker'].level else 0,
         goal=1
     ))
     if not session_data.account.rift['EldritchArtifact'].unlocked and session_data.account.sailing['Artifacts']['Fury Relic']['Level'] == 2:
@@ -227,9 +227,9 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Atom
     speed_Advices.append(Advice(
-        label=f"Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level']}/60%",
+        label=f"Oxygen - Library Booker: {2*session_data.account.atom_collider['Oxygen - Library Booker'].level}/60%",
         picture_class='oxygen',
-        progression=session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level'],
+        progression=session_data.account.atom_collider["Oxygen - Library Booker"].level,
         goal=20 + (10 * session_data.account.gaming.superbits['Isotope Discovery'].unlocked)
     ))
 
