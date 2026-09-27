@@ -1,7 +1,6 @@
 from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
-from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.achievements import Achievements
@@ -164,8 +163,7 @@ class Account:
         self.friend_bonuses: FriendBonuses = FriendBonuses(self.raw_data)
 
         #W1
-        self.stamps: Stamps = Stamps()
-        self.stamp_totals: dict[str, int] = {"Total": 0, **{stamp_type: 0 for stamp_type in stamp_types}}
+        self.stamps: Stamps = Stamps(self.raw_data, self.version)
         self.basketball: Basketball = Basketball(self.raw_data)
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)

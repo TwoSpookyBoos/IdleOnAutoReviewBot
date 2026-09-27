@@ -252,7 +252,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     atom_collider = session_data.account.atom_collider
 
     exalted_advice[boni].append(Advice(
-        label=f"Total Exalted Bonus: {session_data.account.exalted_stamp_multi:.2f}x",
+        label=f"Total Exalted Bonus: {session_data.account.stamps.exalted_multi:.2f}x",
         picture_class='exalted-stamps'
     ))
     exalted_advice[boni].append(Advice(
@@ -391,13 +391,13 @@ def getProgressionTiersAdviceGroup():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
         # TotalLevelStamps
-        if session_data.account.stamp_totals.get('Total', 0) < requirements.get('Total Stamp Levels', 0):
+        if session_data.account.stamps.total_levels < requirements.get('Total Stamp Levels', 0):
             add_subgroup_if_available_slot(stamp_Advices['Stamp Levels'], subgroup_label)
             if subgroup_label in stamp_Advices['Stamp Levels']:
                 stamp_Advices['Stamp Levels'][subgroup_label].append(Advice(
                     label='Total Stamp Levels',
                     picture_class='stat-graph-stamp',
-                    progression=session_data.account.stamp_totals.get('Total', 0),
+                    progression=session_data.account.stamps.total_levels,
                     goal=requirements.get('Total Stamp Levels', 0)
                 ))
         if subgroup_label not in stamp_Advices['Stamp Levels'] and tier_StampLevels >= tier_number - 1:

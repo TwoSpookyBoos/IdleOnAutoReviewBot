@@ -234,43 +234,28 @@ def _calculate_w1_starsigns(account):
 
 def _calculate_w1_stamps(account):
     # Dependency: legend talents
-    # `"StampDoubler" == d` in source. Last updated in v2.531.0
-    exalted_eldou = account.farming.exotic_market['EXALTED ELDOU']
-    account.exalted_stamp_multi = ValueToMulti(
-        100 #base
-        + (
-            account.atom_collider['Aluminium - Stamp Supercharger'].level
-            * account.atom_collider['Aluminium - Stamp Supercharger'].value_per_level
-        )
-        + account.sneaking.pristine_charms['Jellypick'].value
-        + account.compass.upgrades['Abomination Slayer XVII'].total_value
-        + MultiToValue(account.armor_sets['EMPEROR SET'].total_value)
-        + (20 * account.event_points_shop['Extra Exaltedness'].owned)
-        # "PaletteBonus"(23) in source. Last updated in v2.531.0
-        + account.gallery.exalted_palette_bonus
-        # "ExoticBonusQTY"(49) in source. Last updated in v2.531.0
-        + exalted_eldou.value
-        # "Spelunk[4][3]" in source. Last updated in v2.531.0
-        + account.spelunk.exalt_stamp_bonus
-        + account.legend_talents['Wowa Woowa'].value
-        # "RoG_BonusQTY"(17) in source. Last updated in v2.531.0
-        + account.sushi_station.get_milestone_bonus_value('Exalted Stamp Bonus')
-        # "RoG_BonusQTY"(50) in source. Last updated in v2.531.0
-        + account.jelly_operator.obstructions['Fancy Facet'].bonus_value / 100
+    account.stamps.calculate_total_values(
+        [
+            account.atom_collider['Aluminium - Stamp Supercharger'].value,
+            account.sneaking.pristine_charms['Jellypick'].value,
+            account.compass.upgrades['Abomination Slayer XVII'].total_value,
+            MultiToValue(account.armor_sets['EMPEROR SET'].total_value),
+            20 * account.event_points_shop['Extra Exaltedness'].owned,
+            # "PaletteBonus"(23) in source. Last updated in v2.531.0
+            account.gallery.exalted_palette_bonus,
+            # "ExoticBonusQTY"(49) in source. Last updated in v2.531.0
+            account.farming.exotic_market['EXALTED ELDOU'].value,
+            # "Spelunk[4][3]" in source. Last updated in v2.531.0
+            account.spelunk.exalt_stamp_bonus,
+            account.legend_talents['Wowa Woowa'].value,
+            # "RoG_BonusQTY"(17) in source. Last updated in v2.531.0
+            account.sushi_station.get_milestone_bonus_value('Exalted Stamp Bonus'),
+            # "RoG_BonusQTY"(50) in source. Last updated in v2.531.0
+            account.jelly_operator.obstructions['Fancy Facet'].bonus_value / 100,
+        ],
+        account.lab_bonuses['Certified Stamp Book'].enabled,
+        account.sneaking.pristine_charms['Liqorice Rolle'].value,
     )
-
-    for stamp_name, stamp in account.stamps.items():
-        try:
-            account.stamps[stamp_name].total_value = (
-                stamp.value
-                * (2 if account.lab_bonuses['Certified Stamp Book'].enabled and stamp.stamp_type != 'Misc' else 1)
-                * (ValueToMulti(account.sneaking.pristine_charms['Liqorice Rolle'].value) if stamp.stamp_type != 'Misc' else 1)
-                * (account.exalted_stamp_multi if stamp.exalted else 1)
-            )
-        except:
-            account.stamps[stamp_name].total_value = stamp.value
-            logger.exception(f"Failed to calculate the Total Value of {stamp_name}")
-            continue
 
 def _calculate_w2(account):
     _calculate_w2_vials(account)
