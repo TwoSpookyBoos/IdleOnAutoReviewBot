@@ -1,6 +1,6 @@
 from functools import cached_property
 
-from consts.consts_autoreview import lowest_accepted_version
+from consts.consts_autoreview import MultiToValue, lowest_accepted_version
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.achievements import Achievements
@@ -16,6 +16,7 @@ from models.general.dungeons import Dungeons
 from models.general.event_shop import EventShop
 from models.general.family_bonuses import FamilyBonuses
 from models.general.friend_bonuses import FriendBonuses
+from models.general.golden_food import calculate_golden_food_multis
 from models.general.gem_shop import GemShop
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
@@ -50,6 +51,7 @@ from models.w3.armor_sets import ArmorSets
 from models.w3.atom_collider import AtomCollider
 from models.w3.buildings import Buildings
 from models.w3.death_note import DeathNote
+from consts.w3.equinox import ribbon_cloud_dream_number
 from models.w3.equinox import Equinox
 from models.w3.library import Library
 from models.w3.prayers import Prayers
@@ -268,7 +270,15 @@ class Account:
         self.coral_kid = CoralKid(self.raw_data)
         self.jelly_operator = JellyOperator(self.raw_data)
 
-        # Cross-system setup, before calculations
+    def calculate(self):
+        self._calculate_setup()
+        # Each wave reads numbers the waves before it produce
+        self._calculate_wave_1()
+        self._calculate_wave_2()
+        self._calculate_wave_3()
+        self._calculate_wave_4()
+
+    def _calculate_setup(self):
         self.family_bonuses.calculate_levels(self.characters.safe)
         self.inventory.calculate_owned(
             self.characters,
@@ -289,6 +299,402 @@ class Account:
             self.gemshop.purchases['Royal Egg Cap'].owned, self.merits[3][2].level
         )
         self.divinity.link_characters(self.characters.safe)
+
+    def _calculate_wave_1(self):
+        self.caverns.villagers["Cosmos"].calculate_bonuses(self.companions.has("King Doot"))
+        self.arcade.calculate_values(self.companions)
+        self.tesseract.calculate_upgrades()
+        # Emperor reads tesseract, sneaking, arcade and gemshop
+        self.emperor.calculate_max_attempt(self.gemshop, self.sneaking.emporium)
+        self.emperor.calculate_bonus_multi(self.arcade, self.tesseract)
+        self.emperor.calculate_bonuses()
+        self.summoning.calculate_winner_bonus_multi(
+            self.sneaking.pristine_charms["Crystal Comb"].value,
+            self.gemshop.purchases["King Of All Winners"],
+            self.merits[5][4],
+            self.sailing.artifacts["The Winz Lantern"].level,
+            self.achievements,
+            self.armor_sets["GODSHARD SET"].total_value,
+            self.gemshop.bundles["ban_i"].owned,
+            self.emperor["Summoning Winner Bonuses"].value,
+        )
+        self.summoning.calculate_bonuses()
+        self.friend_bonuses.calculate_bonuses(
+            self.companions,
+            self.event_points_shop['Friendly Slot'].owned,
+        )
+        self.gallery.calculate_palette_bonuses(
+            self.legend_talents['Picasso Gaming'].value
+        )
+        self.farming.calculate_exotic_market_bonus()
+
+    def _calculate_wave_2(self):
+        # General
+        self.add_alert_list('General', self.item_filter.get_alerts(
+            self.slab,
+            self.stored_assets,
+            self.all_assets,
+            self.autoloot,
+            self.equinox.dreams[17].completed,
+        ))
+        self.world_progress.calculate(self.achievements, self.death_note)
+        self.storage.calculate_other_sources(
+            self.event_points_shop, self.vault, self.construction_buildings, self.gemshop
+        )
+
+        # Lab connections gate bonuses read all through wave 2
+        self.divinity.calculate(
+            self.companions.has('King Doot')
+            or 'Arctis' in self.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
+        )
+        # Meals rerun when Black Diamond lights
+        self.lab_mainframe.calculate(
+            self.characters.safe,
+            self.divinity.account_wide_arctis,
+            self.gemshop.purchases['Souped Up Tube'].owned,
+            self.sneaking.emporium,
+            self.meals,
+            next(card for card in self.cards if card.codename == 'Crystal3'),
+            self.lab_chips['Conductive Motherboard'],
+            self.breeding,
+            self.merits[3][4].level,
+            self.equinox.upgrades['Laboratory Fuse'].level
+            + self.summoning.bonuses['Lab Con Range'].value,
+            self._calculate_meals,
+        )
+
+        # Master Classes. Grimoire bones wait for wave 3's Gambit
+        self.grimoire.calculate_upgrades()
+        self.compass.calculate_upgrades()
+        self.compass.calculate_dust_sources(
+            self.characters.wws, self.sneaking, self.all_assets, self.arcade,
+            self.lab_jewels, self.emperor,
+        )
+
+        # W1
+        self.vault.calculate(self.glimbo, self.research.grid, self.event_points_shop)
+        self.star_signs.calculate_seraph(
+            self.tesseract.upgrades['Astrology Cultism'].level,
+            self.characters.all_skills['Summoning'],
+        )
+        self.star_signs.calculate_silkrode(self.lab_chips['Silkrode Nanochip'])
+        self.stamps.calculate_total_values(
+            [
+                self.atom_collider['Aluminium - Stamp Supercharger'].value,
+                self.sneaking.pristine_charms['Jellypick'].value,
+                self.compass.upgrades['Abomination Slayer XVII'].total_value,
+                MultiToValue(self.armor_sets['EMPEROR SET'].total_value),
+                20 * self.event_points_shop['Extra Exaltedness'].owned,
+                # "PaletteBonus"(23) in source. Last updated in v2.531.0
+                self.gallery.exalted_palette_bonus,
+                # "ExoticBonusQTY"(49) in source. Last updated in v2.531.0
+                self.farming.exotic_market['EXALTED ELDOU'].value,
+                # "Spelunk[4][3]" in source. Last updated in v2.531.0
+                self.spelunk.exalt_stamp_bonus,
+                self.legend_talents['Wowa Woowa'].value,
+                # "RoG_BonusQTY"(17) in source. Last updated in v2.531.0
+                self.sushi_station.get_milestone_bonus_value('Exalted Stamp Bonus'),
+                # "RoG_BonusQTY"(50) in source. Last updated in v2.531.0
+                self.jelly_operator.obstructions['Fancy Facet'].bonus_value / 100,
+            ],
+            self.lab_bonuses['Certified Stamp Book'].enabled,
+            self.sneaking.pristine_charms['Liqorice Rolle'].value,
+        )
+        self.owl.calculate(self.legend_talents, self.companions)
+        self.basketball.calculate()
+        self.darts.calculate()
+
+        # W2
+        self.alchemy_vials.calculate_values(self.vault, self.rift, self.lab_bonuses)
+        self.alchemy_p2w.sigils.calculate_precharge_levels(
+            self.sneaking.emporium['Ionized Sigils'].obtained
+        )
+        self.alchemy_bubbles.calculate_prisma_multi(
+            self.tesseract,
+            self.arcade,
+            self.sushi_station,
+            self.jelly_operator,
+            self.gallery,
+            self.alchemy_p2w.sigils,
+            self.farming.exotic_market,
+            self.legend_talents,
+            self.companions,
+        )
+        self.ballot.calculate_values(
+            self.equinox.upgrades['Voter Rights'].level,
+            self.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value,
+            self.summoning.bonuses["Ballot Bonus"].value,
+            self.event_points_shop['Gilded Vote Button'].owned,
+            self.event_points_shop['Royal Vote Button'].owned,
+            self.companions['Mashed Potato'].bonus,
+            self.companions['Crystal Cuttlefish'].bonus,
+            self.legend_talents['Democracy FTW'].value,
+        )
+        self.islands.calculate_trash_shop(self.stamps, self.stored_assets, self.bribes)
+        self.killroy.calculate_available(self.equinox.upgrades['Shades of K'].level)
+        # Tachyons read vials
+        self.tesseract.calculate_tachyon_sources(
+            self.characters.acs, self.lab_jewels, self.arcade, self.emperor,
+            self.alchemy_bubbles, self.sneaking, self.gemshop, self.alchemy_vials,
+            self.companions.has('Balloonfish'),
+        )
+
+        # W3
+        self.refinery.calculate(self.companions['Panda'].bonus, self.merits[2][6].level)
+        # Gambit's +100 Tower levels come in wave 3
+        self.construction_buildings.calculate_max_levels(
+            self.rift['SkillMastery'].unlocked,
+            sum(self.characters.all_skills['Construction']),
+            self.atom_collider['Carbon - Wizard Maximizer'].level,
+        )
+        self.atom_collider.calculate_max_levels(
+            self.gaming.superbits['Isotope Discovery'].unlocked,
+            self.compass.upgrades['Atomic Potential'],
+            self.event_points_shop['Higgs Boson'].owned,
+        )
+        self.atom_collider.calculate_costs(
+            self.merits[4][6].level,
+            self.construction_buildings['Atom Collider'].level,
+            self.gaming.superbits['Atom Redux'].unlocked,
+            self.alchemy_bubbles['Atom Split'].base_value,
+            self.stamps['Atomic Stamp'].total_value,
+            self.grimoire.upgrades['Death of the Atom Price'].total_value,
+            self.compass.upgrades['Atomic Cost Crash'].total_value,
+        )
+        self.shrines.calculate_values(
+            next(c.getStars() for c in self.cards if c.name == 'Chaotic Chizoar')
+        )
+
+        # W4
+        self.cooking.calculate_max_plate_level(
+            self.sailing.artifacts['Causticolumn'].level,
+            self.rift['EldritchArtifact'].unlocked,
+            self.sneaking.emporium,
+            self.grimoire.upgrades['Supreme Head Chef Status'],
+            self.spelunk.caves["Lunarheim"],
+        )
+        self.lab_bonuses.calculate_nblb(
+            self.lab_jewels['Pyrite Rhinestone'].enabled,
+            self.sailing.artifacts['Amberite'].level,
+            self.gaming.superbits['Moar Bubbles'].unlocked,
+            self.gaming.superbits['Even Moar Bubbles'].unlocked,
+            self.merits[3][6].level,
+        )
+
+        # W7
+        self.spelunk.calculate_lore_bonus(self.sailing.artifacts["Pointagon"])
+        self.advice_fish.calculate_bonuses()
+        self.meritocracy.calculate_bonuses()
+        self.zenith_market.calculate_bonuses()
+        self.research.calculate_bonuses(
+            self.companions["Pirate Deckhand"].bonus,
+            self.equinox.dreams,
+            self.sushi_station.get_milestone_bonus_value("Research Upgrade Bonus Multi"),
+        )
+        self.glimbo.calculate_drop_rate_multi(self.research)
+        self.sushi_station.calculate_bonuses()
+        self.dancing_coral.calculate_bonuses()
+        self.coral_kid.calculate_bonuses()
+        self.jelly_operator.calculate_bonuses(
+            self.research.grid["Jelly Operator Linguistics"].value,
+            self.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,
+            self.arcade[72].value,
+        )
+        self.gallery.calculate_bonuses(
+            highest_world_reached=self.world_progress.highest_reached,
+            characters=self.characters,
+            cards=self.cards,
+            alchemy_bubbles=self.alchemy_bubbles,
+            coral_reef=self.coral_reef,
+            artifacts=self.sailing.artifacts,
+            gemshop=self.gemshop,
+            emporium=self.sneaking.emporium,
+            spelunk=self.spelunk,
+            legend_talents=self.legend_talents,
+            event_shop=self.event_points_shop,
+            minehead=self.minehead,
+            clam_work=self.clam_work,
+            companions=self.companions,
+            sushi_station=self.sushi_station,
+        )
+
+    def _calculate_meals(self):
+        self.meals.calculate_values(
+            self.lab_jewels['Black Diamond Rhinestone'].active_value,
+            self.breeding.total_shiny_levels['Bonuses from All Meals'],
+            self.summoning.bonuses["Meal Bonuses"].as_multi,
+            self.companions.get_multi('Wickerlight Spirit', 'Meal Bonus'),
+            emperor_set=MultiToValue(self.armor_sets['EMPEROR SET'].total_value),
+            cloud_73=self.equinox.dreams[ribbon_cloud_dream_number].completed,
+            jelly_rog_60=self.jelly_operator.obstructions['Soldier Shiv'].bonus_value,
+            max_summoning_level=max(self.characters.all_skills['Summoning'], default=0),
+        )
+
+    def _calculate_wave_3(self):
+        # Talent levels, and everything reading them
+        self.library.calculate_max_book_levels(
+            self.construction_buildings,
+            self.achievements,
+            self.atom_collider,
+            self.sailing,
+            self.merits,
+            self.saltlick,
+            self.summoning,
+        )
+        self.equinox.calculate_max_levels(
+            self.summoning.bonuses["Equinox Max LV"].value,
+            self.gaming.superbits['Equinox Unending'].unlocked,
+        )
+        self.library.calculate_bonus_talents(
+            self.armor_sets, self.companions, self.family_bonuses, self.equinox,
+            self.achievements, self.sneaking, self.grimoire, self.tesseract,
+        )
+        self.characters.calculate_bonus_talent_levels(
+            account_wide_bonus=self.library.account_wide_bonus_talents,
+            account_wide_arctis=self.divinity.account_wide_arctis,
+            big_p_value=self.alchemy_bubbles['Big P'].base_value,
+            coral_kid_level=self.coral_kid[3].level,
+            timmy_talented=self.gaming.superbits['Timmy Talented'].unlocked,
+            max_book_level=self.library.max_book_level,
+            es_family_value=self.family_bonuses['Elemental Sorcerer'].value,
+            spelunk=self.spelunk,
+            super_talent_levels=self.super_talent_levels,
+        )
+
+        # Tome reads meals, stamps, meritocracy and bonus talent levels
+        self.tome.calculate_live_talent_max(self.meals['Buncha Banana'].value)
+        self.tome.calculate_star_talents(
+            self.characters.safe,
+            self.family_bonuses['Wizard'].value,
+            self.stamps['Talent S Stamp'].total_value,
+            self.guild_bonuses['Star Dazzle'].value,
+            self.alchemy_p2w.sigils['Two Starz'],
+            self.sailing.artifacts.chilled_yarn_multi,
+            self.meritocracy[21].value,
+            self.bribes['Star Scraper'],
+            self.companions['Flying Worm'].bonus,
+        )
+        self.tome.calculate_score(self.manual_tome_score)
+        self.tome.calculate_bonuses(self.grimoire, self.armor_sets, self.event_points_shop)
+
+        # Minau measures Tome score, Gambit points read Minau
+        self.caverns.villagers["Minau"].calculate_bonuses(
+            lengthmeister_multi=(
+                self.caverns.villagers["Cosmos"].majiks.village["Lengthmeister"].as_multi
+            ),
+            crops_found=self.farming.crops.unlocked,
+            all_skills=self.characters.all_skills,
+            tome_score=self.tome.score,
+            death_note=self.death_note,
+            highest_dmg=self.highest_dmg,
+            slab_items=len(self.slab),
+            studies_done=self.caverns.villagers["Bolaia"].studies.total,
+            golem_kills=self.caverns.caves["The Temple"].current_kills,
+        )
+        self.construction_buildings.calculate_gambit_levels(
+            self.caverns.caves['Gambit'].bonuses[9].unlocked
+        )
+        self.summoning.calculate_doublers(
+            self.caverns.caves["Gambit"].bonuses[0].value,
+            self.event_points_shop["Summoning Star"].owned,
+        )
+
+        self.crystal_spawn_chance.calculate(
+            next(card for card in self.cards if card.name == 'Poop'),
+            next(card for card in self.cards if card.name == 'Demon Genie'),
+            self.lab_chips['Omega Nanochip'].owned + self.lab_chips['Omega Motherboard'].owned,
+            self.stamps['Crystallin'].total_value,
+            self.characters,
+            self.shrines['Crescent Shrine'].value,
+        )
+        self.sneaking.calculate_gemstones_values(
+            self.get_current_max_talent("Generational Gemstones")
+        )
+        self.sneaking.calculate_pristine_chance(
+            self.compass.upgrades['Pristine Collector'].total_value
+        )
+        self.grimoire.calculate_bone_sources(
+            self.characters.dbs, self.sneaking, self.caverns, self.all_assets,
+            self.arcade, self.lab_jewels, self.emperor,
+        )
+        self.class_kill_talents.calculate_values(
+            self.characters.safe, self.get_best_talent_level
+        )
+
+        # Farming: Land Rank multi reads talents, crop evo reads summoning
+        self.farming.calculate_market_bonus(
+            self.gemshop.purchases['Plot Of Land'].owned, self.merits[5][2].level
+        )
+        self.farming.calculate_land_rank_bonus(self.get_current_max_talent("Dank Rank"))
+        self.farming.calculate_crop_depot_bonus(
+            self.lab_bonuses['Depot Studies PhD'], self.lab_jewels['Pure Opal Rhombol'],
+            self.grimoire, self.vault, self.sneaking.emporium,
+        )
+        self.farming.calculate_crop_value_multi(self.ballot)
+        self.farming.calculate_crop_evo_multi(
+            self.characters,
+            self.alchemy_bubbles,
+            self.alchemy_vials,
+            self.tome.score,
+            self.stamps['Crop Evo Stamp'].total_value,
+            self.meals,
+            self.star_signs,
+            self.characters.all_skills['Farming'],
+            self.rift['SkillMastery'],
+            self.ballot[29],
+            self.achievements,
+            self.killroy.skull_shop,
+            self.caverns.caves['The Lamp'].wishes['World 6 Majigers'],
+            self.summoning.bonuses,
+        )
+        self.farming.calculate_crop_speed(self.alchemy_vials, self.summoning.bonuses)
+        self.farming.calculate_bean_bonus(
+            self.sneaking.emporium['Deal Sweetening'].value, self.achievements
+        )
+        self.farming.calculate_og(
+            self.achievements,
+            self.star_signs,
+            self.merits[5][2].level,
+            self.sneaking.pristine_charms['Taffy Disc'].value,
+        )
+
+    def _calculate_wave_4(self):
+        # Reads wave 3 talent levels
+        self.statues.calculate_values(
+            [char.max_talents.get('56', 0) for char in self.characters.vmans],
+            self.sailing.artifacts['The Onyx Lantern'].level,
+            self.zenith_market['TRUE ZEN'].value,
+            self.meritocracy[26].value,
+            self.event_points_shop['Smiley Statue'].owned,
+            self.vault.upgrades['Statue Bonanza'].total_value,
+        )
+        self.beanstalk.calculate_unlocked_tier(self.sneaking.emporium)
+        self.beanstalk.calculate_golden_food_multi(calculate_golden_food_multis(
+            characters=self.characters,
+            best_talent_level=self.get_best_talent_level,
+            companions=self.companions,
+            armor_sets=self.armor_sets,
+            family_bonuses=self.family_bonuses,
+            death_note=self.death_note,
+            sigils=self.alchemy_p2w.sigils,
+            artifacts=self.sailing.artifacts,
+            meritocracy=self.meritocracy,
+            star_signs=self.star_signs,
+            breeding=self.breeding,
+            tesseract=self.tesseract,
+            cards=self.cards,
+            achievements=self.achievements,
+            jelly_operator=self.jelly_operator,
+            stamps=self.stamps,
+            meals=self.meals,
+            bribes=self.bribes,
+            pristine_charms=self.sneaking.pristine_charms,
+            ballot=self.ballot,
+            legend_talents=self.legend_talents,
+            vault=self.vault,
+            alchemy_bubbles=self.alchemy_bubbles,
+        ))
+        self.beanstalk.calculate_bonuses()
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

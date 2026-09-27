@@ -4,7 +4,6 @@ from pathlib import Path
 import yaml
 
 
-import models.account_calcs
 from config import app
 from consts.consts_autoreview import versions_patches, lowest_accepted_version
 
@@ -90,7 +89,7 @@ def main(inputData, source_string, runType="web"):
         logger.error(f"Found Version {e.data} < {lowest_accepted_version}. Raising VeryOldDataException.")
         raise VeryOldDataException(e.data)
 
-    models.account_calcs.calculate_account(session_data.account)
+    session_data.account.calculate()
 
     for name in session_data.account.characters.names:
         maybe_ban(name, runType)

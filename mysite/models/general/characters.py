@@ -37,6 +37,35 @@ class Characters(list[Character]):
         self.acs: list[Character] = self._with_class("Arcane Cultist")
         self.wws: list[Character] = self._with_class("Wind Walker")
 
+    def calculate_bonus_talent_levels(
+        self,
+        *,
+        account_wide_bonus: int,
+        account_wide_arctis: bool,
+        big_p_value: float,
+        coral_kid_level: float,
+        timmy_talented: bool,
+        max_book_level: int,
+        es_family_value: float,
+        spelunk,
+        super_talent_levels: int,
+    ):
+        for char in self.safe:
+            char.calculate_bonus_talent_levels(
+                account_wide_bonus,
+                account_wide_arctis or char.isArctisLinked(),
+                big_p_value,
+                coral_kid_level,
+                timmy_talented,
+                max_book_level,
+                es_family_value,
+            )
+            char.active_super_talents = spelunk.get_super_talents(
+                char.character_index, char.active_talent_preset
+            )
+            # Character has no account access
+            char.super_talent_levels = super_talent_levels
+
     def _with_class(self, *class_names: str) -> list[Character]:
         return [
             char
