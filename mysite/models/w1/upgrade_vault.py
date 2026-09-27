@@ -9,6 +9,7 @@ from consts.idleon.w1.upgrade_vault import (
     bundle_max_level_bonus_cap,
 )
 from models.advice.advice import Advice
+from models.general.event_shop import EventShop
 from models.w7.glimbo import Glimbo
 from models.w7.research import ResearchGrid
 from utils.logging import get_logger
@@ -155,12 +156,12 @@ class Vault:
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
     def calculate(
-        self, glimbo: Glimbo, research_grid: ResearchGrid, event_points_shop: dict
+        self, glimbo: Glimbo, research_grid: ResearchGrid, event_points_shop: EventShop
     ):
         # "VaultUpgMaxLV" in source; before Mastery scaling. Last updated in v2.531.0
         glimbo_bogo_level = research_grid["Glimbo BOGO Offer"].level
         glimbo_vip_pass_owned = (
-            event_points_shop['Bonuses']['Glimbo VIP Pass']['Owned']
+            event_points_shop['Glimbo VIP Pass'].owned
         )
         for slot, vault_index in enumerate(glimbo_vault_indices):
             upgrade = self._by_index.get(vault_index)

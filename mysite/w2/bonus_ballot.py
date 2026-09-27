@@ -3,7 +3,6 @@ import time
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
@@ -41,26 +40,16 @@ def getBallotMultiAdviceGroup():
     voter_rights = session_data.account.equinox.upgrades['Voter Rights']
     summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
     voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
-    gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
-    rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
+    gvb = session_data.account.event_points_shop['Gilded Vote Button']
+    rvb = session_data.account.event_points_shop['Royal Vote Button']
     _, mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
     _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
         f"Total Multi: {session_data.account.ballot.bonus_multi:.2f}x": [
             voter_rights.get_bonus_advice(),
             voter_integrity.get_advice(),
-            Advice(
-                label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
-                picture_class=gvb['Image'],
-                progression=int(gvb['Owned']),
-                goal=1
-            ),
-            Advice(
-                label=f"{{{{Event Shop|#event-shop}}}}: Royal Vote Button: {rvb['Description']}",
-                picture_class=rvb['Image'],
-                progression=int(rvb['Owned']),
-                goal=1
-            ),
+            gvb.get_bonus_advice(),
+            rvb.get_bonus_advice(),
             summoning_bonus.get_bonus_advice(),
             mashed_potato_advice,
             crystal_cuttlefish_advice,

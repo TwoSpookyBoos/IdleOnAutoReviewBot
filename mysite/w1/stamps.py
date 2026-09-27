@@ -294,10 +294,10 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         resource=compass_abs.dust_image
     ))
 
-    extra_exaltedness = session_data.account.event_points_shop['Bonuses']['Extra Exaltedness']
+    extra_exaltedness = session_data.account.event_points_shop['Extra Exaltedness']
     extra_exaltedness_value = 20
     exalted_advice[boni].append(Advice(
-        label=f"{{{{Event Shop|#event-shop}}}}: Extra Exaltedness: +{extra_exaltedness_value * extra_exaltedness['Owned']}/{extra_exaltedness_value}%",
+        label=f"{{{{Event Shop|#event-shop}}}}: Extra Exaltedness: +{extra_exaltedness_value * extra_exaltedness.owned}/{extra_exaltedness_value}%",
         picture_class='event-shop-18'
     ))
 
@@ -321,7 +321,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         session_data.account.jelly_operator.obstructions['Fancy Facet'].get_advice()
     )
 
-    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
+    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness.owned)
 
     exalted_advice[tot].append(Advice(
         label=f"Total Exalted Stamps spent: {compass.total_exalted}/{tot_available}",

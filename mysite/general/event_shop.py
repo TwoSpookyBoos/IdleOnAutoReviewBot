@@ -2,16 +2,15 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.w1 import get_event_shop_advice
 from utils.logging import get_logger
 
 
 logger = get_logger(__name__)
 
 def getEventShopAdviceGroup() -> AdviceGroup:
-    event_points_total = session_data.account.event_points_shop['Points Owned'] + session_data.account.all_assets.get("Quest89").amount
+    event_points_total = session_data.account.event_points_shop.points_owned + session_data.account.all_assets.get("Quest89").amount
     event_shop_advice: list[Advice] = [
-        get_event_shop_advice(bonus_name) for bonus_name in session_data.account.event_points_shop['Bonuses'].keys()
+        bonus.get_advice(event_points_total) for bonus in session_data.account.event_points_shop.values()
     ]
 
     event_shop_advice.insert(0, Advice(

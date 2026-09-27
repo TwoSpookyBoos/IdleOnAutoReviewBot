@@ -41,7 +41,7 @@ def _calculate_wave_1(account):
 def _calculate_general_friend_bonuses(account):
     account.friend_bonuses.calculate_bonuses(
         account.companions,
-        account.event_points_shop['Bonuses']['Friendly Slot']['Owned'],
+        account.event_points_shop['Friendly Slot'].owned,
     )
 
 def _calculate_caverns_majiks(account):
@@ -245,7 +245,7 @@ def _calculate_w1_stamps(account):
         + account.sneaking.pristine_charms['Jellypick'].value
         + account.compass.upgrades['Abomination Slayer XVII'].total_value
         + MultiToValue(account.armor_sets['EMPEROR SET'].total_value)
-        + (20 * account.event_points_shop['Bonuses']['Extra Exaltedness']['Owned'])
+        + (20 * account.event_points_shop['Extra Exaltedness'].owned)
         # "PaletteBonus"(23) in source. Last updated in v2.531.0
         + account.gallery.exalted_palette_bonus
         # "ExoticBonusQTY"(49) in source. Last updated in v2.531.0
@@ -306,8 +306,8 @@ def _calculate_w2_ballot(account):
         account.equinox.upgrades['Voter Rights'].level,
         account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value,
         account.summoning.bonuses["Ballot Bonus"].value,
-        account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'],
-        account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'],
+        account.event_points_shop['Gilded Vote Button'].owned,
+        account.event_points_shop['Royal Vote Button'].owned,
         account.companions['Mashed Potato'].bonus,
         account.companions['Crystal Cuttlefish'].bonus,
         account.legend_talents['Democracy FTW'].value,
@@ -373,7 +373,7 @@ def _calculate_w3_atom_collider(account):
     account.atom_collider.calculate_max_levels(
         account.gaming.superbits['Isotope Discovery'].unlocked,
         account.compass.upgrades['Atomic Potential'],
-        account.event_points_shop['Bonuses']['Higgs Boson']['Owned'],
+        account.event_points_shop['Higgs Boson'].owned,
     )
     account.atom_collider.calculate_costs(
         account.merits[4][6]['Level'],
@@ -898,7 +898,7 @@ def _calculate_w1_statues(account):
         account.sailing['Artifacts']['The Onyx Lantern']['Level'],
         account.zenith_market['TRUE ZEN'].value,
         account.meritocracy[26].value,
-        account.event_points_shop['Bonuses']['Smiley Statue']['Owned'],
+        account.event_points_shop['Smiley Statue'].owned,
         account.vault.upgrades['Statue Bonanza'].total_value,
     )
 

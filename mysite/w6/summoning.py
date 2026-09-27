@@ -201,9 +201,9 @@ def get_upgrades() -> AdviceGroup:
         session_data.account.caverns.caves['Gambit'].bonuses[0].get_bonus_advice()
     )
     upgrades_advice[sources].append(Advice(
-        label=f"{10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned']} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
-        picture_class=session_data.account.event_points_shop['Bonuses']['Summoning Star']['Image'],
-        progression=10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned'],
+        label=f"{10 * session_data.account.event_points_shop['Summoning Star'].owned} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
+        picture_class=session_data.account.event_points_shop['Summoning Star'].image,
+        progression=10 * session_data.account.event_points_shop['Summoning Star'].owned,
         goal=10
     ))
     upgrades_advice[sources].append(summoning.get_doubler_spent_advice())

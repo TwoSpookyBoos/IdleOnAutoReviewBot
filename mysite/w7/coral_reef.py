@@ -34,13 +34,13 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     shellslug_multi, shellslug_advice = session_data.account.companions['Shellslug'].get_advice(value_is_multi=True)
 
     # Mult B
-    coolral = session_data.account.event_points_shop['Bonuses']['Coolral']
-    coolral_multi = 1 + 0.3 * coolral['Owned']
+    coolral = session_data.account.event_points_shop['Coolral']
+    coolral_multi = 1 + 0.3 * coolral.owned
     coolral_advice = Advice(
         label=f'{{{{ Event Shop|#event-shop }}}} - Coolral: x{coolral_multi}/x1.3 Daily Corals',
         resource='event-point',
         picture_class='event-shop-25',
-        progression=int(coolral['Owned']),
+        progression=int(coolral.owned),
         goal=1,
     )
 

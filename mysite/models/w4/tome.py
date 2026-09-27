@@ -23,6 +23,7 @@ from consts.w4.tome import (
     tome_star_talent_indexes,
 )
 from models.advice.advice import Advice
+from models.general.event_shop import EventShop
 from models.master_classes.grimoire import Grimoire
 from models.w3.armor_sets import ArmorSets
 from utils.number_formatting import round_and_trim
@@ -197,14 +198,14 @@ class Tome:
 
     # "TomeBonus" 2 in `_customBlock_Summoning`. Last updated in v2.531.0
     def calculate_bonuses(
-        self, grimoire: Grimoire, armor_sets: ArmorSets, event_points_shop: dict
+        self, grimoire: Grimoire, armor_sets: ArmorSets, event_points_shop: EventShop
     ):
         # (1 + (Grimoire(17) + TROLL_SET) / 100) in source. Last updated in v2.531.0
         bonus_multi = ValueToMulti(
             MultiToValue(grimoire.upgrades["Grey Tome Book"].total_value)
             + MultiToValue(armor_sets["TROLL SET"].total_value)
         )
-        singed_tome_owned = event_points_shop["Bonuses"]["Singed Tome"]["Owned"]
+        singed_tome_owned = event_points_shop["Singed Tome"].owned
         self.singed_tome_owned = singed_tome_owned
         self.drop_rate_bonus = (
             self.red_pages_unlocked

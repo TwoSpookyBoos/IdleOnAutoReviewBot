@@ -9,6 +9,7 @@ from consts.consts_general import (
     storage_vault_upgrades,
 )
 from models.advice.advice import Advice
+from models.general.event_shop import EventShop
 from models.general.models_consumables import StorageChest
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads
@@ -94,20 +95,20 @@ class Storage(dict[str, StorageSource]):
 
     def calculate_other_sources(
         self,
-        event_points_shop: dict,
+        event_points_shop: EventShop,
         vault,
         construction_buildings: dict,
         gemshop: dict,
     ):
         for name, slots in storage_event_shop_slots.items():
-            bonus = event_points_shop["Bonuses"][name]
+            bonus = event_points_shop[name]
             self[name] = StorageSource(
                 source="Event Shop",
-                owned_slots=slots * bonus["Owned"],
+                owned_slots=slots * bonus.owned,
                 max_slots=slots,
                 label=f"{{{{ Event Shop|#event-shop }}}} - {name}: {slots} slots",
-                image=bonus["Image"],
-                progression=int(bonus["Owned"]),
+                image=bonus.image,
+                progression=int(bonus.owned),
                 goal=1,
                 resource="event-point",
             )

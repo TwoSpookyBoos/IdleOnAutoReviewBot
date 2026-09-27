@@ -312,10 +312,10 @@ class Gallery:
         emporium_podium = account.sneaking.emporium["Another Gallery Podium"].value
         lunarheim_obtained = account.spelunk.caves["Lunarheim"].bonus_obtained
         superb_gallerium = account.legend_talents["Superb Gallerium"].value
-        event_shop = account.event_points_shop["Bonuses"]
-        plain_showcase = event_shop["Plain Showcase"]["Owned"]
-        worldclass_showcase = event_shop["Worldclass Showcase"]["Owned"]
-        king_of_the_rack = event_shop["King of the Rack"]["Owned"]
+        event_shop = account.event_points_shop
+        plain_showcase = event_shop["Plain Showcase"].owned
+        worldclass_showcase = event_shop["Worldclass Showcase"].owned
+        king_of_the_rack = event_shop["King of the Rack"].owned
         minehead_hatrack = account.minehead[minehead_hatrack_bonus_index].value
         clam_work = account.clam_work
         companions = account.companions

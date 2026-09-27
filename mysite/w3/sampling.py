@@ -206,7 +206,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     supreme_wiring_max_days = 50
     supreme_wiring_days = min(supreme_wiring_max_days, safer_get(session_data.account.raw_optlacc_dict, 323, 0))
-    supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Bonuses']['Supreme Wiring']['Owned'])
+    supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Supreme Wiring'].owned)
     supreme_wiring_multi = ValueToMulti(supreme_wiring_value)
 
     biggole_mole_max_days = 100

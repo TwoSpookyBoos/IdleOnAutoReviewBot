@@ -103,18 +103,12 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
 
 def getEffectBonusAdvices() -> list[Advice]:
     statues = session_data.account.statues
-    smiley_statue = session_data.account.event_points_shop['Bonuses']['Smiley Statue']
     return [
         statues.get_voodoo_advice(),
         statues.get_onyx_advice(session_data.account.sailing['Artifacts']['The Onyx Lantern']['Level']),
         session_data.account.zenith_market['TRUE ZEN'].get_advice(),
         session_data.account.meritocracy[26].get_bonus_advice(),
-        Advice(
-            label=f"{{{{Event Shop|#event-shop}}}}: Smiley Statue: {round(statues.event_shop_multi, 2):g}/1.3x",
-            picture_class=smiley_statue['Image'],
-            progression=int(smiley_statue['Owned']),
-            goal=1
-        ),
+        statues.get_event_shop_advice(session_data.account.event_points_shop['Smiley Statue']),
         statues.get_dragon_advice(),
         get_upgrade_vault_advice('Statue Bonanza'),
         statues.get_total_multi_advice(),

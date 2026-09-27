@@ -136,15 +136,8 @@ def getMaxLevelAdviceGroup() -> AdviceGroup:
 
     ml_advice.append(session_data.account.compass.upgrades['Atomic Potential'].get_advice())
 
-    hb = session_data.account.event_points_shop['Bonuses']['Higgs Boson']
-    ml_advice.append(
-        Advice(
-            label=f"{{{{Event Shop|#event-shop}}}}: Higgs Boson: {hb['Description']}",
-            picture_class=hb['Image'],
-            progression=int(hb['Owned']),
-            goal=1
-        )
-    )
+    hb = session_data.account.event_points_shop['Higgs Boson']
+    ml_advice.append(hb.get_bonus_advice())
 
     for advice in ml_advice:
         advice.mark_advice_completed()

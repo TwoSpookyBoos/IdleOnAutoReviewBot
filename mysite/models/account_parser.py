@@ -12,7 +12,6 @@ from consts.consts_general import (
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
-from consts.consts_w1 import event_points_shop_dict
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
@@ -233,7 +232,6 @@ def _parse_general(account):
     _parse_general_achievements(account)
     _parse_general_merits(account)
     _parse_general_item_filter(account)
-    _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
 
@@ -368,39 +366,11 @@ def _parse_general_item_filter(account):
             if codeName != 'Blank':
                 account.item_filter.append(codeName)
 
-def _parse_general_event_points_shop(account):
-    account.event_points_shop = {
-        'Points Owned': safer_get(account.raw_optlacc_dict, 310, 0),
-        'Raw Purchases': safer_get(account.raw_optlacc_dict, 311, ''),
-        'Bonuses': {}
-    }
-    if isinstance(account.event_points_shop['Raw Purchases'], str):
-        account.event_points_shop['Raw Purchases'] = list(account.event_points_shop['Raw Purchases'])
-    else:
-        logger.warning(f"Event Shop Purchases not String type: {type(account.event_points_shop['Raw Purchases'])} with value of: {account.event_points_shop['Raw Purchases']}")
-        account.event_points_shop['Raw Purchases'] = []
-    for bonusName, bonusDetails in event_points_shop_dict.items():
-        try:
-            account.event_points_shop['Bonuses'][bonusName] = {
-                'Owned': bonusDetails['Code'] in account.event_points_shop['Raw Purchases'],
-                'Cost': bonusDetails['Cost'],
-                'Description': bonusDetails['Description'],
-                'Image': bonusDetails['Image']
-            }
-        except Exception as e:
-            logger.warning(f"Event Shop Parse error: {e}. Defaulting to Unowned")
-            account.event_points_shop['Bonuses'][bonusName] = {
-                'Owned': False,
-                'Cost': bonusDetails['Cost'],
-                'Description': bonusDetails['Description'],
-                'Image': bonusDetails['Image']
-            }
-
 def _parse_general_inventory_slots_account_wide(account):
     account.inventory.calculate_owned(
         account.all_characters,
         account.autoloot,
-        account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+        account.event_points_shop['Secret Pouch'].owned,
         account.gemshop['Bundles']['bon_f']['Owned'],
     )
 

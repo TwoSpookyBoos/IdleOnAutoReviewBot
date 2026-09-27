@@ -13,6 +13,7 @@ from consts.consts_w5 import max_sailing_artifact_level
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from models.general.character import Character
+from models.general.event_shop import EventShopBonus
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -169,6 +170,15 @@ class Statues(dict[str, Statue]):
             progression=onyx_lantern_level,
             goal=max_sailing_artifact_level,
             resource="the-onyx-lantern",
+        )
+
+    def get_event_shop_advice(self, smiley_statue: EventShopBonus) -> Advice:
+        return Advice(
+            label=f"{{{{Event Shop|#event-shop}}}} - Smiley Statue: "
+            f"{round(self.event_shop_multi, 2):g}/1.3x",
+            picture_class=smiley_statue.image,
+            progression=int(smiley_statue.owned),
+            goal=1,
         )
 
     def get_dragon_advice(self) -> Advice:

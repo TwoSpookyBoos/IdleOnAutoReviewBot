@@ -10,6 +10,7 @@ from models.general.colo_scores import ColoScores
 from models.general.character import Character, talent_bonus_banned
 from models.general.companions import Companions
 from models.general.dungeons import Dungeons
+from models.general.event_shop import EventShop
 from models.general.family_bonuses import FamilyBonuses
 from models.general.friend_bonuses import FriendBonuses
 from models.general.greenstacks import GreenStacks
@@ -124,6 +125,7 @@ class Account:
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         self.colo_scores: ColoScores = ColoScores(self.raw_data)
         self.npc_tokens: NpcTokens = NpcTokens(self.raw_data)
+        self.event_points_shop: EventShop = EventShop(self.raw_data)
         self.dungeons: Dungeons = Dungeons(self.raw_data)
         self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
         self.family_bonuses: FamilyBonuses = FamilyBonuses()
