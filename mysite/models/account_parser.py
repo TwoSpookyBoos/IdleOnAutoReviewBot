@@ -22,7 +22,7 @@ from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
 )
 from consts.consts_w5 import (
-    sailing_list, captain_buffs, divinity_divinities_dict, getDivinityNameFromIndex, getStyleNameFromIndex,
+    sailing_list, captain_buffs,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from models.w1.statues import Statues
@@ -956,36 +956,4 @@ def _parse_w5_sailing_captains(account):
             }
 
 def _parse_w5_divinity(account):
-    account.divinity = {
-        'Divinities': copy.deepcopy(divinity_divinities_dict),
-        'DivinityLinks': {}
-    }
-    raw_divinity_list = safe_loads(account.raw_data.get("Divinity", []))
-    if not raw_divinity_list:
-        logger.warning("Divinity data not present")
-    while len(raw_divinity_list) < 40:
-        raw_divinity_list.append(0)
-    account.divinity['DivinityPoints'] = raw_divinity_list[24]
-    if isinstance(account.divinity['DivinityPoints'], str):
-        try:
-            account.divinity['DivinityPoints'] = int(float(account.divinity['DivinityPoints']))
-        except:
-            logger.exception(f"Could not convert '{type(account.divinity['DivinityPoints'])}' {account.divinity['DivinityPoints']} to int. Defaulting to 0")
-            account.divinity['DivinityPoints'] = 0
-    account.divinity['GodsUnlocked'] = min(10, raw_divinity_list[25])
-    account.divinity['GodRank'] = max(0, raw_divinity_list[25] - 10)
-    account.divinity['LowOffering'] = raw_divinity_list[26]
-    account.divinity['HighOffering'] = raw_divinity_list[27]
-    account.divinity['LowOfferingGoal'] = ""
-    account.divinity['HighOfferingGoal'] = ""
-    for divinityIndex in account.divinity['Divinities']:
-        if account.divinity['GodsUnlocked'] >= divinityIndex:
-            account.divinity['Divinities'][divinityIndex]["Unlocked"] = True
-        # Snake has a divinityIndex of 0, Blessing level stored in 28
-        account.divinity['Divinities'][divinityIndex]["BlessingLevel"] = raw_divinity_list[divinityIndex + 27]
-    for character in account.safe_characters:
-        try:
-            character.setDivinityStyle(getStyleNameFromIndex(raw_divinity_list[character.character_index]))
-            character.setDivinityLink(getDivinityNameFromIndex(raw_divinity_list[character.character_index + 12] + 1))
-        except:
-            continue
+    account.divinity.link_characters(account.safe_characters)

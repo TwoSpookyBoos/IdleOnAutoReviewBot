@@ -26,14 +26,14 @@ class CoralKidUpgrade:
             "level": self.level,
             "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
             "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
-            "god_rank": session_data.account.divinity["GodRank"],
+            "god_rank": session_data.account.divinity.god_rank,
         }), 0)
 
         self.value = round_and_trim(coral_kid_upgrades_bonus_final_formulas[self.index]({
             "level": self.level,
             "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
             "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
-            "god_rank": session_data.account.divinity["GodRank"],
+            "god_rank": session_data.account.divinity.god_rank,
         }), 0)
 
     def get_advice(self):

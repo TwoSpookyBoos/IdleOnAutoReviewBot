@@ -269,7 +269,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
 
     harriep_multi_aw = 3 if session_data.account.companions.has('King Doot') else 1
-    harriep_multi_cs = 3 if session_data.account.divinity['Divinities'][4]['Unlocked'] else 1
+    harriep_multi_cs = 3 if session_data.account.divinity[4].unlocked else 1
 
     aw_multi = (
         1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active

@@ -44,6 +44,7 @@ from models.w4.breeding import Breeding
 from models.w4.lab_chips import LabChips
 from models.w4.rift import Rift
 from models.w4.tome import Tome
+from models.w5.divinity import Divinity
 from models.w5.gaming import Gaming
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
@@ -200,6 +201,7 @@ class Account:
 
         # W5
         self.gaming: Gaming = Gaming(self.raw_data)
+        self.divinity: Divinity = Divinity(self.raw_data)
 
         # The Caverns Below
         self.caverns: Caverns = Caverns(self.raw_data)

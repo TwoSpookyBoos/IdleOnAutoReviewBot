@@ -144,7 +144,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     #Character Specific
     for char in session_data.account.safe_characters:
         arctis_max = char.arctis_bonus_max
-        arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
+        arctis_current = arctis_max if session_data.account.divinity.account_wide_arctis or char.isArctisLinked() else 0
 
         char_bonus_levels = int(char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library.max_book_level)
         subgroupName = f"{char.character_name} the {char.class_name}: +{char_bonus_levels}"
@@ -298,7 +298,7 @@ def getTalentExclusions() -> list:
         #525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
 
     #If you have less than 5 God Ranks, exclude ES damage per God rank
-    if session_data.account.divinity['GodRank'] < 4:
+    if session_data.account.divinity.god_rank < 4:
         talentExclusions.append(507)
 
     #Elite Account-Wides don't stack, can be excluded if already maxed on one character

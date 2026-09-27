@@ -1,6 +1,6 @@
 from math import ceil, floor
 
-from consts.consts_autoreview import ValueToMulti, MultiToValue, default_huge_number_replacement
+from consts.consts_autoreview import ValueToMulti, MultiToValue
 from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
@@ -10,13 +10,13 @@ from consts.consts_w1 import get_seraph_cosmos_summ_level_goal, \
 from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
-from consts.consts_w5 import divinity_offerings_dict, divinity_DivCostAfter3, \
+from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.advice.advice import Advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow, safer_math_log
+from utils.safer_data_handling import safe_loads, safer_get, safer_math_log
 from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
@@ -639,27 +639,11 @@ def _calculate_w4_tome_bonuses(account):
 
 
 def _calculate_w5(account):
-    account.divinity['AccountWideArctis'] = (
-        account.companions.has('King Doot') or
-        'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link
+    account.divinity.calculate(
+        account.companions.has('King Doot')
+        or 'Arctis' in account.caverns.villagers["Cosmos"].majiks.idleon["Pocket Divinity"].link,
+        safer_get(account.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3),
     )
-    _calculate_w5_divinity_offering_costs(account)
-
-def _calculate_w5_divinity_offering_costs(account):
-    DivCostAfter3 = safer_get(account.raw_serverVars_dict, "DivCostAfter3", divinity_DivCostAfter3)
-    account.divinity['LowOfferingGoal'] = divinityUpgradeCost(DivCostAfter3, account.divinity['LowOffering'], account.divinity['GodsUnlocked'] + account.divinity['GodRank'])
-    account.divinity['HighOfferingGoal'] = divinityUpgradeCost(DivCostAfter3, account.divinity['HighOffering'], account.divinity['GodsUnlocked'] + account.divinity['GodRank'])
-
-def divinityUpgradeCost(DivCostAfter3, offeringIndex, unlockedDivinity):
-    try:
-        cost = (20 * safer_math_pow(unlockedDivinity + 1.3, 2.3) * safer_math_pow(2.2, unlockedDivinity) + 60) * divinity_offerings_dict.get(offeringIndex, {}).get("Chance", 1) / 100
-        if unlockedDivinity >= 3:
-            cost = cost * safer_math_pow(min(1.8, max(1, 1 + DivCostAfter3 / 100)), unlockedDivinity - 2)
-        return ceil(cost)
-    except OverflowError:
-        logger.exception(f"Could not calc Divinity Offering cost. Probably a cheater with a ridiculous number of Unlocked Divinity: {unlockedDivinity}. Returning {default_huge_number_replacement}")
-        return default_huge_number_replacement
-
 
 def _calculate_caverns(account):
     account.caverns.villagers["Minau"].calculate_bonuses()
@@ -872,7 +856,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         char.arctis_bonus_max = ceil(
             arctis_base * max(1, bigp_value) * coral_kid_multi * div_minorlink_value
         )
-        if account.divinity['AccountWideArctis'] or char.isArctisLinked():
+        if account.divinity.account_wide_arctis or char.isArctisLinked():
             character_specific_bonuses += char.arctis_bonus_max
 
         # "AllTalentLV" in source. Last updated in v2.531.0

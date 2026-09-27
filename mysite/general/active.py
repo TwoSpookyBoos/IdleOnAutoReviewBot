@@ -112,11 +112,11 @@ def getShortTermAdviceList() -> list[Advice]:
     #Div jail if Goat not unlocked
     quick_divinity_goals = [2, 5]
     for divinity in quick_divinity_goals:
-        if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity['Divinities'][divinity]['Unlocked']:
+        if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity[divinity].unlocked:
             shortterm.append(Advice(
-                label=f"Divinity jail until you unlock {session_data.account.divinity['Divinities'][divinity]['Name']} 🙁",
-                picture_class=session_data.account.divinity['Divinities'][divinity]['Name'],
-                progression=session_data.account.divinity['GodsUnlocked'],
+                label=f"Divinity jail until you unlock {session_data.account.divinity[divinity].name} 🙁",
+                picture_class=session_data.account.divinity[divinity].name,
+                progression=session_data.account.divinity.gods_unlocked,
                 goal=divinity
             ))
             break

@@ -26,10 +26,10 @@ logger = get_logger(__name__)
 def getSailingDelays() -> dict:
     delaysDict = {}
     # If Goharut is already unlocked, delay priority on Ashen Urn
-    if session_data.account.divinity['Divinities'][5]['Unlocked']:
+    if session_data.account.divinity[5].unlocked:
         delaysDict[3] = ['Ashen Urn']
     # If Purrmep is already unlocked, delay priority on Jade Rock
-    if session_data.account.divinity['Divinities'][7]['Unlocked']:
+    if session_data.account.divinity[7].unlocked:
         delaysDict[5] = ['Jade Rock']
     # If NBLB is already increasing the max number of bubbles (10 as of v2.11), delay Amberite
     if session_data.account.labBonuses['No Bubble Left Behind']['Value'] >= max_nblb_bubbles:
@@ -179,7 +179,7 @@ def get_sailing_progression_tier_advicegroups():
 def get_sailing_speed_advicegroup() -> AdviceGroup:
     # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
     # Multi Group A -- Purrmep Minor Link, Cards, Bubble
-    purrmep = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Purrmep'))
+    purrmep = session_data.account.divinity.named('Purrmep')
     purrmep_base_max_minor_bonus = 50
     char_linked_to_purrmep: Character | None = None
     for char in session_data.account.safe_characters:
@@ -202,13 +202,13 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     multi_group_a = round(multi_group_a, 2)
 
     # Multi Group B -- Goharut Blessing
-    goharut = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Goharut'))
+    goharut = session_data.account.divinity.named('Goharut')
 
-    multi_group_b = ValueToMulti(4 * goharut['BlessingLevel'])
+    multi_group_b = ValueToMulti(4 * goharut.blessing_level)
     multi_group_b = round(multi_group_b, 2)
 
     # Multi Group C -- Purrmep Blessing
-    multi_group_c = ValueToMulti(3 * purrmep['BlessingLevel'])
+    multi_group_c = ValueToMulti(3 * purrmep.blessing_level)
     multi_group_c = round(multi_group_c, 2)
 
     # Multi Group D -- Ballot Bonus
@@ -224,7 +224,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     multi_group_d = round(multi_group_d, 2)
 
     # Multi Group E -- All other bonuses
-    bagur = next((divinity for divinity in session_data.account.divinity['Divinities'].values() if divinity.get('Name') == 'Bagur'), None)
+    bagur = session_data.account.divinity.named('Bagur')
 
     ad_tablet_level = session_data.account.sailing['Artifacts']['10 AD Tablet']['Level']
     registered_slab_count = len(session_data.account.registered_slab)
@@ -249,7 +249,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     c_shanti_minor = session_data.account.star_signs['C. Shanti Minor']
 
     multi_group_e = 1 + (
-            5 * bagur['BlessingLevel'] +
+            5 * bagur.blessing_level +
             ad_tablet_bonus_percent +
             sailboat_stamp.total_value +
             (boat_statue.type != 'Normal') * boat_statue.value +
@@ -280,8 +280,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
         ],
         f'Multi Group A: {multi_group_a}x': [
             Advice(
-                label=f"Anyone Minor Linked to {purrmep.get('Name')}: +{purrmep_minor_bonus:.2f}%",
-                picture_class=purrmep.get('Name'),
+                label=f"Anyone Minor Linked to {purrmep.name}: +{purrmep_minor_bonus:.2f}%",
+                picture_class=purrmep.name,
                 progression=int(char_linked_to_purrmep is not None),
                 goal=1
             ),
@@ -290,22 +290,10 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             boaty_bubble.get_bonus_advice(goal=max_NBLB)
         ],
         f'Multi Group B: {multi_group_b}x': [
-            Advice(
-                label=f"{goharut.get('Name')} Blessing: +{4 * goharut.get('BlessingLevel')}%",
-                picture_class=goharut.get('Name'),
-                progression=goharut.get('BlessingLevel'),
-                goal=100,
-                resource=goharut.get('BlessingMaterial')
-            )
+            goharut.get_blessing_advice(f": +{4 * goharut.blessing_level}%")
         ],
         f'Multi Group C: {multi_group_c}x': [
-            Advice(
-                label=f"{purrmep.get('Name')} Blessing: +{3 * purrmep.get('BlessingLevel')}%",
-                picture_class=purrmep.get('Name'),
-                progression=purrmep.get('BlessingLevel'),
-                goal=100,
-                resource=purrmep.get('BlessingMaterial')
-            )
+            purrmep.get_blessing_advice(f": +{3 * purrmep.blessing_level}%")
         ],
         f'Multi Group D: {multi_group_d}x': [
             Advice(
@@ -317,13 +305,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             )
         ],
         f'Multi Group E: {multi_group_e}x': [
-            Advice(
-                label=f"{bagur.get('Name')} Blessing: +{5 * bagur.get('BlessingLevel')}%",
-                picture_class=bagur.get('Name'),
-                progression=bagur.get('BlessingLevel'),
-                goal=100,
-                resource=bagur.get('BlessingMaterial')
-            ),
+            bagur.get_blessing_advice(f": +{5 * bagur.blessing_level}%"),
             Advice(
                 label=f'{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%',
                 picture_class='10-ad-tablet',
