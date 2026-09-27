@@ -6,7 +6,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_upgrade_vault_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.all_talentsDict import all_talentsDict
@@ -653,7 +652,7 @@ def getPetDamageAdviceGroup():
                 goal=1
             ),
             session_data.account.arcade[30].get_advice(),
-            get_upgrade_vault_advice('Pet Punchies')
+            session_data.account.vault.get_upgrade_advice('Pet Punchies')
         ]
     }
     for subgroup in pet_damage_advices:

@@ -4,7 +4,6 @@ from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
-from models.advice.generators.general import get_upgrade_vault_advice
 from models.general.session_data import session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
@@ -109,7 +108,7 @@ def getEffectBonusAdvices() -> list[Advice]:
         session_data.account.meritocracy[26].get_bonus_advice(),
         statues.get_event_shop_advice(session_data.account.event_points_shop['Smiley Statue']),
         statues.get_dragon_advice(),
-        get_upgrade_vault_advice('Statue Bonanza'),
+        session_data.account.vault.get_upgrade_advice('Statue Bonanza'),
         statues.get_total_multi_advice(),
     ]
 

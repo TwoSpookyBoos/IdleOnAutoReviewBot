@@ -1,4 +1,6 @@
+from consts.consts_autoreview import EmojiType
 from consts.idleon.w1.basketball import basketball_upgrade_descriptions
+from models.advice.advice import Advice
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index
 
@@ -17,6 +19,16 @@ class BasketballUpgrade:
         if "{" in self.description:
             self.value = self.level
             self.description = self.description.replace("{", str(self.value))
+
+    def get_advice(self, link_to_section: bool = True) -> Advice:
+        link_to_section_text = "{{ Basketball|#basketball }} - " if link_to_section else ""
+        return Advice(
+            label=f"{link_to_section_text}Upgrade {self.index + 1}: {self.description}",
+            picture_class=self.image,
+            progression=self.level,
+            goal=EmojiType.INFINITY.value,
+            resource="basketball-shop-currency",
+        )
 
 
 class Basketball:

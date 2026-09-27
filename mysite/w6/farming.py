@@ -11,7 +11,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_group_tabbed import TabbedAdviceGroup, TabbedAdviceGroupTab
-from models.advice.generators.general import get_upgrade_vault_advice
 from models.w6.farming import Farming
 
 from utils.logging import get_logger
@@ -84,7 +83,7 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
             session_data.account.grimoire.total_upgrades
         ),
         farming.exotic_market['SCIENTERRIFIC'].get_bonus_advice(),
-        get_upgrade_vault_advice('Properly Funded Research'),
+        session_data.account.vault.get_upgrade_advice('Properly Funded Research'),
     ]
     cd_tabbed = {
         "Crop Depot Bonuses": (

@@ -116,7 +116,7 @@ class Storage(dict[str, StorageSource]):
             )
         for name in storage_vault_upgrades:
             upgrade = vault.upgrades[name]
-            # Advice comes from get_upgrade_vault_advice
+            # Advice comes from Vault.get_upgrade_advice
             self[name] = StorageSource(
                 source="Vault",
                 owned_slots=upgrade.value_per_level * upgrade.level,

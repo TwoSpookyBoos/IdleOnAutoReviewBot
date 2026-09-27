@@ -10,7 +10,6 @@ from consts.consts_general import cards_max_level
 from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
@@ -565,7 +564,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
                 completed=box_details.level >= box_details.max_level
             ) for box_name, box_details in best_bubo.po_boxes_invested.items() if box_name in po_box_names
         ]
-        bubo_advice[po].insert(0, get_upgrade_vault_advice('Daily Mailbox'))
+        bubo_advice[po].insert(0, session_data.account.vault.get_upgrade_advice('Daily Mailbox'))
 
         #Alchemy and Talents
         bad_talent_numbers = [450, 480, 527]  #Energy Bolt, Crazy Concoctions, Tampered Injection

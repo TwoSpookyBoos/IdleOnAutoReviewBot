@@ -7,7 +7,6 @@ from models.general.assets import Assets
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -143,7 +142,7 @@ def get_storage_advicegroup() -> AdviceGroup:
     for name, source in storage.items():
         if source.owned_slots < source.max_slots:
             if source.source == 'Vault':
-                advices[ob_label].append(get_upgrade_vault_advice(name))
+                advices[ob_label].append(session_data.account.vault.get_upgrade_advice(name))
             else:
                 advices[ob_label].append(source.get_advice())
 

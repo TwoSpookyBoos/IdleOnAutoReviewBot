@@ -155,6 +155,13 @@ class Vault:
         for upgrade in self.upgrades.values():
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
+
+    def get_upgrade_advice(
+        self, upgrade_name: str, link_to_section: bool = True, additional_info_text: str = ""
+    ) -> Advice:
+        return self.upgrades[upgrade_name].get_advice(
+            self.total_upgrades, link_to_section, additional_info_text
+        )
     def calculate(
         self, glimbo: Glimbo, research_grid: ResearchGrid, event_points_shop: EventShop
     ):

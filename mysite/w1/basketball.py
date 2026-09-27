@@ -3,7 +3,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
-from models.advice.generators.w1 import get_basketball_advice
 
 
 def get_upgrade_info_group():
@@ -12,7 +11,7 @@ def get_upgrade_info_group():
             label="The shop is located in the Valley of the Beans (Bored Beans)",
             picture_class="bored-bean",
         ),
-        *[get_basketball_advice(index, link_to_section=False)[1] for index in session_data.account.basketball.upgrades.keys()]
+        *[upgrade.get_advice(link_to_section=False) for upgrade in session_data.account.basketball.upgrades.values()]
     ]
     return AdviceGroup(
         pre_string='Upgrades',

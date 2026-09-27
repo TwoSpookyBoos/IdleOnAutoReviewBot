@@ -22,7 +22,6 @@ from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdvice
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_upgrade_vault_advice
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
@@ -150,10 +149,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     vault_mastery_vault = session_data.account.vault.upgrades['Vault Mastery']
     if vault_mastery_vault.level < vault_mastery_vault.max_level:
-        drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
+        drop_rate_aw_advice[general].append(session_data.account.vault.get_upgrade_advice('Vault Mastery', additional_info_text=f"<br>(increases the value of the Vault upgrade below)"))
 
     # Upgrade Vault - Drops for Days
-    drop_rate_aw_advice[general].append(get_upgrade_vault_advice('Drops for Days'))
+    drop_rate_aw_advice[general].append(session_data.account.vault.get_upgrade_advice('Drops for Days'))
     general_bonus += session_data.account.vault.upgrades['Drops for Days'].total_value
 
     # Gem Shop - Deathbringer Pack

@@ -7,7 +7,6 @@ from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
-from models.advice.generators.general import get_upgrade_vault_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.safer_data_handling import safer_convert
@@ -69,7 +68,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
 
     # Upgrade Vault > Beeg Forge
     beeg_forge = session_data.account.vault.upgrades['Beeg Forge']
-    cap_Advices['Scaling Sources'].append(get_upgrade_vault_advice("Beeg Forge"))
+    cap_Advices['Scaling Sources'].append(session_data.account.vault.get_upgrade_advice("Beeg Forge"))
 
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
