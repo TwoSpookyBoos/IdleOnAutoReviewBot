@@ -1,9 +1,8 @@
-from math import prod
-
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.tesseract import tesseract_upgrades, tesseract_tachyon_list
 from models.advice.advice import Advice
+from models.master_classes.multi_groups import MultiGroups
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert, safer_math_log
@@ -109,7 +108,7 @@ class Tesseract:
         for upgrade in self.upgrades.values():
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
-        self.tachyon_calc: dict[str, float] = {}
+        self.tachyon_multi: MultiGroups | None = None
         self.tesseract_talent_bonus_value: float = 0.0
 
     def calculate_upgrades(self):
@@ -150,8 +149,8 @@ class Tesseract:
             x2=all_talentsDict[backup_energy_talent_index]['x2'],
         )
 
-        self.tachyon_calc = {
-            'mga': ValueToMulti(
+        self.tachyon_multi = MultiGroups(
+            mga=ValueToMulti(
                 self.upgrades['Ripple in Spacetime'].total_value
                 + self.tesseract_talent_bonus_value
                 + self.upgrades['Verdon Hoarding'].total_value * safer_math_log(self.tachyons[2], 10)
@@ -160,17 +159,16 @@ class Tesseract:
                 + lab_jewels['Eternal Energy Jewel'].active_value
                 + arcade[50].value
             ),
-            'mgb': ValueToMulti(
+            mgb=ValueToMulti(
                 emperor["Arcane Cultist Extra Tachyons"].value
                 + alchemy_bubbles['Tachyon Bubble'].base_value
             ),
-            'mgc': ValueToMulti(sneaking.pristine_charms['Mystery Fizz'].value),
-            'mgd': ValueToMulti(backup_energy_bonus_value),
-            'mge': 1 + 0.2 * gemshop.bundles['bun_x'].owned,
-            'mgf': ValueToMulti(alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"].value),
-            'mgg': 4 * has_balloonfish,
-        }
-        self.tachyon_calc['Total'] = prod(self.tachyon_calc.values())
+            mgc=ValueToMulti(sneaking.pristine_charms['Mystery Fizz'].value),
+            mgd=ValueToMulti(backup_energy_bonus_value),
+            mge=1 + 0.2 * gemshop.bundles['bun_x'].owned,
+            mgf=ValueToMulti(alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"].value),
+            mgg=4 * has_balloonfish,
+        )
 
     def get_tesseract_talent_advice(self) -> Advice:
         return Advice(
@@ -180,6 +178,6 @@ class Tesseract:
 
     def get_backup_energy_advice(self) -> Advice:
         return Advice(
-            label=f"Backup Energy Talent: {self.tachyon_calc['mgd']:.2f}x Tachyons",
+            label=f"Backup Energy Talent: {self.tachyon_multi.mgd:.2f}x Tachyons",
             picture_class='backup-energy',
         )

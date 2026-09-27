@@ -158,11 +158,11 @@ def getCompassCurrenciesAdviceGroup(compass):
 
     # Dust Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Dust multi: {compass.dust_calc['Total']:.3f}x",
+        label=f"Total Dust multi: {compass.dust_multi.total:.3f}x",
         picture_class='compass'
     ))
 
-    mga_label = f"Dust Multi Group A: {compass.dust_calc['mga']:.3f}x"
+    mga_label = f"Dust Multi Group A: {compass.dust_multi.mga:.3f}x"
     solardust_stacks_text = (
         f"<br>{safer_math_log(compass.dusts[2], 'Lava'):.3f} stacks = "
         f"{compass.upgrades['Solardust Hoarding'].total_value * safer_math_log(compass.dusts[2], 'Lava'):.3f}% total"
@@ -172,19 +172,19 @@ def getCompassCurrenciesAdviceGroup(compass):
         compass.upgrades['Solardust Hoarding'].get_advice(solardust_stacks_text),
     ]
 
-    mgb_label = f"Dust Multi Group B: {compass.dust_calc['mgb']:.2f}x"
+    mgb_label = f"Dust Multi Group B: {compass.dust_multi.mgb:.2f}x"
     currency_advices[mgb_label] = [
         compass.upgrades['Spire of Dust'].get_advice(),
     ]
 
-    mgc_label = f"Dust Multi Group C: {compass.dust_calc['mgc']:.2f}x"
+    mgc_label = f"Dust Multi Group C: {compass.dust_multi.mgc:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.sneaking.pristine_charms[
             'Twinkle Taffy'
         ].get_obtained_advice()
     ]
 
-    mgd_label = f"Dust Multi Group D: {compass.dust_calc['mgd']:.2f}x"
+    mgd_label = f"Dust Multi Group D: {compass.dust_multi.mgd:.2f}x"
     currency_advices[mgd_label] = [
         Advice(
             label=f"Windwalker Hood: +25%",
@@ -213,7 +213,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         )
     ]
 
-    mge_label = f"Dust Multi Group E: {compass.dust_calc['mge']:.2f}x"
+    mge_label = f"Dust Multi Group E: {compass.dust_multi.mge:.2f}x"
     currency_advices[mge_label] = []
     ww_index = None
     eternal_hunt_preset_level = 100
@@ -254,7 +254,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         informational=True
     ))
 
-    mgf_label = f"Dust Multi Group F: {compass.dust_calc['mgf']:.2f}x"
+    mgf_label = f"Dust Multi Group F: {compass.dust_multi.mgf:.2f}x"
     currency_advices[mgf_label] = []
     ww_index = None
     compass_preset_level = 100
@@ -296,7 +296,7 @@ def getCompassCurrenciesAdviceGroup(compass):
     ]:
         currency_advices[mgf_label].append(compass.upgrades[bonus_name].get_advice())
 
-    mgg_label = f"Dust Multi Group G: {compass.dust_calc['mgg']:.2f}x"
+    mgg_label = f"Dust Multi Group G: {compass.dust_multi.mgg:.2f}x"
     currency_advices[mgg_label] = [
         session_data.account.emperor["Windwalker Extra Dust"].get_bonus_advice()
     ]

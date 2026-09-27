@@ -1,11 +1,10 @@
-from math import prod
-
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.grimoire import (
     grimoire_upgrades, grimoire_bones_list, grimoire_stack_types, grimoire_stack_target_monsters
 )
 from models.advice.advice import Advice
+from models.master_classes.multi_groups import MultiGroups
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert, safer_math_log
@@ -120,7 +119,7 @@ class Grimoire:
         for upgrade in self.upgrades.values():
             upgrade.unlocked = self.total_upgrades >= upgrade.unlock_requirement
 
-        self.bone_calc: dict[str, float] = {}
+        self.bone_multi: MultiGroups | None = None
 
     def calculate_upgrades(self):
         grimoire_multi = ValueToMulti(
@@ -145,18 +144,17 @@ class Grimoire:
             x2=all_talentsDict[196]['x2'],
         )
 
-        self.bone_calc = {
-            'mga': ValueToMulti(sneaking.pristine_charms['Glimmerchain'].value),
-            'mgb': ValueToMulti(grimoire_percent),
-            'mgc': ValueToMulti(caverns.caves['Gambit'].bonuses[12].value),
-            'mgd': ValueToMulti(25 * self.hood_owned),
-            'mge': ValueToMulti(
+        self.bone_multi = MultiGroups(
+            mga=ValueToMulti(sneaking.pristine_charms['Glimmerchain'].value),
+            mgb=ValueToMulti(grimoire_percent),
+            mgc=ValueToMulti(caverns.caves['Gambit'].bonuses[12].value),
+            mgd=ValueToMulti(25 * self.hood_owned),
+            mge=ValueToMulti(
                 self.upgrades["Bones o' Plenty"].total_value
                 + (self.upgrades['Bovinae Hoarding'].total_value * safer_math_log(self.bones[3], 'Lava'))
                 + arcade[40].value
                 + lab_jewels['Deadly Wrath Jewel'].active_value
             ),
-            'mgf': 1,
-            'mgg': ValueToMulti(emperor["Deathbringer Extra Bones"].value)
-        }
-        self.bone_calc['Total'] = prod(self.bone_calc.values())
+            mgf=1,
+            mgg=ValueToMulti(emperor["Deathbringer Extra Bones"].value),
+        )

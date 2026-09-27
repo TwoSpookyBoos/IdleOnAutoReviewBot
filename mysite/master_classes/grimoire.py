@@ -143,11 +143,11 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
 
     #Bone Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Bone multi: {grimoire.bone_calc['Total']:.3f}x",
+        label=f"Total Bone multi: {grimoire.bone_multi.total:.3f}x",
         picture_class='grimoire'
     ))
 
-    mga_label = f"Bone Multi Group A: {grimoire.bone_calc['mga']:.2f}x"
+    mga_label = f"Bone Multi Group A: {grimoire.bone_multi.mga:.2f}x"
     currency_advices[mga_label] = [
         session_data.account.sneaking.pristine_charms[
             'Glimmerchain'
@@ -166,7 +166,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         if db.secondary_preset_talents.get('196', 0) > grimoire_preset_level:
             grimoire_preset_level = db.secondary_preset_talents.get('196', 0)
 
-    mgb_label = f"Bone Multi Group B: {grimoire.bone_calc['mgb']:.3f}x"
+    mgb_label = f"Bone Multi Group B: {grimoire.bone_multi.mgb:.3f}x"
     currency_advices[mgb_label] = [
         Advice(
             label=f"{grimoire_preset_level}/{session_data.account.library.max_book_level} booked Grimoire:"
@@ -178,12 +178,12 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         )
     ]
 
-    mgc_label = f"Bone Multi Group C: {grimoire.bone_calc['mgc']:.2f}x"
+    mgc_label = f"Bone Multi Group C: {grimoire.bone_multi.mgc:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.caverns.caves['Gambit'].bonuses[12].get_bonus_advice()
     ]
 
-    mgd_label = f"Bone Multi Group D: {grimoire.bone_calc['mgd']:.2f}x"
+    mgd_label = f"Bone Multi Group D: {grimoire.bone_multi.mgd:.2f}x"
     currency_advices[mgd_label] = [
         Advice(
             label=f"Deathbringer Hood of Death: +25%",
@@ -194,7 +194,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         ),
     ]
 
-    mge_label = f"Bone Multi Group E: {grimoire.bone_calc['mge']:.2f}x"
+    mge_label = f"Bone Multi Group E: {grimoire.bone_multi.mge:.2f}x"
     currency_advices[mge_label] = []
     currency_advices[mge_label].append(grimoire.upgrades["Bones o' Plenty"].get_advice(grimoire.total_upgrades))
     bh = grimoire.upgrades['Bovinae Hoarding']
@@ -209,7 +209,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         session_data.account.lab_jewels['Deadly Wrath Jewel'].get_bonus_advice()
     )
 
-    mgf_label = f"Bone Multi Group F: {grimoire.bone_calc['mgf']:.2f}x"
+    mgf_label = f"Bone Multi Group F: {grimoire.bone_multi.mgf:.2f}x"
     db_index = None
     tombstone_preset_level = 100
     for db in session_data.account.dbs:
@@ -250,7 +250,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         )
     ]
 
-    mgg_label = f"Bone Multi Group G: {grimoire.bone_calc['mgg']:.2f}x"
+    mgg_label = f"Bone Multi Group G: {grimoire.bone_multi.mgg:.2f}x"
     currency_advices[mgg_label] = [
         session_data.account.emperor["Deathbringer Extra Bones"].get_bonus_advice()
     ]

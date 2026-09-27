@@ -1,11 +1,10 @@
-from math import prod
-
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.compass import (
     compass_upgrades, compass_abominations, compass_medallions_data, compass_titans, compass_dusts_list
 )
 from models.advice.advice import Advice
+from models.master_classes.multi_groups import MultiGroups
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert, safer_math_log, safer_math_pow
@@ -209,7 +208,7 @@ class Compass:
 
         self.total_exalted: int = len(raw_compass[4])
 
-        self.dust_calc: dict[str, float] = {}
+        self.dust_multi: MultiGroups | None = None
 
     def calculate_upgrades(self):
         circle_multi = ValueToMulti(
@@ -233,18 +232,18 @@ class Compass:
             x1=all_talentsDict[421]['x1'],
             x2=all_talentsDict[421]['x2'],
         )
-        self.dust_calc = {
-            'mga': ValueToMulti(
+        self.dust_multi = MultiGroups(
+            mga=ValueToMulti(
                 self.upgrades['Mountains of Dust'].total_value
                 + (self.upgrades['Solardust Hoarding'].total_value * safer_math_log(self.dusts[2], 'Lava'))
             ),
-            'mgb': self.upgrades['Spire of Dust'].total_value,
-            'mgc': ValueToMulti(sneaking.pristine_charms['Twinkle Taffy'].value),
-            'mgd': ValueToMulti(
+            mgb=self.upgrades['Spire of Dust'].total_value,
+            mgc=ValueToMulti(sneaking.pristine_charms['Twinkle Taffy'].value),
+            mgd=ValueToMulti(
                 (25 * min(1, all_assets.get('EquipmentHats118').amount))
             ),
-            'mge': 1,
-            'mgf': ValueToMulti(
+            mge=1,
+            mgf=ValueToMulti(
                 + compass_percent
                 + arcade[47].value
                 + lab_jewels['North Winds Jewel'].active_value
@@ -257,6 +256,5 @@ class Compass:
                 + self.upgrades['Abomination Slayer XXX'].total_value
                 + self.upgrades['Abomination Slayer XXXIV'].total_value
             ),
-            'mgg': ValueToMulti(emperor["Windwalker Extra Dust"].value)
-        }
-        self.dust_calc['Total'] = prod(self.dust_calc.values())
+            mgg=ValueToMulti(emperor["Windwalker Extra Dust"].value),
+        )
