@@ -12,7 +12,7 @@ from consts.general.common import percent_break_point
 from models.advice.advice import Advice
 from models.caverns.villagers.villager import Villager
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_convert, safer_math_log
+from utils.safer_data_handling import safer_convert, safer_math_log
 from utils.text_formatting import notateNumber
 
 
@@ -171,65 +171,58 @@ class Minau(Villager):
     def __init__(self, **kwargs):
         super().__init__(name="Minau", unlock_at=7, role=villager_roles["Minau"], **kwargs)
         self.measurements = Measurements()
+        self.gloomie_kills: float = 0
 
     def parse_feature(self, raw_caverns_list: list):
+        self.gloomie_kills = self._get_gloomie_kills(raw_caverns_list)
         raw_measurements_level = raw_caverns_list[22]
         for index, data in enumerate(measurements_data):
             level = safer_convert(raw_measurements_level[index], 0)
             bonus = MeasurementBonus(index, data, level)
             self.measurements.append(bonus)
 
-    def calculate_bonuses(self):
-        from models.general.session_data import session_data
-
-        account = session_data.account
-        majik_multi = (
-            account.caverns.villagers["Cosmos"]
-            .majiks.village["Lengthmeister"]
-            .as_multi
-        )
-        scale_values = self._get_scale_values(account)
-        self._scale = [
-            MeasurementScale(value, index) for index, value in enumerate(scale_values)
-        ]
-        for bonus in self.measurements:
-            bonus.calculate_bonus(majik_multi, self._scale)
-
-    def _get_scale_values(self, account) -> list[float]:
-        raw_holes = safe_loads(account.raw_data.get("Holes", []))
-        return [
-            # Gloomie Kills
-            self._get_gloomie_kills(raw_holes),
-            # Crops Found
-            account.farming.crops.unlocked,
+    def calculate_bonuses(
+        self,
+        *,
+        lengthmeister_multi: float,
+        crops_found: int,
+        all_skills: dict[str, list[int]],
+        tome_score: int,
+        death_note,
+        highest_dmg: float,
+        slab_items: int,
+        studies_done: int,
+        golem_kills: float,
+    ):
+        scale_values = [
+            self.gloomie_kills,
+            crops_found,
             # Account Lv
-            sum(account.characters.all_skills["Combat"]) or 0,
-            # Tome Score
-            account.tome.score,
+            sum(all_skills["Combat"]) or 0,
+            tome_score,
             # All Skill Lv
             sum(
                 [
                     sum(skill_levels)
-                    for skill, skill_levels in account.characters.all_skills.items()
+                    for skill, skill_levels in all_skills.items()
                     if skill != "Combat"
                 ]
             ),
             # Unimplemented
             0,
             # Deathnote Pts
-            sum(
-                [account.death_note.worlds[world].total_mk for world in account.death_note.worlds]
-            )
-            + account.death_note.minibosses.total_mk,
-            # Highest Dmg
-            account.highest_dmg,
-            # Slab Items
-            len(account.slab),
-            # Studies Done
-            account.caverns.villagers["Bolaia"].studies.total,
-            # Golem Kills
-            account.caverns.caves["The Temple"].current_kills,
+            sum([death_note.worlds[world].total_mk for world in death_note.worlds])
+            + death_note.minibosses.total_mk,
+            highest_dmg,
+            slab_items,
+            studies_done,
+            golem_kills,
         ]
+        self._scale = [
+            MeasurementScale(value, index) for index, value in enumerate(scale_values)
+        ]
+        for bonus in self.measurements:
+            bonus.calculate_bonus(lengthmeister_multi, self._scale)
 
     @staticmethod
     def _get_gloomie_kills(raw_holes):

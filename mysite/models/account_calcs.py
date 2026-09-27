@@ -309,7 +309,19 @@ def _calculate_w5(account):
 
 def _calculate_caverns(account):
     # Minau measures Tome score, Gambit points read Minau
-    account.caverns.villagers["Minau"].calculate_bonuses()
+    account.caverns.villagers["Minau"].calculate_bonuses(
+        lengthmeister_multi=(
+            account.caverns.villagers["Cosmos"].majiks.village["Lengthmeister"].as_multi
+        ),
+        crops_found=account.farming.crops.unlocked,
+        all_skills=account.characters.all_skills,
+        tome_score=account.tome.score,
+        death_note=account.death_note,
+        highest_dmg=account.highest_dmg,
+        slab_items=len(account.slab),
+        studies_done=account.caverns.villagers["Bolaia"].studies.total,
+        golem_kills=account.caverns.caves["The Temple"].current_kills,
+    )
     account.construction_buildings.calculate_gambit_levels(
         account.caverns.caves['Gambit'].bonuses[9].unlocked
     )
