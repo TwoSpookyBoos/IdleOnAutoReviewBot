@@ -34,6 +34,7 @@ from models.w2.alchemy_vials import AlchemyVials
 from models.w2.arcade import Arcade
 from models.w2.ballot import Ballot
 from models.w2.islands import Islands
+from models.w2.killroy import Killroy
 from models.w2.obols import Obols
 from models.w2.post_office import PostOffice
 from models.w3.armor_sets import ArmorSets
@@ -172,6 +173,7 @@ class Account:
         self.ballot: Ballot = Ballot(self.raw_data)
         self.post_office: PostOffice = PostOffice(self.raw_data)
         self.islands: Islands = Islands(self.raw_data)
+        self.killroy: Killroy = Killroy(self.raw_data)
         self.obols: Obols = Obols(self.raw_data)
         self.alchemy_vials: AlchemyVials = AlchemyVials(self.raw_data)
         self.alchemy_bubbles: AlchemyBubbles = AlchemyBubbles(self.raw_data)

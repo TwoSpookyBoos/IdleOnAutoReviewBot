@@ -11,7 +11,6 @@ from consts.consts_general import (
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
-from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
 from models.w1.statues import Statues
 from models.general.assets import Assets
@@ -380,33 +379,8 @@ def _parse_w1_stamps(account):
     _parse_master_classes_exalted_stamps(account)
 
 def _parse_w2(account):
-    _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
-
-def _parse_w2_killroy(account):
-    _parse_w2_killroy_skull_shop(account)
-    account.killroy = {}
-    account.killroy_total_fights = safer_get(account.raw_optlacc_dict, 112, 0)
-    for upgradeName, upgradeDict in killroy_dict.items():
-        account.killroy[upgradeName] = {
-            'Available': False,
-            'Remaining': max(0, upgradeDict['Required Fights'] - account.killroy_total_fights),
-            'Upgrades': safer_get(account.raw_optlacc_dict, upgradeDict['UpgradesIndex'], 0),
-            'Image': upgradeDict['Image']
-        }
-
-def _parse_w2_killroy_skull_shop(account):
-    account.killroy_skullshop = {
-        'Third Battle Unlocked': safer_get(account.raw_optlacc_dict, 227, 0) == 1,
-        'Artifact Purchases': safer_get(account.raw_optlacc_dict, 228, 0),
-        'Artifact Multi': 1 + (safer_get(account.raw_optlacc_dict, 228, 0) / (300 + safer_get(account.raw_optlacc_dict, 228, 0))),
-        'Crop Purchases': safer_get(account.raw_optlacc_dict, 229, 0),
-        'Crop Multi': 1 + ((safer_get(account.raw_optlacc_dict, 229, 0) / (300 + safer_get(account.raw_optlacc_dict, 229, 0))) * 9),
-        'Crop Multi Plus 1': 1 + (((1 + safer_get(account.raw_optlacc_dict, 229, 0)) / (1 + 300 + safer_get(account.raw_optlacc_dict, 229, 0))) * 9),
-        'Jade Purchases': safer_get(account.raw_optlacc_dict, 230, 0),
-        'Jade Multi': 1 + ((safer_get(account.raw_optlacc_dict, 230, 0) / (300 + safer_get(account.raw_optlacc_dict, 230, 0))) * 2),
-    }
 
 def _parse_w2_weekly_boss(account):
     account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)

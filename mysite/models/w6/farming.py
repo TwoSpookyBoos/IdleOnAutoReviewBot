@@ -767,7 +767,7 @@ class Farming:
         evo_multi["Ballot Multi Current"] = account.ballot[29].active_multi
         evo_multi["Misc Multi"] = (
             ValueToMulti(5 * account.achievements["Lil' Overgrowth"]["Complete"])
-            * account.killroy_skullshop["Crop Multi"]
+            * account.killroy.skull_shop.crop_multi
             * ValueToMulti(
                 15
                 * evo_multi["Skill Mastery Bonus Bool"]

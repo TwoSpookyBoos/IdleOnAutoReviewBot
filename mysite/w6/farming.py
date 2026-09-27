@@ -438,10 +438,10 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     ))
     #Killroy
     evo_advices[misc].append(Advice(
-        label=f"Killroy Skull Shop: {session_data.account.killroy_skullshop['Crop Multi']:.3f}x"
-              f"<br>1 purchase: +{session_data.account.killroy_skullshop['Crop Multi Plus 1'] - session_data.account.killroy_skullshop['Crop Multi']:.3f}x",
+        label=f"Killroy Skull Shop: {session_data.account.killroy.skull_shop.crop_multi:.3f}x"
+              f"<br>1 purchase: +{session_data.account.killroy.skull_shop.next_crop_multi - session_data.account.killroy.skull_shop.crop_multi:.3f}x",
         picture_class='killroy-crop-evolution',
-        progression=session_data.account.killroy_skullshop['Crop Purchases'],
+        progression=session_data.account.killroy.skull_shop.crop_purchases,
     ))
     #Skill Mastery
     # Verify Skill Mastery itself is unlocked from The Rift

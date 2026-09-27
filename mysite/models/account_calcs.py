@@ -4,7 +4,7 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue
 from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
-from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
+from consts.consts_w2 import fishing_toolkit_dict
 from consts.consts_w3 import buildings_towers, buildings_shrines
 from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
@@ -318,12 +318,7 @@ def _calculate_w2_islands_trash(account):
     account.islands.calculate_trash_shop(account.stamps, account.stored_assets, account.bribes)
 
 def _calculate_w2_killroy(account):
-    for upgradeName, upgradeDict in killroy_dict.items():
-        if not account.killroy[upgradeName]['Available']:
-            account.killroy[upgradeName]['Available'] = (
-                safer_get(account.raw_optlacc_dict, 112, 0) >= upgradeDict['Required Fights']
-                or account.killroy[upgradeName]['Upgrades'] > 0
-            ) and account.equinox.upgrades['Shades of K'].level >= upgradeDict['Required Equinox']
+    account.killroy.calculate_available(account.equinox.upgrades['Shades of K'].level)
 
 
 def _calculate_w3(account):
