@@ -292,34 +292,45 @@ class Gallery:
             * (1 + 0.5 * self._has_lore_8)
         )
 
-    def calculate_bonuses(self, account: "Account"):
+    def calculate_bonuses(
+        self,
+        *,
+        highest_world_reached: int,
+        characters: list,
+        cards: list,
+        alchemy_bubbles,
+        coral_reef,
+        artifacts,
+        gemshop,
+        emporium,
+        spelunk,
+        legend_talents,
+        event_shop,
+        minehead,
+        clam_work: "ClamWork",
+        companions: "Companions",
+        sushi_station: "SushiStation",
+    ):
         # Section view: any wearer. Drop rate uses each character's chip
-        has_motherboard_chip = account.world_progress.highest_reached >= 7 and any(
+        has_motherboard_chip = highest_world_reached >= 7 and any(
             "Silkrode Motherboard" in character.equipped_lab_chips
-            for character in account.characters
+            for character in characters
         )
         gallery_card_level = next(
-            (
-                card.level for card in account.cards
-                if card.codename == gallery_card_codename
-            ),
+            (card.level for card in cards if card.codename == gallery_card_codename),
             0,
         )
-        codfrey_prisma = account.alchemy_bubbles.get_prisma_value("Codfrey Rulz Ok")
-        paragorgia_level = account.coral_reef["Paragorgia Coral"].level
-        deathskull_level = account.sailing.artifacts["Deathskull"].level
-        showcases_owned = account.gemshop.purchases["Gallery Showcases"].owned
-        emporium_podium = account.sneaking.emporium["Another Gallery Podium"].value
-        lunarheim_obtained = account.spelunk.caves["Lunarheim"].bonus_obtained
-        superb_gallerium = account.legend_talents["Superb Gallerium"].value
-        event_shop = account.event_points_shop
+        codfrey_prisma = alchemy_bubbles.get_prisma_value("Codfrey Rulz Ok")
+        paragorgia_level = coral_reef["Paragorgia Coral"].level
+        deathskull_level = artifacts["Deathskull"].level
+        showcases_owned = gemshop.purchases["Gallery Showcases"].owned
+        emporium_podium = emporium["Another Gallery Podium"].value
+        lunarheim_obtained = spelunk.caves["Lunarheim"].bonus_obtained
+        superb_gallerium = legend_talents["Superb Gallerium"].value
         plain_showcase = event_shop["Plain Showcase"].owned
         worldclass_showcase = event_shop["Worldclass Showcase"].owned
         king_of_the_rack = event_shop["King of the Rack"].owned
-        minehead_hatrack = account.minehead[minehead_hatrack_bonus_index].value
-        clam_work = account.clam_work
-        companions = account.companions
-        sushi_station = account.sushi_station
+        minehead_hatrack = minehead[minehead_hatrack_bonus_index].value
         self._gallery_multi_by_chip = {
             chip: self._calculate_gallery_multi(
                 chip,

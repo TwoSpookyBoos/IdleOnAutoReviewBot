@@ -514,5 +514,21 @@ def _calculate_w7(account):
         account.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,
         account.arcade[72].value,
     )
-    account.gallery.calculate_bonuses(account)
+    account.gallery.calculate_bonuses(
+        highest_world_reached=account.world_progress.highest_reached,
+        characters=account.characters,
+        cards=account.cards,
+        alchemy_bubbles=account.alchemy_bubbles,
+        coral_reef=account.coral_reef,
+        artifacts=account.sailing.artifacts,
+        gemshop=account.gemshop,
+        emporium=account.sneaking.emporium,
+        spelunk=account.spelunk,
+        legend_talents=account.legend_talents,
+        event_shop=account.event_points_shop,
+        minehead=account.minehead,
+        clam_work=account.clam_work,
+        companions=account.companions,
+        sushi_station=account.sushi_station,
+    )
 
