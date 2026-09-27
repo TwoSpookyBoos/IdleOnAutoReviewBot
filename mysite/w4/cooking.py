@@ -349,7 +349,7 @@ def getPlateLevelsAdviceGroup(cooking):
 
 
 def getCookingAdviceSection() -> AdviceSection:
-    highest_cooking_skill_level = max(session_data.account.all_skills['Cooking'])
+    highest_cooking_skill_level = max(session_data.account.characters.all_skills['Cooking'])
     if highest_cooking_skill_level < 1:
         cooking_AdviceSection = AdviceSection(
             name='Cooking',
@@ -361,8 +361,8 @@ def getCookingAdviceSection() -> AdviceSection:
         )
         return cooking_AdviceSection
 
-    vmans = session_data.account.vmans
-    challenge_account = session_data.account.no_beginners
+    vmans = session_data.account.characters.vmans
+    challenge_account = session_data.account.characters.no_beginners
     atom_fluoride_level = session_data.account.atom_collider['Fluoride - Void Plate Chef'].level
     dchef_level = session_data.account.alchemy_bubbles['Diamond Chef'].level
     cooking = session_data.account.cooking

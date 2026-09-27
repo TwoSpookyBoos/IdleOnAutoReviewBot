@@ -203,7 +203,7 @@ def getRefineryProgressionTierAdviceGroups():
     return refinery_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getConsRefineryAdviceSection() -> AdviceSection:
-    highest_construction_level = max(session_data.account.all_skills['Construction'])
+    highest_construction_level = max(session_data.account.characters.all_skills['Construction'])
     if highest_construction_level < 1:
         return AdviceSection(
             name='Refinery',

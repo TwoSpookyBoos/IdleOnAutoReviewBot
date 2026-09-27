@@ -80,7 +80,7 @@ def getEmperorAdviceSection() -> AdviceSection:
         session_data.account.death_note.worlds[6].maps_dict[264].kill_count > 0 or
         sum([
             int(float(char.kill_dict.get(263, [1])[0])) <= 0
-            for char in session_data.account.all_characters
+            for char in session_data.account.characters
         ]) > 2
     ):
         emperor_AdviceSection = AdviceSection(

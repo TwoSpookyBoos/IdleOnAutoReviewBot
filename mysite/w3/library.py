@@ -135,7 +135,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     ]
 
     #Character Specific
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         arctis_max = char.arctis_bonus_max
         arctis_current = arctis_max if session_data.account.divinity.account_wide_arctis or char.isArctisLinked() else 0
 
@@ -243,7 +243,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     speed_Advices.append(session_data.account.stamps['Biblio Stamp'].get_advice())
 
     # Superbit
-    gaming_level = max(session_data.account.all_skills['Gaming'])
+    gaming_level = max(session_data.account.characters.all_skills['Gaming'])
     speed_Advices.append(Advice(
         label='Superbit: Library Checkouts: +1% per Gaming Level',
         picture_class='green-bits',
@@ -275,13 +275,13 @@ def getTalentExclusions() -> list:
     talentExclusions = []
 
     #If over 2100 lab, you have all jewels from Jade Emporium and lab levels no longer matter
-    if sum(session_data.account.all_skills['Laboratory']) > 2100:
+    if sum(session_data.account.characters.all_skills['Laboratory']) > 2100:
         talentExclusions.extend([537, 538])
         # 537: {"Name": "Essence Transferral", "Tab": "Bubonic Conjuror"},
         # 538: {"Name": "Upload Squared", "Tab": "Bubonic Conjuror"},
 
     #If you can reach max book of 200, the Bubo Aura build really takes off. Priority for damage from Poison falls off a cliff.
-    if max([toon.max_talents_over_books for toon in session_data.account.safe_characters if toon.class_name == "Bubonic Conjuror"], default=0) >= 200:
+    if max([toon.max_talents_over_books for toon in session_data.account.characters.safe if toon.class_name == "Bubonic Conjuror"], default=0) >= 200:
         talentExclusions.append(525)
         #525: {"Name": "Chemical Warfare", "Tab": "Bubonic Conjuror"},
 
@@ -316,12 +316,12 @@ def getTalentExclusions() -> list:
         209: "Death Bringer",       #Apocalypse Wow
     }.items():
         if max([toon.max_talents.get(str(talentNumber), 0)
-               for toon in session_data.account.safe_characters
+               for toon in session_data.account.characters.safe
                if className in toon.all_classes], default=0) == session_data.account.library.max_book_level:
             talentExclusions.append(talentNumber)
 
     #Exclude Siege Breaker > Plunder Ye Deceased if they have a Vman. Level 50 in Enhance Eclipse spawns Plunders often enough to not need the extra time.
-    if "Voidwalker" in session_data.account.classes:
+    if "Voidwalker" in session_data.account.characters.classes:
         talentExclusions.append(319)
 
     #If cooking is basically finished thanks to NMLB, exclude Cooking talents
@@ -353,7 +353,7 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
     }
     category_advices.update({
         v:{
-            f"{char.character_name} the {char.class_name}":[] for char in session_data.account.all_characters
+            f"{char.character_name} the {char.class_name}":[] for char in session_data.account.characters
         } for v in library_subgroup_tiers[1:-1]  #Account-Wide Priorities and VIP are not addressed per character
     })
     category_advices[library_subgroup_tiers[-1]] = []
@@ -384,10 +384,10 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
         if talentNumber in talentExclusions:
             account_wide_talent_prios[talentNumber][0] = session_data.account.library.max_book_level
         else:
-            account_wide_talent_prios[talentNumber][0] = max([toon.max_talents.get(str(talentNumber), 0) for toon in session_data.account.safe_characters], default=0)
+            account_wide_talent_prios[talentNumber][0] = max([toon.max_talents.get(str(talentNumber), 0) for toon in session_data.account.characters.safe], default=0)
         #If less than max book level
         if (
-            account_wide_talent_prios[talentNumber][1] in session_data.account.classes
+            account_wide_talent_prios[talentNumber][1] in session_data.account.characters.classes
             and account_wide_talent_prios[talentNumber][0] < session_data.account.library.max_book_level
         ):
             category_advices[awp].append(Advice(
@@ -398,7 +398,7 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
             ))
 
     #Character Specific
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         char_banner = f"{char.character_name} the {char.class_name}"
         talentNumbersAdded = []
 
@@ -489,13 +489,13 @@ def getLibraryProgressionTiersAdviceGroups_priorities():
     subgroupName = library_subgroup_tiers[-1]  #'VIP'
     for talent_number in expected_talents_dict[subgroupName]:
         try:
-            if session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0) < session_data.account.library.max_book_level:
+            if session_data.account.characters.safe[0].max_talents.get(str(talent_number), 0) < session_data.account.library.max_book_level:
                 category_advices[subgroupName].append(
                     Advice(
                         label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: "
                               f"{all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
                         picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
-                        progression=session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0),
+                        progression=session_data.account.characters.safe[0].max_talents.get(str(talent_number), 0),
                         goal=session_data.account.library.max_book_level
                     )
                 )
@@ -559,10 +559,10 @@ def getLibraryProgressionTiersAdviceGroups_characters():
         if talent_number in talent_exclusions:
             account_wide_talent_prios[talent_number][0] = session_data.account.library.max_book_level
         else:
-            account_wide_talent_prios[talent_number][0] = max([toon.max_talents.get(str(talent_number), 0) for toon in session_data.account.safe_characters], default=0)
+            account_wide_talent_prios[talent_number][0] = max([toon.max_talents.get(str(talent_number), 0) for toon in session_data.account.characters.safe], default=0)
         #If less than max book level
         if (
-            account_wide_talent_prios[talent_number][1] in session_data.account.classes
+            account_wide_talent_prios[talent_number][1] in session_data.account.characters.classes
             and account_wide_talent_prios[talent_number][0] < session_data.account.library.max_book_level
         ):
             if awp not in character_Advices:
@@ -584,7 +584,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
     #Character Specific
     character_specific_advices = {}
     character_specific_advice_groups: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
-    for index, char in enumerate(session_data.account.safe_characters): #type: int, Character
+    for index, char in enumerate(session_data.account.characters.safe): #type: int, Character
         character_specific_advices[char.character_name] = {}
         talentNumbersAdded = []
 
@@ -706,15 +706,15 @@ def getLibraryProgressionTiersAdviceGroups_characters():
             # logger.debug(
             #     f"Star Talent {talent_number} "
             #     f"({all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}) on Character 0: "
-            #     f"{session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0)}"
+            #     f"{session_data.account.characters.safe[0].max_talents.get(str(talent_number), 0)}"
             # )
-            if session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0) < session_data.account.library.max_book_level:
+            if session_data.account.characters.safe[0].max_talents.get(str(talent_number), 0) < session_data.account.library.max_book_level:
                 character_Advices[awt][subgroup_label].append(
                     Advice(
                         label=f"{all_talentsDict.get(talent_number, {}).get('subClass', 'Unknown')}: "
                               f"{all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}')}",
                         picture_class=all_talentsDict.get(talent_number, {}).get('name', f'Unknown{talent_number}'),
-                        progression=session_data.account.safe_characters[0].max_talents.get(str(talent_number), 0),
+                        progression=session_data.account.characters.safe[0].max_talents.get(str(talent_number), 0),
                         goal=session_data.account.library.max_book_level
                     )
                 )

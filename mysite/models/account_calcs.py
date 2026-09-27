@@ -73,7 +73,7 @@ def _calculate_w4_tome(account):
     account.tome.calculate_star_talents(
         {
             char.character_index: char.total_bonus_talent_levels
-            for char in account.safe_characters
+            for char in account.characters.safe
         },
         account.family_bonuses['Wizard'].value
         + account.stamps['Talent S Stamp'].total_value
@@ -97,7 +97,7 @@ def _calculate_wave_2(account):
     _calculate_w1(account)
     _calculate_w2(account)
     account.tesseract.calculate_tachyon_sources(
-        account.acs, account.lab_jewels, account.arcade, account.emperor,
+        account.characters.acs, account.lab_jewels, account.arcade, account.emperor,
         account.alchemy_bubbles, account.sneaking, account.gemshop, account.alchemy_vials,
         account.companions.has('Balloonfish')
     )
@@ -220,7 +220,7 @@ def _calculate_master_classes(account):
     # account.grimoire.calculate_bone_sources(...)  #Moved to wave3 as it relies on Caverns/Gambit
     account.compass.calculate_upgrades()
     account.compass.calculate_dust_sources(
-        account.wws, account.sneaking, account.all_assets, account.arcade, account.lab_jewels, account.emperor
+        account.characters.wws, account.sneaking, account.all_assets, account.arcade, account.lab_jewels, account.emperor
     )
 
 def _calculate_w1(account):
@@ -235,7 +235,7 @@ def _calculate_w1(account):
 
 def _calculate_w1_starsigns(account):
     account.star_signs.calculate_seraph(
-        account.tesseract.upgrades['Astrology Cultism'].level, account.all_skills['Summoning']
+        account.tesseract.upgrades['Astrology Cultism'].level, account.characters.all_skills['Summoning']
     )
     account.star_signs.calculate_silkrode(account.lab_chips['Silkrode Nanochip'])
 
@@ -323,7 +323,7 @@ def _calculate_w3_building_max_levels(account):
     # Gambit's +100 Tower levels is applied in _calculate_caverns
     account.construction_buildings.calculate_max_levels(
         account.rift['SkillMastery'].unlocked,
-        sum(account.all_skills['Construction']),
+        sum(account.characters.all_skills['Construction']),
         account.atom_collider['Carbon - Wizard Maximizer'].level,
     )
 
@@ -368,7 +368,7 @@ def _calculate_w4_cooking_max_plate_levels(account):
 def _calculate_w4_lab(account):
     # Seam: connections need sibling systems, and meals rerun when Black Diamond lights
     account.lab_mainframe.calculate(
-        account.safe_characters,
+        account.characters.safe,
         account.divinity.account_wide_arctis,
         account.gemshop.purchases['Souped Up Tube'].owned,
         account.sneaking.emporium,
@@ -391,7 +391,7 @@ def _calculate_w4_meal_multi(account):
         emperor_set=MultiToValue(account.armor_sets['EMPEROR SET'].total_value),
         cloud_73=account.equinox.dreams[ribbon_cloud_dream_number].completed,
         jelly_rog_60=account.jelly_operator.obstructions['Soldier Shiv'].bonus_value,
-        max_summoning_level=max(account.all_skills['Summoning'], default=0),
+        max_summoning_level=max(account.characters.all_skills['Summoning'], default=0),
     )
 
 def _calculate_w4_lab_bonuses(account):
@@ -457,14 +457,14 @@ def _calculate_w6_farming(account):
     farming.calculate_crop_value_multi(account.ballot)
     # Dependency: Summoning regular battle
     farming.calculate_crop_evo_multi(
-        account.all_characters,
+        account.characters,
         account.alchemy_bubbles,
         account.alchemy_vials,
         account.tome.score,
         account.stamps['Crop Evo Stamp'].total_value,
         account.meals,
         account.star_signs,
-        account.all_skills['Farming'],
+        account.characters.all_skills['Farming'],
         account.rift['SkillMastery'],
         account.ballot[29],
         account.achievements,
@@ -501,7 +501,7 @@ def _calculate_wave_3(account):
     _calculate_w6_sneaking_gemstones(account)
     _calculate_w6_sneaking_pristine_chance(account)
     account.grimoire.calculate_bone_sources(
-        account.dbs, account.sneaking, account.caverns, account.all_assets,
+        account.characters.dbs, account.sneaking, account.caverns, account.all_assets,
         account.arcade, account.lab_jewels, account.emperor
     )
     _calculate_class_unique_kill_stacks(account)
@@ -530,7 +530,7 @@ def _calculate_general_character_bonus_talent_levels(account):
         account.armor_sets, account.companions, account.family_bonuses, account.equinox,
         account.achievements, account.sneaking, account.grimoire, account.tesseract,
     )
-    for char in account.safe_characters:
+    for char in account.characters.safe:
         char.calculate_bonus_talent_levels(
             account.library.account_wide_bonus_talents,
             account.divinity.account_wide_arctis or char.isArctisLinked(),
@@ -552,13 +552,13 @@ def _calculate_general_crystal_spawn_chance(account):
         next(card for card in account.cards if card.name == 'Demon Genie'),
         account.lab_chips['Omega Nanochip'].owned + account.lab_chips['Omega Motherboard'].owned,
         account.stamps['Crystallin'].total_value,
-        account.all_characters,
+        account.characters,
         account.shrines['Crescent Shrine'].value,
     )
 
 def _calculate_class_unique_kill_stacks(account):
     account.class_kill_talents.calculate_values(
-        account.safe_characters, account.get_best_talent_level
+        account.characters.safe, account.get_best_talent_level
     )
 
 def _calculate_wave_4(account):
@@ -568,7 +568,7 @@ def _calculate_wave_4(account):
 
 def _calculate_w1_statues(account):
     account.statues.calculate_values(
-        [char.max_talents.get('56', 0) for char in account.vmans],
+        [char.max_talents.get('56', 0) for char in account.characters.vmans],
         account.sailing.artifacts['The Onyx Lantern'].level,
         account.zenith_market['TRUE ZEN'].value,
         account.meritocracy[26].value,

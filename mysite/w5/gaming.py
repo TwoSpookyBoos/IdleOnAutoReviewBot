@@ -326,7 +326,7 @@ def getGamingProgressionTierAdviceGroups():
     return gaming_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getGamingAdviceSection() -> AdviceSection:
-    highestGamingSkillLevel = max(session_data.account.all_skills.get('Gaming', [0]))
+    highestGamingSkillLevel = max(session_data.account.characters.all_skills.get('Gaming', [0]))
     if highestGamingSkillLevel < 1:
         gaming_AdviceSection = AdviceSection(
             name='Gaming',

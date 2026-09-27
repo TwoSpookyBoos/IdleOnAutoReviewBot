@@ -39,7 +39,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     crystal_Advices.append(Advice(
         label=f"Star Talent 'Crystals 4 Dayys' obtained by completing Picnic Stowaway's quest: \"The Last Supper, at Least for Today\"",
         picture_class='crystals-4-dayys',
-        progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.all_characters])),
+        progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.characters])),
         goal=1
     ))
     crystal_Advices.append(Advice(
@@ -58,7 +58,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         unit="%"
     ))
     best_orb_book = 0
-    for dk in session_data.account.dks:
+    for dk in session_data.account.characters.dks:
         best_orb_book = max(best_orb_book, dk.max_talents.get("168", 0))
     crystal_Advices.append(Advice(
         label=f"Level {best_orb_book}/{session_data.account.library.max_book_level} booked Orb of Remembrance talent (Divine Knight only)",

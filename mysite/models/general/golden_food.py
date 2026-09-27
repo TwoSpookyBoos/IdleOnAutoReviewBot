@@ -115,7 +115,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     apoc_talent = all_talentsDict[apocalypse_wow_talent_index]
     apoc_index = account.death_note.apocalypse_character_index
     wow_maps = (
-        account.all_characters[apoc_index].apocalypses["WOW"].total
+        account.characters[apoc_index].apocalypses["WOW"].total
         if apoc_index is not None
         else 0
     )
@@ -176,7 +176,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     }
 
     multis = {}
-    for character in account.all_characters:
+    for character in account.characters:
         apoc_level = account.get_best_talent_level(
             apocalypse_wow_talent_index, character
         )

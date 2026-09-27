@@ -23,12 +23,12 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     tier_PostOffice = 0
 
     # Assess Tiers
-    boxes_advised = {char.character_name: [] for char in session_data.account.all_characters}
+    boxes_advised = {char.character_name: [] for char in session_data.account.characters}
     for tier_number, requirements in post_office_progression_tiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
         if 'Class Specific' in requirements:
-            for char in session_data.account.all_characters:
+            for char in session_data.account.characters:
                 for class_name in requirements['Class Specific']:
                     if class_name in char.all_classes:
                         for box_name, box_level in requirements['Class Specific'][class_name].items():
@@ -47,7 +47,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                                     ))
                                     boxes_advised[char.character_name].append(box_name)
         if 'Myriad' in requirements:
-            for char in session_data.account.all_characters:
+            for char in session_data.account.characters:
                 for box_name, box_details in char.po_boxes_invested.items():
                     if (
                         (box_name != 'Myriad Crate' and not requirements['Myriad'])
@@ -83,7 +83,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getBoxesAdviceGroup() -> TabbedAdviceGroup:
     tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
-    for index, character in enumerate(session_data.account.all_characters): #type int, Character
+    for index, character in enumerate(session_data.account.characters): #type int, Character
         total_points_invested = sum([boxDetails.level for boxDetails in character.po_boxes_invested.values()])
         remaining_points = max(0, session_data.account.post_office.total_boxes_earned - total_points_invested)
 

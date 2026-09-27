@@ -24,7 +24,7 @@ def getRightHandsAdviceGroups(true_max):
     for skill in right_hand_skills:
         sorted_skills[skill] = []
         stayahead_advices[skill] = []
-        for char in session_data.account.all_characters:
+        for char in session_data.account.characters:
             #Only add specialized characters per skill
             if skill in char.specialized_skills or 'Maestro' in char.all_classes:
                 sorted_skills[skill].append(char)
@@ -33,7 +33,7 @@ def getRightHandsAdviceGroups(true_max):
         )
         highest_skill_level = sorted_skills[skill][0].skills[skill]
         highest_mman_name = next((c.character_name for c in sorted_skills[skill] if 'Maestro' in c.all_classes), '')
-        highest_mman_level = max([char.skills[skill] for char in session_data.account.maestros], default=0)
+        highest_mman_level = max([char.skills[skill] for char in session_data.account.characters.maestros], default=0)
         characters_at_highest = sum(1 for char in sorted_skills[skill] if char.skills[skill] == highest_skill_level)
         mman_uniquely_first = highest_mman_level == highest_skill_level and characters_at_highest == 1
 
@@ -50,7 +50,7 @@ def getRightHandsAdviceGroups(true_max):
                 ))
             else:
                 catchup_advices.append(Advice(
-                    label=f"{highest_mman_name} {'is the highest leveled Mman but still ' if len(session_data.account.maestros) > 1 else ''}"
+                    label=f"{highest_mman_name} {'is the highest leveled Mman but still ' if len(session_data.account.characters.maestros) > 1 else ''}"
                           f"not best in {skill}",
                     picture_class=skill,
                     progression=highest_mman_level,
@@ -59,7 +59,7 @@ def getRightHandsAdviceGroups(true_max):
         elif characters_at_highest == 1 and 'Maestro' not in sorted_skills[skill][0].all_classes:
             skills_needing_catchup.append(skill)
             catchup_advices.append(Advice(
-                label=f"{highest_mman_name} {'is the highest leveled Mman but still ' if len(session_data.account.maestros) > 1 else ''}"
+                label=f"{highest_mman_name} {'is the highest leveled Mman but still ' if len(session_data.account.characters.maestros) > 1 else ''}"
                       f"not best in {skill}",
                 picture_class=skill,
                 progression=highest_mman_level,
@@ -138,13 +138,13 @@ def getRightHandsAdviceGroups(true_max):
     catchup_ag = AdviceGroup(
         tier=true_max if len(catchup_advices) == 0 else true_max-1,
         pre_string=(
-            f"{pl(session_data.account.maestros, f'{session_data.account.maestros[0]} is not', 'Your Maestros are not')}"
+            f"{pl(session_data.account.characters.maestros, f'{session_data.account.characters.maestros[0]} is not', 'Your Maestros are not')}"
             f" best in {len(skills_needing_catchup)} Right Hand Skill{pl(skills_needing_catchup)}"
         ),
         advices=catchup_advices,
         post_string=(
             f"Right Hand gives about 8% more Souls and Critters, and Species Epoch gives about 6% PER Trapping and Worship level! "
-            f"Don't steal {'Vman' if session_data.account.vmans else 'Mman'}'s Worship Charge, and don't slack on your Crystal Countdowns!"
+            f"Don't steal {'Vman' if session_data.account.characters.vmans else 'Mman'}'s Worship Charge, and don't slack on your Crystal Countdowns!"
             if 'Worship' in skills_needing_catchup or 'Trapping' in skills_needing_catchup
             else ''
         ),
@@ -163,7 +163,7 @@ def getRightHandsAdviceGroups(true_max):
     stayahead_ag = AdviceGroup(
         tier='',
         pre_string=(
-            f"Your Maestro{pl(len(session_data.account.maestros), ' is', 's are')}"
+            f"Your Maestro{pl(len(session_data.account.characters.maestros), ' is', 's are')}"
             f" the highest level in {len(right_hand_skills) - len(skills_needing_catchup)}/{len(right_hand_skills)}"
             f" Right Hand skills. Be careful not to let others overtake"
         ),
@@ -516,7 +516,7 @@ def getProgressionTiersAdviceGroup(jmans, maestros):
     #Required Tiers
     for tier, requirements in secret_class_progressionTiers.items():
         if 'Required Class' in requirements:
-            if requirements['Required Class'] in session_data.account.classes and tier_SecretClass == tier-1:
+            if requirements['Required Class'] in session_data.account.characters.classes and tier_SecretClass == tier-1:
                 tier_SecretClass = tier
 
     secret_class_advices = getQuestAdvice(tier_SecretClass, jmans, maestros)
@@ -548,8 +548,8 @@ def getProgressionTiersAdviceGroup(jmans, maestros):
     return secret_class_advice_groups, overall_SectionTier, max_tier, true_max
 
 def getSecretClassAdviceSection() -> AdviceSection:
-    jmans = session_data.account.jmans
-    maestros = session_data.account.maestros
+    jmans = session_data.account.characters.jmans
+    maestros = session_data.account.characters.maestros
     secret_class_advice_groups, overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup(jmans, maestros)
 
     #Generate AdviceSection

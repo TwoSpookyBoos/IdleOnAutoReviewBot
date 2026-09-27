@@ -128,7 +128,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class='telescope',
     ))
     # This only checks if they are max booked, not if they are actually maxed in either of their presets
-    best_jman_bag_book = max([jman.max_talents.get("78", 0) for jman in session_data.account.jmans], default=0)
+    best_jman_bag_book = max([jman.max_talents.get("78", 0) for jman in session_data.account.characters.jmans], default=0)
     capacity_Advices['Character Specific'].append(Advice(
         label="Jman's Extra Bags talent (Materials only)",
         picture_class='extra-bags',

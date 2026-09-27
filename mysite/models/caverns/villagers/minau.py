@@ -203,14 +203,14 @@ class Minau(Villager):
             # Crops Found
             account.farming.crops.unlocked,
             # Account Lv
-            sum(account.all_skills["Combat"]) or 0,
+            sum(account.characters.all_skills["Combat"]) or 0,
             # Tome Score
             account.tome.score,
             # All Skill Lv
             sum(
                 [
                     sum(skill_levels)
-                    for skill, skill_levels in account.all_skills.items()
+                    for skill, skill_levels in account.characters.all_skills.items()
                     if skill != "Combat"
                 ]
             ),

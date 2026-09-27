@@ -180,7 +180,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     purrmep = session_data.account.divinity.named('Purrmep')
     purrmep_base_max_minor_bonus = 50
     char_linked_to_purrmep: Character | None = None
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         if char.divinity_link == 'Purrmep':
             char_linked_to_purrmep = char
             break
@@ -239,7 +239,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     oj_jooce_vial = session_data.account.alchemy_vials['Oj Jooce (Orange Slice)']
 
     has_skill_mastery: bool = session_data.account.rift['SkillMastery'].unlocked
-    total_sailing_level = sum(session_data.account.all_skills['Sailing'])
+    total_sailing_level = sum(session_data.account.characters.all_skills['Sailing'])
 
     has_msa_sailing: bool = session_data.account.gaming.superbits['MSA Sailing'].unlocked
     total_worship_waves = session_data.account.worship.total_waves
@@ -373,7 +373,7 @@ def get_sailing_artifacts_advicegroup() -> AdviceGroup:
     return arti_ag
 
 def get_sailing_advicesection() -> AdviceSection:
-    highest_sailing_level = max(session_data.account.all_skills['Sailing'])
+    highest_sailing_level = max(session_data.account.characters.all_skills['Sailing'])
     if highest_sailing_level < 1:
         sailing_AdviceSection = AdviceSection(
             name='Sailing',

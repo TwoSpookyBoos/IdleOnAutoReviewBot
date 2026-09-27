@@ -89,7 +89,7 @@ def setPrayersProgressionTierAdviceGroup():
     return prayers_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getPrayersAdviceSection() -> AdviceSection:
-    highest_worship_level = max(session_data.account.all_skills['Worship'])
+    highest_worship_level = max(session_data.account.characters.all_skills['Worship'])
     if highest_worship_level < 1:
         prayers_AdviceSection = AdviceSection(
             name='Prayers',

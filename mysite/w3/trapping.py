@@ -55,7 +55,7 @@ def getUnlockedCritterStatus():
         #Blobfish are unlocked after "Blobbo2" quest is completed (value of 1)
 
         quest_index = 0
-        for character_index in range(0, session_data.account.character_count):
+        for character_index in range(0, len(session_data.account.characters)):
             try:
                 char_quests = session_data.account.quests.by_character[character_index]
                 for quest_index in range(0, len(reversedQuestIndexList)):
@@ -85,7 +85,7 @@ def getUnlockedCritterStatus():
 
 def getPlacedTrapsDict():
     placed_traps = {}
-    for character_index in range(0, session_data.account.character_count):
+    for character_index in range(0, len(session_data.account.characters)):
         try:
             placed_traps[character_index] = safe_loads(session_data.account.raw_data[f'PldTraps_{character_index}'])
         except:
@@ -117,7 +117,7 @@ def getCharactersWithUnplacedTraps(trapping_levels, placed_traps):
     if session_data.account.alchemy_bubbles['Call Me Ash'].level >= 1:
         bonus_trap_slot = 1
 
-    for char in session_data.account.all_characters:
+    for char in session_data.account.characters:
         for trap_list_index, requirement in enumerate(trapset_level_requirement_list):
             try:
                 if (
@@ -143,7 +143,7 @@ def getCharactersWithUnplacedTraps(trapping_levels, placed_traps):
 
 def getSecretClassTrapStatus(placed_traps):
     secret_character_not_using_nature_traps_dict = {}
-    for jman in session_data.account.jmans:
+    for jman in session_data.account.characters.jmans:
         if jman.trapping_level >= 25:  #the level required to wear Nature Traps
             for trap_details in placed_traps[jman.character_index]:
                 if trap_details[0] != -1 and trap_details[5] != 3:
@@ -333,8 +333,8 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
     if len(unplaced_traps) > 0:
         for character_index in unplaced_traps:
             trapping_Advices['UnplacedTraps'].append(Advice(
-                label=session_data.account.all_characters[character_index].character_name,
-                picture_class=session_data.account.all_characters[character_index].class_name_icon,
+                label=session_data.account.characters[character_index].character_name,
+                picture_class=session_data.account.characters[character_index].class_name_icon,
                 progression=unplaced_traps[character_index][0],
                 goal=unplaced_traps[character_index][1]
             ))
@@ -343,8 +343,8 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
     if len(secret_character_not_using_nature_traps_dict) > 0:
         for character_index in secret_character_not_using_nature_traps_dict:
             trapping_Advices['BeginnerNatures'].append(Advice(
-                label=session_data.account.all_characters[character_index].character_name,
-                picture_class=session_data.account.all_characters[character_index].class_name_icon,
+                label=session_data.account.characters[character_index].character_name,
+                picture_class=session_data.account.characters[character_index].class_name_icon,
                 progression=secret_character_not_using_nature_traps_dict[character_index],
                 goal=0
             ))
@@ -379,7 +379,7 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
 
     for character_index in non_meta_trap_dict:
         subgroup_label = (
-            f"{session_data.account.all_characters[character_index].character_name}: "
+            f"{session_data.account.characters[character_index].character_name}: "
             f"{non_meta_trap_dict[character_index]} inefficient traps"
         )
         trapping_Advices['NonMetaTraps'][subgroup_label] = []
@@ -425,7 +425,7 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
         post_string=f"Nature EXP-only traps are recommended for Maestro's Right Hand of Action and Voidwalker's Species Epoch talents."
                     f" You will get ZERO critters from Nature Traps, but the bonus critters from those 2 talents more than make up for this loss!",
         informational=True,
-        completed=min([vman.trapping_level for vman in session_data.account.vmans], default=0) >= 120 or len(trapping_Advices['BeginnerNatures']) == 0
+        completed=min([vman.trapping_level for vman in session_data.account.characters.vmans], default=0) >= 120 or len(trapping_Advices['BeginnerNatures']) == 0
     )
     trapping_AdviceGroups['NonMetaTraps'] = AdviceGroup(
         tier='',
@@ -461,7 +461,7 @@ def getProgressionTiersAdviceGroup(trapping_levels_list: list[int]):
     return trapping_AdviceGroups, overall_SectionTier, max_tier
 
 def getTrappingAdviceSection() -> AdviceSection:
-    trapping_levels_list = session_data.account.all_skills['Trapping']
+    trapping_levels_list = session_data.account.characters.all_skills['Trapping']
     if max(trapping_levels_list) < 1:
         trapping_AdviceSection = AdviceSection(
             name='Trapping',

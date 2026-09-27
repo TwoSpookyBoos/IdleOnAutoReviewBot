@@ -253,7 +253,7 @@ def get_tesseract_upgrades_advice_group(tesseract) -> AdviceGroup:
 
 def get_tesseract_advice_section() -> AdviceSection:
     #Check if player has reached this section
-    if 'Arcane Cultist' not in session_data.account.classes:
+    if 'Arcane Cultist' not in session_data.account.characters.classes:
         tesseract_advice_section = AdviceSection(
             name="The Tesseract",
             tier="Not Yet Evaluated",

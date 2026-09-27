@@ -91,7 +91,7 @@ def getP2WProgressionTiersAdviceGroup(highest_alchemy_level):
 
 
 def getAlchemyP2WAdviceSection() -> AdviceSection:
-    highestAlchemyLevel = max(session_data.account.all_skills['Alchemy'])
+    highestAlchemyLevel = max(session_data.account.characters.all_skills['Alchemy'])
     if highestAlchemyLevel < 1:
         p2w_AdviceSection = AdviceSection(
             name='Pay2Win',

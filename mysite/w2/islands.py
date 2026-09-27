@@ -150,7 +150,7 @@ def getRandomEventItemsAdviceGroup() -> AdviceGroup:
     return items_ag
 
 def getIslandsAdviceSection() -> AdviceSection:
-    highest_fishing_level = max(session_data.account.all_skills['Fishing'])
+    highest_fishing_level = max(session_data.account.characters.all_skills['Fishing'])
     if highest_fishing_level < 30:
         islands_AdviceSection = AdviceSection(
             name='Islands',

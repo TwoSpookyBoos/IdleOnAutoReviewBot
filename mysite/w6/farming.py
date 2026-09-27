@@ -373,7 +373,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     evo_advices[meals].append(session_data.account.meals['Bill Jack Pep'].get_bonus_advice())
 
     evo_advices[meals].append(Advice(
-        label=f"Highest Summoning level: {max(session_data.account.all_skills['Summoning'], default=0)}"
+        label=f"Highest Summoning level: {max(session_data.account.characters.all_skills['Summoning'], default=0)}"
               f"<br>Provides a {evo_multi.nyan_stacks}x multi to Nyanborgir",
         picture_class='summoning'
     ))
@@ -889,7 +889,7 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
 
 
 def get_farming_multi_tabbed() -> TabbedAdviceGroup:
-    highest_farming_level = max(session_data.account.all_skills['Farming'])
+    highest_farming_level = max(session_data.account.characters.all_skills['Farming'])
     farming = session_data.account.farming
     fm_tabbed = {
         "Crop Evolution": (
@@ -917,7 +917,7 @@ def get_farming_multi_tabbed() -> TabbedAdviceGroup:
 
 
 def getFarmingAdviceSection():
-    highest_farming_level = max(session_data.account.all_skills['Farming'])
+    highest_farming_level = max(session_data.account.characters.all_skills['Farming'])
     if highest_farming_level < 1:
         farming_AdviceSection = AdviceSection(
             name='Farming',

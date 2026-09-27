@@ -54,7 +54,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     # Character Specific
     bestCrystalBook = 0
-    for jman in session_data.account.jmans:
+    for jman in session_data.account.characters.jmans:
         bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
     crystal_Advice[cs].append(Advice(
         label=f"Level {bestCrystalBook}/{session_data.account.library.max_book_level} booked Cmon Out Crystals talent (Jman only)",
@@ -111,7 +111,7 @@ def getShortTermAdviceList() -> list[Advice]:
     #Div jail if Goat not unlocked
     quick_divinity_goals = [2, 5]
     for divinity in quick_divinity_goals:
-        if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity[divinity].unlocked:
+        if max(session_data.account.characters.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity[divinity].unlocked:
             shortterm.append(Advice(
                 label=f"Divinity jail until you unlock {session_data.account.divinity[divinity].name} 🙁",
                 picture_class=session_data.account.divinity[divinity].name,
@@ -164,7 +164,7 @@ def getShortTermAdviceList() -> list[Advice]:
         ))
     shortterm += obols
 
-    for char in session_data.account.all_characters:
+    for char in session_data.account.characters:
         if 'Journeyman' not in char.all_classes:
             for mapNumber, details in {
                 1: [1, 'weekly-boss-action-t'],  # Green Mushrooms
@@ -221,14 +221,14 @@ def getCardsAdviceList() -> list[Advice]:
 def getLongTermAdviceList() -> list[Advice]:
     longterm = []
     # 2100 lab for jewels
-    if sum(session_data.account.all_skills.get("Laboratory", [0])) < 2100:
+    if sum(session_data.account.characters.all_skills.get("Laboratory", [0])) < 2100:
         longterm.append(Advice(
             label=f"Lab jail until 2100 total Lab levels for W6 jewels 🙁"
                   f"<br>Note: You probably want to link to Goat and level Divinity at the same time"
                   f"{'<br>Also: Buy Laboratory Bling from Jade Emporium' if not session_data.account.sneaking.emporium['Laboratory Bling'].obtained else ''}",
             picture_class='Laboratory Bling',
             resource='laboratory',
-            progression=sum(session_data.account.all_skills.get("Laboratory", [0])),
+            progression=sum(session_data.account.characters.all_skills.get("Laboratory", [0])),
             goal=2100
         ))
     # Gmush Farming
@@ -336,7 +336,7 @@ def getConsumablesAdviceList() -> list[Advice]:
     if session_data.account.highest_world_reached >= 4:
         # Black Pearls
         if session_data.account.stored_assets.get('Pearl4').amount > 0:
-            black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 30]
+            black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.characters.all_skills.get(skillName, [0])) < 30]
             if black_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Black Pearls on Skills under level 30:"
@@ -346,7 +346,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
         # Red Pearls
         if session_data.account.stored_assets.get('Pearl6').amount > 0:
-            red_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 50]
+            red_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.characters.all_skills.get(skillName, [0])) < 50]
             if red_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Divinity Pearls on Skills under level 50:"
@@ -360,7 +360,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 + session_data.account.stored_assets.get('ExpBalloon2').amount
                 + session_data.account.stored_assets.get('ExpBalloon3').amount
         ) > 0:
-            balloonable_skills = [skillName for skillName in pearlable_skills_list if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
+            balloonable_skills = [skillName for skillName in pearlable_skills_list if sum(session_data.account.characters.all_skills.get(skillName, [0])) < 750]
             if balloonable_skills:
                 consumables.append(Advice(
                     label=f"Spend Experience Balloons on Skills under 750 Skill Mastery for Printer Output:"
@@ -371,7 +371,7 @@ def getConsumablesAdviceList() -> list[Advice]:
 
     # Candy options
     if session_data.account.highest_world_reached >= 2:
-        if not session_data.account.maestros and session_data.account.jmans:
+        if not session_data.account.characters.maestros and session_data.account.characters.jmans:
             consumables.append(Advice(
                 label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
                       f"<br>Pearls, Balloons, and Candies are all valid here!",
@@ -379,7 +379,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 resource='x1-hr-time-candy'
             ))
     if session_data.account.highest_world_reached >= 4:
-        for character in session_data.account.all_characters:
+        for character in session_data.account.characters:
             try:
                 if (
                     character.elite_class == "None"
@@ -394,7 +394,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     ))
             except:
                 continue
-        if not session_data.account.vmans:
+        if not session_data.account.characters.vmans:
             consumables.append(Advice(
                 label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
                 picture_class='voidwalker-icon',
@@ -409,9 +409,9 @@ def getConsumablesAdviceList() -> list[Advice]:
                     resource='x24-hr-time-candy'
                 ))
         if not session_data.account.cooking.close_enough and session_data.account.death_note.apocalypse_character_index is not None:
-            if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apocalypses['MEOW'].total < dn_basic_maps_count:
+            if session_data.account.characters[session_data.account.death_note.apocalypse_character_index].apocalypses['MEOW'].total < dn_basic_maps_count:
                 consumables.append(Advice(
-                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}",
+                    label=f"Candy Super CHOW stacks with {session_data.account.characters[session_data.account.death_note.apocalypse_character_index].character_name}",
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))
@@ -514,14 +514,14 @@ def getBuboAdviceGroup() -> AdviceGroup:
     }
 
     sorted_bubos: list[Character] = sorted(
-        session_data.account.bubos, key=lambda toon: toon.combat_level, reverse=True
+        session_data.account.characters.bubos, key=lambda toon: toon.combat_level, reverse=True
     )
     best_bubo = sorted_bubos[0] if len(sorted_bubos) > 0 else None
 
     if best_bubo is None:
         possible_future_bubo = (
-                len(session_data.account.mages) > 0
-                or session_data.account.character_count < max_characters
+                len(session_data.account.characters.mages) > 0
+                or len(session_data.account.characters) < max_characters
         )
         if possible_future_bubo:
             bubo_advice['Best Bubo'] = [
@@ -744,7 +744,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
             completed=True
         ))
         # Note: Sigils are paused during CC if any characters assigned
-        num_assigned_to_sigils = sum([True for char in session_data.account.all_characters if char.alchemy_job_group == 'Sigils'])
+        num_assigned_to_sigils = sum([True for char in session_data.account.characters if char.alchemy_job_group == 'Sigils'])
         move_off_sigils_note = (
             f" I recommend to move your {num_assigned_to_sigils} characters to Liquid Cauldrons during long Active Bubo sessions"
             if num_assigned_to_sigils > 0

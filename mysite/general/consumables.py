@@ -89,7 +89,7 @@ def get_inventory_advicegroup() -> AdviceGroup:
 
     inventorySlots_AdviceDict[aw_label] = [source.get_advice() for source in inventory.values()]
 
-    for character in session_data.account.all_characters:
+    for character in session_data.account.characters:
         if (
             character.inventory_slots >= inventory_slots_max_usable
             or

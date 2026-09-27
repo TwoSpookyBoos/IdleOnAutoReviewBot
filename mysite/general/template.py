@@ -33,7 +33,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 
 def getTemplateAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    highestTemplateSkillLevel = max(session_data.account.all_skills['TemplateSkill'])
+    highestTemplateSkillLevel = max(session_data.account.characters.all_skills['TemplateSkill'])
     if highestTemplateSkillLevel < 1:
         template_AdviceSection = AdviceSection(
             name='Template',

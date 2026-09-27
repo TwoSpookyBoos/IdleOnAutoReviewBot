@@ -81,7 +81,7 @@ def main(inputData, source_string, runType="web"):
 
     # Step 2: Make account data available throughout the session
     try:
-        session_data.account = Account(parsedJSON, source_string)
+        session_data.account = Account(parsedJSON, source_string, runType)
         patch_guess = ''
         for version in versions_patches:
             if session_data.account.version > version:
@@ -91,13 +91,13 @@ def main(inputData, source_string, runType="web"):
         logger.error(f"Found Version {e.data} < {lowest_accepted_version}. Raising VeryOldDataException.")
         raise VeryOldDataException(e.data)
 
-    models.account_parser.parse_account(session_data.account, runType)
+    models.account_parser.parse_account(session_data.account)
     models.account_calcs.calculate_account(session_data.account)
 
-    for name in session_data.account.names:
+    for name in session_data.account.characters.names:
         maybe_ban(name, runType)
 
-    #roastworthyBool = getRoastableStatus(session_data.account.names)
+    #roastworthyBool = getRoastableStatus(session_data.account.characters.names)
 
     # Step 3: Send that data off to all the different analyzers
     # finalize_progression_tiers()

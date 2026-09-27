@@ -217,7 +217,7 @@ def getCompassCurrenciesAdviceGroup(compass):
     currency_advices[mge_label] = []
     ww_index = None
     eternal_hunt_preset_level = 100
-    for ww in session_data.account.wws:
+    for ww in session_data.account.characters.wws:
         if ww_index is None:
             ww_index = ww.character_index
         if ww.current_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
@@ -226,7 +226,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         if ww.secondary_preset_talents.get('423', 0) >= eternal_hunt_preset_level:
             ww_index = ww.character_index
             eternal_hunt_preset_level = ww.secondary_preset_talents.get('423', 0)
-    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
+    bonus_talent_levels = session_data.account.characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
     ww_per_stack = lava_func(
         funcType='decay',
         level=eternal_hunt_preset_level + bonus_talent_levels,
@@ -236,8 +236,8 @@ def getCompassCurrenciesAdviceGroup(compass):
 
     currency_advices[mge_label].append(Advice(
         label=f"{eternal_hunt_preset_level}/{session_data.account.library.max_book_level} booked Eternal Hunt:"
-              f"<br>Max Preset Level {eternal_hunt_preset_level + session_data.account.all_characters[ww_index].total_bonus_talent_levels} on "
-              f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels",
+              f"<br>Max Preset Level {eternal_hunt_preset_level + session_data.account.characters[ww_index].total_bonus_talent_levels} on "
+              f"{session_data.account.characters[ww_index].character_name} including bonus talent levels",
         picture_class='eternal-hunt',
         progression=eternal_hunt_preset_level,
         goal=session_data.account.library.max_book_level
@@ -258,7 +258,7 @@ def getCompassCurrenciesAdviceGroup(compass):
     currency_advices[mgf_label] = []
     ww_index = None
     compass_preset_level = 100
-    for ww in session_data.account.wws:
+    for ww in session_data.account.characters.wws:
         if ww_index is None:
             ww_index = ww.character_index
         if ww.current_preset_talents.get('421', 0) >= compass_preset_level:
@@ -267,7 +267,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         if ww.secondary_preset_talents.get('421', 0) >= compass_preset_level:
             ww_index = ww.character_index
             compass_preset_level = ww.secondary_preset_talents.get('421', 0)
-    bonus_talent_levels = session_data.account.all_characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
+    bonus_talent_levels = session_data.account.characters[ww_index].total_bonus_talent_levels if ww_index is not None else 0
     compass_percent = lava_func(
         funcType='decay',
         level=compass_preset_level + bonus_talent_levels,
@@ -277,7 +277,7 @@ def getCompassCurrenciesAdviceGroup(compass):
     currency_advices[mgf_label].append(Advice(
         label=f"{compass_preset_level}/{session_data.account.library.max_book_level} booked Compass:"
               f"<br>Max Preset Level {compass_preset_level + bonus_talent_levels} on "
-              f"{session_data.account.all_characters[ww_index].character_name} including bonus talent levels"
+              f"{session_data.account.characters[ww_index].character_name} including bonus talent levels"
               f"<br>+{compass_percent:.3f}% boost to Dust found",
         picture_class='compass',
         progression=compass_preset_level,
@@ -409,7 +409,7 @@ def getCompassUpgradesTabbed(compass) -> TabbedAdviceGroup:
 
 def getCompassAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if 'Wind Walker' not in session_data.account.classes:
+    if 'Wind Walker' not in session_data.account.characters.classes:
         compass_AdviceSection = AdviceSection(
             name="Compass",
             tier="Not Yet Evaluated",

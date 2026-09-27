@@ -220,26 +220,26 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict['Prerequisites'].append(Advice(
         label='Step 1: Have a Voidwalker in your family',
         picture_class='voidwalker-icon',
-        progression=int('Voidwalker' in session_data.account.classes),
+        progression=int('Voidwalker' in session_data.account.characters.classes),
         goal=1
     ))
     abm_adviceDict['Prerequisites'].append(Advice(
         label='Step 2: Voidwalker: Enhancement Eclipse talent leveled to 150+',
         picture_class='enhancement-eclipse',
-        progression=max([vman.max_talents.get("49", 0) for vman in session_data.account.vmans], default=0),
+        progression=max([vman.max_talents.get("49", 0) for vman in session_data.account.characters.vmans], default=0),
         goal=150
     ))
     abm_adviceDict['Prerequisites'].append(Advice(
         label="Step 3: Have a Wind Walker in your family for 12-18x Breeding speed"
               "<br>Beast Master will only be about 1/3rd that value: 4-6x",
         picture_class='wind-walker-icon',
-        progression=int('Beast Master' in session_data.account.classes),
+        progression=int('Beast Master' in session_data.account.characters.classes),
         goal=1
     ))
     all_prereqs_met = all([
-        'Voidwalker' in session_data.account.classes,
-        max([vman.max_talents.get("49", 0) for vman in session_data.account.vmans], default=0) >= 150,
-        'Beast Master' in session_data.account.classes
+        'Voidwalker' in session_data.account.characters.classes,
+        max([vman.max_talents.get("49", 0) for vman in session_data.account.characters.vmans], default=0) >= 150,
+        'Beast Master' in session_data.account.characters.classes
     ])
     abm_adviceDict['Prerequisites'].append(Advice(
         label=(
@@ -540,7 +540,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
         advices=breeding_Advices['MaxArenaWave'],
     )
 
-    if max(session_data.account.all_skills['Breeding']) >= 40:
+    if max(session_data.account.characters.all_skills['Breeding']) >= 40:
         breeding_AdviceGroups['ShinyLevels'] = AdviceGroup(
             tier=tier_ShinyLevels,
             pre_string='Level Shinies',
@@ -577,7 +577,7 @@ def getPetDamageAdviceGroup():
     arena_spirit_talent = next(talent for talent in all_talentsDict.values() if talent['name'] == 'Arena Spirit')
     highest_arena_spirit_level = 0
     highest_arena_spirit_goal_level = 0
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         talents = char.current_preset_talents
         try:
             arena_spirit_level = talents[str(arena_spirit_talent['skillIndex'])] + char.total_bonus_talent_levels
@@ -670,7 +670,7 @@ def getPetDamageAdviceGroup():
     return pet_damage_advice_group
 
 def getBreedingAdviceSection() -> AdviceSection:
-    highest_breeding_level = max(session_data.account.all_skills['Breeding'])
+    highest_breeding_level = max(session_data.account.characters.all_skills['Breeding'])
     if highest_breeding_level < 1:
         breeding_AdviceSection = AdviceSection(
             name='Breeding',

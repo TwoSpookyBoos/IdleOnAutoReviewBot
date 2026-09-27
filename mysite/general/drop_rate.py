@@ -813,7 +813,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
     infinite_star_sign_levels = get_infinite_star_sign_levels(
         session_data.account.breeding.total_shiny_levels['Infinite Star Signs']
     )
-    for index, character in enumerate(session_data.account.all_characters):
+    for index, character in enumerate(session_data.account.characters):
         # Drop Rate from LUK
         dr_from_luk_advice: list[Advice] = []
         luk = character.main_stats['LUK']
@@ -872,7 +872,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         ]
         family_multi = ValueToMulti(family_bonuses.get_character_value(
             'Royal Guardian',
-            session_data.account.all_characters,
+            session_data.account.characters,
             character,
             character.get_talent_value(family_guy_talent_index),
         ))

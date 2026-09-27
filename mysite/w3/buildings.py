@@ -35,7 +35,7 @@ def generateShrineLevelingAlerts():
     has_collective_bargaining_agreement = session_data.account.sneaking.emporium['Shrine Collective Bargaining Agreement'].obtained
     xp_reset_warning = '' if reached_world_6 and has_collective_bargaining_agreement else f'<br>{EmojiType.WARNING.value} Moving this shrine will lose xp progress for the current level!'
 
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         char_current_map = char.current_map_index
         char_current_world = (char_current_map // 50) + 1
         for shrine_name, shrine_data in unlocked_shrines_data.items():
@@ -217,7 +217,7 @@ def getProgressionTiersAdviceGroup():
     return building_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getConsBuildingsAdviceSection() -> AdviceSection:
-    highestConstructionLevel = max(session_data.account.all_skills["Construction"])
+    highestConstructionLevel = max(session_data.account.characters.all_skills["Construction"])
     if highestConstructionLevel < 1:
         building_AdviceSection = AdviceSection(
             name='Buildings',

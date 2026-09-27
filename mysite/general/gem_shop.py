@@ -37,7 +37,7 @@ def try_exclude_DungeonTickets(exclusionLists):
             return
 
 def try_exclude_SoupedUpTube(exclusionLists):
-    sum_LabLevels = sum(session_data.account.all_skills['Laboratory'])
+    sum_LabLevels = sum(session_data.account.characters.all_skills['Laboratory'])
     if sum_LabLevels >= 180:
         for sublist in exclusionLists:
             sublist.append('Souped Up Tube')

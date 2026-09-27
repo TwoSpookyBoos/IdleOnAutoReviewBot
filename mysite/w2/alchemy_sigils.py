@@ -158,7 +158,7 @@ def getSigilsProgressionTiersAdviceGroup():
     tier_Sigils = 0
     player_sigils = session_data.account.alchemy_p2w.sigils
     player_sigil_assignments = defaultdict(lambda: 0)
-    for char in session_data.account.safe_characters:
+    for char in session_data.account.characters.safe:
         if char.alchemy_job_group == 'Sigils':
             player_sigil_assignments[char.alchemy_job_string] += 1
 
@@ -227,7 +227,7 @@ def getSigilsProgressionTiersAdviceGroup():
     return sigils_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getAlchemySigilsAdviceSection() -> AdviceSection:
-    highest_lab_level = max(session_data.account.all_skills['Laboratory'])
+    highest_lab_level = max(session_data.account.characters.all_skills['Laboratory'])
     if highest_lab_level < 1:
         sigils_AdviceSection = AdviceSection(
             name='Sigils',

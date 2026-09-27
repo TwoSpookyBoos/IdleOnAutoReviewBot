@@ -157,7 +157,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     db_index = None
     grimoire_preset_level = 100
 
-    for db in session_data.account.dbs:
+    for db in session_data.account.characters.dbs:
         if db_index is None:
             db_index = db.character_index
         if db.current_preset_talents.get('196', 0) > grimoire_preset_level:
@@ -170,8 +170,8 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     currency_advices[mgb_label] = [
         Advice(
             label=f"{grimoire_preset_level}/{session_data.account.library.max_book_level} booked Grimoire:"
-                  f"<br>Max Preset Level {grimoire_preset_level + session_data.account.all_characters[db_index].total_bonus_talent_levels} on "
-                  f"{session_data.account.all_characters[db_index].character_name} including bonus talent levels",
+                  f"<br>Max Preset Level {grimoire_preset_level + session_data.account.characters[db_index].total_bonus_talent_levels} on "
+                  f"{session_data.account.characters[db_index].character_name} including bonus talent levels",
             picture_class='grimoire',
             progression=grimoire_preset_level,
             goal=session_data.account.library.max_book_level
@@ -212,7 +212,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     mgf_label = f"Bone Multi Group F: {grimoire.bone_multi.mgf:.2f}x"
     db_index = None
     tombstone_preset_level = 100
-    for db in session_data.account.dbs:
+    for db in session_data.account.characters.dbs:
         if db_index is None:
             db_index = db.character_index
         if db.current_preset_talents.get('198', 0) > tombstone_preset_level:
@@ -231,8 +231,8 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
     currency_advices[mgf_label] = [
         Advice(
             label=f"{tombstone_preset_level}/{session_data.account.library.max_book_level} booked Graveyard Shift:"
-                  f"<br>Max Preset Level {tombstone_preset_level + session_data.account.all_characters[db_index].total_bonus_talent_levels} on "
-                  f"{session_data.account.all_characters[db_index].character_name} including bonus talent levels",
+                  f"<br>Max Preset Level {tombstone_preset_level + session_data.account.characters[db_index].total_bonus_talent_levels} on "
+                  f"{session_data.account.characters[db_index].character_name} including bonus talent levels",
             picture_class='graveyard-shift',
             progression=tombstone_preset_level,
             goal=session_data.account.library.max_book_level
@@ -299,7 +299,7 @@ def getGrimoireUpgradesAdviceGroup(grimoire) -> AdviceGroup:
 
 def getGrimoireAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if 'Death Bringer' not in session_data.account.classes:
+    if 'Death Bringer' not in session_data.account.characters.classes:
         grimoire_AdviceSection = AdviceSection(
             name="The Grimoire",
             tier="Not Yet Evaluated",

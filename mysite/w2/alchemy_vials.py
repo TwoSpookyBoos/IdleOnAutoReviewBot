@@ -187,7 +187,7 @@ def getVialBonusesAdviceGroup() -> AdviceGroup:
     return vb_ag
 
 def getAlchemyVialsAdviceSection() -> AdviceSection:
-    highestAlchemyLevel = max(session_data.account.all_skills['Alchemy'])
+    highestAlchemyLevel = max(session_data.account.characters.all_skills['Alchemy'])
     if highestAlchemyLevel < 1:
         vial_AdviceSection = AdviceSection(
             name='Vials',

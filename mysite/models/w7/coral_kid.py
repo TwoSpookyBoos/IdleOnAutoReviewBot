@@ -24,21 +24,21 @@ class CoralKidUpgrade:
         from models.general.session_data import session_data
         self.base_value = round_and_trim(coral_kid_upgrades_bonus_base_formulas[self.index]({
             "level": self.level,
-            "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
+            "total_divinity_level": sum(session_data.account.characters.all_skills["Divinity"]),
             "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
             "god_rank": session_data.account.divinity.god_rank,
         }), 0)
 
         self.value = round_and_trim(coral_kid_upgrades_bonus_final_formulas[self.index]({
             "level": self.level,
-            "total_divinity_level": sum(session_data.account.all_skills["Divinity"]),
+            "total_divinity_level": sum(session_data.account.characters.all_skills["Divinity"]),
             "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
             "god_rank": session_data.account.divinity.god_rank,
         }), 0)
 
     def get_advice(self):
         from models.general.session_data import session_data
-        total_div_level: int = sum(session_data.account.all_skills["Divinity"])
+        total_div_level: int = sum(session_data.account.characters.all_skills["Divinity"])
         self.unlocked = self.divinity_required <= total_div_level
         description = self.description_template
         if "{" in description:

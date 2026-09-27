@@ -114,7 +114,7 @@ def getRoyalArmoryOrbletMarketAdviceGroup(royal_armory) -> AdviceGroup:
 
 def getRoyalArmoryAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if 'Royal Guardian' not in session_data.account.classes:
+    if 'Royal Guardian' not in session_data.account.characters.classes:
         royal_armory_AdviceSection = AdviceSection(
             name="Royal Armory",
             tier="Not Yet Evaluated",

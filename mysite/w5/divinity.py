@@ -132,7 +132,7 @@ def getDootChecksAdviceGroups(lowest_divinity_level: int, highest_divinity_level
     if not session_data.account.companions.has('King Doot'):
         if session_data.account.divinity[2].unlocked:
             # If you don't own Doot but do have Arctis unlocked, generate Alert if any char has no divinity link
-            for char in session_data.account.all_characters:
+            for char in session_data.account.characters:
                 if char.divinity_link == 'Unlinked':
                     session_data.account.alerts_Advices['World 5'].append(Advice(
                         label=f"{char.character_name} isn't linked to a {{{{ Divinity|#divinity }}}}",
@@ -146,7 +146,7 @@ def getDootChecksAdviceGroups(lowest_divinity_level: int, highest_divinity_level
             completed=True
         ))
         if lowest_divinity_level < 2:
-            for char in session_data.account.safe_characters:
+            for char in session_data.account.characters.safe:
                 if char.divinity_level < 2:
                     doot_Advices.append(Advice(
                         label=f"{char.character_name} needs to level their Divinity once to get Doot's bonus!",
@@ -158,13 +158,13 @@ def getDootChecksAdviceGroups(lowest_divinity_level: int, highest_divinity_level
             purrmep_assigned_to_any_highest_character = False
             div_level_of_purrmep_linked_character = 0
             highest_characters_not_assigned_to_purrmep = []
-            for char in session_data.account.safe_characters:
+            for char in session_data.account.characters.safe:
                 if char.divinity_link == 'Purrmep':
                     div_level_of_purrmep_linked_character = char.divinity_level
                     if char.divinity_level == highest_divinity_level:
                         purrmep_assigned_to_any_highest_character = True
             if not purrmep_assigned_to_any_highest_character:
-                for char in session_data.account.safe_characters:
+                for char in session_data.account.characters.safe:
                     if char.divinity_level == highest_divinity_level and char.divinity_link != "Purrmep":
                         highest_characters_not_assigned_to_purrmep.append(char)
             if not purrmep_assigned_to_any_highest_character:
@@ -209,7 +209,7 @@ def getArctisAdviceGroup(lowest_divinity_level: int, highest_divinity_level: int
     # Find the lowest minor link bonus from Arctis across all characters, as if they were linked
     current_lowest_arctis_value = 0
     current_highest_arctis_value = 0
-    for char in session_data.account.all_characters:
+    for char in session_data.account.characters:
         char_arctis = ceil(15 * session_data.account.alchemy_bubbles['Big P'].base_value * (char.divinity_level / (char.divinity_level + 60)))
         if current_lowest_arctis_value == 0:  #First character being evaluated
             current_lowest_arctis_value = char_arctis
@@ -315,7 +315,7 @@ def getDivinityProgressionTierAdviceGroups(lowest_divinity_level, highest_divini
             anyRequirementFailed = True
             add_subgroup_if_available_slot(divinity_AdviceDict['TieredProgress'], subgroupName)
             if subgroupName in divinity_AdviceDict['TieredProgress']:
-                for character in session_data.account.safe_characters:
+                for character in session_data.account.characters.safe:
                     if character.divinity_level < tierRequirements.get('MinDivLevel', 0):
                         divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
                             label=f"Raise {character.character_name}'s Divinity level to {tierRequirements.get('MinDivLevel', 0)} {getDivLevelReason(tierRequirements.get('MinDivLevel', 0))}",
@@ -337,8 +337,8 @@ def getDivinityProgressionTierAdviceGroups(lowest_divinity_level, highest_divini
     return divinity_AdviceGroupDict, overall_SectionTier, max_tier, true_max
 
 def getDivinityAdviceSection() -> AdviceSection:
-    highest_divinity_level = max(session_data.account.all_skills.get('Divinity', [0]))
-    lowest_divinity_level = min(session_data.account.all_skills.get('Divinity', [0]))
+    highest_divinity_level = max(session_data.account.characters.all_skills.get('Divinity', [0]))
+    lowest_divinity_level = min(session_data.account.characters.all_skills.get('Divinity', [0]))
     if highest_divinity_level < 1:
         divinity_AdviceSection = AdviceSection(
             name='Divinity',

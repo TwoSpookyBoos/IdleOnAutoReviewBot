@@ -48,7 +48,7 @@ def getSlabProgressionTierAdviceGroups():
             item = account.stored_assets.get(item_codename)
             if item.amount > 0:
                 sources = ", ".join([
-                    char.character_name for char in account.all_characters
+                    char.character_name for char in account.characters
                     if item_codename in char.equipment.inventory
                 ])
                 sources = 'In Storage' if not sources else f"Inventory of {sources}"
@@ -62,7 +62,7 @@ def getSlabProgressionTierAdviceGroups():
             elif account.worn_assets.get(item_codename).amount > 0:
                 item = account.worn_assets.get(item_codename)
                 sources = ", ".join([
-                    char.character_name for char in account.all_characters
+                    char.character_name for char in account.characters
                     if item_codename in char.equipment.equips
                     or item_codename in char.equipment.tools
                 ])

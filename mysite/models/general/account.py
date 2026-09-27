@@ -8,6 +8,7 @@ from models.general.class_kill_talents import ClassKillTalents
 from models.general.crystal_spawn_chance import CrystalSpawnChance
 from models.general.colo_scores import ColoScores
 from models.general.character import Character, talent_bonus_banned
+from models.general.characters import Characters
 from models.general.companions import Companions
 from models.general.dungeons import Dungeons
 from models.general.event_shop import EventShop
@@ -19,6 +20,7 @@ from models.general.guild_bonuses import GuildBonuses
 from models.general.inventory import Inventory
 from models.general.merits import Merits
 from models.general.npc_tokens import NpcTokens
+from models.general.quests import Quests
 from models.general.reset_counters import ResetCounters
 from models.general.storage import Storage
 from models.w1.stamps import Stamps
@@ -28,6 +30,7 @@ from models.w1.bribes import Bribes
 from models.w1.darts import Darts
 from models.w1.forge import ForgeUpgrades
 from models.w1.owl import Owl
+from models.w1.statues import Statues
 from models.w1.upgrade_vault import Vault
 from models.w2.alchemy_bubbles import AlchemyBubbles
 from models.w2.alchemy_cauldrons import AlchemyCauldrons
@@ -105,7 +108,7 @@ def session_singleton(cls):
 @session_singleton
 class Account:
 
-    def __init__(self, json_data, source_string: InputType):
+    def __init__(self, json_data, source_string: InputType, run_type: str):
 
         self.raw_data = safe_loads(json_data)
         self.version = safer_get(self.raw_data, 'DoOnceREAL', 0.00)
@@ -139,25 +142,8 @@ class Account:
         self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
         self.family_bonuses: FamilyBonuses = FamilyBonuses()
         self.class_kill_talents: ClassKillTalents = ClassKillTalents(self.raw_data)
-        #Class lists
-        self.beginners = []
-        self.jmans = []
-        self.maestros = []
-        self.vmans = []
-        self.no_beginners = False  #Indicates an account has created all characters and none can/went down the Secret Class path
-
-        self.barbs = []
-        self.bbs = []
-        self.dbs = []
-        self.dks = []
-
-        self.mages = []
-        self.bubos = []
-        self.sorcs = []
-        self.acs = []
-
-        self.wws = []
-        self.sbs = []
+        self.characters: Characters = Characters(self.raw_data, run_type)
+        self.quests: Quests = Quests(self.raw_data, len(self.characters))
 
         self.companions: Companions = Companions(
             self.raw_data, doot=g.doot, riftslug=g.riftslug, sheepie=g.sheepie
@@ -173,6 +159,7 @@ class Account:
         self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
         self.bribes: Bribes = Bribes(self.raw_data)
         self.star_signs: StarSigns = StarSigns(self.raw_data)
+        self.statues: Statues = Statues(self.raw_data, self.characters.safe)
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
@@ -270,10 +257,10 @@ class Account:
         char_list = []
         talent_num = "-1"
         if name == "Generational Gemstones":
-            char_list = self.wws
+            char_list = self.characters.wws
             talent_num = "432"
         elif name == "Dank Rank":
-            char_list = self.dbs
+            char_list = self.characters.dbs
             talent_num = "207"
         return max(
             [
@@ -309,7 +296,7 @@ class Account:
                 + gets_bonus * self.super_talent_levels * self.spelunk.has_super_talent(
                     char.character_index, talent_index
                 )
-                for char in self.safe_characters
+                for char in self.characters.safe
                 if (base := char.current_preset_talents.get(str(talent_index), 0)) > 0
             ],
             default=0,

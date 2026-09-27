@@ -134,7 +134,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         picture_class='',
     ))
     complete_toons = 0  #Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
-    for char in session_data.account.all_characters:
+    for char in session_data.account.characters:
         character_total_psr = account_sum + star_talent_diff_to_max + char.po_boxes_invested['Utilitarian Capsule'].bonus_1_value
         if char.sub_class == 'Squire':
             character_total_psr += squire_super_samples_max_book
@@ -173,12 +173,12 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         pre_string=f"Sources of Printer Sample Rate ({max_printer_sample_rate}% Hardcap)",
         post_string=(
             f"All possible values would total well over the 90% hardcap. Targets on infinite sources are where I'd recommend stopping."
-            if complete_toons < session_data.account.character_count
+            if complete_toons < len(session_data.account.characters)
             else ''
         ),
         advices=psr_Advices,
         informational=True,
-        completed=complete_toons >= session_data.account.character_count
+        completed=complete_toons >= len(session_data.account.characters)
     )
     return psrAdviceGroup
 
@@ -187,7 +187,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     # Skill Mastery
     sm_base = 4 * session_data.account.rift['SkillMastery'].unlocked  # This isn't expressed anywhere in game, but is hard-coded in source code.
     sm_eligible_skills = len(skill_index_list) - 1  #-1 to exclude Combat
-    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
+    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.characters.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
     sm_sum = sm_base + sm_bonus
     sm_multi = ValueToMulti(sm_sum)
 
@@ -225,7 +225,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     best_kotr_book = 0
     any_dk_max_leveled = False
     best_kotr_preset_level = 0
-    for dk in session_data.account.dks:
+    for dk in session_data.account.characters.dks:
         levels_above_max = dk.max_talents_over_books - session_data.account.library.max_book_level
         # Book level
         if dk.max_talents.get("178", 0) >= session_data.account.library.max_book_level:

@@ -3,17 +3,12 @@ from math import floor
 from flask import g
 
 from consts.consts_autoreview import items_codes_and_names
-from consts.idleon.consts_idleon import max_characters
 from consts.consts_general import (
     key_cards, cardset_names, card_raw_data
 )
 from consts.consts_monster_data import decode_monster_name
-from models.w1.statues import Statues
 from models.general.assets import Assets
-from models.general.character import Character
-from models.general.quests import Quests
 from models.general.cards import Card
-from utils.data_formatting import getCharacterDetails
 from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -73,7 +68,7 @@ def _make_cards(account):
         ) for decoded_enemy_name, card_values in parsed_card_data.items()
     ]
 
-    for character in g.account.all_characters:
+    for character in g.account.characters:
         for equipped_card_codename in character.equipped_cards_codenames:
             try:
                 equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
@@ -96,7 +91,7 @@ def _make_cards(account):
 def _all_stored_items(account) -> Assets:
     chest_keys = (("ChestOrder", "ChestQuantity"),)
     name_quantity_key_pairs = chest_keys + tuple(
-        (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in account.safe_character_indexes
+        (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in account.characters.safe_indexes
     )
     all_stuff_stored_or_in_inv = dict.fromkeys(items_codes_and_names.keys(), 0)
 
@@ -113,7 +108,7 @@ def _all_stored_items(account) -> Assets:
 
 def _all_worn_items(account) -> Assets:
     stuff_worn = defaultdict(int)
-    for toon in account.safe_characters:
+    for toon in account.characters.safe:
         for item in [*toon.equipment.foods, *toon.equipment.equips, *toon.equipment.tools]:
             if item.codename == 'Blank':
                 continue
@@ -121,14 +116,12 @@ def _all_worn_items(account) -> Assets:
 
     return Assets(stuff_worn)
 
-def parse_account(account, run_type):
-    _parse_wave_1(account, run_type)
+def parse_account(account):
+    _parse_wave_1(account)
 
-def _parse_wave_1(account, run_type):
+def _parse_wave_1(account):
     _parse_switches(account)
-    _parse_characters(account, run_type)
     _parse_general(account)
-    _parse_w1(account)
     _parse_w3(account)
     _parse_w4(account)
     _parse_w5(account)
@@ -152,46 +145,6 @@ def _parse_switches(account):
     account.tabbed_advice_groups = g.tabbed_advice_groups
     account.manual_tome_score = g.get("tome_score") if g.manual_tome else None
 
-def _parse_characters(account, run_type):
-    character_count, character_names, character_classes, characterDict, perSkillDict = getCharacterDetails(
-        account.raw_data, run_type
-    )
-    account.names = character_names
-    account.character_count = character_count
-    account.all_characters = [Character(account.raw_data, **char) for char in characterDict.values()]
-    account.classes = set()
-    for char in account.all_characters:
-        for className in char.all_classes:
-            if className != 'None':
-                account.classes.add(className)
-    account.safe_characters = [char for char in account.all_characters if char]  # Use this if touching raw_data instead of all_characters
-    account.safe_character_indexes = [char.character_index for char in account.all_characters if char]
-    account.all_skills = perSkillDict
-    account.quests = Quests(account.raw_data, account.character_count)
-    account.max_toon_count = max(max_characters, character_count)  # OPTIMIZE: find a way to read this from somewhere
-
-    _parse_character_class_lists(account)
-
-def _parse_character_class_lists(account):
-    account.beginners = [toon for toon in account.all_characters if 'Beginner' in toon.all_classes or 'Journeyman' in toon.all_classes]
-    account.jmans = [toon for toon in account.all_characters if 'Journeyman' in toon.all_classes]
-    account.maestros = [toon for toon in account.all_characters if 'Maestro' in toon.all_classes]
-    account.vmans = [toon for toon in account.all_characters if 'Voidwalker' in toon.all_classes]
-    account.no_beginners = len(account.beginners) == 0 and account.character_count >= account.max_toon_count
-
-    account.barbs = [toon for toon in account.all_characters if 'Barbarian' in toon.all_classes]
-    account.bbs = [toon for toon in account.all_characters if 'Blood Berserker' in toon.all_classes]
-    account.dbs = [toon for toon in account.all_characters if 'Death Bringer' in toon.all_classes]
-    account.dks = [toon for toon in account.all_characters if 'Divine Knight' in toon.all_classes]
-
-    account.mages = [toon for toon in account.all_characters if 'Mage' in toon.all_classes]
-    account.bubos = [toon for toon in account.all_characters if 'Bubonic Conjuror' in toon.all_classes]
-    account.sorcs = [toon for toon in account.all_characters if 'Elemental Sorcerer' in toon.all_classes]
-    account.acs = [toon for toon in account.all_characters if 'Arcane Cultist' in toon.all_classes]
-
-    account.wws = [toon for toon in account.all_characters if 'Wind Walker' in toon.all_classes]
-    account.sbs = [toon for toon in account.all_characters if 'Siege Breaker' in toon.all_classes]
-
 def _parse_general(account):
     # General / Multiple uses
     account.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(account.raw_data.get("OptLacc", [])))}
@@ -204,7 +157,7 @@ def _parse_general(account):
 
     account.cards = _make_cards(account)
 
-    account.family_bonuses.calculate_levels(account.safe_characters)
+    account.family_bonuses.calculate_levels(account.characters.safe)
     _parse_general_item_filter(account)
     _parse_general_inventory_slots_account_wide(account)
 
@@ -218,14 +171,11 @@ def _parse_general_item_filter(account):
 
 def _parse_general_inventory_slots_account_wide(account):
     account.inventory.calculate_owned(
-        account.all_characters,
+        account.characters,
         account.autoloot,
         account.event_points_shop['Secret Pouch'].owned,
         account.gemshop.bundles['bon_f'].owned,
     )
-
-def _parse_w1(account):
-    account.statues = Statues(account.raw_data, account.safe_characters)
 
 def _parse_w3(account):
     _parse_w3_deathnote(account)
@@ -233,9 +183,9 @@ def _parse_w3(account):
 
 def _parse_w3_deathnote(account):
     # Dependency: _parse_character_class_lists
-    account.death_note.calculate_apocalypse_characters(account.barbs, account.bbs)
-    account.death_note.calculate_kills(account.all_characters)
-    account.death_note.calculate_rift_meowed(account.all_characters)
+    account.death_note.calculate_apocalypse_characters(account.characters.barbs, account.characters.bbs)
+    account.death_note.calculate_kills(account.characters)
+    account.death_note.calculate_rift_meowed(account.characters)
 
 def _parse_w3_equinox(account):
     account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
@@ -263,4 +213,4 @@ def _parse_w5_slab(account):
     account.registered_slab = set(safe_loads(account.raw_data.get("Cards1", [])))
 
 def _parse_w5_divinity(account):
-    account.divinity.link_characters(account.safe_characters)
+    account.divinity.link_characters(account.characters.safe)

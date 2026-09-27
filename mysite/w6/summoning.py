@@ -242,7 +242,7 @@ def get_bosses() -> AdviceGroup:
 
 def get_section() -> AdviceSection:
     # Check if player has reached this section
-    highest_summoning_level = max(session_data.account.all_skills["Summoning"])
+    highest_summoning_level = max(session_data.account.characters.all_skills["Summoning"])
     if highest_summoning_level < 1:
         return AdviceSection(
             name="Summoning",

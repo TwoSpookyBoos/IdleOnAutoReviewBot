@@ -42,7 +42,7 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     #Verify Skill Mastery itself is unlocked from The Rift
     cap_Advices['Static Sources'].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
     #Account-wide total smithing levels of 300 needed to unlock the bonus
-    total_smithing_levels = sum(session_data.account.all_skills['Smithing'])
+    total_smithing_levels = sum(session_data.account.characters.all_skills['Smithing'])
     skill_mastery_bonus_bool = session_data.account.rift['SkillMastery'].unlocked and total_smithing_levels >= 300
     cap_Advices['Static Sources'].append(Advice(
         label=f"Skill Mastery at 300 Smithing: +{25 * skill_mastery_bonus_bool * session_data.account.rift['SkillMastery'].unlocked}/25%",
@@ -149,7 +149,7 @@ def getProgressionTiersAdviceGroup():
 
     # Total up all the purchases across all current characters
     # TODO: Move this parsing to Account
-    for character in session_data.account.all_characters:
+    for character in session_data.account.characters:
         try:
             player_cash_points.append(safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1], 0))
             sum_CashPoints += safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1], 0)
@@ -170,8 +170,8 @@ def getProgressionTiersAdviceGroup():
                 add_subgroup_if_available_slot(smithing_Advices['Cash Points'], subgroup_label)
                 if subgroup_label in smithing_Advices['Cash Points']:
                     smithing_Advices['Cash Points'][subgroup_label].append(Advice(
-                        label=session_data.account.all_characters[character_index].character_name,
-                        picture_class=session_data.account.all_characters[character_index].class_name_icon,
+                        label=session_data.account.characters[character_index].character_name,
+                        picture_class=session_data.account.characters[character_index].class_name_icon,
                         progression=upgrade_count,
                         goal=requirements.get('Cash Points', 0)
                     ))
@@ -184,8 +184,8 @@ def getProgressionTiersAdviceGroup():
                 add_subgroup_if_available_slot(smithing_Advices['Monster Points'], subgroup_label)
                 if subgroup_label in smithing_Advices['Monster Points']:
                     smithing_Advices['Monster Points'][subgroup_label].append(Advice(
-                        label=session_data.account.all_characters[character_index].character_name,
-                        picture_class=session_data.account.all_characters[character_index].class_name_icon,
+                        label=session_data.account.characters[character_index].character_name,
+                        picture_class=session_data.account.characters[character_index].class_name_icon,
                         progression=upgrade_count,
                         goal=requirements.get('Monster Points', 0),
                         resource=requirements.get('Resource', 0)
