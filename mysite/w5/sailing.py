@@ -243,7 +243,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     has_skill_mastery: bool = session_data.account.rift['SkillMastery'].unlocked
     total_sailing_level = sum(session_data.account.all_skills['Sailing'])
 
-    has_msa_sailing: bool = session_data.account.gaming['SuperBits']['MSA Sailing']['Unlocked']
+    has_msa_sailing: bool = session_data.account.gaming.superbits['MSA Sailing'].unlocked
     total_worship_waves = session_data.account.worship.total_waves
 
     c_shanti_minor = session_data.account.star_signs['C. Shanti Minor']

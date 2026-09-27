@@ -27,7 +27,7 @@ from consts.consts_w4 import (
     getShinyLevelFromDays, getDaysToNextShinyLevel, getBreedabilityMultiFromDays, getBreedabilityHeartFromMulti
 )
 from consts.consts_w5 import (
-    sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex,
+    sailing_list, captain_buffs, divinity_divinities_dict, getDivinityNameFromIndex, getStyleNameFromIndex,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from models.w1.statues import Statues
@@ -1159,108 +1159,9 @@ def _parse_w4_breeding_pets(account, rawBreeding):
         account.breeding["Grouped Bonus"][groupedBonus].sort(key=lambda x: float(x[2]))
 
 def _parse_w5(account):
-    account.gaming = {
-        'BitsOwned': 0,
-        'FertilizerValue': 0,
-        'FertilizerSpeed': 0,
-        'FertilizerCapacity': 0,
-        'MutationsUnlocked': 0,
-        'EvolutionChance': 0,
-        'DNAOwned': 0,
-        'Nugget': 0,
-        'Acorns': 0,
-        'PoingHighscore': 0,
-        'LogbookString': "",
-        'Logbook': {},
-        'SuperBitsString': "",
-        'SuperBits': {},
-        'Envelopes': 0,
-        'Imports': {}
-    }
-    _parse_w5_gaming(account)
-    _parse_w5_gaming_sprouts(account)
     _parse_w5_slab(account)
     _parse_w5_sailing(account)
     _parse_w5_divinity(account)
-
-def _parse_w5_gaming(account):
-    raw_gaming_list = safe_loads(account.raw_data.get('Gaming', []))
-    if not raw_gaming_list:
-        logger.warning('Gaming data not present')
-    if raw_gaming_list:
-        # Bits Owned sometimes Float, sometimes String
-        try:
-            account.gaming['BitsOwned'] = safer_convert(raw_gaming_list[0], 0.00)
-        except:
-            account.gaming['BitsOwned'] = 0.00
-
-        try:
-            account.gaming['FertilizerValue'] = raw_gaming_list[1]
-            account.gaming['FertilizerSpeed'] = raw_gaming_list[2]
-            account.gaming['FertilizerCapacity'] = raw_gaming_list[3]
-            account.gaming['MutationsUnlocked'] = raw_gaming_list[4]
-            account.gaming['DNAOwned'] = raw_gaming_list[5]
-            account.gaming['EvolutionChance'] = raw_gaming_list[7]  #TODO: Look into this being duplicated
-            account.gaming['Nugget'] = raw_gaming_list[8]
-            account.gaming['Acorns'] = raw_gaming_list[9]
-            account.gaming['EvolutionChance'] = raw_gaming_list[10]  #TODO: Look into this being duplicated
-            account.gaming['LogbookString'] = raw_gaming_list[11]
-            account.gaming['SuperBitsString'] = str(raw_gaming_list[12])
-            account.gaming['Envelopes'] = raw_gaming_list[13]
-        except:
-            account.gaming['FertilizerValue'] = 0
-            account.gaming['FertilizerSpeed'] = 0
-            account.gaming['FertilizerCapacity'] = 0
-            account.gaming['MutationsUnlocked'] = 0
-            account.gaming['DNAOwned'] = 0
-            account.gaming['EvolutionChance'] = 0
-            account.gaming['Nugget'] = 0
-            account.gaming['Acorns'] = 0
-            account.gaming['LogbookString'] = 0
-            account.gaming['SuperBitsString'] = ''
-            account.gaming['Envelopes'] = 0
-
-    for name, valuesDict in gaming_superbits_dict.items():
-        try:
-            account.gaming['SuperBits'][name] = {
-                'Unlocked': valuesDict['CodeString'] in account.gaming['SuperBitsString'],
-                'BonusText': valuesDict['BonusText']
-            }
-        except:
-            account.gaming['SuperBits'][valuesDict['Name']] = {
-                'Unlocked': False,
-                'BonusText': valuesDict['BonusText']
-            }
-
-def _parse_w5_gaming_sprouts(account):
-    # [0] through [24] = actual sprouts
-    # [300, 25469746.803332243, 0, 0, 655, 70],  # [25] = Sprinkler Import
-    # [315, 1335, 0, 0, 654, 383],  # [26] = Shovel Import
-    # [300, 1335, 503, 711, 429.34312394215203, 237.05230565943967],  # [27] = Squirrel Import
-    # [275, 287171, 26, 0, 82, 153],  # [28] = Seashell Import
-    # [260, 1, 0, 0, 82, 225],  # [29] = Kitsune Roxie Import
-    # [224, 1345, 0, 0, 98, 383],  # [30] = Log Import
-    # [1, 842957708.5889401, 0, 0, 83, 70],  # [31] = Poing Import
-    # [160, 23, 0, 0, 77, 295],  # [32] = Snail Import
-    # [0, 21884575.351264, 0, 0, 309, 210],  # [33] = Box9 Import
-    # [0, 842957708.5889401, 0, 0, 0, 0],  # [34] = Box10 Import
-    raw_gaming_sprout_list = safe_loads(account.raw_data.get("GamingSprout", []))
-    try:
-        account.gaming['Imports'] = {
-            'Snail': {
-                'Level': raw_gaming_sprout_list[32][0],
-                'SnailRank': raw_gaming_sprout_list[32][1],
-                'Encouragements': raw_gaming_sprout_list[32][2]
-            }
-        }
-    except:
-        account.gaming['Imports'] = {
-            'Snail': {
-                'Level': 0,
-                'SnailRank': 0,
-                'Encouragements': 0
-            }
-        }
 
 def _parse_w5_slab(account):
     account.registered_slab = set(safe_loads(account.raw_data.get("Cards1", [])))

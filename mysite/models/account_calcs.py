@@ -469,7 +469,7 @@ def _calculate_w3_collider_base_costs(account):
     #Formula for base cost: (AtomInfo[3] + AtomInfo[1] * AtomCurrentLevel) * POWER(AtomInfo[2], AtomCurrentLevel)
     for atomName, atomValuesDict in account.atom_collider['Atoms'].items():
         #Update max level +10 if Isotope Discovery unlocked
-        if account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+        if account.gaming.superbits['Isotope Discovery'].unlocked:
             account.atom_collider['Atoms'][atomName]['MaxLevel'] += 10
 
         #Update max level if Wind Walker Compass > Atomic Potential is leveled
@@ -502,7 +502,7 @@ def _calculate_w3_collider_cost_reduction(account):
         7 * account.merits[4][6]['Level']
         + (account.construction_buildings['Atom Collider']['Level'] / 10)
         + 1 * account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']
-        + 10 * account.gaming['SuperBits']['Atom Redux']['Unlocked']
+        + 10 * account.gaming.superbits['Atom Redux'].unlocked
         + account.alchemy_bubbles['Atom Split'].base_value
         + account.stamps['Atomic Stamp'].total_value
         + account.grimoire.upgrades['Death of the Atom Price'].total_value
@@ -708,8 +708,8 @@ def _calculate_w4_lab_bonuses(account):
 
     account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.labJewels['Pyrite Rhinestone']['Enabled']  #Up to +1
     account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.sailing['Artifacts']['Amberite']['Level']  #Up to +4 as of 2.11
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming['SuperBits']['Moar Bubbles']['Unlocked']  #20% chance at +1
-    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming['SuperBits']['Even Moar Bubbles']['Unlocked']  #30% chance at +1
+    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming.superbits['Moar Bubbles'].unlocked  #20% chance at +1
+    account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.gaming.superbits['Even Moar Bubbles'].unlocked  #30% chance at +1
     account.labBonuses['No Bubble Left Behind']['Value'] += 1 * account.merits[3][6]['Level']  #Up to 3
     #Grand total: 3 + 1 + 4 + 1 + 1 + 3 = 13 possible. 11 guaranteed, 2 are chances
 
@@ -863,7 +863,7 @@ def _calculate_w3_library_max_book_levels(account):
 def _calculate_w3_equinox_max_levels(account):
     account.equinox.calculate_max_levels(
         account.summoning.bonuses["Equinox Max LV"].value,
-        account.gaming['SuperBits']['Equinox Unending']['Unlocked'],
+        account.gaming.superbits['Equinox Unending'].unlocked,
     )
 
 def _calculate_general_character_bonus_talent_levels(account):
@@ -962,7 +962,7 @@ def _calculate_general_character_bonus_talent_levels(account):
             character_specific_bonuses += char.arctis_bonus_max
 
         # "AllTalentLV" in source. Last updated in v2.531.0
-        if account.gaming['SuperBits']['Timmy Talented']['Unlocked']:
+        if account.gaming.superbits['Timmy Talented'].unlocked:
             char.timmy_talented_bonus = max(0, floor((char.combat_level - 500) / 100))
         character_specific_bonuses += char.timmy_talented_bonus
 

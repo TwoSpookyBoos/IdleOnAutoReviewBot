@@ -75,27 +75,27 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
 
     #Sodium lower than Snail // 5
-    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_possible_rank:
-        if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
+    if session_data.account.gaming.snail.rank < snail_max_possible_rank:
+        if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming.snail.rank // 5:
             settings_advice['Alerts'].append(
                 Advice(
-                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                    label=f"Snail could reset from Rank {session_data.account.gaming.snail.rank}"
                           f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
-                          f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                          f"<br>Level Sodium to {session_data.account.gaming.snail.rank // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming.snail.rank // 5)}.",
                     picture_class="sodium",
                     progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                    goal=session_data.account.gaming.snail.rank // 5
                 )
             )
             session_data.account.alerts_Advices['World 3'].append(Advice(
-                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
+                    label=f"Snail could reset from Rank {session_data.account.gaming.snail.rank}"
                           f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
-                          f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                          f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming.snail.rank // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming.snail.rank // 5)}.",
                     picture_class='sodium',
                     progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                    goal=session_data.account.gaming.snail.rank // 5
             ))
 
     currentMaxedTowers = 0
@@ -135,12 +135,12 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 def getMaxLevelAdviceGroup() -> AdviceGroup:
     ml_advice = []
 
-    sp_id = session_data.account.gaming['SuperBits']['Isotope Discovery']
+    sp_id = session_data.account.gaming.superbits['Isotope Discovery']
     ml_advice.append(
         Advice(
             label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
             picture_class='red-bits',
-            progression=int(sp_id['Unlocked']),
+            progression=int(sp_id.unlocked),
             goal=1
         )
     )
@@ -189,9 +189,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']}/10%",
+        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming.superbits['Atom Redux'].unlocked}/10%",
         picture_class='red-bits',
-        progression=int(session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']),
+        progression=int(session_data.account.gaming.superbits['Atom Redux'].unlocked),
         goal=1
     ))
 

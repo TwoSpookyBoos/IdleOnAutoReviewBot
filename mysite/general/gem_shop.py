@@ -85,9 +85,9 @@ def try_exclude_ChestSluggo(exclusionLists):
 
 def try_exclude_Gaming(exclusionLists):
     if (
-        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
-        or session_data.account.gaming['FertilizerValue'] >= 420
-        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        session_data.account.gaming.superbits['Isotope Discovery'].unlocked
+        or session_data.account.gaming.fertilizer_value >= 420
+        or session_data.account.gaming.fertilizer_speed >= 500
         or session_data.account.farming.crops.unlocked >= max_farming_crops * 0.75
     ):
         for sublist in exclusionLists:
@@ -95,7 +95,7 @@ def try_exclude_Gaming(exclusionLists):
             sublist.append('Lava Sprouts')
         return
     try:
-        if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+        if session_data.account.gaming.bits_owned >= 1e47:  #Red 100B
             for sublist in exclusionLists:
                 sublist.append('Golden Sprinkler')
                 sublist.append('Lava Sprouts')

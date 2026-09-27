@@ -171,7 +171,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
                 picture_class=symbols_image_name
             ))
 
-        if session_data.account.gaming['SuperBits']['Timmy Talented']['Unlocked']:
+        if session_data.account.gaming.superbits['Timmy Talented'].unlocked:
             bonusLevelAdvices[subgroupName].append(Advice(
                 label=f"Superbit: Timmy Talented: +{char.timmy_talented_bonus}",
                 picture_class='red-bits',
@@ -230,7 +230,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
         label=f"Oxygen - Library Booker: {2*session_data.account.atom_collider['Atoms']['Oxygen - Library Booker']['Level']}/60%",
         picture_class='oxygen',
         progression=session_data.account.atom_collider['Atoms']["Oxygen - Library Booker"]['Level'],
-        goal=20 + (10 * session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked'])
+        goal=20 + (10 * session_data.account.gaming.superbits['Isotope Discovery'].unlocked)
     ))
 
     # Tower
@@ -259,7 +259,7 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     speed_Advices.append(Advice(
         label='Superbit: Library Checkouts: +1% per Gaming Level',
         picture_class='green-bits',
-        progression=gaming_level if session_data.account.gaming['SuperBits']['Library Checkouts']['Unlocked'] else 0
+        progression=gaming_level if session_data.account.gaming.superbits['Library Checkouts'].unlocked else 0
     ))
 
     # Achievement
@@ -351,7 +351,7 @@ def getTalentExclusions() -> list:
         #493: {"Name": "Sharing Some Smarts", "Tab": "Shaman"},
 
     #If the final Gaming Superbit is owned, exclude DK Gaming
-    if session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']:
+    if session_data.account.gaming.superbits['Isotope Discovery'].unlocked:
         talentExclusions.extend([175, 176, 177])
         #175: {"Name": "Undying Passion", "Tab": "Divine Knight"},
         #176: {"Name": "One Thousand Hours Played", "Tab": "Divine Knight"},

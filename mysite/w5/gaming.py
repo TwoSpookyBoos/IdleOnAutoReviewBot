@@ -169,17 +169,17 @@ def getSnailInformationGroup() -> AdviceGroup:
     }
 
     sodium_level = session_data.account.atom_collider['Atoms']['Sodium - Snail Kryptonite']['Level']
-    snail_data = session_data.account.gaming['Imports']['Snail']
+    snail_data = session_data.account.gaming.snail
     sodium_safety_level = sodium_level * 5
-    floored_envelopes = safer_convert(session_data.account.gaming['Envelopes'], 0)
+    floored_envelopes = safer_convert(session_data.account.gaming.envelopes, 0)
 
-    current_snail_level = snail_data['SnailRank']
+    current_snail_level = snail_data.rank
 
     #General
     snail_AdviceDict["General"].append(Advice(
         label=(
             f"Current Snail Rank: {current_snail_level}"
-            if snail_data['Level'] > 0 else
+            if snail_data.level > 0 else
             'Snail import not yet unlocked'
         ),
         picture_class='immortal-snail',
@@ -194,7 +194,7 @@ def getSnailInformationGroup() -> AdviceGroup:
 
         max_snail_level = 25
         for bonus_levels, superbit_name in [(10, "Snail Genesis"), (5, "Snail Omega"), (10, "Snail Zenith")]:
-            if session_data.account.gaming["SuperBits"][superbit_name]["Unlocked"]:
+            if session_data.account.gaming.superbits[superbit_name].unlocked:
                 max_snail_level += bonus_levels
         max_snail_level = min(max_snail_level, snail_max_possible_rank) # Don't try impossible ranks
 
@@ -248,7 +248,7 @@ def getSnailInformationGroup() -> AdviceGroup:
                     label=f"{label_prefix}: Encourage the snail {num_encourage} times."
                           f"<br>Game will display {s_chance:0.2%} success, {r_chance:0.2%} reset chance at {num_encourage} encourages.",
                     picture_class='immortal-snail',
-                    progression=snail_data['Encouragements'] if level == current_snail_level else 0,
+                    progression=snail_data.encouragements if level == current_snail_level else 0,
                     goal=num_encourage,
                     resource='snail-envelope'
                 )
@@ -257,7 +257,7 @@ def getSnailInformationGroup() -> AdviceGroup:
             snail_AdviceDict[current_rank_group_label] = []
             num_encourage, s_chance, r_chance = encouragement_info[current_snail_level]
 
-            encouragements_short_by = max(0, num_encourage - snail_data['Encouragements'])
+            encouragements_short_by = max(0, num_encourage - snail_data.encouragements)
 
             snail_AdviceDict[current_rank_group_label].append(make_encouragement_advice(current_snail_level, "Step 1"))
 
@@ -340,7 +340,7 @@ def getGamingAdviceSection() -> AdviceSection:
 
     # Generate AdviceGroup
     gaming_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getGamingProgressionTierAdviceGroups()
-    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_possible_rank:
+    if session_data.account.gaming.snail.rank < snail_max_possible_rank:
         gaming_AdviceGroupDict['Snail'] = getSnailInformationGroup()
 
     # Generate AdviceSection
