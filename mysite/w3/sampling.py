@@ -7,15 +7,12 @@ from models.advice.advice_group import AdviceGroup
 
 from utils.safer_data_handling import safer_get
 from utils.text_formatting import notateNumber
-from utils.logging import get_logger
 from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
 from consts.idleon.consts_idleon import skill_index_list
 from consts.idleon.lava_func import lava_func
 from consts.consts_w5 import goldrelic_multis_dict
 from consts.consts_w3 import max_printer_sample_rate
 from consts.progression_tiers import sampling_progressionTiers, true_max_tiers
-
-logger = get_logger(__name__)
 
 def getSampleClass(materialName: str) -> str:
     if materialName == 'Oak Logs':
@@ -406,7 +403,7 @@ def getProgressionTiersAdviceGroup():
     true_max = true_max_tiers['Sampling']
     max_tier = true_max - optional_tiers
     tier_MaterialSamples = 0
-    all_samples = session_data.account.printer['AllSamplesSorted']
+    printer = session_data.account.printer
 
     # Assess tiers
     failed_materials_dict = {}
@@ -419,14 +416,7 @@ def getProgressionTiersAdviceGroup():
         for materialName, materialNumber in tierRequirements['Materials'].items():
             finalMaterialNumber = materialNumber if session_data.account.companions.has('King Doot') and tier_number >= 3 else materialNumber * tierRequirements[
                 'NonDootDiscount']
-            # logger.debug(f"Comparing {float(max(all_samples.get(materialName, [0])))} to {finalMaterialNumber}")
-            try:
-                if max(all_samples.get(materialName, [0])) < finalMaterialNumber:
-                    failed_materials_dict[tier_number][materialName] = finalMaterialNumber
-                    # logger.info(f"Tier{tier_number} failed on {materialName}: {max(all_samples.get(materialName, [0]))} < {finalMaterialNumber}")
-            except Exception as reason:
-                logger.exception(
-                    f"Couldn't compare {type(max(all_samples.get(materialName, [0])))} {max(all_samples.get(materialName, [0]))} to T{tier_number} {materialName} {finalMaterialNumber}: {reason}")
+            if printer.best_sample(materialName) < finalMaterialNumber:
                 failed_materials_dict[tier_number][materialName] = finalMaterialNumber
         # If the player passed at least 1 requirement and tier_MaterialSamples already current, increase tier_MaterialSamples
         if len(failed_materials_dict[tier_number].keys()) < len(tierRequirements['Materials'].keys()) and tier_MaterialSamples == tier_number - 1:
@@ -447,7 +437,7 @@ def getProgressionTiersAdviceGroup():
                 sampling_Advices['MaterialSamples'][subgroup_label].append(Advice(
                     label=f"{materialName}",
                     picture_class=materialName,
-                    progression=notateNumber("Match", max(all_samples.get(materialName, [0])), 2, '', goalString),
+                    progression=notateNumber("Match", printer.best_sample(materialName), 2, '', goalString),
                     goal=goalString,
                     resource=getSampleClass(materialName)
                 ))
@@ -458,7 +448,7 @@ def getProgressionTiersAdviceGroup():
         sampling_Advices['MaterialSamples'][catchup].append(Advice(
             label=f"{materialName}",
             picture_class=materialName,
-            progression=notateNumber("Match", max(all_samples.get(materialName, [0])), 2, '', goalString),
+            progression=notateNumber("Match", printer.best_sample(materialName), 2, '', goalString),
             goal=goalString,
             resource=getSampleClass(materialName)
         ))

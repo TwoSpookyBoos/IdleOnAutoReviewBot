@@ -25,7 +25,7 @@ from consts.consts_w2 import (
 )
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
-    collider_storage_limit_list, prayers_dict, printer_all_indexes_being_printed, equipment_sets_dict
+    collider_storage_limit_list, prayers_dict, equipment_sets_dict
 )
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -246,7 +246,7 @@ def _parse_general(account):
     account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_general_achievements(account)
     _parse_general_merits(account)
-    _parse_general_printer(account)
+    _parse_general_item_filter(account)
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
@@ -389,57 +389,9 @@ def _parse_general_merits(account):
                 logger.warning(f"Merit Parse error: {e}. Defaulting to 0")
                 continue  # Already defaulted to 0 in Consts
 
-def _parse_general_printer(account):
-    account.printer = {
-        'HighestValue': 0,
-        'AllSamplesSorted': {},
-        'CurrentPrintsByCharacter': {},
-        'AllCurrentPrints': {},
-    }
-
-    raw_print = safe_loads(account.raw_data.get('Print', [0, 0, 0, 0, 0, 'Blank']))[5:]
-    raw_printer_xtra = safe_loads(account.raw_data.get('PrinterXtra', []))
-    _parse_general_item_filter(account, raw_printer_xtra)
-    account.printer['HighestValue'] = max([p for p in raw_print if isinstance(p, int)] + [p for p in raw_printer_xtra if isinstance(p, int)], default=0)
-
-    try:
-        sample_names = raw_print[0::2] + raw_printer_xtra[0:119:2]
-        sample_values = raw_print[1::2] + raw_printer_xtra[1:119:2]
-    except Exception as e:
-        logger.warning(f"3d Printer Parse error: {e}. Defaulting to []")
-        sample_names = []
-        sample_values = []
-    for sampleIndex, sampleItem in enumerate(sample_names):
-        if sampleItem:
-            if sampleIndex in printer_all_indexes_being_printed:
-                if sampleIndex // 7 not in account.printer['CurrentPrintsByCharacter']:
-                    account.printer['CurrentPrintsByCharacter'][sampleIndex // 7] = {}
-                if getItemDisplayName(sampleItem) not in account.printer['CurrentPrintsByCharacter'][sampleIndex // 7]:
-                    account.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)] = []
-                try:
-                    account.printer['CurrentPrintsByCharacter'][sampleIndex // 7][getItemDisplayName(sampleItem)].append(sample_values[sampleIndex])
-                except:
-                    logger.exception(f"Failed on characterIndex '{sampleIndex // 7}', sampleIndex '{sampleIndex}', sampleItem '{sampleItem}'")
-            else:
-                if sampleItem != 'Blank':  # Don't want blanks in the AllSorted list, but they're desired in the Character-Specific group
-                    if getItemDisplayName(sampleItem) not in account.printer['AllSamplesSorted']:
-                        account.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)] = []
-                    try:
-                        account.printer['AllSamplesSorted'][getItemDisplayName(sampleItem)].append(float(sample_values[sampleIndex]))
-                    except:
-                        logger.exception(f"Failed on sampleIndex '{sampleIndex}', sampleItem '{sampleItem}'")
-    for sampleItem in account.printer['AllSamplesSorted']:
-        account.printer['AllSamplesSorted'][sampleItem].sort(reverse=True)
-    for characterIndex, printDict in account.printer['CurrentPrintsByCharacter'].items():
-        if characterIndex < account.character_count:
-            account.all_characters[characterIndex].setPrintedMaterials(printDict)
-        for printName, printValues in printDict.items():
-            if printName not in account.printer['AllCurrentPrints']:
-                account.printer['AllCurrentPrints'][printName] = []
-            account.printer['AllCurrentPrints'][printName] += printValues
-
-def _parse_general_item_filter(account, raw_printer_xtra):
+def _parse_general_item_filter(account):
     account.item_filter = []
+    raw_printer_xtra = safe_loads(account.raw_data.get('PrinterXtra', []))
     if len(raw_printer_xtra) >= 121:
         for codeName in raw_printer_xtra[120:]:
             if codeName != 'Blank':

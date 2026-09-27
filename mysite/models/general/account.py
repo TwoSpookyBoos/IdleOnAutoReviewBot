@@ -31,6 +31,7 @@ from models.w2.post_office import PostOffice
 from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
 from models.w3.library import Library
+from models.w3.printer import Printer
 from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
 from models.w4.lab_chips import LabChips
@@ -177,6 +178,7 @@ class Account:
         self.worship: Worship = Worship(self.raw_data)
         self.equinox: Equinox = Equinox(self.raw_data)
         self.death_note: DeathNote = DeathNote(self.raw_data)
+        self.printer: Printer = Printer(self.raw_data)
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)

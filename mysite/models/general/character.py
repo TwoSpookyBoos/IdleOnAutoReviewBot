@@ -219,7 +219,6 @@ class Character:
             for name in apoc_names_list
         }
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
-        self.printed_materials = {}
 
         self.setPolytheismLink()
 
@@ -342,9 +341,6 @@ class Character:
             self.max_talents_over_books += value
         except:
             pass
-
-    def setPrintedMaterials(self, printDict):
-        self.printed_materials = printDict
 
     def setCrystalSpawnChance(self, value: float):
         self.crystal_spawn_chance = value

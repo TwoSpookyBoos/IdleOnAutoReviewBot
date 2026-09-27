@@ -92,7 +92,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskBasic_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
+                        ' (Printing!)' if session_data.account.printer.is_printing(bubbleValuesDict.material) else '',
                         goal=target
                     ))
 
@@ -148,7 +148,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskLithium_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
+                        ' (Printing!)' if session_data.account.printer.is_printing(bubbleValuesDict.material) else '',
                         goal=target
                     ))
 
@@ -241,7 +241,7 @@ def getBubblesProgressionTiersAdviceGroup():
                         add_subgroup_if_available_slot(bubble_Advices[bubble_type], subgroup_including_percent_label)
                         if subgroup_including_percent_label in bubble_Advices[bubble_type]:
                             bubble = session_data.account.alchemy_bubbles[required_bubble]
-                            printing = bubble.material in session_data.account.printer['AllCurrentPrints']
+                            printing = session_data.account.printer.is_printing(bubble.material)
                             bubble_Advices[bubble_type][subgroup_including_percent_label].append(
                                 bubble.get_advice(
                                     ' (Printing!)' if printing else '',
