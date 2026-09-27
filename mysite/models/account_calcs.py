@@ -1,6 +1,4 @@
-from math import floor
-
-from consts.consts_autoreview import ValueToMulti, MultiToValue
+from consts.consts_autoreview import MultiToValue
 from consts.idleon.lava_func import lava_func
 from consts.w3.equinox import ribbon_cloud_dream_number
 from utils.logging import get_logger
@@ -61,22 +59,16 @@ def _calculate_w2_arcade(account):
 def _calculate_w4_tome(account):
     # Dependency: _calculate_w4_meal_multi, bonus talent levels, meritocracy
     account.tome.calculate_live_talent_max(account.meals['Buncha Banana'].value)
-    two_starz = account.alchemy_p2w.sigils['Two Starz']
-    star_scraper = account.bribes['Star Scraper']
     account.tome.calculate_star_talents(
-        {
-            char.character_index: char.total_bonus_talent_levels
-            for char in account.characters.safe
-        },
-        account.family_bonuses['Wizard'].value
-        + account.stamps['Talent S Stamp'].total_value
-        + floor(account.guild_bonuses['Star Dazzle'].value)
-        # "SigilBonus" in source, v2.531.0: Chilled Yarn's bonus is its tier
-        + two_starz.values[two_starz.level]
-        * account.sailing.artifacts.chilled_yarn_multi
-        * ValueToMulti(account.meritocracy[21].value)
-        + star_scraper.value * star_scraper.purchased
-        + account.companions['Flying Worm'].bonus
+        account.characters.safe,
+        account.family_bonuses['Wizard'].value,
+        account.stamps['Talent S Stamp'].total_value,
+        account.guild_bonuses['Star Dazzle'].value,
+        account.alchemy_p2w.sigils['Two Starz'],
+        account.sailing.artifacts.chilled_yarn_multi,
+        account.meritocracy[21].value,
+        account.bribes['Star Scraper'],
+        account.companions['Flying Worm'].bonus,
     )
     account.tome.calculate_score(account.manual_tome_score)
 
@@ -96,8 +88,6 @@ def _calculate_wave_2(account):
     )
     _calculate_w3(account)
     _calculate_w4(account)
-    _calculate_caverns(account)
-    _calculate_w6(account)
     _calculate_w7(account)
 
 def _calculate_general(account):
@@ -318,14 +308,11 @@ def _calculate_w5(account):
     )
 
 def _calculate_caverns(account):
+    # Minau measures Tome score, Gambit points read Minau
     account.caverns.villagers["Minau"].calculate_bonuses()
     account.construction_buildings.calculate_gambit_levels(
         account.caverns.caves['Gambit'].bonuses[9].unlocked
     )
-
-
-def _calculate_w6(account):
-    _calculate_w6_summoning(account)
 
 
 def _calculate_w6_sneaking_gemstones(account):
@@ -398,6 +385,8 @@ def _calculate_wave_3(account):
     _calculate_general_character_bonus_talent_levels(account)
     _calculate_w4_tome(account)
     _calculate_w4_tome_bonuses(account)
+    _calculate_caverns(account)
+    _calculate_w6_summoning(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
     _calculate_w6_sneaking_pristine_chance(account)

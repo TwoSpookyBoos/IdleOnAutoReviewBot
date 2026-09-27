@@ -23,8 +23,11 @@ from consts.w4.tome import (
     tome_star_talent_indexes,
 )
 from models.advice.advice import Advice
+from models.general.character import Character
 from models.general.event_shop import EventShop
 from models.master_classes.grimoire import Grimoire
+from models.w1.bribes import Bribe
+from models.w2.alchemy_p2w import Sigil
 from models.w3.armor_sets import ArmorSets
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
@@ -155,8 +158,32 @@ class Tome:
 
     # "TotalTalentPoints" in source. Last updated in v2.531.0
     def calculate_star_talents(
-        self, bonus_talent_levels: dict[int, float], account_bonus: float
+        self,
+        characters: list[Character],
+        wizard_family_value: float,
+        talent_s_stamp_value: float,
+        star_dazzle_value: float,
+        two_starz: Sigil,
+        chilled_yarn_multi: float,
+        meritocracy_value: float,
+        star_scraper: Bribe,
+        flying_worm_bonus: float,
     ):
+        bonus_talent_levels = {
+            char.character_index: char.total_bonus_talent_levels for char in characters
+        }
+        account_bonus = (
+            wizard_family_value
+            + talent_s_stamp_value
+            + floor(star_dazzle_value)
+            # "SigilBonus" in source: Chilled Yarn's bonus is its tier.
+            # Last updated in v2.531.0
+            + two_starz.values[two_starz.level]
+            * chilled_yarn_multi
+            * ValueToMulti(meritocracy_value)
+            + star_scraper.value * star_scraper.purchased
+            + flying_worm_bonus
+        )
         best = 0
         # the game scores whoever is logged in
         for character_index, character in enumerate(self._star_characters):
