@@ -27,7 +27,16 @@ def _calculate_wave_1(account):
     _calculate_w2_arcade(account)
     account.tesseract.calculate_upgrades()
     _calculate_w6_emperor(account)
-    account.summoning.calculate_winner_bonus_multi(account)
+    account.summoning.calculate_winner_bonus_multi(
+        account.sneaking.pristine_charms["Crystal Comb"].value,
+        account.gemshop.purchases["King Of All Winners"],
+        account.merits[5][4],
+        account.sailing.artifacts["The Winz Lantern"].level,
+        account.achievements,
+        account.armor_sets["GODSHARD SET"].total_value,
+        account.gemshop.bundles["ban_i"].owned,
+        account.emperor["Summoning Winner Bonuses"].value,
+    )
     account.summoning.calculate_bonuses()
     _calculate_general_friend_bonuses(account)
     account.gallery.calculate_palette_bonuses(
@@ -476,7 +485,10 @@ def _calculate_w6_farming(account):
 
 
 def _calculate_w6_summoning(account):
-    account.summoning.calculate_doublers(account)
+    account.summoning.calculate_doublers(
+        account.caverns.caves["Gambit"].bonuses[0].value,
+        account.event_points_shop["Summoning Star"].owned,
+    )
 
 
 def _calculate_wave_3(account):

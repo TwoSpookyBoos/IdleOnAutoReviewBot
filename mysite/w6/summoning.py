@@ -94,9 +94,9 @@ def get_bonuses() -> AdviceGroup:
 def get_bonuses_multi() -> AdviceGroup:
     account = session_data.account
     summoning = account.summoning
-    player_group, max_group = summoning.multi["Bonuses"]["Group"]
-    player_mga, player_mgb, player_mgc = player_group
-    _, max_mgb, _ = max_group
+    winner_multi = summoning.winner_multi
+    player_mga, player_mgb, player_mgc = winner_multi.mga, winner_multi.mgb, winner_multi.mgc
+    max_mgb = winner_multi.max_mgb
     mga = f"Multi Group A: {round_and_trim(player_mga)}x"
     mgb = f"Multi Group B: {round_and_trim(player_mgb)}x"
     mgc = f"Multi Group C: {round_and_trim(player_mgc)}x"
@@ -161,8 +161,8 @@ def get_bonuses_multi() -> AdviceGroup:
         goal=1
     ))
     # Summary
-    total = round_and_trim(summoning.multi["Bonuses"]["Value"])
-    library_total = round_and_trim(summoning.multi["Library"]["Value"])
+    total = round_and_trim(winner_multi.value)
+    library_total = round_and_trim(winner_multi.library_value)
     multi_advices[summary].append(Advice(
         label=f"Regular Battles Bonuses Multi: {total}x",
         picture_class='summoning'

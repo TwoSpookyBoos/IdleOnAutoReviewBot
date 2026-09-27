@@ -26,6 +26,9 @@ from consts.w6.summoning import (
 from consts.consts_monster_data import decode_monster_name
 
 from models.advice.advice import Advice
+from models.general.achievements import Achievements
+from models.general.gem_shop import GemShopPurchase
+from models.general.merits import Merit
 
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
@@ -270,6 +273,26 @@ class SummoningDoubler:
     spentable: int = 0
 
 
+class WinnerBonusMulti:
+    def __init__(
+        self,
+        mga: float,
+        mgb: float,
+        mgc: float,
+        mgc_library: float,
+        max_mga: float,
+        max_mgb: float,
+        max_mgc_library: float,
+    ):
+        self.mga: float = mga
+        self.mgb: float = mgb
+        self.mgc: float = mgc
+        self.max_mgb: float = max_mgb
+        self.value: float = max(1, mga * mgb * mgc)
+        self.library_value: float = max(1, mga * mgb * mgc_library)
+        self.library_max: float = max(1, max_mga * max_mgb * max_mgc_library)
+
+
 class Summoning:
     def __init__(self, raw_data: dict):
         raw_summoning_list = safe_loads(raw_data.get("Summon", []))
@@ -299,6 +322,7 @@ class Summoning:
         self._parse_sanctuary(safer_index(raw_summoning_list, 4, []))
         self.bosses: dict[str, SummoningBoss] = {}
         self._parse_bosses(raw_data)
+        self.winner_multi: WinnerBonusMulti | None = None
 
     def _parse_upgrade(self, raw_data: dict, raw_upgrades: list[int]):
         # Summoning Upgrade doublers
@@ -340,93 +364,76 @@ class Summoning:
             boss_info = summoning_boss_info[color]
             self.bosses[color] = SummoningBoss(color_index, color, boss_info, win_count)
 
-    def calculate_winner_bonus_multi(self, account: "Account"):
+    def calculate_winner_bonus_multi(
+        self,
+        crystal_comb_value: float,
+        king_of_all_winners: GemShopPurchase,
+        winner_merit: Merit,
+        winz_lantern_level: int,
+        achievements: Achievements,
+        godshard_set_value: float,
+        daydreamer_pack_owned: bool,
+        emperor_winner_value: float,
+    ):
         # "WinBonus" in source. Last update in v2.48 Giftmas Event
         # The 'base' value of a normal match is multiplied by 3.5. This is
         # handled by SummoningBonus itself, not part of this function.
         # Multi Group A: Pristine Charm - Crystal Comb
         max_mga = 1.3
-        player_mga = ValueToMulti(
-            account.sneaking.pristine_charms["Crystal Comb"].value
-        )
+        player_mga = ValueToMulti(crystal_comb_value)
         # Multi Group B: Gem Shop - King of all Winners
-        max_mgb = ValueToMulti(
-            10 * account.gemshop.purchases["King Of All Winners"].max_level
-        )
-        player_mgb = ValueToMulti(
-            10 * account.gemshop.purchases["King Of All Winners"].owned
-        )
+        max_mgb = ValueToMulti(10 * king_of_all_winners.max_level)
+        player_mgb = ValueToMulti(10 * king_of_all_winners.owned)
         # Multi Group C: Summoning Winner Bonuses
-        max_mgc_rest = ValueToMulti(
-            (25 * max_sailing_artifact_level)
-            + account.merits[5][4].max_level  # World 6 Merit Shop
-            + 1  # int(account.achievements['Spectre Stars'])
-            + 1  # int(account.achievements['Regalis My Beloved'])
-            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
-            + 50  # Gem Shop - Daydreamer Pack (ban_i)
-            # Not for Library
-            + self.bonuses["Winner Bonuses"].value
-            + account.emperor["Summoning Winner Bonuses"].value  # Technically infinity
-        )
         max_mgc_library = ValueToMulti(
             # 19 == t ? Library bonus's index
             (25 * max_sailing_artifact_level)
-            + account.merits[5][4].max_level  # World 6 Merit Shop
-            + 1  # int(account.achievements['Spectre Stars'])
-            + 1  # int(account.achievements['Regalis My Beloved'])
-            + 15  # max value of account.armor_sets['GODSHARD SET']
+            + winner_merit.max_level  # World 6 Merit Shop
+            + 1  # Spectre Stars achievement
+            + 1  # Regalis My Beloved achievement
+            + 15  # Godshard Set max value
             + 50  # Gem Shop - Daydreamer Pack (ban_i)
         )
         player_mgc_rest = ValueToMulti(
-            (25 * account.sailing.artifacts["The Winz Lantern"].level)
-            + account.merits[5][4].level
-            + int(account.achievements["Spectre Stars"].complete)
-            + int(account.achievements["Regalis My Beloved"].complete)
-            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
-            + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
+            (25 * winz_lantern_level)
+            + winner_merit.level
+            + int(achievements["Spectre Stars"].complete)
+            + int(achievements["Regalis My Beloved"].complete)
+            + MultiToValue(godshard_set_value)
+            + 50 * daydreamer_pack_owned  # Gem Shop - Daydreamer Pack
             # Not for library
             + self.bonuses["Winner Bonuses"].value
-            + account.emperor["Summoning Winner Bonuses"].value
+            + emperor_winner_value
         )
         player_mgc_library = ValueToMulti(
-            (25 * account.sailing.artifacts["The Winz Lantern"].level)
-            + account.merits[5][4].level
-            + int(account.achievements["Spectre Stars"].complete)
-            + int(account.achievements["Regalis My Beloved"].complete)
-            + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
-            + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
+            (25 * winz_lantern_level)
+            + winner_merit.level
+            + int(achievements["Spectre Stars"].complete)
+            + int(achievements["Regalis My Beloved"].complete)
+            + MultiToValue(godshard_set_value)
+            + 50 * daydreamer_pack_owned  # Gem Shop - Daydreamer Pack
         )
-        self.multi = {}
-        # Library
-        self.multi["Library"] = {}
-        self.multi["Library"]["Value"] = max(
-            1, player_mga * player_mgb * player_mgc_library
-        )
-        self.multi["Library"]["Max"] = max(1, max_mga * max_mgb * max_mgc_library)
-        # Not Library
-        self.multi["Bonuses"] = {}
-        self.multi["Bonuses"]["Value"] = max(
-            1, player_mga * player_mgb * player_mgc_rest
-        )
-        self.multi["Bonuses"]["Group"] = (
-            (player_mga, player_mgb, player_mgc_rest),
-            (max_mga, max_mgb, max_mgc_rest),
+        self.winner_multi = WinnerBonusMulti(
+            player_mga,
+            player_mgb,
+            player_mgc_rest,
+            player_mgc_library,
+            max_mga,
+            max_mgb,
+            max_mgc_library,
         )
 
     def calculate_bonuses(self):
         for name, bonus in self.bonuses.items():
-            multi = self.multi["Bonuses"]["Value"]
+            multi = self.winner_multi.value
             max_multi = multi
             if name == "Library Max":
-                multi = self.multi["Library"]["Value"]
-                max_multi = self.multi["Library"]["Max"]
+                multi = self.winner_multi.library_value
+                max_multi = self.winner_multi.library_max
             bonus.calculate_bonus(multi, max_multi)
 
-    def calculate_doublers(self, account: "Account"):
-        self.doubler.own = (
-            account.caverns.caves["Gambit"].bonuses[0].value
-            + 10 * account.event_points_shop["Summoning Star"].owned
-        )
+    def calculate_doublers(self, gambit_doublers: float, summoning_star_owned: int):
+        self.doubler.own = gambit_doublers + 10 * summoning_star_owned
         self.doubler.spentable = min(self.doubler.spentable, self.doubler.own)
 
     def get_doubler_spent_advice(self) -> Advice:
