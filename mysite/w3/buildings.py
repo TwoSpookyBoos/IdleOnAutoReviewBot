@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 def getInfluencers():
     honker_vial_level = session_data.account.alchemy_vials['Goosey Glug (Honker)'].level
-    poisonic_level = session_data.account.construction_buildings['Poisonic Elder']['Level']
+    poisonic_level = session_data.account.construction_buildings['Poisonic Elder'].level
     cons_mastery = session_data.account.rift['ConstructMastery'].unlocked
     carbon_unlocked = session_data.account.atom_collider['Carbon - Wizard Maximizer'].level >= 1
     results = [(cons_mastery or carbon_unlocked), honker_vial_level, poisonic_level]
@@ -27,7 +27,7 @@ def generateShrineLevelingAlerts():
         return
 
     shrine_data = session_data.account.shrines
-    unlocked_shrines = [value['Image'] for key, value in session_data.account.construction_buildings.items() if value['Type'] == 'Shrine' and value['Level'] > 0]
+    unlocked_shrines = [building.image for building in session_data.account.construction_buildings.values() if building.type == 'Shrine' and building.level > 0]
     unlocked_shrines_data = {key: {'map_index': shrine.map_index, 'leveled_by': [], 'image': shrine.image} for key, shrine in shrine_data.items() if shrine.image in unlocked_shrines}
 
     shrine_world_tour_active = session_data.account.lab_bonuses['Shrine World Tour'].enabled
@@ -86,7 +86,7 @@ def getProgressionTiersAdviceGroup():
     # Make adjustments to tiers based on other influencers
     # 1) If any building is level 0, it gets promoted to SS tier
     for building_name, building_level in max_level_dict.items():
-        if player_buildings[building_name]['Level'] == 0:
+        if player_buildings[building_name].level == 0:
             max_level_dict[building_name] = 1  # With a max recommended level of 1
             for tier in progression_tiers_post_buffs:
                 if building_name in tier[2] and tier[1] != "SS":
@@ -100,7 +100,7 @@ def getProgressionTiersAdviceGroup():
                     # logger.debug(f"Level 0 building detected. Removing {building_name} from PREBuff {tier[1]} and adding to SS with max level 1 instead.")
 
     # 2) Honker vial is 12+ OR Trapper Drone is 20+, drop Trapper Drone priority
-    if influencers[1] >= 12 or player_buildings['Trapper Drone']['Level'] >= 20:
+    if influencers[1] >= 12 or player_buildings['Trapper Drone'].level >= 20:
         try:
             progression_tiers_post_buffs[2][2].remove('Trapper Drone')  # Remove Trapper Drone from S Tier
             progression_tiers_post_buffs[5][2].insert(1, 'Trapper Drone')  # Add Trapper Drone to C tier
@@ -125,7 +125,7 @@ def getProgressionTiersAdviceGroup():
             logger.exception(f"Could not move Boulder Roller from S tier in one or both tierlists: {reason}")
 
     # 4) Talent Library Book 101+, drop priority
-    if player_buildings['Talent Book Library']['Level'] >= 101:
+    if player_buildings['Talent Book Library'].level >= 101:
         try:
             progression_tiers_post_buffs[2][2].remove("Talent Book Library")  # Remove from S tier
             progression_tiers_post_buffs[5][2].insert(1, "Talent Book Library")  # Add to C tier
@@ -137,7 +137,7 @@ def getProgressionTiersAdviceGroup():
 
     # 5) #Basic Towers to 70, drop priority
     for tower_name in ['Frozone Malone', 'Party Starter', 'Pulse Mage', 'Fireball Lobber', 'Boulder Roller']:
-        if player_buildings[tower_name]['Level'] >= 70:
+        if player_buildings[tower_name].level >= 70:
             try:
                 progression_tiers_post_buffs[3][2].remove(tower_name)  # Remove from A tier
                 progression_tiers_post_buffs[5][2].insert(3, tower_name)  # Add to C tier
@@ -149,7 +149,7 @@ def getProgressionTiersAdviceGroup():
 
     # 6) Fancy Towers to 90, drop priority
     for tower_name in ['Kraken Cosplayer', 'Poisonic Elder', 'Stormcaller']:
-        if player_buildings[tower_name]['Level'] >= 90:
+        if player_buildings[tower_name].level >= 90:
             for tierIndex in range(0, len(progression_tiers_post_buffs)):
                 if tower_name in progression_tiers_post_buffs[tierIndex][2]:
                     progression_tiers_post_buffs[tierIndex][2].remove(tower_name)  # Remove from any existing tier (S for Kraken and Poison, A for Stormcaller)
@@ -158,7 +158,7 @@ def getProgressionTiersAdviceGroup():
                 max_level_dict[tower_name] = 240
 
     # 7) Voidinator to 40, drop priority
-    if player_buildings['Voidinator']['Level'] >= 40:  # Voidinator scaling is very bad
+    if player_buildings['Voidinator'].level >= 40:  # Voidinator scaling is very bad
         try:
             progression_tiers_pre_buffs[4][2].remove("Voidinator")  # Remove from PreBuff B tier
             progression_tiers_pre_buffs[5][2].insert(0, "Voidinator")  # Add to C tier
@@ -188,28 +188,16 @@ def getProgressionTiersAdviceGroup():
         building_Advices[counter] = []
         tier_names_list.append(progression_tiers_to_use[counter][1])
         for building_name in progression_tiers_to_use[counter][2]:
-            try:
-                if max_level_dict.get(building_name, 999) > player_buildings.get(building_name, {}).get('Level', 0):
-                    if progression_tiers_to_use[counter][1] == 'Unlock':
-                        building_Advices[counter].append(Advice(
-                            label=building_name,
-                            picture_class=player_buildings.get(building_name, {}).get('Image', ''),
-                            progression=0,
-                            goal=1
-                        ))
-                    else:
-                        building_Advices[counter].append(Advice(
-                            label=building_name,
-                            picture_class=player_buildings.get(building_name, {}).get('Image', ''),
-                            progression=player_buildings.get(building_name, {}).get('Level', 0),
-                            goal=max_level_dict.get(building_name, 999)
-                        ))
-            except:
-                logger.exception(f"ProgressionTier evaluation error. Counter = {counter}, building_name = {building_name}")
+            building = player_buildings[building_name]
+            if max_level_dict.get(building_name, 999) > building.level:
+                building_Advices[counter].append(building.get_tier_advice(
+                    max_level_dict.get(building_name, 999),
+                    unlock_only=progression_tiers_to_use[counter][1] == 'Unlock',
+                ))
 
     # Generate AdviceGroups
     building_AdviceGroups = {}
-    tier_UnlockAllBuildings = int(all([building['Level'] > 0 for building in player_buildings.values()]))
+    tier_UnlockAllBuildings = int(all([building.level > 0 for building in player_buildings.values()]))
     for tier_key in building_Advices.keys():
         if f"{tier_names_list[tier_key]}" == 'Unlock':
             building_AdviceGroups[tier_key] = AdviceGroup(

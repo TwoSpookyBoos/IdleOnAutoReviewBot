@@ -19,7 +19,7 @@ class DancingCoralBonus:
 
     def calculate_bonus(self):
         from models.general.session_data import session_data
-        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name]["Level"]
+        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name].level
         levels_above_threshold = max(target_shrine_level - 200, 0)
         self.value = levels_above_threshold * self.base_value
         if "}" in self.description_template:
@@ -28,7 +28,7 @@ class DancingCoralBonus:
 
     def get_advice(self):
         from models.general.session_data import session_data
-        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name]["Level"]
+        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name].level
         description = self.description_template
         total_bonus = ""
         if "{" in description:

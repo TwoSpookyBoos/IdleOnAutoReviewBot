@@ -39,6 +39,7 @@ from models.w2.obols import Obols
 from models.w2.post_office import PostOffice
 from models.w3.armor_sets import ArmorSets
 from models.w3.atom_collider import AtomCollider
+from models.w3.buildings import Buildings
 from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
 from models.w3.library import Library
@@ -188,6 +189,7 @@ class Account:
         self.equinox: Equinox = Equinox(self.raw_data)
         self.death_note: DeathNote = DeathNote(self.raw_data)
         self.printer: Printer = Printer(self.raw_data)
+        self.construction_buildings: Buildings = Buildings(self.raw_data)
         self.refinery: Refinery = Refinery(self.raw_data)
         self.shrines: Shrines = Shrines(self.raw_data)
         self.prayers: Prayers = Prayers(self.raw_data)

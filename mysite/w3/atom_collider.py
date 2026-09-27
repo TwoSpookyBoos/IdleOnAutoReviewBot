@@ -89,8 +89,8 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     currentMaxedTowers = 0
     if colliderData["Carbon - Wizard Maximizer"].level < colliderData["Carbon - Wizard Maximizer"].max_level:
         for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
-            if buildingValuesDict['Type'] == 'Tower':
-                if buildingValuesDict['Level'] >= buildingValuesDict['MaxLevel'] and buildingValuesDict['MaxLevel'] < buildings_tower_max_level:
+            if buildingValuesDict.type == 'Tower':
+                if buildingValuesDict.level >= buildingValuesDict.max_level and buildingValuesDict.max_level < buildings_tower_max_level:
                     currentMaxedTowers += 1
 
     if currentMaxedTowers > 0:
@@ -177,11 +177,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}"
-              f"/{session_data.account.construction_buildings['Atom Collider']['MaxLevel'] / 10:.1f}%",
+        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider'].level / 10:.1f}"
+              f"/{session_data.account.construction_buildings['Atom Collider'].max_level / 10:.1f}%",
         picture_class='atom-collider',
-        progression=session_data.account.construction_buildings['Atom Collider']['Level'],
-        goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
+        progression=session_data.account.construction_buildings['Atom Collider'].level,
+        goal=session_data.account.construction_buildings['Atom Collider'].max_level
     ))
 
     cr_advice.append(session_data.account.alchemy_bubbles['Atom Split'].get_advice(
@@ -261,7 +261,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     return tiers_ag, overall_ColliderTier, max_tier, true_max
 
 def getColliderAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
+    if session_data.account.construction_buildings['Atom Collider'].level < 1:
         collider_AdviceSection = AdviceSection(
             name='Atom Collider',
             tier='Not Yet Evaluated',

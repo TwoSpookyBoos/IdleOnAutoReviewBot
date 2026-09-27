@@ -12,6 +12,7 @@ from models.advice.advice import Advice
 from models.general.event_shop import EventShop
 from models.general.gem_shop import GemShop
 from models.general.models_consumables import StorageChest
+from models.w3.buildings import Buildings
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads
 
@@ -98,7 +99,7 @@ class Storage(dict[str, StorageSource]):
         self,
         event_points_shop: EventShop,
         vault,
-        construction_buildings: dict,
+        construction_buildings: Buildings,
         gemshop: GemShop,
     ):
         for name, slots in storage_event_shop_slots.items():
@@ -123,16 +124,16 @@ class Storage(dict[str, StorageSource]):
             )
         for name, slots_per_level in storage_building_slots_per_level.items():
             building = construction_buildings[name]
-            owned_slots = slots_per_level * (building["Level"] - 1)
+            owned_slots = slots_per_level * (building.level - 1)
             self[name] = StorageSource(
                 source="Construction Building",
                 owned_slots=owned_slots,
-                max_slots=slots_per_level * (building["MaxLevel"] - 1),
+                max_slots=slots_per_level * (building.max_level - 1),
                 label=f"{{{{ Construction Building|#buildings }}}} - {name}: "
                 f"{owned_slots} total slots",
-                image=building["Image"],
-                progression=building["Level"],
-                goal=building["MaxLevel"],
+                image=building.image,
+                progression=building.level,
+                goal=building.max_level,
             )
         for name, slots in storage_gem_shop_slots.items():
             purchase = gemshop.purchases[name]

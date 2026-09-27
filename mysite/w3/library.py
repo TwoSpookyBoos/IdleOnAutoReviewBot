@@ -49,9 +49,9 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
 
     bookLevelAdvices[staticSubgroup].append(Advice(
         label=f"Construction: Talent Book Library built: "
-              f"+{25 * (0 < session_data.account.construction_buildings['Talent Book Library']['Level'])}/25",
+              f"+{25 * (0 < session_data.account.construction_buildings['Talent Book Library'].level)}/25",
         picture_class="talent-book-library",
-        progression=min(1, session_data.account.construction_buildings['Talent Book Library']['Level']),
+        progression=min(1, session_data.account.construction_buildings['Talent Book Library'].level),
         goal=1
     ))
     bookLevelAdvices[staticSubgroup].append(Advice(
@@ -229,11 +229,11 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
 
     # Tower
     speed_Advices.append(Advice(
-        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library']['Level']-1) * 5)}/"
-              f"{session_data.account.construction_buildings['Talent Book Library']['MaxLevel']*5}%",
+        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library'].level-1) * 5)}/"
+              f"{session_data.account.construction_buildings['Talent Book Library'].max_level*5}%",
         picture_class='talent-book-library',
-        progression=session_data.account.construction_buildings['Talent Book Library']['Level'],
-        goal=session_data.account.construction_buildings['Talent Book Library']['MaxLevel']
+        progression=session_data.account.construction_buildings['Talent Book Library'].level,
+        goal=session_data.account.construction_buildings['Talent Book Library'].max_level
     ))
 
     # Bubble
@@ -742,7 +742,7 @@ def getLibraryProgressionTiersAdviceGroups_characters():
 
 
 def getLibraryAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Talent Book Library']['Level'] < 1:
+    if session_data.account.construction_buildings['Talent Book Library'].level < 1:
         library_AdviceSection = AdviceSection(
             name="Library",
             tier="Not Yet Evaluated",
@@ -766,7 +766,7 @@ def getLibraryAdviceSection() -> AdviceSection:
     # Generate Alerts
     if (
         session_data.account.library.books_ready >= 40
-        and session_data.account.construction_buildings['Automation Arm']['Level'] >= 5
+        and session_data.account.construction_buildings['Automation Arm'].level >= 5
         and any_book_advice
     ):
         # For future reference, since this comes up from time to time. The amount of checkouts stored in the JSON is only updated when the player

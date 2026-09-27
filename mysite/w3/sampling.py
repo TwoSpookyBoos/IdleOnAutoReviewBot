@@ -449,7 +449,7 @@ def getProgressionTiersAdviceGroup():
     return sampling_AdviceGroupDict, overall_SectionTier, max_tier,true_max
 
 def getSamplingAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['3D Printer']['Level'] < 1:
+    if session_data.account.construction_buildings['3D Printer'].level < 1:
         sampling_AdviceSection = AdviceSection(
             name='Sampling',
             tier='Not Yet Evaluated',

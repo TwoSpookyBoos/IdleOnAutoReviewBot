@@ -11,7 +11,6 @@ from consts.consts_general import (
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
-from consts.consts_w3 import buildings_dict
 from models.w1.statues import Statues
 from models.general.assets import Assets
 from models.general.character import Character
@@ -387,28 +386,8 @@ def _parse_w2_weekly_boss(account):
 
 
 def _parse_w3(account):
-    _parse_w3_buildings(account)
     _parse_w3_deathnote(account)
     _parse_w3_equinox(account)
-
-def _parse_w3_buildings(account):
-    account.construction_buildings = {}
-    raw_buildings_list = safe_loads(account.raw_data.get("Tower", []))
-    for buildingIndex, buildingValuesDict in buildings_dict.items():
-        try:
-            account.construction_buildings[buildingValuesDict['Name']] = {
-                'Level': int(raw_buildings_list[buildingIndex]),
-                'MaxLevel': buildingValuesDict['BaseMaxLevel'],
-                'Image': buildingValuesDict['Image'],
-                'Type': buildingValuesDict['Type'],
-            }
-        except:
-            account.construction_buildings[buildingValuesDict['Name']] = {
-                'Level': 0,
-                'MaxLevel': buildingValuesDict['BaseMaxLevel'],
-                'Image': buildingValuesDict['Image'],
-                'Type': buildingValuesDict['Type'],
-            }
 
 def _parse_w3_deathnote(account):
     # Dependency: _parse_character_class_lists

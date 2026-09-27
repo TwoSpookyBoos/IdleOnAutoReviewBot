@@ -5,7 +5,6 @@ from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import fishing_toolkit_dict
-from consts.consts_w3 import buildings_towers, buildings_shrines
 from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
@@ -327,44 +326,13 @@ def _calculate_w3(account):
     _calculate_w3_atom_collider(account)
     _calculate_w3_shrines(account)
 
-def _update_w3_building_max_levels(account, building_name: str, levels: int, note=''):
-    if building_name == 'All Towers':
-        for tower_name in buildings_towers:
-            try:
-                account.construction_buildings[tower_name]['MaxLevel'] += levels
-            except:
-                logger.warning(f"Could not increase max level of {tower_name}: {note if note else 'No note provided'}")
-    elif building_name == 'All Shrines':
-        for shrine_name in buildings_shrines:
-            try:
-                account.construction_buildings[shrine_name]['MaxLevel'] += levels
-            except:
-                logger.warning(f"Could not increase max level of {shrine_name}: {note if note else 'No note provided'}")
-    else:
-        try:
-            account.construction_buildings[building_name]['MaxLevel'] += levels
-        except:
-            logger.warning(f"Could not increase max level of {building_name}: {note if note else 'No note provided'}")
-
 def _calculate_w3_building_max_levels(account):
-    if account.rift['SkillMastery'].unlocked:
-        totalLevel = sum(account.all_skills['Construction'])
-        if totalLevel >= 500:
-            _update_w3_building_max_levels(account, 'Trapper Drone', 35, '500 Construction Mastery')
-
-        if totalLevel >= 1000:
-            _update_w3_building_max_levels(account, 'Talent Book Library', 35, '1K Construction Mastery')
-
-        if totalLevel >= 1500:
-            _update_w3_building_max_levels(account, 'All Shrines', 30, '1.5K Construction Mastery')
-
-        if totalLevel >= 2500:
-            _update_w3_building_max_levels(account, 'All Towers', 30, '2.5K Construction Mastery')
-
-    if account.atom_collider['Carbon - Wizard Maximizer'].level > 0:
-        _update_w3_building_max_levels(account, 'All Towers', 2 * account.atom_collider['Carbon - Wizard Maximizer'].level, 'Atom Collider - Carbon - Wizard Maximizer')
-
-    #+100 levels from Gambit occurs in _calculate_caverns_gambit
+    # Gambit's +100 Tower levels is applied in _calculate_caverns
+    account.construction_buildings.calculate_max_levels(
+        account.rift['SkillMastery'].unlocked,
+        sum(account.all_skills['Construction']),
+        account.atom_collider['Carbon - Wizard Maximizer'].level,
+    )
 
 def _calculate_w3_refinery(account):
     account.refinery.calculate(account.companions['Panda'].bonus, account.merits[2][6].level)
@@ -377,7 +345,7 @@ def _calculate_w3_atom_collider(account):
     )
     account.atom_collider.calculate_costs(
         account.merits[4][6].level,
-        account.construction_buildings['Atom Collider']['Level'],
+        account.construction_buildings['Atom Collider'].level,
         account.gaming.superbits['Atom Redux'].unlocked,
         account.alchemy_bubbles['Atom Split'].base_value,
         account.stamps['Atomic Stamp'].total_value,
@@ -457,8 +425,9 @@ def _calculate_w5(account):
 
 def _calculate_caverns(account):
     account.caverns.villagers["Minau"].calculate_bonuses()
-    if account.caverns.caves['Gambit'].bonuses[9].unlocked:
-        _update_w3_building_max_levels(account, 'All Towers', 100, 'Gambit Cavern upgrade Index 9')
+    account.construction_buildings.calculate_gambit_levels(
+        account.caverns.caves['Gambit'].bonuses[9].unlocked
+    )
 
 
 def _calculate_w6(account):

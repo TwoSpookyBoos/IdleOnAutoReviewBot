@@ -394,7 +394,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
 
 
 def getDeathNoteAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Death Note']['Level'] < 1:
+    if session_data.account.construction_buildings['Death Note'].level < 1:
         deathnote_AdviceSection = AdviceSection(
             name='Death Note',
             tier='0/0',
