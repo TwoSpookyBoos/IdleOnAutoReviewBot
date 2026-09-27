@@ -142,15 +142,15 @@ def getDeathNoteProgressionTiersAdviceGroup():
                     tier_combo[world_index] = tier[0]
                 else:
                     required_kills = getDNKillRequirement(skull_value=tier[world_index])
-                    for skull_value in full_death_note_dict[world_index].lowest_skulls_dict:
+                    for skull_value in full_death_note_dict[world_index].maps_by_skull:
                         skull_name = dn_skull_value_to_name_dict[skull_value]
                         if skull_value < tier[world_index]:
                             # Looking for previously skipped enemy requirements where {skull_value} < {tier[world_index]}
                             # I promise this should be < not <=. You'll get negative amounts remaining if you use <=
-                            for enemy in full_death_note_dict[world_index].lowest_skulls_dict[skull_value]:
+                            for enemy in full_death_note_dict[world_index].maps_by_skull[skull_value]:
                                 if (
-                                    tier[world_index] < dn_delays.get(enemy[0], {}).get('DelayUntilSkull', 0)
-                                    or tier[0] < dn_delays.get(enemy[0], {}).get('DelayUntilTier', 0)
+                                    tier[world_index] < dn_delays.get(enemy.map_name, {}).get('DelayUntilSkull', 0)
+                                    or tier[0] < dn_delays.get(enemy.map_name, {}).get('DelayUntilTier', 0)
                                 ):
                                     # Skip certain maps until particular Skull values or Tier number
                                     continue
@@ -161,16 +161,16 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     try:
                                         deathnote_AdviceDict[f'W{world_index}'].append(Advice(
                                             label=(
-                                                f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
+                                                f"{enemy.monster_name} in {enemy.map_name} ({notateNumber('Basic', required_kills - enemy.kill_count, 0)} remaining)"
                                             ),
-                                            picture_class=enemy[3],
-                                            progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
+                                            picture_class=enemy.monster_image,
+                                            progression=min(99, floor(round(enemy.kill_count/required_kills * 100))),
                                             goal=100,
                                             unit='%',
                                             resource=skull_name
                                         ))
                                     except:
-                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy[0]}")
+                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy.map_name}")
                     # If all failed requirements were delayed, be sure to increase the Tier as this counts as a Pass
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
                         tier_combo[world_index] = tier[0]
