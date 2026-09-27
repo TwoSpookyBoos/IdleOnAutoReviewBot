@@ -21,7 +21,7 @@ from consts.consts_w1 import (
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
-    ballot_dict, obols_dict, ignorable_obols_list, islands_dict, killroy_dict, get_obol_totals
+    ballot_dict, obols_dict, ignorable_obols_list, killroy_dict, get_obol_totals
 )
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
@@ -705,7 +705,6 @@ def _parse_w1_statues(account):
 def _parse_w2(account):
     _parse_w2_ballot(account)
     _parse_w2_obols(account)
-    _parse_w2_islands(account)
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
@@ -778,21 +777,6 @@ def _parse_w2_obols(account):
     raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
     raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
     account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
-
-def _parse_w2_islands(account):
-    account.islands = {
-        'Trash': safer_get(account.raw_optlacc_dict, 161, 0),  # [161]: 362.202271805249
-        'Bottles': safer_get(account.raw_optlacc_dict, 162, 0),  # [162]: 106.90044163281846
-    }
-
-    raw_islands_list = list(safer_get(account.raw_optlacc_dict, 169, ''))  # [169]: "_dcabe" or could be int 0 for whatever reason...
-    for islandName, islandData in islands_dict.items():
-        account.islands[islandName] = {
-            'Unlocked': islandData['Code'] in raw_islands_list,
-            'Description': islandData['Description']
-        }
-
-    account.nothing_hours = safer_get(account.raw_optlacc_dict, 184, 0)
 
 def _parse_w2_killroy(account):
     _parse_w2_killroy_skull_shop(account)

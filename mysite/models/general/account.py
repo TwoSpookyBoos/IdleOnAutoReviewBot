@@ -27,6 +27,7 @@ from models.w2.alchemy_cauldrons import AlchemyCauldrons
 from models.w2.alchemy_p2w import AlchemyP2W
 from models.w2.alchemy_vials import AlchemyVials
 from models.w2.arcade import Arcade
+from models.w2.islands import Islands
 from models.w2.post_office import PostOffice
 from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
@@ -167,6 +168,7 @@ class Account:
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
         self.post_office: PostOffice = PostOffice(self.raw_data)
+        self.islands: Islands = Islands(self.raw_data)
         self.alchemy_vials: AlchemyVials = AlchemyVials(self.raw_data)
         self.alchemy_bubbles: AlchemyBubbles = AlchemyBubbles(self.raw_data)
         self.alchemy_cauldrons: AlchemyCauldrons = AlchemyCauldrons(self.raw_data)

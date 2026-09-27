@@ -6,43 +6,23 @@ from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label
-from consts.consts_w2 import islands_fractal_rewards_dict
 from consts.progression_tiers import islands_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 
 def getTrashIslandAdviceGroup() -> AdviceGroup:
+    islands = session_data.account.islands
     trash_advices = []
-    if session_data.account.islands['Trash Island']['Garbage Purchases'] < 6:
-        trash_advices.append(Advice(
-            label='Step 1: Purchase 6 total levels into Garbage Generation',
-            picture_class='garbage',
-            progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
-            goal=6
-        ))
-    if not session_data.account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked']:
-        trash_advices.append(Advice(
-            label=f"Step 2: Unlock and Purchase the new {{{{ Bribes|#bribes}}}}",
-            picture_class='bribes',
-            progression=session_data.account.islands['Trash'],
-            goal=session_data.account.islands['Trash Island']['Unlock New Bribe Set']['Cost']
-        ))
-    if session_data.account.islands['Trash Island']['Garbage Purchases'] < 9:
-        trash_advices.append(Advice(
-            label='Step 3: Purchase 9 total levels into Garbage Generation',
-            picture_class='garbage',
-            progression=session_data.account.islands['Trash Island']['Garbage Purchases'],
-            goal=9
-        ))
+    if islands.garbage_purchases < 6:
+        trash_advices.append(islands.get_garbage_generation_advice(1, 6))
+    if not islands.trash_shop['Unlock New Bribe Set'].unlocked:
+        trash_advices.append(islands.trash_shop['Unlock New Bribe Set'].get_advice(2))
+    if islands.garbage_purchases < 9:
+        trash_advices.append(islands.get_garbage_generation_advice(3, 9))
 
     for stamp_name in ['Golden Sixes Stamp', 'Stat Wallstreet Stamp', 'Skelefish Stamp', 'Amplestample Stamp']:
-        if not session_data.account.islands['Trash Island'][stamp_name]['Unlocked']:
-            trash_advices.append(Advice(
-                label=f"Step 4: Purchase the {stamp_name[:-6]} {{{{ Stamp|#stamps }}}}",
-                picture_class=stamp_name,
-                progression=session_data.account.islands['Trash'],
-                goal=session_data.account.islands['Trash Island'][stamp_name]['Cost']
-            ))
+        if not islands.trash_shop[stamp_name].unlocked:
+            trash_advices.append(islands.trash_shop[stamp_name].get_advice(4))
 
     trash_advicegroup = AdviceGroup(
         tier='',
@@ -53,14 +33,7 @@ def getTrashIslandAdviceGroup() -> AdviceGroup:
     return trash_advicegroup
 
 def getFractalAdviceGroup() -> AdviceGroup:
-    fractal_advices = []
-    for hours, details in islands_fractal_rewards_dict.items():
-        fractal_advices.append(Advice(
-            label=details['Reward'],
-            picture_class=details['Image'],
-            progression=session_data.account.nothing_hours,
-            goal=int(hours)
-        ))
+    fractal_advices = session_data.account.islands.get_fractal_rewards_advice()
 
     for advice in fractal_advices:
         advice.mark_advice_completed()
@@ -85,15 +58,11 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     for tier_number, requirements in islands_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         for island_name in requirements.get('Islands', []):
-            if not session_data.account.islands[island_name]['Unlocked']:
+            island = session_data.account.islands[island_name]
+            if not island.unlocked:
                 add_subgroup_if_available_slot(island_Advices, subgroup_label)
                 if subgroup_label in island_Advices:
-                    island_Advices[subgroup_label].append(Advice(
-                        label=f'Unlock {island_name}',
-                        picture_class=island_name,
-                        progression=0,
-                        goal=1
-                    ))
+                    island_Advices[subgroup_label].append(island.get_unlock_advice())
         if subgroup_label not in island_Advices and tier_Islands == tier_number - 1:
             tier_Islands = tier_number
 

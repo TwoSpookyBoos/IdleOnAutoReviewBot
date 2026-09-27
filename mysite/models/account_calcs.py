@@ -9,7 +9,7 @@ from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_
     get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
     get_seraph_stacks, seraph_max
 from consts.consts_w1 import statues_dict
-from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
+from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
@@ -462,18 +462,7 @@ def _calculate_w2_ballot(account):
             account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{ValueToMulti(account.ballot['Buffs'][buffIndex]['Value']):.3f}")
 
 def _calculate_w2_islands_trash(account):
-    for item in islands_trash_shop_costs:
-        account.islands['Trash Island'][item] = {'Cost': islands_trash_shop_costs[item]}
-    #Onetime purchases
-    account.islands['Trash Island']['Skelefish Stamp']['Unlocked'] = account.stamps['Skelefish Stamp'].delivered or account.stored_assets.get('StampB47').amount > 0
-    account.islands['Trash Island']['Amplestample Stamp']['Unlocked'] = account.stamps['Amplestample Stamp'].delivered or account.stored_assets.get('StampB32').amount > 0
-    account.islands['Trash Island']['Golden Sixes Stamp']['Unlocked'] = account.stamps['Golden Sixes Stamp'].delivered or account.stored_assets.get('StampA38').amount > 0
-    account.islands['Trash Island']['Stat Wallstreet Stamp']['Unlocked'] = account.stamps['Stat Wallstreet Stamp'].delivered or account.stored_assets.get('StampA39').amount > 0
-    account.islands['Trash Island']['Unlock New Bribe Set']['Unlocked'] = account.bribes['Random Garbage'].unlocked
-
-    #Repeated purchases
-    account.islands['Trash Island']['Garbage Purchases'] = safer_get(account.raw_optlacc_dict, 163, 0)
-    account.islands['Trash Island']['Bottle Purchases'] = safer_get(account.raw_optlacc_dict, 164, 0)
+    account.islands.calculate_trash_shop(account.stamps, account.stored_assets, account.bribes)
 
 def _calculate_w2_killroy(account):
     for upgradeName, upgradeDict in killroy_dict.items():
