@@ -15,20 +15,18 @@ class DancingCoralBonus:
         self.base_value = info["Base Value"]
         self.target_shrine_name = info["Target Shrine Name"]
         self.value = 0
+        self.target_shrine_level = 0
         self.image = f"dancing-coral-bonus-{self.index}"
 
-    def calculate_bonus(self):
-        from models.general.session_data import session_data
-        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name].level
-        levels_above_threshold = max(target_shrine_level - 200, 0)
+    def calculate_bonus(self, construction_buildings):
+        self.target_shrine_level = construction_buildings[self.target_shrine_name].level
+        levels_above_threshold = max(self.target_shrine_level - 200, 0)
         self.value = levels_above_threshold * self.base_value
         if "}" in self.description_template:
             self.value = ValueToMulti(self.value)
 
 
     def get_advice(self):
-        from models.general.session_data import session_data
-        target_shrine_level = session_data.account.construction_buildings[self.target_shrine_name].level
         description = self.description_template
         total_bonus = ""
         if "{" in description:
@@ -45,7 +43,7 @@ class DancingCoralBonus:
         return Advice(
             label=f"{description}",
             picture_class=self.image,
-            progression=0 if not self.unlocked else target_shrine_level,
+            progression=0 if not self.unlocked else self.target_shrine_level,
             goal=1 if not self.unlocked else ""
         )
     
@@ -60,6 +58,6 @@ class DancingCoral(dict[int, DancingCoralBonus]):
             upgrade = DancingCoralBonus(info, (index + 1) <= unlocked_bonuses, index)
             self[index] = upgrade
 
-    def calculate_bonuses(self):
+    def calculate_bonuses(self, construction_buildings):
         for bonus in self.values():
-            bonus.calculate_bonus()
+            bonus.calculate_bonus(construction_buildings)
