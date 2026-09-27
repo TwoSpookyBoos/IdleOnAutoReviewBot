@@ -11,7 +11,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_gem_shop_purchase_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.number_formatting import round_and_trim
@@ -45,7 +44,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     mga = ValueToMulti(
         (20 * session_data.account.achievements['Vial Junkee']['Complete'])
-        + (20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned'])
+        + (20 * session_data.account.gemshop.purchases['Sigil Supercharge'].owned)
         + player_peapod_value
         + willow_vial_value
         + player_sigil_stamp_value
@@ -98,13 +97,9 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
         progression=int(session_data.account.achievements['Vial Junkee']['Complete']),
         goal=1
     ))
-    gsss_advice = get_gem_shop_purchase_advice(
-        purchase_name='Sigil Supercharge',
-        link_to_section=True,
-        secondary_label=(
-            f": +{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['Owned']}/"
-            f"{20 * session_data.account.gemshop['Purchases']['Sigil Supercharge']['MaxLevel']}%"
-        )
+    sigil_supercharge = session_data.account.gemshop.purchases['Sigil Supercharge']
+    gsss_advice = sigil_supercharge.get_advice(
+        additional_text=f": +{20 * sigil_supercharge.owned}/{20 * sigil_supercharge.max_level}%"
     )
     gsss_advice.completed = not practical_maxed
     speed_Advice[mga_label].append(gsss_advice)

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from consts.caverns.cavern import get_resource_image
+from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import EmojiType
 from consts.idleon.caverns.villager.kaipu import available_schematics, schematics_data
 from models.advice.advice import Advice
@@ -76,7 +77,7 @@ class Schematic(dict[str, SchematicBonus]):
 
 class Kaipu(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Kaipu", unlock_at=2, role="The Engineer", **kwargs)
+        super().__init__(name="Kaipu", unlock_at=2, role=villager_roles["Kaipu"], **kwargs)
         self.schematics = Schematic()
 
     def parse_feature(self, raw_caverns_list: list):

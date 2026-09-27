@@ -7,8 +7,7 @@ from consts.consts_autoreview import items_codes_and_names
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
-    gem_shop_bundles_dict, achievements_list, allMeritsDict
+    key_cards, cardset_names, card_raw_data, achievements_list, allMeritsDict
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
@@ -21,7 +20,7 @@ from models.general.character import Character
 from models.general.cards import Card
 from models.w1.stamps import Stamp
 from utils.data_formatting import getCharacterDetails
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert, safer_index
+from utils.safer_data_handling import safe_loads, safer_get, safer_convert
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.text_formatting import numberToLetter, letterToNumber
@@ -218,81 +217,12 @@ def _parse_general(account):
     account.daily_world_boss_kills = safer_get(account.raw_optlacc_dict, 195, 0)
     account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
-    _parse_general_gem_shop(account)
-    _parse_general_gem_shop_optlacc(account)
-    _parse_general_gem_shop_bundles(account)
     account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_general_achievements(account)
     _parse_general_merits(account)
     _parse_general_item_filter(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
-
-def _parse_general_gem_shop(account):
-    raw_gem_items_purchased = safe_loads(account.raw_data.get('GemItemsPurchased', []))
-    for purchase_name, details in gem_shop_dict.items():
-        try:
-            purchased_amount = safer_convert(raw_gem_items_purchased[details['Index']], 0)
-        except Exception as e:
-            logger.warning(f"Gemshop Parse error with details {details}: {e}. Defaulting to 0")
-            purchased_amount = 0
-        account.gemshop['Purchases'][purchase_name] = {
-            'Owned': purchased_amount,
-            'ItemCodename': details['ItemCodename'],
-            'Description': details['Description'],
-            'Index': details['Index'],
-            'MaxLevel': details['MaxLevel'],
-            'BaseGemCost': details['BaseGemCost'],
-            'IncrementGemCost': details['IncrementGemCost'],
-            'Section': details['Section'],
-            'Subsection': details['Subsection'],
-        }
-    raw_caverns_list: list[int] = safe_loads(account.raw_data.get('Holes', []))
-    parallel_villagers = safer_index(raw_caverns_list, 23, [0] * 10)
-    for villager in account.caverns.villagers.values():
-        account.gemshop["Purchases"][f"Parallel Villagers {villager.role}"] = {
-            'Owned': parallel_villagers[villager.index],
-            'MaxLevel': 1,
-            'ItemCodename': 'GemP40',
-            'Section': 'Oddities',
-            'Subsection': 'Caverns'
-        }
-    account.minigame_plays_daily = 5 + (4 * account.gemshop['Purchases']['Daily Minigame Plays']['Owned'])
-
-def _parse_general_gem_shop_optlacc(account):
-    for purchase_name, details in gem_shop_optlacc_dict.items():
-        try:
-            purchased_amount = safer_convert(safer_get(account.raw_optlacc_dict, details['Index'], 0), 0)
-        except:
-            purchased_amount = 0
-            if max(account.raw_optlacc_dict.keys()) < details['Index']:
-                logger.info(f"Error parsing {purchase_name} because optlacc_index {details['Index']} not present in JSON. Defaulting to 0")
-            else:
-                logger.exception(f"Error parsing {purchase_name} at optlacc_index {details['Index']}: Could not convert {account.raw_optlacc_dict.get(details['Index'])} to int")
-        account.gemshop['Purchases'][purchase_name] = {
-            'Owned': purchased_amount,
-            'ItemCodename': '',
-            'Description': details['Description'],
-            'Index': details['Index'],
-            'MaxLevel': details['MaxLevel'],
-            'BaseGemCost': details['BaseGemCost'],
-            'IncrementGemCost': details['IncrementGemCost'],
-            'Section': details['Section'],
-            'Subsection': details['Subsection'],
-        }
-
-def _parse_general_gem_shop_bundles(account):
-    raw_gem_shop_bundles = safe_loads(account.raw_data.get('BundlesReceived', []))
-    account.gemshop['Bundle Data Present'] = 'BundlesReceived' in account.raw_data
-    for code_name, display_name in gem_shop_bundles_dict.items():
-        account.gemshop['Bundles'][code_name] = {
-            'Display': display_name,
-            'Owned': code_name in raw_gem_shop_bundles
-        }
-    #logger.debug(f"{account.gemshop['Bundles'] = }")
-    unknown_bundles = [v for v in account.gemshop['Bundles'] if v not in gem_shop_bundles_dict]
-    if unknown_bundles:
-        logger.warning(f"Unknown Gem Shop Bundles found: {unknown_bundles}")
 
 def _parse_general_quests(account):
     account.compiled_quests = {}
@@ -364,7 +294,7 @@ def _parse_general_inventory_slots_account_wide(account):
         account.all_characters,
         account.autoloot,
         account.event_points_shop['Secret Pouch'].owned,
-        account.gemshop['Bundles']['bon_f']['Owned'],
+        account.gemshop.bundles['bon_f'].owned,
     )
 
 def _parse_master_classes(account):
@@ -567,7 +497,7 @@ def _parse_w4_rift(account):
 def _parse_w4_breeding(account):
     # Seam: egg slots need gem shop and merits
     account.breeding.calculate_egg_slots(
-        account.gemshop['Purchases']['Royal Egg Cap']['Owned'],
+        account.gemshop.purchases['Royal Egg Cap'].owned,
         account.merits[3][2]['Level'],
     )
 

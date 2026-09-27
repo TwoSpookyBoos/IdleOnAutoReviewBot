@@ -188,9 +188,9 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     mge_label = f"Tachyon Multi Group E: {tesseract.tachyon_calc['mge']:.2f}x"
 
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
-    missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
-    has_arcanist_pack = session_data.account.gemshop['Bundles']['bun_x']['Owned']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop.bundle_data_present else ''
+    missing_bundle_data = not session_data.account.gemshop.bundle_data_present
+    has_arcanist_pack = session_data.account.gemshop.bundles['bun_x'].owned
     ac_pack_value = tesseract.tachyon_calc['mge']
     currency_advices[mge_label] = [Advice(
         label=f"Gemshop - Arcane Cultist Pack:"

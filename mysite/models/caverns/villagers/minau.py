@@ -6,6 +6,7 @@ from consts.caverns.villager.minau import (
     measurement_scales_name,
     measurements_data,
 )
+from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.general.common import percent_break_point
 from models.advice.advice import Advice
@@ -168,7 +169,7 @@ class Measurements(list[MeasurementBonus]):
 
 class Minau(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Minau", unlock_at=7, role="The Measurer", **kwargs)
+        super().__init__(name="Minau", unlock_at=7, role=villager_roles["Minau"], **kwargs)
         self.measurements = Measurements()
 
     def parse_feature(self, raw_caverns_list: list):

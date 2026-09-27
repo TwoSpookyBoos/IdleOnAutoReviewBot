@@ -10,6 +10,7 @@ from consts.consts_general import (
 )
 from models.advice.advice import Advice
 from models.general.event_shop import EventShop
+from models.general.gem_shop import GemShop
 from models.general.models_consumables import StorageChest
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads
@@ -98,7 +99,7 @@ class Storage(dict[str, StorageSource]):
         event_points_shop: EventShop,
         vault,
         construction_buildings: dict,
-        gemshop: dict,
+        gemshop: GemShop,
     ):
         for name, slots in storage_event_shop_slots.items():
             bonus = event_points_shop[name]
@@ -134,17 +135,17 @@ class Storage(dict[str, StorageSource]):
                 goal=building["MaxLevel"],
             )
         for name, slots in storage_gem_shop_slots.items():
-            purchase = gemshop["Purchases"][name]
-            owned_slots = slots * purchase["Owned"]
-            max_slots = slots * purchase["MaxLevel"]
+            purchase = gemshop.purchases[name]
+            owned_slots = slots * purchase.owned
+            max_slots = slots * purchase.max_level
             self[name] = StorageSource(
                 source="Gem Shop",
                 owned_slots=owned_slots,
                 max_slots=max_slots,
                 label=f"{{{{ Gem Shop|#gem-shop }}}} - {name} "
-                f"({purchase['Subsection']}): {owned_slots}/{max_slots} total slots",
+                f"({purchase.subsection}): {owned_slots}/{max_slots} total slots",
                 image=name,
-                progression=purchase["Owned"],
-                goal=purchase["MaxLevel"],
+                progression=purchase.owned,
+                goal=purchase.max_level,
                 resource="gem",
             )

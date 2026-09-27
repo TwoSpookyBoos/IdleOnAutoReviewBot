@@ -8,7 +8,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.general import get_gem_shop_purchase_advice
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
@@ -263,7 +262,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
     # Multi Group F -- Davey Jones Bonus + Legend Talents
     # "DaveyJonesBonus" in source. Last updated in v2.49 Dec 24 2025
     multi_group_f = ValueToMulti(
-        50 * session_data.account.gemshop['Purchases']['Davey Jones Training']['Owned']
+        50 * session_data.account.gemshop.purchases['Davey Jones Training'].owned
         + session_data.account.legend_talents['Davey Jones Returns'].value
     )
     multi_group_f = round_and_trim(multi_group_f)
@@ -338,7 +337,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             )
         ],
         f'Multi Group F: {multi_group_f}x': [
-            get_gem_shop_purchase_advice(purchase_name='Davey Jones Training', link_to_section=True),
+            session_data.account.gemshop.purchases['Davey Jones Training'].get_advice(),
             session_data.account.legend_talents['Davey Jones Returns'].get_advice()
         ]
     }

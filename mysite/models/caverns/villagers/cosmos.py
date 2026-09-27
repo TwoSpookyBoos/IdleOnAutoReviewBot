@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_w5 import divinity_divinities_dict
 from consts.idleon.caverns.villager.cosmos import majiks
@@ -69,7 +70,7 @@ class Majiks:
 
 class Cosmos(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Cosmos", unlock_at=5, role="The Conjuror", **kwargs)
+        super().__init__(name="Cosmos", unlock_at=5, role=villager_roles["Cosmos"], **kwargs)
 
     def parse_feature(self, raw_caverns_list: list):
         hole_majiks = raw_caverns_list[4]
@@ -127,21 +128,21 @@ class Cosmos(Villager):
     def stat_advices(self) -> list[Advice]:
         from models.general.session_data import session_data
 
-        gscp = session_data.account.gemshop["Purchases"]["Conjuror Pts"]
+        gscp = session_data.account.gemshop.purchases["Conjuror Pts"]
         # Practical Max Level
-        advice_list = self.base_stat_advice(self.majiks.max_point - gscp["Owned"])
+        advice_list = self.base_stat_advice(self.majiks.max_point - gscp.owned)
         advice_list.append(
             Advice(
                 label=(
-                    f"Up to {gscp['MaxLevel']} Conjuror Pts can be purchased"
+                    f"Up to {gscp.max_level} Conjuror Pts can be purchased"
                     f" from the {{{{Gem Shop|#gem-shop}}}}"
                 ),
                 picture_class="conjuror-pts",
-                progression=gscp["Owned"],
-                goal=gscp["MaxLevel"],
+                progression=gscp.owned,
+                goal=gscp.max_level,
             )
         )
-        earned_conjuror_points = gscp["Owned"] + self.level
+        earned_conjuror_points = gscp.owned + self.level
         if earned_conjuror_points > self.majiks.spend_point < self.majiks.max_point:
             unspent = earned_conjuror_points - self.majiks.spend_point
             advice_list.append(

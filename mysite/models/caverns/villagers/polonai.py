@@ -1,11 +1,12 @@
 from consts.caverns.cavern import cavern_names, max_cavern
+from consts.caverns.villager.roles import villager_roles
 from models.advice.advice import Advice
 from models.caverns.villagers.villager import Villager
 
 
 class Polonai(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Polonai", unlock_at=0, role="The Explorer", **kwargs)
+        super().__init__(name="Polonai", unlock_at=0, role=villager_roles["Polonai"], **kwargs)
 
     def parse_feature(self, raw_caverns_list: list):
         pass

@@ -12,7 +12,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
@@ -98,11 +97,9 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Account Wide'].append(session_data.account.guild_bonuses['Rucksack'].get_advice())
     capacity_Advices['Account Wide'].append(session_data.account.shrines['Pantheon Shrine'].get_advice())
     capacity_Advices['Account Wide'].append(session_data.account.shrines.get_chizoar_card_advice())
-    gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']
-    capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
-        purchase_name='Carry Capacity',
-        link_to_section=True,
-        secondary_label=f": +{25 * gemshop_carry_capacity['Owned']}/{25 * gemshop_carry_capacity['MaxLevel']}%"
+    gemshop_carry_capacity = session_data.account.gemshop.purchases['Carry Capacity']
+    capacity_Advices['Account Wide'].append(gemshop_carry_capacity.get_advice(
+        additional_text=f": +{25 * gemshop_carry_capacity.owned}/{25 * gemshop_carry_capacity.max_level}%"
     ))
     capacity_Advices['Account Wide'].append(session_data.account.star_signs.get_seraph_advice())
 
@@ -251,7 +248,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     stamps = session_data.account.stamps
     compass = session_data.account.compass
-    gemshop = session_data.account.gemshop['Purchases']
+    gemshop = session_data.account.gemshop.purchases
     atom_collider = session_data.account.atom_collider
 
     exalted_advice[boni].append(Advice(
@@ -317,7 +314,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         session_data.account.jelly_operator.obstructions['Fancy Facet'].get_advice()
     )
 
-    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness.owned)
+    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps'].owned + int(extra_exaltedness.owned)
 
     exalted_advice[tot].append(Advice(
         label=f"Total Exalted Stamps spent: {compass.total_exalted}/{tot_available}",
@@ -333,10 +330,10 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     ))
     gemshop_exalted_stamps = gemshop['Exalted Stamps']
     exalted_advice[tot].append(Advice(
-        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps['Subsection']}): {gemshop_exalted_stamps['Owned']}",
+        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps.subsection}): {gemshop_exalted_stamps.owned}",
         picture_class='exalted-stamps',
-        progression=gemshop_exalted_stamps['Owned'],
-        goal=gemshop_exalted_stamps['MaxLevel']
+        progression=gemshop_exalted_stamps.owned,
+        goal=gemshop_exalted_stamps.max_level
     ))
 
     exalted_advice[rec] = [

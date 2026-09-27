@@ -12,6 +12,7 @@ from models.general.dungeons import Dungeons
 from models.general.event_shop import EventShop
 from models.general.family_bonuses import FamilyBonuses
 from models.general.friend_bonuses import FriendBonuses
+from models.general.gem_shop import GemShop
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
 from models.general.inventory import Inventory
@@ -118,11 +119,7 @@ class Account:
         #General
         self.highest_world_reached = 1
         self.inventory: Inventory = Inventory()
-        self.gemshop = {
-            'Purchases': {},
-            'Bundle Data Present': None,
-            'Bundles': {}
-        }
+        self.gemshop: GemShop = GemShop(self.raw_data)
         self.storage: Storage = Storage(self.raw_data)
         self.greenstacks: GreenStacks = GreenStacks(self.raw_data)
         self.colo_scores: ColoScores = ColoScores(self.raw_data)

@@ -9,6 +9,7 @@ from consts.idleon.w6.emperor import (
 from consts.w6.emperor import emperor_bonus_info
 
 from models.advice.advice import Advice
+from models.general.gem_shop import GemShop
 from models.w6.sneaking import Emporium
 
 from utils.number_formatting import round_and_trim
@@ -90,12 +91,12 @@ class Emperor(dict[str, EmperorBonus]):
             bonus = EmperorBonus(bonus_index, wins[bonus_index])
             self[bonus.name] = bonus
 
-    def calculate_max_attempt(self, gemshop, emporium: Emporium):
+    def calculate_max_attempt(self, gemshop: GemShop, emporium: Emporium):
         # "MaxEmperorAttemptStack" in source. Last updated in v2.48
         self.max_attempts = (
             5  # Base
             + emporium["Emperor Season Pass"].value
-            + (6 * gemshop["Purchases"]["Lifetime Tickets"]["Owned"])
+            + (6 * gemshop.purchases["Lifetime Tickets"].owned)
         )
 
     def calculate_bonus_multi(self, arcade, tesseract):

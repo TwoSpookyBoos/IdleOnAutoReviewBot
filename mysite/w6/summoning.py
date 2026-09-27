@@ -8,7 +8,6 @@ from consts.w6.summoning import (
 from models.advice.advice import Advice
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_section import AdviceSection
-from models.advice.generators.general import get_gem_shop_purchase_advice
 from models.general.session_data import session_data
 
 from utils.logging import get_logger
@@ -109,10 +108,8 @@ def get_bonuses_multi() -> AdviceGroup:
     )
     # Multi Group B: Gem Shop - King of all Winners
     multi_advices[mgb].append(
-        get_gem_shop_purchase_advice(
-            purchase_name="King Of All Winners",
-            link_to_section=True,
-            secondary_label=f": {round_and_trim(player_mgb)}/{round_and_trim(max_mgb)}x",
+        account.gemshop.purchases["King Of All Winners"].get_advice(
+            additional_text=f": {round_and_trim(player_mgb)}/{round_and_trim(max_mgb)}x",
         )
     )
     # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
@@ -152,9 +149,9 @@ def get_bonuses_multi() -> AdviceGroup:
         progression=int(account.armor_sets['GODSHARD SET'].owned),
         goal=1
     ))
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop['Bundle Data Present'] else ''
-    missing_bundle_data = not account.gemshop['Bundle Data Present']
-    has_daydreamer_pack = account.gemshop['Bundles']['ban_i']['Owned']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop.bundle_data_present else ''
+    missing_bundle_data = not account.gemshop.bundle_data_present
+    has_daydreamer_pack = account.gemshop.bundles['ban_i'].owned
     multi_advices[mgc].append(Advice(
         label=f"Gemshop - Daydreamer Pack:"
               f"<br>+{50 * int(has_daydreamer_pack)}/50% Summoning Winner Bonuses"

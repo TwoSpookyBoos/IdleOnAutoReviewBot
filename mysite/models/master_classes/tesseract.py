@@ -166,7 +166,7 @@ class Tesseract:
             ),
             'mgc': ValueToMulti(sneaking.pristine_charms['Mystery Fizz'].value),
             'mgd': ValueToMulti(backup_energy_bonus_value),
-            'mge': 1 + 0.2 * gemshop['Bundles']['bun_x']['Owned'],
+            'mge': 1 + 0.2 * gemshop.bundles['bun_x'].owned,
             'mgf': ValueToMulti(alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"].value),
             'mgg': 4 * has_balloonfish,
         }

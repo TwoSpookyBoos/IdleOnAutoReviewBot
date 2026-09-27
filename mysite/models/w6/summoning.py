@@ -351,10 +351,10 @@ class Summoning:
         )
         # Multi Group B: Gem Shop - King of all Winners
         max_mgb = ValueToMulti(
-            10 * account.gemshop["Purchases"]["King Of All Winners"]["MaxLevel"]
+            10 * account.gemshop.purchases["King Of All Winners"].max_level
         )
         player_mgb = ValueToMulti(
-            10 * account.gemshop["Purchases"]["King Of All Winners"]["Owned"]
+            10 * account.gemshop.purchases["King Of All Winners"].owned
         )
         # Multi Group C: Summoning Winner Bonuses
         max_mgc_rest = ValueToMulti(
@@ -383,7 +383,7 @@ class Summoning:
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
-            + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
+            + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
             # Not for library
             + self.bonuses["Winner Bonuses"].value
             + account.emperor["Summoning Winner Bonuses"].value
@@ -394,7 +394,7 @@ class Summoning:
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
-            + 50 * account.gemshop["Bundles"]["ban_i"]["Owned"]  # Gem Shop - Daydreamer Pack
+            + 50 * account.gemshop.bundles["ban_i"].owned  # Gem Shop - Daydreamer Pack
         )
         self.multi = {}
         # Library

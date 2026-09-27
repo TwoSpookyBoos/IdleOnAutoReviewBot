@@ -69,7 +69,7 @@ def get_gallery_item_advice() -> list[Advice]:
 
 def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     companion_data_missing = not session_data.account.companions.data_present
-    bundle_data_missing = not session_data.account.gemshop['Bundle Data Present']
+    bundle_data_missing = not session_data.account.gemshop.bundle_data_present
     missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if bundle_data_missing else ''
     # Card groups share one cap in source. Last updated in v2.531.0
     passive_drop_rate_card_caps = [
@@ -157,7 +157,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     general_bonus += session_data.account.vault.upgrades['Drops for Days'].total_value
 
     # Gem Shop - Deathbringer Pack
-    has_db_pack = session_data.account.gemshop['Bundles']['bun_v']['Owned']
+    has_db_pack = session_data.account.gemshop.bundles['bun_v'].owned
     db_pack_value = 200 if has_db_pack else 0
     drop_rate_aw_advice[general].append(Advice(
         label=f"Gemshop- Deathbringer Pack:"
@@ -607,7 +607,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
 
     # Gem Shop - Island Explorer Pack
-    has_island_explorer_pack = session_data.account.gemshop['Bundles']['bun_p']['Owned']
+    has_island_explorer_pack = session_data.account.gemshop.bundles['bun_p'].owned
     island_explorer_multi = 1.2 if has_island_explorer_pack else 1
     drop_rate_aw_advice[special].append(Advice(
         label=f"Gemshop- Island Explorer Pack:"

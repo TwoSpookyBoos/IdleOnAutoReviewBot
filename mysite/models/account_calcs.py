@@ -410,7 +410,7 @@ def _calculate_w4_lab(account):
     account.lab_mainframe.calculate(
         account.safe_characters,
         account.divinity.account_wide_arctis,
-        account.gemshop['Purchases']['Souped Up Tube']['Owned'],
+        account.gemshop.purchases['Souped Up Tube'].owned,
         account.sneaking.emporium,
         account.meals,
         next(card for card in account.cards if card.codename == 'Crystal3'),
@@ -514,7 +514,7 @@ def _calculate_w6_farming_crop_depot(account):
 def _calculate_w6_farming_markets(account):
     # Dependency: Gemshop, Merit
     bought_plot = (
-        account.gemshop['Purchases']['Plot Of Land']['Owned']
+        account.gemshop.purchases['Plot Of Land'].owned
         + min(3, account.merits[5][2]['Level'])
     )
     account.farming.calculate_market_bonus(bought_plot)

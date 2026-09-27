@@ -5,7 +5,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safer_get
 
@@ -45,10 +44,9 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     )
 
     # Mult C
-    more_coral = 'More Coral'
-    more_coral_data = session_data.account.gemshop['Purchases'][more_coral]
-    more_coral_multi = 1 + 0.2 * more_coral_data['Owned']
-    more_coral_advice = get_gem_shop_purchase_advice(purchase_name=more_coral, secondary_label=f": x{more_coral_multi}/x3.0 Daily Corals")
+    more_coral = session_data.account.gemshop.purchases['More Coral']
+    more_coral_multi = 1 + 0.2 * more_coral.owned
+    more_coral_advice = more_coral.get_advice(additional_text=f": x{more_coral_multi}/x3.0 Daily Corals")
 
 
     # Mult D

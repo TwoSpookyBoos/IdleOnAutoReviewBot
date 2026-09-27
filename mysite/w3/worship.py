@@ -52,9 +52,8 @@ def setPrayersProgressionTierAdviceGroup():
         if player_prayers[prayer_name].level < prayer_level:
             if (
                 prayer_name == 'Antifun Spirit'
-                and session_data.account.minigame_plays_daily < next_antifun_cost
+                and session_data.account.gemshop.minigame_plays_daily < next_antifun_cost
             ):
-                #logger.debug(f"Skipping Antifun Spirit because next level costs {next_antifun_cost} while player has {session_data.account.minigame_plays_daily} daily minigame plays")
                 continue
             else:
                 prayers_Advices['Conditional'].append(player_prayers[prayer_name].get_advice(prayer_level))
