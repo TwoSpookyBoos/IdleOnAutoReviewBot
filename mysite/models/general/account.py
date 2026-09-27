@@ -20,6 +20,7 @@ from models.general.gem_shop import GemShop
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
 from models.general.inventory import Inventory
+from models.general.item_filter import ItemFilter
 from models.general.merits import Merits
 from models.general.npc_tokens import NpcTokens
 from models.general.quests import Quests
@@ -66,6 +67,7 @@ from models.w4.tome import Tome
 from models.w5.divinity import Divinity
 from models.w5.gaming import Gaming
 from models.w5.sailing import Sailing
+from models.w5.slab import Slab
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
@@ -157,6 +159,7 @@ class Account:
         self.guild_bonuses: GuildBonuses = GuildBonuses(self.raw_data)
         self.family_bonuses: FamilyBonuses = FamilyBonuses()
         self.class_kill_talents: ClassKillTalents = ClassKillTalents(self.raw_data)
+        self.item_filter: ItemFilter = ItemFilter(self.raw_data)
         self.characters: Characters = Characters(self.raw_data, run_type)
         self.quests: Quests = Quests(self.raw_data, len(self.characters))
         self.stored_assets: Assets = Assets.from_storage(
@@ -227,6 +230,7 @@ class Account:
         self.gaming: Gaming = Gaming(self.raw_data)
         self.divinity: Divinity = Divinity(self.raw_data)
         self.sailing: Sailing = Sailing(self.raw_data)
+        self.slab: Slab = Slab(self.raw_data)
 
         # The Caverns Below
         self.caverns: Caverns = Caverns(self.raw_data)
@@ -263,6 +267,28 @@ class Account:
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
         self.jelly_operator = JellyOperator(self.raw_data)
+
+        # Cross-system setup, before calculations
+        self.family_bonuses.calculate_levels(self.characters.safe)
+        self.inventory.calculate_owned(
+            self.characters,
+            self.autoloot,
+            self.event_points_shop['Secret Pouch'].owned,
+            self.gemshop.bundles['bon_f'].owned,
+        )
+        self.death_note.calculate_apocalypse_characters(
+            self.characters.barbs, self.characters.bbs
+        )
+        self.death_note.calculate_kills(self.characters)
+        self.death_note.calculate_rift_meowed(self.characters)
+        self.equinox.calculate_unlocked(
+            self.achievements, self.research.grid['Equinox Nightmares'].level
+        )
+        self.rift.calculate_unlocked(self.quests.by_character)
+        self.breeding.calculate_egg_slots(
+            self.gemshop.purchases['Royal Egg Cap'].owned, self.merits[3][2].level
+        )
+        self.divinity.link_characters(self.characters.safe)
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]

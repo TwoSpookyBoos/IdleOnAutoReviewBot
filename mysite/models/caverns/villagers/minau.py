@@ -224,7 +224,7 @@ class Minau(Villager):
             # Highest Dmg
             account.highest_dmg,
             # Slab Items
-            len(account.registered_slab),
+            len(account.slab),
             # Studies Done
             account.caverns.villagers["Bolaia"].studies.total,
             # Golem Kills

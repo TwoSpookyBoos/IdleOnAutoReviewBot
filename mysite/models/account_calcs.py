@@ -1,15 +1,9 @@
 from math import floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue
-from consts.consts_general import greenstack_amount
 from consts.idleon.lava_func import lava_func
-from consts.consts_w2 import fishing_toolkit_dict
-from consts.consts_w5 import filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
-from models.advice.advice import Advice
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads
-from utils.text_formatting import getItemDisplayName, notateNumber
 
 logger = get_logger(__name__)
 
@@ -107,70 +101,15 @@ def _calculate_wave_2(account):
     _calculate_w7(account)
 
 def _calculate_general(account):
-    _calculate_general_alerts(account)
-    _calculate_general_item_filter(account)
+    account.add_alert_list('General', account.item_filter.get_alerts(
+        account.slab,
+        account.stored_assets,
+        account.all_assets,
+        account.autoloot,
+        account.equinox.dreams[17].completed,
+    ))
     account.world_progress.calculate(account.achievements, account.death_note)
     _calculate_general_storage_slots(account)
-
-def _calculate_general_alerts(account):
-    if account.stored_assets.get("Trophy2").amount >= 75 and account.equinox.dreams[17].completed:
-        account.alerts_Advices['General'].append(Advice(
-            label=f"You have {account.stored_assets.get('Trophy2').amount}/75 Lucky Lads to craft a Luckier Lad!",
-            picture_class="luckier-lad"
-        ))
-
-def _calculate_general_item_filter(account):
-    raw_fishing_toolkit_lures = safe_loads(account.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[0]
-    raw_fishing_toolkit_lines = safe_loads(account.raw_data.get("FamValFishingToolkitOwned", [{'0': 0, 'length': 1}]))[1]
-    for filtered_item_codename in account.item_filter:
-        filtered_displayname = getItemDisplayName(filtered_item_codename)
-        if (
-            filtered_item_codename == 'Trophy2'  #Lucky Lad
-            and 'Trophy20' not in account.registered_slab  #Luckier Lad
-            and account.stored_assets.get('Trophy2').amount < 75
-        ):
-            account.alerts_Advices['General'].append(Advice(
-                label='Lucky Lad filtered before 75 for Luckier Lad',
-                picture_class='lucky-lad',
-                resource='luckier-lad'
-            ))
-        elif filtered_item_codename in filter_recipes:
-            for craftable_item_codename in filter_recipes[filtered_item_codename]:
-                if craftable_item_codename not in account.registered_slab:
-                    account.alerts_Advices['General'].append(Advice(
-                        label=f"{filtered_displayname} filtered, {getItemDisplayName(craftable_item_codename)} not in Slab",
-                        picture_class=filtered_displayname,
-                        resource=craftable_item_codename
-                    ))
-        elif filtered_item_codename in filter_never and account.autoloot:
-            account.alerts_Advices['General'].append(Advice(
-                label=f'Why did you filter {filtered_displayname}?',
-                picture_class=filtered_displayname,
-            ))
-        elif filtered_item_codename in filter_only_after_gstack and account.autoloot and account.all_assets.get(filtered_item_codename).amount < greenstack_amount:
-            account.alerts_Advices['General'].append(Advice(
-                label=f'Unfilter {filtered_displayname} until Greenstacked',
-                picture_class=filtered_displayname,
-            ))
-        elif filtered_item_codename not in account.registered_slab:
-            account.alerts_Advices['General'].append(Advice(
-                label=f"{filtered_displayname} filtered, not in Slab",
-                picture_class=filtered_displayname,
-            ))
-        elif filtered_item_codename in fishing_toolkit_dict['Lures']:
-            # index + 1 needed to account for the default lure which is not an Item registered in Slab
-            if fishing_toolkit_dict['Lures'].index(filtered_item_codename) + 1 not in raw_fishing_toolkit_lures.values():
-                account.alerts_Advices['General'].append(Advice(
-                    label=f"{filtered_displayname} filtered, not in Fishing Toolkit",
-                    picture_class=filtered_displayname,
-                ))
-        elif filtered_item_codename in fishing_toolkit_dict['Lines']:
-            # index + 1 needed to account for the default line which is not an Item registered in Slab
-            if fishing_toolkit_dict['Lines'].index(filtered_item_codename) + 1 not in raw_fishing_toolkit_lines.values():
-                account.alerts_Advices['General'].append(Advice(
-                    label=f"{filtered_displayname} filtered, not in Fishing Toolkit",
-                    picture_class=filtered_displayname,
-                ))
 
 def _calculate_general_storage_slots(account):
     account.storage.calculate_other_sources(

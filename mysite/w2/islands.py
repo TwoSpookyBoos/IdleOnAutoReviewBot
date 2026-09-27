@@ -126,12 +126,12 @@ def getRandomEventItemsAdviceGroup() -> AdviceGroup:
     total_possible = len(random_event_items)
 
     for display, details in random_event_items.items():
-        if details['Code Name'] in session_data.account.registered_slab:
+        if details['Code Name'] in session_data.account.slab:
             total_found += 1
         items_advice.append(Advice(
             label=display,
             picture_class=details['Image'],
-            progression=int(details['Code Name'] in session_data.account.registered_slab),
+            progression=int(details['Code Name'] in session_data.account.slab),
             goal=1,
             resource=details['Resource'],
             informational=True

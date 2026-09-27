@@ -38,7 +38,7 @@ def getSlabProgressionTierAdviceGroups():
     max_tier = true_max - optional_tiers
     tier_Slab = 0
     account = session_data.account
-    registered_slab = account.registered_slab
+    registered_slab = account.slab
 
     # Assess Tiers
     for item_codename in SlabItemSort:
