@@ -256,7 +256,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_2_bonus += session_data.account.arcade[27].value
 
     # Obols - Family - Drop Rate
-    obols_bonus_totals = session_data.account.obols['BonusTotals']
+    obols_bonus_totals = session_data.account.obols.family_bonus_totals
     obols_family_drop_rate = obols_bonus_totals.get('Total%_DROP_RATE', 0)
     obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
     obols_family_note = '<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR'

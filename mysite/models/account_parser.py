@@ -14,9 +14,7 @@ from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import starsigns_dict, event_points_shop_dict
 from consts.w1.stamps import stamp_types
-from consts.consts_w2 import (
-    ballot_dict, obols_dict, ignorable_obols_list, killroy_dict, get_obol_totals
-)
+from consts.consts_w2 import ballot_dict, killroy_dict
 from consts.consts_w3 import (
     refinery_dict, buildings_dict, buildings_shrines, atoms_list,
     collider_storage_limit_list, prayers_dict, equipment_sets_dict
@@ -551,7 +549,6 @@ def _parse_w1_stamps(account):
 
 def _parse_w2(account):
     _parse_w2_ballot(account)
-    _parse_w2_obols(account)
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
@@ -572,58 +569,6 @@ def _parse_w2_ballot(account):
             'Value': buffValuesDict['BaseValue'],
             'Image': buffValuesDict['Image'],
         }
-
-def _parse_w2_obols(account):
-    # Please send help, I hate Obols so much
-    account.obols = {
-        'Unknown': {
-            'Unknown': {'Total': 0},
-            'Circle': {'Total': 0},
-            'Square': {'Total': 0},
-            'Hexagon': {'Total': 0},
-            'Sparkle': {'Total': 0},
-        },
-        'Drop Rate': {
-            'Circle': {'Total': 0},
-            'Square': {'Total': 0},
-            'Hexagon': {'Total': 0},
-            'Sparkle': {'Total': 0},
-        },
-        'Choppin': {
-            'Circle': {'Total': 0},
-            'Square': {'Total': 0},
-            'Hexagon': {'Total': 0},
-            'Sparkle': {'Total': 0},
-        },
-        'Card Drop Chance': {
-            'Circle': {'Total': 0},
-            'Square': {'Total': 0},
-            'Hexagon': {'Total': 0},
-            'Sparkle': {'Total': 0},
-        },
-    }
-    raw_owned_obols = []
-    for jsonkey in [
-        'ObolEqO1', 'ObolEqO2', 'ObolEqO0_0', 'ObolEqO0_1', 'ObolEqO0_2', 'ObolEqO0_3', 'ObolEqO0_4',
-        'ObolEqO0_5', 'ObolEqO0_6', 'ObolEqO0_7', 'ObolEqO0_8', 'ObolEqO0_9'
-    ]:
-        raw_owned_obols += safe_loads(account.raw_data.get(jsonkey, []))
-    raw_obol_inventory_list = safe_loads(account.raw_data.get("ObolInvOr"))
-    for subdict in raw_obol_inventory_list:
-        raw_owned_obols += subdict.values()
-    for obol in raw_owned_obols:
-        if obol not in ignorable_obols_list:
-            obolBonusType = obols_dict.get(obol, {}).get('Bonus', 'Unknown')
-            obolShape = obols_dict.get(obol, {}).get('Shape', 'Unknown')
-            account.obols[obolBonusType][obolShape]['Total'] += 1
-            if obol not in account.obols[obolBonusType][obolShape]:
-                account.obols[obolBonusType][obolShape][obol] = {'Count': 1}
-            else:
-                account.obols[obolBonusType][obolShape][obol]['Count'] += 1
-    
-    raw_family_obols_list = safe_loads(account.raw_data.get('ObolEqO1'))
-    raw_family_obols_upgrades = safe_loads(account.raw_data.get('ObolEqMAPz1'))
-    account.obols['BonusTotals'] = get_obol_totals(raw_family_obols_list, raw_family_obols_upgrades)
 
 def _parse_w2_killroy(account):
     _parse_w2_killroy_skull_shop(account)

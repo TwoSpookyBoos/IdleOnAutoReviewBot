@@ -127,40 +127,40 @@ def getShortTermAdviceList() -> list[Advice]:
         ))
 
     #OBOLS
-    if 10 > session_data.account.obols['Drop Rate']['Square']['Total']:
+    if 10 > session_data.account.obols.count('Drop Rate', 'Square'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Square slots with DK at Sandy Pots"
                   f"<br>Note: Hyper Six Obols are included in your progress",
             picture_class='golden-obol-of-triple-sixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Square']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Square'),
             goal=10  # 4 family, 6 personal
         ))
-    if 6 > session_data.account.obols['Drop Rate']['Hexagon']['Total']:
+    if 6 > session_data.account.obols.count('Drop Rate', 'Hexagon'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Hexagon slots with DK at Sandy Pots"
                   f"<br>Note: W5 Miniboss Obols are included in your progress",
             picture_class='platinum-obol-of-yahtzee-sixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Hexagon']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Hexagon'),
             goal=6  # 4 family, 2 personal
         ))
-    if 5 > session_data.account.obols['Drop Rate']['Sparkle']['Total']:
+    if 5 > session_data.account.obols.count('Drop Rate', 'Sparkle'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Sparkle slots with DK at Sandy Pots",
             picture_class='dementia-obol-of-infinisixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Sparkle']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Sparkle'),
             goal=5  # 4 family, 1 personal
         ))
-    if 24 > session_data.account.obols['Drop Rate']['Circle']['Total']:
+    if 24 > session_data.account.obols.count('Drop Rate', 'Circle'):
         # If Chocco Chip is owned, POPs last, otherwise POPs first
         obols.insert(0 if session_data.account.lab_chips['Chocolatey Chip'].owned else len(obols), Advice(
             label=f"Farm POP Obols for Circle slots with ES at Gigafrogs"
                   f"<br>Note: Hyper Six Obols are included in your progress",
             picture_class='silver-obol-of-pop-pop',
             resource='gigafrog',
-            progression=session_data.account.obols['Drop Rate']['Circle']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Circle'),
             goal=24  #12 family, 12 personal
         ))
     shortterm += obols
