@@ -500,7 +500,11 @@ def _calculate_w7(account):
     account.advice_fish.calculate_bonuses()
     account.meritocracy.calculate_bonuses()
     account.zenith_market.calculate_bonuses()
-    account.research.calculate_bonuses(account)
+    account.research.calculate_bonuses(
+        account.companions["Pirate Deckhand"].bonus,
+        account.equinox.dreams,
+        account.sushi_station.get_milestone_bonus_value("Research Upgrade Bonus Multi"),
+    )
     account.glimbo.calculate_drop_rate_multi(account.research)
     account.sushi_station.calculate_bonuses()
     account.dancing_coral.calculate_bonuses()

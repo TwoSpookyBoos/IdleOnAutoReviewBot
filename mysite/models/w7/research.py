@@ -250,17 +250,17 @@ class Research:
         self.observations = Observations(raw_research_info)
         self.posty_notes = PostyNotes(research_level)
 
-    def calculate_bonuses(self, account):
+    def calculate_bonuses(
+        self,
+        pirate_deckhand_bonus: float,
+        dreams: dict,
+        sushi_research_multi: float,
+    ):
         self.grid.calculate_all_multi(
             # "Companions"(55) in source
-            account.companions["Pirate Deckhand"].bonus,
-            sum(
-                account.equinox.dreams[index + 1].completed
-                for index in self.all_multi_cloud_indexes
-            ),
+            pirate_deckhand_bonus,
+            sum(dreams[index + 1].completed for index in self.all_multi_cloud_indexes),
             # "RoG_BonusQTY"(53) in source
-            account.sushi_station.get_milestone_bonus_value(
-                "Research Upgrade Bonus Multi"
-            ),
+            sushi_research_multi,
         )
         self.grid.calculate_bonuses()
