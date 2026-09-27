@@ -1,7 +1,6 @@
 from functools import cached_property
 
 from consts.consts_autoreview import lowest_accepted_version
-from consts.consts_w4 import max_meal_count, max_meal_plate_level
 from consts.w1.stamps import stamp_types
 from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
@@ -46,6 +45,7 @@ from models.w3.shrines import Shrines
 from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
+from models.w4.cooking import Cooking, Meals
 from models.w4.lab_chips import LabChips
 from models.w4.rift import Rift
 from models.w4.tome import Tome
@@ -194,21 +194,8 @@ class Account:
         self.rift: Rift = Rift(self.raw_data)
         self.tome: Tome = Tome(self.raw_data)
         self.breeding: Breeding = Breeding(self.raw_data)
-        self.cooking = {
-            'MealsUnlocked': 0,
-            'MealsUnlockedByWorld': {i:0 for i in range(0,9)},
-            'UnlockedMealsUnder11': 0,
-            'UnlockedMealsUnder30': 0,
-            'MealsUnder11': 0,
-            'MealsUnder30': 0,
-            'PlayerMaxPlateLvl': 30,  # 30 is the default starting point
-            'PlayerTotalMealLevels': 0,
-            'MaxTotalMealLevels': max_meal_count * max_meal_plate_level,
-            'PlayerMissingPlateUpgrades': [],
-            'Tables': [],
-            'TablesOwned': 0
-        }
-        self.meals = {}
+        self.meals: Meals = Meals(self.raw_data, self.version)
+        self.cooking: Cooking = Cooking(self.raw_data, self.meals)
 
         # W5
         self.gaming: Gaming = Gaming(self.raw_data)

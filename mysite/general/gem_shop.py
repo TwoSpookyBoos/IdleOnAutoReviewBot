@@ -11,7 +11,7 @@ from consts.idleon.consts_idleon import current_world, max_characters
 from consts.w6.farming import max_farming_crops
 from consts.caverns.cavern import max_cavern
 from consts.caverns.villager.minau import max_measurements
-from consts.consts_w4 import cooking_close_enough, breeding_total_pets
+from consts.consts_w4 import breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
 
 
@@ -71,7 +71,7 @@ def try_exclude_EggCapacity(exclusionLists):
             sublist.append('Royal Egg Cap')
 
 def try_exclude_Kitchens(exclusionLists):
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         for sublist in exclusionLists:
             sublist.append('Richelin Kitchen')
 

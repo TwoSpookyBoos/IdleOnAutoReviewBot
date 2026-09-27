@@ -3,7 +3,6 @@
 from consts.consts_autoreview import build_subgroup_label, break_you_best
 from consts.consts_w2 import min_NBLB, max_NBLB, at_risk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
     bubble_cauldron_color_list, nblb_skippable, nblb_max_index
-from consts.consts_w4 import cooking_close_enough
 from consts.w6.farming import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
@@ -21,7 +20,7 @@ def getBubbleExclusions():
         exclusionsList.append('Cropius Mapper')
 
     #If cooking is nearly finished, exclude Diamond Chef
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         exclusionsList.append('Diamond Chef')
 
     return exclusionsList

@@ -572,10 +572,10 @@ def getPetDamageAdviceGroup():
     barley_lost_achievement_bonus = int(barley_lost_achievement['Complete']) * 5
 
     croissant_meal = session_data.account.meals['Croissant']
-    croissant_meal_bonus = croissant_meal['Value']
+    croissant_meal_bonus = croissant_meal.value
 
     wedding_cake_meal = session_data.account.meals['Wedding Cake']
-    wedding_cake_meal_bonus = wedding_cake_meal['Value']
+    wedding_cake_meal_bonus = wedding_cake_meal.value
 
     arena_spirit_talent = next(talent for talent in all_talentsDict.values() if talent['name'] == 'Arena Spirit')
     highest_arena_spirit_level = 0
@@ -633,14 +633,14 @@ def getPetDamageAdviceGroup():
             ),
             Advice(
                 label=f'{{{{ Meal|#cooking }}}} - Croissant: +{croissant_meal_bonus:.2f}%',
-                picture_class=croissant_meal['Image'],
-                progression=croissant_meal['Level'],
+                picture_class=croissant_meal.image,
+                progression=croissant_meal.level,
                 goal=max_meal_plate_level
             ),
             Advice(
                 label=f'{{{{ Meal|#cooking }}}} - Wedding Cake: +{wedding_cake_meal_bonus:.2f}%',
-                picture_class=wedding_cake_meal['Image'],
-                progression=wedding_cake_meal['Level'],
+                picture_class=wedding_cake_meal.image,
+                progression=wedding_cake_meal.level,
                 goal=max_meal_plate_level
             ),
             Advice(

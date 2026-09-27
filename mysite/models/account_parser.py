@@ -15,9 +15,7 @@ from consts.consts_monster_data import decode_monster_name
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
-from consts.consts_w4 import (
-    max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
-)
+from consts.consts_w4 import lab_bonuses_dict, lab_jewels_dict
 from consts.consts_w5 import (
     sailing_list, captain_buffs,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
@@ -564,76 +562,9 @@ def _parse_w3_equinox(account):
     account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
 
 def _parse_w4(account):
-    _parse_w4_cooking(account)
     _parse_w4_lab(account)
     _parse_w4_rift(account)
     _parse_w4_breeding(account)
-
-def _parse_w4_cooking(account):
-    _parse_w4_cooking_tables(account)
-    _parse_w4_cooking_meals(account)
-    _parse_w4_cooking_ribbons(account)
-
-def _parse_w4_cooking_tables(account):
-    emptyTable = [0] * 11  # Some tables only have 10 fields, others have 11. Scary.
-    emptyCooking = [emptyTable for table in range(max_cooking_tables)]
-    raw_cooking_list = safe_loads(account.raw_data.get("Cooking", emptyCooking))
-    for sublistIndex, value in enumerate(raw_cooking_list):
-        if isinstance(raw_cooking_list[sublistIndex], list):
-            # Pads out the length of all tables to 11 entries, to be safe.
-            while len(raw_cooking_list[sublistIndex]) < 11:
-                raw_cooking_list[sublistIndex].append(0)
-    account.cooking['Tables'] = raw_cooking_list
-    account.cooking['Tables Owned'] = sum(1 for table in account.cooking['Tables'] if table[0] == 2)
-
-def _parse_w4_cooking_meals(account):
-    emptyMeal = [0] * max_meal_count
-    # Meals contains 4 lists of lists. The first 3 are as long as the number of plates. The 4th is general shorter.
-    emptyMeals = [emptyMeal for meal in range(4)]
-    raw_meals_list = safe_loads(account.raw_data.get('Meals', emptyMeals))
-    if len(raw_meals_list[0]) < max_meal_count:
-        logger.warning(f"Data's meal levels list shorter than expected: {len(raw_meals_list[0])} < {max_meal_count}")
-        while len(raw_meals_list[0]) < max_meal_count:
-            raw_meals_list[0].append(0)
-
-    # CookMaster[0] in source: meal mastery. Last updated in v2.531.0
-    raw_cook_master = safe_loads(account.raw_data.get('CookMaster', []))
-    raw_mastery_list = safer_index(raw_cook_master, 0, [])
-
-    # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
-    for index, details in cooking_meal_dict.items():
-        account.meals[details['Name']] = {
-            'Level': parse_number(raw_meals_list[0][index], 0),
-            'Mastery': parse_number(safer_index(raw_mastery_list, index, 0), 0),
-            'Value': parse_number(raw_meals_list[0][index], 0) * details['BaseValue'],  # Mealmulti applied in calculate section
-            'BaseValue': details['BaseValue'],
-            'Effect': details['Effect'],
-            'Index': index,
-            'Image': details['Image'],
-            'World': details['World']
-        }
-
-    account.cooking['PlayerTotalMealLevels'] = sum([details['Level'] for details in account.meals.values()])
-    account.cooking['MealsUnlocked'] = sum([details['Level'] > 0 for details in account.meals.values()])
-    for meal in account.meals.values():
-        account.cooking['MealsUnlockedByWorld'][meal['World']] += meal['Level'] > 0
-    account.cooking['UnlockedMealsUnder11'] = sum([0 < details['Level'] < 11 for details in account.meals.values()])
-    account.cooking['UnlockedMealsUnder30'] = sum([0 < details['Level'] < 30 for details in account.meals.values()])
-    account.cooking['MealsUnder11'] = sum([details['Level'] < 11 for details in account.meals.values()])
-    account.cooking['MealsUnder30'] = sum([details['Level'] < 30 for details in account.meals.values()])
-
-
-def _parse_w4_cooking_ribbons(account):
-    raw_ribbons = safe_loads(account.raw_data.get('Ribbon', []))
-    if not raw_ribbons:
-        logger.warning(f"Meal Ribbons data not present{', as expected' if account.version < 236 else ''}")
-    for meal_name, meal_values in account.meals.items():
-        try:
-            account.meals[meal_name]['RibbonTier'] = safer_convert(raw_ribbons[meal_values['Index']+28], 0)  #Ribbon shelf occupies first 28 indexes
-        except:
-            account.meals[meal_name]['RibbonTier'] = 0
-            if raw_ribbons:
-                logger.exception(f"Could not retrieve Ribbon for {meal_name}")
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))

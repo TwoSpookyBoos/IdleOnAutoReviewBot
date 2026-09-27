@@ -18,7 +18,7 @@ from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import max_nblb_bubbles, max_meal_plate_level
+from consts.consts_w4 import max_nblb_bubbles
 from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
@@ -253,7 +253,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             ad_tablet_bonus_percent +
             sailboat_stamp.total_value +
             (boat_statue.type != 'Normal') * boat_statue.value +
-            popped_corn['Value'] +
+            popped_corn.value +
             oj_jooce_vial.value +
             has_skill_mastery * (total_sailing_level > 200) * 15 +
             has_msa_sailing * (total_worship_waves // 10) +
@@ -317,12 +317,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 label=f"Level {boat_statue.level} Boat Statue: +{(boat_statue.type != 'Normal') * boat_statue.value:.2f}% {'(must be at least gold)' if boat_statue.type == 'Normal' else ''}",
                 picture_class=boat_statue.image,
             ),
-            Advice(
-                label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",
-                picture_class=popped_corn['Image'],
-                progression=popped_corn['Level'],
-                goal=max_meal_plate_level
-            ),
+            popped_corn.get_bonus_advice(),
             oj_jooce_vial.get_advice(full_name=False),
             Advice(
                 label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",

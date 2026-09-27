@@ -65,7 +65,7 @@ def getAchievementStatus(achievementName):
             case 'Doctor Repellant':
                 return min(10000, int(session_data.account.farming.crops.get(0, 0))), 10000, 'apple-crop'
             case 'Good Plate':
-                return min(11, max([meal['Level'] for meal in session_data.account.meals.values()], default=0)), 11, ''
+                return min(11, max([meal.level for meal in session_data.account.meals.values()], default=0)), 11, ''
             case 'Bonsai Bonanza':
                 return min(100, session_data.account.achievements[achievementName]['Raw']), 100, 'bonsai'
 
@@ -102,13 +102,13 @@ def getAchievementStatus(achievementName):
                 return min(1000, session_data.account.achievements[achievementName]['Raw']), 1000, 'talent-book-library'
             #W4
             case 'Cabbage Patch':
-                if session_data.account.meals['Cabbage']['Level'] > 0:
-                    return min(5, session_data.account.cooking['Tables Owned']), 5, 'cooking-table'
+                if session_data.account.meals['Cabbage'].level > 0:
+                    return min(5, session_data.account.cooking.tables_owned), 5, 'cooking-table'
                 else:
                     return 0, 5, 'cabbage'
             case 'Le Pretzel Bleu':
-                if session_data.account.meals['Pretzel']['Level'] > 0:
-                    return min(8,session_data.account.cooking['Tables Owned']), 8, 'cooking-table'
+                if session_data.account.meals['Pretzel'].level > 0:
+                    return min(8,session_data.account.cooking.tables_owned), 8, 'cooking-table'
                 else:
                     return 0, 8, 'pretzel'
             case 'Gilded Shells':

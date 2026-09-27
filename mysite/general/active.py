@@ -10,7 +10,6 @@ from consts.consts_general import cards_max_level
 from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
-from consts.consts_w4 import cooking_close_enough
 from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
@@ -409,7 +408,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))
-        if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.death_note.apocalypse_character_index is not None:
+        if not session_data.account.cooking.close_enough and session_data.account.death_note.apocalypse_character_index is not None:
             if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
                 consumables.append(Advice(
                     label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}",

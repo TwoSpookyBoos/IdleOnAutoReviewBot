@@ -1,7 +1,6 @@
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import snail_max_possible_rank
-from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
 from models.general.session_data import session_data
@@ -221,7 +220,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 def getAtomExclusionsList() -> list[str]:
     exclusionsList = []
     # If cooking is basically finished thanks to NMLB, exclude Fluoride's cooking speed
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         exclusionsList.append('Fluoride - Void Plate Chef')
 
     return exclusionsList

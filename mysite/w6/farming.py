@@ -1,7 +1,6 @@
 from math import ceil, floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
-from consts.consts_w4 import max_meal_plate_level
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.w6.farming import landrank_list
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
@@ -375,26 +374,14 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     evo_advices[stamp].append(session_data.account.stamps['Crop Evo Stamp'].get_advice())
 
 #Meals
-    evo_advices[meals].append(Advice(
-        label=f"{{{{ Meal|#cooking }}}}: Bill Jack Pep: {session_data.account.meals['Bill Jack Pep']['Description']}",
-        picture_class=session_data.account.meals['Bill Jack Pep']['Image'],
-        progression=session_data.account.meals['Bill Jack Pep']['Level'],
-        goal=max_meal_plate_level
-    ))
+    evo_advices[meals].append(session_data.account.meals['Bill Jack Pep'].get_bonus_advice())
 
     evo_advices[meals].append(Advice(
         label=f"Highest Summoning level: {max(session_data.account.all_skills['Summoning'], default=0)}"
               f"<br>Provides a {evo_multi['Nyan Stacks']}x multi to Nyanborgir",
         picture_class='summoning'
     ))
-    evo_advices[meals].append(Advice(
-        label=f"{{{{ Meal|#cooking }}}}: Nyanborgir: {session_data.account.meals['Nyanborgir']['Description']}"
-              f"<br>After {evo_multi['Nyan Stacks']} Summoning Level stack{pl(evo_multi['Nyan Stacks'])}:"
-              f" {session_data.account.meals['Nyanborgir']['Value'] * evo_multi['Nyan Stacks']:,.3f}%",
-        picture_class=session_data.account.meals['Nyanborgir']['Image'],
-        progression=session_data.account.meals['Nyanborgir']['Level'],
-        goal=max_meal_plate_level
-    ))
+    evo_advices[meals].append(session_data.account.meals.get_nyanborgir_advice())
 
 #Day Market
     evo_advices[farm].append(

@@ -145,7 +145,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
         "Nutty Crafter Achievement": 5 * achievements["Nutty Crafter"]["Complete"],
         "Shimmeron Bubble": 0,
         "Emoji Veggie Sigil": sigil_value * sigil_multi,
-        "Yumi Peachring Meal": account.meals["Yumi Peachring"]["Value"],
+        "Yumi Peachring Meal": account.meals["Yumi Peachring"].value,
         "Beanbie Major Star Sign": 0,
         "Gold from Lead Bribe": account.bribes["Gold from Lead"].bonus,
         "Gumm Stick Pristine Charm": (

@@ -1,4 +1,4 @@
-from math import floor, ceil
+from math import floor
 from functools import cached_property
 
 from consts.consts_autoreview import MultiToValue, ValueToMulti, EmojiType
@@ -728,15 +728,10 @@ class Farming:
             account.stamps["Crop Evo Stamp"].total_value
         )
         # Meals
-        evo_multi["Nyan Stacks"] = ceil(
-            (max(account.all_skills["Summoning"], default=0) + 1) / 50
-        )
+        evo_multi["Nyan Stacks"] = account.meals.nyan_stacks
         evo_multi["Meals Multi"] = (
-            ValueToMulti(account.meals['Bill Jack Pep']['Value'])
-            # TODO: move to meal bonus calculate
-            * ValueToMulti(
-                account.meals["Nyanborgir"]["Value"] * evo_multi["Nyan Stacks"]
-            )
+            ValueToMulti(account.meals['Bill Jack Pep'].value)
+            * ValueToMulti(account.meals.nyanborgir_value)
         )
         # Markets
         evo_multi["Farm Multi"] = (
