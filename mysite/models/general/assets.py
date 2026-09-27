@@ -1,8 +1,11 @@
+from collections import defaultdict
 from typing import Union
 
+from consts.consts_autoreview import items_codes_and_names
 from models.advice.advice import Advice
 from consts.consts_general import greenstack_amount
 from consts.consts_w5 import get_vendor_name
+from utils.safer_data_handling import safer_convert
 from utils.text_formatting import getItemDisplayName, getItemCodeName
 
 
@@ -132,6 +135,29 @@ class Assets(dict):
                     (codename, Asset(codename, count)) for codename, count in assets.items()
                 )
             )
+
+    @classmethod
+    def from_storage(cls, raw_data: dict, character_indexes: list[int]) -> "Assets":
+        """Chest storage plus every character's inventory"""
+        name_quantity_key_pairs = (("ChestOrder", "ChestQuantity"),) + tuple(
+            (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in character_indexes
+        )
+        stored = dict.fromkeys(items_codes_and_names.keys(), 0)
+        for name_key, quantity_key in name_quantity_key_pairs:
+            for name, count in zip(raw_data.get(name_key, []), raw_data.get(quantity_key, [])):
+                stored[name] = stored.get(name, 0) + safer_convert(count, 0)
+        return cls(stored)
+
+    @classmethod
+    def from_worn(cls, characters: list) -> "Assets":
+        """Equipment, tools and food on every character"""
+        worn = defaultdict(int)
+        for character in characters:
+            equipment = character.equipment
+            for item in [*equipment.foods, *equipment.equips, *equipment.tools]:
+                if item.codename != 'Blank':
+                    worn[item.codename] += item.amount
+        return cls(worn)
 
     def __add__(self, other: Union["Assets", Asset, dict[str, int]]):
         """Creates a new Assets object as a sum of the two Asset-like operands"""

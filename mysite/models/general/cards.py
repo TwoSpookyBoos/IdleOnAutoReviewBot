@@ -1,9 +1,20 @@
 import sys
 from math import ceil, floor
 
-from consts.consts_general import cards_max_level
+from consts.consts_general import (
+    card_raw_data,
+    cards_max_level,
+    cardset_names,
+    key_cards,
+)
+from consts.consts_monster_data import decode_monster_name
 from models.advice.advice import Advice
 from models.general.character import Character
+from utils.logging import get_logger
+from utils.number_formatting import parse_number
+from utils.safer_data_handling import safe_loads, safer_get
+
+logger = get_logger(__name__)
 
 
 class Card:
@@ -105,3 +116,57 @@ class Card:
 
     def __repr__(self):
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"
+
+
+class Cards(list[Card]):
+    def __init__(self, raw_data: dict, characters: list[Character]):
+        card_counts = safe_loads(raw_data.get(key_cards, {}))
+        raw_optlacc = dict(enumerate(safe_loads(raw_data.get("OptLacc", []))))
+        # "OptionsListAccount"[603]/[155] in source: card level floors.
+        # Last updated in v2.531.0
+        min_7_cards = set(f"{safer_get(raw_optlacc, 603, '')}".split(','))
+        min_6_cards = set(f"{safer_get(raw_optlacc, 155, '')}".split(','))
+
+        cards_by_name: dict[str, Card] = {}
+        unknown_cards = []
+        for cardset_index, cardset_details in enumerate(card_raw_data):
+            if cardset_index < len(cardset_names):
+                cardset_name = cardset_names[cardset_index]
+            else:
+                logger.warning(f"No name found for Card Set Index {cardset_index}!")
+                cardset_name = f"UnknownSet-{cardset_index}"
+            for card_info in cardset_details:
+                # ["mushG", "A0", "5", "+{_Base_HP", "12"]
+                codename = card_info[0]
+                if codename == 'Blank':
+                    continue
+                name = decode_monster_name(codename, card=True)
+                if name.startswith('Unknown'):
+                    unknown_cards.append(card_info)
+                cards_by_name[name] = Card(
+                    codename=codename,
+                    name=name,
+                    cardset=cardset_name,
+                    count=safer_get(card_counts, codename, 0),
+                    coefficient=parse_number(card_info[2], 1.0),
+                    value_per_level=parse_number(card_info[4], 0.0),
+                    description=card_info[3].replace('_', ' '),
+                    min_level=(
+                        7 if codename in min_7_cards
+                        else 6 if codename in min_6_cards
+                        else 0
+                    ),
+                )
+        if unknown_cards:
+            logger.error(f"Unknown Card name(s) found: {unknown_cards}")
+        super().__init__(cards_by_name.values())
+
+        cards_by_codename: dict[str, Card] = {}
+        for card in self:
+            cards_by_codename.setdefault(card.codename, card)
+        for character in characters:
+            for codename in character.equipped_cards_codenames:
+                if codename in cards_by_codename:
+                    character.equipped_cards.append(cards_by_codename[codename])
+                else:
+                    logger.warning(f"Unknown equipped_card_codename: {codename}. Skipping")

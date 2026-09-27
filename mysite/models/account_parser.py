@@ -1,120 +1,8 @@
-from collections import defaultdict
-from math import floor
-from flask import g
-
-from consts.consts_autoreview import items_codes_and_names
-from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data
-)
-from consts.consts_monster_data import decode_monster_name
-from models.general.assets import Assets
-from models.general.cards import Card
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert
+from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
-from utils.number_formatting import parse_number
 
 logger = get_logger(__name__)
 
-
-def _make_cards(account):
-    card_counts = safe_loads(account.raw_data.get(key_cards, {}))
-
-    #Parse card data from source code
-    parsed_card_data = {}
-    unknown_cards = []
-    for cardset_index, cardset_details in enumerate(card_raw_data):
-        try:
-            cardset_name = cardset_names[cardset_index]
-        except:
-            logger.warning(f"No name found for Card Set Index {cardset_index}!")
-            cardset_name = f"UnknownSet-{cardset_index}"
-        for card_info in cardset_details:
-            if card_info[0] == 'Blank':
-                continue  #Skip the blank placeholders
-            # ["mushG", "A0", "5", "+{_Base_HP", "12"],
-            enemy_decoded_name = decode_monster_name(card_info[0], card=True)
-            if enemy_decoded_name.startswith('Unknown'):
-                unknown_cards.append(card_info)
-            parsed_card_data[enemy_decoded_name] = {
-                'Card Name': card_info[0],
-                'Enemy Name': enemy_decoded_name,
-                'Cards For 1star': parse_number(card_info[2], 1.0),
-                'Description': card_info[3].replace('_', ' '),
-                'Value per Level': parse_number(card_info[4], 0.0),
-                'Set Name': cardset_name
-            }
-
-    if unknown_cards:
-        logger.error(f"Unknown Card name(s) found: {unknown_cards}")
-
-    # "OptionsListAccount"[603]/[155] in source: card level floors.
-    # Last updated in v2.531.0
-    min_7_cards = set(f"{safer_get(account.raw_optlacc_dict, 603, '')}".split(','))
-    min_6_cards = set(f"{safer_get(account.raw_optlacc_dict, 155, '')}".split(','))
-    cards = [
-        Card(
-            codename=card_values['Card Name'],
-            name=decoded_enemy_name,
-            cardset=card_values['Set Name'],
-            count=safer_get(card_counts, card_values['Card Name'], 0),
-            coefficient=card_values['Cards For 1star'],
-            value_per_level=card_values['Value per Level'],
-            description=card_values['Description'],
-            min_level=(
-                7 if card_values['Card Name'] in min_7_cards
-                else 6 if card_values['Card Name'] in min_6_cards
-                else 0
-            ),
-        ) for decoded_enemy_name, card_values in parsed_card_data.items()
-    ]
-
-    for character in g.account.characters:
-        for equipped_card_codename in character.equipped_cards_codenames:
-            try:
-                equipped_card = next(card for card in cards if card.codename == equipped_card_codename)
-                character.equipped_cards.append(equipped_card)
-            except:
-                logger.warning(f"Unknown equipped_card_codename: {equipped_card_codename}. Skipping")
-    # cards = [
-    #     Card(codename, name, cardset, safer_get(card_counts, codename, 0), coefficient)
-    #     for cardset, cards in card_data.items()
-    #     for codename, (name, coefficient) in cards.items()
-    # ]
-
-    # unknown_cards = [
-    #     codename for codename in card_counts if not any(codename in items for items in card_data.values())
-    # ]
-
-    return cards
-
-
-def _all_stored_items(account) -> Assets:
-    chest_keys = (("ChestOrder", "ChestQuantity"),)
-    name_quantity_key_pairs = chest_keys + tuple(
-        (f"InventoryOrder_{i}", f"ItemQTY_{i}") for i in account.characters.safe_indexes
-    )
-    all_stuff_stored_or_in_inv = dict.fromkeys(items_codes_and_names.keys(), 0)
-
-    for name_key, quantity_key in name_quantity_key_pairs:
-        pair_item_name_to_quantity = zip(account.raw_data.get(name_key, list()), account.raw_data.get(quantity_key, list()))
-        for name, count in pair_item_name_to_quantity:
-            if name not in all_stuff_stored_or_in_inv:
-                all_stuff_stored_or_in_inv[name] = safer_convert(count, 0)
-            else:
-                all_stuff_stored_or_in_inv[name] += safer_convert(count, 0)
-
-    return Assets(all_stuff_stored_or_in_inv)
-
-
-def _all_worn_items(account) -> Assets:
-    stuff_worn = defaultdict(int)
-    for toon in account.characters.safe:
-        for item in [*toon.equipment.foods, *toon.equipment.equips, *toon.equipment.tools]:
-            if item.codename == 'Blank':
-                continue
-            stuff_worn[item.codename] += item.amount
-
-    return Assets(stuff_worn)
 
 def parse_account(account):
     _parse_wave_1(account)
@@ -130,12 +18,6 @@ def _parse_general(account):
     account.raw_optlacc_dict = {k: v for k, v in enumerate(safe_loads(account.raw_data.get("OptLacc", [])))}
     # Toolbox provides serverVars,Efficiency provides servervars, otherwise return an empty dict if neither present
     account.raw_serverVars_dict = safe_loads(account.raw_data.get("serverVars", account.raw_data.get("servervars", {})))
-
-    account.stored_assets = _all_stored_items(account)
-    account.worn_assets = _all_worn_items(account)
-    account.all_assets = account.stored_assets + account.worn_assets
-
-    account.cards = _make_cards(account)
 
     account.family_bonuses.calculate_levels(account.characters.safe)
     _parse_general_item_filter(account)

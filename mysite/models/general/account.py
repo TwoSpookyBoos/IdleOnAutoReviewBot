@@ -7,6 +7,8 @@ from models.general.achievements import Achievements
 from models.general.class_kill_talents import ClassKillTalents
 from models.general.crystal_spawn_chance import CrystalSpawnChance
 from models.general.colo_scores import ColoScores
+from models.general.assets import Assets
+from models.general.cards import Cards
 from models.general.character import Character, talent_bonus_banned
 from models.general.characters import Characters
 from models.general.companions import Companions
@@ -156,6 +158,12 @@ class Account:
         self.class_kill_talents: ClassKillTalents = ClassKillTalents(self.raw_data)
         self.characters: Characters = Characters(self.raw_data, run_type)
         self.quests: Quests = Quests(self.raw_data, len(self.characters))
+        self.stored_assets: Assets = Assets.from_storage(
+            self.raw_data, self.characters.safe_indexes
+        )
+        self.worn_assets: Assets = Assets.from_worn(self.characters.safe)
+        self.all_assets: Assets = self.stored_assets + self.worn_assets
+        self.cards: Cards = Cards(self.raw_data, self.characters)
 
         self.companions: Companions = Companions(
             self.raw_data, doot=g.doot, riftslug=g.riftslug, sheepie=g.sheepie
