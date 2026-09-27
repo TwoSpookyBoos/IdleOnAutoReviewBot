@@ -18,6 +18,7 @@ from models.general.inventory import Inventory
 from models.general.npc_tokens import NpcTokens
 from models.general.storage import Storage
 from models.w1.stamps import Stamps
+from models.w1.star_signs import StarSigns
 from models.w1.basketball import Basketball
 from models.w1.bribes import Bribes
 from models.w1.darts import Darts
@@ -161,6 +162,7 @@ class Account:
         self.vault: Vault = Vault(self.raw_data, potluck_pack=g.potluck_pack)
         self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
         self.bribes: Bribes = Bribes(self.raw_data)
+        self.star_signs: StarSigns = StarSigns(self.raw_data)
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)

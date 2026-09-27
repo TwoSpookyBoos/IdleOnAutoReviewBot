@@ -68,10 +68,10 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     }
 
     starsignBase = 0
-    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep']['Unlocked'])
-    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule']['Unlocked'])
-    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller']['Unlocked'])
-    totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
+    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep'].unlocked)
+    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule'].unlocked)
+    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller'].unlocked)
+    totalStarsignValue = starsignBase * session_data.account.star_signs.silkrode_multi * session_data.account.star_signs.seraph_multi
 
     # Stamps
     capacity_Advices['Stamps'].append(
@@ -108,26 +108,26 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         link_to_section=True,
         secondary_label=f": +{25 * gemshop_carry_capacity['Owned']}/{25 * gemshop_carry_capacity['MaxLevel']}%"
     ))
-    capacity_Advices['Account Wide'].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    capacity_Advices['Account Wide'].append(session_data.account.star_signs.get_seraph_advice())
 
     # Character Specific
-    capacity_Advices['Character Specific'].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    capacity_Advices['Character Specific'].append(session_data.account.star_signs.get_silkrode_advice())
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep']['Unlocked']}/30% base",
+        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep'].unlocked}/30% base",
         picture_class='mr-no-sleep',
-        progression=int(session_data.account.star_signs['Mr No Sleep']['Unlocked']),
+        progression=int(session_data.account.star_signs['Mr No Sleep'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule']['Unlocked']}/10% base",
+        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule'].unlocked}/10% base",
         picture_class='pack-mule',
-        progression=int(session_data.account.star_signs['Pack Mule']['Unlocked']),
+        progression=int(session_data.account.star_signs['Pack Mule'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller']['Unlocked']}/5% base",
+        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller'].unlocked}/5% base",
         picture_class='the-og-skiller',
-        progression=int(session_data.account.star_signs['The OG Skiller']['Unlocked']),
+        progression=int(session_data.account.star_signs['The OG Skiller'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(

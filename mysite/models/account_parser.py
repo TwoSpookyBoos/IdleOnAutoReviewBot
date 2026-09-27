@@ -12,7 +12,7 @@ from consts.consts_general import (
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
-from consts.consts_w1 import starsigns_dict, event_points_shop_dict
+from consts.consts_w1 import event_points_shop_dict
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
@@ -433,37 +433,8 @@ def _parse_master_classes_exalted_stamps(account):
 
 
 def _parse_w1(account):
-    _parse_w1_starsigns(account)
     _parse_w1_stamps(account)
     account.statues = Statues(account.raw_data, account.safe_characters)
-
-def _parse_w1_starsigns(account):
-    account.star_signs = {}
-    account.star_sign_extras = {}
-    raw_star_signs = safe_loads(account.raw_data.get('StarSg', {}))
-    for signIndex, signValuesDict in starsigns_dict.items():
-        try:
-            account.star_signs[signValuesDict['Name']] = {
-                'Index': signIndex,
-                'Passive': signValuesDict['Passive'],
-                'Unlocked': parse_number(safer_get(raw_star_signs, signValuesDict['Name'].replace(' ', '_'), 0)) > 0
-                # Some StarSigns are saved as strings "1", some are int 1 to mean unlocked.
-                # 'Bonus1': signValuesDict.get('Bonus1', 0),
-                # 'Bonus2': signValuesDict.get('Bonus2', 0),
-                # 'Bonus3': signValuesDict.get('Bonus3', 0),
-            }
-        except Exception as e:
-            logger.warning(f"Star Sign Parse error at signIndex {signIndex}: {e}. Defaulting to Locked")
-            account.star_signs[signValuesDict['Name']] = {
-                'Index': signIndex,
-                'Passive': signValuesDict['Passive'],
-                'Unlocked': False,
-                # 'Bonus1': signValuesDict.get('Bonus1', 0),
-                # 'Bonus2': signValuesDict.get('Bonus2', 0),
-                # 'Bonus3': signValuesDict.get('Bonus3', 0),
-            }
-
-    account.star_sign_extras['UnlockedSigns'] = sum(account.star_signs[name]['Unlocked'] for name in account.star_signs)
 
 def _parse_w1_stamps(account):
     raw_stamps_list = safe_loads(account.raw_data.get("StampLv", [{}, {}, {}]))

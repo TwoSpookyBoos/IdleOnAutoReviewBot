@@ -11,7 +11,7 @@ from consts.general.talents import (
 from consts.idleon.lava_func import lava_func
 
 from models.advice.advice import Advice
-from models.w1.star_signs import get_infinite_star_sign_levels, star_sign_value
+from models.w1.star_signs import get_infinite_star_sign_levels
 
 from utils.all_talentsDict import all_talentsDict
 from utils.number_formatting import round_and_trim
@@ -132,7 +132,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     infinite_levels = get_infinite_star_sign_levels(
         account.breeding.total_shiny_levels["Infinite Star Signs"]
     )
-    seraph_unlocked = account.star_signs["Seraph Cosmos"]["Unlocked"]
+    seraph_unlocked = account.star_signs["Seraph Cosmos"].unlocked
     cultism_level = account.tesseract.upgrades["Astrology Cultism"].level
     card_levels = {card.codename: card.level for card in account.cards}
     achievements = account.achievements
@@ -192,8 +192,8 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
             "Shimmeron Bubble": account.alchemy_bubbles.get_class_bubble_value(
                 character.base_class, "Shimmeron"
             ),
-            "Beanbie Major Star Sign": star_sign_value(
-                beanbie, character, 20, infinite_levels, seraph_multi
+            "Beanbie Major Star Sign": beanbie.value_for(
+                character, 20, infinite_levels, seraph_multi
             ),
             "Apocalypse Wow Talent": lava_func(
                 apoc_talent["funcX"], apoc_level, apoc_talent["x1"], apoc_talent["x2"]

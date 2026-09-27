@@ -88,7 +88,7 @@ def getCardDropChanceAdviceGroup(groups):
 
     multi_group_a = (
             bribe_bonus +
-            int(pokaminni['Unlocked']) * 15 +
+            int(pokaminni.unlocked) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
             anearful_vial_bonus +
             card_stamp_bonus +
@@ -99,7 +99,7 @@ def getCardDropChanceAdviceGroup(groups):
 
     multi_group_a_jman = (
             bribe_bonus +
-            int(pokaminni['Unlocked']) * 15 +
+            int(pokaminni.unlocked) * 15 +
             gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
             anearful_vial_bonus +
             card_stamp_bonus +
@@ -144,9 +144,9 @@ def getCardDropChanceAdviceGroup(groups):
             sir_stache.getAdvice(),
             egggulyte.getAdvice(),
             Advice(
-                label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {'+15% if equipped' if pokaminni['Unlocked'] else 'Locked.'}",
+                label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {'+15% if equipped' if pokaminni.unlocked else 'Locked.'}",
                 picture_class='pokaminni',
-                progression=int(pokaminni['Unlocked']),
+                progression=int(pokaminni.unlocked),
                 goal=1
             ),
             Advice(

@@ -107,13 +107,13 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
 
     sps_adviceDict[mgc].append(Advice(
         label=f"Star Sign: Breedabilli: "
-              f"+{15 * session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', False)}/15%",
+              f"+{15 * session_data.account.star_signs['Breedabilli'].unlocked}/15%",
         picture_class='breedabilli',
-        progression=int(session_data.account.star_signs.get('Breedabilli', {}).get('Unlocked', 0)),
+        progression=int(session_data.account.star_signs['Breedabilli'].unlocked),
         goal=1
     ))
-    sps_adviceDict[mgc].append(session_data.account.star_sign_extras['SeraphAdvice'])
-    sps_adviceDict[mgc].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    sps_adviceDict[mgc].append(session_data.account.star_signs.get_seraph_advice())
+    sps_adviceDict[mgc].append(session_data.account.star_signs.get_silkrode_advice())
 
     for group_name in sps_adviceDict:
         for advice in sps_adviceDict[group_name]:
@@ -303,7 +303,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
         'Chocolatey Chip', 'Omega Nanochip', 'Omega Motherboard', 'Silkrode Software', 'Silkrode Processor'
     ):
         abm_adviceDict['Lab Chips'].append(session_data.account.lab_chips[chip_name].get_advice())
-    abm_adviceDict['Lab Chips'].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    abm_adviceDict['Lab Chips'].append(session_data.account.star_signs.get_silkrode_advice())
     abm_adviceDict['Lab Chips'].append(Advice(
         label='Fill any remaining slots with Galvanic Nanochip: +10% respawn per chip',
         picture_class='galvanic-nanochip'
@@ -592,7 +592,7 @@ def getPetDamageAdviceGroup():
     arena_spirit_talent_bonus = lava_func(arena_spirit_talent['funcY'], highest_arena_spirit_level, arena_spirit_talent['y1'], arena_spirit_talent['y2'])
 
     power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
-    power_bowower_star_sign_bonus = int(power_bowower_star_sign['Unlocked']) * 30
+    power_bowower_star_sign_bonus = int(power_bowower_star_sign.unlocked) * 30
 
     pet_damage_arcade_bonus = session_data.account.arcade[30]
     pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus.value
@@ -650,9 +650,9 @@ def getPetDamageAdviceGroup():
                 goal=highest_arena_spirit_goal_level
             ),
             Advice(
-                label=f"{{{{ Star Sign|#star-signs }}}} -  Power Bowower: {'+30% if equipped' if power_bowower_star_sign['Unlocked'] else 'Locked.'}",
+                label=f"{{{{ Star Sign|#star-signs }}}} -  Power Bowower: {'+30% if equipped' if power_bowower_star_sign.unlocked else 'Locked.'}",
                 picture_class='power-bowower',
-                progression=int(power_bowower_star_sign['Unlocked']),
+                progression=int(power_bowower_star_sign.unlocked),
                 goal=1
             ),
             session_data.account.arcade[30].get_advice(),

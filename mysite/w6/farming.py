@@ -424,18 +424,18 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 #SUMMONING
     evo_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Star Sign
-    evo_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
-    evo_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    evo_advices[ss].append(session_data.account.star_signs.get_seraph_advice())
+    evo_advices[ss].append(session_data.account.star_signs.get_silkrode_advice())
     evo_advices[ss].append(Advice(
         label=f"Highest Farming level: {highest_farming_level}",
         picture_class='farming'
     ))
 
     evo_advices[ss].append(Advice(
-        label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor']['Unlocked']:.0f}/3% per farming level."
+        label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor'].unlocked:.0f}/3% per farming level."
               f"<br>Total Value if doubled: {evo_multi['Starsign Final Value']:,.3f}%",
         picture_class='cropiovo-minor',
-        progression=int(session_data.account.star_signs['Cropiovo Minor']['Unlocked']),
+        progression=int(session_data.account.star_signs['Cropiovo Minor'].unlocked),
         goal=1
     ))
 # Lamp
@@ -626,13 +626,13 @@ def getOGAdviceGroup(farming):
         goal=1
     ))
 #Star Sign
-    og_advices[ss].append(session_data.account.star_sign_extras['SeraphAdvice'])
-    og_advices[ss].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    og_advices[ss].append(session_data.account.star_signs.get_seraph_advice())
+    og_advices[ss].append(session_data.account.star_signs.get_silkrode_advice())
     og_advices[ss].append(Advice(
-        label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais']['Unlocked']:.0f}/15%."
+        label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais'].unlocked:.0f}/15%."
               f"<br>Total Value if doubled: {farming.multi['OG']['Starsign Final Value']:.3f}%",
         picture_class='og-signalais',
-        progression=int(session_data.account.star_signs['O.G. Signalais']['Unlocked']),
+        progression=int(session_data.account.star_signs['O.G. Signalais'].unlocked),
         goal=1
     ))
 #Night Market

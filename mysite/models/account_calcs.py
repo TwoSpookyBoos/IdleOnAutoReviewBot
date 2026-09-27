@@ -4,9 +4,6 @@ from consts.consts_autoreview import ValueToMulti, MultiToValue
 from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
-from consts.consts_w1 import get_seraph_cosmos_summ_level_goal, \
-    get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
-    get_seraph_stacks, seraph_max
 from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
 from consts.consts_w3 import buildings_towers, buildings_shrines
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
@@ -229,47 +226,10 @@ def _calculate_w1(account):
     account.darts.calculate()
 
 def _calculate_w1_starsigns(account):
-    seraph_summoning_player = get_seraph_cosmos_max_summ_level_goal(account.tesseract.upgrades['Astrology Cultism'].level)
-    account.star_sign_extras['SeraphMulti'] = get_seraph_cosmos_multi(
-        astrology_cultism_level=account.tesseract.upgrades['Astrology Cultism'].level,
-        all_summoning_levels=account.all_skills['Summoning']
+    account.star_signs.calculate_seraph(
+        account.tesseract.upgrades['Astrology Cultism'].level, account.all_skills['Summoning']
     )
-    account.star_sign_extras['SeraphGoal'] = get_seraph_cosmos_summ_level_goal(
-        astrology_cultism_level=account.tesseract.upgrades['Astrology Cultism'].level,
-        all_summoning_levels=account.all_skills['Summoning']
-    )
-    min_level_stacks = get_seraph_stacks(min(account.all_skills['Summoning'], default=0))
-    max_level_stacks = get_seraph_stacks(max(account.all_skills['Summoning'], default=0))
-    inequality_notice = ' (Note: Some lower leveled characters have less)' if min_level_stacks != max_level_stacks else ''
-    if account.star_signs['Seraph Cosmos']['Unlocked']:
-        account.star_sign_extras['SeraphEval'] = f"Multis Passive signs by {round(account.star_sign_extras['SeraphMulti'], 3):g}/{seraph_max}x."
-    else:
-        account.star_sign_extras['SeraphEval'] = f"Locked. Would increase other Passive signs by {account.star_sign_extras['SeraphMulti']:.2f}/{seraph_max}x if unlocked.{inequality_notice}"
-        account.star_sign_extras['SeraphMulti'] = 1
-    if account.star_sign_extras['SeraphGoal'] < seraph_summoning_player:
-        account.star_sign_extras['SeraphEval'] += f" Increases every 20 Summoning levels.{inequality_notice}"
-    account.star_sign_extras['SeraphAdvice'] = Advice(
-        label=f"{{{{ Star Sign|#star-signs }}}}: Seraph Cosmos: {account.star_sign_extras['SeraphEval']}",
-        picture_class='seraph-cosmos',
-        progression=max(account.all_skills['Summoning'], default=0),
-        goal=account.star_sign_extras['SeraphGoal'],
-        completed=(
-            True if account.star_sign_extras['SeraphMulti'] == seraph_max
-            else None
-        )
-    )
-
-    if account.lab_chips['Silkrode Nanochip'].owned:
-        account.star_sign_extras['DoublerOwned'] = True
-        account.star_sign_extras['SilkrodeNanoEval'] = f"{account.lab_chips['Silkrode Nanochip'].count} owned. Doubles star signs when equipped."
-        account.star_sign_extras['SilkrodeNanoMulti'] = 2
-    else:
-        account.star_sign_extras['DoublerOwned'] = False
-        account.star_sign_extras['SilkrodeNanoEval'] = "None Owned. Would double other signs if equipped."
-        account.star_sign_extras['SilkrodeNanoMulti'] = 1
-    account.star_sign_extras['SilkrodeNanoAdvice'] = account.lab_chips['Silkrode Nanochip'].get_advice(
-        f": {account.star_sign_extras['SilkrodeNanoEval']}"
-    )
+    account.star_signs.calculate_silkrode(account.lab_chips['Silkrode Nanochip'])
 
 
 def _calculate_w1_stamps(account):

@@ -257,7 +257,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             oj_jooce_vial.value +
             has_skill_mastery * (total_sailing_level > 200) * 15 +
             has_msa_sailing * (total_worship_waves // 10) +
-            c_shanti_minor['Unlocked'] * 20
+            c_shanti_minor.unlocked * 20
     ) / 125
     multi_group_e = round(multi_group_e, 2)
 
@@ -337,9 +337,9 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
                 goal=session_data.account.worship.max_total_waves,
             ),
             Advice(
-                label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {'+20% if equipped' if c_shanti_minor['Unlocked'] else 'Locked.'}",
+                label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {'+20% if equipped' if c_shanti_minor.unlocked else 'Locked.'}",
                 picture_class='c-shanti-minor',
-                progression=int(c_shanti_minor['Unlocked']),
+                progression=int(c_shanti_minor.unlocked),
                 goal=1
             )
         ],

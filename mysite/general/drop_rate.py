@@ -17,11 +17,7 @@ from models.general.session_data import session_data
 
 from models.general.assets import Asset
 from models.general.character import Character
-from models.w1.star_signs import (
-    get_infinite_star_sign_levels,
-    is_infinite_star_sign,
-    star_sign_value,
-)
+from models.w1.star_signs import get_infinite_star_sign_levels
 from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
@@ -728,14 +724,13 @@ def process_star_sign(
     silkroad_chip_equipped, seraph_cosmos_starsign_mod, star_signs_advice
 ):
     starsign = session_data.account.star_signs[name]
-    infinite_unlocked = is_infinite_star_sign(starsign, infinite_star_sign_levels)
-    equipped = (starsign['Index'] - 1) in character.equipped_star_signs
-    silkroad_chip_owned = session_data.account.star_sign_extras['DoublerOwned']
+    infinite_unlocked = starsign.is_infinite(infinite_star_sign_levels)
+    equipped = starsign.is_equipped(character)
+    silkroad_chip_owned = session_data.account.star_signs.silkrode_owned
     boosted = silkroad_chip_equipped and infinite_unlocked
 
-    active_value = star_sign_value(
-        starsign, character, drop_rate, infinite_star_sign_levels,
-        seraph_cosmos_starsign_mod
+    active_value = starsign.value_for(
+        character, drop_rate, infinite_star_sign_levels, seraph_cosmos_starsign_mod
     )
 
     text = (
@@ -1015,7 +1010,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         # Seraph Cosmos
         # Always shown because the modifier can grow based on Summoning levels
         ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
-        seraph_unlocked = session_data.account.star_signs['Seraph Cosmos']['Unlocked']
+        seraph_unlocked = session_data.account.star_signs['Seraph Cosmos'].unlocked
         seraph_cosmos_starsign_mod = get_seraph_cosmos_multi(ac_level, character.summoning_level)
         # Only applied once unlocked
         applied_seraph_mod = seraph_cosmos_starsign_mod if seraph_unlocked else 1

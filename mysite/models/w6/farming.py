@@ -755,10 +755,10 @@ class Farming:
         # Starsign
         evo_multi["Starsign Final Value"] = (
             3
-            * account.star_signs["Cropiovo Minor"]["Unlocked"]
+            * account.star_signs["Cropiovo Minor"].unlocked
             * max(account.all_skills["Farming"], default=0)
-            * account.star_sign_extras["SilkrodeNanoMulti"]
-            * account.star_sign_extras["SeraphMulti"]
+            * account.star_signs.silkrode_multi
+            * account.star_signs.seraph_multi
         )
         evo_multi["SS Multi"] = ValueToMulti(evo_multi["Starsign Final Value"])
         # Misc
@@ -832,9 +832,9 @@ class Farming:
         )
         og_multi["Starsign Final Value"] = (
             15
-            * account.star_signs["O.G. Signalais"]["Unlocked"]
-            * account.star_sign_extras["SilkrodeNanoMulti"]
-            * account.star_sign_extras["SeraphMulti"]
+            * account.star_signs["O.G. Signalais"].unlocked
+            * account.star_signs.silkrode_multi
+            * account.star_signs.seraph_multi
         )
         og_multi["SS Multi"] = ValueToMulti(og_multi["Starsign Final Value"])
         og_multi["NM Multi"] = self.market["Og Fertilizer"].as_multi
