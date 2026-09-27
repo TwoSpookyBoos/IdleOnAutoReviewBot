@@ -377,7 +377,7 @@ def _calculate_w3_atom_collider(account):
         account.event_points_shop['Higgs Boson'].owned,
     )
     account.atom_collider.calculate_costs(
-        account.merits[4][6]['Level'],
+        account.merits[4][6].level,
         account.construction_buildings['Atom Collider']['Level'],
         account.gaming.superbits['Atom Redux'].unlocked,
         account.alchemy_bubbles['Atom Split'].base_value,
@@ -416,7 +416,7 @@ def _calculate_w4_lab(account):
         next(card for card in account.cards if card.codename == 'Crystal3'),
         account.lab_chips['Conductive Motherboard'],
         account.breeding,
-        account.merits[3][4]['Level'],
+        account.merits[3][4].level,
         account.equinox.upgrades['Laboratory Fuse'].level
         + account.summoning.bonuses['Lab Con Range'].value,
         lambda: _calculate_w4_meal_multi(account),
@@ -440,7 +440,7 @@ def _calculate_w4_lab_bonuses(account):
         account.sailing.artifacts['Amberite'].level,
         account.gaming.superbits['Moar Bubbles'].unlocked,
         account.gaming.superbits['Even Moar Bubbles'].unlocked,
-        account.merits[3][6]['Level'],
+        account.merits[3][6].level,
     )
 
 def _calculate_w4_tome_bonuses(account):
@@ -515,7 +515,7 @@ def _calculate_w6_farming_markets(account):
     # Dependency: Gemshop, Merit
     bought_plot = (
         account.gemshop.purchases['Plot Of Land'].owned
-        + min(3, account.merits[5][2]['Level'])
+        + min(3, account.merits[5][2].level)
     )
     account.farming.calculate_market_bonus(bought_plot)
 

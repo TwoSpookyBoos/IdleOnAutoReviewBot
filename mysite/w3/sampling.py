@@ -37,7 +37,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     account_sum += vialBonus
     account_sum += session_data.account.alchemy_bubbles['Sample It'].base_value
     account_sum += 0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level
-    account_sum += 0.5 * session_data.account.merits[2][4]['Level']
+    account_sum += 0.5 * session_data.account.merits[2][4].level
     account_sum += session_data.account.family_bonuses['Maestro'].value
     stample_value = session_data.account.stamps['Stample Stamp'].total_value
     amplestample_value = session_data.account.stamps['Amplestample Stamp'].total_value
@@ -68,10 +68,10 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     psr_Advices[account_subgroup].append(Advice(
         label=f"W3 merit: "
-              f"+{round(0.5 * session_data.account.merits[2][4]['Level'], 1):g}/{0.5 * session_data.account.merits[2][4]['MaxLevel']:.0f}%",
+              f"+{round(0.5 * session_data.account.merits[2][4].level, 1):g}/{0.5 * session_data.account.merits[2][4].max_level:.0f}%",
         picture_class='merit-2-4',
-        progression=session_data.account.merits[2][4]['Level'],
-        goal=session_data.account.merits[2][4]['MaxLevel']
+        progression=session_data.account.merits[2][4].level,
+        goal=session_data.account.merits[2][4].max_level
     ))
     psr_Advices[account_subgroup].append(session_data.account.family_bonuses['Maestro'].get_bonus_advice(goal_level=328))
     psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice(goal_override=32))

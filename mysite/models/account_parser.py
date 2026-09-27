@@ -1,4 +1,3 @@
-import copy
 from collections import defaultdict
 from math import floor
 from flask import g
@@ -7,7 +6,7 @@ from consts.consts_autoreview import items_codes_and_names
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import (
-    key_cards, cardset_names, card_raw_data, achievements_list, allMeritsDict
+    key_cards, cardset_names, card_raw_data, achievements_list
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
@@ -219,7 +218,6 @@ def _parse_general(account):
 
     account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_general_achievements(account)
-    _parse_general_merits(account)
     _parse_general_item_filter(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
@@ -269,17 +267,6 @@ def _parse_general_achievements(account):
                 'Complete': False,
                 'Raw': 0
             }
-
-def _parse_general_merits(account):
-    account.merits = copy.deepcopy(allMeritsDict)
-    raw_merits_list = safe_loads(account.raw_data.get("TaskZZ2", []))
-    for worldIndex in account.merits:
-        for meritIndex in account.merits[worldIndex]:
-            try:
-                account.merits[worldIndex][meritIndex]["Level"] = safer_convert(raw_merits_list[worldIndex][meritIndex], 0)
-            except Exception as e:
-                logger.warning(f"Merit Parse error: {e}. Defaulting to 0")
-                continue  # Already defaulted to 0 in Consts
 
 def _parse_general_item_filter(account):
     account.item_filter = []
@@ -498,7 +485,7 @@ def _parse_w4_breeding(account):
     # Seam: egg slots need gem shop and merits
     account.breeding.calculate_egg_slots(
         account.gemshop.purchases['Royal Egg Cap'].owned,
-        account.merits[3][2]['Level'],
+        account.merits[3][2].level,
     )
 
 def _parse_w5(account):

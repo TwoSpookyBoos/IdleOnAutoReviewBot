@@ -318,7 +318,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict['Active Fight'].append(Advice(
         label=f"W6 Taskboard Merit: +10% W6 respawn if fighting Samurai Guardians",
         picture_class='merit-5-1',
-        progression=session_data.account.merits[5][1]['Level'],
+        progression=session_data.account.merits[5][1].level,
         goal=10
     ))
 
@@ -329,7 +329,7 @@ def getActiveBMAdviceGroup() -> AdviceGroup:
     abm_adviceDict['Active Fight'].append(Advice(
         label=f'W5 Taskboard Merit: +20% W5 respawn if fighting Tremor Wurms',
         picture_class='merit-4-1',
-        progression=session_data.account.merits[4][1]['Level'],
+        progression=session_data.account.merits[4][1].level,
         goal=10
     ))
 

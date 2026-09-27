@@ -833,7 +833,7 @@ class Farming:
         )
         og_multi["SS Multi"] = ValueToMulti(og_multi["Starsign Final Value"])
         og_multi["NM Multi"] = self.market["Og Fertilizer"].as_multi
-        og_multi["Merit Multi"] = ValueToMulti(2 * account.merits[5][2]["Level"])
+        og_multi["Merit Multi"] = ValueToMulti(2 * account.merits[5][2].level)
         og_multi["LR Multi"] = ValueToMulti(
             self.land_rank["Overgrowth Boost"].value
             + self.land_rank["Overgrowth Megaboost"].value

@@ -359,7 +359,7 @@ class Summoning:
         # Multi Group C: Summoning Winner Bonuses
         max_mgc_rest = ValueToMulti(
             (25 * max_sailing_artifact_level)
-            + account.merits[5][4]["MaxLevel"]  # World 6 Merit Shop
+            + account.merits[5][4].max_level  # World 6 Merit Shop
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
@@ -371,7 +371,7 @@ class Summoning:
         max_mgc_library = ValueToMulti(
             # 19 == t ? Library bonus's index
             (25 * max_sailing_artifact_level)
-            + account.merits[5][4]["MaxLevel"]  # World 6 Merit Shop
+            + account.merits[5][4].max_level  # World 6 Merit Shop
             + 1  # int(account.achievements['Spectre Stars'])
             + 1  # int(account.achievements['Regalis My Beloved'])
             + 15  # max value of account.armor_sets['GODSHARD SET']
@@ -379,7 +379,7 @@ class Summoning:
         )
         player_mgc_rest = ValueToMulti(
             (25 * account.sailing.artifacts["The Winz Lantern"].level)
-            + account.merits[5][4]["Level"]
+            + account.merits[5][4].level
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)
@@ -390,7 +390,7 @@ class Summoning:
         )
         player_mgc_library = ValueToMulti(
             (25 * account.sailing.artifacts["The Winz Lantern"].level)
-            + account.merits[5][4]["Level"]
+            + account.merits[5][4].level
             + int(account.achievements["Spectre Stars"]["Complete"])
             + int(account.achievements["Regalis My Beloved"]["Complete"])
             + MultiToValue(account.armor_sets["GODSHARD SET"].total_value)

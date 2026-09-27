@@ -90,10 +90,10 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
 
     bookLevelAdvices[scalingSubgroup].append(Advice(
         label=f"W3 Max Book level Merit: "
-              f"+{2 * session_data.account.merits[2][2]['Level']}/10",
+              f"+{2 * session_data.account.merits[2][2].level}/10",
         picture_class="merit-2-2",
-        progression=session_data.account.merits[2][2]["Level"],
-        goal=session_data.account.merits[2][2]["MaxLevel"]
+        progression=session_data.account.merits[2][2].level,
+        goal=session_data.account.merits[2][2].max_level
     ))
     bookLevelAdvices[scalingSubgroup].append(Advice(
         label=f"{{{{Salt Lick|#salt-lick }}}}: "

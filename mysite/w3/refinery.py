@@ -87,7 +87,7 @@ def getSaltDict() -> dict[str, Salt]:
         salt_rank=session_data.account.refinery['Orange']['Rank'],
         next_salt_rank=session_data.account.refinery['Blue']['Rank'],
         previousSalt=saltDict['RedSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 1,
+        merit_purchased=session_data.account.merits[2][6].level >= 1,
         running=session_data.account.refinery['Orange']['Running'],
     )
     saltDict['BlueSalt'] = Salt(
@@ -96,7 +96,7 @@ def getSaltDict() -> dict[str, Salt]:
         salt_rank=session_data.account.refinery['Blue']['Rank'],
         next_salt_rank=session_data.account.refinery['Green']['Rank'],
         previousSalt=saltDict['OrangeSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 2,
+        merit_purchased=session_data.account.merits[2][6].level >= 2,
         running=session_data.account.refinery['Blue']['Running'],
     )
     saltDict['GreenSalt'] = Salt(
@@ -105,7 +105,7 @@ def getSaltDict() -> dict[str, Salt]:
         salt_rank=session_data.account.refinery['Green']['Rank'],
         next_salt_rank=session_data.account.refinery['Purple']['Rank'],
         previousSalt=saltDict['BlueSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 3,
+        merit_purchased=session_data.account.merits[2][6].level >= 3,
         running=session_data.account.refinery['Green']['Running'],
     )
     saltDict['PurpleSalt'] = Salt(
@@ -114,7 +114,7 @@ def getSaltDict() -> dict[str, Salt]:
         salt_rank=session_data.account.refinery['Purple']['Rank'],
         next_salt_rank=session_data.account.refinery['Nullo']['Rank'],
         previousSalt=saltDict['GreenSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 4,
+        merit_purchased=session_data.account.merits[2][6].level >= 4,
         running=session_data.account.refinery['Purple']['Running'],
     )
     saltDict['NulloSalt'] = Salt(
@@ -123,7 +123,7 @@ def getSaltDict() -> dict[str, Salt]:
         salt_rank=session_data.account.refinery['Nullo']['Rank'],
         next_salt_rank=0,
         previousSalt=saltDict['PurpleSalt'],
-        merit_purchased=session_data.account.merits[2][6]['Level'] >= 5,
+        merit_purchased=session_data.account.merits[2][6].level >= 5,
         running=session_data.account.refinery['Nullo']['Running'],
     )
     return saltDict
@@ -211,12 +211,12 @@ def getRefineryProgressionTierAdviceGroups():
         sum_salts_rank2_plus += 1
     if salt_dict['NulloSalt'].salt_rank >= 2:
         sum_salts_rank2_plus += 1
-    if session_data.account.merits[2][6]['Level'] < sum_salts_rank2_plus:
+    if session_data.account.merits[2][6].level < sum_salts_rank2_plus:
         tier_W3Merits = 0
         refinery_AdviceDict['Merits'].append(Advice(
                 label='W3 Taskboard Merits Purchased',
                 picture_class='iceland-irwin',
-                progression=session_data.account.merits[2][6]['Level'],
+                progression=session_data.account.merits[2][6].level,
                 goal=sum_salts_rank2_plus
         ))
 

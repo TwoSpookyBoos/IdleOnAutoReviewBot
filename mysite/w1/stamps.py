@@ -157,8 +157,8 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     capacity_Advices['Character Specific'].append(Advice(
         label='Star Talent: Telekinetic Storage',
         picture_class="telekinetic-storage",
-        progression=5 * session_data.account.merits[2][3]['Level'],
-        goal=5 * session_data.account.merits[2][3]['MaxLevel']
+        progression=5 * session_data.account.merits[2][3].level,
+        goal=5 * session_data.account.merits[2][3].max_level
     ))
 
     for group_name in capacity_Advices:

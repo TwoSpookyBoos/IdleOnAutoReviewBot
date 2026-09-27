@@ -622,9 +622,9 @@ def getOGAdviceGroup(farming):
     og_advices[nm].append(farming.market['Og Fertilizer'].get_bonus_advice())
 #Merit
     og_advices[merit].append(Advice(
-        label=f"W6 Taskboard Merit: +{2 * session_data.account.merits[5][2]['Level']}/30%",
+        label=f"W6 Taskboard Merit: +{2 * session_data.account.merits[5][2].level}/30%",
         picture_class='merit-5-2',
-        progression=session_data.account.merits[5][2]['Level'],
+        progression=session_data.account.merits[5][2].level,
         goal=15
     ))
 #Land Rank

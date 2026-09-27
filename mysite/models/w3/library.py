@@ -1,4 +1,5 @@
 from models.advice.advice import Advice
+from models.general.merits import Merits
 from models.w3.atom_collider import AtomCollider
 from models.w5.sailing import Sailing
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
@@ -14,7 +15,7 @@ class Library:
 
     def calculate_max_book_levels(
         self, construction_buildings: dict, achievements: dict, atom_collider: AtomCollider,
-        sailing: Sailing, merits: list, saltlick, summoning
+        sailing: Sailing, merits: Merits, saltlick, summoning
     ):
         self.static_sum = (
             0
@@ -25,7 +26,7 @@ class Library:
         )
         self.scaling_sum = (
             0
-            + 2 * merits[2][2]['Level']
+            + 2 * merits[2][2].level
             + 2 * saltlick.upgrades['Max Book'].level
         )
         self.max_book_level = (

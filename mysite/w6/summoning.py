@@ -122,10 +122,10 @@ def get_bonuses_multi() -> AdviceGroup:
     multi_advices[mgc].append(session_data.account.sailing.artifacts['The Winz Lantern'].get_advice())
     multi_advices[mgc].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
-              f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",
+              f"+{account.merits[5][4].level}/{account.merits[5][4].max_level}%",
         picture_class="merit-5-4",
-        progression=account.merits[5][4]["Level"],
-        goal=account.merits[5][4]["MaxLevel"]
+        progression=account.merits[5][4].level,
+        goal=account.merits[5][4].max_level
     ))
     multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Spectre Stars: "

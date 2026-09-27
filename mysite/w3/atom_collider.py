@@ -154,11 +154,11 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
     cr_advice.append(Advice(
-        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/{session_data.account.merits[4][6]['Level'] * 7}%"
+        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6].level * 7}/{session_data.account.merits[4][6].max_level * 7}%"
               f"<br>The in-game display is incorrect. Don't @ me.",
         picture_class='merit-4-6',
-        progression=session_data.account.merits[4][6]['Level'],
-        goal=session_data.account.merits[4][6]['MaxLevel']
+        progression=session_data.account.merits[4][6].level,
+        goal=session_data.account.merits[4][6].max_level
     ))
 
     cr_advice.append(Advice(
