@@ -1,7 +1,7 @@
-from math import ceil, floor
+from math import floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue
-from consts.consts_general import getNextESFamilyBreakpoint, greenstack_amount
+from consts.consts_general import greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import fishing_toolkit_dict
@@ -545,141 +545,25 @@ def _calculate_w3_equinox_max_levels(account):
     )
 
 def _calculate_general_character_bonus_talent_levels(account):
-    universe_talent = account.tesseract.upgrades['Universe Talent']
-    account.bonus_talents = {
-        'Kattelkruk Set': {
-            'Value': account.armor_sets['KATTLEKRUK SET'].total_value,
-            'Image': account.armor_sets['KATTLEKRUK SET'].image,
-            'Label': f"{{{{Set bonus|#armor-sets}}}}: Kattlekruk Set: "
-                     f"+{account.armor_sets['KATTLEKRUK SET'].total_value:g}"
-                     f"/{account.armor_sets['KATTLEKRUK SET'].base_value:g}",
-            'Progression': int(account.armor_sets['KATTLEKRUK SET'].owned),
-            'Goal': 1
-        },
-        'Rift Slug': {
-            'Value': account.companions['Rift Slug'].bonus,
-            'Image': 'rift-slug',
-            'Label': f"Companion: Rift Slug: "
-                     f"+{account.companions['Rift Slug'].bonus:g}"
-                     f"/{account.companions['Rift Slug'].value:g}",
-            'Progression': int(account.companions.has('Rift Slug')),
-            'Goal': 1
-        },
-        'ES Family': {
-            'Value': floor(account.family_bonuses['Elemental Sorcerer'].value),
-            'Image': 'elemental-sorcerer-icon',
-            'Label': f"ES Family Bonus: "
-                     f"+{floor(account.family_bonuses['Elemental Sorcerer'].value)}.<br>"
-                     f"Next increase at Class Level: ",
-            'Progression': account.family_bonuses['Elemental Sorcerer'].level,
-            'Goal': getNextESFamilyBreakpoint(account.family_bonuses['Elemental Sorcerer'].level)
-        },
-        'Equinox Symbols': {
-            'Value': account.equinox.upgrades['Equinox Symbols'].level,
-            'Image': 'equinox-symbols',
-            'Label': f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: "
-                     f"+{account.equinox.upgrades['Equinox Symbols'].level}/{account.equinox.upgrades['Equinox Symbols'].final_max_level}",
-            'Progression': account.equinox.upgrades['Equinox Symbols'].level,
-            'Goal': account.equinox.upgrades['Equinox Symbols'].final_max_level
-        },
-        'Maroon Warship': {
-            'Value': 1 * account.achievements['Maroon Warship'].complete,
-            'Image': 'maroon-warship',
-            'Label': f"W5 Achievement: Maroon Warship: "
-                     f"+{1 * account.achievements['Maroon Warship'].complete}/1",
-            'Progression': 1 if account.achievements['Maroon Warship'].complete else 0,
-            'Goal': 1
-        },
-        'Sneaking Mastery': {
-            'Value': 5 if account.sneaking.unlocked_mastery >= 3 else 0,
-            'Image': 'sneaking-mastery',
-            'Label': f"{{{{ Rift|#rift }}}}: Sneaking Mastery: "
-                     f"+{5 if account.sneaking.unlocked_mastery >= 3 else 0}/5 (Mastery III)",
-            'Progression': account.sneaking.unlocked_mastery,
-            'Goal': 3
-        },
-        'Grimoire': {
-            'Value': account.grimoire.upgrades['Skull of Major Talent'].level,
-            'Image': account.grimoire.upgrades['Skull of Major Talent'].image,
-            'Label': f"{{{{Grimoire|#the-grimoire}}}}: Skull of Major Talent: "
-                     f"+{account.grimoire.upgrades['Skull of Major Talent'].level}"
-                     f"/{account.grimoire.upgrades['Skull of Major Talent'].max_level}",
-            'Progression': account.grimoire.upgrades['Skull of Major Talent'].level,
-            'Goal': account.grimoire.upgrades['Skull of Major Talent'].max_level
-        },
-        'Universe Talent': {
-            'Value': min(5, universe_talent.total_value),
-            'Image': universe_talent.image,
-            'Label': f"{{{{Tesseract|#the-tesseract}}}}: Universe Talent: "
-                     f"+{min(5, universe_talent.total_value):g}"
-                     f"/{universe_talent.max_level}",
-            'Progression': universe_talent.level,
-            'Goal': universe_talent.max_level
-        },
-    }
-    account.sum_account_wide_bonus_talents = 0
-    for bonusName, bonusValuesDict in account.bonus_talents.items():
-        try:
-            account.sum_account_wide_bonus_talents += int(bonusValuesDict.get('Value', 0))
-        except:
-            continue
-
+    account.library.calculate_bonus_talents(
+        account.armor_sets, account.companions, account.family_bonuses, account.equinox,
+        account.achievements, account.sneaking, account.grimoire, account.tesseract,
+    )
     for char in account.safe_characters:
-        character_specific_bonuses = 0
-
-        # "DivMinorBonus" in source. Last updated in v2.531.0
-        arctis_base = 15
-        bigp_value = account.alchemy_bubbles['Big P'].base_value
-        # "OptLacc[430]" in source. Last updated in v2.531.0
-        coral_kid_multi = ValueToMulti(round(account.coral_kid[3].level))
-        div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
-        char.arctis_bonus_max = ceil(
-            arctis_base * max(1, bigp_value) * coral_kid_multi * div_minorlink_value
+        char.calculate_bonus_talent_levels(
+            account.library.account_wide_bonus_talents,
+            account.divinity.account_wide_arctis or char.isArctisLinked(),
+            account.alchemy_bubbles['Big P'].base_value,
+            account.coral_kid[3].level,
+            account.gaming.superbits['Timmy Talented'].unlocked,
+            account.library.max_book_level,
+            account.family_bonuses['Elemental Sorcerer'].value,
         )
-        if account.divinity.account_wide_arctis or char.isArctisLinked():
-            character_specific_bonuses += char.arctis_bonus_max
-
-        # "AllTalentLV" in source. Last updated in v2.531.0
-        if account.gaming.superbits['Timmy Talented'].unlocked:
-            char.timmy_talented_bonus = max(0, floor((char.combat_level - 500) / 100))
-        character_specific_bonuses += char.timmy_talented_bonus
-
-        # Symbols of Beyond = 1 + 1 per 20 levels
-        if any([elite in char.all_classes for elite in ["Blood Berserker", "Divine Knight"]]):
-            char.setSymbolsOfBeyondMax(char.max_talents.get("149", 0) // 20)  # Symbols of Beyond - Red
-        elif any([elite in char.all_classes for elite in ["Siege Breaker", "Beast Master"]]):
-            char.setSymbolsOfBeyondMax(char.max_talents.get("374", 0) // 20)  # Symbols of Beyond - Green
-        elif any([elite in char.all_classes for elite in ["Elemental Sorcerer", "Bubonic Conjuror"]]):
-            char.setSymbolsOfBeyondMax(char.max_talents.get("539", 0) // 20)  # Symbols of Beyond - Purple
-        character_specific_bonuses += char.symbols_of_beyond
-
-        char.total_bonus_talent_levels = account.sum_account_wide_bonus_talents + character_specific_bonuses
-        char.max_talents_over_books = account.library.max_book_level + char.total_bonus_talent_levels
         char.active_super_talents = account.spelunk.get_super_talents(
             char.character_index, char.active_talent_preset
         )
         # Character has no account access
         char.super_talent_levels = account.super_talent_levels
-
-        # If they're an ES, use max level of Family Guy to calculate floor(ES Family Value * Family Guy)
-        if char.class_name == 'Elemental Sorcerer':
-            try:
-                #TODO: Move one-off talent value calculation
-                family_guy_bonus = lava_func(
-                    'decay',
-                    char.max_talents_over_books + char.max_talents.get('374', 0),
-                    40,
-                    100
-                )
-                family_guy_multi = ValueToMulti(family_guy_bonus)
-                final_fg_value = (
-                    floor(account.family_bonuses['Elemental Sorcerer'].value * family_guy_multi)
-                    - floor(account.family_bonuses['Elemental Sorcerer'].value)
-                )
-                char.max_talents_over_books += final_fg_value
-                char.setFamilyGuyBonus(final_fg_value)
-            except:
-                pass
 
 def _calculate_general_crystal_spawn_chance(account):
     #This assumes you have the Shrine bonus and the Star Talent maxed

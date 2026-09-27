@@ -1,4 +1,4 @@
-from math import floor
+from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_general import inventory_bags_dict, specialized_skills_dict
@@ -91,6 +91,7 @@ class Character:
         self.family_guy_bonus = 0
         self.arctis_bonus_max = 0
         self.timmy_talented_bonus = 0
+        self.total_bonus_talent_levels: int = 0
         self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
@@ -348,17 +349,49 @@ class Character:
             except:
                 pass
 
-    def setFamilyGuyBonus(self, value: float):
-        self.family_guy_bonus = value
+    def calculate_bonus_talent_levels(
+        self,
+        account_wide_bonus: int,
+        arctis_linked: bool,
+        big_p_value: float,
+        coral_kid_level: float,
+        timmy_talented: bool,
+        max_book_level: int,
+        es_family_value: float,
+    ):
+        # "OptLacc[430]" in source: Coral Kid boosts the Arctis minor link. Last updated in v2.531.0
+        # "DivMinorBonus" in source: base 15 scaled by divinity level. Last updated in v2.531.0
+        arctis_base = 15 * max(1, big_p_value) * ValueToMulti(round(coral_kid_level))
+        divinity_minor = self.divinity_level / (self.divinity_level + 60)
+        self.arctis_bonus_max = ceil(arctis_base * divinity_minor)
+        character_bonus = self.arctis_bonus_max if arctis_linked else 0
 
-    def setSymbolsOfBeyondMax(self, value: int):
-        self.symbols_of_beyond = 1 + value if value > 0 else 0
+        # "AllTalentLV" in source. Last updated in v2.531.0
+        if timmy_talented:
+            self.timmy_talented_bonus = max(0, floor((self.combat_level - 500) / 100))
+        character_bonus += self.timmy_talented_bonus
 
-    def increase_max_talents_over_books(self, value: int):
-        try:
-            self.max_talents_over_books += value
-        except:
-            pass
+        # Symbols of Beyond: 1 + 1 per 20 levels of the elite's own copy
+        symbols_level = 0
+        if any(elite in self.all_classes for elite in ["Blood Berserker", "Divine Knight"]):
+            symbols_level = self.max_talents.get("149", 0) // 20
+        elif any(elite in self.all_classes for elite in ["Siege Breaker", "Beast Master"]):
+            symbols_level = self.max_talents.get("374", 0) // 20
+        elif any(elite in self.all_classes for elite in ["Elemental Sorcerer", "Bubonic Conjuror"]):
+            symbols_level = self.max_talents.get("539", 0) // 20
+        self.symbols_of_beyond = 1 + symbols_level if symbols_level > 0 else 0
+        character_bonus += self.symbols_of_beyond
+
+        self.total_bonus_talent_levels = account_wide_bonus + character_bonus
+        self.max_talents_over_books = max_book_level + self.total_bonus_talent_levels
+
+        # Family Guy: floor(ES Family value * Family Guy multi) extra levels
+        if self.class_name == 'Elemental Sorcerer':
+            family_guy_multi = ValueToMulti(lava_func(
+                'decay', self.max_talents_over_books + self.max_talents.get('374', 0), 40, 100
+            ))
+            self.family_guy_bonus = floor(es_family_value * family_guy_multi) - floor(es_family_value)
+            self.max_talents_over_books += self.family_guy_bonus
 
     def setCrystalSpawnChance(self, value: float):
         self.crystal_spawn_chance = value

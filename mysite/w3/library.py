@@ -125,27 +125,21 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     bonusLevelAdvices = {}
 
     #Account Wide
-    account_subgroupName = f"Account Wide: +{session_data.account.sum_account_wide_bonus_talents}"
-    bonusLevelAdvices[account_subgroupName] = []
-    for bonusName, bonusValuesDict in session_data.account.bonus_talents.items():
-        force_complete = None
-        if bonusValuesDict.get('Label', '').startswith('ES Family Bonus'):
-            if int(bonusValuesDict['Progression']) >= arbitrary_es_family_goal:
-                force_complete = True
-        bonusLevelAdvices[account_subgroupName].append(Advice(
-            label=bonusValuesDict.get('Label', ''),
-            picture_class=bonusValuesDict.get('Image', ''),
-            progression=bonusValuesDict.get('Progression', ''),
-            goal=bonusValuesDict.get('Goal', ''),
-            complete=force_complete
-        ))
+    library = session_data.account.library
+    account_subgroupName = f"Account Wide: +{library.account_wide_bonus_talents}"
+    bonusLevelAdvices[account_subgroupName] = [
+        source.get_advice(
+            True if name == 'ES Family' and source.progression >= arbitrary_es_family_goal else None
+        )
+        for name, source in library.bonus_talents.items()
+    ]
 
     #Character Specific
     for char in session_data.account.safe_characters:
         arctis_max = char.arctis_bonus_max
         arctis_current = arctis_max if session_data.account.divinity.account_wide_arctis or char.isArctisLinked() else 0
 
-        char_bonus_levels = int(char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library.max_book_level)
+        char_bonus_levels = int(char.max_talents_over_books - library.account_wide_bonus_talents - library.max_book_level)
         subgroupName = f"{char.character_name} the {char.class_name}: +{char_bonus_levels}"
         bonusLevelAdvices[subgroupName] = []
 
@@ -186,7 +180,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
         #Character Specific 4 - Final total
         character_final = (
             session_data.account.library.max_book_level
-            + session_data.account.sum_account_wide_bonus_talents
+            + library.account_wide_bonus_talents
             + char_bonus_levels
         )
         bonusLevelAdvices[subgroupName].append(Advice(
@@ -197,7 +191,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
     for advice in bonusLevelAdvices[account_subgroupName]:
         advice.mark_advice_completed()
     if (
-        int(session_data.account.bonus_talents['ES Family']['Progression']) >= arbitrary_es_family_goal and
+        library.bonus_talents['ES Family'].progression >= arbitrary_es_family_goal and
         sum([1 for advice in bonusLevelAdvices[account_subgroupName] if advice.goal == "✔" or advice.goal == '']) >= len(bonusLevelAdvices[account_subgroupName])-1
     ):
         good_enough = True
