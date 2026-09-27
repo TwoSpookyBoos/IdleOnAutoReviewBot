@@ -1066,12 +1066,12 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
 
         post_office_advice.append(Advice(
             label=f"{{{{ Post Office|#post-office }}}}- {nplb_name}:"
-                  f"<br>+{round(char_nplb['Bonus1Value'], 1):g}/{round(nplb_dr_max_value, 1):g}% Drop Rate",
+                  f"<br>+{round(char_nplb.bonus_1_value, 1):g}/{round(nplb_dr_max_value, 1):g}% Drop Rate",
             picture_class=nplb_name,
-            progression=char_nplb['Level'],
-            goal=char_nplb['Max Level']
+            progression=char_nplb.level,
+            goal=char_nplb.max_level
         ))
-        post_office_bonus += char_nplb['Bonus1Value']
+        post_office_bonus += char_nplb.bonus_1_value
 
         # Prayers - Midas Minded
         prayer_advice: list[Advice] = []

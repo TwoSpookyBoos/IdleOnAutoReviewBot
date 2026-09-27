@@ -135,7 +135,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     complete_toons = 0  #Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for char in session_data.account.all_characters:
-        character_total_psr = account_sum + star_talent_diff_to_max + char.po_boxes_invested['Utilitarian Capsule']['Bonus1Value']
+        character_total_psr = account_sum + star_talent_diff_to_max + char.po_boxes_invested['Utilitarian Capsule'].bonus_1_value
         if char.sub_class == 'Squire':
             character_total_psr += squire_super_samples_max_book
         if max_printer_sample_rate > character_total_psr:
@@ -145,8 +145,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
                 f"Keep prayer equipped for +{prayer_gain:.2f}% {EmojiType.THUMBSUP.value}"
                 if 'The Royal Sampler' in char.equipped_prayers
                 else f"{EmojiType.WARNING.value}Equip the Prayer for +{prayer_gain:.2f}%"
-            ) + (f"<br>{char.po_boxes_invested['Utilitarian Capsule']['Level']}/"
-                 f"{char.po_boxes_invested['Utilitarian Capsule']['Max Level']} PO Boxes invested")
+            ) + (f"<br>{char.po_boxes_invested['Utilitarian Capsule'].level}/"
+                 f"{char.po_boxes_invested['Utilitarian Capsule'].max_level} PO Boxes invested")
             complete_toons += 1 if 'The Royal Sampler' in char.equipped_prayers else 0
         else:
             character_eval = (

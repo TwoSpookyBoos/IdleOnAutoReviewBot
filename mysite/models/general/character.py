@@ -24,6 +24,7 @@ from consts.general.talents import (
     talent_bonus_banned_range,
 )
 from models.general.equipment import Equipment
+from models.w2.post_office import PostOfficeBox
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -150,54 +151,10 @@ class Character:
         self.secondary_polytheism_link = "Unlinked"
         self.obols = get_obol_totals(obols, obol_upgrades)
 
-        self.po_boxes_invested = {}
-        for poBoxIndex, poBoxValues in po_box_dict.items():
-            try:
-                self.po_boxes_invested[poBoxValues['Name']] = {
-                    'Level': po_boxes[poBoxIndex],
-                    'Max Level': poBoxValues['Max Level'],
-                    'Tab': poBoxValues['Tab'],
-                    'Bonus1Value': lava_func(
-                        poBoxValues['1_funcType'],
-                        po_boxes[poBoxIndex],
-                        poBoxValues['1_x1'],
-                        poBoxValues['1_x2'],
-                    ),
-                    'Bonus1String': '',
-                    'Bonus2Value': lava_func(
-                        poBoxValues['2_funcType'],
-                        po_boxes[poBoxIndex] - poBoxValues['2_minCount'],
-                        poBoxValues['2_x1'],
-                        poBoxValues['2_x2'],
-                    ) if po_boxes[poBoxIndex] >= poBoxValues['2_minCount'] else 0,
-                    'Bonus2String': '',
-                    'Bonus3Value': lava_func(
-                        poBoxValues['3_funcType'],
-                        po_boxes[poBoxIndex] - poBoxValues['3_minCount'],
-                        poBoxValues['3_x1'],
-                        poBoxValues['3_x2'],
-                    ) if po_boxes[poBoxIndex] >= poBoxValues['3_minCount'] else 0,
-                    'Bonus3String': '',
-                }
-                if self.po_boxes_invested[poBoxValues['Name']]['Level'] > 0:
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (
-                        f"{poBoxValues['1_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}{poBoxValues['1_post']} {poBoxValues['1_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (
-                        f"{poBoxValues['2_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}{poBoxValues['2_post']} {poBoxValues['2_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (
-                        f"{poBoxValues['3_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}{poBoxValues['3_post']} {poBoxValues['3_stat']}")
-            except:
-                self.po_boxes_invested[poBoxValues['Name']] = {
-                    'Level': 0,
-                    'Max Level': poBoxValues['Max Level'],
-                    'Tab': poBoxValues['Tab'],
-                    'Bonus1Value': 0,
-                    'Bonus1String': '',
-                    'Bonus2Value': 0,
-                    'Bonus2String': '',
-                    'Bonus3Value': 0,
-                    'Bonus3String': '',
-                }
+        self.po_boxes_invested: dict[str, PostOfficeBox] = {
+            info['Name']: PostOfficeBox(info, safer_index(po_boxes, index, None))
+            for index, info in po_box_dict.items()
+        }
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
@@ -405,7 +362,7 @@ class Character:
             'decay', self.max_talents.get("619", 0), 174, 50
         )))
         shrine_and_po = ValueToMulti(
-            self.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + crescent_shrine_value
+            self.po_boxes_invested['Non Predatory Loot Box'].bonus_3_value + crescent_shrine_value
         )
         self.crystal_spawn_chance = account_wide * (
             shrine_and_po * cmon_out_crystals_multi * crystals_4_dayys_multi

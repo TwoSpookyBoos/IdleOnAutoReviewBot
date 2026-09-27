@@ -560,9 +560,9 @@ def getBuboAdviceGroup() -> AdviceGroup:
             Advice(
                 label=f"{{{{ PO|#post-office}}}}: {box_name}",
                 picture_class=box_name,
-                progression=box_details['Level'],
-                goal=box_details['Max Level'],
-                completed=box_details['Level'] >= box_details['Max Level']
+                progression=box_details.level,
+                goal=box_details.max_level,
+                completed=box_details.level >= box_details.max_level
             ) for box_name, box_details in best_bubo.po_boxes_invested.items() if box_name in po_box_names
         ]
         bubo_advice[po].insert(0, get_upgrade_vault_advice('Daily Mailbox'))

@@ -33,7 +33,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                     if class_name in char.all_classes:
                         for box_name, box_level in requirements['Class Specific'][class_name].items():
                             if (
-                                char.po_boxes_invested[box_name]['Level'] < box_level
+                                char.po_boxes_invested[box_name].level < box_level
                                 and box_name not in boxes_advised[char.character_name]
                             ):
                                 add_subgroup_if_available_slot(po_Advices['Tiers'], subgroup_label)
@@ -41,7 +41,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                                     po_Advices['Tiers'][subgroup_label].append(Advice(
                                         label=f"{char.character_name}: {box_name}",
                                         picture_class=char.class_name_icon,
-                                        progression=char.po_boxes_invested[box_name]['Level'],
+                                        progression=char.po_boxes_invested[box_name].level,
                                         goal=box_level,
                                         resource=box_name
                                     ))
@@ -54,7 +54,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                         or requirements['Myriad']
                     ):
                         if (
-                            box_details['Level'] < box_details['Max Level']
+                            box_details.level < box_details.max_level
                             and box_name not in boxes_advised[char.character_name]
                         ):
                             add_subgroup_if_available_slot(po_Advices['Tiers'], subgroup_label)
@@ -62,8 +62,8 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                                 po_Advices['Tiers'][subgroup_label].append(Advice(
                                     label=f"{char.character_name}: {box_name}",
                                     picture_class=char.class_name_icon,
-                                    progression=char.po_boxes_invested[box_name]['Level'],
-                                    goal=box_details['Max Level'],
+                                    progression=char.po_boxes_invested[box_name].level,
+                                    goal=box_details.max_level,
                                     resource=box_name
                                 ))
                                 boxes_advised[char.character_name].append(box_name)
@@ -84,24 +84,24 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
 def getBoxesAdviceGroup() -> TabbedAdviceGroup:
     tabbed_advices: dict[str, tuple[TabbedAdviceGroupTab, AdviceGroup]] = {}
     for index, character in enumerate(session_data.account.all_characters): #type int, Character
-        total_points_invested = sum([boxDetails['Level'] for boxDetails in character.po_boxes_invested.values()])
+        total_points_invested = sum([boxDetails.level for boxDetails in character.po_boxes_invested.values()])
         remaining_points = max(0, session_data.account.post_office.total_boxes_earned - total_points_invested)
 
         po_Advices = {}
 
         for box_name, box_details in character.po_boxes_invested.items():
-            needed_for_completion = (box_details['Max Level'] - box_details['Level'])
+            needed_for_completion = (box_details.max_level - box_details.level)
             using_points = min(remaining_points, needed_for_completion)
             remaining_points = max(0, remaining_points - using_points)
 
             advice = Advice(
                 label=box_name,
                 picture_class=box_name,
-                progression=box_details['Level'],
-                goal=box_details['Max Level'],
+                progression=box_details.level,
+                goal=box_details.max_level,
                 potential=using_points)
 
-            tab_name = box_details['Tab']
+            tab_name = box_details.tab
             if tab_name not in po_Advices:
                 po_Advices[tab_name] = []
 
