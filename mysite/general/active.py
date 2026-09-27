@@ -409,7 +409,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                     resource='x24-hr-time-candy'
                 ))
         if not session_data.account.cooking.close_enough and session_data.account.death_note.apocalypse_character_index is not None:
-            if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
+            if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apocalypses['MEOW'].total < dn_basic_maps_count:
                 consumables.append(Advice(
                     label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}",
                     picture_class='death-note',

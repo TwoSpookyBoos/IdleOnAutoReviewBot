@@ -3,10 +3,10 @@ from math import ceil, floor
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_general import inventory_bags_dict, specialized_skills_dict
 from consts.consts_w2 import alchemy_jobs_list, get_obol_totals, po_box_dict
-from consts.consts_w3 import apoc_names_list, prayers_dict
+from consts.consts_w3 import prayers_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w5 import divinity_divinities_dict
-from consts.idleon.consts_idleon import current_world, expected_talents_dict
+from consts.idleon.consts_idleon import expected_talents_dict
 from consts.idleon.lava_func import lava_func
 from consts.general.equipment import (
     equip_slot_chip_doublers,
@@ -25,6 +25,7 @@ from consts.general.talents import (
 )
 from models.general.equipment import Equipment
 from models.w2.post_office import PostOfficeBox
+from models.w3.apocalypse import ApocProgress, new_apocalypses
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -164,18 +165,7 @@ class Character:
                     continue
         self.equipped_card_doublers: list[str] = self.get_card_doublers()
 
-        self.apoc_dict: dict = {
-            name: {
-                **{f"Basic W{i} Enemies": list() for i in range(1, current_world+1)},
-                "Easy Extras": [],
-                "Medium Extras": [],
-                "Difficult Extras": [],
-                "Insane": [],
-                "Impossible": [],
-                "Total": 0,
-            }
-            for name in apoc_names_list
-        }
+        self.apocalypses: dict[str, ApocProgress] = new_apocalypses()
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
 
         self.setPolytheismLink()
@@ -251,21 +241,6 @@ class Character:
                     self.kill_dict[mapIndex] = [parse_number(self.kill_dict[mapIndex])]
                 except:
                     self.kill_dict[mapIndex] = [0, 0, 0]
-
-    def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
-        self.apoc_dict[apocType][apocRating].append(mapInfoList)
-
-    def increaseApocTotal(self, apocType: str):
-        self.apoc_dict[apocType]["Total"] += 1
-
-    def sortApocByProgression(self):
-        for apocType, difficulties in self.apoc_dict.items():
-            for difficulty, enemies in difficulties.items():
-                if difficulty != "Total":
-                    if len(enemies) > 0:
-                        difficulties[difficulty] = sorted(
-                            enemies, key=lambda item: item[1], reverse=True
-                        )
 
     def calculate_inventory_slots(self, account_wide_slots: int):
         self.inventory_slots = account_wide_slots

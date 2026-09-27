@@ -115,7 +115,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     apoc_talent = all_talentsDict[apocalypse_wow_talent_index]
     apoc_index = account.death_note.apocalypse_character_index
     wow_maps = (
-        account.all_characters[apoc_index].apoc_dict["WOW"]["Total"]
+        account.all_characters[apoc_index].apocalypses["WOW"].total
         if apoc_index is not None
         else 0
     )
