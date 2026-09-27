@@ -1,5 +1,4 @@
 from consts.consts_autoreview import MultiToValue
-from consts.idleon.lava_func import lava_func
 from consts.w3.equinox import ribbon_cloud_dream_number
 from utils.logging import get_logger
 
@@ -316,11 +315,8 @@ def _calculate_caverns(account):
 
 
 def _calculate_w6_sneaking_gemstones(account):
-    # TODO: Move to Talent class and calculate by Talent.as_multi
-    generational_gemstones_level = account.get_current_max_talent("Generational Gemstones")
-    gemstone_multi = lava_func("decayMulti", max(0, generational_gemstones_level), 3, 300)
     account.sneaking.calculate_gemstones_values(
-        generational_gemstones_level, gemstone_multi
+        account.get_current_max_talent("Generational Gemstones")
     )
 
 

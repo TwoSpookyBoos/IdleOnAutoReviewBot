@@ -9,3 +9,4 @@ family_guy_talent_index = 144
 dank_rank_talent_index = 207
 apocalypse_wow_talent_index = 209
 graded_rate_talent_index = 239
+generational_gemstones_talent_index = 432

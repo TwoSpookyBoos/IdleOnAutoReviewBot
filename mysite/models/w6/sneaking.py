@@ -2,6 +2,8 @@ from typing import Optional
 from functools import cached_property
 
 from consts.consts_autoreview import ValueToMulti
+from consts.general.talents import generational_gemstones_talent_index
+from consts.idleon.lava_func import lava_func
 from consts.idleon.w6.sneaking import (
     pristine_charms_info,
     gemstones_info,
@@ -11,6 +13,7 @@ from consts.idleon.w6.sneaking import (
 from consts.w6.sneaking import pristine_charm_images_override
 from models.advice.advice import Advice
 
+from utils.all_talentsDict import all_talentsDict
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index
 
@@ -184,7 +187,12 @@ class Sneaking:
         base_chance = 0.1 * max(0.0, 1.5 - self.daily_charms_found / 80)
         self.pristine_chance = base_chance * (1 + pristine_collector_bonus / 100)
 
-    def calculate_gemstones_values(self, talent_level, gemstone_multi):
+    def calculate_gemstones_values(self, talent_level: int):
+        # Generational Gemstones boosts every gemstone
+        talent = all_talentsDict[generational_gemstones_talent_index]
+        gemstone_multi = lava_func(
+            talent["funcX"], max(0, talent_level), talent["x1"], talent["x2"]
+        )
         moissanite = self.gemstones["Moissanite"]
         moissanite.calculate_value(None, 1.0)
         self.gemstone_multi_source = (talent_level, gemstone_multi)
