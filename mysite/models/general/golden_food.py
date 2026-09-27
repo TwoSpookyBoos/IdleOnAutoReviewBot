@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from functools import cached_property
 
 from consts.consts_autoreview import EmojiType, MultiToValue, ValueToMulti
@@ -103,72 +104,95 @@ class GoldenFoodMulti:
         return self.outer * (self.family + sum(self.sources.values()) / 100)
 
 
-def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
+def calculate_golden_food_multis(
+    *,
+    characters: list,
+    best_talent_level: Callable[[int, object], int],
+    companions,
+    armor_sets,
+    family_bonuses,
+    death_note,
+    sigils,
+    artifacts,
+    meritocracy,
+    star_signs,
+    breeding,
+    tesseract,
+    cards: list,
+    achievements,
+    jelly_operator,
+    stamps,
+    meals,
+    bribes,
+    pristine_charms,
+    ballot,
+    legend_talents,
+    vault,
+    alchemy_bubbles,
+) -> dict[int, GoldenFoodMulti]:
     # "GfoodBonusMULTI" in source, per character. Last updated in v2.531.0
-    companions = account.companions
-    secret_set = MultiToValue(account.armor_sets["SECRET SET"].total_value)
+    secret_set = MultiToValue(armor_sets["SECRET SET"].total_value)
     verminous_multi = companions.get_multi("Verminous", "Gold Food")
     outer = ValueToMulti(secret_set + MultiToValue(verminous_multi))
-    family = max(1, account.family_bonuses["Shaman"].value)
+    family = max(1, family_bonuses["Shaman"].value)
 
     # Apocalypse Wow: best Death Bringer, times WOW maps
     apoc_talent = all_talentsDict[apocalypse_wow_talent_index]
-    apoc_index = account.death_note.apocalypse_character_index
+    apoc_index = death_note.apocalypse_character_index
     wow_maps = (
-        account.characters[apoc_index].apocalypses["WOW"].total
+        characters[apoc_index].apocalypses["WOW"].total
         if apoc_index is not None
         else 0
     )
 
-    sigil = account.alchemy_p2w.sigils["Emoji Veggie"]
+    sigil = sigils["Emoji Veggie"]
     sigil_multi = (
-        account.sailing.artifacts.chilled_yarn_multi
-        * ValueToMulti(account.meritocracy[21].value)
+        artifacts.chilled_yarn_multi
+        * ValueToMulti(meritocracy[21].value)
     )
     sigil_value = sigils_dict["Emoji Veggie"]["Values"][
         min(sigil.level, max_sigil_level)
     ]
-    beanbie = account.star_signs["Beanbie Major"]
+    beanbie = star_signs["Beanbie Major"]
     infinite_levels = get_infinite_star_sign_levels(
-        account.breeding.total_shiny_levels["Infinite Star Signs"]
+        breeding.total_shiny_levels["Infinite Star Signs"]
     )
-    seraph_unlocked = account.star_signs["Seraph Cosmos"].unlocked
-    cultism_level = account.tesseract.upgrades["Astrology Cultism"].level
-    card_levels = {card.codename: card.level for card in account.cards}
-    achievements = account.achievements
-    obstructions = account.jelly_operator.obstructions
+    seraph_unlocked = star_signs["Seraph Cosmos"].unlocked
+    cultism_level = tesseract.upgrades["Astrology Cultism"].level
+    card_levels = {card.codename: card.level for card in cards}
+    obstructions = jelly_operator.obstructions
     # Per character ones filled below; order kept for the sum
     sources = {
         # EtcBonuses("8") not modelled
         "Haungry For Gold Talent": 0,
-        "Golden Apple Stamp": account.stamps["Golden Apple Stamp"].total_value,
+        "Golden Apple Stamp": stamps["Golden Apple Stamp"].total_value,
         "Nutty Crafter Achievement": 5 * achievements["Nutty Crafter"].complete,
         "Shimmeron Bubble": 0,
         "Emoji Veggie Sigil": sigil_value * sigil_multi,
-        "Yumi Peachring Meal": account.meals["Yumi Peachring"].value,
+        "Yumi Peachring Meal": meals["Yumi Peachring"].value,
         "Beanbie Major Star Sign": 0,
-        "Gold from Lead Bribe": account.bribes["Gold from Lead"].bonus,
+        "Gold from Lead Bribe": bribes["Gold from Lead"].bonus,
         "Gumm Stick Pristine Charm": (
-            account.sneaking.pristine_charms["Gumm Stick"].value
+            pristine_charms["Gumm Stick"].value
         ),
         "Beanstacker Achievements": (
             2 * achievements["Beanstacker Trainee"].complete
             + 3 * achievements["Beanstacker Prodigy"].complete
         ),
         "Ballot": (
-            account.ballot[26].value
-            * account.ballot[26].active
+            ballot[26].value
+            * ballot[26].active
         ),
         "Apocalypse Wow Talent": 0,
         "Purp Mushroom Companion": companions["Purp Mushroom"].bonus,
         "Midusian Appetite Legend Talent": (
-            account.legend_talents["Midusian Appetite"].value
+            legend_talents["Midusian Appetite"].value
         ),
         "Bort The Cornhusk Card": min(4 * card_levels.get("cropfallEvent1", 0), 50),
         "IdleOn 5th Anniversary Card": min(5 * card_levels.get("anni5Event1", 0), 50),
         "Vanillie Companion": companions["Vanillie"].bonus,
         "Verminous Companion": companions.get_value("Verminous", "Gold Food Effect"),
-        "24 Karat Foods Vault": account.vault.upgrades["24 Karat Foods"].total_value,
+        "24 Karat Foods Vault": vault.upgrades["24 Karat Foods"].total_value,
         "Jelly Obstructions": (
             obstructions["Spinine"].bonus_value
             + obstructions["Smooth Stone"].bonus_value
@@ -176,8 +200,8 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     }
 
     multis = {}
-    for character in account.characters:
-        apoc_level = account.get_best_talent_level(
+    for character in characters:
+        apoc_level = best_talent_level(
             apocalypse_wow_talent_index, character
         )
         seraph_multi = (
@@ -189,7 +213,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
             "Haungry For Gold Talent": character.get_talent_value(
                 haungry_for_gold_talent_index
             ),
-            "Shimmeron Bubble": account.alchemy_bubbles.get_class_bubble_value(
+            "Shimmeron Bubble": alchemy_bubbles.get_class_bubble_value(
                 character.base_class, "Shimmeron"
             ),
             "Beanbie Major Star Sign": beanbie.value_for(

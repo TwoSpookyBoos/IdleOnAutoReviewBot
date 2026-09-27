@@ -1,5 +1,6 @@
 from consts.consts_autoreview import MultiToValue
 from consts.w3.equinox import ribbon_cloud_dream_number
+from models.general.golden_food import calculate_golden_food_multis
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -466,7 +467,31 @@ def _calculate_w1_statues(account):
 def _calculate_w6_beanstalk(account):
     # Dependency: Emporium
     account.beanstalk.calculate_unlocked_tier(account.sneaking.emporium)
-    account.beanstalk.calculate_golden_food_multi(account)
+    account.beanstalk.calculate_golden_food_multi(calculate_golden_food_multis(
+        characters=account.characters,
+        best_talent_level=account.get_best_talent_level,
+        companions=account.companions,
+        armor_sets=account.armor_sets,
+        family_bonuses=account.family_bonuses,
+        death_note=account.death_note,
+        sigils=account.alchemy_p2w.sigils,
+        artifacts=account.sailing.artifacts,
+        meritocracy=account.meritocracy,
+        star_signs=account.star_signs,
+        breeding=account.breeding,
+        tesseract=account.tesseract,
+        cards=account.cards,
+        achievements=account.achievements,
+        jelly_operator=account.jelly_operator,
+        stamps=account.stamps,
+        meals=account.meals,
+        bribes=account.bribes,
+        pristine_charms=account.sneaking.pristine_charms,
+        ballot=account.ballot,
+        legend_talents=account.legend_talents,
+        vault=account.vault,
+        alchemy_bubbles=account.alchemy_bubbles,
+    ))
     account.beanstalk.calculate_bonuses()
 
 
