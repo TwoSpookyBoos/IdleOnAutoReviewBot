@@ -494,7 +494,11 @@ class Account:
         self.glimbo.calculate_drop_rate_multi(self.research)
         self.sushi_station.calculate_bonuses()
         self.dancing_coral.calculate_bonuses()
-        self.coral_kid.calculate_bonuses()
+        self.coral_kid.calculate_bonuses(
+            sum(self.characters.all_skills["Divinity"]),
+            self.coral_reef.total_level,
+            self.divinity.god_rank,
+        )
         self.jelly_operator.calculate_bonuses(
             self.research.grid["Jelly Operator Linguistics"].value,
             self.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,

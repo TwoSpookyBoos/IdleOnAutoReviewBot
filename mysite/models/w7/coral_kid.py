@@ -20,26 +20,24 @@ class CoralKidUpgrade:
         self.value = 0
         self.unlocked = False
 
-    def calculate_bonus(self):
-        from models.general.session_data import session_data
-        self.base_value = round_and_trim(coral_kid_upgrades_bonus_base_formulas[self.index]({
+    def calculate_bonus(
+        self, total_divinity_level: int, coral_reef_upgrade_count: int, god_rank: int
+    ):
+        formula_input = {
             "level": self.level,
-            "total_divinity_level": sum(session_data.account.characters.all_skills["Divinity"]),
-            "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
-            "god_rank": session_data.account.divinity.god_rank,
-        }), 0)
-
-        self.value = round_and_trim(coral_kid_upgrades_bonus_final_formulas[self.index]({
-            "level": self.level,
-            "total_divinity_level": sum(session_data.account.characters.all_skills["Divinity"]),
-            "coral_reef_upgrade_count": session_data.account.coral_reef.total_level,
-            "god_rank": session_data.account.divinity.god_rank,
-        }), 0)
+            "total_divinity_level": total_divinity_level,
+            "coral_reef_upgrade_count": coral_reef_upgrade_count,
+            "god_rank": god_rank,
+        }
+        self.base_value = round_and_trim(
+            coral_kid_upgrades_bonus_base_formulas[self.index](formula_input), 0
+        )
+        self.value = round_and_trim(
+            coral_kid_upgrades_bonus_final_formulas[self.index](formula_input), 0
+        )
+        self.unlocked = self.divinity_required <= total_divinity_level
 
     def get_advice(self):
-        from models.general.session_data import session_data
-        total_div_level: int = sum(session_data.account.characters.all_skills["Divinity"])
-        self.unlocked = self.divinity_required <= total_div_level
         description = self.description_template
         if "{" in description:
             description = description.replace("{", str(self.base_value))
@@ -71,6 +69,8 @@ class CoralKid(dict[int, CoralKidUpgrade]):
             upgrade = CoralKidUpgrade(index, level, description_template)
             self[index] = upgrade
 
-    def calculate_bonuses(self):
+    def calculate_bonuses(
+        self, total_divinity_level: int, coral_reef_upgrade_count: int, god_rank: int
+    ):
         for bonus in self.values():
-            bonus.calculate_bonus()
+            bonus.calculate_bonus(total_divinity_level, coral_reef_upgrade_count, god_rank)
