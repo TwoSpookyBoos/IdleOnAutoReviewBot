@@ -415,7 +415,6 @@ def _calculate_caverns(account):
 
 
 def _calculate_w6(account):
-    # _calculate_w6_farming(account)  # Runs in wave3 due to Land Rank multi from Talents
     _calculate_w6_summoning(account)
 
 
@@ -437,57 +436,43 @@ def _calculate_w6_sneaking_pristine_chance(account):
 
 def _calculate_w6_farming(account):
     # Runs in wave3 due to Land Rank multi from Talents
-    _calculate_w6_farming_markets(account)
-    _calculate_w6_farming_land_ranks(account)
-    _calculate_w6_farming_crop_depot(account)
-    account.farming.calculate_crop_value_multi(account.ballot)
-    _calculate_w6_farming_crop_evo(account)
-    account.farming.calculate_crop_speed(account)
-    account.farming.calculate_bean_bonus(account)
-    account.farming.calculate_og(account)
-
-
-def _calculate_w6_farming_land_ranks(account):
-    dank_rank_level = account.get_current_max_talent("Dank Rank")
-    land_rank_multi = account.farming.get_land_rank_multi(dank_rank_level)
-    account.farming.calculate_land_rank_bonus(land_rank_multi)
-
-
-def _calculate_w6_farming_crop_depot(account):
-    lab_multi = ValueToMulti(
-        (account.lab_bonuses['Depot Studies PhD'].value + account.lab_jewels['Pure Opal Rhombol'].value)
-        * account.lab_bonuses['Depot Studies PhD'].enabled
-    )
-    account.farming.calculate_crop_depot_bonus(
-        lab_multi, account.grimoire, account.vault, account.sneaking.emporium
-    )
-
-
-def _calculate_w6_farming_markets(account):
-    # Dependency: Gemshop, Merit
-    bought_plot = (
-        account.gemshop.purchases['Plot Of Land'].owned
-        + min(3, account.merits[5][2].level)
-    )
-    account.farming.calculate_market_bonus(bought_plot)
-
-
-def _calculate_w6_farming_crop_evo(account):
-    # Dependency: Summoning regular battle
-    # Alchemy
     farming = account.farming
-    map_opened = 0
-    mama_trolls_map_open = False
-    for char in account.all_characters:
-        for mapIndex in range(251, 264):  # Clearing the fake portal at Samurai Guardians doesn't count
-            try:
-                if int(float(char.kill_dict.get(mapIndex, [1])[0])) <= 0:
-                    map_opened += 1
-                    mama_trolls_map_open = mama_trolls_map_open or mapIndex == 257
-            except:
-                continue
-    farming.magic_bean_unlocked = mama_trolls_map_open
-    account.farming.calculate_crop_evo_multi(map_opened, account)
+    farming.calculate_market_bonus(
+        account.gemshop.purchases['Plot Of Land'].owned, account.merits[5][2].level
+    )
+    farming.calculate_land_rank_bonus(account.get_current_max_talent("Dank Rank"))
+    farming.calculate_crop_depot_bonus(
+        account.lab_bonuses['Depot Studies PhD'], account.lab_jewels['Pure Opal Rhombol'],
+        account.grimoire, account.vault, account.sneaking.emporium,
+    )
+    farming.calculate_crop_value_multi(account.ballot)
+    # Dependency: Summoning regular battle
+    farming.calculate_crop_evo_multi(
+        account.all_characters,
+        account.alchemy_bubbles,
+        account.alchemy_vials,
+        account.tome.score,
+        account.stamps['Crop Evo Stamp'].total_value,
+        account.meals,
+        account.star_signs,
+        account.all_skills['Farming'],
+        account.rift['SkillMastery'],
+        account.ballot[29],
+        account.achievements,
+        account.killroy.skull_shop,
+        account.caverns.caves['The Lamp'].wishes['World 6 Majigers'],
+        account.summoning.bonuses,
+    )
+    farming.calculate_crop_speed(account.alchemy_vials, account.summoning.bonuses)
+    farming.calculate_bean_bonus(
+        account.sneaking.emporium['Deal Sweetening'].value, account.achievements
+    )
+    farming.calculate_og(
+        account.achievements,
+        account.star_signs,
+        account.merits[5][2].level,
+        account.sneaking.pristine_charms['Taffy Disc'].value,
+    )
 
 
 def _calculate_w6_summoning(account):
