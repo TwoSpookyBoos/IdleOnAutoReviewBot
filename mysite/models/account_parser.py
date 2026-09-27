@@ -120,30 +120,10 @@ def parse_account(account):
     _parse_wave_1(account)
 
 def _parse_wave_1(account):
-    _parse_switches(account)
     _parse_general(account)
     _parse_w3(account)
     _parse_w4(account)
     _parse_w5(account)
-
-def _parse_switches(account):
-    # AutoLoot
-    if g.autoloot:
-        account.autoloot = True
-    elif account.raw_data.get("AutoLoot", 0) == 1 or safe_loads(account.raw_data.get('BundlesReceived', {})).get('bun_i', 0) == 1:
-        account.autoloot = True
-        g.autoloot = True
-    else:
-        account.autoloot = False
-
-    # Shows the switch on when the save has it, like Autoloot
-    if account.vault.potluck_pack_owned:
-        g.potluck_pack = True
-
-    account.max_subgroups = 3
-    account.library_group_characters = g.library_group_characters
-    account.tabbed_advice_groups = g.tabbed_advice_groups
-    account.manual_tome_score = g.get("tome_score") if g.manual_tome else None
 
 def _parse_general(account):
     # General / Multiple uses

@@ -115,6 +115,11 @@ class Account:
         if self.version < lowest_accepted_version:
             raise VeryOldDataException(self.version)
         self.data_source = source_string.value
+        # Request switches
+        self.max_subgroups = 3
+        self.library_group_characters = g.library_group_characters
+        self.tabbed_advice_groups = g.tabbed_advice_groups
+        self.manual_tome_score = g.get("tome_score") if g.manual_tome else None
         self.alerts_Advices = {
             'General': [],
             'World 1': [],
@@ -129,6 +134,13 @@ class Account:
         self.highest_world_reached = 1
         self.inventory: Inventory = Inventory()
         self.gemshop: GemShop = GemShop(self.raw_data)
+        # Save data can turn Autoloot on, shown on the switch too
+        self.autoloot: bool = (
+            g.autoloot
+            or self.raw_data.get("AutoLoot", 0) == 1
+            or self.gemshop.bundles['bun_i'].owned
+        )
+        g.autoloot = self.autoloot
         self.reset_counters: ResetCounters = ResetCounters(self.raw_data)
         self.crystal_spawn_chance: CrystalSpawnChance = CrystalSpawnChance()
         self.achievements: Achievements = Achievements(self.raw_data)
@@ -156,6 +168,8 @@ class Account:
         self.darts: Darts = Darts(self.raw_data)
         self.owl: Owl = Owl(self.raw_data)
         self.vault: Vault = Vault(self.raw_data, potluck_pack=g.potluck_pack)
+        # Shows the switch on when the save has it, like Autoloot
+        g.potluck_pack = self.vault.potluck_pack_owned
         self.forge_upgrades: ForgeUpgrades = ForgeUpgrades(self.raw_data)
         self.bribes: Bribes = Bribes(self.raw_data)
         self.star_signs: StarSigns = StarSigns(self.raw_data)
