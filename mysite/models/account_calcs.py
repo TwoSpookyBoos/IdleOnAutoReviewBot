@@ -5,18 +5,16 @@ from consts.consts_general import getNextESFamilyBreakpoint, storage_chests_item
     greenstack_amount
 from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
-from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_summ_level_goal, \
+from consts.consts_w1 import get_seraph_cosmos_summ_level_goal, \
     get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
     get_seraph_stacks, seraph_max
-from consts.consts_w1 import statues_dict
 from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
-from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
+from consts.consts_w5 import divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.advice.advice import Advice
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_get, safer_math_pow, safer_math_log
@@ -320,7 +318,6 @@ def _calculate_w1(account):
         account.glimbo, account.research.grid, account.event_points_shop
     )
     _calculate_w1_starsigns(account)
-    # _calculate_w1_statues(account)  #Moved to Wave 4 as it relies on Talent levels
     _calculate_w1_stamps(account)
     account.owl.calculate(account.legend_talents, account.companions)
     account.basketball.calculate()
@@ -1174,91 +1171,14 @@ def _calculate_wave_4(account):
     _calculate_w6_beanstalk(account)
 
 def _calculate_w1_statues(account):
-    voodoo_statufication_multi = [
-        lava_func(
-            all_talentsDict[56]['funcX'],
-            char.max_talents.get('56', 0),
-            all_talentsDict[56]['x1'],
-            all_talentsDict[56]['x2']
-        ) for char in account.vmans
-    ]
-
-    voodoo_statufication_multi = ValueToMulti(max(voodoo_statufication_multi, default=0))
-
-    vault_multi = account.vault.upgrades['Statue Bonanza'].total_value
-    vault_statues = [statues_dict[i]['Name'] for i in [0, 1, 2, 6]]
-
-    onyx_multi = 2 + (0.3 * account.sailing['Artifacts']['The Onyx Lantern']['Level'])
-    onyx_typenumber = get_statue_type_index_from_name('Onyx')
-
-    zenith_multi = ValueToMulti(50 + floor(account.zenith_market['TRUE ZEN'].value))
-    zenith_typenumber = get_statue_type_index_from_name('Zenith')
-
-    merit_multi = ValueToMulti(account.meritocracy[26].value)
-
-    event_shop_multi = ValueToMulti(30 * account.event_points_shop['Bonuses']['Smiley Statue']['Owned'])
-
-    # The value of Dragon Statue is used to increase other statues so must be calculated first
-    account.statues['Dragon Statue']['Value'] = (
-        account.statues['Dragon Statue']['BaseValue']
-        * account.statues['Dragon Statue']['Level']
-        * (onyx_multi if account.statues['Dragon Statue']['TypeNumber'] >= onyx_typenumber else 1)
-        * (zenith_multi if account.statues['Dragon Statue']['TypeNumber'] >= zenith_typenumber else 1)
-        * (vault_multi if 'Dragon Statue' in vault_statues else 1)  #It isn't currently, but, y'know.. maybe one day
-        * voodoo_statufication_multi
-        * event_shop_multi
-        * merit_multi
+    account.statues.calculate_values(
+        [char.max_talents.get('56', 0) for char in account.vmans],
+        account.sailing['Artifacts']['The Onyx Lantern']['Level'],
+        account.zenith_market['TRUE ZEN'].value,
+        account.meritocracy[26].value,
+        account.event_points_shop['Bonuses']['Smiley Statue']['Owned'],
+        account.vault.upgrades['Statue Bonanza'].total_value,
     )
-    dragon_multi = ValueToMulti(account.statues['Dragon Statue']['Value'])
-    # logger.debug(f"{vault_multi = }, {voodoo_statufication_multi = }, {onyx_multi = }, {zenith_multi = }, {dragon_multi = }, {event_shop_multi = }, {merit_multi = }")
-
-    for statue_name, statue_details in account.statues.items():
-        if statue_name != 'Dragon Statue':
-            account.statues[statue_name]['Value'] = (
-                account.statues[statue_name]['BaseValue']
-                * account.statues[statue_name]['Level']
-                * (onyx_multi if statue_details['TypeNumber'] >= onyx_typenumber else 1)
-                * (zenith_multi if statue_details['TypeNumber'] >= zenith_typenumber else 1)
-                * (vault_multi if statue_name in vault_statues else 1)
-                * voodoo_statufication_multi
-                * dragon_multi
-                * event_shop_multi
-                * merit_multi
-            )
-
-    account.statue_effect_advice = [
-        Advice(
-            label=f"Voidwalker {{{{talent|#library}}}}: Voodoo Statufication: {round(voodoo_statufication_multi, 2):g}x",
-            picture_class='voodoo-statufication'
-        ),
-        Advice(
-            label=f"Onyx base bonus: {2 * account.onyx_statues_unlocked}/2x"
-                  f"<br>Total including {{{{The Onyx Lantern |  #sailing}}}}: {round(onyx_multi, 1):g}/"
-                  f"{2 + (0.3 * max_sailing_artifact_level)}x",
-            picture_class='onyx-tools',
-            progression=account.sailing['Artifacts']['The Onyx Lantern']['Level'],
-            goal=max_sailing_artifact_level,
-            resource='the-onyx-lantern'
-        ),
-        account.zenith_market['TRUE ZEN'].get_advice(),
-        account.meritocracy[26].get_bonus_advice(),
-        Advice(
-            label=f"{{{{Event Shop|#event-shop}}}}: Smiley Statue: {round(event_shop_multi, 2):g}/1.3x",
-            picture_class=account.event_points_shop['Bonuses']['Smiley Statue']['Image'],
-            progression=int(account.event_points_shop['Bonuses']['Smiley Statue']['Owned']),
-            goal=1
-        ),
-        Advice(
-            label=f"Level {account.statues['Dragon Statue']['Level']} Dragon Statue: {round(dragon_multi, 3):g}x",
-            picture_class=account.statues['Dragon Statue']['Image']
-        ),
-        get_upgrade_vault_advice('Statue Bonanza'),
-        Advice(
-            label=f"Total Multi for all statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi, 2):g}x"
-                  f"<br>Vault statues: {round(voodoo_statufication_multi * onyx_multi * zenith_multi * dragon_multi * event_shop_multi * merit_multi * vault_multi, 2):g}x",
-            picture_class='town-marble'
-        )
-    ]
 
 
 def _calculate_w6_beanstalk(account):

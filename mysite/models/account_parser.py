@@ -15,9 +15,7 @@ from consts.consts_general import (
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import (
-    starsigns_dict, statues_dict, statue_type_dict,
-    statue_count, event_points_shop_dict,
-    statue_type_count, get_statue_type_index_from_name
+    starsigns_dict, event_points_shop_dict,
 )
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import (
@@ -37,6 +35,7 @@ from consts.consts_w5 import (
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
 from models.general.models_consumables import StorageChest
+from models.w1.statues import Statues
 from models.general.assets import Assets
 from models.general.character import Character
 from models.general.cards import Card
@@ -477,7 +476,7 @@ def _parse_master_classes_exalted_stamps(account):
 def _parse_w1(account):
     _parse_w1_starsigns(account)
     _parse_w1_stamps(account)
-    _parse_w1_statues(account)
+    account.statues = Statues(account.raw_data, account.safe_characters)
 
 def _parse_w1_starsigns(account):
     account.star_signs = {}
@@ -569,68 +568,6 @@ def _parse_w1_stamps(account):
                 effect=""
             )
     _parse_master_classes_exalted_stamps(account)
-
-def _parse_w1_statues(account):
-    account.statues = {}
-    account.maxed_statues = 0
-    # "StuG": "[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0]",
-    raw_statue_type_list = safe_loads(account.raw_data.get("StuG", []))
-    if len(raw_statue_type_list) != statue_count:
-        raw_statue_type_list += [0] * (statue_count - len(raw_statue_type_list))
-    account.onyx_statues_unlocked = (
-            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Onyx')
-            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 2
-    )
-    account.zenith_statues_unlocked = (
-            max(raw_statue_type_list, default=0) >= get_statue_type_index_from_name('Zenith')
-            or parse_number(safer_get(account.raw_optlacc_dict, 69, 0), 0) >= 3
-    )
-    statue_levels = [0] * statue_count
-
-    # Find the maximum value across all characters. Only matters while Normal, since Gold shares across all characters
-    for char in account.safe_characters:
-        try:
-            char_statues = safe_loads(account.raw_data.get(f"StatueLevels_{char.character_index}"))
-            for statueIndex, statueDetails in enumerate(char_statues):
-                try:
-                    if statueDetails[0] > statue_levels[statueIndex]:
-                        statue_levels[statueIndex] = statueDetails[0]
-                except IndexError:
-                    logger.warning(f"statue_levels list does not contain index {statueIndex}, meaning consts_w1.statues_dict is missing a statue!")
-        except Exception as e:
-            logger.warning(f"Per-Character statue level Parse error for Character{char.character_index}: {e}. Skipping them.")
-            continue
-
-    for statueIndex, statueDetails in statues_dict.items():
-        try:
-            account.statues[statueDetails['Name']] = {
-                'Level': statue_levels[statueIndex],
-                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
-                'TypeNumber': raw_statue_type_list[statueIndex],  # Integer: 0-3
-                'ItemName': statueDetails['ItemName'],
-                'Effect': statueDetails['Effect'],
-                'BaseValue': statueDetails['BaseValue'],
-                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statue_multi()
-                'Farmer': statueDetails['Farmer'],
-                'Resource': statueDetails['Resource'],
-            }
-        except Exception as e:
-            logger.warning(f"Statue Parse error: {e}. Defaulting to level 0")
-            account.statues[statueDetails['Name']] = {
-                'Level': 0,
-                'Type': statue_type_dict.get(raw_statue_type_list[statueIndex], 'UnknownType'),  # Description: Normal, Gold, Onyx, Zenith
-                'TypeNumber': 0,
-                'ItemName': statueDetails['ItemName'],
-                'Effect': statueDetails['Effect'],
-                'BaseValue': statueDetails['BaseValue'],
-                'Value': statueDetails['BaseValue'],  # Handled in _calculate_w1_statues()
-                'Farmer': statueDetails['Farmer'],
-                'Resource': statueDetails['Resource'],
-            }
-        account.statues[statueDetails['Name']]['Image'] = f"{account.statues[statueDetails['Name']]['Type']}-{statueDetails['Name']}".lower().replace(' ', '-')
-        if account.statues[statueDetails['Name']]['TypeNumber'] >= statue_type_count:
-            account.maxed_statues += 1
-
 
 def _parse_w2(account):
     _parse_w2_ballot(account)

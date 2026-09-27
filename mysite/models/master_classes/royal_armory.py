@@ -119,7 +119,6 @@ class StatueFlair:
         self.flair_name = royal_armory_statue_flair_names[min(level, len(royal_armory_statue_flair_names) - 1)]
 
     def get_advice(self, statue_image: str) -> Advice:
-        # statue_image: session_data.account.statues[self.statue_name]['Image'] at the call site.
         return Advice(
             label=f"{self.statue_name} Flair: {self.flair_name}",
             picture_class=statue_image,

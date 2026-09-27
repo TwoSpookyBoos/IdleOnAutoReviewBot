@@ -119,11 +119,11 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     multi_group_d_value += demonblub_card_value
 
     coral_statue = session_data.account.statues['Coral Statue']
-    coral_statue_value = coral_statue['Value']
+    coral_statue_value = coral_statue.value
     coral_statue_advice = Advice(
-        label=f"Level {coral_statue['Level']} Coral Statue: +{coral_statue_value:.2f}% {'(must be at least gold)' if coral_statue['Type'] == 'Normal' else ''}",
-        picture_class=coral_statue['Image'],
-        progression=coral_statue['Level'],
+        label=f"Level {coral_statue.level} Coral Statue: +{coral_statue_value:.2f}% {'(must be at least gold)' if coral_statue.type == 'Normal' else ''}",
+        picture_class=coral_statue.image,
+        progression=coral_statue.level,
         goal=EmojiType.INFINITY.value,
     )
     multi_group_d_advice.append(coral_statue_advice)

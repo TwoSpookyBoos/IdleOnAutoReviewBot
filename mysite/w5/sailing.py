@@ -252,7 +252,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             5 * bagur['BlessingLevel'] +
             ad_tablet_bonus_percent +
             sailboat_stamp.total_value +
-            (boat_statue['Type'] != 'Normal') * boat_statue['Value'] +
+            (boat_statue.type != 'Normal') * boat_statue.value +
             popped_corn['Value'] +
             oj_jooce_vial.value +
             has_skill_mastery * (total_sailing_level > 200) * 15 +
@@ -332,8 +332,8 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             ),
             session_data.account.stamps['Sailboat Stamp'].get_advice(),
             Advice(
-                label=f"Level {boat_statue['Level']} Boat Statue: +{(boat_statue['Type'] != 'Normal') * boat_statue['Value']:.2f}% {'(must be at least gold)' if boat_statue['Type'] == 'Normal' else ''}",
-                picture_class=boat_statue['Image'],
+                label=f"Level {boat_statue.level} Boat Statue: +{(boat_statue.type != 'Normal') * boat_statue.value:.2f}% {'(must be at least gold)' if boat_statue.type == 'Normal' else ''}",
+                picture_class=boat_statue.image,
             ),
             Advice(
                 label=f"{{{{ Meal|#cooking }}}} - Popped Corn: {popped_corn['Description']}",

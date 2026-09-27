@@ -72,7 +72,7 @@ def getRoyalArmoryStatuesAdviceGroup(royal_armory) -> AdviceGroup:
 
 def getRoyalArmoryStatueFlairAdviceGroup(royal_armory) -> AdviceGroup:
     flair_advices = [
-        flair.get_advice(session_data.account.statues[flair.statue_name]['Image'])
+        flair.get_advice(session_data.account.statues[flair.statue_name].image)
         for flair in royal_armory.statue_flairs
     ]
 
