@@ -602,7 +602,7 @@ def _calculate_w4_meal_multi(account):
     meal_multi = (
         ValueToMulti(
             (account.labJewels['Black Diamond Rhinestone']['Value'] * account.labJewels['Black Diamond Rhinestone']['Enabled'])
-            + account.breeding['Total Shiny Levels']['Bonuses from All Meals']
+            + account.breeding.total_shiny_levels['Bonuses from All Meals']
         )
         * account.summoning.bonuses["Meal Bonuses"].as_multi
         * account.companions.get_multi('Wickerlight Spirit', 'Meal Bonus')

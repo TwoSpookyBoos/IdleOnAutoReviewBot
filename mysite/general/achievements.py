@@ -112,7 +112,7 @@ def getAchievementStatus(achievementName):
                 else:
                     return 0, 8, 'pretzel'
             case 'Gilded Shells':
-                return min(12, session_data.account.breeding['Egg Slots']), 12, 'egg-nest'
+                return min(12, session_data.account.breeding.egg_slots), 12, 'egg-nest'
             #W5
             case 'Artifact Finder':
                 return min(15, sum(1 for artifact in session_data.account.sailing['Artifacts'].values() if artifact['Level'] > 0)), 15, ''

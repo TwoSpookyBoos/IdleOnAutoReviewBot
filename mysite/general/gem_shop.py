@@ -66,7 +66,7 @@ def try_exclude_BurningBadBooks(exclusionLists):
             sublist.append('Burning Bad Books')
 
 def try_exclude_EggCapacity(exclusionLists):
-    if session_data.account.breeding['Total Unlocked Count'] >= breeding_total_pets - 5:
+    if session_data.account.breeding.total_unlocked_count >= breeding_total_pets - 5:
         for sublist in exclusionLists:
             sublist.append('Royal Egg Cap')
 

@@ -130,7 +130,7 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
     ]
     beanbie = account.star_signs["Beanbie Major"]
     infinite_levels = get_infinite_star_sign_levels(
-        account.breeding["Total Shiny Levels"]["Infinite Star Signs"]
+        account.breeding.total_shiny_levels["Infinite Star Signs"]
     )
     seraph_unlocked = account.star_signs["Seraph Cosmos"]["Unlocked"]
     cultism_level = account.tesseract.upgrades["Astrology Cultism"].level

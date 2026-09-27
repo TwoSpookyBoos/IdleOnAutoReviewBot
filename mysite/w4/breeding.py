@@ -37,7 +37,7 @@ def getShinyExclusions(breeding_dict, progression_tiers_breeding):
     highest_iss_in_tiers = max([requirements.get('Shinies', {}).get('Infinite Star Signs', [0])[0] for requirements in progression_tiers_breeding.values()])
     if (
         session_data.account.rift['InfiniteStars'].unlocked
-        and sum([shiny_pet[1] for shiny_pet in breeding_dict['Grouped Bonus']['Infinite Star Signs']]) < highest_iss_in_tiers
+        and sum([pet.shiny_level for pet in breeding_dict.shiny_bonus_pets['Infinite Star Signs']]) < highest_iss_in_tiers
     ):
         shinyExclusionsDict['Infinite Star Signs'] = False
 
@@ -101,13 +101,9 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
         label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * faster_shiny_pet_total_levels}% total",
         picture_class='green-mushroom-shiny'
     ))
-    sps_adviceDict[mgc].append(Advice(
-        label=f"Breeding Upgrade: Grand Martial of Shinytown: "
-              f"+{session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Value']}%",
-        picture_class='breeding-bonus-11',
-        progression=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['Level'],
-        goal=session_data.account.breeding['Upgrades']['Grand Martial of Shinytown']['MaxLevel'],
-    ))
+    sps_adviceDict[mgc].append(
+        session_data.account.breeding.upgrades['Grand Martial of Shinytown'].get_advice()
+    )
 
     sps_adviceDict[mgc].append(Advice(
         label=f"Star Sign: Breedabilli: "
@@ -133,19 +129,14 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
 
 def getBreedabilityAdviceGroup():
     b_advices = []
-    all_breedability = {}
-    for world_index in session_data.account.breeding['Species'].keys():
-        for k, v in session_data.account.breeding['Species'][world_index].items():
-            all_breedability[k] = v
-            all_breedability[k]['World'] = world_index
-    # all_breedability = {
-    #     k:v
-    #     for worldIndex in session_data.account.breeding['Species'].keys()
-    #     for k,v in session_data.account.breeding['Species'][worldIndex].items()
-    # }
+    all_breedability = {
+        name: pet
+        for world_pets in session_data.account.breeding.species.values()
+        for name, pet in world_pets.items()
+    }
     sorted_breedability = sorted(
         all_breedability.items(),
-        key=lambda pet: pet[1]['BreedabilityDays'],
+        key=lambda pet: pet[1].breedability_days,
         reverse=True
     )
     total_pet = len(sorted_breedability)
@@ -155,9 +146,9 @@ def getBreedabilityAdviceGroup():
 
     achievement_7s = 0
     for pet in sorted_breedability:
-        achievement_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] and pet[1]['World'] != 4 else 0
-        if pet[1]['BreedabilityHeart'] in total_by_heart:
-            total_by_heart[pet[1]['BreedabilityHeart']] += 1
+        achievement_7s += 1 if pet[1].breedability_days >= breedabilityDaysList[-4] and pet[1].world != 4 else 0
+        if pet[1].breedability_heart in total_by_heart:
+            total_by_heart[pet[1].breedability_heart] += 1
 
     for heart_index, heart in enumerate(total_by_heart.keys()):
         if total_by_heart[heart] > 0:
@@ -173,18 +164,18 @@ def getBreedabilityAdviceGroup():
         target = breedabilityDaysList[-1]
 
     for pet in sorted_breedability:
-        if pet[1]['BreedabilityDays'] >= target:
+        if pet[1].breedability_days >= target:
             continue
         b_advices.append(Advice(
-            label=f"W{pet[1]['World']} {pet[0]}"
-                  f"<br>Breedability Multi: {pet[1]['BreedabilityMulti']:.3f}x"
+            label=f"W{pet[1].world} {pet[0]}"
+                  f"<br>Breedability Multi: {pet[1].breedability_multi:.3f}x"
                   f"<br>Heart {number_to_roman(heart_level)}: "
-                  f"{notateNumber('Match', pet[1]['BreedabilityDays'], 0, 'K' if pet[1]['BreedabilityDays'] >= 1000 else '')} / "
+                  f"{notateNumber('Match', pet[1].breedability_days, 0, 'K' if pet[1].breedability_days >= 1000 else '')} / "
                   f"{notateNumber('Match', target, 0, 'K')}",
             picture_class=pet[0],
-            progression=f"{min(1, pet[1]['BreedabilityDays'] / target):.2%}",
+            progression=f"{min(1, pet[1].breedability_days / target):.2%}",
             goal='100%',
-            resource=pet[1]['BreedabilityHeart']
+            resource=pet[1].breedability_heart
         ))
     b_advices.insert(0, Advice(
         label=f"Total Heart {number_to_roman(heart_level)}+ pets",
@@ -436,10 +427,10 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         # Unlocked Territories
         if tier_UnlockedTerritories >= (tier_number - 1):
-            if breeding_dict['Highest Unlocked Territory Number'] >= requirements.get('TerritoriesUnlocked', 0):
+            if breeding_dict.highest_unlocked_territory >= requirements.get('TerritoriesUnlocked', 0):
                 tier_UnlockedTerritories = tier_number
             else:
-                for territory_index in range(breeding_dict['Highest Unlocked Territory Number'] + 1, requirements['TerritoriesUnlocked'] + 1):
+                for territory_index in range(breeding_dict.highest_unlocked_territory + 1, requirements['TerritoriesUnlocked'] + 1):
                     breeding_Advices['UnlockedTerritories'][spice].append(Advice(
                         label=getTerritoryName(territory_index),
                         picture_class=getSpiceImage(territory_index),
@@ -454,7 +445,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
 
         # Arena Waves to unlock Pet Slots
         if tier_MaxArenaWave >= (tier_number - 1):
-            if breeding_dict['ArenaMaxWave'] >= requirements.get('ArenaWaves', 0):
+            if breeding_dict.arena_max_wave >= requirements.get('ArenaWaves', 0):
                 tier_MaxArenaWave = tier_number
             else:
                 for pet_index in range(0, len(recommended_arena_comps[tier_MaxArenaWave][0])):
@@ -475,18 +466,18 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
             # if there are actual level requirements
             all_requirements_met = True
             for shiny_type in requirements['Shinies']:
-                if breeding_dict['Total Shiny Levels'][shiny_type] < requirements['Shinies'][shiny_type][0]:
+                if breeding_dict.total_shiny_levels[shiny_type] < requirements['Shinies'][shiny_type][0]:
                     if shiny_exclusions.get(shiny_type, False) == False:
                         all_requirements_met = False
                     else:
                         continue
                     failedShinyRequirements.append([
                         shiny_type,
-                        breeding_dict['Total Shiny Levels'][shiny_type],
+                        breeding_dict.total_shiny_levels[shiny_type],
                         requirements['Shinies'][shiny_type][0],
                         requirements['Shinies'][shiny_type][1]],
                     )
-                    failedShinyBonus[shiny_type] = breeding_dict['Grouped Bonus'][shiny_type]
+                    failedShinyBonus[shiny_type] = breeding_dict.shiny_bonus_pets[shiny_type]
             if all_requirements_met == True and tier_ShinyLevels >= tier_number - 1:
                 tier_ShinyLevels = tier_number
             else:
@@ -502,10 +493,10 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
                             breeding_Advices['ShinyLevels'][shiny_subgroup_label] = []
                         for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
                             breeding_Advices['ShinyLevels'][shiny_subgroup_label].append(Advice(
-                                label=f"{possibleShinyPet[0]}: {possibleShinyPet[2]:,.2f} base days to level",
-                                picture_class=possibleShinyPet[0],
-                                progression=possibleShinyPet[1],
-                                goal=max(failedRequirement[3], possibleShinyPet[1]),
+                                label=f"{possibleShinyPet.name}: {possibleShinyPet.days_to_shiny_level:,.2f} base days to level",
+                                picture_class=possibleShinyPet.name,
+                                progression=possibleShinyPet.shiny_level,
+                                goal=max(failedRequirement[3], possibleShinyPet.shiny_level),
                                 completed=False
                             ))
 
@@ -519,15 +510,15 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
             all_requirements_met = True
             if tier_MaxShinyLevels >= (tier_number - 1):
                 for shiny_type in requirements['Max Shinies']:
-                    for pet_details in breeding_dict['Grouped Bonus'][shiny_type]:
-                        if pet_details[1] < len(shiny_days_list):
+                    for pet_details in breeding_dict.shiny_bonus_pets[shiny_type]:
+                        if pet_details.shiny_level < len(shiny_days_list):
                             all_requirements_met = False
                             add_subgroup_if_available_slot(breeding_Advices['MaxShinyLevels'], subgroup_label)
                             if subgroup_label in breeding_Advices['MaxShinyLevels']:
                                 breeding_Advices['MaxShinyLevels'][subgroup_label].append(Advice(
-                                    label=f"{shiny_type}: {pet_details[0]}",
-                                    picture_class=pet_details[0],
-                                    progression=pet_details[1],
+                                    label=f"{shiny_type}: {pet_details.name}",
+                                    picture_class=pet_details.name,
+                                    progression=pet_details.shiny_level,
                                     goal=len(shiny_days_list),
                                 ))
 
@@ -540,7 +531,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
     territories = customized_tiers.get(tier_UnlockedTerritories + 1, {}).get('TerritoriesUnlocked', max_breeding_territories)
     breeding_AdviceGroups['UnlockedTerritories'] = AdviceGroup(
         tier=tier_UnlockedTerritories,
-        pre_string=f"Unlock {territories - breeding_dict['Highest Unlocked Territory Number']}"
+        pre_string=f"Unlock {territories - breeding_dict.highest_unlocked_territory}"
                    f" more Spice Territor{pl(breeding_Advices['UnlockedTerritories'], 'y', 'ies')}",
         advices=breeding_Advices['UnlockedTerritories'],
     )
@@ -559,7 +550,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
             advices=breeding_Advices['ShinyLevels'],
         )
         if len(breeding_Advices['ShinyLevels']) == 0:
-            maxed_shinies = [pet_info[0] for bonus_group in breeding_dict['Grouped Bonus'].values() for pet_info in bonus_group if pet_info[1] == 20 ]
+            maxed_shinies = [pet_info.name for bonus_group in breeding_dict.shiny_bonus_pets.values() for pet_info in bonus_group if pet_info.shiny_level == 20 ]
             breeding_AdviceGroups['MaxShinyLevels'] = AdviceGroup(
                 tier=tier_MaxShinyLevels,
                 pre_string=f'Max level Shinies ({len(maxed_shinies)}/{breeding_total_pets})',
@@ -569,8 +560,8 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
 
 def getPetDamageAdviceGroup():
     # Multi Group A
-    blooming_axe_breeding_upgrade = session_data.account.breeding['Upgrades']['Blooming Axe']
-    blooming_axe_breeding_upgrade_bonus = blooming_axe_breeding_upgrade['Value']
+    blooming_axe_breeding_upgrade = session_data.account.breeding.upgrades['Blooming Axe']
+    blooming_axe_breeding_upgrade_bonus = blooming_axe_breeding_upgrade.value
     multi_group_a = ValueToMulti(blooming_axe_breeding_upgrade_bonus)
 
     # Multi Group B
@@ -630,12 +621,7 @@ def getPetDamageAdviceGroup():
             )
         ],
         f'Multi Group A: {round(multi_group_a, 2)}x': [
-            Advice(
-                label=f'Breeding Upgrade - Blooming Axe: +{blooming_axe_breeding_upgrade_bonus}%',
-                picture_class='breeding-bonus-5',
-                progression=blooming_axe_breeding_upgrade['Level'],
-                goal=blooming_axe_breeding_upgrade['MaxLevel']
-            )
+            blooming_axe_breeding_upgrade.get_advice()
         ],
         f'Multi Group B: {round(multi_group_b, 2)}x': [
             electrolyte_vial.get_advice(full_name=False),
@@ -682,7 +668,7 @@ def getPetDamageAdviceGroup():
         pre_string='Sources of Pet Damage',
         advices=pet_damage_advices,
         informational=True,
-        completed=all([territory['Unlocked'] for territory in session_data.account.breeding['Territories'].values()]) and session_data.account.breeding['ArenaMaxWave'] >= breeding_last_arena_bonus_unlock_wave
+        completed=all(session_data.account.breeding.territories.values()) and session_data.account.breeding.arena_max_wave >= breeding_last_arena_bonus_unlock_wave
     )
     return pet_damage_advice_group
 
@@ -701,7 +687,7 @@ def getBreedingAdviceSection() -> AdviceSection:
     breedingDict = session_data.account.breeding
     #Generate AdviceGroups
     breeding_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getBreedingProgressionTiersAdviceGroups(breedingDict)
-    breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict['Total Shiny Levels']['Faster Shiny Pet Lv Up Rate'])
+    breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict.total_shiny_levels['Faster Shiny Pet Lv Up Rate'])
     breeding_AdviceGroupDict['ActiveBM'] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
     breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()

@@ -392,15 +392,15 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_4_bonus = 0
 
     # Breeding - Shiny Pets
-    for world in session_data.account.breeding['Species']:
-        for shiny_name, shiny_details in session_data.account.breeding['Species'][world].items():
-            if shiny_details['ShinyBonus'] == 'Drop Rate':
-                shiny_value = shiny_details['ShinyLevel']
+    for world in session_data.account.breeding.species:
+        for shiny_name, shiny_details in session_data.account.breeding.species[world].items():
+            if shiny_details.shiny_bonus == 'Drop Rate':
+                shiny_value = shiny_details.shiny_level
                 drop_rate_aw_advice[w4].append(Advice(
                     label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}:"
                           f"<br>+{shiny_value}/{len(shiny_days_list)}% Drop Rate",
                     picture_class=shiny_name,
-                    progression=shiny_details['ShinyLevel'],
+                    progression=shiny_details.shiny_level,
                     goal=len(shiny_days_list)
                 ))
                 world_4_bonus += shiny_value
@@ -835,7 +835,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
     beanstalk = session_data.account.beanstalk
     seed_of_loot = session_data.account.farming.land_rank['Seed of Loot']
     infinite_star_sign_levels = get_infinite_star_sign_levels(
-        session_data.account.breeding['Total Shiny Levels']['Infinite Star Signs']
+        session_data.account.breeding.total_shiny_levels['Infinite Star Signs']
     )
     for index, character in enumerate(session_data.account.all_characters):
         # Drop Rate from LUK
