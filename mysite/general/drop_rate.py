@@ -326,14 +326,10 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     ))
     world_2_bonus += trove_sigil_value
 
-    ballot_active = session_data.account.ballot['CurrentBuff'] == 27
-    if ballot_active:
-        ballot_status = 'is Active'
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
-        ballot_status = 'is Inactive'
-    else:
-        ballot_status = 'status is not available in provided data'
-    ballot_value = session_data.account.ballot['Buffs'][27]['Value']
+    ballot_buff = session_data.account.ballot[27]
+    ballot_active = ballot_buff.active
+    ballot_status = ballot_buff.status
+    ballot_value = ballot_buff.value
     ballot_value_active = ballot_value * ballot_active
     drop_rate_aw_advice[w2].append(Advice(
         label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{round(ballot_value_active, 2)}/{round(ballot_value, 2)}% Drop Rate"

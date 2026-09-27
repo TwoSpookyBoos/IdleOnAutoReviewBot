@@ -78,15 +78,8 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     mgc_label = f"Multi Group C: {mgc:.3f}x"
 
     # Multi Group D = Bonus Ballot
-    ballot_active = session_data.account.ballot['CurrentBuff'] == 17
-    if ballot_active:
-        ballot_status = 'is Active'
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
-        ballot_status = 'is Inactive'
-    else:
-        ballot_status = 'status is not available in provided data'
-    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][17]['Value'])
-    ballot_multi_active = max(1, ballot_multi * ballot_active)
+    ballot_buff = session_data.account.ballot[17]
+    ballot_multi_active = ballot_buff.active_multi
 
     mgd = ballot_multi_active
     mgd_label = f"Multi Group D: {mgd:.3f}x"
@@ -154,14 +147,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{tuttle_vial_multi:.3f}x"))
 
     # Multi Group D
-    speed_Advice[mgd_label].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
-              f"<br>(Buff {ballot_status})",
-        picture_class='ballot-17',
-        progression=int(ballot_active),
-        goal=1,
-        completed=True
-    ))
+    speed_Advice[mgd_label].append(ballot_buff.get_bonus_advice())
 
     # Multi Group E
     speed_Advice[mge_label].append(session_data.account.arcade[43].get_advice())

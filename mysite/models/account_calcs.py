@@ -342,26 +342,16 @@ def _calculate_w2_prisma(account):
     )
 
 def _calculate_w2_ballot(account):
-    # Dependency: legend talents
-    # "VotingBonuszMulti" in source. Last update v2.48 Giftmas Event (December 8, 2025)
-    account.ballot['BonusMulti'] = ValueToMulti(
-        account.equinox.upgrades['Voter Rights'].level
-        + account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value
-        + account.summoning.bonuses["Ballot Bonus"].value
-        + (17 * account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'])
-        + (13 * account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'])
-        + account.companions['Mashed Potato'].bonus
-        + account.companions['Crystal Cuttlefish'].bonus
-        + account.legend_talents['Democracy FTW'].value
+    account.ballot.calculate_values(
+        account.equinox.upgrades['Voter Rights'].level,
+        account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity'].value,
+        account.summoning.bonuses["Ballot Bonus"].value,
+        account.event_points_shop['Bonuses']['Gilded Vote Button']['Owned'],
+        account.event_points_shop['Bonuses']['Royal Vote Button']['Owned'],
+        account.companions['Mashed Potato'].bonus,
+        account.companions['Crystal Cuttlefish'].bonus,
+        account.legend_talents['Democracy FTW'].value,
     )
-    for buffIndex, buffValuesDict in account.ballot['Buffs'].items():
-        account.ballot['Buffs'][buffIndex]['Value'] *= account.ballot['BonusMulti']
-        # Check for + or +x% replacements
-        if "{" in buffValuesDict['Description']:
-            account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("{", f"{account.ballot['Buffs'][buffIndex]['Value']:.3f}")
-        # Check for multi replacements
-        if "}" in buffValuesDict['Description']:
-            account.ballot['Buffs'][buffIndex]['Description'] = buffValuesDict['Description'].replace("}", f"{ValueToMulti(account.ballot['Buffs'][buffIndex]['Value']):.3f}")
 
 def _calculate_w2_islands_trash(account):
     account.islands.calculate_trash_shop(account.stamps, account.stored_assets, account.bribes)

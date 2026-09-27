@@ -255,15 +255,8 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     lolly_flower = session_data.account.sneaking.pristine_charms['Lolly Flower']
     charm_multi_active = ValueToMulti(lolly_flower.value)
 
-    ballot_active = session_data.account.ballot['CurrentBuff'] == 11
-    if ballot_active:
-        ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
-        ballot_status = "is Inactive"
-    else:
-        ballot_status = "status is not available in provided data"
-    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][11]['Value'])
-    ballot_multi_active = max(1, ballot_multi * ballot_active)
+    ballot_buff = session_data.account.ballot[11]
+    ballot_multi_active = ballot_buff.active_multi
 
     lab_multi_aw = 2 if session_data.account.companions.has('King Doot') else 1
     lab_multi_cs = 2 if session_data.account.labBonuses['Wired In']['Enabled'] else 1
@@ -355,14 +348,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
 
     po_Advices[aw_label].append(lolly_flower.get_obtained_advice())
 
-    po_Advices[aw_label].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
-              f"<br>(Buff {ballot_status})",
-        picture_class='ballot-11',
-        progression=int(ballot_active),
-        goal=1,
-        completed=True
-    ))
+    po_Advices[aw_label].append(ballot_buff.get_bonus_advice())
 
     po_Advices[cs_label].append(Advice(
         label="Blue Dot before your sample = Only 2x from Lab is active",

@@ -14,7 +14,7 @@ from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import starsigns_dict, event_points_shop_dict
 from consts.w1.stamps import stamp_types
-from consts.consts_w2 import ballot_dict, killroy_dict
+from consts.consts_w2 import killroy_dict
 from consts.consts_w3 import refinery_dict, buildings_dict
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
@@ -529,27 +529,9 @@ def _parse_w1_stamps(account):
     _parse_master_classes_exalted_stamps(account)
 
 def _parse_w2(account):
-    _parse_w2_ballot(account)
     _parse_w2_killroy(account)
     _parse_w2_weekly_boss(account)
 
-
-def _parse_w2_ballot(account):
-    raw_vote_categories = safer_get(account.raw_serverVars_dict, 'voteCategories', [0,0,0,0])
-    raw_vote_categories = [safer_convert(v, 0) for v in raw_vote_categories]  #Convert any None to 0 as a default
-    account.ballot = {
-        "CurrentBuff": raw_vote_categories[0],
-        "OnTheBallot": raw_vote_categories[1:],
-        "Week": safer_get(account.raw_optlacc_dict, 309, 0),
-        "Buffs": {}
-    }
-    for buffIndex, buffValuesDict in ballot_dict.items():
-        account.ballot['Buffs'][buffIndex] = {
-            'Description': buffValuesDict['Description'],
-            'BaseValue': buffValuesDict['BaseValue'],
-            'Value': buffValuesDict['BaseValue'],
-            'Image': buffValuesDict['Image'],
-        }
 
 def _parse_w2_killroy(account):
     _parse_w2_killroy_skull_shop(account)

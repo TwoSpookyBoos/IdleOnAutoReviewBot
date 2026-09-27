@@ -156,8 +156,8 @@ def calculate_golden_food_multis(account) -> dict[int, GoldenFoodMulti]:
             + 3 * achievements["Beanstacker Prodigy"]["Complete"]
         ),
         "Ballot": (
-            account.ballot["Buffs"][26]["Value"]
-            * (account.ballot["CurrentBuff"] == 26)
+            account.ballot[26].value
+            * account.ballot[26].active
         ),
         "Apocalypse Wow Talent": 0,
         "Purp Mushroom Companion": companions["Purp Mushroom"].bonus,

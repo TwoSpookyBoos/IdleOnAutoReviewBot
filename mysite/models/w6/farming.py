@@ -22,6 +22,7 @@ from consts.w6.farming import (
 from models.advice.advice import Advice
 from models.master_classes.grimoire import Grimoire
 from models.w1.upgrade_vault import Vault
+from models.w2.ballot import Ballot
 from models.w6.sneaking import Emporium
 
 from utils.number_formatting import parse_number, round_and_trim
@@ -662,7 +663,7 @@ class Farming:
         for bonus in self.exotic_market.values():
             bonus.calculate_bonus()
 
-    def calculate_crop_value_multi(self, ballot: dict):
+    def calculate_crop_value_multi(self, ballot: Ballot):
         # if ("CropsBonusValue" == e)
         # return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
         value_multi = {}
@@ -674,7 +675,7 @@ class Farming:
         value_multi["Value GMO Current"] = self.market["Value Gmo"].as_multi
 
         # Ballot Buff * Active status
-        ballot_value = ballot["Buffs"][29]["Value"] * int(ballot["CurrentBuff"] == 29)
+        ballot_value = ballot[29].value * int(ballot[29].active)
         # Calculate with the Min Plot Rank
         value_multi["Pboost Ballot Multi Min"] = ValueToMulti(
             # Value of PBoost * Lowest Plot Rank
@@ -765,20 +766,10 @@ class Farming:
         evo_multi["Skill Mastery Bonus Bool"] = (
             account.rift['SkillMastery'].unlocked and evo_multi["Total Farming Levels"] >= 300
         )
-        evo_multi["Ballot Active"] = account.ballot["CurrentBuff"] == 29
-        # TODO: move to Ballot class method that create advice for it
-        if evo_multi["Ballot Active"]:
-            evo_multi["Ballot Status"] = "is Active"
-        elif not evo_multi["Ballot Active"] and account.ballot["CurrentBuff"] != 0:
-            evo_multi["Ballot Status"] = "is Inactive"
-        else:
-            evo_multi["Ballot Status"] = "status is not available in provided data"
-        evo_multi["Ballot Multi Max"] = ValueToMulti(
-            account.ballot["Buffs"][29]["Value"]
-        )
-        evo_multi["Ballot Multi Current"] = max(
-            1, evo_multi["Ballot Multi Max"] * evo_multi["Ballot Active"]
-        )
+        evo_multi["Ballot Active"] = account.ballot[29].active
+        evo_multi["Ballot Status"] = account.ballot[29].status
+        evo_multi["Ballot Multi Max"] = account.ballot[29].multi
+        evo_multi["Ballot Multi Current"] = account.ballot[29].active_multi
         evo_multi["Misc Multi"] = (
             ValueToMulti(5 * account.achievements["Lil' Overgrowth"]["Complete"])
             * account.killroy_skullshop["Crop Multi"]

@@ -268,15 +268,11 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         farming.land_rank.get_bonus_with_land_rank_advice("Production Boost")
     )
 
-    ballot_active = session_data.account.ballot['CurrentBuff'] == 29
-    if ballot_active:
-        ballot_status = "is Active"
-    elif not ballot_active and session_data.account.ballot['CurrentBuff'] != 0:
-        ballot_status = "is Inactive"
-    else:
-        ballot_status = "status is not available in provided data"
-    ballot_multi = ValueToMulti(session_data.account.ballot['Buffs'][29]['Value'])
-    ballot_multi_active = max(1, ballot_multi * ballot_active)
+    ballot_buff = session_data.account.ballot[29]
+    ballot_active = ballot_buff.active
+    ballot_status = ballot_buff.status
+    ballot_multi = ballot_buff.multi
+    ballot_multi_active = ballot_buff.active_multi
     value_advices[mgc].append(Advice(
         label=f"Plus Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
               f"<br>(Buff {ballot_status})",

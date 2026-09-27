@@ -29,6 +29,7 @@ from models.w2.alchemy_cauldrons import AlchemyCauldrons
 from models.w2.alchemy_p2w import AlchemyP2W
 from models.w2.alchemy_vials import AlchemyVials
 from models.w2.arcade import Arcade
+from models.w2.ballot import Ballot
 from models.w2.islands import Islands
 from models.w2.obols import Obols
 from models.w2.post_office import PostOffice
@@ -163,6 +164,7 @@ class Account:
 
         # W2
         self.arcade: Arcade = Arcade(self.raw_data)
+        self.ballot: Ballot = Ballot(self.raw_data)
         self.post_office: PostOffice = PostOffice(self.raw_data)
         self.islands: Islands = Islands(self.raw_data)
         self.obols: Obols = Obols(self.raw_data)

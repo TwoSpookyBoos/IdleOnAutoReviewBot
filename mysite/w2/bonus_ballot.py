@@ -12,27 +12,19 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getBonusesAdviceGroup() -> AdviceGroup:
-    bb = session_data.account.ballot['Buffs']
+    ballot = session_data.account.ballot
     current_week = math.floor(time.time() / 604800)
+    is_current_week = current_week == ballot.week
     bb_advice = {
         'Current Bonus': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items() if bonus_index == session_data.account.ballot['CurrentBuff'] and bonus_index != 0
-        ] if current_week == session_data.account.ballot['Week'] else [],
+            buff.get_advice() for buff in ballot.values()
+            if buff.index == ballot.current_buff and buff.index != 0
+        ] if is_current_week else [],
         'On the Ballot': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items() if bonus_index in session_data.account.ballot['OnTheBallot'] and bonus_index != 0
-        ] if current_week == session_data.account.ballot['Week'] else [],
-        'All Bonuses': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items()
-        ]
+            buff.get_advice() for buff in ballot.values()
+            if buff.index in ballot.on_the_ballot and buff.index != 0
+        ] if is_current_week else [],
+        'All Bonuses': [buff.get_advice() for buff in ballot.values()]
     }
 
     bb_ag = AdviceGroup(
@@ -54,7 +46,7 @@ def getBallotMultiAdviceGroup():
     _, mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
     _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
-        f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
+        f"Total Multi: {session_data.account.ballot.bonus_multi:.2f}x": [
             voter_rights.get_bonus_advice(),
             voter_integrity.get_advice(),
             Advice(

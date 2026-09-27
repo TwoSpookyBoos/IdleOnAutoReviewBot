@@ -213,12 +213,12 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
 
     # Multi Group D -- Ballot Bonus
 
-    sailing_ballot_buff_index, sailing_ballot_buff = next(
-        (i, buff) for i, buff in session_data.account.ballot['Buffs'].items()
-        if 'Sailing Speed' in buff['Description']
+    sailing_ballot_buff = next(
+        buff for buff in session_data.account.ballot.values()
+        if 'Sailing Speed' in buff.description
     )
-    is_current_ballot_buff = session_data.account.ballot['CurrentBuff'] == sailing_ballot_buff_index
-    sailing_ballot_buff_mult = ValueToMulti(is_current_ballot_buff * sailing_ballot_buff['Value'])
+    is_current_ballot_buff = sailing_ballot_buff.active
+    sailing_ballot_buff_mult = ValueToMulti(is_current_ballot_buff * sailing_ballot_buff.value)
 
     multi_group_d = sailing_ballot_buff_mult
     multi_group_d = round(multi_group_d, 2)
@@ -297,9 +297,9 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
         ],
         f'Multi Group D: {multi_group_d}x': [
             Advice(
-                label=f"Weekly Ballot: {round(sailing_ballot_buff_mult, 2)}x/{round(ValueToMulti(sailing_ballot_buff['Value']), 2)}x"
+                label=f"Weekly Ballot: {round(sailing_ballot_buff_mult, 2)}x/{round(sailing_ballot_buff.multi, 2)}x"
                       f"<br>(Buff {'is Active' if is_current_ballot_buff else 'is Inactive'})",
-                picture_class=sailing_ballot_buff['Image'],
+                picture_class=sailing_ballot_buff.image,
                 progression=int(is_current_ballot_buff),
                 goal=1
             )
