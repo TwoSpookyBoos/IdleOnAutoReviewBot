@@ -2,7 +2,6 @@ from math import floor
 
 from consts.consts_autoreview import ValueToMulti, MultiToValue
 from consts.consts_general import greenstack_amount
-from consts.idleon.consts_idleon import base_crystal_chance
 from consts.idleon.lava_func import lava_func
 from consts.consts_w2 import fishing_toolkit_dict
 from consts.consts_w5 import divinity_DivCostAfter3, \
@@ -551,55 +550,13 @@ def _calculate_general_character_bonus_talent_levels(account):
         char.super_talent_levels = account.super_talent_levels
 
 def _calculate_general_crystal_spawn_chance(account):
-    #This assumes you have the Shrine bonus and the Star Talent maxed
-    poop_value = 10 * (1 + next(c.getStars() for c in account.cards if c.name == 'Poop'))
-    genie_value = 15 * (1 + next(c.getStars() for c in account.cards if c.name == 'Demon Genie'))
-
-    # If they have both doublers, add together and 2x
-    if account.lab_chips['Omega Nanochip'].owned and account.lab_chips['Omega Motherboard'].owned:
-        total_card_chance = 2 * (poop_value + genie_value)
-    # If they only have 1 doubler, double whichever is stronger
-    elif account.lab_chips['Omega Nanochip'].owned or account.lab_chips['Omega Motherboard'].owned:
-        total_card_chance = (2 * max(poop_value, genie_value)) + min(poop_value, genie_value)
-    # If they have neither doubler, use base values only
-    else:
-        total_card_chance = poop_value + genie_value
-
-    account_wide = (
-        base_crystal_chance
-        * ValueToMulti(account.stamps['Crystallin'].total_value)
-        * ValueToMulti(total_card_chance)
-    )
-
-    for char in account.all_characters:
-        cmon_out_crystals_multi = max(1, ValueToMulti(lava_func(
-            'decay',
-            char.max_talents_over_books if char.max_talents.get("26", 0) > 0 else 0,  #This is an assumption that Cmon Out Crystals is max booked
-            300,
-            100
-        )))
-        crystals_4_dayys_multi = max(1, ValueToMulti(lava_func(
-            'decay',
-            char.max_talents.get("619", 0),
-            174,
-            50
-        )))
-        shrine_and_po = ValueToMulti(char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + account.shrines['Crescent Shrine'].value)
-        try:
-            character_influenced = (
-                shrine_and_po
-                * cmon_out_crystals_multi
-                * crystals_4_dayys_multi
-            )
-        except:
-            logger.exception(f"Character Specific crystal spawn chance calc exception for {char.character_name}")
-            character_influenced = 1
-        char.setCrystalSpawnChance(account_wide * character_influenced)
-    account.highest_crystal_spawn_chance = max(
-        [char.crystal_spawn_chance for char in account.all_characters if "Journeyman" not in char.all_classes], default=base_crystal_chance
-    )
-    account.highest_jman_crystal_spawn_chance = max(
-        [char.crystal_spawn_chance for char in account.all_characters if "Journeyman" in char.all_classes], default=base_crystal_chance
+    account.crystal_spawn_chance.calculate(
+        next(card for card in account.cards if card.name == 'Poop'),
+        next(card for card in account.cards if card.name == 'Demon Genie'),
+        account.lab_chips['Omega Nanochip'].owned + account.lab_chips['Omega Motherboard'].owned,
+        account.stamps['Crystallin'].total_value,
+        account.all_characters,
+        account.shrines['Crescent Shrine'].value,
     )
 
 def _calculate_class_unique_kill_stacks(account):

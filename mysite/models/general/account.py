@@ -5,6 +5,7 @@ from models.custom_exceptions import VeryOldDataException
 from models.advice.advice import Advice
 from models.general.achievements import Achievements
 from models.general.class_kill_talents import ClassKillTalents
+from models.general.crystal_spawn_chance import CrystalSpawnChance
 from models.general.colo_scores import ColoScores
 from models.general.character import Character, talent_bonus_banned
 from models.general.companions import Companions
@@ -126,6 +127,7 @@ class Account:
         self.inventory: Inventory = Inventory()
         self.gemshop: GemShop = GemShop(self.raw_data)
         self.reset_counters: ResetCounters = ResetCounters(self.raw_data)
+        self.crystal_spawn_chance: CrystalSpawnChance = CrystalSpawnChance()
         self.achievements: Achievements = Achievements(self.raw_data)
         self.merits: Merits = Merits(self.raw_data)
         self.storage: Storage = Storage(self.raw_data)

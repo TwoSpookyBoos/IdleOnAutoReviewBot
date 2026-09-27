@@ -50,10 +50,10 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     ))
     crystal_Advices.append(Advice(
         label=f"Minimum 1% (1 in 100) {{{{ Crystal Spawn Chance|#active }}}} on Non-Jman:"
-              f"<br>{session_data.account.highest_crystal_spawn_chance*100:.4f}%"
-              f" (1 in {100/(session_data.account.highest_crystal_spawn_chance*100):.2f})",
+              f"<br>{session_data.account.crystal_spawn_chance.highest*100:.4f}%"
+              f" (1 in {100/(session_data.account.crystal_spawn_chance.highest*100):.2f})",
         picture_class='crystal-carrot',
-        progression=f"{session_data.account.highest_crystal_spawn_chance * 100:.4f}",
+        progression=f"{session_data.account.crystal_spawn_chance.highest * 100:.4f}",
         goal=1,
         unit="%"
     ))

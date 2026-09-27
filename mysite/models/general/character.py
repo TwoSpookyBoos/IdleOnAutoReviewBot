@@ -393,8 +393,23 @@ class Character:
             self.family_guy_bonus = floor(es_family_value * family_guy_multi) - floor(es_family_value)
             self.max_talents_over_books += self.family_guy_bonus
 
-    def setCrystalSpawnChance(self, value: float):
-        self.crystal_spawn_chance = value
+    def calculate_crystal_spawn_chance(self, account_wide: float, crescent_shrine_value: float):
+        # Assumes Cmon Out Crystals is max booked
+        cmon_out_crystals_multi = max(1, ValueToMulti(lava_func(
+            'decay',
+            self.max_talents_over_books if self.max_talents.get("26", 0) > 0 else 0,
+            300,
+            100
+        )))
+        crystals_4_dayys_multi = max(1, ValueToMulti(lava_func(
+            'decay', self.max_talents.get("619", 0), 174, 50
+        )))
+        shrine_and_po = ValueToMulti(
+            self.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + crescent_shrine_value
+        )
+        self.crystal_spawn_chance = account_wide * (
+            shrine_and_po * cmon_out_crystals_multi * crystals_4_dayys_multi
+        )
 
     def isArctisLinked(self):
         return 'Arctis' in [

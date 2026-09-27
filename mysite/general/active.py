@@ -82,14 +82,14 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     crystal_Advice[total].append(Advice(
         label=f"Best Crystal Spawn Chance on Non-Jman:"
-              f" {session_data.account.highest_crystal_spawn_chance * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.highest_crystal_spawn_chance * 100):.2f})",
+              f" {session_data.account.crystal_spawn_chance.highest * 100:.4f}%"
+              f" (1 in {100 / (session_data.account.crystal_spawn_chance.highest * 100):.2f})",
         picture_class="crystal-carrot",
     ))
     crystal_Advice[total].append(Advice(
         label=f"Best Crystal Spawn Chance on Jman:"
-              f" {session_data.account.highest_jman_crystal_spawn_chance * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.highest_jman_crystal_spawn_chance * 100):.2f})",
+              f" {session_data.account.crystal_spawn_chance.highest_jman * 100:.4f}%"
+              f" (1 in {100 / (session_data.account.crystal_spawn_chance.highest_jman * 100):.2f})",
         picture_class="crystal-crabal",
     ))
 
