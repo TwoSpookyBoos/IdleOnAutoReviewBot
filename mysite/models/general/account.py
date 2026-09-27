@@ -19,6 +19,7 @@ from models.general.guild_bonuses import GuildBonuses
 from models.general.inventory import Inventory
 from models.general.merits import Merits
 from models.general.npc_tokens import NpcTokens
+from models.general.reset_counters import ResetCounters
 from models.general.storage import Storage
 from models.w1.stamps import Stamps
 from models.w1.star_signs import StarSigns
@@ -125,6 +126,7 @@ class Account:
         self.highest_world_reached = 1
         self.inventory: Inventory = Inventory()
         self.gemshop: GemShop = GemShop(self.raw_data)
+        self.reset_counters: ResetCounters = ResetCounters(self.raw_data)
         self.achievements: Achievements = Achievements(self.raw_data)
         self.merits: Merits = Merits(self.raw_data)
         self.storage: Storage = Storage(self.raw_data)

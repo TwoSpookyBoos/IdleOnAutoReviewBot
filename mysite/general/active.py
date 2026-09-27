@@ -275,24 +275,24 @@ def getLongTermAdviceList() -> list[Advice]:
 def getDailyAdviceList() -> list[Advice]:
     daily = []
 
-    if session_data.account.daily_particle_clicks_remaining > 0:
+    if session_data.account.reset_counters.particle_clicks_remaining > 0:
         daily.append(Advice(
             label=f"Spend Alternative Particle Clicks for {{{{ Bubbles|#bubbles }}}}",
             picture_class='boron',
-            progression=session_data.account.daily_particle_clicks_remaining
+            progression=session_data.account.reset_counters.particle_clicks_remaining
         ))
 
-    if session_data.account.minigame_plays_remaining > 0:
+    if session_data.account.reset_counters.minigame_plays_remaining > 0:
         daily.append(Advice(
             label=f"Spend remaining daily Minigame plays",
             picture_class='daily-minigame-plays',
-            progression=session_data.account.minigame_plays_remaining
+            progression=session_data.account.reset_counters.minigame_plays_remaining
         ))
-    if session_data.account.daily_world_boss_kills < 300:
+    if session_data.account.reset_counters.world_boss_kills < 300:
         daily.append(Advice(
             label=f"Daily World Boss retries for Gems",
             picture_class='gem',
-            progression=session_data.account.daily_world_boss_kills // 3,
+            progression=session_data.account.reset_counters.world_boss_kills // 3,
             goal=100,
             resource='kruks-volcano-key'
         ))

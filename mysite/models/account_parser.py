@@ -134,7 +134,6 @@ def _parse_wave_1(account, run_type):
     _parse_general(account)
     _parse_master_classes(account)
     _parse_w1(account)
-    _parse_w2(account)
     _parse_w3(account)
     _parse_w4(account)
     _parse_w5(account)
@@ -209,10 +208,6 @@ def _parse_general(account):
     account.all_assets = account.stored_assets + account.worn_assets
 
     account.cards = _make_cards(account)
-
-    account.minigame_plays_remaining = safer_get(account.raw_optlacc_dict, 33, 0)
-    account.daily_world_boss_kills = safer_get(account.raw_optlacc_dict, 195, 0)
-    account.daily_particle_clicks_remaining = safer_get(account.raw_optlacc_dict, 135, 0)
 
     account.family_bonuses.calculate_levels(account.safe_characters)
     _parse_general_item_filter(account)
@@ -351,13 +346,6 @@ def _parse_w1_stamps(account):
                 effect=""
             )
     _parse_master_classes_exalted_stamps(account)
-
-def _parse_w2(account):
-    _parse_w2_weekly_boss(account)
-
-
-def _parse_w2_weekly_boss(account):
-    account.weekly_boss_kills = safer_get(account.raw_optlacc_dict, 189, 0)
 
 
 def _parse_w3(account):

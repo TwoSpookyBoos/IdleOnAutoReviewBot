@@ -1178,12 +1178,12 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             x1=boss_battle_spillover['x1'],
             x2=boss_battle_spillover['x2']
         )
-        boss_battle_spillover_value = boss_battle_spillover_value_per_tier * session_data.account.weekly_boss_kills
+        boss_battle_spillover_value = boss_battle_spillover_value_per_tier * session_data.account.reset_counters.weekly_boss_kills
         boss_battle_spillover_value_max = boss_battle_spillover_value_per_tier_max * 5
         talent_advice.append(Advice(
             label=f"Special Talent - Boss Battle Spillover:"
                   f"<br>+{round(boss_battle_spillover_value, 1)}%/{boss_battle_spillover_value_max}% Drop Rate" 
-                  f"{'<br>Can be increased by defeating more weekly boss difficulties!' if session_data.account.weekly_boss_kills < 5 else ''}",
+                  f"{'<br>Can be increased by defeating more weekly boss difficulties!' if session_data.account.reset_counters.weekly_boss_kills < 5 else ''}",
             picture_class='boss-battle-spillover',
             progression=char_boss_battle_spillover_level,
             goal=100,
