@@ -14,6 +14,7 @@ from models.general.family_bonuses import FamilyBonuses
 from models.general.friend_bonuses import FriendBonuses
 from models.general.greenstacks import GreenStacks
 from models.general.guild_bonuses import GuildBonuses
+from models.general.inventory import Inventory
 from models.general.npc_tokens import NpcTokens
 from models.w1.stamps import Stamps
 from models.w1.basketball import Basketball
@@ -102,12 +103,7 @@ class Account:
         }
         #General
         self.highest_world_reached = 1
-        self.inventory = {
-            'Characters Missing Bags': {},
-            'Account Wide Inventory': {},
-            'Account Wide Inventory Slots Owned': 0,
-            'Account Wide Inventory Slots Max': 0,
-        }
+        self.inventory: Inventory = Inventory()
         self.gemshop = {
             'Purchases': {},
             'Bundle Data Present': None,

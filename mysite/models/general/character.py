@@ -1,7 +1,7 @@
 from math import floor
 
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_general import specialized_skills_dict
+from consts.consts_general import inventory_bags_dict, specialized_skills_dict
 from consts.consts_w2 import alchemy_jobs_list, get_obol_totals, po_box_dict
 from consts.consts_w3 import apoc_names_list, prayers_dict
 from consts.consts_w4 import lab_chips_dict
@@ -308,6 +308,24 @@ class Character:
                         difficulties[difficulty] = sorted(
                             enemies, key=lambda item: item[1], reverse=True
                         )
+
+    def calculate_inventory_slots(self, account_wide_slots: int):
+        self.inventory_slots = account_wide_slots
+        for bag, slots in self.inventory_bags.items():
+            if int(bag) == 112:
+                continue  # 4th anniversary bag counts account wide
+            if isinstance(slots, int | float | str):
+                self.inventory_slots += parse_number(slots)
+            else:
+                logger.warning(
+                    f"Funky bag value found in {self.character_index}'s bagsDict for bag {bag}: "
+                    f"{type(slots)} {slots}. Searching for expected value."
+                )
+                if int(bag) in inventory_bags_dict:
+                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict[int(bag)]}. All is well :)")
+                else:
+                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
+                self.inventory_slots += inventory_bags_dict.get(int(bag), 0)
 
     def setDivinityStyle(self, styleName: str):
         self.divinity_style = styleName

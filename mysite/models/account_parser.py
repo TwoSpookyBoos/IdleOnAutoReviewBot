@@ -10,7 +10,7 @@ from consts.consts_general import (
     key_cards, cardset_names, card_raw_data, gem_shop_dict, gem_shop_optlacc_dict,
     gem_shop_bundles_dict,
     achievements_list, allMeritsDict,
-    inventory_bags_dict, inventory_other_sources_dict, storage_chests_dict
+    storage_chests_dict
 )
 from consts.consts_item_data import ITEM_DATA
 from consts.consts_monster_data import decode_monster_name
@@ -36,7 +36,7 @@ from consts.consts_w5 import (
     sailing_list, captain_buffs, divinity_divinities_dict, gaming_superbits_dict, getDivinityNameFromIndex, getStyleNameFromIndex,
     sailing_artifacts_dict, artifact_tier_names, sailing_artifacts_description_overrides
 )
-from models.general.models_consumables import Bag, StorageChest
+from models.general.models_consumables import StorageChest
 from models.general.assets import Assets
 from models.general.character import Character
 from models.general.cards import Card
@@ -250,7 +250,6 @@ def _parse_general(account):
     _parse_general_event_points_shop(account)
     _parse_general_quests(account)
     _parse_general_inventory_slots_account_wide(account)
-    _parse_general_inventory_characters(account)
     _parse_general_storage_slots(account)
 
 def _parse_class_unique_kill_stacks(account):
@@ -426,81 +425,12 @@ def _parse_general_event_points_shop(account):
             }
 
 def _parse_general_inventory_slots_account_wide(account):
-    #Dependencies: _parse_switches, _parse_characters, _parse_general_gem_shop_bundles, _parse_general_event_points_shop
-    #Create dictionary for Account Wide Inventory sources
-    fourth_anni_bag_owned = any([char.character_name for char in account.all_characters if '112' in char.inventory_bags])
-    account.inventory['Account Wide Inventory'] = {
-        'Default': {
-            'Description': inventory_other_sources_dict['Default']['Description'],
-            'Max Slots': inventory_other_sources_dict['Default']['Max Slots'],
-            'Owned': True,
-            'Owned Slots': inventory_other_sources_dict['Default']['Max Slots'],
-            'Image': inventory_other_sources_dict['Default']['Image']
-        },
-        'Autoloot': {
-            'Description': inventory_other_sources_dict['Autoloot']['Description'],
-            'Max Slots': inventory_other_sources_dict['Autoloot']['Max Slots'],
-            'Owned': account.autoloot,
-            'Owned Slots': inventory_other_sources_dict['Autoloot']['Max Slots'] * account.autoloot,
-            'Image': inventory_other_sources_dict['Autoloot']['Image'],
-            'Resource': inventory_other_sources_dict['Autoloot']['Resource']
-        },
-        'Secret Pouch': {
-            'Description': inventory_other_sources_dict['Secret Pouch']['Description'],
-            'Max Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'],
-            'Owned': account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
-            'Owned Slots': inventory_other_sources_dict['Secret Pouch']['Max Slots'] * account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
-            'Image': inventory_other_sources_dict['Secret Pouch']['Image'],
-            'Resource': inventory_other_sources_dict['Secret Pouch']['Resource']
-        },
-        'Fourth Anni': {
-            'Description': inventory_other_sources_dict['Fourth Anni']['Description'],
-            'Max Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'],
-            'Owned': fourth_anni_bag_owned,
-            'Owned Slots': inventory_other_sources_dict['Fourth Anni']['Max Slots'] * fourth_anni_bag_owned,
-            'Image': inventory_other_sources_dict['Fourth Anni']['Image']
-        },
-        'bon_f': {
-            'Description': inventory_other_sources_dict['bon_f']['Description'],
-            'Max Slots': inventory_other_sources_dict['bon_f']['Max Slots'],
-            'Owned': account.gemshop['Bundles']['bon_f']['Owned'],
-            'Owned Slots': inventory_other_sources_dict['bon_f']['Max Slots'] * account.gemshop['Bundles']['bon_f']['Owned'],
-            'Image': inventory_other_sources_dict['bon_f']['Image'],
-            'Resource': inventory_other_sources_dict['bon_f']['Resource']
-        },
-    }
-    account.inventory['Account Wide Inventory Slots Owned'] = sum([source['Owned Slots'] for source in account.inventory['Account Wide Inventory'].values()])
-    account.inventory['Account Wide Inventory Slots Max'] = sum([source['Max Slots'] for source in account.inventory['Account Wide Inventory'].values()])
-
-def _parse_general_inventory_characters(account):
-    #Dependencies: _parse_general_inventory_slots_account_wide
-    # Sanity check for any unknown bags present in the JSON
-    unknown_bags_in_json = set()
-    for character in account.all_characters:
-        for bag in character.inventory_bags:
-            if int(bag) not in inventory_bags_dict:
-                unknown_bags_in_json.add(f"{bag}: {character.inventory_bags[bag]}")
-    if len(unknown_bags_in_json) > 0:
-        logger.warning(f"Unknown Inventory Bags found in JSON: {unknown_bags_in_json}. Get these added to consts_general.inventory_bags_dict")
-
-    for character in account.all_characters:
-        account.inventory['Characters Missing Bags'][character.character_index] = [bag for bag in Bag if str(bag.value) not in character.inventory_bags]
-        character.inventory_slots = account.inventory['Account Wide Inventory Slots Owned']
-        for bag in character.inventory_bags:
-            if int(bag) == 112:
-                continue  #4th anniversary bag accounted for in account wide inventory
-            if isinstance(character.inventory_bags[bag], int | float | str):
-                try:
-                    character.inventory_slots += parse_number(character.inventory_bags[bag])
-                except:
-                    logger.exception(f"Could not increase character {character.character_index}'s bagslots by {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}")
-            else:
-                logger.warning(f"Funky bag value found in {character.character_index}'s bagsDict for bag {bag}: {type(character.inventory_bags[bag])} {character.inventory_bags[bag]}. Searching for expected value.")
-                if int(bag) in inventory_bags_dict:
-                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict.get(int(bag), 0)}. All is well :)")
-                else:
-                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
-                character.inventory_slots += inventory_bags_dict.get(int(bag), 0)
+    account.inventory.calculate_owned(
+        account.all_characters,
+        account.autoloot,
+        account.event_points_shop['Bonuses']['Secret Pouch']['Owned'],
+        account.gemshop['Bundles']['bon_f']['Owned'],
+    )
 
 def _parse_general_storage_slots(account):
     #Dependencies: None

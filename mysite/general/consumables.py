@@ -85,22 +85,9 @@ def get_inventory_advicegroup() -> AdviceGroup:
     characters_missing_usable_bag_slots = []
 
     inventory = session_data.account.inventory
-    aw_owned = inventory['Account Wide Inventory Slots Owned']
-    aw_max = inventory['Account Wide Inventory Slots Max']
-    awi = inventory['Account Wide Inventory']
-    aw_label = f"Account Wide: {aw_owned}/{aw_max} Inventory Slots for all characters"
+    aw_label = f"Account Wide: {inventory.owned_slots}/{inventory.max_slots} Inventory Slots for all characters"
 
-    inventorySlots_AdviceDict[aw_label] = [
-        Advice(
-            label=f"{entry['Description']}: "
-                  f"{entry['Owned Slots']}/{entry['Max Slots']} slots",
-            picture_class=entry['Image'],
-            progression=int(entry['Owned']),
-            goal=1,
-            resource=entry.get('Resource', '')
-        )
-        for entry in awi.values()
-    ]
+    inventorySlots_AdviceDict[aw_label] = [source.get_advice() for source in inventory.values()]
 
     for character in session_data.account.all_characters:
         if (
@@ -108,8 +95,8 @@ def get_inventory_advicegroup() -> AdviceGroup:
             or
             (
                 character.inventory_slots == inventory_slots_max_usable_without_bundles
-                and awi['Autoloot']['Owned'] is False
-                and awi['bon_f']['Owned'] is False
+                and inventory['Autoloot'].owned is False
+                and inventory['bon_f'].owned is False
             )
         ):
             continue
@@ -127,7 +114,7 @@ def get_inventory_advicegroup() -> AdviceGroup:
                     goal=1,
                     completed=False,
                     resource='coins' if bag.type == 'Vendor' else 'smithing' if bag.type == 'Crafted' else ''
-                ) for bag in inventory['Characters Missing Bags'][character.character_index] if bag.pretty_name not in inventory_accountwide_bags
+                ) for bag in inventory.missing_bags(character) if bag.pretty_name not in inventory_accountwide_bags
             ]
 
     for subgroupName in inventorySlots_AdviceDict:
