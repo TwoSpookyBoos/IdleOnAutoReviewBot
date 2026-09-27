@@ -1103,18 +1103,18 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
         midas_minded_equipped = midas_minded_name in character.equipped_prayers
         midas_minded_equip_notice = "" if midas_minded_equipped else "<br>Equip the prayer to gain its bonus!"
         midas_minded_prayer = session_data.account.prayers[midas_minded_name]
-        midas_mind_completed = (midas_minded_prayer['Level'] == midas_minded_data['MaxLevel']) and midas_minded_equipped
+        midas_mind_completed = (midas_minded_prayer.level == midas_minded_data['MaxLevel']) and midas_minded_equipped
         prayer_advice.append(Advice(
             label=f"{{{{ Prayers|#prayers }}}} - {midas_minded_name}:"
-                  f"<br>+{round(midas_minded_prayer['BonusValue'], 1):g}/{round(midas_minded_bonus_max, 1):g}% Drop Rate Bonus | "
-                  f"+{round(midas_minded_prayer['CurseValue'], 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE."
+                  f"<br>+{round(midas_minded_prayer.bonus_value, 1):g}/{round(midas_minded_bonus_max, 1):g}% Drop Rate Bonus | "
+                  f"+{round(midas_minded_prayer.curse_value, 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE."
                   f"{midas_minded_equip_notice}",
             picture_class=midas_minded_name,
-            progression=midas_minded_prayer['Level'],
+            progression=midas_minded_prayer.level,
             goal=midas_minded_data['MaxLevel'],
             completed=midas_mind_completed
         ))
-        prayer_bonus += midas_minded_prayer['BonusValue'] * midas_minded_equipped
+        prayer_bonus += midas_minded_prayer.bonus_value * midas_minded_equipped
 
         # Obols - Personal
         obol_advice: list[Advice] = []
@@ -1147,7 +1147,7 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             char_world = (char_map // 50) + 1
 
             shrine_data = session_data.account.shrines['Clover Shrine']
-            shrine_map = shrine_data['MapIndex']
+            shrine_map = shrine_data.map_index
             shrine_world = (shrine_map // 50) + 1
 
             if session_data.account.labBonuses['Shrine World Tour']['Enabled']:
@@ -1155,13 +1155,13 @@ def get_drop_rate_player_advice_groups(account_wide_bonuses: dict) -> TabbedAdvi
             else:
                 clover_shrine_affects_character = char_map == shrine_map
 
-        clover_shrine_value = session_data.account.shrines['Clover Shrine']['Value']
+        clover_shrine_value = session_data.account.shrines['Clover Shrine'].value
         shrine_advice.append(Advice(
             label=f"{f'(ACTIVE {EmojiType.CHECK.value}) ' if clover_shrine_affects_character else ''} Shrines- Clover Shrine:"
                   f"<br>+{round(clover_shrine_value, 1):g}% Drop Rate "
                   f"{shrine_extra_bonus_text}",
             picture_class='clover-shrine',
-            progression=session_data.account.shrines['Clover Shrine']['Level'],
+            progression=session_data.account.shrines['Clover Shrine'].level,
             goal=EmojiType.INFINITY.value
         ))
         shrine_bonus += clover_shrine_value * clover_shrine_affects_character

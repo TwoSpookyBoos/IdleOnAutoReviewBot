@@ -1,5 +1,4 @@
 from models.general.session_data import session_data
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from consts.consts_autoreview import break_you_best, build_subgroup_label
@@ -40,23 +39,17 @@ def setPrayersProgressionTierAdviceGroup():
     for tier_number, requirements in prayers_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         for prayer_name, prayer_level in requirements.items():
-            if player_prayers[prayer_name]['Level'] < prayer_level:
+            if player_prayers[prayer_name].level < prayer_level:
                 add_subgroup_if_available_slot(prayers_Advices['Recommended'], subgroup_label)
                 if subgroup_label in prayers_Advices['Recommended']:
-                    prayers_Advices['Recommended'][subgroup_label].append(Advice(
-                        label=prayer_name,
-                        picture_class=prayer_name,
-                        progression=player_prayers[prayer_name]['Level'],
-                        goal=prayer_level,
-                        resource=player_prayers[prayer_name]['Material']
-                    ))
+                    prayers_Advices['Recommended'][subgroup_label].append(player_prayers[prayer_name].get_advice(prayer_level))
         if subgroup_label not in prayers_Advices['Recommended'] and tier_WorshipPrayers == tier_number - 1:
             tier_WorshipPrayers = tier_number
 
     # Check Optional Prayers
-    next_antifun_cost = get_antifun_spirit_next_level_cost(player_prayers['Antifun Spirit']['Level'])
+    next_antifun_cost = get_antifun_spirit_next_level_cost(player_prayers['Antifun Spirit'].level)
     for prayer_name, prayer_level in conditional_prayers.items():
-        if player_prayers[prayer_name]['Level'] < prayer_level:
+        if player_prayers[prayer_name].level < prayer_level:
             if (
                 prayer_name == 'Antifun Spirit'
                 and session_data.account.minigame_plays_daily < next_antifun_cost
@@ -64,24 +57,12 @@ def setPrayersProgressionTierAdviceGroup():
                 #logger.debug(f"Skipping Antifun Spirit because next level costs {next_antifun_cost} while player has {session_data.account.minigame_plays_daily} daily minigame plays")
                 continue
             else:
-                prayers_Advices['Conditional'].append(Advice(
-                    label=prayer_name,
-                    picture_class=prayer_name,
-                    progression=player_prayers[prayer_name]['Level'],
-                    goal=prayer_level,
-                    resource=player_prayers[prayer_name]['Material']
-                ))
+                prayers_Advices['Conditional'].append(player_prayers[prayer_name].get_advice(prayer_level))
 
     # Check Ignorable Prayers
     for prayer_name, prayer_level in ignorable_prayers.items():
-        if player_prayers[prayer_name]['Level'] < ignorable_prayers[prayer_name]:
-            prayers_Advices['Ignorable'].append(Advice(
-                label=prayer_name,
-                picture_class=prayer_name,
-                progression=player_prayers[prayer_name]['Level'],
-                goal=ignorable_prayers[prayer_name],
-                resource=player_prayers[prayer_name]['Material']
-            ))
+        if player_prayers[prayer_name].level < ignorable_prayers[prayer_name]:
+            prayers_Advices['Ignorable'].append(player_prayers[prayer_name].get_advice(ignorable_prayers[prayer_name]))
 
     # Generate Advice Groups
     prayers_AdviceGroups['Recommended'] = AdviceGroup(

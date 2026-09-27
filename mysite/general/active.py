@@ -44,8 +44,8 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         session_data.account.lab_chips['Omega Motherboard'].get_advice()
     )
     crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
-    crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
-    crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
+    crystal_Advice[aw].append(session_data.account.shrines['Crescent Shrine'].get_advice())
+    crystal_Advice[aw].append(session_data.account.shrines.get_chizoar_card_advice())
     crystal_Advice[aw].append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class="moai-head",
@@ -76,7 +76,7 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
 
     # Totals
     crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100):.3f}x"
+        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine'].value + box_value) / 100):.3f}x"
               f"<br>The cards also add together. Everything else is a unique multiplier.",
         picture_class="shrine-box2"
     ))

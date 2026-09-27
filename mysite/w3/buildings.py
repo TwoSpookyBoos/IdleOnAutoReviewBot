@@ -28,7 +28,7 @@ def generateShrineLevelingAlerts():
 
     shrine_data = session_data.account.shrines
     unlocked_shrines = [value['Image'] for key, value in session_data.account.construction_buildings.items() if value['Type'] == 'Shrine' and value['Level'] > 0]
-    unlocked_shrines_data = {key: {'map_index': shrine['MapIndex'], 'leveled_by': [], 'image': shrine['Image']} for key, shrine in shrine_data.items() if shrine['Image'] in unlocked_shrines}
+    unlocked_shrines_data = {key: {'map_index': shrine.map_index, 'leveled_by': [], 'image': shrine.image} for key, shrine in shrine_data.items() if shrine.image in unlocked_shrines}
 
     shrine_world_tour_active = session_data.account.labBonuses['Shrine World Tour']['Enabled']
     reached_world_6 = session_data.account.highest_world_reached >= 6

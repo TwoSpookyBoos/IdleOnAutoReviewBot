@@ -8,7 +8,7 @@ from consts.consts_w1 import get_seraph_cosmos_summ_level_goal, \
     get_seraph_cosmos_max_summ_level_goal, get_seraph_cosmos_multi, \
     get_seraph_stacks, seraph_max
 from consts.consts_w2 import fishing_toolkit_dict, killroy_dict
-from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
+from consts.consts_w3 import buildings_towers, buildings_shrines
 from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
@@ -378,8 +378,7 @@ def _calculate_w2_killroy(account):
 def _calculate_w3(account):
     _calculate_w3_building_max_levels(account)
     _calculate_w3_atom_collider(account)
-    _calculate_w3_shrine_values(account)
-    _calculate_w3_shrine_advices(account)
+    _calculate_w3_shrines(account)
 
 def _update_w3_building_max_levels(account, building_name: str, levels: int, note=''):
     if building_name == 'All Towers':
@@ -436,28 +435,9 @@ def _calculate_w3_atom_collider(account):
         account.compass.upgrades['Atomic Cost Crash'].total_value,
     )
 
-def _calculate_w3_shrine_values(account):
-    cchizoar_multi = ValueToMulti(5 * (1 + next(c.getStars() for c in account.cards if c.name == 'Chaotic Chizoar')))
-    for shrine in account.shrines:
-        account.shrines[shrine]['Value'] *= cchizoar_multi
-
-def _calculate_w3_shrine_advices(account):
-    account.shrine_advices = {}
-    for shrine_name in account.shrines:
-        account.shrine_advices[shrine_name] = Advice(
-            label=f"Level {account.shrines[shrine_name]['Level']} {shrine_name}:"
-                  f" +{account.shrines[shrine_name]['Value']:.0f}%"
-                  f"<br>{arbitrary_shrine_note}",
-            picture_class=account.shrines[shrine_name]['Image'],
-            progression=account.shrines[shrine_name]['Level'],
-            goal=arbitrary_shrine_goal
-        )
-    cchizoar_multi = 1 + (5 * (1 + next(c.getStars() for c in account.cards if c.name == 'Chaotic Chizoar')) / 100)
-    account.shrine_advices['Chaotic Chizoar Card'] = Advice(
-        label=f"Chaotic Chizoar card to increase Shrine ({cchizoar_multi}x multi already included)",
-        picture_class="chaotic-chizoar-card",
-        progression=1 + next(c.getStars() for c in account.cards if c.name == "Chaotic Chizoar"),
-        goal=6
+def _calculate_w3_shrines(account):
+    account.shrines.calculate_values(
+        next(c.getStars() for c in account.cards if c.name == 'Chaotic Chizoar')
     )
 
 
@@ -934,7 +914,7 @@ def _calculate_general_crystal_spawn_chance(account):
             174,
             50
         )))
-        shrine_and_po = ValueToMulti(char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + account.shrines['Crescent Shrine']['Value'])
+        shrine_and_po = ValueToMulti(char.po_boxes_invested['Non Predatory Loot Box']['Bonus3Value'] + account.shrines['Crescent Shrine'].value)
         try:
             character_influenced = (
                 shrine_and_po

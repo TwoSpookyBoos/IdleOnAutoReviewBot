@@ -37,7 +37,9 @@ from models.w3.atom_collider import AtomCollider
 from models.w3.death_note import DeathNote
 from models.w3.equinox import Equinox
 from models.w3.library import Library
+from models.w3.prayers import Prayers
 from models.w3.printer import Printer
+from models.w3.shrines import Shrines
 from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
@@ -176,6 +178,8 @@ class Account:
         self.equinox: Equinox = Equinox(self.raw_data)
         self.death_note: DeathNote = DeathNote(self.raw_data)
         self.printer: Printer = Printer(self.raw_data)
+        self.shrines: Shrines = Shrines(self.raw_data)
+        self.prayers: Prayers = Prayers(self.raw_data)
         self.armor_sets: ArmorSets = ArmorSets(self.raw_data)
         self.atom_collider: AtomCollider = AtomCollider(self.raw_data)
 

@@ -127,9 +127,9 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     prayerSubgroup = 'Which Characters need Royal Sampler?'
     psr_Advices[prayerSubgroup] = []
     psr_Advices[prayerSubgroup].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: Royal Sampler: {session_data.account.prayers['The Royal Sampler']['BonusString']}",
+        label=f"{{{{ Prayer|#prayers }}}}: Royal Sampler: {session_data.account.prayers['The Royal Sampler'].bonus_string}",
         picture_class='the-royal-sampler',
-        progression=session_data.account.prayers['The Royal Sampler']['Level'],
+        progression=session_data.account.prayers['The Royal Sampler'].level,
         goal=20
     ))
     psr_Advices[prayerSubgroup].append(Advice(
@@ -143,7 +143,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
             character_total_psr += squire_super_samples_max_book
         if max_printer_sample_rate > character_total_psr:
             short_by = max_printer_sample_rate - character_total_psr
-            prayer_gain = min(short_by, session_data.account.prayers['The Royal Sampler']['BonusValue'])
+            prayer_gain = min(short_by, session_data.account.prayers['The Royal Sampler'].bonus_value)
             character_eval = (
                 f"Keep prayer equipped for +{prayer_gain:.2f}% {EmojiType.THUMBSUP.value}"
                 if 'The Royal Sampler' in char.equipped_prayers

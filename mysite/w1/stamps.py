@@ -100,8 +100,8 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     # Account-Wide
     capacity_Advices['Account Wide'].append(session_data.account.bribes['Bottomless Bags'].get_bonus_advice())
     capacity_Advices['Account Wide'].append(session_data.account.guild_bonuses['Rucksack'].get_advice())
-    capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
-    capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
+    capacity_Advices['Account Wide'].append(session_data.account.shrines['Pantheon Shrine'].get_advice())
+    capacity_Advices['Account Wide'].append(session_data.account.shrines.get_chizoar_card_advice())
     gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']
     capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
         purchase_name='Carry Capacity',
@@ -151,13 +151,13 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class='herculean-matty-pouch',
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusValue']}/177%",
+        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack'].bonus_value}/177%",
         picture_class='ruck-sack',
-        progression=session_data.account.prayers['Ruck Sack']['Level'],
+        progression=session_data.account.prayers['Ruck Sack'].level,
         goal=50
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
+        label=f"{{{{ Prayer|#prayers }}}}: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen'].curse_string})",
         picture_class='zerg-rushogen',
         progression=EmojiType.NO.value
     ))

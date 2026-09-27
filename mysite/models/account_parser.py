@@ -15,9 +15,7 @@ from consts.consts_monster_data import decode_monster_name
 from consts.consts_w1 import starsigns_dict, event_points_shop_dict
 from consts.w1.stamps import stamp_types
 from consts.consts_w2 import ballot_dict, killroy_dict
-from consts.consts_w3 import (
-    refinery_dict, buildings_dict, buildings_shrines, prayers_dict
-)
+from consts.consts_w3 import refinery_dict, buildings_dict
 from consts.consts_w4 import (
     max_cooking_tables, max_meal_count, max_meal_plate_level, cooking_meal_dict, lab_bonuses_dict, lab_jewels_dict,
 )
@@ -586,8 +584,6 @@ def _parse_w3(account):
     _parse_w3_buildings(account)
     _parse_w3_deathnote(account)
     _parse_w3_equinox(account)
-    _parse_w3_shrines(account)
-    _parse_w3_prayers(account)
 
 def _parse_w3_refinery(account):
     account.refinery = {}
@@ -643,83 +639,6 @@ def _parse_w3_deathnote(account):
 
 def _parse_w3_equinox(account):
     account.equinox.calculate_unlocked(account.achievements, account.research.grid['Equinox Nightmares'].level)
-
-def _parse_w3_shrines(account):
-    account.shrines = {}
-    raw_shrines_list = safe_loads(account.raw_data.get("Shrine", []))
-    for shrineIndex, shrineName in enumerate(buildings_shrines):
-        try:
-            account.shrines[shrineName] = {
-                "MapIndex": int(raw_shrines_list[shrineIndex][0]),
-                1: int(raw_shrines_list[shrineIndex][1]),
-                2: int(raw_shrines_list[shrineIndex][2]),
-                "Level": int(raw_shrines_list[shrineIndex][3]),
-                "Hours": float(raw_shrines_list[shrineIndex][4]),
-                5: int(raw_shrines_list[shrineIndex][5]),
-                "BaseValue": (
-                    buildings_dict[18 + shrineIndex]['ValueBase']
-                    + (buildings_dict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
-                    if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
-                ),
-                "Value": (
-                    buildings_dict[18 + shrineIndex]['ValueBase']
-                    + (buildings_dict[18 + shrineIndex]['ValueIncrement'] * (int(raw_shrines_list[shrineIndex][3]) - 1))
-                    if int(raw_shrines_list[shrineIndex][3]) > 0 else 0
-                ),
-                'Image': buildings_dict[18 + shrineIndex]['Image']
-            }
-        except:
-            account.shrines[shrineName] = {
-                "MapIndex": 0,
-                1: 0,
-                2: 0,
-                "Level": 0,
-                "Hours": 0.0,
-                5: 0,
-                "BaseValue": 0,
-                "Value": 0,
-                'Image': buildings_dict[18 + shrineIndex]['Image']
-            }
-
-def _parse_w3_prayers(account):
-    account.prayers = {}
-    raw_prayers_list = safe_loads(account.raw_data.get("PrayOwned", []))
-    for prayerIndex, prayerValuesDict in prayers_dict.items():
-        account.prayers[prayerValuesDict['Name']] = {
-            'DisplayName': prayerValuesDict['Display'],
-            'Material': prayerValuesDict['Material'],
-            'Level': 0,
-            'BonusValue': 0,
-            'BonusString': f"Level at least once to receive the bonus!",
-            'CurseValue': 0,
-            'CurseString': f"Level at least once to receive the curse!"
-        }
-        try:
-            account.prayers[prayerValuesDict['Name']]['Level'] = int(raw_prayers_list[prayerIndex])
-            account.prayers[prayerValuesDict['Name']]['BonusValue'] = lava_func(
-                prayerValuesDict['bonus_funcType'],
-                account.prayers[prayerValuesDict['Name']]['Level'],
-                prayerValuesDict['bonus_x1'],
-                prayerValuesDict['bonus_x2']) if account.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
-            account.prayers[prayerValuesDict['Name']]['BonusString'] = (
-                f"{prayerValuesDict['bonus_pre']}"
-                f"{account.prayers[prayerValuesDict['Name']]['BonusValue']}"
-                f"{prayerValuesDict['bonus_post']}"
-                f" {prayerValuesDict['bonus_stat']}"
-            )
-            account.prayers[prayerValuesDict['Name']]['CurseValue'] = lava_func(
-                prayerValuesDict['curse_funcType'],
-                account.prayers[prayerValuesDict['Name']]['Level'],
-                prayerValuesDict['curse_x1'],
-                prayerValuesDict['curse_x2']) if account.prayers[prayerValuesDict['Name']]['Level'] > 0 else 0
-            account.prayers[prayerValuesDict['Name']]['CurseString'] = (
-                f"{prayerValuesDict['curse_pre']}"
-                f"{account.prayers[prayerValuesDict['Name']]['CurseValue']}"
-                f"{prayerValuesDict['curse_post']}"
-                f" {prayerValuesDict['curse_stat']}"
-            )
-        except:
-            pass
 
 def _parse_w4(account):
     _parse_w4_cooking(account)
