@@ -18,9 +18,7 @@ class Polonai(Villager):
         if self.level >= max_cavern:
             return None
 
-        from models.general.session_data import session_data
-
-        villagers = session_data.account.caverns.villagers.values()
+        villagers = self.caverns.villagers.values()
         return {
             "Cavern Unlock Status": [
                 self._get_caver_unlock_advice(index, name)

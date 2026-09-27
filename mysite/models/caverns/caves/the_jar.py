@@ -136,9 +136,7 @@ class TheJar(Cavern):
         return advices
 
     def _jar_stats_advice(self) -> list[Advice]:
-        from models.general.session_data import session_data
-
-        kaipu = session_data.account.caverns.villagers["Kaipu"]
+        kaipu = self.caverns.villagers["Kaipu"]
         advices = [kaipu.schematics["Jar Production Line"].get_advice()]
         for jar_index, destroyed in enumerate(self.jars_destroyed):
             pow10_stacks = safer_math_log(destroyed, "Lava")

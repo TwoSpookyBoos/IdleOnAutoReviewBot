@@ -20,6 +20,9 @@ class Caverns:
         game_version = safer_get(raw_data, "DoOnceREAL", 0.00)
         self.villagers: Villagers = Villagers(raw_caverns_list, game_version)
         self.caves: Caves = Caves(raw_caverns_list)
+        # Caves and villagers read each other through their Caverns
+        for part in [*self.villagers.values(), *self.caves.values()]:
+            part.caverns = self
 
     @cached_property
     def skilling_resource_discount(self) -> float:

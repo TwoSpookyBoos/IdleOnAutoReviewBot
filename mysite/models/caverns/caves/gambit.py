@@ -39,9 +39,7 @@ class GambitChallenge:
     def unlocked(self) -> bool:
         if self._unlock_schematic is None:
             return True
-        from models.general.session_data import session_data
-
-        kaipu = session_data.account.caverns.villagers["Kaipu"]
+        kaipu = self.cavern.caverns.villagers["Kaipu"]
         return kaipu.schematics[self._unlock_schematic].bought
 
     @cached_property
@@ -66,9 +64,7 @@ class GambitChallenge:
                 picture_class=self.image,
             )
         assert self._unlock_schematic is not None
-        from models.general.session_data import session_data
-
-        schematic = session_data.account.caverns.villagers["Kaipu"].schematics[
+        schematic = self.cavern.caverns.villagers["Kaipu"].schematics[
             self._unlock_schematic
         ]
         return Advice(
@@ -232,19 +228,17 @@ class Gambit(Cavern):
 
     @cached_property
     def pts_multi(self) -> float:
-        from models.general.session_data import session_data
-
-        account = session_data.account
+        caverns = self.caverns
         return ValueToMulti(
-            account.caverns.villagers["Minau"].measurements[13].value
-            + account.caverns.villagers["Bolaia"].studies[13].value
+            caverns.villagers["Minau"].measurements[13].value
+            + caverns.villagers["Bolaia"].studies[13].value
             + (
                 10
-                * account.caverns.villagers["Kaipu"].schematics["The Sicilian"].bought
+                * caverns.villagers["Kaipu"].schematics["The Sicilian"].bought
             )
-            + account.caverns.caves["Wisdom Monument"].bonuses["Gambit Points"].value
-            + account.caverns.caves["The Jar"].collectibles["Deep Blue Square"].value
-            + account.caverns.caves["The Jar"].collectibles["Murky Fabrege Egg"].value
+            + caverns.caves["Wisdom Monument"].bonuses["Gambit Points"].value
+            + caverns.caves["The Jar"].collectibles["Deep Blue Square"].value
+            + caverns.caves["The Jar"].collectibles["Murky Fabrege Egg"].value
         )
 
     @cached_property

@@ -11,12 +11,11 @@ class Cavern(ABC):
         self.cavern_number = cavern_number
         self.image = f"cavern-{cavern_number}"
         self.opals_found: int = 0
+        self.caverns = None  # set by Caverns
 
     @cached_property
     def unlocked(self) -> bool:
-        from models.general.session_data import session_data
-
-        polonai_level = session_data.account.caverns.villagers["Polonai"].level
+        polonai_level = self.caverns.villagers["Polonai"].level
         return polonai_level >= self.cavern_number
 
     def parse_opals_found(self, raw_caverns_list: list):

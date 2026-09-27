@@ -68,10 +68,8 @@ class BellImprovement:
         # `BellMethodsQTY` in source. Last updated in v2.43 Nov 6
         # Yes, the stack multiplier only applies AFTER the schematic is purchased.
         # Probably a bug in game but must be replicated for accuracy.
-        from models.general.session_data import session_data
-
         schematic_bought = (
-            session_data.account.caverns.villagers["Kaipu"]
+            self.cavern.caverns.villagers["Kaipu"]
             .schematics["Improvement Stackin'"]
             .bought
         )

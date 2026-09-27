@@ -19,8 +19,15 @@ from utils.text_formatting import notateNumber
 
 class HarpChord:
     def __init__(
-        self, letter: str, index: int, level: float, exp: float, unlocked_by: str | None
+        self,
+        cavern: "TheHarp",
+        letter: str,
+        index: int,
+        level: float,
+        exp: float,
+        unlocked_by: str | None,
     ):
+        self.cavern = cavern
         self.letter = letter
         self.index = index
         self.level = level
@@ -31,9 +38,7 @@ class HarpChord:
     @cached_property
     def _schematic(self):
         assert self.unlocked_by is not None
-        from models.general.session_data import session_data
-
-        return session_data.account.caverns.villagers["Kaipu"].schematics[
+        return self.cavern.caverns.villagers["Kaipu"].schematics[
             self.unlocked_by
         ]
 
@@ -132,6 +137,7 @@ class TheHarp(Cavern):
                 None if index < 2 else schematics_unlocking_harp_chords[index - 2]
             )
             self.chords[letter] = HarpChord(
+                cavern=self,
                 letter=letter,
                 index=index,
                 level=level,
@@ -155,10 +161,8 @@ class TheHarp(Cavern):
 
     @cached_property
     def strings_unlocked(self) -> int:
-        from models.general.session_data import session_data
-
-        kaipu = session_data.account.caverns.villagers["Kaipu"]
-        cosmos = session_data.account.caverns.villagers["Cosmos"]
+        kaipu = self.caverns.villagers["Kaipu"]
+        cosmos = self.caverns.villagers["Cosmos"]
         bought_count = sum(
             1
             for schematic_name in schematics_unlocking_harp_strings
@@ -170,10 +174,8 @@ class TheHarp(Cavern):
         return sum(chord.unlocked for chord in self.chords.values())
 
     def _string_stats_advice(self) -> list[Advice]:
-        from models.general.session_data import session_data
-
-        kaipu = session_data.account.caverns.villagers["Kaipu"]
-        cosmos = session_data.account.caverns.villagers["Cosmos"]
+        kaipu = self.caverns.villagers["Kaipu"]
+        cosmos = self.caverns.villagers["Cosmos"]
         return [
             cosmos.majiks.hole["String is Strung"].get_advice(),
             *[
