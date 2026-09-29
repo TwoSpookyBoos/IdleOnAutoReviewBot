@@ -1,11 +1,8 @@
-from consts.consts_autoreview import ValueToMulti, EmojiType
-
 from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.general.session_data import session_data
-from utils.number_formatting import round_and_trim
 
 
 def get_corals_info_group() -> AdviceGroup:
@@ -23,126 +20,35 @@ def get_corals_info_group() -> AdviceGroup:
     )
 
 def get_sources_of_coral_info_group() -> AdviceGroup:
-    # `"ReefDayGains" == e` in source. Last updated in v2.46 Dec 7
-
-    # Base
-    base_daily_corals = 10
-
-    # Mult A
+    coral_reef = session_data.account.coral_reef
     shellslug = session_data.account.companions['Shellslug']
-    shellslug_multi = shellslug.get_multi('Daily Corals')
-
-    # Mult B
-    coolral = session_data.account.event_points_shop['Coolral']
-    coolral_multi = 1 + 0.3 * coolral.owned
-    coolral_advice = Advice(
-        label=f'{{{{ Event Shop|#event-shop }}}} - Coolral: x{coolral_multi}/x1.3 Daily Corals',
-        resource='event-point',
-        picture_class='event-shop-25',
-        progression=int(coolral.owned),
-        goal=1,
-    )
-
-    # Mult C
     more_coral = session_data.account.gemshop.purchases['More Coral']
-    more_coral_multi = 1 + 0.2 * more_coral.owned
-    more_coral_advice = more_coral.get_advice(additional_text=f": x{more_coral_multi}/x3.0 Daily Corals")
-
-
-    # Mult D
-    multi_group_d_value = 0
-    multi_group_d_advice: list[Advice] = []
-
-    coral_kid_bonus = session_data.account.coral_kid[5]
-    multi_group_d_advice.append(coral_kid_bonus.get_advice())
-    multi_group_d_value += coral_kid_bonus.value
-
-    dancing_coral_bonus = session_data.account.dancing_coral[0]
-    dancing_coral_advice = dancing_coral_bonus.get_advice()
-    multi_group_d_advice.append(dancing_coral_advice)
-    multi_group_d_value += dancing_coral_bonus.value
-
-    # +20% Daily Corals once Clam Work is past level 5
-    clamwork_level = session_data.account.clam_work.level
-    clamwork_value = 20 if clamwork_level > 5 else 0
-    clamwork_advice = Advice(
-        label=f"Clam Work: +{clamwork_value}% Daily Corals past level 5",
-        picture_class="clam-pearl",
-        progression=clamwork_level,
-        goal=6,
-    )
-    multi_group_d_advice.append(clamwork_advice)
-    multi_group_d_value += clamwork_value
-
-    killroy_coral_level = session_data.account.killroy.coral_level
-    killroy_coral_value = round_and_trim(killroy_coral_level / (250 + killroy_coral_level) * 25, 0)
-    killroy_advice = Advice(
-        label=f"Killroy: +{killroy_coral_value:g}% Daily Corals",
-        picture_class="killroy-skull",
-        progression=killroy_coral_level,
-        goal=EmojiType.INFINITY.value,
-    )
-    multi_group_d_advice.append(killroy_advice)
-    multi_group_d_value += killroy_coral_value
-
-    corale_stamp = session_data.account.stamps['Corale Stamp']
-    corale_stamp_value = corale_stamp.total_value
-    corale_stamp_advice = corale_stamp.get_advice()
-    multi_group_d_advice.append(corale_stamp_advice)
-    multi_group_d_value += corale_stamp_value
-
-    scale_on_ice = session_data.account.alchemy_vials['Scale On Ice (Scaled Fragment)']
-    scale_on_ice_value = scale_on_ice.value
-    scale_on_ice_advice = scale_on_ice.get_advice(
-        additional_text=' Daily Corals', full_name=False, resource='scaled-fragment'
-    )
-    multi_group_d_advice.append(scale_on_ice_advice)
-    multi_group_d_value += scale_on_ice_value
-
-    legend_talent = session_data.account.legend_talents['Coral Restoration']
-    multi_group_d_advice.append(legend_talent.get_advice())
-    multi_group_d_value += legend_talent.value
-
-    multi_group_d_advice.append(session_data.account.arcade[57].get_advice())
-    multi_group_d_value += session_data.account.arcade[57].value
-
-    coral_conservationism = session_data.account.sneaking.emporium['Coral Conservationism']
-    multi_group_d_advice.append(coral_conservationism.get_obtained_advice())
-    multi_group_d_value += coral_conservationism.value
-
+    more_coral_advice = more_coral.get_advice(additional_text=f": x{coral_reef.more_coral_multi}/x3.0 Daily Corals")
     demonblub_card: Card = next(card for card in session_data.account.cards if card.name == 'Demonblub')
-    demonblub_card_value = demonblub_card.getCurrentValue()
-    demonblub_advice = demonblub_card.getAdvice()
-    multi_group_d_advice.append(demonblub_advice)
-    multi_group_d_value += demonblub_card_value
 
-    coral_statue = session_data.account.statues['Coral Statue']
-    coral_statue_value = coral_statue.value
-    coral_statue_advice = Advice(
-        label=f"Level {coral_statue.level} Coral Statue: +{coral_statue_value:.2f}% {'(must be at least gold)' if coral_statue.type == 'Normal' else ''}",
-        picture_class=coral_statue.image,
-        progression=coral_statue.level,
-        goal=EmojiType.INFINITY.value,
-    )
-    multi_group_d_advice.append(coral_statue_advice)
-    multi_group_d_value += coral_statue_value
-
-    multi_group_d_mult = ValueToMulti(multi_group_d_value)
-
-    # Total
-    total_daily_corals = base_daily_corals * shellslug_multi * coolral_multi * more_coral_multi * multi_group_d_mult
+    multi_group_d_advice: list[Advice] = [
+        session_data.account.coral_kid[5].get_advice(),
+        session_data.account.dancing_coral[0].get_advice(),
+        coral_reef.get_clam_work_advice(),
+        coral_reef.get_killroy_advice(),
+        session_data.account.stamps['Corale Stamp'].get_advice(),
+        session_data.account.alchemy_vials['Scale On Ice (Scaled Fragment)'].get_advice(
+            additional_text=' Daily Corals', full_name=False, resource='scaled-fragment'
+        ),
+        session_data.account.legend_talents['Coral Restoration'].get_advice(),
+        session_data.account.arcade[57].get_advice(),
+        session_data.account.sneaking.emporium['Coral Conservationism'].get_obtained_advice(),
+        demonblub_card.getAdvice(),
+        coral_reef.get_coral_statue_advice(),
+    ]
 
     coral_sources: dict[str, list[Advice]] = {
-        f'Total daily corals: {round(total_daily_corals, 2):g}': [],
-        f'Base: {base_daily_corals}': [Advice(
-           label=f'Base daily corals: {base_daily_corals}',
-           picture_class='coral',
-           completed=True,
-        )],
-        f'Multi Group A: x{round(shellslug_multi, 2):g}': [shellslug.get_advice()],
-        f'Multi Group B: x{round(coolral_multi, 2):g}': [coolral_advice],
-        f'Multi Group C: x{round(more_coral_multi, 2):g}': [more_coral_advice],
-        f'Multi Group D: x{round(multi_group_d_mult, 2):g}': multi_group_d_advice,
+        f'Total daily corals: {round(coral_reef.total_daily_corals, 2):g}': [],
+        f'Base: {coral_reef.base_daily_corals}': [coral_reef.get_base_daily_corals_advice()],
+        f'Multi Group A: x{round(coral_reef.shellslug_multi, 2):g}': [shellslug.get_advice()],
+        f'Multi Group B: x{round(coral_reef.coolral_multi, 2):g}': [coral_reef.get_coolral_advice()],
+        f'Multi Group C: x{round(coral_reef.more_coral_multi, 2):g}': [more_coral_advice],
+        f'Multi Group D: x{round(coral_reef.multi_group_d_mult, 2):g}': multi_group_d_advice,
     }
 
     for subgroup in coral_sources.values():

@@ -808,6 +808,24 @@ class Account:
             davey_jones_owned=self.gemshop.purchases['Davey Jones Training'].owned,
             davey_jones_returns=self.legend_talents['Davey Jones Returns'].value,
         )
+        self.coral_reef.calculate_daily_corals(
+            shellslug_multi=self.companions['Shellslug'].get_multi('Daily Corals'),
+            coolral_owned=self.event_points_shop['Coolral'].owned,
+            more_coral_owned=self.gemshop.purchases['More Coral'].owned,
+            coral_kid=self.coral_kid[5].value,
+            dancing_coral=self.dancing_coral[0].value,
+            clam_work_level=self.clam_work.level,
+            killroy_coral_level=self.killroy.coral_level,
+            corale_stamp=self.stamps['Corale Stamp'].total_value,
+            scale_on_ice=self.alchemy_vials['Scale On Ice (Scaled Fragment)'].value,
+            coral_restoration=self.legend_talents['Coral Restoration'].value,
+            arcade_bonus=self.arcade[57].value,
+            coral_conservationism=self.sneaking.emporium['Coral Conservationism'].value,
+            demonblub_card=next(
+                c for c in self.cards if c.name == 'Demonblub'
+            ).getCurrentValue(),
+            coral_statue=self.statues['Coral Statue'],
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,
