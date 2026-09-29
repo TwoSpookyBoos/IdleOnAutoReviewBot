@@ -779,6 +779,35 @@ class Account:
             arcade_bonus=self.arcade[30].value,
             vault_pet_punchies=self.vault.upgrades['Pet Punchies'].total_value,
         )
+        self.sailing.calculate_speed(
+            purrmep=self.divinity.named('Purrmep'),
+            goharut=self.divinity.named('Goharut'),
+            bagur=self.divinity.named('Bagur'),
+            characters=self.characters.safe,
+            crawler_level=next(c.level for c in self.cards if c.name == 'Crawler'),
+            kattlekruk_level=next(
+                c.level for c in self.cards if c.name == 'Kattlekruk'
+            ),
+            boaty_bubble=self.alchemy_bubbles['Boaty Bubble'].base_value,
+            big_p=self.alchemy_bubbles['Big P'].base_value,
+            ballot_buff=next(
+                buff for buff in self.ballot.values()
+                if 'Sailing Speed' in buff.description
+            ),
+            slab_count=len(self.slab),
+            slab_sovereignty=self.lab_bonuses['Slab Sovereignty'],
+            sailboat_stamp=self.stamps['Sailboat Stamp'].total_value,
+            boat_statue=self.statues['Boat Statue'],
+            popped_corn=self.meals['Popped Corn'].value,
+            oj_jooce=self.alchemy_vials['Oj Jooce (Orange Slice)'].value,
+            skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
+            total_sailing_level=sum(self.characters.all_skills['Sailing']),
+            msa_sailing=self.gaming.superbits['MSA Sailing'].unlocked,
+            total_worship_waves=self.worship.total_waves,
+            c_shanti_unlocked=self.star_signs['C. Shanti Minor'].unlocked,
+            davey_jones_owned=self.gemshop.purchases['Davey Jones Training'].owned,
+            davey_jones_returns=self.legend_talents['Davey Jones Returns'].value,
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,

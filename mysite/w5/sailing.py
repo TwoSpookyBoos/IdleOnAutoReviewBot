@@ -2,7 +2,6 @@ from collections import defaultdict
 
 from consts.consts_w2 import max_NBLB
 
-from models.general.character import Character
 from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
@@ -11,10 +10,9 @@ from models.general.session_data import session_data
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
-from utils.number_formatting import round_and_trim
 from utils.logging import get_logger
 
-from consts.consts_autoreview import break_you_best, build_subgroup_label, ValueToMulti
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import max_nblb_bubbles
 from consts.progression_tiers import sailing_progressionTiers, true_max_tiers
@@ -175,168 +173,43 @@ def get_sailing_progression_tier_advicegroups():
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def get_sailing_speed_advicegroup() -> AdviceGroup:
-    # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
-    # Multi Group A -- Purrmep Minor Link, Cards, Bubble
-    purrmep = session_data.account.divinity.named('Purrmep')
-    purrmep_base_max_minor_bonus = 50
-    char_linked_to_purrmep: Character | None = None
-    for char in session_data.account.characters.safe:
-        if char.divinity_link == 'Purrmep':
-            char_linked_to_purrmep = char
-            break
-
+    sailing = session_data.account.sailing
+    divinity = session_data.account.divinity
+    purrmep = divinity.named('Purrmep')
+    goharut = divinity.named('Goharut')
+    bagur = divinity.named('Bagur')
     crawler: Card = next(card for card in session_data.account.cards if card.name == 'Crawler')
     kattlekruk: Card = next(card for card in session_data.account.cards if card.name == 'Kattlekruk')
-
     boaty_bubble = session_data.account.alchemy_bubbles['Boaty Bubble']
-
-    big_p = session_data.account.alchemy_bubbles['Big P']
-
-    purrmep_minor_bonus = 0
-    if char_linked_to_purrmep is not None:
-        purrmep_minor_bonus = char_linked_to_purrmep.divinity_level / (60 + char_linked_to_purrmep.divinity_level) * big_p.base_value * purrmep_base_max_minor_bonus
-
-    multi_group_a = 1 + (purrmep_minor_bonus + 4 * crawler.level + 6 * kattlekruk.level + boaty_bubble.base_value) / 125
-    multi_group_a = round(multi_group_a, 2)
-
-    # Multi Group B -- Goharut Blessing
-    goharut = session_data.account.divinity.named('Goharut')
-
-    multi_group_b = ValueToMulti(4 * goharut.blessing_level)
-    multi_group_b = round(multi_group_b, 2)
-
-    # Multi Group C -- Purrmep Blessing
-    multi_group_c = ValueToMulti(3 * purrmep.blessing_level)
-    multi_group_c = round(multi_group_c, 2)
-
-    # Multi Group D -- Ballot Bonus
-
-    sailing_ballot_buff = next(
-        buff for buff in session_data.account.ballot.values()
-        if 'Sailing Speed' in buff.description
-    )
-    is_current_ballot_buff = sailing_ballot_buff.active
-    sailing_ballot_buff_mult = ValueToMulti(is_current_ballot_buff * sailing_ballot_buff.value)
-
-    multi_group_d = sailing_ballot_buff_mult
-    multi_group_d = round(multi_group_d, 2)
-
-    # Multi Group E -- All other bonuses
-    bagur = session_data.account.divinity.named('Bagur')
-
-    ad_tablet_level = session_data.account.sailing.artifacts['10 AD Tablet'].level
-    registered_slab_count = len(session_data.account.slab)
-    lab_bonus_slab_sovereignty = session_data.account.lab_bonuses['Slab Sovereignty']
-    lab_bonus_slab_sovereignty_mult = ValueToMulti(lab_bonus_slab_sovereignty.value) * lab_bonus_slab_sovereignty.enabled
-    ad_tablet_bonus_percent = ((4 * ad_tablet_level * ((registered_slab_count - 500) // 10)) * lab_bonus_slab_sovereignty_mult) if registered_slab_count >= 500 else 0
-
-    sailboat_stamp = session_data.account.stamps['Sailboat Stamp']
-
-    boat_statue = session_data.account.statues['Boat Statue']
-
-    popped_corn = session_data.account.meals['Popped Corn']
-
-    oj_jooce_vial = session_data.account.alchemy_vials['Oj Jooce (Orange Slice)']
-
-    has_skill_mastery: bool = session_data.account.rift['SkillMastery'].unlocked
-    total_sailing_level = sum(session_data.account.characters.all_skills['Sailing'])
-
-    has_msa_sailing: bool = session_data.account.gaming.superbits['MSA Sailing'].unlocked
-    total_worship_waves = session_data.account.worship.total_waves
-
-    c_shanti_minor = session_data.account.star_signs['C. Shanti Minor']
-
-    multi_group_e = 1 + (
-            5 * bagur.blessing_level +
-            ad_tablet_bonus_percent +
-            sailboat_stamp.total_value +
-            (boat_statue.type != 'Normal') * boat_statue.value +
-            popped_corn.value +
-            oj_jooce_vial.value +
-            has_skill_mastery * (total_sailing_level > 200) * 15 +
-            has_msa_sailing * (total_worship_waves // 10) +
-            c_shanti_minor.unlocked * 20
-    ) / 125
-    multi_group_e = round(multi_group_e, 2)
-
-    # Multi Group F -- Davey Jones Bonus + Legend Talents
-    # "DaveyJonesBonus" in source. Last updated in v2.49 Dec 24 2025
-    multi_group_f = ValueToMulti(
-        50 * session_data.account.gemshop.purchases['Davey Jones Training'].owned
-        + session_data.account.legend_talents['Davey Jones Returns'].value
-    )
-    multi_group_f = round_and_trim(multi_group_f)
-
-    multi_total = round(multi_group_a * multi_group_b * multi_group_c * multi_group_d * multi_group_e * multi_group_f, 2)
+    multi_total = sailing.speed_multi
 
     speed_advices = {
-        f'Total: {multi_total}x': [
-            Advice(
-                label=f'Total Sailing Speed bonus: {multi_total}x',
-                picture_class='sailing',
-            )
-        ],
-        f'Multi Group A: {multi_group_a}x': [
-            Advice(
-                label=f"Anyone Minor Linked to {purrmep.name}: +{purrmep_minor_bonus:.2f}%",
-                picture_class=purrmep.name,
-                progression=int(char_linked_to_purrmep is not None),
-                goal=1
-            ),
+        f'Total: {multi_total}x': [sailing.get_speed_advice()],
+        f'Multi Group A: {sailing.speed_multi_a}x': [
+            sailing.get_purrmep_minor_advice(),
             crawler.getAdvice(),
             kattlekruk.getAdvice(),
             boaty_bubble.get_bonus_advice(goal=max_NBLB)
         ],
-        f'Multi Group B: {multi_group_b}x': [
-            goharut.get_blessing_advice(f": +{4 * goharut.blessing_level}%")
+        f'Multi Group B: {sailing.speed_multi_b}x': [
+            goharut.get_blessing_advice(f": +{sailing.goharut_bonus}%")
         ],
-        f'Multi Group C: {multi_group_c}x': [
-            purrmep.get_blessing_advice(f": +{3 * purrmep.blessing_level}%")
+        f'Multi Group C: {sailing.speed_multi_c}x': [
+            purrmep.get_blessing_advice(f": +{sailing.purrmep_blessing_bonus}%")
         ],
-        f'Multi Group D: {multi_group_d}x': [
-            Advice(
-                label=f"Weekly Ballot: {round(sailing_ballot_buff_mult, 2)}x/{round(sailing_ballot_buff.multi, 2)}x"
-                      f"<br>(Buff {'is Active' if is_current_ballot_buff else 'is Inactive'})",
-                picture_class=sailing_ballot_buff.image,
-                progression=int(is_current_ballot_buff),
-                goal=1
-            )
-        ],
-        f'Multi Group E: {multi_group_e}x': [
-            bagur.get_blessing_advice(f": +{5 * bagur.blessing_level}%"),
-            Advice(
-                label=f'{{{{ Sailing|#sailing }}}}: Level {ad_tablet_level} 10 AD Tablet: +{ad_tablet_bonus_percent}%',
-                picture_class='10-ad-tablet',
-                progression=session_data.account.sailing.artifacts['10 AD Tablet'].level,
-                goal=max_sailing_artifact_level
-            ),
+        f'Multi Group D: {sailing.speed_multi_d}x': [sailing.get_ballot_advice()],
+        f'Multi Group E: {sailing.speed_multi_e}x': [
+            bagur.get_blessing_advice(f": +{sailing.bagur_bonus}%"),
+            sailing.get_ad_tablet_advice(),
             session_data.account.stamps['Sailboat Stamp'].get_advice(),
-            Advice(
-                label=f"Level {boat_statue.level} Boat Statue: +{(boat_statue.type != 'Normal') * boat_statue.value:.2f}% {'(must be at least gold)' if boat_statue.type == 'Normal' else ''}",
-                picture_class=boat_statue.image,
-            ),
-            popped_corn.get_bonus_advice(),
-            oj_jooce_vial.get_advice(full_name=False),
-            Advice(
-                label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: {'+15%' if has_skill_mastery and total_sailing_level >= 200 else 'Locked.'}",
-                picture_class='skill-mastery',
-                progression=has_msa_sailing * total_sailing_level,
-                goal=200
-            ),
-            Advice(
-                label=f'MSA Sailing: +{has_msa_sailing * total_worship_waves // 10}% (+1% per 10 waves in Worship)',
-                picture_class='worship',
-                progression=total_worship_waves,
-                goal=session_data.account.worship.max_total_waves,
-            ),
-            Advice(
-                label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {'+20% if equipped' if c_shanti_minor.unlocked else 'Locked.'}",
-                picture_class='c-shanti-minor',
-                progression=int(c_shanti_minor.unlocked),
-                goal=1
-            )
+            sailing.get_boat_statue_advice(),
+            session_data.account.meals['Popped Corn'].get_bonus_advice(),
+            session_data.account.alchemy_vials['Oj Jooce (Orange Slice)'].get_advice(full_name=False),
+            sailing.get_skill_mastery_advice(),
+            sailing.get_msa_advice(session_data.account.worship.max_total_waves),
+            sailing.get_c_shanti_advice(),
         ],
-        f'Multi Group F: {multi_group_f}x': [
+        f'Multi Group F: {sailing.speed_multi_f}x': [
             session_data.account.gemshop.purchases['Davey Jones Training'].get_advice(),
             session_data.account.legend_talents['Davey Jones Returns'].get_advice()
         ]
