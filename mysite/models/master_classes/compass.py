@@ -218,8 +218,11 @@ class Compass:
         for upgrade in self.upgrades.values():
             upgrade.calculate(circle_multi)
 
-    def calculate_dust_sources(self, wind_walkers, sneaking, all_assets, arcade, lab_jewels, emperor):
+    def calculate_dust_sources(self, wind_walkers, sneaking, all_assets, hatrack_dust, arcade, lab_jewels, emperor):
         # _customBlock_Windwalker if ("ExtraDust" == e)
+        # Racked hood scales with the rack, else worn
+        self.hood_owned = hatrack_dust > 0 or all_assets.get('EquipmentHats118').amount > 0
+        self.hood_value = hatrack_dust or 25 * self.hood_owned
         ww_preset_level = 100
         for ww in wind_walkers:
             if ww.current_preset_talents.get('421', 0) >= ww_preset_level:
@@ -239,9 +242,7 @@ class Compass:
             ),
             mgb=self.upgrades['Spire of Dust'].total_value,
             mgc=ValueToMulti(sneaking.pristine_charms['Twinkle Taffy'].value),
-            mgd=ValueToMulti(
-                (25 * min(1, all_assets.get('EquipmentHats118').amount))
-            ),
+            mgd=ValueToMulti(self.hood_value),
             mge=1,
             mgf=ValueToMulti(
                 + compass_percent

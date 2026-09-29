@@ -288,6 +288,7 @@ def getGemShopAdviceSection() -> AdviceSection:
     }
     for display, details in fomo_equipment.items():
         prog = safer_convert(session_data.account.all_assets.get(details['Code Name']).amount, 0)
+        prog += details['Code Name'] in session_data.account.hat_rack.codes
         fomo_advice.append(Advice(
             label=display,
             picture_class=details['Image'],

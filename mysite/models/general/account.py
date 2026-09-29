@@ -370,13 +370,9 @@ class Account:
             self._calculate_meals,
         )
 
-        # Master Classes. Grimoire bones wait for wave 3's Gambit
+        # Master Classes. Bones wait for wave 3's Gambit, dust for the Hat Rack
         self.grimoire.calculate_upgrades()
         self.compass.calculate_upgrades()
-        self.compass.calculate_dust_sources(
-            self.characters.wws, self.sneaking, self.all_assets, self.arcade,
-            self.lab_jewels, self.emperor,
-        )
 
         # W1
         self.vault.calculate(self.glimbo, self.research.grid, self.event_points_shop)
@@ -628,6 +624,12 @@ class Account:
         )
         self.grimoire.calculate_bone_sources(
             self.characters.dbs, self.sneaking, self.caverns, self.all_assets,
+            self.hat_rack.get_bonus_value('Extra Bones'),
+            self.arcade, self.lab_jewels, self.emperor,
+        )
+        self.compass.calculate_dust_sources(
+            self.characters.wws, self.sneaking, self.all_assets,
+            self.hat_rack.get_bonus_value('Dust Multi'),
             self.arcade, self.lab_jewels, self.emperor,
         )
         self.class_kill_talents.calculate_values(

@@ -189,7 +189,7 @@ def getCompassCurrenciesAdviceGroup(compass):
         Advice(
             label=f"Windwalker Hood: +25%",
             picture_class='windwalker-hood',
-            progression=int(session_data.account.all_assets.get('EquipmentHats118').amount > 0),
+            progression=int(compass.hood_owned),
             goal=1,
             resource='gem'
         ),
