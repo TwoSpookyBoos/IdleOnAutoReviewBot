@@ -5,7 +5,10 @@ from math import prod
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_general import max_card_stars
 from consts.consts_w1 import get_seraph_cosmos_multi
-from consts.consts_w2 import max_sigil_level, sigils_dict
+from consts.consts_w2 import max_sigil_level, obols_max_bonuses_dict, sigils_dict
+from consts.consts_w3 import approx_max_talent_level_non_es_non_star
+from consts.consts_w4 import shiny_days_list
+from consts.consts_w5 import max_sailing_artifact_level
 from consts.general.drop_rate import (
     big_big_hampter_drop_rate,
     boss_battle_spillover_talent_index,
@@ -31,9 +34,11 @@ from consts.general.talents import dank_rank_talent_index, family_guy_talent_ind
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
+from models.advice.advice import Advice
 from models.w1.star_signs import get_infinite_star_sign_levels
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
+from utils.text_formatting import kebab, notateNumber
 
 logger = get_logger(__name__)
 
@@ -120,6 +125,19 @@ class DropRate:
         self.special_multi = 1
         self.companion_multi = 1
         self.characters: list[CharacterDropRate] = []
+        # Advice context
+        self._bundle_data_present = True
+        self._has_deathbringer_pack = False
+        self._has_island_explorer_pack = False
+        self.chilled_yarn_level = 0
+        self._chilled_yarn_multi = 1
+        self._chilled_yarn_max = 1
+        self._trove_sigil_level = 0
+        self._ballot_buff = None
+        self.shiny_pets: list[tuple[str, object]] = []
+        self._achievements: dict[str, tuple[int, int, bool]] = {}
+        self._archlord = None
+        self._sneaking_mastery_level = 0
 
     def calculate(
         self,
@@ -316,8 +334,11 @@ class DropRate:
         if friend_bonus_drop_rate_index in friend_bonuses:
             self.general += friend_bonuses[friend_bonus_drop_rate_index].value
         self.general += vault.upgrades["Drops for Days"].total_value
+        self._bundle_data_present = gemshop.bundle_data_present
+        self._has_deathbringer_pack = gemshop.bundles["bun_v"].owned
+        self._has_island_explorer_pack = gemshop.bundles["bun_p"].owned
         self.deathbringer_pack = (
-            deathbringer_pack_drop_rate if gemshop.bundles["bun_v"].owned else 0
+            deathbringer_pack_drop_rate if self._has_deathbringer_pack else 0
         )
         self.general += self.deathbringer_pack
 
@@ -337,7 +358,11 @@ class DropRate:
         self.obols_family = obols.family_bonus_totals.get("Total%_DROP_RATE", 0)
         self.world_2 += self.obols_family
         self.world_2 += alchemy_bubbles["Droppin Loads"].base_value
+        self.chilled_yarn_level = artifacts["Chilled Yarn"].level
+        self._chilled_yarn_multi = artifacts.chilled_yarn_multi
+        self._chilled_yarn_max = artifacts.max_chilled_yarn_multi
         trove_level = alchemy_p2w.sigils["Trove"].level
+        self._trove_sigil_level = trove_level
         trove_values = sigils_dict["Trove"]["Values"]
         try:
             self.trove_sigil = trove_values[trove_level] * artifacts.chilled_yarn_multi
@@ -353,6 +378,7 @@ class DropRate:
             trove_values[max_sigil_level] * artifacts.max_chilled_yarn_multi
         )
         self.world_2 += self.trove_sigil
+        self._ballot_buff = ballot[27]
         self.ballot = ballot[27].value * ballot[27].active
         self.world_2 += self.ballot
 
@@ -365,10 +391,14 @@ class DropRate:
 
         # World 4
         self.world_4 = 0
-        for species in breeding.species.values():
-            for shiny in species.values():
-                if shiny.shiny_bonus == "Drop Rate":
-                    self.world_4 += shiny.shiny_level
+        self.shiny_pets = [
+            (name, pet)
+            for species in breeding.species.values()
+            for name, pet in species.items()
+            if pet.shiny_bonus == "Drop Rate"
+        ]
+        for _, pet in self.shiny_pets:
+            self.world_4 += pet.shiny_level
         self.world_4 += tome.drop_rate_bonus
 
         # World 5
@@ -390,6 +420,18 @@ class DropRate:
             summoning_gm_drop_rate if achievements["Summoning GM"].complete else 0
         )
         self.world_6 += self.summoning_gm
+        self._achievements = {
+            "Big Big Hampter": (
+                self.big_big_hampter,
+                big_big_hampter_drop_rate,
+                achievements["Big Big Hampter"].complete,
+            ),
+            "Summoning GM": (
+                self.summoning_gm,
+                summoning_gm_drop_rate,
+                achievements["Summoning GM"].complete,
+            ),
+        }
         self.world_6 += farming.depot["Highlighter"].value
         self.world_6 += farming.land_rank["Seed of Loot"].value
         self.world_6 += farming.exotic_market["POMMELION SEED"].value
@@ -413,8 +455,9 @@ class DropRate:
         )
 
         # Special multis, applied after the flat bonuses
-        archlord = class_kill_talents["Archlord of the Pirates"]
-        self.archlord_multi = ValueToMulti(archlord.total_value)
+        self._archlord = class_kill_talents["Archlord of the Pirates"]
+        self.archlord_multi = ValueToMulti(self._archlord.total_value)
+        self._sneaking_mastery_level = sneaking.unlocked_mastery
         self.sneaking_mastery = (
             sneaking_mastery_drop_rate if sneaking.unlocked_mastery > 0 else 0
         )
@@ -661,6 +704,124 @@ class DropRate:
             dr.equipment_multi_total * dr.gown_multi * dr.card_multi * dr.family_multi
         )
         return dr
+
+    def _bundle_advice(self, name: str, owned: bool, value_text: str) -> Advice:
+        missing = (
+            ""
+            if self._bundle_data_present
+            else ("<br>Note: Could be inaccurate. Bundle data not found!")
+        )
+        return Advice(
+            label=f"{{{{ Gem Shop|#gem-shop }}}} - {name}: {value_text}{missing}",
+            picture_class="gem",
+            progression=int(owned) if self._bundle_data_present else "IDK",
+            goal=1,
+        )
+
+    def get_deathbringer_pack_advice(self) -> Advice:
+        return self._bundle_advice(
+            "Deathbringer Pack",
+            self._has_deathbringer_pack,
+            f"+{self.deathbringer_pack}/{deathbringer_pack_drop_rate}% Drop Rate",
+        )
+
+    def get_island_explorer_pack_advice(self) -> Advice:
+        return self._bundle_advice(
+            "Island Explorer Pack",
+            self._has_island_explorer_pack,
+            f"{self.island_explorer_multi}/{island_explorer_pack_multi}x "
+            f"Drop Rate MULTI",
+        )
+
+    def get_obols_family_advice(self) -> Advice:
+        cap = obols_max_bonuses_dict["FamilyDropRateTrue"]
+        return Advice(
+            label=f"Obols - Family Obols: +{self.obols_family}/{cap}% Drop Rate"
+            f"<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR",
+            picture_class="hyper-six-obol",
+            progression=self.obols_family,
+            goal=cap,
+        )
+
+    def get_chilled_yarn_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Artifacts|#artifacts }}}} - Chilled Yarn: "
+            f"{round(self._chilled_yarn_multi, 1):g}/"
+            f"{round(self._chilled_yarn_max, 1):g}x Sigil Bonuses"
+            f"<br>Note: Improves the sigil below",
+            picture_class="chilled-yarn",
+            progression=self.chilled_yarn_level,
+            goal=max_sailing_artifact_level,
+        )
+
+    def get_trove_sigil_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Sigils|#sigils }}}} - Trove Sigil: "
+            f"+{self.trove_sigil}/{self.trove_sigil_max}% Drop Rate",
+            picture_class="trove",
+            progression=self._trove_sigil_level,
+            goal=max_sigil_level,
+        )
+
+    def get_ballot_advice(self) -> Advice:
+        buff = self._ballot_buff
+        return Advice(
+            label=f"Weekly {{{{ Ballot|#bonus-ballot }}}} - Drop Rate: "
+            f"+{round(self.ballot, 2)}/{round(buff.value, 2)}%"
+            f"<br>(Buff {buff.status})",
+            picture_class="ballot-27",
+            progression=int(buff.active),
+            goal=1,
+            completed=True,
+        )
+
+    def get_shiny_pet_advice(self) -> list[Advice]:
+        return [
+            Advice(
+                label=f"{{{{ Breeding|#breeding }}}} - Shiny {name}: "
+                f"+{pet.shiny_level}/{len(shiny_days_list)}% Drop Rate",
+                picture_class=name,
+                progression=pet.shiny_level,
+                goal=len(shiny_days_list),
+            )
+            for name, pet in self.shiny_pets
+        ]
+
+    def get_achievement_advice(self, name: str) -> Advice:
+        value, cap, complete = self._achievements[name]
+        return Advice(
+            label=f"{{{{ Achievements|#achievements }}}} - {name}: "
+            f"+{value}/{cap}% Drop Rate",
+            picture_class=kebab(name),
+            progression=int(complete),
+            goal=1,
+        )
+
+    def get_archlord_advice(self) -> Advice:
+        talent = self._archlord
+        max_level = approx_max_talent_level_non_es_non_star
+        max_multi = ValueToMulti(talent.value_at_level(max_level))
+        goal = notateNumber("Basic", 1e6, 2)
+        return Advice(
+            label=f"Siege Breaker Talent - Archlord of the Pirates: "
+            f"{round(self.archlord_multi, 5):g}/{round(max_multi, 5):g}x "
+            f"Drop Rate MULTI"
+            f"<br>Level {talent.highest_preset_level}/{max_level} "
+            f"with your current kills",
+            picture_class="archlord-of-the-pirates",
+            progression=notateNumber("Match", talent.kills, 2, "", goal),
+            goal=goal,
+            resource="pirate-flag",
+        )
+
+    def get_sneaking_mastery_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Rift|#rift }}}} - Sneaking Mastery: "
+            f"+{self.sneaking_mastery}/{sneaking_mastery_drop_rate}% Drop Rate",
+            picture_class="sneaking-mastery",
+            progression=min(1, self._sneaking_mastery_level),
+            goal=1,
+        )
 
     @staticmethod
     def _class_talent(character, talent_index: int) -> tuple[int, float]:

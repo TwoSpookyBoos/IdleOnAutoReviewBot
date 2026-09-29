@@ -1,19 +1,14 @@
 from consts.progression_tiers import true_max_tiers
 from consts.general.drop_rate import (
-    big_big_hampter_drop_rate,
     boss_battle_spillover_talent_index,
     card_set_drop_rate,
-    deathbringer_pack_drop_rate,
     drop_rate_companions,
     drop_rate_multi_codenames,
     flat_drop_rate_codenames,
     golden_food_stat,
-    island_explorer_pack_multi,
     looty_booty_talent_index,
     max_weekly_boss_difficulties,
     robbinghood_talent_index,
-    sneaking_mastery_drop_rate,
-    summoning_gm_drop_rate,
 )
 from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
@@ -21,9 +16,8 @@ from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.idleon.lava_func import lava_func
 from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.consts_w4 import shiny_days_list
-from consts.consts_w3 import prayers_dict, approx_max_talent_level_non_es_non_star
-from consts.consts_w2 import max_sigil_level, po_box_dict, obols_max_bonuses_dict
+from consts.consts_w3 import prayers_dict
+from consts.consts_w2 import po_box_dict, obols_max_bonuses_dict
 from consts.general.friend_bonuses import friend_bonus_drop_rate_index
 from consts.consts_w1 import seraph_max, get_seraph_cosmos_summ_level_goal
 from models.general.session_data import session_data
@@ -39,7 +33,7 @@ from models.advice.advice_group import AdviceGroup
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
 from utils.all_talentsDict import all_talentsDict
 from utils.number_formatting import round_and_trim
-from utils.text_formatting import notateNumber, kebab
+from utils.text_formatting import kebab
 from utils.logging import get_logger
 
 
@@ -74,8 +68,6 @@ def get_gallery_item_advice() -> list[Advice]:
 
 def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate = session_data.account.drop_rate
-    bundle_data_missing = not session_data.account.gemshop.bundle_data_present
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if bundle_data_missing else ''
     general = 'General'
     mc = 'Master Classes'
     w1 = 'World 1'
@@ -148,15 +140,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[general].append(session_data.account.vault.get_upgrade_advice('Drops for Days'))
 
     # Gem Shop - Deathbringer Pack
-    has_db_pack = session_data.account.gemshop.bundles['bun_v'].owned
-    drop_rate_aw_advice[general].append(Advice(
-        label=f"Gemshop- Deathbringer Pack:"
-              f"<br>+{drop_rate.deathbringer_pack}/{deathbringer_pack_drop_rate}% Drop Rate"
-              f"{missing_bundle_data_txt}",
-        picture_class='gem',
-        progression=int(has_db_pack) if not bundle_data_missing else 'IDK',
-        goal=1
-    ))
+    drop_rate_aw_advice[general].append(drop_rate.get_deathbringer_pack_advice())
 
     drop_rate_aw_advice[f"{general} - +{round(drop_rate.general, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(general)
 
@@ -188,16 +172,11 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     # Lab Nodes- Certified Stamp Book
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
     golden_sixes_buffs = []
-    has_certified_stamp_book = session_data.account.lab_bonuses['Certified Stamp Book'].enabled
-    if not has_certified_stamp_book:
+    certified_stamp_book = session_data.account.lab_bonuses['Certified Stamp Book']
+    if not certified_stamp_book.enabled:
         golden_sixes_buffs.append('Laboratory')
-        drop_rate_aw_advice[w1].append(Advice(
-            label=f"{{{{ Lab Nodes|#lab }}}}- Certified Stamp Book:"
-                  "<br>x2 Non-Misc Stamp Bonuses"
-                  "<br>Note: Improves the stamp below",
-            picture_class='certified-stamp-book',
-            progression=int(has_certified_stamp_book),
-            goal=1
+        drop_rate_aw_advice[w1].append(certified_stamp_book.get_bonus_advice(
+            "<br>Note: Improves the stamp below"
         ))
     # Pristine Charm- Liqorice Rolle
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
@@ -230,17 +209,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[w2].append(session_data.account.arcade[27].get_advice())
 
     # Obols - Family - Drop Rate
-    obols_family_drop_rate = drop_rate.obols_family
-    obols_family_drop_rate_max = obols_max_bonuses_dict['FamilyDropRateTrue']
-    obols_family_note = '<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR'
-    drop_rate_aw_advice[w2].append(Advice(
-        label=f"Obols- Family Obols:"
-              f"<br>+{obols_family_drop_rate}/{obols_family_drop_rate_max}% Drop Rate"
-              f"{obols_family_note}",
-        picture_class='hyper-six-obol',
-        progression=obols_family_drop_rate,
-        goal=obols_family_drop_rate_max
-    ))
+    drop_rate_aw_advice[w2].append(drop_rate.get_obols_family_advice())
 
     # Question: Maybe up the goal to 6930 for +39.6% at 99% or 2730 for a nice round +39%?
     # Alchemy - Bubbles - Dropin Loads
@@ -267,42 +236,12 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Artifacts- Chilled Yarn
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    artifacts = session_data.account.sailing.artifacts
-    chilled_yarn_artifact_level = artifacts['Chilled Yarn'].level
-    chilled_yarn_multi = artifacts.chilled_yarn_multi
-    chilled_yarn_max = artifacts.max_chilled_yarn_multi
-    if chilled_yarn_artifact_level < max_sailing_artifact_level:
-        drop_rate_aw_advice[w2].append(Advice(
-            label=f"{{{{ Artifacts|#artifacts }}}}- Chilled Yarn:"
-                  f"<br>{round(chilled_yarn_multi, 1):g}/{round(chilled_yarn_max, 1):g}x Sigil Bonuses"
-                  f"<br>Note: Improves the sigil below",
-            picture_class='chilled-yarn',
-            progression=chilled_yarn_artifact_level,
-            goal=max_sailing_artifact_level
-        ))
+    if drop_rate.chilled_yarn_level < max_sailing_artifact_level:
+        drop_rate_aw_advice[w2].append(drop_rate.get_chilled_yarn_advice())
     # Alchemy - Sigils - Trove
-    trove_sigil_level = session_data.account.alchemy_p2w.sigils['Trove'].level
-    drop_rate_aw_advice[w2].append(Advice(
-        label=f"{{{{ Sigils|#sigils }}}}- Trove Sigil:"
-              f"<br>+{drop_rate.trove_sigil}/{drop_rate.trove_sigil_max}% Drop Rate",
-        picture_class='trove',
-        progression=trove_sigil_level,
-        goal=max_sigil_level
-    ))
+    drop_rate_aw_advice[w2].append(drop_rate.get_trove_sigil_advice())
 
-    ballot_buff = session_data.account.ballot[27]
-    ballot_active = ballot_buff.active
-    ballot_status = ballot_buff.status
-    ballot_value = ballot_buff.value
-    ballot_value_active = drop_rate.ballot
-    drop_rate_aw_advice[w2].append(Advice(
-        label=f"Weekly {{{{ Ballot|#bonus-ballot }}}}: +{round(ballot_value_active, 2)}/{round(ballot_value, 2)}% Drop Rate"
-              f"<br>(Buff {ballot_status})",
-        picture_class='ballot-27',
-        progression=int(ballot_active),
-        goal=1,
-        completed=True
-    ))
+    drop_rate_aw_advice[w2].append(drop_rate.get_ballot_advice())
 
     drop_rate_aw_advice[f"{w2} - +{round(drop_rate.world_2, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w2)
 
@@ -339,17 +278,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     #########################################
 
     # Breeding - Shiny Pets
-    for world in session_data.account.breeding.species:
-        for shiny_name, shiny_details in session_data.account.breeding.species[world].items():
-            if shiny_details.shiny_bonus == 'Drop Rate':
-                shiny_value = shiny_details.shiny_level
-                drop_rate_aw_advice[w4].append(Advice(
-                    label=f"{{{{ Breeding|#breeding }}}}- Shiny {shiny_name}:"
-                          f"<br>+{shiny_value}/{len(shiny_days_list)}% Drop Rate",
-                    picture_class=shiny_name,
-                    progression=shiny_details.shiny_level,
-                    goal=len(shiny_days_list)
-                ))
+    drop_rate_aw_advice[w4].extend(drop_rate.get_shiny_pet_advice())
 
     # The Tome
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
@@ -390,24 +319,10 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     #########################################
 
     # Achievements - Big Big Hampter
-    big_hampter_completed = session_data.account.achievements['Big Big Hampter'].complete
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Achievements|#achievements }}}}- Big Big Hampter:"
-              f"<br>+{drop_rate.big_big_hampter}/{big_big_hampter_drop_rate}% Drop Rate",
-        picture_class='big-big-hampter',
-        progression=int(big_hampter_completed),
-        goal=1
-    ))
+    drop_rate_aw_advice[w6].append(drop_rate.get_achievement_advice('Big Big Hampter'))
 
     # Achievements - Summoning GM
-    summoning_gm_completed = session_data.account.achievements['Summoning GM'].complete
-    drop_rate_aw_advice[w6].append(Advice(
-        label=f"{{{{ Achievements|#achievements }}}}- Summoning GM:"
-              f"<br>+{drop_rate.summoning_gm}/{summoning_gm_drop_rate}% Drop Rate",
-        picture_class='summoning-gm',
-        progression=int(summoning_gm_completed),
-        goal=1
-    ))
+    drop_rate_aw_advice[w6].append(drop_rate.get_achievement_advice('Summoning GM'))
 
     # Farming - Crop Depot - Highlighter
     highlighter = session_data.account.farming.depot["Highlighter"]
@@ -477,40 +392,13 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     ))
 
     # Siege Breaker - Talents -  Archlord of the Pirates
-    sb_talent = session_data.account.class_kill_talents['Archlord of the Pirates']
-    goal_string = notateNumber('Basic', 1e6, 2)
-    sb_talent_bonus_max = sb_talent.value_at_level(approx_max_talent_level_non_es_non_star)
-    sb_talent_multi = drop_rate.archlord_multi
-    drop_rate_aw_advice[special].append(Advice(
-        label=f"Siege Breaker talent- Archlord of the Pirates:"
-              f"<br>Level {sb_talent.highest_preset_level}/{approx_max_talent_level_non_es_non_star} with your current kills gives"
-              f"<br>{round(sb_talent_multi, 5):g}/{round(ValueToMulti(sb_talent_bonus_max), 5):g}x Drop Rate MULTI",
-        picture_class='archlord-of-the-pirates',
-        progression=notateNumber('Match', sb_talent.kills, 2, '', goal_string),
-        goal=goal_string,
-        resource='pirate-flag'
-    ))
+    drop_rate_aw_advice[special].append(drop_rate.get_archlord_advice())
 
     # Rift - Sneak Mastery 1
-    sneak_mastery_level = session_data.account.sneaking.unlocked_mastery
-    drop_rate_aw_advice[special].append(Advice(
-        label=f"{{{{ Rift|#rift }}}}- Sneaking Mastery:"
-              f"<br>+{drop_rate.sneaking_mastery}/{sneaking_mastery_drop_rate}% Drop Rate",
-        picture_class='sneaking-mastery',
-        progression=min(1, sneak_mastery_level),
-        goal=1
-    ))
+    drop_rate_aw_advice[special].append(drop_rate.get_sneaking_mastery_advice())
 
     # Gem Shop - Island Explorer Pack
-    has_island_explorer_pack = session_data.account.gemshop.bundles['bun_p'].owned
-    drop_rate_aw_advice[special].append(Advice(
-        label=f"Gemshop- Island Explorer Pack:"
-              f"<br>{drop_rate.island_explorer_multi}/{island_explorer_pack_multi}x Drop Rate MULTI"
-              f"{missing_bundle_data_txt}",
-        picture_class='gem',
-        progression=int(has_island_explorer_pack) if not bundle_data_missing else 'IDK',
-        goal=1
-    ))
+    drop_rate_aw_advice[special].append(drop_rate.get_island_explorer_pack_advice())
 
     # Map-specific: DR Bonus from Arcane Cultist's Overwhelming Energy Talent
     drop_rate_aw_advice[special].append(Advice(
