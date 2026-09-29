@@ -188,7 +188,7 @@ def getGrimoireCurrenciesAdviceGroup(grimoire) -> AdviceGroup:
         Advice(
             label=f"Deathbringer Hood of Death: +25%",
             picture_class='deathbringer-hood-of-death',
-            progression=int(session_data.account.all_assets.get('EquipmentHats112').amount > 0),
+            progression=int(grimoire.hood_owned),
             goal=1,
             resource='gem'
         ),
