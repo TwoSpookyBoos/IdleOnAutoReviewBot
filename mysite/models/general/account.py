@@ -850,6 +850,17 @@ class Account:
             arcade_bonus=self.arcade[43].value,
             big_sig_fig=self.legend_talents['Big Sig Fig'].value,
         )
+        self.gaming.snail.calculate(
+            envelopes=self.gaming.envelopes,
+            superbits=self.gaming.superbits,
+            sodium_level=self.atom_collider['Sodium - Snail Kryptonite'].level,
+            treble_notes=(
+                self.caverns.caves['The Harp'].notes['Treble Note'].amount
+            ),
+            final_ballad=self.caverns.villagers['Kaipu'].schematics[
+                'Final Ballad of the Snail'
+            ],
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,
