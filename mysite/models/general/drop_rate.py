@@ -46,6 +46,7 @@ from consts.idleon.lava_func import lava_func
 from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
 from models.advice.advice import Advice
+from models.general.drop_rate_equipment import get_equipment_advice
 from models.w1.star_signs import get_infinite_star_sign_levels
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
@@ -110,6 +111,17 @@ class CharacterDropRate:
     chizoar_below_max: bool = False
     weekly_boss_kills: int = 0
     max_talent_level: int = 0
+    character: object = None
+    highest_world_reached: int = 0
+
+    def get_equipment_advice(self) -> dict[str, list[Advice]]:
+        # Slots with items in both the flat and multi lists get one section
+        return get_equipment_advice(
+            self.character,
+            flat_drop_rate_codenames,
+            drop_rate_multi_codenames,
+            self.highest_world_reached,
+        )
 
     def get_luk_advice(self) -> Advice:
         return Advice(
@@ -367,6 +379,7 @@ class DropRate:
         self._archlord = None
         self._sneaking_mastery_level = 0
         self._chizoar_below_max = False
+        self._highest_world_reached = 0
 
     def calculate(
         self,
@@ -676,6 +689,7 @@ class DropRate:
         self.world_7 += research.grid["Divine Design"].total_value
         self.gallery = 0
         self.gallery_multi = 0
+        self._highest_world_reached = world_progress.highest_reached
         if world_progress.highest_reached >= 7:
             self.gallery = gallery.bonuses["Drop Rate"][1]
             self.gallery_multi = gallery.bonuses["Drop Rate Multi"][1]
@@ -749,7 +763,9 @@ class DropRate:
         royal_armory,
         farming,
     ) -> CharacterDropRate:
-        dr = CharacterDropRate()
+        dr = CharacterDropRate(
+            character=character, highest_world_reached=self._highest_world_reached
+        )
         legend_talent_multi = ValueToMulti(
             legend_talents["Flopping a Full House"].value
         )
