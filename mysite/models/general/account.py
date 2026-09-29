@@ -653,6 +653,7 @@ class Account:
             self.characters.wws, self.sneaking, self.all_assets,
             self.hat_rack.get_bonus_value('Dust Multi'),
             self.arcade, self.lab_jewels, self.emperor,
+            max_book_level=self.library.max_book_level,
         )
         self.class_kill_talents.calculate_values(
             self.characters.safe, self.get_best_talent_level

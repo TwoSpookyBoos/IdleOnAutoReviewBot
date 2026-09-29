@@ -1,13 +1,15 @@
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.lava_func import lava_func
 from consts.idleon.master_classes.compass import (
-    compass_upgrades, compass_abominations, compass_medallions_data, compass_titans, compass_dusts_list
+    compass_upgrades, compass_abominations, compass_medallions, compass_medallions_data, compass_titans,
+    compass_dusts_list
 )
 from models.advice.advice import Advice
 from models.master_classes.multi_groups import MultiGroups
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert, safer_math_log, safer_math_pow
+from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
 
@@ -218,17 +220,40 @@ class Compass:
         for upgrade in self.upgrades.values():
             upgrade.calculate(circle_multi)
 
-    def calculate_dust_sources(self, wind_walkers, sneaking, all_assets, hatrack_dust, arcade, lab_jewels, emperor):
+    def calculate_dust_sources(
+        self, wind_walkers, sneaking, all_assets, hatrack_dust, arcade, lab_jewels, emperor, *, max_book_level: int
+    ):
         # _customBlock_Windwalker if ("ExtraDust" == e)
         # Racked hood scales with the rack, else worn
         self.hood_owned = hatrack_dust > 0 or all_assets.get('EquipmentHats118').amount > 0
         self.hood_value = hatrack_dust or 25 * self.hood_owned
-        ww_preset_level = 100
-        for ww in wind_walkers:
-            if ww.current_preset_talents.get('421', 0) >= ww_preset_level:
-                ww_preset_level = ww.current_preset_talents.get('421', 0)
-            if ww.secondary_preset_talents.get('421', 0) >= ww_preset_level:
-                ww_preset_level = ww.secondary_preset_talents.get('421', 0)
+        self.max_book_level = max_book_level
+        self.top_of_the_mornin_total = (
+            self.upgrades["Top of the Mornin'"].total_value + self.upgrades['Abomination Slayer XII'].total_value
+        )
+        self.solardust_stacks = safer_math_log(self.dusts[2], 'Lava')
+        self.aether_fragments = min(1000, all_assets.get('Quest100').amount)
+        self.tempest_bow_owned = all_assets.get('EquipmentBowsTempest0').amount > 0
+        self.tempest_rings_owned = min(all_assets.get('EquipmentRingsTempest6').amount, 2)
+        # Eternal Hunt, best preset across Wind Walkers
+        self._eternal_hunt_ww, self.eternal_hunt_preset_level = self._best_preset(wind_walkers, '423')
+        self.eternal_hunt_per_stack = lava_func(
+            funcType='decay',
+            level=self.eternal_hunt_preset_level + self._bonus_talent_levels(self._eternal_hunt_ww),
+            x1=3,
+            x2=200
+        )
+        # Compass talent, best preset across Wind Walkers
+        self._compass_ww, ww_preset_level = self._best_preset(wind_walkers, '421')
+        self.compass_preset_level = ww_preset_level
+        self.compass_talent_bonus_levels = self._bonus_talent_levels(self._compass_ww)
+        # Shown with bonus talent levels; the multi below uses the preset level only
+        self.compass_talent_percent = lava_func(
+            funcType='decay',
+            level=ww_preset_level + self.compass_talent_bonus_levels,
+            x1=150,
+            x2=300
+        )
         compass_percent = lava_func(
             funcType=all_talentsDict[421]['funcX'],
             level=ww_preset_level,
@@ -238,7 +263,7 @@ class Compass:
         self.dust_multi = MultiGroups(
             mga=ValueToMulti(
                 self.upgrades['Mountains of Dust'].total_value
-                + (self.upgrades['Solardust Hoarding'].total_value * safer_math_log(self.dusts[2], 'Lava'))
+                + (self.upgrades['Solardust Hoarding'].total_value * self.solardust_stacks)
             ),
             mgb=self.upgrades['Spire of Dust'].total_value,
             mgc=ValueToMulti(sneaking.pristine_charms['Twinkle Taffy'].value),
@@ -258,4 +283,183 @@ class Compass:
                 + self.upgrades['Abomination Slayer XXXIV'].total_value
             ),
             mgg=ValueToMulti(emperor["Windwalker Extra Dust"].value),
+        )
+
+    @staticmethod
+    def _best_preset(wind_walkers, talent: str):
+        best_ww = None
+        best_level = 100
+        for ww in wind_walkers:
+            if best_ww is None:
+                best_ww = ww
+            if ww.current_preset_talents.get(talent, 0) >= best_level:
+                best_ww = ww
+                best_level = ww.current_preset_talents.get(talent, 0)
+            if ww.secondary_preset_talents.get(talent, 0) >= best_level:
+                best_ww = ww
+                best_level = ww.secondary_preset_talents.get(talent, 0)
+        return best_ww, best_level
+
+    @staticmethod
+    def _bonus_talent_levels(ww) -> int:
+        return ww.total_bonus_talent_levels if ww is not None else 0
+
+    def get_abominations_slain_advice(self, goal: int) -> Advice:
+        return Advice(
+            label="Abominations Slain",
+            picture_class='slayer-abominator',
+            progression=self.total_abominations_slain,
+            goal=goal
+        )
+
+    def get_medallions_collected_advice(self, goal: int) -> Advice:
+        return Advice(
+            label="Medallions Collected",
+            picture_class='wind-walker-medallion',
+            progression=self.total_medallions,
+            goal=goal
+        )
+
+    def get_top_of_the_mornin_advice(self) -> Advice:
+        return Advice(
+            label=(
+                f"""Daily Top of the Mornin' kills: {self.top_of_the_mornin_total}"""
+                f"""<br>Remaining: {self.top_of_the_mornin}"""
+            ),
+            picture_class=self.upgrades["Top of the Mornin'"].image,
+            progression=self.top_of_the_mornin_total - self.top_of_the_mornin,
+            goal=self.top_of_the_mornin_total,
+            informational=True
+        )
+
+    def get_total_dust_collected_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Dusts Collected: {notateNumber('Basic', self.total_dust_collected, 3)}",
+            picture_class='dustwalker',
+            informational=True,
+            completed=True
+        )
+
+    def get_aethermoon_advice(self) -> Advice:
+        if self.aethermoons_enabled:
+            return Advice(
+                label="Aethermoons Enabled! Collect 1 per two full AFK hour while fighting on a Wind Walker. "
+                      "Maximize your /hr display within AFK Info screen before consuming!",
+                picture_class='aethermoon',
+                progression=1,
+                goal=1
+            )
+        return Advice(
+            label="Fight with Tempest Form enabled to collect 1,000 Aether Fragments, then use the stack. "
+                  "This enables AFK Fighting on Wind Walkers to produce 1 Aethermoon per two hours!",
+            picture_class='aether-fragment',
+            progression=self.aether_fragments,
+            goal=1000
+        )
+
+    def get_dust_advices(self) -> list[Advice]:
+        return [Advice(
+            label=f"{dust_name}: {notateNumber('Basic', self.dusts[dust_index], 3)}",
+            picture_class=f'compass-dust-{dust_index}',
+            informational=True,
+            completed=True
+        ) for dust_index, dust_name in enumerate(compass_dusts_list)]
+
+    def get_dust_multi_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Dust multi: {self.dust_multi.total:.3f}x",
+            picture_class='compass'
+        )
+
+    def get_solardust_stacks_text(self) -> str:
+        return (
+            f"<br>{self.solardust_stacks:.3f} stacks = "
+            f"{self.upgrades['Solardust Hoarding'].total_value * self.solardust_stacks:.3f}% total"
+        )
+
+    def get_windwalker_hood_advice(self) -> Advice:
+        return Advice(
+            label="Windwalker Hood: +25%",
+            picture_class='windwalker-hood',
+            progression=int(self.hood_owned),
+            goal=1,
+            resource='gem'
+        )
+
+    def get_tempest_bow_advice(self) -> Advice:
+        return Advice(
+            label="Tempest Bow of Dust:"
+                  "<br>Base Range: 15 - 50%"
+                  "<br>Max + 5/5 10 PCT stones: 300%",
+            picture_class='tempest-bow-of-dust',
+            progression=int(self.tempest_bow_owned),
+            goal=1,
+            resource='tempest-bow-stone-10-pct',
+        )
+
+    def get_tempest_ring_advice(self) -> Advice:
+        return Advice(
+            label="Tempest Ring of Gold:"
+                  "<br>Base Range: 20 - 50%"
+                  "<br>Max + 3/3 10 PCT stones: 125%",
+            picture_class='tempest-ring-of-gold',
+            progression=self.tempest_rings_owned,
+            goal=2,
+            resource='tempest-ring-stone-10-pct'
+        )
+
+    def get_eternal_hunt_advice(self) -> Advice:
+        ww = self._eternal_hunt_ww
+        return Advice(
+            label=f"{self.eternal_hunt_preset_level}/{self.max_book_level} booked Eternal Hunt:"
+                  f"<br>Max Preset Level {self.eternal_hunt_preset_level + ww.total_bonus_talent_levels} on "
+                  f"{ww.character_name} including bonus talent levels",
+            picture_class='eternal-hunt',
+            progression=self.eternal_hunt_preset_level,
+            goal=self.max_book_level
+        )
+
+    def get_eternal_hunt_stacks_advice(self) -> Advice:
+        per_stack = self.eternal_hunt_per_stack
+        return Advice(
+            label=f"<br>Per stack: +{per_stack:.3f}%"
+                  f"<br>10 stacks: {ValueToMulti(10 * per_stack):.3f}x"
+                  f"<br>20 stacks: {ValueToMulti(20 * per_stack):.3f}x"
+                  f"<br>30 stacks: {ValueToMulti(30 * per_stack):.3f}x"
+                  f"<br>40 stacks: {ValueToMulti(40 * per_stack):.3f}x"
+                  f"<br>50 stacks: {ValueToMulti(50 * per_stack):.3f}x",
+            picture_class='eternal-hunt-grave',
+            completed=True,
+            informational=True
+        )
+
+    def get_compass_talent_advice(self) -> Advice:
+        return Advice(
+            label=f"{self.compass_preset_level}/{self.max_book_level} booked Compass:"
+                  f"<br>Max Preset Level {self.compass_preset_level + self.compass_talent_bonus_levels} on "
+                  f"{self._compass_ww.character_name} including bonus talent levels"
+                  f"<br>+{self.compass_talent_percent:.3f}% boost to Dust found",
+            picture_class='compass',
+            progression=self.compass_preset_level,
+            goal=self.max_book_level
+        )
+
+    def get_total_medallions_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Medallions Collected: {self.total_medallions}/{len(compass_medallions)}",
+            picture_class='wind-walker-medallion',
+            progression=self.total_medallions,
+            goal=len(compass_medallions)
+        )
+
+    def get_total_upgrades_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Compass Upgrades: {self.total_upgrades:,}",
+            picture_class='compass',
+        )
+
+    def get_total_abominations_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Abominations Slain: {self.total_abominations_slain:,}",
+            picture_class='slayer-abominator',
         )
