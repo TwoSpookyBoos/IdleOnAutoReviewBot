@@ -54,6 +54,12 @@ drop_rate_multi_companions = (
     "Crystal Glunko",
 )
 
+# Name, Drop Rate, image
+drop_rate_star_signs = (
+    ("Pirate Booty", 5, "pack-mule"),
+    ("Druipi Major", 12, "killian-maximus"),
+)
+
 deathbringer_pack_drop_rate = 200
 big_big_hampter_drop_rate = 4
 summoning_gm_drop_rate = 6

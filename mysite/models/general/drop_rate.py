@@ -2,11 +2,20 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from math import prod
 
-from consts.consts_autoreview import ValueToMulti
-from consts.consts_general import max_card_stars
-from consts.consts_w1 import get_seraph_cosmos_multi
-from consts.consts_w2 import max_sigil_level, obols_max_bonuses_dict, sigils_dict
-from consts.consts_w3 import approx_max_talent_level_non_es_non_star
+from consts.consts_autoreview import EmojiType, ValueToMulti
+from consts.consts_general import cards_max_level, max_card_stars
+from consts.consts_w1 import (
+    get_seraph_cosmos_multi,
+    get_seraph_cosmos_summ_level_goal,
+    seraph_max,
+)
+from consts.consts_w2 import (
+    max_sigil_level,
+    obols_max_bonuses_dict,
+    po_box_dict,
+    sigils_dict,
+)
+from consts.consts_w3 import approx_max_talent_level_non_es_non_star, prayers_dict
 from consts.consts_w4 import shiny_days_list
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.general.drop_rate import (
@@ -19,11 +28,13 @@ from consts.general.drop_rate import (
     drop_rate_multi_card_description,
     drop_rate_multi_codenames,
     drop_rate_multi_companions,
+    drop_rate_star_signs,
     flat_drop_rate_codenames,
     golden_food_stat,
     gown_drop_rate_codename,
     island_explorer_pack_multi,
     looty_booty_talent_index,
+    max_weekly_boss_difficulties,
     passive_drop_rate_card_caps,
     robbinghood_talent_index,
     sneaking_mastery_drop_rate,
@@ -85,6 +96,223 @@ class CharacterDropRate:
     talents: float = 0
     flat_total: float = 0
     total: float = 100
+    # Advice context
+    equipped_cardset: str = ""
+    summoning_level: int = 0
+    seraph_cosmos_unlocked: bool = False
+    seraph_cosmos_next_goal: int = 0
+    silkrode_nanochip_owned: bool = False
+    star_sign_states: dict[str, tuple[bool, bool]] = field(default_factory=dict)
+    loot_box: object = None
+    midas_minded: object = None
+    midas_minded_equipped: bool = False
+    clover_shrine: object = None
+    chizoar_below_max: bool = False
+    weekly_boss_kills: int = 0
+    max_talent_level: int = 0
+
+    def get_luk_advice(self) -> Advice:
+        return Advice(
+            label=f"Stats - LUK: +{round(self.luk, 2)}% Drop Rate",
+            picture_class="luk",
+        )
+
+    def get_card_set_advice(self, name: str, progress: CardSetProgress) -> Advice:
+        equipped = f"(EQUIPPED {EmojiType.CHECK.value}) " * (
+            self.equipped_cardset == name
+        )
+        cap = card_set_drop_rate[name] * (1 + max_card_stars)
+        next_level = (
+            f"<br>Cards until next set level {progress.stars_sum}/"
+            f"{progress.next_star_sum}"
+            if progress.stars_sum < progress.next_star_sum
+            else ""
+        )
+        return Advice(
+            label=f"{equipped}{{{{ Card Sets|#cards }}}} - {name}: "
+            f"+{progress.value}/{cap}% Drop Rate{next_level}",
+            picture_class=kebab(name),
+            progression=progress.star,
+            goal=max_card_stars,
+        )
+
+    def get_silkrode_nanochip_advice(self) -> Advice:
+        return Advice(
+            label="Lab Chips - Silkrode Nanochip: "
+            "2x Passive Star Sign Bonuses while equipped",
+            picture_class="silkrode-nanochip",
+            progression=int(self.silkrode_nanochip_equipped),
+            goal=1,
+        )
+
+    def get_seraph_cosmos_advice(self) -> Advice:
+        next_goal = (
+            f"<br>{self.summoning_level}/{self.seraph_cosmos_next_goal} "
+            f"summoning levels toward next multi increase."
+            if self.seraph_cosmos_multi < seraph_max
+            else ""
+        )
+        return Advice(
+            label=f"{{{{ Star Signs|#star-signs }}}} - Seraph Cosmos: "
+            f"{round(self.seraph_cosmos_multi, 3):g}/{seraph_max}x "
+            f"Passive Star Sign Bonuses{next_goal}",
+            picture_class="seraph-cosmos",
+            progression=int(self.seraph_cosmos_unlocked),
+            goal=1,
+        )
+
+    def get_star_sign_advice(self, name: str, picture_class: str) -> Advice:
+        value = self.star_signs[name]
+        infinite, equipped = self.star_sign_states[name]
+        boosted = self.silkrode_nanochip_equipped and infinite
+        passive = " (PASSIVE)" if infinite and not boosted else ""
+        unboosted = (
+            "<br>Not being boosted by Silkrode Nanochip. Equip the Lab Chip!"
+            if infinite and self.silkrode_nanochip_owned and not boosted
+            else ""
+        )
+        maxed = boosted or ((equipped or infinite) and not self.silkrode_nanochip_owned)
+        return Advice(
+            label=f"{{{{ Star Signs|#star-signs }}}} - {name}: "
+            f"+{round(value, 1):g}% Drop Rate{passive}{unboosted}",
+            picture_class=picture_class,
+            progression=int(value > 0 and maxed),
+            goal=1,
+        )
+
+    def get_loot_box_advice(self) -> Advice:
+        box = self.loot_box
+        info = next(b for b in po_box_dict.values() if b["Name"] == box.name)
+        cap = lava_func(
+            funcType=info["1_funcType"],
+            level=info["Max Level"],
+            x1=info["1_x1"],
+            x2=info["1_x2"],
+        )
+        return Advice(
+            label=f"{{{{ Post Office|#post-office }}}} - {box.name}: "
+            f"+{round(self.post_office, 1):g}/{round(cap, 1):g}% Drop Rate",
+            picture_class=box.name,
+            progression=box.level,
+            goal=box.max_level,
+        )
+
+    def get_midas_minded_advice(self) -> Advice:
+        prayer = self.midas_minded
+        info = next(p for p in prayers_dict.values() if p["Name"] == prayer.name)
+        bonus_cap = lava_func(
+            funcType=info["bonus_funcType"],
+            level=info["MaxLevel"],
+            x1=info["bonus_x1"],
+            x2=info["bonus_x2"],
+        )
+        curse_cap = lava_func(
+            funcType=info["curse_funcType"],
+            level=info["MaxLevel"],
+            x1=info["curse_x1"],
+            x2=info["curse_x2"],
+        )
+        unequipped = (
+            ""
+            if self.midas_minded_equipped
+            else "<br>Equip the prayer to gain its bonus!"
+        )
+        return Advice(
+            label=f"{{{{ Prayers|#prayers }}}} - {prayer.name}: "
+            f"+{round(prayer.bonus_value, 1):g}/{round(bonus_cap, 1):g}% Drop Rate | "
+            f"+{round(prayer.curse_value, 1):g}/{round(curse_cap, 1):g}% "
+            f"Max HP for Monsters CURSE.{unequipped}",
+            picture_class=prayer.name,
+            progression=prayer.level,
+            goal=info["MaxLevel"],
+            completed=prayer.level == info["MaxLevel"] and self.midas_minded_equipped,
+        )
+
+    def get_obols_advice(self) -> Advice:
+        cap = obols_max_bonuses_dict["PlayerDropRateTrue"]
+        return Advice(
+            label=f"Obols - Personal Obols: +{self.obols}/{cap}% Drop Rate"
+            f"<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR",
+            picture_class="dementia-obol-of-infinisixes",
+            progression=self.obols,
+            goal=cap,
+        )
+
+    def get_clover_shrine_advice(self) -> Advice:
+        shrine = self.clover_shrine
+        active = f"(ACTIVE {EmojiType.CHECK.value}) " * self.clover_shrine_active
+        chizoar = (
+            "<br>Note: Can be increased by getting more Chaotic Chizoar card stars"
+            if self.chizoar_below_max
+            else ""
+        )
+        return Advice(
+            label=f"{active}Shrines - Clover Shrine: "
+            f"+{round(shrine.value, 1):g}% Drop Rate{chizoar}",
+            picture_class="clover-shrine",
+            progression=shrine.level,
+            goal=EmojiType.INFINITY.value,
+        )
+
+    def get_boss_battle_spillover_advice(self) -> Advice:
+        talent = all_talentsDict[boss_battle_spillover_talent_index]
+        max_level = 100
+        cap = (
+            lava_func(
+                funcType=talent["funcX"],
+                level=max_level,
+                x1=talent["x1"],
+                x2=talent["x2"],
+            )
+            * max_weekly_boss_difficulties
+        )
+        more = (
+            "<br>Can be increased by defeating more weekly boss difficulties!"
+            if self.weekly_boss_kills < max_weekly_boss_difficulties
+            else ""
+        )
+        return Advice(
+            label=f"Special Talent - Boss Battle Spillover: "
+            f"+{round(self.boss_battle_spillover, 1)}/{cap}% Drop Rate{more}",
+            picture_class="boss-battle-spillover",
+            progression=self.boss_battle_spillover_level,
+            goal=max_level,
+            completed=self.boss_battle_spillover == cap,
+        )
+
+    def _class_talent_advice(
+        self, talent_index: int, label: str, level: int, value: float
+    ) -> Advice:
+        talent = all_talentsDict[talent_index]
+        cap = lava_func(
+            funcType=talent["funcX"],
+            level=self.max_talent_level,
+            x1=talent["x1"],
+            x2=talent["x2"],
+        )
+        return Advice(
+            label=f"{label}: +{round(value, 1)}/{round(cap, 1)}% Drop Rate",
+            picture_class=kebab(talent["name"]),
+            progression=level,
+            goal=self.max_talent_level,
+            completed=value == cap,
+        )
+
+    def get_robbinghood_advice(self) -> Advice:
+        return self._class_talent_advice(
+            robbinghood_talent_index,
+            "Archer Talent - Robbinghood",
+            self.robbinghood_level,
+            self.robbinghood,
+        )
+
+    def get_looty_booty_advice(self) -> Advice:
+        return self._class_talent_advice(
+            looty_booty_talent_index,
+            "Journeyman Talent - Curse Of Mr Looty Booty",
+            self.looty_booty_level,
+            self.looty_booty,
+        )
 
 
 class DropRate:
@@ -138,6 +366,7 @@ class DropRate:
         self._achievements: dict[str, tuple[int, int, bool]] = {}
         self._archlord = None
         self._sneaking_mastery_level = 0
+        self._chizoar_below_max = False
 
     def calculate(
         self,
@@ -259,6 +488,8 @@ class DropRate:
         ]
 
     def _calculate_cards(self, cards):
+        chizoar = next(card for card in cards if card.name == "Chaotic Chizoar")
+        self._chizoar_below_max = chizoar.getStars() < (cards_max_level - 1)
         self.passive_cards = [
             ([card for card in cards if card.name in names], cap)
             for names, cap in passive_drop_rate_card_caps
@@ -543,6 +774,7 @@ class DropRate:
                 drop_rate_multi_card_description, legend_talent_multi
             )
         )
+        dr.equipped_cardset = character.equipped_cardset
         cardset = self.card_sets.get(character.equipped_cardset)
         if cardset is not None:
             dr.card_set = cardset.value
@@ -590,37 +822,51 @@ class DropRate:
         dr.silkrode_nanochip_equipped = (
             "Silkrode Nanochip" in character.equipped_lab_chips
         )
+        astrology_cultism = tesseract.upgrades["Astrology Cultism"].level
+        dr.summoning_level = character.summoning_level
         dr.seraph_cosmos_multi = get_seraph_cosmos_multi(
-            tesseract.upgrades["Astrology Cultism"].level, character.summoning_level
+            astrology_cultism, character.summoning_level
         )
+        dr.seraph_cosmos_next_goal = get_seraph_cosmos_summ_level_goal(
+            astrology_cultism, character.summoning_level
+        )
+        dr.seraph_cosmos_unlocked = star_signs["Seraph Cosmos"].unlocked
+        dr.silkrode_nanochip_owned = star_signs.silkrode_owned
         applied_seraph_multi = (
-            dr.seraph_cosmos_multi if star_signs["Seraph Cosmos"].unlocked else 1
+            dr.seraph_cosmos_multi if dr.seraph_cosmos_unlocked else 1
         )
         infinite_star_sign_levels = get_infinite_star_sign_levels(
             breeding.total_shiny_levels["Infinite Star Signs"]
         )
         star_signs_total = 0
-        for name, drop_rate in (("Pirate Booty", 5), ("Druipi Major", 12)):
-            value = star_signs[name].value_for(
+        for name, drop_rate, _ in drop_rate_star_signs:
+            star_sign = star_signs[name]
+            value = star_sign.value_for(
                 character, drop_rate, infinite_star_sign_levels, applied_seraph_multi
             )
             dr.star_signs[name] = value
+            dr.star_sign_states[name] = (
+                star_sign.is_infinite(infinite_star_sign_levels),
+                star_sign.is_equipped(character),
+            )
             star_signs_total += value
 
+        dr.loot_box = character.po_boxes_invested["Non Predatory Loot Box"]
         dr.post_office = 0
-        dr.post_office += character.po_boxes_invested[
-            "Non Predatory Loot Box"
-        ].bonus_1_value
+        dr.post_office += dr.loot_box.bonus_1_value
 
-        midas_minded_equipped = "Midas Minded" in character.equipped_prayers
+        dr.midas_minded = prayers["Midas Minded"]
+        dr.midas_minded_equipped = "Midas Minded" in character.equipped_prayers
         dr.prayers = 0
-        dr.prayers += prayers["Midas Minded"].bonus_value * midas_minded_equipped
+        dr.prayers += dr.midas_minded.bonus_value * dr.midas_minded_equipped
 
         dr.obols = 0
         dr.obols += character.obols.get("Total%_DROP_RATE", 0)
 
         # Clover Shrine
         clover_shrine = shrines["Clover Shrine"]
+        dr.clover_shrine = clover_shrine
+        dr.chizoar_below_max = self._chizoar_below_max
         if artifacts["Moai Head"].level > 0:
             dr.clover_shrine_active = True
         elif lab_bonuses["Shrine World Tour"].enabled:
@@ -635,6 +881,8 @@ class DropRate:
         dr.shrines += clover_shrine.value * dr.clover_shrine_active
 
         # Talents
+        dr.weekly_boss_kills = reset_counters.weekly_boss_kills
+        dr.max_talent_level = character.max_talents_over_books
         dr.talents = 0
         bbs = all_talentsDict[boss_battle_spillover_talent_index]
         dr.boss_battle_spillover_level = character.current_preset_talents.get(

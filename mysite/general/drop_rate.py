@@ -1,37 +1,27 @@
 from consts.progression_tiers import true_max_tiers
 from consts.general.drop_rate import (
-    boss_battle_spillover_talent_index,
-    card_set_drop_rate,
+    drop_rate_star_signs,
     drop_rate_companions,
     drop_rate_multi_codenames,
     flat_drop_rate_codenames,
     golden_food_stat,
-    looty_booty_talent_index,
-    max_weekly_boss_difficulties,
-    robbinghood_talent_index,
 )
 from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
 from consts.consts_autoreview import ValueToMulti, EmojiType
-from consts.idleon.lava_func import lava_func
-from consts.consts_general import max_card_stars, cards_max_level, equipment_by_bonus_dict
+from consts.consts_general import cards_max_level, equipment_by_bonus_dict
 from consts.consts_w5 import max_sailing_artifact_level
-from consts.consts_w3 import prayers_dict
-from consts.consts_w2 import po_box_dict, obols_max_bonuses_dict
 from consts.general.friend_bonuses import friend_bonus_drop_rate_index
-from consts.consts_w1 import seraph_max, get_seraph_cosmos_summ_level_goal
 from models.general.session_data import session_data
 
 from models.general.assets import Asset
 from models.general.character import Character
-from models.w1.star_signs import get_infinite_star_sign_levels
 from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
 from utils.misc.add_tabbed_advice_group_or_spread_advice_group_list import add_tabbed_advice_group_or_spread_advice_group_list
-from utils.all_talentsDict import all_talentsDict
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import kebab
 from utils.logging import get_logger
@@ -470,36 +460,6 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     return account_wide_advice_group
 
 
-def process_star_sign(
-    name, active_value, picture_class, character, infinite_star_sign_levels,
-    silkroad_chip_equipped, star_signs_advice
-):
-    starsign = session_data.account.star_signs[name]
-    infinite_unlocked = starsign.is_infinite(infinite_star_sign_levels)
-    equipped = starsign.is_equipped(character)
-    silkroad_chip_owned = session_data.account.star_signs.silkrode_owned
-    boosted = silkroad_chip_equipped and infinite_unlocked
-
-    text = (
-        f"<br>+{round(active_value, 1):g}% Drop Rate {'(PASSIVE)' if infinite_unlocked and not boosted else ''}"
-        f"{'<br>Not being boosted by Silkrode Nanochip. Equip the Lab Chip!' if infinite_unlocked and silkroad_chip_owned and not boosted else ''}"
-    )
-
-    if infinite_unlocked and silkroad_chip_equipped:
-        max_boosted_for_this_character = True
-    elif (equipped or infinite_unlocked) and not silkroad_chip_owned:
-        max_boosted_for_this_character = True
-    else:
-        max_boosted_for_this_character = False
-
-    star_signs_advice.append(Advice(
-        label=f"{{{{ Star Signs|#star-signs }}}}- {name}:{text}",
-        picture_class=picture_class,
-        progression=int(active_value > 0 and max_boosted_for_this_character),
-        goal=1
-    ))
-
-
 def invalid_weapon_type(base_class, slot):
     if base_class == 'Warrior':
         return slot in ['Bow', 'Wand', 'Fisticuffs']
@@ -521,18 +481,8 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
     royal_armory = session_data.account.royal_armory
     royal_guardian_family = session_data.account.family_bonuses['Royal Guardian']
     beanstalk = session_data.account.beanstalk
-    infinite_star_sign_levels = get_infinite_star_sign_levels(
-        session_data.account.breeding.total_shiny_levels['Infinite Star Signs']
-    )
     for index, character in enumerate(session_data.account.characters):
         dr = drop_rate.characters[index]
-        # Drop Rate from LUK
-        dr_from_luk = dr.luk
-        dr_from_luk_advice: list[Advice] = []
-        dr_from_luk_advice.append(Advice(
-            label=f"Drop Rate from the 'LUK' Stat: +{round(dr_from_luk, 2)}%",
-            picture_class='luk'
-        ))
 
         # Non-passive Drop Rate cards
         card_advice: list[Advice] = []
@@ -571,37 +521,11 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
             royal_guardian_family.get_bonus_advice(royal_guardian_family_goal)
         ]
 
-        # Card Sets - Bosses n Nightmares
-        cardset_advice: list[Advice] = []
-        bnn = drop_rate.card_sets['Bosses n Nightmares']
-        bnn_stars_sum, bnn_star, bnn_star_next, bnn_value = (
-            bnn.stars_sum, bnn.star, bnn.next_star_sum, bnn.value
-        )
-        bnn_equipped = character.equipped_cardset == 'Bosses n Nightmares'
-        cardset_advice.append(Advice(
-            label=f"{f'(EQUIPPED {EmojiType.CHECK.value}) ' if bnn_equipped else ''} {{{{ Card Sets|#cards }}}}- Bosses n Nightmares:"
-                  f"<br>+{bnn_value}/{card_set_drop_rate['Bosses n Nightmares'] * (1 + max_card_stars)}% Drop Rate"
-                  + (f"<br>Cards until next set level {bnn_stars_sum}/{bnn_star_next}" if bnn_stars_sum < bnn_star_next else '')
-            ,
-            picture_class='bosses-n-nightmares',
-            progression=bnn_star,
-            goal=6
-        ))
-
-        # Cards Sets - Events
-        events = drop_rate.card_sets['Events']
-        events_stars_sum, events_star, events_star_next, events_value = (
-            events.stars_sum, events.star, events.next_star_sum, events.value
-        )
-        events_equipped = character.equipped_cardset == 'Events'
-        cardset_advice.append(Advice(
-            label=f"{f'(EQUIPPED {EmojiType.CHECK.value}) ' if events_equipped else ''} {{{{ Card Sets|#cards }}}}- Events:"
-                  f"<br>+{events_value}/{card_set_drop_rate['Events'] * (1 + max_card_stars)}% Drop Rate"
-                  + (f"<br>Cards until next set level {events_stars_sum}/{events_star_next}" if events_stars_sum < events_star_next else ''),
-            picture_class='events',
-            progression=events_star,
-            goal=6
-        ))
+        # Card Sets
+        cardset_advice = [
+            dr.get_card_set_advice(name, progress)
+            for name, progress in drop_rate.card_sets.items()
+        ]
 
         # Equipment - Flat Drop Rate
         equipment_advice = get_equipment_advice_for_stat(
@@ -646,199 +570,22 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
             character, golden_food_stat
         )
 
-        # Star Signs
-        star_signs_advice: list[Advice] = []
-
-        # Lab Chips - Silkrode Nanochip
-        # Modifier for Star Signs below, must be equipped so we always show
-        silkroad_chip_equipped = dr.silkrode_nanochip_equipped
-        star_signs_advice.append(Advice(
-            label=f"Lab Chips- Silkrode Nanochip: 2x Passive Star Sign Bonuses while equipped",
-            picture_class='silkrode-nanochip',
-            progression=int(silkroad_chip_equipped),
-            goal=1
-        ))
-
-        # Seraph Cosmos
-        # Always shown because the modifier can grow based on Summoning levels
-        ac_level = session_data.account.tesseract.upgrades['Astrology Cultism'].level
-        seraph_unlocked = session_data.account.star_signs['Seraph Cosmos'].unlocked
-        seraph_cosmos_starsign_mod = dr.seraph_cosmos_multi
-        next_multi_goal = get_seraph_cosmos_summ_level_goal(ac_level, character.summoning_level)
-        next_level_note = (
-            f"<br>{character.summoning_level}/{next_multi_goal} summoning levels toward next multi increase."
-            if seraph_cosmos_starsign_mod < seraph_max
-            else ''
-        )
-        star_signs_advice.append(Advice(
-            label=f"{{{{ Star Signs|#star-signs }}}}- Seraph Cosmos:"
-                  f"<br>{round(seraph_cosmos_starsign_mod, 3):g}/{seraph_max}x Passive Star Sign Bonuses"
-                  f"{next_level_note}",
-            picture_class='seraph-cosmos',
-            progression=int(seraph_unlocked),
-            goal=1
-        ))
-
-        for name, picture_class in (("Pirate Booty", "pack-mule"), ("Druipi Major", "killian-maximus")):
-            process_star_sign(
-                name, dr.star_signs[name], picture_class,
-                character,
-                infinite_star_sign_levels,
-                silkroad_chip_equipped,
-                star_signs_advice
-            )
+        # Star Signs. Nanochip and Seraph modify the signs below
+        star_signs_advice = [
+            dr.get_silkrode_nanochip_advice(),
+            dr.get_seraph_cosmos_advice(),
+            *(
+                dr.get_star_sign_advice(name, picture_class)
+                for name, _, picture_class in drop_rate_star_signs
+            ),
+        ]
         star_signs_bonus = sum(dr.star_signs.values(), 0)
 
-        # Post Office - Non Predatory Loot Box
-        post_office_advice: list[Advice] = []
-
-        nplb_name = 'Non Predatory Loot Box'
-        nplb = next(b for b in po_box_dict.values() if b['Name'] == nplb_name)
-        nplb_dr_max_value = lava_func(
-            funcType=nplb['1_funcType'],
-            level=nplb['Max Level'],
-            x1=nplb['1_x1'],
-            x2=nplb['1_x2']
-        )
-        char_nplb = character.po_boxes_invested[nplb_name]
-
-        post_office_advice.append(Advice(
-            label=f"{{{{ Post Office|#post-office }}}}- {nplb_name}:"
-                  f"<br>+{round(char_nplb.bonus_1_value, 1):g}/{round(nplb_dr_max_value, 1):g}% Drop Rate",
-            picture_class=nplb_name,
-            progression=char_nplb.level,
-            goal=char_nplb.max_level
-        ))
-
-        # Prayers - Midas Minded
-        prayer_advice: list[Advice] = []
-
-        midas_minded_name = 'Midas Minded'
-        midas_minded_data = next(p for p in prayers_dict.values() if p['Name'] == midas_minded_name)
-        midas_minded_bonus_max = lava_func(
-            funcType=midas_minded_data['bonus_funcType'],
-            level=midas_minded_data['MaxLevel'],
-            x1=midas_minded_data['bonus_x1'],
-            x2=midas_minded_data['bonus_x2']
-        )
-        midas_minded_curse_max = lava_func(
-            funcType=midas_minded_data['curse_funcType'],
-            level=midas_minded_data['MaxLevel'],
-            x1=midas_minded_data['curse_x1'],
-            x2=midas_minded_data['curse_x2']
-        )
-
-        midas_minded_equipped = midas_minded_name in character.equipped_prayers
-        midas_minded_equip_notice = "" if midas_minded_equipped else "<br>Equip the prayer to gain its bonus!"
-        midas_minded_prayer = session_data.account.prayers[midas_minded_name]
-        midas_mind_completed = (midas_minded_prayer.level == midas_minded_data['MaxLevel']) and midas_minded_equipped
-        prayer_advice.append(Advice(
-            label=f"{{{{ Prayers|#prayers }}}} - {midas_minded_name}:"
-                  f"<br>+{round(midas_minded_prayer.bonus_value, 1):g}/{round(midas_minded_bonus_max, 1):g}% Drop Rate Bonus | "
-                  f"+{round(midas_minded_prayer.curse_value, 1):g}/{round(midas_minded_curse_max, 1):g}% Max HP for Monsters CURSE."
-                  f"{midas_minded_equip_notice}",
-            picture_class=midas_minded_name,
-            progression=midas_minded_prayer.level,
-            goal=midas_minded_data['MaxLevel'],
-            completed=midas_mind_completed
-        ))
-
-        # Obols - Personal
-        obol_advice: list[Advice] = []
-        player_obol_drop_rate = character.obols.get('Total%_DROP_RATE', 0)
-        player_obol_drop_rate_max = obols_max_bonuses_dict['PlayerDropRateTrue']
-        obol_advice.append(Advice(
-            label=f"Obols- Personal Obols:"
-                  f"<br>+{player_obol_drop_rate}/{player_obol_drop_rate_max}% Drop Rate"
-                  f"<br>Note: Includes Rare and Hyper Obols, each rerolled with +1% DR",
-            picture_class='dementia-obol-of-infinisixes',
-            progression=player_obol_drop_rate,
-            goal=player_obol_drop_rate_max
-        ))
-
-        # Shrines - Clover Shrine
-        shrine_advice: list[Advice] = []
-
-        chaotic_chizoar_card = next(c for c in session_data.account.cards if c.name == 'Chaotic Chizoar')
-        shrine_extra_bonus_text = ''
-        if chaotic_chizoar_card.getStars() < (cards_max_level - 1):
-            shrine_extra_bonus_text = '<br>Note: Can be increased by getting more Chaotic Chizoar card stars'
-
-        clover_shrine_affects_character = dr.clover_shrine_active
-
-        clover_shrine_value = session_data.account.shrines['Clover Shrine'].value
-        shrine_advice.append(Advice(
-            label=f"{f'(ACTIVE {EmojiType.CHECK.value}) ' if clover_shrine_affects_character else ''} Shrines- Clover Shrine:"
-                  f"<br>+{round(clover_shrine_value, 1):g}% Drop Rate "
-                  f"{shrine_extra_bonus_text}",
-            picture_class='clover-shrine',
-            progression=session_data.account.shrines['Clover Shrine'].level,
-            goal=EmojiType.INFINITY.value
-        ))
-
-        # Talents
-        talent_advice: list[Advice] = []
-
-        # Talents - Special Talent: Boss Battle Spillover
-        boss_battle_spillover = all_talentsDict[boss_battle_spillover_talent_index]
-        char_boss_battle_spillover_level = dr.boss_battle_spillover_level
-        boss_battle_spillover_value_per_tier_max = lava_func(
-            funcType=boss_battle_spillover['funcX'],
-            level=100,
-            x1=boss_battle_spillover['x1'],
-            x2=boss_battle_spillover['x2']
-        )
-        boss_battle_spillover_value = dr.boss_battle_spillover
-        boss_battle_spillover_value_max = boss_battle_spillover_value_per_tier_max * max_weekly_boss_difficulties
-        talent_advice.append(Advice(
-            label=f"Special Talent - Boss Battle Spillover:"
-                  f"<br>+{round(boss_battle_spillover_value, 1)}%/{boss_battle_spillover_value_max}% Drop Rate" 
-                  f"{'<br>Can be increased by defeating more weekly boss difficulties!' if session_data.account.reset_counters.weekly_boss_kills < max_weekly_boss_difficulties else ''}",
-            picture_class='boss-battle-spillover',
-            progression=char_boss_battle_spillover_level,
-            goal=100,
-            completed=boss_battle_spillover_value == boss_battle_spillover_value_max
-        ))
-
-        # Talent - Archer: Robbinghood
+        talent_advice = [dr.get_boss_battle_spillover_advice()]
         if character.base_class == 'Archer':
-            robbinghood = all_talentsDict[robbinghood_talent_index]
-            char_robbinghood_level = dr.robbinghood_level
-            robbinghood_value = dr.robbinghood
-            robbinghood_value_max = lava_func(
-                funcType=robbinghood['funcX'],
-                level=character.max_talents_over_books,
-                x1=robbinghood['x1'],
-                x2=robbinghood['x2']
-            )
-            talent_advice.append(Advice(
-                label=f"Archer Talent - Robbinghood:"
-                      f"<br>+{round(robbinghood_value, 1)}%/{round(robbinghood_value_max, 1)}% Drop Rate",
-                picture_class='robbinghood',
-                progression=char_robbinghood_level,
-                goal=character.max_talents_over_books,
-                completed=robbinghood_value == robbinghood_value_max
-            ))
-
-        # Talent - Journeyman: Curse Of Mr Looty Booty
+            talent_advice.append(dr.get_robbinghood_advice())
         if character.base_class == 'Journeyman':
-            looty_booty = all_talentsDict[looty_booty_talent_index]
-            char_looty_booty_level = dr.looty_booty_level
-            looty_booty_value = dr.looty_booty
-            looty_booty_value_max = lava_func(
-                funcType=looty_booty['funcX'],
-                level=character.max_talents_over_books,
-                x1=looty_booty['x1'],
-                x2=looty_booty['x2']
-            )
-            talent_advice.append(Advice(
-                label=f"Journeyman Talent - Curse Of Mr Looty Booty:"
-                      f"<br>+{round(looty_booty_value, 1)}%/{round(looty_booty_value_max, 1)}% Drop Rate",
-                picture_class='curse-of-mr-looty-booty',
-                progression=char_looty_booty_level,
-                goal=character.max_talents_over_books,
-                completed=looty_booty_value == looty_booty_value_max
-            ))
+            talent_advice.append(dr.get_looty_booty_advice())
 
         # Talent - Royal Guardian: Graded Rate
         if dr.graded_rate > 0:
@@ -846,7 +593,7 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
 
         # Wrap Up
         character_specific_advice = {
-            f'Luck - +{round(dr_from_luk, 2)}% Drop Rate': dr_from_luk_advice,
+            f'Luck - +{round(dr.luk, 2)}% Drop Rate': [dr.get_luk_advice()],
             f'Cards - +{round(dr.cards, 1)}% Drop Rate': card_advice,
             f'Card Set - +{round(dr.card_set, 1)}% Drop Rate': cardset_advice,
             f'Drop Rate Multi Cards - x{round_and_trim(dr.card_multi, 3)} Drop Rate':
@@ -866,10 +613,10 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
             f'Golden Food - +{round(dr.golden_food, 1)}% Drop Rate':
                 golden_food_advice,
             f'Star Signs - +{round(star_signs_bonus, 1)}% Drop Rate': star_signs_advice,
-            f'Post Office - +{round(dr.post_office, 1)}% Drop Rate': post_office_advice,
-            f'Prayers - +{round(dr.prayers, 1)}% Drop Rate': prayer_advice,
-            f'Obols - +{round(dr.obols, 1)}% Drop Rate': obol_advice,
-            f'Shrines - +{round(dr.shrines, 1)}% Drop Rate': shrine_advice,
+            f'Post Office - +{round(dr.post_office, 1)}% Drop Rate': [dr.get_loot_box_advice()],
+            f'Prayers - +{round(dr.prayers, 1)}% Drop Rate': [dr.get_midas_minded_advice()],
+            f'Obols - +{round(dr.obols, 1)}% Drop Rate': [dr.get_obols_advice()],
+            f'Shrines - +{round(dr.shrines, 1)}% Drop Rate': [dr.get_clover_shrine_advice()],
             f'Talents - +{round(dr.talents, 1)}% Drop Rate': talent_advice,
         }
         for subgroup in character_specific_advice.values():
