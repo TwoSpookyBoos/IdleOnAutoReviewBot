@@ -12,6 +12,7 @@ from models.general.cards import Cards
 from models.general.character import Character, talent_bonus_banned
 from models.general.characters import Characters
 from models.general.companions import Companions
+from models.general.drop_rate import DropRate
 from models.general.dungeons import Dungeons
 from models.general.event_shop import EventShop
 from models.general.family_bonuses import FamilyBonuses
@@ -151,6 +152,7 @@ class Account:
         g.autoloot = self.autoloot
         self.reset_counters: ResetCounters = ResetCounters(self.raw_data)
         self.crystal_spawn_chance: CrystalSpawnChance = CrystalSpawnChance()
+        self.drop_rate: DropRate = DropRate()
         self.achievements: Achievements = Achievements(self.raw_data)
         self.merits: Merits = Merits(self.raw_data)
         self.storage: Storage = Storage(self.raw_data)
@@ -710,6 +712,58 @@ class Account:
             alchemy_bubbles=self.alchemy_bubbles,
         ))
         self.beanstalk.calculate_bonuses()
+        # Reads nearly everything, so last
+        self.drop_rate.calculate(
+            best_talent_level=self.get_best_talent_level,
+            class_kill_talent_value=self.get_class_kill_talent_value,
+            characters=self.characters,
+            cards=self.cards,
+            artifacts=self.sailing.artifacts,
+            guild_bonuses=self.guild_bonuses,
+            friend_bonuses=self.friend_bonuses,
+            vault=self.vault,
+            gemshop=self.gemshop,
+            grimoire=self.grimoire,
+            royal_armory=self.royal_armory,
+            owl=self.owl,
+            stamps=self.stamps,
+            arcade=self.arcade,
+            obols=self.obols,
+            alchemy_bubbles=self.alchemy_bubbles,
+            alchemy_p2w=self.alchemy_p2w,
+            alchemy_vials=self.alchemy_vials,
+            ballot=self.ballot,
+            equinox=self.equinox,
+            armor_sets=self.armor_sets,
+            hat_rack=self.hat_rack,
+            breeding=self.breeding,
+            tome=self.tome,
+            caverns=self.caverns,
+            achievements=self.achievements,
+            farming=self.farming,
+            summoning=self.summoning,
+            emperor=self.emperor,
+            legend_talents=self.legend_talents,
+            spelunk=self.spelunk,
+            research=self.research,
+            gallery=self.gallery,
+            world_progress=self.world_progress,
+            companions=self.companions,
+            class_kill_talents=self.class_kill_talents,
+            sneaking=self.sneaking,
+            sushi_station=self.sushi_station,
+            jelly_operator=self.jelly_operator,
+            glimbo=self.glimbo,
+            minehead=self.minehead,
+            family_bonuses=self.family_bonuses,
+            beanstalk=self.beanstalk,
+            star_signs=self.star_signs,
+            tesseract=self.tesseract,
+            prayers=self.prayers,
+            shrines=self.shrines,
+            lab_bonuses=self.lab_bonuses,
+            reset_counters=self.reset_counters,
+        )
 
     def add_alert_list(
         self, group_name: str, advice_list: list[Advice | None] | set[Advice | None]
