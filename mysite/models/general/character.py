@@ -29,7 +29,7 @@ from models.w3.apocalypse import ApocProgress, new_apocalypses
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
-from utils.safer_data_handling import safer_index
+from utils.safer_data_handling import safer_convert, safer_index
 
 logger = get_logger(__name__)
 
@@ -167,6 +167,15 @@ class Character:
 
         self.apocalypses: dict[str, ApocProgress] = new_apocalypses()
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
+        # Anvil points bought with cash and with monster materials
+        try:
+            raw_anvil = raw_data[f"AnvilPAstats_{character_index}"]
+            self.anvil_cash_points: int = safer_convert(raw_anvil[1], 0)
+            self.anvil_monster_points: int = safer_convert(raw_anvil[2], 0)
+        except Exception:
+            logger.exception(f"Unable to retrieve AnvilPAstats_{character_index}")
+            self.anvil_cash_points = 0
+            self.anvil_monster_points = 0
 
         self.setPolytheismLink()
 

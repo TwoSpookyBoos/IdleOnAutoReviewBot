@@ -1,15 +1,13 @@
-import math
 
 from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import smithing_progressionTiers, true_max_tiers
 
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.safer_data_handling import safer_convert
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -25,35 +23,18 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
         'Total Capacity': [],
         'Bars per Forge Slot': []
     }
+    forge_upgrades = session_data.account.forge_upgrades
     #Static Sources
-    achievement = session_data.account.achievements['Vitamin D-licious'].complete
-    cap_Advices['Static Sources'].append(Advice(
-        label=f"W5 Achievement: Vitamin D-licious: +{50 if achievement else 0}/50%",
-        picture_class='vitamin-d-licious',
-        progression=int(achievement),
-        goal=1
-    ))
-
-    bribe = session_data.account.bribes['Forge Cap Smuggling']
-    bribe_value = bribe.bonus
-    cap_Advices['Static Sources'].append(bribe.get_bonus_advice())
+    cap_Advices['Static Sources'].append(forge_upgrades.get_vitamin_d_advice())
+    cap_Advices['Static Sources'].append(session_data.account.bribes['Forge Cap Smuggling'].get_bonus_advice())
 
     #Verify Skill Mastery itself is unlocked from The Rift
     cap_Advices['Static Sources'].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
-    #Account-wide total smithing levels of 300 needed to unlock the bonus
-    total_smithing_levels = sum(session_data.account.characters.all_skills['Smithing'])
-    skill_mastery_bonus_bool = session_data.account.rift['SkillMastery'].unlocked and total_smithing_levels >= 300
-    cap_Advices['Static Sources'].append(Advice(
-        label=f"Skill Mastery at 300 Smithing: +{25 * skill_mastery_bonus_bool * session_data.account.rift['SkillMastery'].unlocked}/25%",
-        picture_class='smithing',
-        progression=total_smithing_levels,
-        goal=300
-    ))
+    cap_Advices['Static Sources'].append(forge_upgrades.get_skill_mastery_advice())
 
     #Scaling Sources
     #Forge Upgrade purchased at the forge itself with coins
-    forge_upgrades = session_data.account.forge_upgrades.ore_capacity
-    cap_Advices['Scaling Sources'].append(session_data.account.forge_upgrades.get_ore_capacity_advice())
+    cap_Advices['Scaling Sources'].append(forge_upgrades.get_ore_capacity_advice())
 
     #Godshard Ore card
     cap_Advices['Scaling Sources'].append(next(c for c in session_data.account.cards if c.name == 'Godshard Ore').getAdvice())
@@ -67,46 +48,14 @@ def getForgeCapacityAdviceGroup() -> list[AdviceGroup]:
     cap_Advices['Scaling Sources'].append(majik_beeg_forge.get_advice())
 
     # Upgrade Vault > Beeg Forge
-    beeg_forge = session_data.account.vault.upgrades['Beeg Forge']
     cap_Advices['Scaling Sources'].append(session_data.account.vault.get_upgrade_advice("Beeg Forge"))
 
     for group_name in cap_Advices:
         for advice in cap_Advices[group_name]:
             advice.mark_advice_completed()
 
-    groupA = ValueToMulti((session_data.account.arcade[26].value + (30 * (next(c.getStars() for c in session_data.account.cards if c.name == 'Godshard Ore')+1))))
-    groupB = ValueToMulti(session_data.account.stamps['Forge Stamp'].total_value)
-    groupC = ValueToMulti(bribe_value + beeg_forge.total_value)
-    groupD = ValueToMulti((50 * achievement) + (25 * skill_mastery_bonus_bool))
-    groupE = majik_beeg_forge.value
-
-    final_forgeCapacity = math.ceil(min(2e9, (20 + forge_upgrades) * groupA * groupB * groupC * groupD * groupE))
-    bar_Advices['Total Capacity'].append(Advice(
-        label=f"Total Capacity: {final_forgeCapacity:,}",
-        picture_class='empty-forge-slot'
-    ))
-    barDict = {
-        'Godshard Bar': 15000,
-        'Marble Bar': 4000,
-        'Dreadlo Bar': 1000,
-        'Starfire Bar': 500,
-        'Lustre Bar': 250,
-        'Void Bar': 100,
-        'Dementia Bar': 40,
-        'Platinum Bar': 16,
-        'Gold Bar': 7,
-        'Iron Bar': 4,
-        'Copper Bar': 2
-    }
-    for barName, oreCost in barDict.items():
-        nextBar = oreCost - (final_forgeCapacity % oreCost) if final_forgeCapacity % oreCost > 0 else oreCost
-        bar_Advices['Bars per Forge Slot'].append(Advice(
-            label=f"{math.floor(final_forgeCapacity / oreCost):,} {barName}s."
-                  f"<br>{nextBar:,} cap to next bar",
-            picture_class=barName,
-            progression=oreCost-nextBar,
-            goal=oreCost
-        ))
+    bar_Advices['Total Capacity'].append(forge_upgrades.get_total_capacity_advice())
+    bar_Advices['Bars per Forge Slot'].extend(forge_upgrades.get_bar_advice())
 
     sources_ag = AdviceGroup(
         tier='',
@@ -140,25 +89,9 @@ def getProgressionTiersAdviceGroup():
     tier_MonsterPoints = 0
     tier_ForgeTotals = 0
 
-    player_cash_points = []
-    player_monster_points = []
-    sum_CashPoints = 0
-    sum_MonsterPoints = 0
+    player_cash_points = [c.anvil_cash_points for c in session_data.account.characters]
+    player_monster_points = [c.anvil_monster_points for c in session_data.account.characters]
     sum_ForgeUpgrades = session_data.account.forge_upgrades.total_purchased
-
-    # Total up all the purchases across all current characters
-    # TODO: Move this parsing to Account
-    for character in session_data.account.characters:
-        try:
-            player_cash_points.append(safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1], 0))
-            sum_CashPoints += safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][1], 0)
-
-            player_monster_points.append(safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][2], 0))
-            sum_MonsterPoints += safer_convert(session_data.account.raw_data[f"AnvilPAstats_{character.character_index}"][2], 0)
-        except:
-            player_cash_points.append(0)
-            player_monster_points.append(0)
-            logger.exception(f"Unable to retrieve AnvilPAstats_{character.character_index}")
 
     #Assess Tiers
     for tier_number, requirements in smithing_progressionTiers.items():

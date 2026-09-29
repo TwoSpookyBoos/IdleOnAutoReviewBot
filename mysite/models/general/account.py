@@ -720,6 +720,21 @@ class Account:
             alchemy_bubbles=self.alchemy_bubbles,
         ))
         self.beanstalk.calculate_bonuses()
+        self.forge_upgrades.calculate_ore_capacity(
+            arcade_bonus=self.arcade[26].value,
+            godshard_stars=next(
+                c.getStars() for c in self.cards if c.name == 'Godshard Ore'
+            ),
+            forge_stamp=self.stamps['Forge Stamp'].total_value,
+            bribe=self.bribes['Forge Cap Smuggling'].bonus,
+            vault_beeg_forge=self.vault.upgrades['Beeg Forge'].total_value,
+            majik_beeg_forge=self.caverns.villagers["Cosmos"].majiks.idleon[
+                'Beeg Beeg Forge'
+            ].value,
+            vitamin_d_complete=self.achievements['Vitamin D-licious'].complete,
+            skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
+            total_smithing_levels=sum(self.characters.all_skills['Smithing']),
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,
