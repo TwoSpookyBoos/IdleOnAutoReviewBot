@@ -51,6 +51,7 @@ from models.w2.post_office import PostOffice
 from models.w3.armor_sets import ArmorSets
 from models.w3.atom_collider import AtomCollider
 from models.w3.buildings import Buildings
+from models.w3.cog_board import CogBoard
 from models.w3.death_note import DeathNote
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.w3.equinox import Equinox
@@ -213,6 +214,7 @@ class Account:
         self.death_note: DeathNote = DeathNote(self.raw_data)
         self.printer: Printer = Printer(self.raw_data)
         self.construction_buildings: Buildings = Buildings(self.raw_data)
+        self.cog_board: CogBoard = CogBoard(self.raw_data)
         self.refinery: Refinery = Refinery(self.raw_data)
         self.shrines: Shrines = Shrines(self.raw_data)
         self.prayers: Prayers = Prayers(self.raw_data)

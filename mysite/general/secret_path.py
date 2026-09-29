@@ -3,7 +3,6 @@ from models.general.character import Character
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from utils.safer_data_handling import safe_loads
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, EmojiType
@@ -403,19 +402,9 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                 except:
                     continue
             if neb1status >= 0:
-                neb1platskulls = 0
-                try:
-                    playerneb1Int = session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", "{\"Nebulyte1\": [\"0\", \"0\"]}")
-                    # logger.debug(f"playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
-                    if isinstance(playerneb1Int, str):
-                        playerneb1Int = safe_loads(playerneb1Int)
-                        playerneb1Int = playerneb1Int.get('Nebulyte1', ['0', '0'])
-                        playerneb1Int = int(playerneb1Int[0])
-                        # logger.debug(f"After json.loads, playerneb1Int = {type(playerneb1Int)}: {playerneb1Int}")
-                    # playerneb1Int = int(session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", {"Nebulyte1":[0,0]})[0])
-                    neb1platskulls = max(playerneb1Int, neb1platskulls)
-                except Exception as reason:
-                    logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
+                neb1platskulls = max(
+                    session_data.account.quests.get_progress(maestro.character_index, 'Nebulyte1'), 0
+                )
             if neb2status == -1:
                 try:
                     neb2status = (
@@ -435,17 +424,11 @@ def getQuestAdvice(tier_SecretClass, jmans, maestros):
                 except:
                     continue
             if neb3status == 0:
-                try:
-                    playerneb3Int = session_data.account.raw_data.get(f"QuestStatus_{maestro.character_index}", "{\"Nebulyte3\": [\"0\"]}")
-                    # logger.debug(f"playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
-                    if isinstance(playerneb3Int, str):
-                        playerneb3Int = safe_loads(playerneb3Int)
-                        playerneb3Int = playerneb3Int.get('Nebulyte1', ['0', '0'])
-                        playerneb3Int = int(playerneb3Int[0])
-                        # logger.debug(f"After json.loads, playerneb3Int = {type(playerneb3Int)}: {playerneb3Int}")
-                    neb3gmushkills = max(playerneb3Int, neb3gmushkills)
-                except Exception as reason:
-                    logger.warning(f"Could not retrieve 'Nebulyte1' in QuestStatus_{maestro.character_index} because: {reason}")
+                # Reads Nebulyte1's counter, as before
+                neb3gmushkills = max(
+                    session_data.account.quests.get_progress(maestro.character_index, 'Nebulyte1'),
+                    neb3gmushkills,
+                )
             if neb4status == -1:
                 try:
                     neb4status = (

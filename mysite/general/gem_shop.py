@@ -2,7 +2,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from utils.safer_data_handling import safe_loads, safer_convert
+from utils.safer_data_handling import safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.consts_general import gem_shop_optlacc_dict
@@ -46,14 +46,10 @@ def try_exclude_FluorescentFlaggies(exclusionLists):
     102-104 are red cog-making
     105-107 are purple cog-makingss_through_d_exclusions
     """
-    try:
-        cogList = safe_loads(session_data.account.raw_data.get('CogO', []))
-        cogBlanks = sum(1 for cog in cogList[0:95] if cog == 'Blank')
-        if cogBlanks <= 60:
-            for sublist in exclusionLists:
-                sublist.append('Fluorescent Flaggies')
-    except:
-        pass
+    blank_cog_slots = session_data.account.cog_board.blank_slots
+    if blank_cog_slots is not None and blank_cog_slots <= 60:
+        for sublist in exclusionLists:
+            sublist.append('Fluorescent Flaggies')
 
 def try_exclude_BurningBadBooks(exclusionLists):
     if session_data.account.construction_buildings['Automation Arm'].level >= 5:

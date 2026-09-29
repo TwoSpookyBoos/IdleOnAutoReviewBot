@@ -1,4 +1,4 @@
-from utils.safer_data_handling import safe_loads
+from utils.safer_data_handling import safe_loads, safer_index
 
 
 class Quest:
@@ -31,6 +31,20 @@ class Quests(dict[str, Quest]):
                     quest.accepted_chars.append(char_index)
                 else:
                     quest.unaccepted_chars.append(char_index)
+        # Per-quest progress counters, e.g. kills toward a quest goal
+        self.progress_by_character: list[dict[str, list]] = [
+            safe_loads(raw_data.get(f"QuestStatus_{index}", {}))
+            for index in range(character_count)
+        ]
+
+    def get_progress(self, character_index: int, name: str) -> int:
+        progress = safer_index(self.progress_by_character, character_index, {})
+        if not isinstance(progress, dict):
+            return 0
+        try:
+            return int(safer_index(progress.get(name, [0]), 0, 0))
+        except (TypeError, ValueError):
+            return 0
 
     def completed_count(self, name: str) -> int:
         quest = self.get(name)

@@ -306,7 +306,7 @@ def getConsumablesAdviceList() -> list[Advice]:
     consumables = []
 
     #If 30+ Colo tickets owned
-    total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
+    total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.colo_scores.tickets
     if total_colo_tickets > 300 and session_data.account.world_progress.highest_reached >= 6:
         consumables.append(Advice(
             label=f"{total_colo_tickets} Colo Tickets available",
