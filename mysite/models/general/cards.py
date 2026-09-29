@@ -1,6 +1,8 @@
 import sys
+from dataclasses import dataclass
 from math import ceil, floor
 
+from consts.consts_autoreview import ValueToMulti
 from consts.consts_general import (
     card_raw_data,
     cards_max_level,
@@ -8,8 +10,20 @@ from consts.consts_general import (
     key_cards,
 )
 from consts.consts_monster_data import decode_monster_name
+from consts.consts_w3 import approx_max_talent_level_star_talents
+from consts.general.cards import (
+    base_card_drop_chance,
+    base_player_max_card_stars,
+    cardiovascular_max_level,
+    cards_galore_talent_index,
+    max_8ball_keychain_card_drop_chance,
+    max_obol_card_drop_chance,
+    pokaminni_card_drop_chance,
+)
+from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from models.general.character import Character
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safe_loads, safer_get
@@ -118,6 +132,34 @@ class Card:
         return f"[{self.__class__.__name__}: {self.name}, {self.count}, {self.star}-star]"
 
 
+@dataclass
+class CardSetProgress:
+    stars_sum: int
+    star: int
+    stars_over: int
+    next_star_sum: int
+    maxed: bool
+
+    @property
+    def rank(self) -> int:
+        return self.star + self.maxed
+
+
+class CardSet(list[Card]):
+    def __init__(self, name: str, cards: list[Card]):
+        super().__init__(sorted(cards, key=lambda card: card.diff_to_next))
+        self.name = name
+
+    def get_progress(self, max_stars: int) -> CardSetProgress:
+        stars_sum = sum(min(card.star, max_stars) + 1 for card in self)
+        star, stars_over = divmod(stars_sum, len(self))
+        star = min(star, max_stars)
+        next_star_sum = (star + 1) * len(self)
+        # 96/96 Blunder Hills, for instance
+        maxed = stars_sum == next_star_sum
+        return CardSetProgress(stars_sum, star, stars_over, next_star_sum, maxed)
+
+
 class Cards(list[Card]):
     def __init__(self, raw_data: dict, characters: list[Character]):
         card_counts = safe_loads(raw_data.get(key_cards, {}))
@@ -170,3 +212,194 @@ class Cards(list[Card]):
                     character.equipped_cards.append(cards_by_codename[codename])
                 else:
                     logger.warning(f"Unknown equipped_card_codename: {codename}. Skipping")
+
+        cards_by_set: dict[str, list[Card]] = {}
+        for card in self:
+            cards_by_set.setdefault(card.cardset, []).append(card)
+        self.cardsets: dict[str, CardSet] = {
+            name: CardSet(name, cards) for name, cards in cards_by_set.items()
+        }
+
+    def named(self, name: str) -> Card:
+        return next(card for card in self if card.name == name)
+
+    def calculate(
+        self,
+        *,
+        ruby_cards_unlocked: bool,
+        rustbelt_03_obtained: bool,
+        five_aces_bribe: float,
+        pokaminni_unlocked: bool,
+        anearful_vial: float,
+        card_stamp: float,
+        card_spotter: float,
+        card_champ_bubble: float,
+    ):
+        self.player_max_card_stars = (
+            base_player_max_card_stars
+            + (1 * ruby_cards_unlocked)
+            + (1 * rustbelt_03_obtained)
+        )
+        self.cardset_progress: dict[str, CardSetProgress] = {
+            name: cardset.get_progress(self.player_max_card_stars)
+            for name, cardset in self.cardsets.items()
+        }
+        self.cardset_rank_total = sum(
+            progress.rank for progress in self.cardset_progress.values()
+        )
+        self._calculate_drop_chance(
+            five_aces_bribe=five_aces_bribe,
+            pokaminni_unlocked=pokaminni_unlocked,
+            anearful_vial=anearful_vial,
+            card_stamp=card_stamp,
+            card_spotter=card_spotter,
+            card_champ_bubble=card_champ_bubble,
+        )
+
+    def _calculate_drop_chance(
+        self,
+        *,
+        five_aces_bribe: float,
+        pokaminni_unlocked: bool,
+        anearful_vial: float,
+        card_stamp: float,
+        card_spotter: float,
+        card_champ_bubble: float,
+    ):
+        # Multi Group B: Cardiovascular
+        cardiovascular = next(
+            talent
+            for talent in all_talentsDict.values()
+            if talent["name"] == "Cardiovascular!"
+        )
+        self.cardiovascular_bonus = round(
+            ValueToMulti(
+                lava_func(
+                    cardiovascular["funcX"],
+                    cardiovascular_max_level,
+                    cardiovascular["x1"],
+                    cardiovascular["x2"],
+                )
+            ),
+            2,
+        )
+        self.drop_chance_multi_b = round(self.cardiovascular_bonus, 2)
+
+        # Multi Group A: all other bonuses
+        self.pokaminni_unlocked = pokaminni_unlocked
+        # JMAN ONLY
+        cards_galore = all_talentsDict[cards_galore_talent_index]
+        self.cards_galore_bonus = lava_func(
+            cards_galore["funcX"],
+            approx_max_talent_level_star_talents,
+            cards_galore["x1"],
+            cards_galore["x2"],
+        )
+        gigafrog = 5 * self.named("Gigafrog").level
+        snelbie = 8 * self.named("Snelbie").level
+        sir_stache = 9 * self.named("Sir Stache").level
+        egggulyte = 1 * self.named("Egggulyte").level
+        max_equipment_bonus = (
+            max_obol_card_drop_chance + max_8ball_keychain_card_drop_chance
+        )
+        pokaminni_bonus = int(pokaminni_unlocked) * pokaminni_card_drop_chance
+        self.drop_chance_multi_a = round(
+            (
+                five_aces_bribe
+                + pokaminni_bonus
+                + gigafrog
+                + snelbie
+                + sir_stache
+                + egggulyte
+                + anearful_vial
+                + card_stamp
+                + card_spotter
+                + max_equipment_bonus
+                + card_champ_bubble
+            )
+            / 100,
+            2,
+        )
+        self.drop_chance_multi_a_jman = round(
+            (
+                five_aces_bribe
+                + pokaminni_bonus
+                + gigafrog
+                + snelbie
+                + sir_stache
+                + egggulyte
+                + anearful_vial
+                + card_stamp
+                + self.cards_galore_bonus
+                + card_spotter
+                + max_equipment_bonus
+                + card_champ_bubble
+            )
+            / 100,
+            2,
+        )
+
+        # Total
+        self.drop_chance = round(
+            base_card_drop_chance
+            + self.drop_chance_multi_a * self.drop_chance_multi_b,
+            2,
+        )
+        self.drop_chance_jman = round(
+            base_card_drop_chance
+            + self.drop_chance_multi_a_jman * self.drop_chance_multi_b,
+            2,
+        )
+
+    def get_drop_chance_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Card Drop Chance bonus: {self.drop_chance}x "
+            f"({self.drop_chance_jman}x if Jman)",
+            picture_class="dementia-obol-of-cards",
+        )
+
+    def get_base_drop_chance_advice(self) -> Advice:
+        return Advice(
+            label="Passive +20% bonus. Not multiplied by other Multi Groups",
+            picture_class="",
+        )
+
+    def get_pokaminni_advice(self) -> Advice:
+        status = (
+            f"+{pokaminni_card_drop_chance}% if equipped"
+            if self.pokaminni_unlocked
+            else "Locked."
+        )
+        return Advice(
+            label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {status}",
+            picture_class="pokaminni",
+            progression=int(self.pokaminni_unlocked),
+            goal=1,
+        )
+
+    def get_obols_advice(self) -> Advice:
+        return Advice(
+            label=f"Full Card Drop Chance Obols: +{max_obol_card_drop_chance}%"
+            f"<br>Both personal and family, all rerolled for +1% Card Drop Chance",
+            picture_class="dementia-obol-of-cards",
+        )
+
+    def get_keychains_advice(self) -> Advice:
+        return Advice(
+            label="2x 8 Ball Keychains: 2x +10%",
+            picture_class="x8-ball-chain",
+        )
+
+    def get_cards_galore_advice(self) -> Advice:
+        return Advice(
+            label=f"Cards Galore Talent: +{self.cards_galore_bonus:.2f}% "
+            f"if maxed (Jman only)",
+            picture_class="cards-galore",
+        )
+
+    def get_cardiovascular_advice(self) -> Advice:
+        return Advice(
+            label=f'Star Talent "Cardiovascular!": '
+            f"{self.cardiovascular_bonus}x if maxed",
+            picture_class="cardiovascular",
+        )

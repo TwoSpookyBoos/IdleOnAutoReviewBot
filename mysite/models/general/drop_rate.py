@@ -46,6 +46,7 @@ from consts.idleon.lava_func import lava_func
 from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
 from models.advice.advice import Advice
+from models.general.cards import CardSetProgress
 from models.general.drop_rate_equipment import get_equipment_advice
 from models.w1.star_signs import get_infinite_star_sign_levels
 from utils.all_talentsDict import all_talentsDict
@@ -53,14 +54,6 @@ from utils.logging import get_logger
 from utils.text_formatting import kebab, notateNumber
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class CardSetProgress:
-    stars_sum: int
-    star: int
-    next_star_sum: int
-    value: int
 
 
 @dataclass
@@ -133,7 +126,8 @@ class CharacterDropRate:
         equipped = f"(EQUIPPED {EmojiType.CHECK.value}) " * (
             self.equipped_cardset == name
         )
-        cap = card_set_drop_rate[name] * (1 + max_card_stars)
+        per_star = card_set_drop_rate[name]
+        cap = per_star * (1 + max_card_stars)
         next_level = (
             f"<br>Cards until next set level {progress.stars_sum}/"
             f"{progress.next_star_sum}"
@@ -142,9 +136,9 @@ class CharacterDropRate:
         )
         return Advice(
             label=f"{equipped}{{{{ Card Sets|#cards }}}} - {name}: "
-            f"+{progress.value}/{cap}% Drop Rate{next_level}",
+            f"+{per_star * progress.rank}/{cap}% Drop Rate{next_level}",
             picture_class=kebab(name),
-            progression=progress.star,
+            progression=progress.rank,
             goal=max_card_stars,
         )
 
@@ -517,15 +511,9 @@ class DropRate:
             for card in cards
             if card.description == drop_rate_multi_card_description
         ]
-        for cardset, per_star in card_set_drop_rate.items():
-            cards_in_set = [card for card in cards if card.cardset == cardset]
-            stars_sum = sum(min(card.star, max_card_stars) + 1 for card in cards_in_set)
-            star = min(stars_sum // len(cards_in_set), max_card_stars)
-            next_star_sum = (star + 1) * len(cards_in_set)
-            if stars_sum == next_star_sum:
-                star += 1
-            self.card_sets[cardset] = CardSetProgress(
-                stars_sum, star, next_star_sum, per_star * star
+        for cardset in card_set_drop_rate:
+            self.card_sets[cardset] = cards.cardsets[cardset].get_progress(
+                max_card_stars
             )
 
     def _calculate_account_wide(
@@ -793,7 +781,7 @@ class DropRate:
         dr.equipped_cardset = character.equipped_cardset
         cardset = self.card_sets.get(character.equipped_cardset)
         if cardset is not None:
-            dr.card_set = cardset.value
+            dr.card_set = card_set_drop_rate[character.equipped_cardset] * cardset.rank
 
         dr.family_multi = ValueToMulti(
             family_bonuses.get_character_value(

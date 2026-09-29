@@ -826,6 +826,16 @@ class Account:
             ).getCurrentValue(),
             coral_statue=self.statues['Coral Statue'],
         )
+        self.cards.calculate(
+            ruby_cards_unlocked=self.rift['RubyCards'].unlocked,
+            rustbelt_03_obtained=self.spelunk.caves['Rustbelt 03'].bonus_obtained,
+            five_aces_bribe=self.bribes['Five Aces in the Deck'].bonus,
+            pokaminni_unlocked=self.star_signs['Pokaminni'].unlocked,
+            anearful_vial=self.alchemy_vials['Anearful (Glublin Ear)'].value,
+            card_stamp=self.stamps['Card Stamp'].total_value,
+            card_spotter=self.guild_bonuses['C2 Card Spotter'].value,
+            card_champ_bubble=self.alchemy_bubbles['Card Champ'].base_value,
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,

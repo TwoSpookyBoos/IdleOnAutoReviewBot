@@ -1,18 +1,14 @@
 from collections import defaultdict
 
-from consts.consts_autoreview import break_you_best, ValueToMulti
+from consts.consts_autoreview import break_you_best
 from consts.consts_general import star_tiers, max_card_stars
-from consts.idleon.lava_func import lava_func
-from consts.consts_w2 import obols_max_bonuses_dict
-from consts.consts_w3 import approx_max_talent_level_star_talents
+from consts.general.cards import card_champ_bubble_goal
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
-from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -38,138 +34,37 @@ def getUnlockableAdviceGroup(cards, groups):
         groups.append(group_unlockable)
 
 def getCardDropChanceAdviceGroup(groups):
-    # Multi Group B: Cardiovascular
-
-    cardiovascular_id = next(index for index, talent in all_talentsDict.items() if talent['name'] == 'Cardiovascular!')
-    cardiovascular_max_level = 100
-
-    cardiovascular_dict_entry = all_talentsDict[cardiovascular_id]
-    cardiovascular_bonus = ValueToMulti(lava_func(cardiovascular_dict_entry['funcX'], cardiovascular_max_level, cardiovascular_dict_entry['x1'], cardiovascular_dict_entry['x2']))
-    cardiovascular_bonus = round(cardiovascular_bonus, 2)
-
-    multi_group_b = cardiovascular_bonus
-    multi_group_b = round(multi_group_b, 2)
-
-    # Multi Group A: all other bonuses
+    cards = session_data.account.cards
     five_aces = session_data.account.bribes['Five Aces in the Deck']
-    bribe_bonus = five_aces.bonus
-
-    pokaminni = session_data.account.star_signs['Pokaminni']
-
-    gigafrog: Card = next(card for card in session_data.account.cards if card.name == "Gigafrog")
-    snelbie: Card = next(card for card in session_data.account.cards if card.name == "Snelbie")
-    sir_stache: Card = next(card for card in session_data.account.cards if card.name == "Sir Stache")
-    egggulyte: Card = next(card for card in session_data.account.cards if card.name == "Egggulyte")
-
-    gigafrog_bonus = 5 * gigafrog.level
-    snelbie_bonus = 8 * snelbie.level
-    sir_stache_bonus = 9 * sir_stache.level
-    egggulyte_bonus = 1 * egggulyte.level
-
     anearful_vial = session_data.account.alchemy_vials['Anearful (Glublin Ear)']
-    anearful_vial_bonus = anearful_vial.value
-
-    card_stamp = session_data.account.stamps['Card Stamp']
-    card_stamp_bonus = card_stamp.total_value
-
-    # JMAN ONLY
-    cards_galore_talent = all_talentsDict[28]
-    cards_galore_talent_bonus = lava_func(cards_galore_talent['funcX'], approx_max_talent_level_star_talents, cards_galore_talent['x1'], cards_galore_talent['x2'])
-
     guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
-    guild_bonus_bonus = guild_bonus.value
-
-    max_obol_card_drop_chance = obols_max_bonuses_dict["PlayerCardDropChanceTrue"] + obols_max_bonuses_dict["FamilyCardDropChanceTrue"]
-    max_8ball_keychain_card_drop_chance = 2 * 10
-    max_equipment_card_drop_chance_bonus = max_obol_card_drop_chance + max_8ball_keychain_card_drop_chance
-
     card_champ_bubble = session_data.account.alchemy_bubbles['Card Champ']
-    card_champ_bubble_bonus = card_champ_bubble.base_value
-
-    multi_group_a = (
-            bribe_bonus +
-            int(pokaminni.unlocked) * 15 +
-            gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
-            anearful_vial_bonus +
-            card_stamp_bonus +
-            guild_bonus_bonus +
-            max_equipment_card_drop_chance_bonus +
-            card_champ_bubble_bonus
-    ) / 100
-
-    multi_group_a_jman = (
-            bribe_bonus +
-            int(pokaminni.unlocked) * 15 +
-            gigafrog_bonus + snelbie_bonus + sir_stache_bonus + egggulyte_bonus +
-            anearful_vial_bonus +
-            card_stamp_bonus +
-            cards_galore_talent_bonus +
-            guild_bonus_bonus +
-            max_equipment_card_drop_chance_bonus +
-            card_champ_bubble_bonus
-    ) / 100
-
-    multi_group_a = round(multi_group_a, 2)
-    multi_group_a_jman = round(multi_group_a_jman, 2)
-
-    # Total
-
-    multi_total = round(0.2 + multi_group_a * multi_group_b, 2)
-    multi_total_jman = round(0.2 + multi_group_a_jman * multi_group_b, 2)
 
     card_drop_chance_advices = {
-        f'Total: {multi_total}x ({multi_total_jman}x if Jman)': [
-            Advice(
-                label=f'Total Card Drop Chance bonus: {multi_total}x ({multi_total_jman}x if Jman)',
-                picture_class='dementia-obol-of-cards',
-            )
+        f'Total: {cards.drop_chance}x ({cards.drop_chance_jman}x if Jman)': [
+            cards.get_drop_chance_advice()
         ],
-        f'Base Chance: +20%': [
-            Advice(
-                label="Passive +20% bonus. Not multiplied by other Multi Groups",
-                picture_class=""
-            )
-        ],
-        f'Multi Group A: {multi_group_a}x ({multi_group_a_jman}x if Jman)': [],
+        f'Base Chance: +20%': [cards.get_base_drop_chance_advice()],
+        f'Multi Group A: {cards.drop_chance_multi_a}x ({cards.drop_chance_multi_a_jman}x if Jman)': [],
         f'Multi Group A - account-wide': [
             five_aces.get_bonus_advice(),
             anearful_vial.get_advice(full_name=False),
             session_data.account.stamps['Card Stamp'].get_advice(),
-            card_champ_bubble.get_bonus_advice(goal=3960),
+            card_champ_bubble.get_bonus_advice(goal=card_champ_bubble_goal),
             guild_bonus.get_advice()
         ],
         f'Multi Group A - character-specific': [
-            gigafrog.getAdvice(),
-            snelbie.getAdvice(),
-            sir_stache.getAdvice(),
-            egggulyte.getAdvice(),
-            Advice(
-                label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {'+15% if equipped' if pokaminni.unlocked else 'Locked.'}",
-                picture_class='pokaminni',
-                progression=int(pokaminni.unlocked),
-                goal=1
-            ),
-            Advice(
-                label=f'Full Card Drop Chance Obols: +{max_obol_card_drop_chance}%'
-                      f'<br>Both personal and family, all rerolled for +1% Card Drop Chance',
-                picture_class="dementia-obol-of-cards"
-            ),
-            Advice(
-                label=f'2x 8 Ball Keychains: 2x +10%',
-                picture_class="x8-ball-chain"
-            )
+            cards.named('Gigafrog').getAdvice(),
+            cards.named('Snelbie').getAdvice(),
+            cards.named('Sir Stache').getAdvice(),
+            cards.named('Egggulyte').getAdvice(),
+            cards.get_pokaminni_advice(),
+            cards.get_obols_advice(),
+            cards.get_keychains_advice(),
         ],
-        f'Multi Group A - class-specific': [
-            Advice(
-                label=f"Cards Galore Talent: +{cards_galore_talent_bonus:.2f}% if maxed (Jman only)",
-                picture_class="cards-galore",
-            )
-        ],
-        f'Multi Group B: {multi_group_b}x (character-specific)': [
-            Advice(
-                label=f'Star Talent "Cardiovascular!": {cardiovascular_bonus}x if maxed',
-                picture_class="cardiovascular",
-            )
+        f'Multi Group A - class-specific': [cards.get_cards_galore_advice()],
+        f'Multi Group B: {cards.drop_chance_multi_b}x (character-specific)': [
+            cards.get_cardiovascular_advice()
         ],
     }
 
@@ -185,59 +80,36 @@ def getCardDropChanceAdviceGroup(groups):
         informational=True
     ))
 
-def getCardsetAdviceGroups(cardsets, max_card_stars, groups):
-    cardset_rank_total = 0
-    for name, cardset in cardsets.items():
-        cardset_stars_sum = sum(min(card.star, max_card_stars) + 1 for card in cardset)
-        cardset_star, cardset_diff = divmod(cardset_stars_sum, len(cardset))
-        cardset_star = min(cardset_star, max_card_stars)
-        cardset_star_next = (cardset_star + 1) * len(cardset)
-        cardset_maxed = cardset_stars_sum == cardset_star_next  #96/96 Blunder Hills, for instance
-
-        cardset_rank_total += cardset_star + cardset_maxed
-        #logger.debug(f"{name} at {cardset_stars_sum}/{cardset_star_next} toward {star_tiers[cardset_star]} is worth {cardset_star + cardset_maxed} total cardset tiers")
-
+def getCardsetAdviceGroups(cards, groups):
+    for name, cardset in cards.cardsets.items():
+        progress = cards.cardset_progress[name]
         advices = [
             Advice(
                 label=f"{card.name}:<br>{card.getFormattedXY()}",
                 picture_class=card.css_class,
                 progression=f"{card.diff_to_next:,}",
                 goal=star_tiers[card.star + 1]
-            ) for card in cardset if -1 < card.star < max_card_stars
+            ) for card in cardset if -1 < card.star < cards.player_max_card_stars
         ]
         group = AdviceGroup(
             tier="",
-            pre_string=f"{name}: Collect {len(cardset) - cardset_diff} more cards for {star_tiers[cardset_star]} ({cardset_stars_sum}/{cardset_star_next})",
+            pre_string=f"{name}: Collect {len(cardset) - progress.stars_over} more cards for {star_tiers[progress.star]} ({progress.stars_sum}/{progress.next_star_sum})",
             picture_class=name,
             advices=advices,
             informational=True
         )
         groups.append(group)
-    return cardset_rank_total
 
 
 def getCardsAdviceSection() -> AdviceSection:
     cards = session_data.account.cards
-    cardsets = defaultdict(list)
-    for card in cards:
-        cardsets[card.cardset].append(card)
-
-    cardsets = {
-        name: sorted(cards, key=lambda card: card.diff_to_next)
-        for name, cards in cardsets.items()
-    }
-
-    player_max_card_stars = (
-        4
-        + (1 * session_data.account.rift['RubyCards'].unlocked)
-        + (1 * session_data.account.spelunk.caves["Rustbelt 03"].bonus_obtained)
-    )
+    player_max_card_stars = cards.player_max_card_stars
 
     groups = list()
 
     getUnlockableAdviceGroup(cards, groups)
     getCardDropChanceAdviceGroup(groups)
-    cardset_rank_total = getCardsetAdviceGroups(cardsets, player_max_card_stars, groups)
+    getCardsetAdviceGroups(cards, groups)
 
     note = (
         '' if player_max_card_stars == max_card_stars
@@ -248,9 +120,9 @@ def getCardsAdviceSection() -> AdviceSection:
     for group in [g for g in groups if g][3:]:
         group.hide = True
 
-    max_tier = len(cardsets) * (player_max_card_stars + 1)
+    max_tier = len(cards.cardsets) * (player_max_card_stars + 1)
     true_max = true_max_tiers['Cards']
-    curr_tier = cardset_rank_total
+    curr_tier = cards.cardset_rank_total
     overall_SectionTier = 0
     tier = f"{curr_tier}/{max_tier}"
     section = AdviceSection(
