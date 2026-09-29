@@ -1,10 +1,10 @@
-from math import ceil, floor
+from math import floor
 
 from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgroup_label, EmojiType
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.w6.farming import landrank_list
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
-from consts.w6.farming import max_farming_crops, max_farming_value, crop_evo_breakpoint_list
+from consts.w6.farming import max_farming_crops, max_farming_value
 
 from models.general.session_data import session_data
 from models.advice.advice import Advice
@@ -23,60 +23,12 @@ logger = get_logger(__name__)
 
 
 def get_depot_tabbed(farming) -> TabbedAdviceGroup:
-    navette_value = session_data.account.lab_jewels['Pure Opal Navette'].active_value
-    navette_max = session_data.account.lab_jewels['Pure Opal Navette'].base_value
-
-    spelunker_multi = max(1, session_data.account.lab_bonuses['Spelunker Obol'].value)
-    spelunker_max = session_data.account.lab_bonuses['Spelunker Obol'].base_value
-
-    rhombol_value = session_data.account.lab_jewels['Pure Opal Rhombol'].active_value
-    rhombol_max = session_data.account.lab_jewels['Pure Opal Rhombol'].base_value
-    rhombol_enhanced_max = rhombol_max * (spelunker_max + (navette_max/100))
-
-    studies_value = max(1, ValueToMulti(session_data.account.lab_bonuses['Depot Studies PhD'].value + rhombol_value))
-    studies_max = ValueToMulti(session_data.account.lab_bonuses['Depot Studies PhD'].base_value)
-    studies_enhanced_max_value = session_data.account.lab_bonuses['Depot Studies PhD'].base_value
-
     lab_multi = round_and_trim(farming.depot_multi.lab)
-    lab_max = round_and_trim(ValueToMulti(studies_enhanced_max_value + rhombol_enhanced_max))
 
     multi_advices: dict[str, list[Advice]] = {}
     total_multi = round_and_trim(farming.depot_multi.total)
     multi_advices[f"Crop Depot Bonuses Multi: {total_multi}"] = []
-    multi_advices[f"Multi Group A: {lab_multi}"] = [
-        Advice(
-            label=f"Lab Jewel: Pure Opal Navette: Increases the value of Spelunker Obol by +{navette_value/100:.1f}/{navette_max/100:.1f}"
-                  f"<br>(Yes, this jewel is bugged)",
-            picture_class='pure-opal-navette',
-            progression=int(session_data.account.lab_jewels['Pure Opal Navette'].enabled),
-            goal=1
-        ),
-        Advice(
-            label=f"Lab Bonus: Spelunker Obol: Multiplies the value of Pure Opal Rhombol by {spelunker_multi:.1f}/{spelunker_max:.1f}x",
-            picture_class='spelunker-obol',
-            progression=int(session_data.account.lab_bonuses['Spelunker Obol'].enabled),
-            goal=1
-        ),
-        Advice(
-            label=f"Lab Jewel: Pure Opal Rhombol: Increases Depot Studies by +.{rhombol_value:.0f}/.{rhombol_max:.0f}",
-            picture_class='pure-opal-rhombol',
-            progression=int(session_data.account.lab_jewels['Pure Opal Rhombol'].enabled),
-            goal=1
-        ),
-        Advice(
-            label=f"Lab Bonus: Depot Studies PhD: {studies_value:.2f}/{studies_max:.2f}x",
-            picture_class='depot-studies-phd',
-            progression=int(session_data.account.lab_bonuses['Depot Studies PhD'].enabled),
-            goal=1
-        ),
-        Advice(
-            label=f"Final Lab multi: {lab_multi}/{lab_max}x"
-                  f"<br>Note: Defaulted ON. Sorry {EmojiType.FROWN.value}",
-            picture_class='laboratory',
-            progression=f"{lab_multi}",
-            goal=f"{lab_max}"
-        ),
-    ]
+    multi_advices[f"Multi Group A: {lab_multi}"] = farming.get_depot_lab_advices()
     grimoire_multi = round_and_trim(farming.depot_multi.grimoire)
     multi_advices[f"Multi Group B: {grimoire_multi}"] = [
         session_data.account.grimoire.upgrades['Superior Crop Research'].get_advice(
@@ -240,14 +192,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         mgd: [],
     }
     #MGA
-    value_advices[mga].append(Advice(
-        label=f"Highest full 100 Product Doubler reached for guarantee: "
-              f"{(farming.market['Product Doubler'].value // 100) * 100:.0f}%",
-        picture_class='day-market',
-        progression=f"{farming.market['Product Doubler'].value:.0f}",
-        goal=400,
-        unit='%'
-    ))
+    value_advices[mga].append(farming.get_product_doubler_advice())
 
     #MGB
     #optimal_upgrades = getValueLRSuggies(farming) if farming['LandRankTotalRanks'] >= 5 else [-1, -1, -1]
@@ -266,36 +211,14 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         farming.land_rank.get_bonus_with_land_rank_advice("Production Boost")
     )
 
-    ballot_buff = session_data.account.ballot[29]
-    ballot_active = ballot_buff.active
-    ballot_status = ballot_buff.status
-    ballot_multi = ballot_buff.multi
-    ballot_multi_active = ballot_buff.active_multi
-    value_advices[mgc].append(Advice(
-        label=f"Plus Weekly {{{{ Ballot|#bonus-ballot }}}}: {ballot_multi_active:.3f}/{ballot_multi:.3f}x"
-              f"<br>(Buff {ballot_status})",
-        picture_class='ballot-29',
-        progression=int(ballot_active),
-        goal=1
-    ))
+    value_advices[mgc].append(farming.get_value_ballot_advice())
 
     value_advices[mgd].append(farming.market['Value Gmo'].get_bonus_advice())
 
     #Final
-    value_advices[final].append(Advice(
-        label=f"Total on Lowest ranked plot"
-              f"<br>Note: 10,000x is a HARD cap.",
-        picture_class='crop-scientist',
-        progression=f"{val.before_cap_min:,.0f}",
-        goal=f"{max_farming_value:,}"
-    ))
+    value_advices[final].append(farming.get_value_lowest_plot_advice())
     if val.before_cap_min < max_farming_value:
-        value_advices[final].append(Advice(
-            label=f"Total on Highest ranked plot",
-            picture_class='crop-scientist',
-            progression=f"{val.before_cap_max:,.0f}",
-            goal=f"{max_farming_value:,}"
-        ))
+        value_advices[final].append(farming.get_value_highest_plot_advice())
 
     value_ag = AdviceGroup(
         tier='',
@@ -342,11 +265,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         f"<br>Total value: {evo_multi.cropius_value:.3f}%",
         goal=EmojiType.INFINITY.value
     ))
-    crop_chapter_stacks = max(0, (session_data.account.tome.score - 5000) // 2000)
+    crop_chapter_stacks = evo_multi.crop_chapter_stacks
     crop_chapter = session_data.account.alchemy_bubbles['Crop Chapter']
     evo_advices[alch].append(crop_chapter.get_advice(
         f": {crop_chapter.base_value:.3}% per 2k Tome Points above 5k"
-        f"<br>{session_data.account.tome.score:,} Tome Points = {crop_chapter_stacks} stacks"
+        f"<br>{evo_multi.tome_score:,} Tome Points = {crop_chapter_stacks} stacks"
         f"<br>Total: +{round(crop_chapter.base_value * crop_chapter_stacks, 3):g}%",
         goal=EmojiType.INFINITY.value
     ))
@@ -371,11 +294,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 #Meals
     evo_advices[meals].append(session_data.account.meals['Bill Jack Pep'].get_bonus_advice())
 
-    evo_advices[meals].append(Advice(
-        label=f"Highest Summoning level: {max(session_data.account.characters.all_skills['Summoning'], default=0)}"
-              f"<br>Provides a {evo_multi.nyan_stacks}x multi to Nyanborgir",
-        picture_class='summoning'
-    ))
+    evo_advices[meals].append(farming.get_nyanborgir_level_advice())
     evo_advices[meals].append(session_data.account.meals.get_nyanborgir_advice())
 
 #Day Market
@@ -408,18 +327,8 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 #Star Sign
     evo_advices[ss].append(session_data.account.star_signs.get_seraph_advice())
     evo_advices[ss].append(session_data.account.star_signs.get_silkrode_advice())
-    evo_advices[ss].append(Advice(
-        label=f"Highest Farming level: {highest_farming_level}",
-        picture_class='farming'
-    ))
-
-    evo_advices[ss].append(Advice(
-        label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: {3 * session_data.account.star_signs['Cropiovo Minor'].unlocked:.0f}/3% per farming level."
-              f"<br>Total Value if doubled: {evo_multi.starsign_value:,.3f}%",
-        picture_class='cropiovo-minor',
-        progression=int(session_data.account.star_signs['Cropiovo Minor'].unlocked),
-        goal=1
-    ))
+    evo_advices[ss].append(farming.get_highest_farming_level_advice())
+    evo_advices[ss].append(farming.get_cropiovo_advice())
 # Lamp
     evo_advices[lamp].append(
         session_data.account.caverns.caves['The Lamp']
@@ -429,57 +338,18 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 
 # MISC
     # Achievement
-    evo_advices[misc].append(Advice(
-        label=f"""W6 Achievement: Lil' Overgrowth: {1.05 * session_data.account.achievements["Lil' Overgrowth"].complete:.2f}/1.05x""",
-        picture_class='lil-overgrowth',
-        progression=int(session_data.account.achievements["Lil' Overgrowth"].complete),
-        goal=1
-    ))
+    evo_advices[misc].append(farming.get_lil_overgrowth_advice())
     #Killroy
-    evo_advices[misc].append(Advice(
-        label=f"Killroy Skull Shop: {session_data.account.killroy.skull_shop.crop_multi:.3f}x"
-              f"<br>1 purchase: +{session_data.account.killroy.skull_shop.next_crop_multi - session_data.account.killroy.skull_shop.crop_multi:.3f}x",
-        picture_class='killroy-crop-evolution',
-        progression=session_data.account.killroy.skull_shop.crop_purchases,
-    ))
+    evo_advices[misc].append(farming.get_skull_shop_advice())
     #Skill Mastery
     # Verify Skill Mastery itself is unlocked from The Rift
     evo_advices[misc].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
     # Account-wide total farming levels of 200 needed to unlock the bonus
-    evo_advices[misc].append(Advice(
-        label=f"Skill Mastery at 200 Farming: +{1.15 * evo_multi.skill_mastery_active * session_data.account.rift['SkillMastery'].unlocked}/1.15x",
-        picture_class='farming',
-        progression=evo_multi.total_farming_levels,
-        goal=200
-    ))
-
-    ballot_buff = session_data.account.ballot[29]
-    evo_advices[misc].append(Advice(
-        label=f"Weekly Ballot: {ballot_buff.active_multi:.3f}/{ballot_buff.multi:.3f}x"
-              f"<br>(Buff {ballot_buff.status})",
-        picture_class='ballot-29',
-        progression=int(ballot_buff.active),
-        goal=1
-    ))
+    evo_advices[misc].append(farming.get_skill_mastery_advice())
+    evo_advices[misc].append(farming.get_evo_ballot_advice())
 
 #Total
-    first_crop_index = crop_evo_breakpoint_list[0]
-    target_evo_crop = (
-        first_crop_index, ceil(1 / farming.crops.evo_chance(first_crop_index))
-    )
-    for crop_index in crop_evo_breakpoint_list[1:]:
-        crop_evo_chance = ceil(1 / farming.crops.evo_chance(crop_index))
-        if evo_multi.total > crop_evo_chance:
-            # Found crop for that we have enough evo chance, use previous as
-            # target
-            break
-        target_evo_crop = crop_index, crop_evo_chance
-    if target_evo_crop is not None:
-        crop_index, crop_evo_chance = target_evo_crop
-        percent = evo_multi.total / crop_evo_chance
-        evo_advices[total].append(
-            farming.crops.get_crop_evo_advice(crop_index, crop_evo_chance, percent)
-        )
+    evo_advices[total].append(farming.get_target_evo_crop_advice())
     evo_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Crop Evolution Chance',
@@ -507,10 +377,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     }
 #Advices
 #Total
-    speed_advices[total].append(Advice(
-        label=f"Farming Speed Multi: {farming.speed_multi.total:,.3f}x",
-        picture_class='crop-scientist'
-    ))
+    speed_advices[total].append(farming.get_speed_total_advice())
 #Summoning
     speed_advices[summon].append(summoning_bonus.get_bonus_advice())
 #Vial and Market
@@ -548,10 +415,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     }
 
     #Total
-    bm_advices[total].append(Advice(
-        label=f"Magic Beans Bonus: {farming.bean_multi.total:,.3f}x",
-        picture_class='crop-scientist'
-    ))
+    bm_advices[total].append(farming.get_bean_total_advice())
 
     #Day Market - More Beenz
     bm_advices[mga].append(farming.market['More Beenz'].get_bonus_advice())
@@ -560,13 +424,7 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
         session_data.account.sneaking.emporium['Deal Sweetening'].get_obtained_advice()
     )
     #Achievement - Crop Flooding
-    bm_advices[mgb].append(Advice(
-        label=f"W6 Achievement: Crop Flooding: "
-              f"+{5 * session_data.account.achievements['Crop Flooding'].complete}/5%",
-        picture_class='crop-flooding',
-        progression=int(session_data.account.achievements['Crop Flooding'].complete),
-        goal=1
-    ))
+    bm_advices[mgb].append(farming.get_crop_flooding_advice())
     bm_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Magic Bean Bonus',
@@ -596,37 +454,17 @@ def getOGAdviceGroup(farming):
         pristine: [],
     }
 #Total
-    og_advices[total].append(Advice(
-        label=f"Overgrowth Chance: {farming.og_multi.total:,.3f}x",
-        picture_class='crop-scientist'
-    ))
+    og_advices[total].append(farming.get_og_total_advice())
 #Achievement- Big Time Land Owner = 1.15x
-    og_advices[ach].append(Advice(
-        label=f"W6 Achievement: Big Time Land Owner: "
-              f"{ValueToMulti(15 * session_data.account.achievements['Big Time Land Owner'].complete):.2f}/1.15x",
-        picture_class='big-time-land-owner',
-        progression=int(session_data.account.achievements['Big Time Land Owner'].complete),
-        goal=1
-    ))
+    og_advices[ach].append(farming.get_big_time_land_owner_advice())
 #Star Sign
     og_advices[ss].append(session_data.account.star_signs.get_seraph_advice())
     og_advices[ss].append(session_data.account.star_signs.get_silkrode_advice())
-    og_advices[ss].append(Advice(
-        label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: {15 * session_data.account.star_signs['O.G. Signalais'].unlocked:.0f}/15%."
-              f"<br>Total Value if doubled: {farming.og_multi.starsign_value:.3f}%",
-        picture_class='og-signalais',
-        progression=int(session_data.account.star_signs['O.G. Signalais'].unlocked),
-        goal=1
-    ))
+    og_advices[ss].append(farming.get_og_signalais_advice())
 #Night Market
     og_advices[nm].append(farming.market['Og Fertilizer'].get_bonus_advice())
 #Merit
-    og_advices[merit].append(Advice(
-        label=f"W6 Taskboard Merit: +{2 * session_data.account.merits[5][2].level}/30%",
-        picture_class='merit-5-2',
-        progression=session_data.account.merits[5][2].level,
-        goal=15
-    ))
+    og_advices[merit].append(farming.get_og_merit_advice())
 #Land Rank
     og_advices[lr].append(
         farming.land_rank['Overgrowth Boost'].get_bonus_advice(False)

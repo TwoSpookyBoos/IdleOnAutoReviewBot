@@ -666,6 +666,8 @@ class Account:
         self.farming.calculate_crop_depot_bonus(
             self.lab_bonuses['Depot Studies PhD'], self.lab_jewels['Pure Opal Rhombol'],
             self.grimoire, self.vault, self.sneaking.emporium,
+            pure_opal_navette=self.lab_jewels['Pure Opal Navette'],
+            spelunker_obol=self.lab_bonuses['Spelunker Obol'],
         )
         self.farming.calculate_crop_value_multi(self.ballot)
         self.farming.calculate_crop_evo_multi(
@@ -683,6 +685,7 @@ class Account:
             self.killroy.skull_shop,
             self.caverns.caves['The Lamp'].wishes['World 6 Majigers'],
             self.summoning.bonuses,
+            max_summoning_level=max(self.characters.all_skills['Summoning'], default=0),
         )
         self.farming.calculate_crop_speed(self.alchemy_vials, self.summoning.bonuses)
         self.farming.calculate_bean_bonus(

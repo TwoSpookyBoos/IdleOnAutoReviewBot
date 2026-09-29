@@ -1,4 +1,4 @@
-from math import floor
+from math import ceil, floor
 from functools import cached_property
 
 from consts.consts_autoreview import MultiToValue, ValueToMulti, EmojiType
@@ -17,6 +17,7 @@ from consts.w6.farming import (
     max_farming_crops,
     crop_dict,
     max_farming_value,
+    crop_evo_breakpoint_list,
 )
 
 from models.advice.advice import Advice
@@ -626,6 +627,8 @@ class CropEvoMulti:
         self.maps_opened: int = maps_opened
         self.cropius_value: float = maps_opened * cropius_mapper_value
         self.vial_value: float = vial_value
+        self.tome_score = tome_score
+        self.crop_chapter_stacks = max(0, (tome_score - 5000) // 2000)
         self.alchemy: float = (
             ValueToMulti(self.cropius_value)
             * ValueToMulti(
@@ -797,7 +800,14 @@ class Farming:
         grimoire: Grimoire,
         vault: Vault,
         emporium: dict[str, Emporium],
+        *,
+        pure_opal_navette: LabJewel,
+        spelunker_obol: LabBonus,
     ):
+        self._depot_studies = depot_studies
+        self._pure_opal_rhombol = pure_opal_rhombol
+        self._pure_opal_navette = pure_opal_navette
+        self._spelunker_obol = spelunker_obol
         lab_multi = ValueToMulti(
             (depot_studies.value + pure_opal_rhombol.value) * depot_studies.enabled
         )
@@ -827,6 +837,7 @@ class Farming:
             bonus.calculate_bonus()
 
     def calculate_crop_value_multi(self, ballot: Ballot):
+        self._value_ballot = ballot[29]
         # if ("CropsBonusValue" == e)
         # return Math.min(100, Math.round(Math.max(1, Math.floor(1 + (c.randomFloat() + q._customBlock_FarmingStuffs("BasketUpgQTY", 0, 5) / 100))) * (1 + q._customBlock_FarmingStuffs("LandRankUpgBonusTOTAL", 1, 0) / 100) * (1 + (q._customBlock_FarmingStuffs("LankRankUpgBonus", 1, 0) * c.asNumber(a.engine.getGameAttribute("FarmRank")[0][0 | t]) + q._customBlock_Summoning("VotingBonusz", 29, 0)) / 100)));
         self.value_multi = CropValueMulti(
@@ -859,7 +870,16 @@ class Farming:
         skull_shop: SkullShop,
         lamp_wish: LampWish,
         summoning_bonuses: dict,
+        *,
+        max_summoning_level: int,
     ):
+        self._max_summoning_level = max_summoning_level
+        self._highest_farming_level = max(farming_levels)
+        self._cropiovo_unlocked = star_signs["Cropiovo Minor"].unlocked
+        self._lil_overgrowth = achievements["Lil' Overgrowth"].complete
+        self._skull_shop = skull_shop
+        self._skill_mastery_unlocked = skill_mastery.unlocked
+        self._evo_ballot = ballot_buff
         maps_opened = 0
         mama_trolls_map_open = False
         for char in characters:
@@ -904,6 +924,7 @@ class Farming:
         )
 
     def calculate_bean_bonus(self, deal_sweetening_value: float, achievements: Achievements):
+        self._crop_flooding = achievements["Crop Flooding"].complete
         self.bean_multi = MagicBeanMulti(
             self.market["More Beenz"].as_multi,
             ValueToMulti(
@@ -919,6 +940,9 @@ class Farming:
         og_merit_level: int,
         taffy_disc_value: float,
     ):
+        self._big_time_land_owner = achievements["Big Time Land Owner"].complete
+        self._og_signalais_unlocked = star_signs["O.G. Signalais"].unlocked
+        self._og_merit_level = og_merit_level
         self.og_multi = OvergrowthMulti(
             ValueToMulti(15 * achievements["Big Time Land Owner"].complete),
             15
@@ -933,4 +957,229 @@ class Farming:
                 + self.land_rank["Overgrowth Superboost"].value
             ),
             ValueToMulti(taffy_disc_value),
+        )
+
+    def get_depot_lab_advices(self) -> list[Advice]:
+        navette = self._pure_opal_navette
+        spelunker = self._spelunker_obol
+        rhombol = self._pure_opal_rhombol
+        studies = self._depot_studies
+        navette_value = navette.active_value
+        navette_max = navette.base_value
+        spelunker_multi = max(1, spelunker.value)
+        spelunker_max = spelunker.base_value
+        rhombol_value = rhombol.active_value
+        rhombol_max = rhombol.base_value
+        rhombol_enhanced_max = rhombol_max * (spelunker_max + (navette_max / 100))
+        studies_value = max(1, ValueToMulti(studies.value + rhombol_value))
+        studies_max = ValueToMulti(studies.base_value)
+        lab_multi = round_and_trim(self.depot_multi.lab)
+        lab_max = round_and_trim(
+            ValueToMulti(studies.base_value + rhombol_enhanced_max)
+        )
+        return [
+            Advice(
+                label=f"Lab Jewel: Pure Opal Navette: Increases the value of "
+                f"Spelunker Obol by +{navette_value / 100:.1f}/{navette_max / 100:.1f}"
+                f"<br>(Yes, this jewel is bugged)",
+                picture_class="pure-opal-navette",
+                progression=int(navette.enabled),
+                goal=1,
+            ),
+            Advice(
+                label=f"Lab Bonus: Spelunker Obol: Multiplies the value of Pure Opal "
+                f"Rhombol by {spelunker_multi:.1f}/{spelunker_max:.1f}x",
+                picture_class="spelunker-obol",
+                progression=int(spelunker.enabled),
+                goal=1,
+            ),
+            Advice(
+                label=f"Lab Jewel: Pure Opal Rhombol: Increases Depot Studies by "
+                f"+.{rhombol_value:.0f}/.{rhombol_max:.0f}",
+                picture_class="pure-opal-rhombol",
+                progression=int(rhombol.enabled),
+                goal=1,
+            ),
+            Advice(
+                label=f"Lab Bonus: Depot Studies PhD: "
+                f"{studies_value:.2f}/{studies_max:.2f}x",
+                picture_class="depot-studies-phd",
+                progression=int(studies.enabled),
+                goal=1,
+            ),
+            Advice(
+                label=f"Final Lab multi: {lab_multi}/{lab_max}x"
+                f"<br>Note: Defaulted ON. Sorry {EmojiType.FROWN.value}",
+                picture_class="laboratory",
+                progression=f"{lab_multi}",
+                goal=f"{lab_max}",
+            ),
+        ]
+
+    def get_product_doubler_advice(self) -> Advice:
+        doubler = self.market["Product Doubler"]
+        return Advice(
+            label=f"Highest full 100 Product Doubler reached for guarantee: "
+            f"{(doubler.value // 100) * 100:.0f}%",
+            picture_class="day-market",
+            progression=f"{doubler.value:.0f}",
+            goal=400,
+            unit="%",
+        )
+
+    def get_value_ballot_advice(self) -> Advice:
+        buff = self._value_ballot
+        return Advice(
+            label=f"Plus Weekly {{{{ Ballot|#bonus-ballot }}}}: "
+            f"{buff.active_multi:.3f}/{buff.multi:.3f}x"
+            f"<br>(Buff {buff.status})",
+            picture_class="ballot-29",
+            progression=int(buff.active),
+            goal=1,
+        )
+
+    def get_value_lowest_plot_advice(self) -> Advice:
+        return Advice(
+            label="Total on Lowest ranked plot<br>Note: 10,000x is a HARD cap.",
+            picture_class="crop-scientist",
+            progression=f"{self.value_multi.before_cap_min:,.0f}",
+            goal=f"{max_farming_value:,}",
+        )
+
+    def get_value_highest_plot_advice(self) -> Advice:
+        return Advice(
+            label="Total on Highest ranked plot",
+            picture_class="crop-scientist",
+            progression=f"{self.value_multi.before_cap_max:,.0f}",
+            goal=f"{max_farming_value:,}",
+        )
+
+    def get_nyanborgir_level_advice(self) -> Advice:
+        return Advice(
+            label=f"Highest Summoning level: {self._max_summoning_level}"
+            f"<br>Provides a {self.evo_multi.nyan_stacks}x multi to Nyanborgir",
+            picture_class="summoning",
+        )
+
+    def get_highest_farming_level_advice(self) -> Advice:
+        return Advice(
+            label=f"Highest Farming level: {self._highest_farming_level}",
+            picture_class="farming",
+        )
+
+    def get_cropiovo_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Starsign|#star-signs }}}}: Cropiovo Minor: "
+            f"{3 * self._cropiovo_unlocked:.0f}/3% per farming level."
+            f"<br>Total Value if doubled: {self.evo_multi.starsign_value:,.3f}%",
+            picture_class="cropiovo-minor",
+            progression=int(self._cropiovo_unlocked),
+            goal=1,
+        )
+
+    def get_lil_overgrowth_advice(self) -> Advice:
+        return Advice(
+            label=f"W6 Achievement: Lil' Overgrowth: "
+            f"{1.05 * self._lil_overgrowth:.2f}/1.05x",
+            picture_class="lil-overgrowth",
+            progression=int(self._lil_overgrowth),
+            goal=1,
+        )
+
+    def get_skull_shop_advice(self) -> Advice:
+        shop = self._skull_shop
+        return Advice(
+            label=f"Killroy Skull Shop: {shop.crop_multi:.3f}x"
+            f"<br>1 purchase: +{shop.next_crop_multi - shop.crop_multi:.3f}x",
+            picture_class="killroy-crop-evolution",
+            progression=shop.crop_purchases,
+        )
+
+    def get_skill_mastery_advice(self) -> Advice:
+        evo = self.evo_multi
+        return Advice(
+            label=f"Skill Mastery at 200 Farming: "
+            f"+{1.15 * evo.skill_mastery_active * self._skill_mastery_unlocked}/1.15x",
+            picture_class="farming",
+            progression=evo.total_farming_levels,
+            goal=200,
+        )
+
+    def get_evo_ballot_advice(self) -> Advice:
+        buff = self._evo_ballot
+        return Advice(
+            label=f"Weekly Ballot: {buff.active_multi:.3f}/{buff.multi:.3f}x"
+            f"<br>(Buff {buff.status})",
+            picture_class="ballot-29",
+            progression=int(buff.active),
+            goal=1,
+        )
+
+    def get_target_evo_crop_advice(self) -> Advice:
+        first_crop_index = crop_evo_breakpoint_list[0]
+        target_evo_crop = (
+            first_crop_index,
+            ceil(1 / self.crops.evo_chance(first_crop_index)),
+        )
+        for crop_index in crop_evo_breakpoint_list[1:]:
+            crop_evo_chance = ceil(1 / self.crops.evo_chance(crop_index))
+            if self.evo_multi.total > crop_evo_chance:
+                # Enough evo chance for this crop, so target the previous one
+                break
+            target_evo_crop = crop_index, crop_evo_chance
+        crop_index, crop_evo_chance = target_evo_crop
+        percent = self.evo_multi.total / crop_evo_chance
+        return self.crops.get_crop_evo_advice(crop_index, crop_evo_chance, percent)
+
+    def get_speed_total_advice(self) -> Advice:
+        return Advice(
+            label=f"Farming Speed Multi: {self.speed_multi.total:,.3f}x",
+            picture_class="crop-scientist",
+        )
+
+    def get_bean_total_advice(self) -> Advice:
+        return Advice(
+            label=f"Magic Beans Bonus: {self.bean_multi.total:,.3f}x",
+            picture_class="crop-scientist",
+        )
+
+    def get_crop_flooding_advice(self) -> Advice:
+        return Advice(
+            label=f"W6 Achievement: Crop Flooding: +{5 * self._crop_flooding}/5%",
+            picture_class="crop-flooding",
+            progression=int(self._crop_flooding),
+            goal=1,
+        )
+
+    def get_og_total_advice(self) -> Advice:
+        return Advice(
+            label=f"Overgrowth Chance: {self.og_multi.total:,.3f}x",
+            picture_class="crop-scientist",
+        )
+
+    def get_big_time_land_owner_advice(self) -> Advice:
+        return Advice(
+            label=f"W6 Achievement: Big Time Land Owner: "
+            f"{self.og_multi.achievement:.2f}/1.15x",
+            picture_class="big-time-land-owner",
+            progression=int(self._big_time_land_owner),
+            goal=1,
+        )
+
+    def get_og_signalais_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Starsign|#star-signs }}}}: O.G. Signalais: "
+            f"{15 * self._og_signalais_unlocked:.0f}/15%."
+            f"<br>Total Value if doubled: {self.og_multi.starsign_value:.3f}%",
+            picture_class="og-signalais",
+            progression=int(self._og_signalais_unlocked),
+            goal=1,
+        )
+
+    def get_og_merit_advice(self) -> Advice:
+        return Advice(
+            label=f"W6 Taskboard Merit: +{2 * self._og_merit_level}/30%",
+            picture_class="merit-5-2",
+            progression=self._og_merit_level,
+            goal=15,
         )
