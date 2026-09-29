@@ -29,7 +29,8 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
     base_daily_corals = 10
 
     # Mult A
-    shellslug_multi, shellslug_advice = session_data.account.companions['Shellslug'].get_advice(value_is_multi=True)
+    shellslug = session_data.account.companions['Shellslug']
+    shellslug_multi = shellslug.get_multi('Daily Corals')
 
     # Mult B
     coolral = session_data.account.event_points_shop['Coolral']
@@ -138,7 +139,7 @@ def get_sources_of_coral_info_group() -> AdviceGroup:
            picture_class='coral',
            completed=True,
         )],
-        f'Multi Group A: x{round(shellslug_multi, 2):g}': [shellslug_advice],
+        f'Multi Group A: x{round(shellslug_multi, 2):g}': [shellslug.get_advice()],
         f'Multi Group B: x{round(coolral_multi, 2):g}': [coolral_advice],
         f'Multi Group C: x{round(more_coral_multi, 2):g}': [more_coral_advice],
         f'Multi Group D: x{round(multi_group_d_mult, 2):g}': multi_group_d_advice,

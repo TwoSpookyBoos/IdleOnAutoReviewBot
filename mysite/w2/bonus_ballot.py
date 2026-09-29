@@ -42,8 +42,8 @@ def getBallotMultiAdviceGroup():
     voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
     gvb = session_data.account.event_points_shop['Gilded Vote Button']
     rvb = session_data.account.event_points_shop['Royal Vote Button']
-    _, mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
-    _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
+    mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
+    crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
         f"Total Multi: {session_data.account.ballot.bonus_multi:.2f}x": [
             voter_rights.get_bonus_advice(),

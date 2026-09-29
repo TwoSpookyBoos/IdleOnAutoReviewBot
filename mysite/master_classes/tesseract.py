@@ -208,7 +208,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     )]
 
     mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_multi.mgg)}x"
-    _, ballonfish_advice = session_data.account.companions['Balloonfish'].get_advice()
+    ballonfish_advice = session_data.account.companions['Balloonfish'].get_advice()
     currency_advices[mgg_label] = [ballonfish_advice]
 
     for subgroup in currency_advices:

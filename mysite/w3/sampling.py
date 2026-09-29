@@ -331,7 +331,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         goal=supreme_wiring_max_days
     ))
 
-    _, biggole_mole_advice = session_data.account.companions['Biggole Mole'].get_advice()
+    biggole_mole_advice = session_data.account.companions['Biggole Mole'].get_advice()
     po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(Advice(
