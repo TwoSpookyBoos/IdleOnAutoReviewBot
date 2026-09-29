@@ -23,6 +23,18 @@ class ItemBonus:
     misc1: ItemMiscBonus | None = None
     misc2: ItemMiscBonus | None = None
 
+    def add_to(self, total: dict[str, float], multi: float):
+        if multi == 0:
+            return
+        total[" Weapon Power"] += self.weapon_power * multi
+        total[" STR"] += self.str * multi
+        total[" AGI"] += self.agi * multi
+        total[" WIS"] += self.wis * multi
+        total[" LUK"] += self.luk * multi
+        total[" Defence"] += self.defence * multi
+        total[self.misc1.effect] += self.misc1.value * multi
+        total[self.misc2.effect] += self.misc2.value * multi
+
 
 @dataclass
 class ItemDefinition:

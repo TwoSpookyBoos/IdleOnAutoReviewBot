@@ -1,11 +1,9 @@
-from collections import defaultdict
 from math import ceil, floor
 from dataclasses import dataclass
 
 from consts.consts_general import equipment_by_bonus_dict
-from consts.consts_item_data import ITEM_DATA, ItemBonus
+from consts.consts_item_data import ITEM_DATA
 from consts.idleon.w7.gallery import podium_multi_by_level, nametag_multi_by_level
-from consts.idleon.w7.research import minehead_hatrack_bonus_index
 from consts.w7.gallery import (
     nametag_max_level,
     bonus_image,
@@ -69,7 +67,7 @@ class GalleryTrophy:
         return Advice(label=label, picture_class=self.name, resource=resource)
 
     def add_bonus_to(self, total: dict[str, float]):
-        _add_item_bonus_to_total(self._item.bonus, total, self._multi)
+        self._item.bonus.add_to(total, self._multi)
 
     def _get_multi(self):
         if self.level is None:
@@ -90,21 +88,6 @@ def _misc_bonus_stat(item_name: str, slot: int) -> str | None:
         if data:
             return data.get(f"Misc{slot}", {}).get("Bonus")
     return None
-
-
-def _add_item_bonus_to_total(
-    item_bonus: ItemBonus, total: dict[str, float], multi: float
-):
-    if multi == 0:
-        return
-    total[" Weapon Power"] += item_bonus.weapon_power * multi
-    total[" STR"] += item_bonus.str * multi
-    total[" AGI"] += item_bonus.agi * multi
-    total[" WIS"] += item_bonus.wis * multi
-    total[" LUK"] += item_bonus.luk * multi
-    total[" Defence"] += item_bonus.defence * multi
-    total[item_bonus.misc1.effect] += item_bonus.misc1.value * multi
-    total[item_bonus.misc2.effect] += item_bonus.misc2.value * multi
 
 
 class GalleryNametag:
@@ -129,7 +112,7 @@ class GalleryNametag:
         self._multi = self._get_level_multi() * multi
 
     def add_bonus_to(self, total: dict[str, float]):
-        _add_item_bonus_to_total(self._item.bonus, total, self._multi)
+        self._item.bonus.add_to(total, self._multi)
 
     def get_how_get_advice(self) -> Advice:
         advice = self.get_bonus_advice(link_to_section=False)
@@ -207,15 +190,8 @@ class Gallery:
         raw_nametag_level: list[int] = safer_index(spelunk_info, 17, [])
         self.nametag: dict[str, GalleryNametag] = {}
         self._parse_nametag(raw_nametag_level)
-        raw_hatrack: list[str] = safer_index(spelunk_info, 46, [])
-        self.hatrack_count = len(raw_hatrack)
-        self.hatrack: list[ItemDefinition] = [
-            ITEM_DATA[hat] for hat in raw_hatrack if hat in ITEM_DATA
-        ]
-        self.hatrack_multi = 1.0
         # Total bonuses
         self.bonuses = {}
-        self.hatrack_bonuses = {}
 
     def _parse_trophy(self, raw_trophy_index_list: list[int]):
         all_trophy = []
@@ -306,7 +282,6 @@ class Gallery:
         spelunk,
         legend_talents,
         event_shop,
-        minehead,
         clam_work: "ClamWork",
         companions: "Companions",
         sushi_station: "SushiStation",
@@ -329,8 +304,6 @@ class Gallery:
         superb_gallerium = legend_talents["Superb Gallerium"].value
         plain_showcase = event_shop["Plain Showcase"].owned
         worldclass_showcase = event_shop["Worldclass Showcase"].owned
-        king_of_the_rack = event_shop["King of the Rack"].owned
-        minehead_hatrack = minehead[minehead_hatrack_bonus_index].value
         self._gallery_multi_by_chip = {
             chip: self._calculate_gallery_multi(
                 chip,
@@ -362,33 +335,6 @@ class Gallery:
         }
         self.gallery_multi = self._gallery_multi_by_chip[has_motherboard_chip]
         self.bonuses = self._get_bonuses(self.gallery_multi)
-        self._calculate_hatrack_bonuses(
-            king_of_the_rack, minehead_hatrack, companions, sushi_station
-        )
-
-    def _calculate_hatrack_bonuses(
-        self,
-        king_of_the_rack: int,
-        minehead_hatrack: float,
-        companions: "Companions",
-        sushi_station: "SushiStation",
-    ):
-        # "HatrackBonusMulti" in source. Last updated in v2.531.0
-        self.hatrack_multi = 1 + (
-            self.hatrack_count
-            + companions["Wild Boar"].bonus
-            + 10 * king_of_the_rack
-            + minehead_hatrack
-            + sushi_station.get_milestone_bonus_value("Hat Rack Multi")
-        ) / 100
-        # "InitializePremHatBonuses" in source. Last updated in v2.531.0
-        hatrack_total = defaultdict(float)
-        for hat in self.hatrack:
-            _add_item_bonus_to_total(hat.bonus, hatrack_total, self.hatrack_multi)
-        for key, value in hatrack_total.items():
-            if key == "0" or not key.startswith("%"):
-                continue
-            self.hatrack_bonuses[key.split(" ", 1)[1]] = (key, value)
 
     def get_character_bonus_value(self, name: str, has_motherboard_chip: bool) -> float:
         # "GalleryBonusMulti" reads the current character's chip
@@ -529,18 +475,6 @@ class Gallery:
             label=f"{{{{ Gallery|#gallery }}}} - Honey Yellow Palette: "
             f"+{round_and_trim(self.exalted_palette_bonus)}%",
             picture_class="palette-slot",
-        )
-
-    def get_hatrack_bonus_value(self, name: str) -> float:
-        return self.hatrack_bonuses.get(name, ("", 0))[1]
-
-    def get_hatrack_bonus_advice(self, name: str) -> Advice:
-        value = self.get_hatrack_bonus_value(name)
-        return Advice(
-            label=f"Hat Rack - {name}: +{round_and_trim(value)}%"
-            f"<br>{self.hatrack_count} hats, "
-            f"{round_and_trim(self.hatrack_multi)}x multi",
-            picture_class=self.hatrack[-1].name if self.hatrack else "hatrack-stand",
         )
 
     # TODO Aler if empty podium slot

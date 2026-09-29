@@ -359,13 +359,13 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     drop_rate_aw_advice[f"{w3} - +{round(world_3_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w3)
 
     # Hatrack, applied per character
-    gallery = session_data.account.gallery
-    hatrack_drop_rate_value = gallery.get_hatrack_bonus_value('Drop Rate')
-    hatrack_drop_rate_multi_value = gallery.get_hatrack_bonus_value('Drop Rate Multi')
+    hat_rack = session_data.account.hat_rack
+    hatrack_drop_rate_value = hat_rack.get_bonus_value('Drop Rate')
+    hatrack_drop_rate_multi_value = hat_rack.get_bonus_value('Drop Rate Multi')
     if session_data.account.world_progress.highest_reached >= 3:
         drop_rate_aw_advice[hatrack_group].extend([
-            gallery.get_hatrack_bonus_advice('Drop Rate'),
-            gallery.get_hatrack_bonus_advice('Drop Rate Multi'),
+            hat_rack.get_bonus_advice('Drop Rate'),
+            hat_rack.get_bonus_advice('Drop Rate Multi'),
         ])
     drop_rate_aw_advice[
         f"{hatrack_group} - +{round(hatrack_drop_rate_value, 1)}% Drop Rate, "
@@ -512,6 +512,7 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
     world_7_bonus += divine_design.total_value
 
     # Gallery - Trophies & Nametags, applied per character
+    gallery = session_data.account.gallery
     gallery_drop_rate_value = 0
     gallery_drop_rate_multi_value = 0
     if session_data.account.world_progress.highest_reached >= 7:

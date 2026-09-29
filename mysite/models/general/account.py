@@ -53,6 +53,7 @@ from models.w3.buildings import Buildings
 from models.w3.death_note import DeathNote
 from consts.w3.equinox import ribbon_cloud_dream_number
 from models.w3.equinox import Equinox
+from models.w3.hat_rack import HatRack
 from models.w3.library import Library
 from models.w3.prayers import Prayers
 from models.w3.printer import Printer
@@ -214,6 +215,7 @@ class Account:
         self.prayers: Prayers = Prayers(self.raw_data)
         self.armor_sets: ArmorSets = ArmorSets(self.raw_data)
         self.atom_collider: AtomCollider = AtomCollider(self.raw_data)
+        self.hat_rack: HatRack = HatRack(self.raw_data)
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)
@@ -446,6 +448,9 @@ class Account:
 
         # W3
         self.refinery.calculate(self.companions['Panda'].bonus, self.merits[2][6].level)
+        self.hat_rack.calculate_bonuses(
+            self.companions, self.event_points_shop, self.minehead, self.sushi_station
+        )
         # Gambit's +100 Tower levels come in wave 3
         self.construction_buildings.calculate_max_levels(
             self.rift['SkillMastery'].unlocked,
@@ -521,7 +526,6 @@ class Account:
             spelunk=self.spelunk,
             legend_talents=self.legend_talents,
             event_shop=self.event_points_shop,
-            minehead=self.minehead,
             clam_work=self.clam_work,
             companions=self.companions,
             sushi_station=self.sushi_station,
