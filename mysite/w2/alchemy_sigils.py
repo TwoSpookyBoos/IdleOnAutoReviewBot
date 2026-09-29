@@ -1,10 +1,6 @@
 from collections import defaultdict
 
-from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label
-from consts.idleon.lava_func import lava_func
-from consts.w1.stamps import stamp_maxes
-from consts.consts_w2 import max_sigil_level, sigils_dict
-from consts.consts_w5 import max_sailing_artifact_level
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.progression_tiers import sigils_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
 
@@ -20,65 +16,18 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
-    # "SigilBonusSpeed" in source. Last updated in v2.49 Dec 24 2025
-    # Multi Group A = several
-    peapod_values = sigils_dict['Pea Pod']['Values']
-    peapod_level = session_data.account.alchemy_p2w.sigils['Pea Pod'].level
-    try:
-        player_peapod_value = (
-                peapod_values[peapod_level]
-                * session_data.account.sailing.artifacts.chilled_yarn_multi
-        )
-    except:
-        logger.error(f"Peapod Sigil Level of {peapod_level} not present in 'sigils_dict'. Defaulting to max_sigil_level of {max_sigil_level}")
-        player_peapod_value = (
-                peapod_values[max_sigil_level]
-                * session_data.account.sailing.artifacts.chilled_yarn_multi
-        )
+    sigils = session_data.account.alchemy_p2w.sigils
     willow_vial = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']
-    willow_vial_value = willow_vial.value
-
-    player_sigil_stamp_value = session_data.account.stamps['Sigil Stamp'].total_value
-    goal_sigil_stamp_value = lava_func('decay', stamp_maxes['Sigil Stamp'], 40, 150)
-    # The Sigil Stamp is a MISC stamp, thus isn't multiplied by the Lab bonus or Pristine Charm
-
-    mga = ValueToMulti(
-        (20 * session_data.account.achievements['Vial Junkee'].complete)
-        + (20 * session_data.account.gemshop.purchases['Sigil Supercharge'].owned)
-        + player_peapod_value
-        + willow_vial_value
-        + player_sigil_stamp_value
-    )
-    mga_label = f"Multi Group A: {mga:.3f}x"
-
-    # Multi Group B = Summoning Winner Bonuses
     summoning_bonus = session_data.account.summoning.bonuses["Sigil SPD"]
-    mgb = summoning_bonus.as_multi
-    mgb_label = f"Summoning: {round_and_trim(mgb)}x"
-
-    # Multi Group C = Tuttle Vial
     tuttle_vial = session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']
-    tuttle_vial_multi = ValueToMulti(tuttle_vial.value)
-    mgc = tuttle_vial_multi
-    mgc_label = f"Multi Group C: {mgc:.3f}x"
-
-    # Multi Group D = Bonus Ballot
     ballot_buff = session_data.account.ballot[17]
-    ballot_multi_active = ballot_buff.active_multi
 
-    mgd = ballot_multi_active
-    mgd_label = f"Multi Group D: {mgd:.3f}x"
-
-    # Multi Group E = Arcade
-    ab43 = session_data.account.arcade[43]
-    mge = ValueToMulti(ab43.value)
-    mge_label = f"Multi Group E: {mge:.3f}x"
-
-    # Multi Group F = Legend Talents
-    mgf = ValueToMulti(session_data.account.legend_talents['Big Sig Fig'].value)
-    mgf_label = f"Multi Group F: {round_and_trim(mgf)}x"
-
-    total_multi = max(1, mga * mgb * mgc * mgd * mge * mgf)
+    mga_label = f"Multi Group A: {sigils.speed_multi_a:.3f}x"
+    mgb_label = f"Summoning: {round_and_trim(sigils.speed_multi_b)}x"
+    mgc_label = f"Multi Group C: {sigils.speed_multi_c:.3f}x"
+    mgd_label = f"Multi Group D: {sigils.speed_multi_d:.3f}x"
+    mge_label = f"Multi Group E: {sigils.speed_multi_e:.3f}x"
+    mgf_label = f"Multi Group F: {round_and_trim(sigils.speed_multi_f)}x"
 
     speed_Advice = {
         mga_label: [],
@@ -90,42 +39,23 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     }
 
     # Multi Group A
-    speed_Advice[mga_label].append(Advice(
-        label=f"W2 Achievement: Vial Junkee: "
-              f"+{20 * session_data.account.achievements['Vial Junkee'].complete}/20%",
-        picture_class='vial-junkee',
-        progression=int(session_data.account.achievements['Vial Junkee'].complete),
-        goal=1
-    ))
+    speed_Advice[mga_label].append(sigils.get_vial_junkee_advice())
     sigil_supercharge = session_data.account.gemshop.purchases['Sigil Supercharge']
     gsss_advice = sigil_supercharge.get_advice(
         additional_text=f": +{20 * sigil_supercharge.owned}/{20 * sigil_supercharge.max_level}%"
     )
     gsss_advice.completed = not practical_maxed
     speed_Advice[mga_label].append(gsss_advice)
-    speed_Advice[mga_label].append(Advice(
-        label=f"Sigil: Level {session_data.account.alchemy_p2w.sigils['Pea Pod'].level}"
-              f" Pea Pod: +{player_peapod_value}/{peapod_values[-1] * session_data.account.sailing.artifacts.max_chilled_yarn_multi}%",
-        picture_class='pea-pod',
-        progression=session_data.account.alchemy_p2w.sigils['Pea Pod'].level,
-        goal=max_sigil_level
-    ))
-    speed_Advice[mga_label].append(Advice(
-        label=f"{{{{ Artifact|#sailing}}}}: Chilled Yarn: {session_data.account.sailing.artifacts.chilled_yarn_multi}"
-              f"/{session_data.account.sailing.artifacts.max_chilled_yarn_multi}x"
-              f"<br>(Already applied to Pea Pod Sigil above)",
-        picture_class='chilled-yarn',
-        progression=session_data.account.sailing.artifacts['Chilled Yarn'].level,
-        goal=max_sailing_artifact_level
-    ))
-    speed_Advice[mga_label].append(willow_vial.get_advice(f"+{willow_vial_value:.3f}"))
+    speed_Advice[mga_label].append(sigils.get_peapod_advice())
+    speed_Advice[mga_label].append(sigils.get_chilled_yarn_advice())
+    speed_Advice[mga_label].append(willow_vial.get_advice(f"+{willow_vial.value:.3f}"))
     speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
 
     # Multi Group B
     speed_Advice[mgb_label].append(summoning_bonus.get_bonus_advice())
 
     # Multi Group C
-    speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{tuttle_vial_multi:.3f}x"))
+    speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{sigils.speed_multi_c:.3f}x"))
 
     # Multi Group D
     speed_Advice[mgd_label].append(ballot_buff.get_bonus_advice())
@@ -142,7 +72,7 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
 
     speed_AdviceGroup = AdviceGroup(
         tier='',
-        pre_string=f"Sources of Sigil Charging Speed. Grand total: {total_multi:.3f}x",
+        pre_string=f"Sources of Sigil Charging Speed. Grand total: {sigils.speed_multi:.3f}x",
         advices=speed_Advice,
         informational=True,
     )

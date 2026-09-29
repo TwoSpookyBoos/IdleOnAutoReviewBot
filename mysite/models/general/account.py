@@ -836,6 +836,20 @@ class Account:
             card_spotter=self.guild_bonuses['C2 Card Spotter'].value,
             card_champ_bubble=self.alchemy_bubbles['Card Champ'].base_value,
         )
+        self.alchemy_p2w.sigils.calculate_speed(
+            chilled_yarn=self.sailing.artifacts['Chilled Yarn'],
+            chilled_yarn_multi=self.sailing.artifacts.chilled_yarn_multi,
+            max_chilled_yarn_multi=self.sailing.artifacts.max_chilled_yarn_multi,
+            vial_junkee=self.achievements['Vial Junkee'].complete,
+            sigil_supercharge_owned=self.gemshop.purchases['Sigil Supercharge'].owned,
+            willow_vial=self.alchemy_vials['Willow Sippy (Willow Logs)'].value,
+            sigil_stamp=self.stamps['Sigil Stamp'].total_value,
+            summoning_multi=self.summoning.bonuses['Sigil SPD'].as_multi,
+            tuttle_vial=self.alchemy_vials['Turtle Tisane (Tuttle)'].value,
+            ballot_multi=self.ballot[17].active_multi,
+            arcade_bonus=self.arcade[43].value,
+            big_sig_fig=self.legend_talents['Big Sig Fig'].value,
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,
