@@ -61,6 +61,7 @@ from models.w3.printer import Printer
 from models.w3.shrines import Shrines
 from models.w3.refinery import Refinery
 from models.w3.salt_lick import SaltLick
+from models.w3.trapping import Trapping
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
 from models.w4.cooking import Cooking, Meals
@@ -218,6 +219,7 @@ class Account:
         self.armor_sets: ArmorSets = ArmorSets(self.raw_data)
         self.atom_collider: AtomCollider = AtomCollider(self.raw_data)
         self.hat_rack: HatRack = HatRack(self.raw_data)
+        self.trapping: Trapping = Trapping(self.raw_data, len(self.characters))
 
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)
@@ -448,6 +450,12 @@ class Account:
         self.refinery.calculate(self.companions['Panda'].bonus, self.merits[2][6].level)
         self.hat_rack.calculate_bonuses(
             self.companions, self.event_points_shop, self.minehead, self.sushi_station
+        )
+        self.trapping.calculate(
+            characters=self.characters,
+            quests_by_character=self.quests.by_character,
+            emporium_new_critter=self.sneaking.emporium["New Critter"].obtained,
+            call_me_ash_level=self.alchemy_bubbles['Call Me Ash'].level,
         )
         # Gambit's +100 Tower levels come in wave 3
         self.construction_buildings.calculate_max_levels(
