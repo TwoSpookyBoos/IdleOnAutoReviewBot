@@ -1,6 +1,7 @@
 from math import floor
 
 from consts.consts_general import getNextESFamilyBreakpoint
+from consts.consts_w5 import max_sailing_artifact_level
 from models.advice.advice import Advice
 from models.general.achievements import Achievements
 from models.general.merits import Merits
@@ -41,8 +42,18 @@ class Library:
 
     def calculate_max_book_levels(
         self, construction_buildings: Buildings, achievements: Achievements, atom_collider: AtomCollider,
-        sailing: Sailing, merits: Merits, saltlick, summoning
+        sailing: Sailing, merits: Merits, saltlick, summoning, *,
+        eldritch_artifacts_unlocked: bool, sovereign_artifacts_obtained: bool, omnipotent_artifacts_obtained: bool
     ):
+        self._library_building = construction_buildings['Talent Book Library']
+        self._checkout_takeout = achievements['Checkout Takeout']
+        self._oxygen = atom_collider['Oxygen - Library Booker']
+        self._fury_relic = sailing.artifacts['Fury Relic']
+        self._merit = merits[2][2]
+        self._saltlick = saltlick.upgrades['Max Book']
+        self.eldritch_artifacts_unlocked = eldritch_artifacts_unlocked
+        self.sovereign_artifacts_obtained = sovereign_artifacts_obtained
+        self.omnipotent_artifacts_obtained = omnipotent_artifacts_obtained
         self.static_sum = (
             0
             + (25 * (0 < construction_buildings['Talent Book Library'].level))
@@ -58,6 +69,113 @@ class Library:
         self.max_book_level = (
             100 + self.static_sum + self.scaling_sum
             + summoning.bonuses["Library Max"].value
+        )
+
+    def get_library_building_advice(self) -> Advice:
+        level = self._library_building.level
+        return Advice(
+            label=f"Construction: Talent Book Library built: "
+                  f"+{25 * (0 < level)}/25",
+            picture_class="talent-book-library",
+            progression=min(1, level),
+            goal=1
+        )
+
+    def get_checkout_takeout_advice(self) -> Advice:
+        complete = self._checkout_takeout.complete
+        return Advice(
+            label=f"W3 Achievement: Checkout Takeout: "
+                  f"+{5 * complete}/5",
+            picture_class="checkout-takeout",
+            progression=int(complete),
+            goal=1
+        )
+
+    def get_oxygen_advice(self) -> Advice:
+        level = self._oxygen.level
+        return Advice(
+            label=f"{{{{Atom Collider|#atom-collider }}}}: Oxygen: "
+                  f"+{10 * (0 < level)}/10",
+            picture_class="oxygen",
+            progression=1 if 0 < level else 0,
+            goal=1
+        )
+
+    def get_fury_relic_advice(self) -> Advice:
+        level = self._fury_relic.level
+        if not self.eldritch_artifacts_unlocked and level == 2:
+            fury_post_string = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
+        elif not self.sovereign_artifacts_obtained and level == 3:
+            fury_post_string = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
+        elif not self.omnipotent_artifacts_obtained and level == 4:
+            fury_post_string = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
+        else:
+            fury_post_string = ''
+        return Advice(
+            label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
+                  f"+{25 * level}/{25 * max_sailing_artifact_level}{fury_post_string}",
+            picture_class='fury-relic',
+            progression=level,
+            goal=max_sailing_artifact_level
+        )
+
+    def get_merit_advice(self) -> Advice:
+        return Advice(
+            label=f"W3 Max Book level Merit: "
+                  f"+{2 * self._merit.level}/10",
+            picture_class="merit-2-2",
+            progression=self._merit.level,
+            goal=self._merit.max_level
+        )
+
+    def get_saltlick_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{Salt Lick|#salt-lick }}}}: "
+                  f"+{2 * self._saltlick.level}/20",
+            picture_class="salt-lick",
+            progression=self._saltlick.level,
+            goal=10
+        )
+
+    def calculate_checkout_speed(
+        self, *, isotope_discovery: bool, library_checkouts_unlocked: bool, gaming_level: int
+    ):
+        self.isotope_discovery = isotope_discovery
+        self.library_checkouts_unlocked = library_checkouts_unlocked
+        self.gaming_level = gaming_level
+
+    def get_oxygen_speed_advice(self) -> Advice:
+        return Advice(
+            label=f"Oxygen - Library Booker: {2*self._oxygen.level}/60%",
+            picture_class='oxygen',
+            progression=self._oxygen.level,
+            goal=20 + (10 * self.isotope_discovery)
+        )
+
+    def get_library_building_speed_advice(self) -> Advice:
+        building = self._library_building
+        return Advice(
+            label=f"Talent Book Library building: {((building.level-1) * 5)}/"
+                  f"{building.max_level*5}%",
+            picture_class='talent-book-library',
+            progression=building.level,
+            goal=building.max_level
+        )
+
+    def get_library_checkouts_advice(self) -> Advice:
+        return Advice(
+            label='Superbit: Library Checkouts: +1% per Gaming Level',
+            picture_class='green-bits',
+            progression=self.gaming_level if self.library_checkouts_unlocked else 0
+        )
+
+    def get_checkout_takeout_speed_advice(self) -> Advice:
+        complete = self._checkout_takeout.complete
+        return Advice(
+            label=f"W3 Achievement: Checkout Takeout: +{30 * complete}%",
+            picture_class='checkout-takeout',
+            progression=int(complete),
+            goal=1
         )
 
     def get_checkout_alert_advice(self) -> Advice:

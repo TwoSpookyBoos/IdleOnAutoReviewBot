@@ -561,6 +561,14 @@ class Account:
             self.merits,
             self.saltlick,
             self.summoning,
+            eldritch_artifacts_unlocked=self.rift['EldritchArtifact'].unlocked,
+            sovereign_artifacts_obtained=self.sneaking.emporium['Sovereign Artifacts'].obtained,
+            omnipotent_artifacts_obtained=self.spelunk.caves['Pebble Cove'].bonus_obtained,
+        )
+        self.library.calculate_checkout_speed(
+            isotope_discovery=self.gaming.superbits['Isotope Discovery'].unlocked,
+            library_checkouts_unlocked=self.gaming.superbits['Library Checkouts'].unlocked,
+            gaming_level=max(self.characters.all_skills['Gaming']),
         )
         self.equinox.calculate_max_levels(
             self.summoning.bonuses["Equinox Max LV"].value,

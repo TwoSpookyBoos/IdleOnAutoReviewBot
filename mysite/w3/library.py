@@ -3,7 +3,6 @@ from consts.consts_general import arbitrary_es_family_goal
 from consts.idleon.consts_idleon import expected_talents_dict, current_world
 from consts.consts_w3 import max_static_book_levels, max_scaling_book_levels, max_overall_book_levels, \
     library_subgroup_tiers, old_library_subgroup_tiers, skill_talentsDict, combat_talentsDict, unbookable_talents_list
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 from models.advice.advice_group_tabbed import TabbedAdviceGroupTab, TabbedAdviceGroup
@@ -47,61 +46,20 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
     staticSubgroup = f"Static Sources: +{session_data.account.library.static_sum}/{max_static_book_levels}"
     bookLevelAdvices[staticSubgroup] = []
 
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"Construction: Talent Book Library built: "
-              f"+{25 * (0 < session_data.account.construction_buildings['Talent Book Library'].level)}/25",
-        picture_class="talent-book-library",
-        progression=min(1, session_data.account.construction_buildings['Talent Book Library'].level),
-        goal=1
-    ))
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"W3 Achievement: Checkout Takeout: "
-              f"+{5 * session_data.account.achievements['Checkout Takeout'].complete}/5",
-        picture_class="checkout-takeout",
-        progression=int(session_data.account.achievements['Checkout Takeout'].complete),
-        goal=1
-    ))
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"{{{{Atom Collider|#atom-collider }}}}: Oxygen: "
-              f"+{10 * (0 < session_data.account.atom_collider['Oxygen - Library Booker'].level)}/10",
-        picture_class="oxygen",
-        progression=1 if 0 < session_data.account.atom_collider['Oxygen - Library Booker'].level else 0,
-        goal=1
-    ))
-    if not session_data.account.rift['EldritchArtifact'].unlocked and session_data.account.sailing.artifacts['Fury Relic'].level == 2:
-        furyPostString = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
-    elif not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained and session_data.account.sailing.artifacts['Fury Relic'].level == 3:
-        furyPostString = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
-    elif not session_data.account.spelunk.caves["Pebble Cove"].bonus_obtained and session_data.account.sailing.artifacts['Fury Relic'].level == 4:
-        furyPostString = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
-    else:
-        furyPostString = ''
-    bookLevelAdvices[staticSubgroup].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
-              f"+{25 * session_data.account.sailing.artifacts['Fury Relic'].level}/{25 * max_sailing_artifact_level}{furyPostString}",
-        picture_class='fury-relic',
-        progression=session_data.account.sailing.artifacts['Fury Relic'].level,
-        goal=max_sailing_artifact_level
-    ))
+    library = session_data.account.library
+    bookLevelAdvices[staticSubgroup] = [
+        library.get_library_building_advice(),
+        library.get_checkout_takeout_advice(),
+        library.get_oxygen_advice(),
+        library.get_fury_relic_advice(),
+    ]
 
     #Scaling Sources
-    scalingSubgroup = f"Scaling Sources: +{session_data.account.library.scaling_sum}/{max_scaling_book_levels}"
-    bookLevelAdvices[scalingSubgroup] = []
-
-    bookLevelAdvices[scalingSubgroup].append(Advice(
-        label=f"W3 Max Book level Merit: "
-              f"+{2 * session_data.account.merits[2][2].level}/10",
-        picture_class="merit-2-2",
-        progression=session_data.account.merits[2][2].level,
-        goal=session_data.account.merits[2][2].max_level
-    ))
-    bookLevelAdvices[scalingSubgroup].append(Advice(
-        label=f"{{{{Salt Lick|#salt-lick }}}}: "
-              f"+{2 * session_data.account.saltlick.upgrades['Max Book'].level}/20",
-        picture_class="salt-lick",
-        progression=session_data.account.saltlick.upgrades['Max Book'].level,
-        goal=10
-    ))
+    scalingSubgroup = f"Scaling Sources: +{library.scaling_sum}/{max_scaling_book_levels}"
+    bookLevelAdvices[scalingSubgroup] = [
+        library.get_merit_advice(),
+        library.get_saltlick_advice(),
+    ]
 
     # Summoning Sources
     summoning_bonus = session_data.account.summoning.bonuses["Library Max"]
@@ -213,22 +171,13 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     # Meal
     speed_Advices.append(session_data.account.meals['Fortune Cookie'].get_bonus_advice())
 
+    library = session_data.account.library
+
     # Atom
-    speed_Advices.append(Advice(
-        label=f"Oxygen - Library Booker: {2*session_data.account.atom_collider['Oxygen - Library Booker'].level}/60%",
-        picture_class='oxygen',
-        progression=session_data.account.atom_collider["Oxygen - Library Booker"].level,
-        goal=20 + (10 * session_data.account.gaming.superbits['Isotope Discovery'].unlocked)
-    ))
+    speed_Advices.append(library.get_oxygen_speed_advice())
 
     # Tower
-    speed_Advices.append(Advice(
-        label=f"Talent Book Library building: {((session_data.account.construction_buildings['Talent Book Library'].level-1) * 5)}/"
-              f"{session_data.account.construction_buildings['Talent Book Library'].max_level*5}%",
-        picture_class='talent-book-library',
-        progression=session_data.account.construction_buildings['Talent Book Library'].level,
-        goal=session_data.account.construction_buildings['Talent Book Library'].max_level
-    ))
+    speed_Advices.append(library.get_library_building_speed_advice())
 
     # Bubble
     speed_Advices.append(session_data.account.alchemy_bubbles['Ignore Overdues'].get_advice(
@@ -243,21 +192,11 @@ def getCheckoutSpeedAdviceGroup(anyBookAdvice) -> AdviceGroup:
     speed_Advices.append(session_data.account.stamps['Biblio Stamp'].get_advice())
 
     # Superbit
-    gaming_level = max(session_data.account.characters.all_skills['Gaming'])
-    speed_Advices.append(Advice(
-        label='Superbit: Library Checkouts: +1% per Gaming Level',
-        picture_class='green-bits',
-        progression=gaming_level if session_data.account.gaming.superbits['Library Checkouts'].unlocked else 0
-    ))
+    speed_Advices.append(library.get_library_checkouts_advice())
 
     # Achievement
-    speed_Advices.append(Advice(
-        label=f"W3 Achievement: Checkout Takeout: +{30 * session_data.account.achievements['Checkout Takeout'].complete}%",
-        picture_class='checkout-takeout',
-        progression=int(session_data.account.achievements['Checkout Takeout'].complete),
-        goal=1
-    ))
-    
+    speed_Advices.append(library.get_checkout_takeout_speed_advice())
+
     for advice in speed_Advices:
         advice.mark_advice_completed()
 
