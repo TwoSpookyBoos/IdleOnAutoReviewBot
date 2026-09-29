@@ -737,6 +737,38 @@ class Account:
             skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
             total_smithing_levels=sum(self.characters.all_skills['Smithing']),
         )
+        self.printer.calculate_sample_rate(
+            snow_slurry=self.alchemy_vials['Snow Slurry (Snow Ball)'].value,
+            sample_it=self.alchemy_bubbles['Sample It'].base_value,
+            salt_lick_level=self.saltlick.upgrades['Printer Sample Size'].level,
+            merit_level=self.merits[2][4].level,
+            merit_max_level=self.merits[2][4].max_level,
+            maestro_family=self.family_bonuses['Maestro'].value,
+            stample=self.stamps['Stample Stamp'].total_value,
+            amplestample=self.stamps['Amplestample Stamp'].total_value,
+            arcade_bonus=self.arcade[5].value,
+            saharan_skull=self.achievements['Saharan Skull'].complete,
+            max_book_level=self.library.max_book_level,
+            characters=self.characters,
+        )
+        self.printer.calculate_output(
+            skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
+            all_skills=self.characters.all_skills,
+            gold_relic_level=self.sailing.artifacts['Gold Relic'].level,
+            supreme_wiring_owned=self.event_points_shop['Supreme Wiring'].owned,
+            biggole_mole_bonus=self.companions['Biggole Mole'].bonus,
+            moon_of_print=self.compass.upgrades['Moon of Print'],
+            death_bringers=self.characters.dks,
+            max_book_level=self.library.max_book_level,
+            king_of_the_remembered_kills=(
+                self.class_kill_talents['King of the Remembered'].kills
+            ),
+            lolly_flower=self.sneaking.pristine_charms['Lolly Flower'].value,
+            ballot_multi=self.ballot[11].active_multi,
+            has_king_doot=self.companions.has('King Doot'),
+            wired_in_enabled=self.lab_bonuses['Wired In'].enabled,
+            harriep_unlocked=self.divinity[4].unlocked,
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,

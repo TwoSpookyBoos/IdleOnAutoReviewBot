@@ -1,4 +1,3 @@
-import math
 
 from models.general.session_data import session_data
 from models.advice.advice import Advice
@@ -6,10 +5,7 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
 from utils.text_formatting import notateNumber
-from consts.consts_autoreview import ValueToMulti, break_you_best, build_subgroup_label, EmojiType, AdviceType
-from consts.idleon.consts_idleon import skill_index_list
-from consts.idleon.lava_func import lava_func
-from consts.consts_w5 import goldrelic_multis_dict
+from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, AdviceType
 from consts.consts_w3 import max_printer_sample_rate
 from consts.progression_tiers import sampling_progressionTiers, true_max_tiers
 
@@ -30,23 +26,9 @@ def getSampleClass(materialName: str) -> str:
 def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     psr_Advices = {}
 
-    #Account-Wide
-    account_sum = 0.0
-    vialBonus = session_data.account.alchemy_vials['Snow Slurry (Snow Ball)'].value
-    account_sum += vialBonus
-    account_sum += session_data.account.alchemy_bubbles['Sample It'].base_value
-    account_sum += 0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level
-    account_sum += 0.5 * session_data.account.merits[2][4].level
-    account_sum += session_data.account.family_bonuses['Maestro'].value
-    stample_value = session_data.account.stamps['Stample Stamp'].total_value
-    amplestample_value = session_data.account.stamps['Amplestample Stamp'].total_value
-    account_sum += stample_value
-    account_sum += amplestample_value
-    account_sum += session_data.account.arcade[5].value
-    account_sum += session_data.account.achievements['Saharan Skull'].complete
-    #achievementStatus = session_data.account.achievements['Saharan Skull'].complete
-    star_talent_one_point = lava_func('bigBase', 1, 10, 0.075)
-    account_sum += star_talent_one_point
+    printer = session_data.account.printer
+    account_sum = printer.account_sample_rate
+    vialBonus = printer.snow_slurry
 
     account_subgroup = f'Account-Wide: +{account_sum:.2f}%'
     psr_Advices[account_subgroup] = []
@@ -58,20 +40,8 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         f" bubble: +{session_data.account.alchemy_bubbles['Sample It'].base_value:.2f}/10%",
         goal=200
     ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"{{{{ Salt Lick|#salt-lick }}}} bonus: "
-              f"+{round(0.5 * session_data.account.saltlick.upgrades['Printer Sample Size'].level, 2):g}/10%",
-        picture_class='salt-lick',
-        progression=session_data.account.saltlick.upgrades['Printer Sample Size'].level,
-        goal=20
-    ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"W3 merit: "
-              f"+{round(0.5 * session_data.account.merits[2][4].level, 1):g}/{0.5 * session_data.account.merits[2][4].max_level:.0f}%",
-        picture_class='merit-2-4',
-        progression=session_data.account.merits[2][4].level,
-        goal=session_data.account.merits[2][4].max_level
-    ))
+    psr_Advices[account_subgroup].append(printer.get_salt_lick_advice())
+    psr_Advices[account_subgroup].append(printer.get_merit_advice())
     psr_Advices[account_subgroup].append(session_data.account.family_bonuses['Maestro'].get_bonus_advice(goal_level=328))
     psr_Advices[account_subgroup].append(session_data.account.stamps['Amplestample Stamp'].get_advice(goal_override=32))
     psr_Advices[account_subgroup].append(session_data.account.stamps['Stample Stamp'].get_advice(goal_override=60))
@@ -83,42 +53,20 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
         session_data.account.sneaking.pristine_charms['Liqorice Rolle'].get_obtained_advice()
     )
     psr_Advices[account_subgroup].append(session_data.account.arcade[5].get_advice())
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"W3 Achievement: Saharan Skull: {int(session_data.account.achievements['Saharan Skull'].complete)}/1%",
-        picture_class='saharan-skull',
-        progression=int(session_data.account.achievements['Saharan Skull'].complete),
-        goal=1
-    ))
-    psr_Advices[account_subgroup].append(Advice(
-        label=f"Star Talent: Printer Sampling: {star_talent_one_point:.3f}% at minimum level 1",
-        picture_class='printer-sampling',
-        progression=1,
-        goal=1
-    ))
+    psr_Advices[account_subgroup].append(printer.get_saharan_skull_advice())
+    psr_Advices[account_subgroup].append(printer.get_star_talent_advice())
 
     #Character-Specific
-    character_sum = 0.0
-    star_talent_diff_to_max = lava_func('bigBase', 100, 10, 0.075) - star_talent_one_point
-    character_sum += star_talent_diff_to_max
-    po_box_max = lava_func('decay', 400, 5, 200)
-    character_sum += po_box_max
-    squire_super_samples_max_book = lava_func('decay', session_data.account.library.max_book_level, 9, 75)
+    character_sum = printer.character_sample_rate_max
+    squire_super_samples_max_book = printer.squire_super_samples
     character_subgroup = f"Character-Specific: Up to +{character_sum:.3f}% or +{character_sum + squire_super_samples_max_book:.2f}% for Squires"
     psr_Advices[character_subgroup] = []
-    psr_Advices[character_subgroup].append(Advice(
-        label=f"Star Talent: Printer Sampling: Additional {star_talent_diff_to_max:.2f}% at max level 100",
-        picture_class='printer-sampling',
-        progression=1,
-        goal=1
-    ))
+    psr_Advices[character_subgroup].append(printer.get_star_talent_max_advice())
     psr_Advices[character_subgroup].append(Advice(
         label=f"Post Office: Utilitarian Capsule: +3.33% at max 400 crates",
         picture_class='utilitarian-capsule'
     ))
-    psr_Advices[character_subgroup].append(Advice(
-        label=f"Squire only: Super Samples: +{squire_super_samples_max_book:.2f}% at max book level {session_data.account.library.max_book_level}",
-        picture_class='super-samples'
-    ))
+    psr_Advices[character_subgroup].append(printer.get_super_samples_advice())
 
     prayerSubgroup = 'Which Characters need Royal Sampler?'
     psr_Advices[prayerSubgroup] = []
@@ -134,9 +82,7 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     ))
     complete_toons = 0  #Either above 90 and the prayer not worn, or below 90 and already wearing the prayer. Those are the 2 "no action needed" states
     for char in session_data.account.characters:
-        character_total_psr = account_sum + star_talent_diff_to_max + char.po_boxes_invested['Utilitarian Capsule'].bonus_1_value
-        if char.sub_class == 'Squire':
-            character_total_psr += squire_super_samples_max_book
+        character_total_psr = printer.character_sample_rates[char.character_index]
         if max_printer_sample_rate > character_total_psr:
             short_by = max_printer_sample_rate - character_total_psr
             prayer_gain = min(short_by, session_data.account.prayers['The Royal Sampler'].bonus_value)
@@ -182,90 +128,12 @@ def getPrinterSampleRateAdviceGroup() -> AdviceGroup:
     return psrAdviceGroup
 
 def getPrinterOutputAdviceGroup() -> AdviceGroup:
-    # Calculate Multis for Labels
-    # Skill Mastery
-    sm_base = 4 * session_data.account.rift['SkillMastery'].unlocked  # This isn't expressed anywhere in game, but is hard-coded in source code.
-    sm_eligible_skills = len(skill_index_list) - 1  #-1 to exclude Combat
-    sm_bonus = sum([1 for skillName, skillLevels in session_data.account.characters.all_skills.items() if skillName != "Combat" and sum(skillLevels) >= 750])
-    sm_sum = sm_base + sm_bonus
-    sm_multi = ValueToMulti(sm_sum)
-
-    gr_level = session_data.account.sailing.artifacts['Gold Relic'].level
-    gr_days = session_data.account.printer.gold_relic_days
-    gr_max_days = (
-        160 if gr_level == 4
-        else 80 if gr_level == 3
-        else 60 if gr_level == 2
-        else 40
-    )
-    gr_multi = ValueToMulti(gr_days * goldrelic_multis_dict.get(gr_level, 0))
-
-    supreme_wiring_max_days = 50
-    supreme_wiring_days = min(supreme_wiring_max_days, session_data.account.printer.supreme_wiring_days)
-    supreme_wiring_value = (supreme_wiring_days * 2 * session_data.account.event_points_shop['Supreme Wiring'].owned)
-    supreme_wiring_multi = ValueToMulti(supreme_wiring_value)
-
-    biggole_mole_max_days = 100
-    biggole_mole_days = min(biggole_mole_max_days, session_data.account.printer.biggole_mole_days)
-    biggole_mole_value = biggole_mole_days * session_data.account.companions['Biggole Mole'].bonus
-    biggole_mole_multi = ValueToMulti(biggole_mole_value)
-
-    mop = session_data.account.compass.upgrades['Moon of Print']
-    compass_moon_of_print_max_days = 100
-    compass_moon_of_print_days = min(compass_moon_of_print_max_days, session_data.account.printer.moon_of_print_days)
-    compass_moon_of_print_value = (
-        compass_moon_of_print_max_days
-        * mop.unlocked
-        * mop.total_value
-    )
-    compass_moon_of_print_multi = ValueToMulti(compass_moon_of_print_value)
-
-    any_dk_max_booked = False
-    best_kotr_book = 0
-    any_dk_max_leveled = False
-    best_kotr_preset_level = 0
-    for dk in session_data.account.characters.dks:
-        levels_above_max = dk.max_talents_over_books - session_data.account.library.max_book_level
-        # Book level
-        if dk.max_talents.get("178", 0) >= session_data.account.library.max_book_level:
-            any_dk_max_booked = True
-        if dk.max_talents.get("178", 0) > best_kotr_book:
-            best_kotr_book = dk.max_talents.get("178", 0)
-
-        # Preset level
-        if (
-            dk.current_preset_talents.get("178", 0) >= session_data.account.library.max_book_level
-            or dk.secondary_preset_talents.get("178", 0) >= session_data.account.library.max_book_level
-        ):
-            any_dk_max_leveled = True
-        if dk.current_preset_talents.get("178", 0) >= best_kotr_preset_level:
-            best_kotr_preset_level = dk.current_preset_talents.get("178", 0) + levels_above_max
-        if dk.secondary_preset_talents.get("178", 0) >= best_kotr_preset_level:
-            best_kotr_preset_level = dk.secondary_preset_talents.get("178", 0) + levels_above_max
-
-    talent_value = lava_func('decay', best_kotr_preset_level, 5, 150)
-    orb_kills = session_data.account.class_kill_talents['King of the Remembered'].kills
-    pow10_kills = math.log(orb_kills,10) if orb_kills > 0 else 0
-    kotr_multi = max(1, ValueToMulti(talent_value * pow10_kills))
-
+    printer = session_data.account.printer
     lolly_flower = session_data.account.sneaking.pristine_charms['Lolly Flower']
-    charm_multi_active = ValueToMulti(lolly_flower.value)
-
     ballot_buff = session_data.account.ballot[11]
-    ballot_multi_active = ballot_buff.active_multi
-
-    lab_multi_aw = 2 if session_data.account.companions.has('King Doot') else 1
-    lab_multi_cs = 2 if session_data.account.lab_bonuses['Wired In'].enabled else 1
-
-    harriep_multi_aw = 3 if session_data.account.companions.has('King Doot') else 1
-    harriep_multi_cs = 3 if session_data.account.divinity[4].unlocked else 1
-
-    aw_multi = (
-        1 * sm_multi * gr_multi * kotr_multi * charm_multi_active * ballot_multi_active
-        * lab_multi_aw * harriep_multi_aw * supreme_wiring_multi * biggole_mole_multi * compass_moon_of_print_multi
-    )
+    aw_multi = printer.account_output_multi
     aw_label = f"Account Wide: {aw_multi:.3f}x"
-    cs_multi = lab_multi_cs * harriep_multi_cs
+    cs_multi = printer.character_output_multi
     cs_label = f"Character Specific: Up to {cs_multi}x"
 
     po_Advices = {
@@ -274,73 +142,21 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     }
 
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
-    po_Advices[f"{cs_label if not session_data.account.companions.has('King Doot') else aw_label}"].append(Advice(
-        label=f"Lab Bonus: Wired In: {'2x (Thanks Doot!)' if session_data.account.companions.has('King Doot') else '2x if connected to Lab/Arctis'}",
-        picture_class='wired-in',
-        progression=lab_multi_aw if session_data.account.companions.has('King Doot') else '',
-        goal=2,
-        unit='x',
-        completed=session_data.account.companions.has('King Doot')
-    ))
-    po_Advices[f"{cs_label if not session_data.account.companions.has('King Doot') else aw_label}"].append(Advice(
-        label=f"{{{{ Divinity|#divinity }}}}: Harriep Major Link bonus: {'3x (Thanks Doot!)' if session_data.account.companions.has('King Doot') else '3x if linked'}",
-        picture_class='harriep',
-        progression=harriep_multi_aw if session_data.account.companions.has('King Doot') else '',
-        goal=3,
-        unit='x',
-        completed=session_data.account.companions.has('King Doot')
-    ))
+    # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
+    doot_subgroup = aw_label if printer.has_king_doot else cs_label
+    po_Advices[doot_subgroup].append(printer.get_wired_in_advice())
+    po_Advices[doot_subgroup].append(printer.get_harriep_advice())
 
     # Account Wide
-    po_Advices[aw_label].append(Advice(
-        label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: {sm_base}/4%"
-              f"<br>Additional 1% per Skill at 750: {sm_bonus}/{sm_eligible_skills}%",
-        picture_class='skill-mastery',
-        progression=f"{sm_multi:.2f}",
-        goal=f"{ValueToMulti(4 + sm_eligible_skills):.2f}",
-        unit='x'
-    ))
-
-    max_booked_note = '<br>Not max booked!' if not any_dk_max_booked else ''
-    max_preset_note = '<br>Not max leveled in any preset!' if not any_dk_max_leveled else ''
-    breakdown = f'<br>({talent_value:.3f} talent * {pow10_kills:.3f} pow10 kills)' if any_dk_max_booked and any_dk_max_leveled else ''
-    po_Advices[aw_label].append(Advice(
-        label=f"DK's King of the Remembered: {kotr_multi:.3f}x"
-              f"{max_booked_note}"
-              f"{max_preset_note}"
-              f"{breakdown}",
-        picture_class='king-of-the-remembered',
-        resource='orb-of-remembrance',
-        progression=f"{kotr_multi:.3f}",
-        unit='x'
-    ))
-
-    po_Advices[aw_label].append(Advice(
-        label=f"{{{{ Sailing|#sailing}}}}: Level {gr_level} Gold Relic:"
-              f"<br>{gr_multi:.2f}x ({gr_days}/{gr_max_days} days)",
-        picture_class='gold-relic',
-        progression=gr_days,
-        goal=gr_max_days
-    ))
-
-    po_Advices[aw_label].append(Advice(
-        label=f"{{{{ Event Shop|#event-shop}}}}: Supreme Wiring:"
-              f"<br>{supreme_wiring_multi:.2f}x ({supreme_wiring_days}/{supreme_wiring_max_days} days)",
-        picture_class='event-shop-4',
-        progression=supreme_wiring_days,
-        goal=supreme_wiring_max_days
-    ))
+    po_Advices[aw_label].append(printer.get_skill_mastery_advice())
+    po_Advices[aw_label].append(printer.get_king_of_the_remembered_advice())
+    po_Advices[aw_label].append(printer.get_gold_relic_advice())
+    po_Advices[aw_label].append(printer.get_supreme_wiring_advice())
 
     biggole_mole_advice = session_data.account.companions['Biggole Mole'].get_advice()
     po_Advices[aw_label].append(biggole_mole_advice)
 
-    po_Advices[aw_label].append(Advice(
-        label=f"{{{{Compass|#the-compass}}}}: {mop.path_name}-{mop.path_ordering}: Moon of Print: "
-              f"<br>{compass_moon_of_print_multi:.2f}x ({compass_moon_of_print_days}/{compass_moon_of_print_max_days} days)",
-        picture_class=mop.image,
-        progression=compass_moon_of_print_days,
-        goal=compass_moon_of_print_max_days
-    ))
+    po_Advices[aw_label].append(printer.get_moon_of_print_advice())
 
     po_Advices[aw_label].append(lolly_flower.get_obtained_advice())
 
