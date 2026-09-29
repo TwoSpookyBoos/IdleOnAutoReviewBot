@@ -1,3 +1,4 @@
+from consts.consts_autoreview import ValueToMulti
 from consts.consts_w4 import (
     breeding_genetics_list,
     breeding_shiny_bonus_list,
@@ -11,7 +12,9 @@ from consts.consts_w4 import (
     slot_unlock_waves_list,
     territory_names,
 )
+from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_get, safer_index
 
@@ -149,4 +152,87 @@ class Breeding:
     def calculate_egg_slots(self, royal_egg_cap: int, merit_level: int):
         self.egg_slots += (
             royal_egg_cap + self.upgrades["Egg Capacity"].level + merit_level
+        )
+
+    def calculate_pet_damage(
+        self,
+        *,
+        electrolyte_vial: float,
+        barley_lost: bool,
+        croissant: float,
+        wedding_cake: float,
+        characters: list,
+        power_bowower_unlocked: bool,
+        arcade_bonus: float,
+        vault_pet_punchies: float,
+    ):
+        self.pet_damage_multi_a = ValueToMulti(self.upgrades["Blooming Axe"].value)
+        self.barley_lost = barley_lost
+        self.barley_lost_bonus = int(barley_lost) * 5
+        talent = next(
+            t for t in all_talentsDict.values() if t["name"] == "Arena Spirit"
+        )
+        self.arena_spirit_level = 0
+        self.arena_spirit_goal_level = 0
+        for char in characters:
+            try:
+                level = (
+                    char.current_preset_talents[str(talent["skillIndex"])]
+                    + char.total_bonus_talent_levels
+                )
+            except KeyError:
+                continue
+            if level > self.arena_spirit_level:
+                self.arena_spirit_level = level
+                self.arena_spirit_goal_level = char.max_talents_over_books
+        self.arena_spirit_bonus = lava_func(
+            talent["funcY"], self.arena_spirit_level, talent["y1"], talent["y2"]
+        )
+        self.power_bowower_unlocked = power_bowower_unlocked
+        self.power_bowower_bonus = int(power_bowower_unlocked) * 30
+        self.pet_damage_multi_b = ValueToMulti(
+            electrolyte_vial
+            + self.barley_lost_bonus
+            + croissant
+            + wedding_cake
+            + self.arena_spirit_bonus
+            + self.power_bowower_bonus
+            + arcade_bonus
+            + vault_pet_punchies
+        )
+        self.pet_damage_multi = round(
+            self.pet_damage_multi_a * self.pet_damage_multi_b, 2
+        )
+
+    def get_pet_damage_advice(self) -> Advice:
+        return Advice(
+            label=f"Total Pet Damage bonus: {self.pet_damage_multi}x",
+            picture_class="vault-upgrade-58",
+        )
+
+    def get_barley_lost_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Achievement|#achievements }}}} - Barley Lost: "
+            f"+{self.barley_lost_bonus}%",
+            picture_class="barley-lost",
+            progression=int(self.barley_lost),
+            goal=1,
+        )
+
+    def get_arena_spirit_advice(self) -> Advice:
+        return Advice(
+            label=f"Beast Master Talent passive- Arena Spirit: "
+            f"+{self.arena_spirit_bonus:.2f}%",
+            picture_class="arena-spirit",
+            progression=self.arena_spirit_level,
+            goal=self.arena_spirit_goal_level,
+        )
+
+    def get_power_bowower_advice(self) -> Advice:
+        status = "+30% if equipped" if self.power_bowower_unlocked else "Locked."
+        return Advice(
+            label=f"{{{{ Star Sign|#star-signs }}}} -  Power Bowower: {status}",
+            picture_class="power-bowower",
+            progression=int(self.power_bowower_unlocked),
+            goal=1,
         )

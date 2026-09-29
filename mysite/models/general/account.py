@@ -769,6 +769,16 @@ class Account:
             wired_in_enabled=self.lab_bonuses['Wired In'].enabled,
             harriep_unlocked=self.divinity[4].unlocked,
         )
+        self.breeding.calculate_pet_damage(
+            electrolyte_vial=self.alchemy_vials['Electrolyte (Condensed Zap)'].value,
+            barley_lost=self.achievements['Barley Lost'].complete,
+            croissant=self.meals['Croissant'].value,
+            wedding_cake=self.meals['Wedding Cake'].value,
+            characters=self.characters.safe,
+            power_bowower_unlocked=self.star_signs['Power Bowower'].unlocked,
+            arcade_bonus=self.arcade[30].value,
+            vault_pet_punchies=self.vault.upgrades['Pet Punchies'].total_value,
+        )
         # Reads nearly everything, so last
         self.drop_rate.calculate(
             best_talent_level=self.get_best_talent_level,

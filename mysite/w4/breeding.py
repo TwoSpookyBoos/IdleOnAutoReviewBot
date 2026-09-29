@@ -1,6 +1,5 @@
 import copy
 
-from consts.idleon.lava_func import lava_func
 from models.general.session_data import session_data
 
 from models.advice.advice import Advice
@@ -8,12 +7,11 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.all_talentsDict import all_talentsDict
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 from utils.number_formatting import number_to_roman
 
-from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
+from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
 from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, \
     breeding_last_arena_bonus_unlock_wave, breeding_total_pets, max_heart_level
@@ -555,102 +553,35 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
     return breeding_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getPetDamageAdviceGroup():
-    # Multi Group A
-    blooming_axe_breeding_upgrade = session_data.account.breeding.upgrades['Blooming Axe']
-    blooming_axe_breeding_upgrade_bonus = blooming_axe_breeding_upgrade.value
-    multi_group_a = ValueToMulti(blooming_axe_breeding_upgrade_bonus)
-
-    # Multi Group B
-    electrolyte_vial = session_data.account.alchemy_vials['Electrolyte (Condensed Zap)']
-    electrolyte_vial_bonus = electrolyte_vial.value
-
-    barley_lost_achievement = session_data.account.achievements['Barley Lost']
-    barley_lost_achievement_bonus = int(barley_lost_achievement.complete) * 5
-
+    breeding = session_data.account.breeding
+    multi_total = breeding.pet_damage_multi
+    multi_group_a = breeding.pet_damage_multi_a
+    multi_group_b = breeding.pet_damage_multi_b
     croissant_meal = session_data.account.meals['Croissant']
-    croissant_meal_bonus = croissant_meal.value
-
     wedding_cake_meal = session_data.account.meals['Wedding Cake']
-    wedding_cake_meal_bonus = wedding_cake_meal.value
-
-    arena_spirit_talent = next(talent for talent in all_talentsDict.values() if talent['name'] == 'Arena Spirit')
-    highest_arena_spirit_level = 0
-    highest_arena_spirit_goal_level = 0
-    for char in session_data.account.characters.safe:
-        talents = char.current_preset_talents
-        try:
-            arena_spirit_level = talents[str(arena_spirit_talent['skillIndex'])] + char.total_bonus_talent_levels
-            if arena_spirit_level > highest_arena_spirit_level:
-                highest_arena_spirit_level = arena_spirit_level
-                highest_arena_spirit_goal_level = char.max_talents_over_books
-        except:
-            continue
-    arena_spirit_talent_bonus = lava_func(arena_spirit_talent['funcY'], highest_arena_spirit_level, arena_spirit_talent['y1'], arena_spirit_talent['y2'])
-
-    power_bowower_star_sign = session_data.account.star_signs['Power Bowower']
-    power_bowower_star_sign_bonus = int(power_bowower_star_sign.unlocked) * 30
-
-    pet_damage_arcade_bonus = session_data.account.arcade[30]
-    pet_damage_arcade_bonus_bonus = pet_damage_arcade_bonus.value
-
-    pet_punchies_vault_upgrade = session_data.account.vault.upgrades['Pet Punchies']
-    pet_punchies_vault_upgrade_bonus = pet_punchies_vault_upgrade.total_value
-
-    multi_group_b = ValueToMulti(
-        electrolyte_vial_bonus +
-        barley_lost_achievement_bonus +
-        croissant_meal_bonus +
-        wedding_cake_meal_bonus +
-        arena_spirit_talent_bonus +
-        power_bowower_star_sign_bonus +
-        pet_damage_arcade_bonus_bonus +
-        pet_punchies_vault_upgrade_bonus
-        )
-
-    multi_total = round(multi_group_a * multi_group_b, 2)
 
     pet_damage_advices = {
-        f'Total: {multi_total}x': [
-            Advice(
-                label=f'Total Pet Damage bonus: {multi_total}x',
-                picture_class='vault-upgrade-58'
-            )
-        ],
+        f'Total: {multi_total}x': [breeding.get_pet_damage_advice()],
         f'Multi Group A: {round(multi_group_a, 2)}x': [
-            blooming_axe_breeding_upgrade.get_advice()
+            breeding.upgrades['Blooming Axe'].get_advice()
         ],
         f'Multi Group B: {round(multi_group_b, 2)}x': [
-            electrolyte_vial.get_advice(full_name=False),
+            session_data.account.alchemy_vials['Electrolyte (Condensed Zap)'].get_advice(full_name=False),
+            breeding.get_barley_lost_advice(),
             Advice(
-                label=f'{{{{ Achievement|#achievements }}}} - Barley Lost: +{barley_lost_achievement_bonus}%',
-                picture_class='barley-lost',
-                progression=int(barley_lost_achievement.complete),
-                goal=1
-            ),
-            Advice(
-                label=f'{{{{ Meal|#cooking }}}} - Croissant: +{croissant_meal_bonus:.2f}%',
+                label=f'{{{{ Meal|#cooking }}}} - Croissant: +{croissant_meal.value:.2f}%',
                 picture_class=croissant_meal.image,
                 progression=croissant_meal.level,
                 goal=max_meal_plate_level
             ),
             Advice(
-                label=f'{{{{ Meal|#cooking }}}} - Wedding Cake: +{wedding_cake_meal_bonus:.2f}%',
+                label=f'{{{{ Meal|#cooking }}}} - Wedding Cake: +{wedding_cake_meal.value:.2f}%',
                 picture_class=wedding_cake_meal.image,
                 progression=wedding_cake_meal.level,
                 goal=max_meal_plate_level
             ),
-            Advice(
-                label=f'Beast Master Talent passive- Arena Spirit: +{arena_spirit_talent_bonus:.2f}%',
-                picture_class='arena-spirit',
-                progression=highest_arena_spirit_level,
-                goal=highest_arena_spirit_goal_level
-            ),
-            Advice(
-                label=f"{{{{ Star Sign|#star-signs }}}} -  Power Bowower: {'+30% if equipped' if power_bowower_star_sign.unlocked else 'Locked.'}",
-                picture_class='power-bowower',
-                progression=int(power_bowower_star_sign.unlocked),
-                goal=1
-            ),
+            breeding.get_arena_spirit_advice(),
+            breeding.get_power_bowower_advice(),
             session_data.account.arcade[30].get_advice(),
             session_data.account.vault.get_upgrade_advice('Pet Punchies')
         ]
