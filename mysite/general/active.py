@@ -5,7 +5,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from consts.idleon.consts_idleon import pearlable_skills_list, current_world, max_characters
-from consts.idleon.lava_func import lava_func
 from consts.consts_general import cards_max_level
 from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_vial_level
@@ -44,53 +43,18 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrines['Crescent Shrine'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrines.get_chizoar_card_advice())
-    crystal_Advice[aw].append(Advice(
-        label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
-        picture_class="moai-head",
-        progression=session_data.account.sailing.artifacts['Moai Head'].level,
-        goal=1
-    ))
+    crystal = session_data.account.crystal_spawn_chance
+    crystal_Advice[aw].append(crystal.get_moai_head_advice())
 
     # Character Specific
-    bestCrystalBook = 0
-    for jman in session_data.account.characters.jmans:
-        bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
-    crystal_Advice[cs].append(Advice(
-        label=f"Level {bestCrystalBook}/{session_data.account.library.max_book_level} booked Cmon Out Crystals talent (Jman only)",
-        picture_class="cmon-out-crystals",
-        progression=bestCrystalBook,
-        goal=session_data.account.library.max_book_level
-    ))
-    crystals_4_dayys_multi = 1 + lava_func('decay', 100, 174, 50) / 100
-    crystal_Advice[cs].append(Advice(
-        label=f"Crystals 4 Dayys star talent: {crystals_4_dayys_multi}x at level 100",
-        picture_class="crystals-4-dayys",
-    ))
-    box_value = lava_func('decay', 300, 65, 200)
-    crystal_Advice[cs].append(Advice(
-        label=f"Non Predatory Loot Box: +{box_value:.0f}% at 400 crates",
-        picture_class="non-predatory-loot-box",
-    ))
+    crystal_Advice[cs].append(crystal.get_cmon_out_crystals_advice())
+    crystal_Advice[cs].append(crystal.get_crystals_4_dayys_advice())
+    crystal_Advice[cs].append(crystal.get_non_predatory_box_advice())
 
     # Totals
-    crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine'].value + box_value) / 100):.3f}x"
-              f"<br>The cards also add together. Everything else is a unique multiplier.",
-        picture_class="shrine-box2"
-    ))
-
-    crystal_Advice[total].append(Advice(
-        label=f"Best Crystal Spawn Chance on Non-Jman:"
-              f" {session_data.account.crystal_spawn_chance.highest * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.crystal_spawn_chance.highest * 100):.2f})",
-        picture_class="crystal-carrot",
-    ))
-    crystal_Advice[total].append(Advice(
-        label=f"Best Crystal Spawn Chance on Jman:"
-              f" {session_data.account.crystal_spawn_chance.highest_jman * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.crystal_spawn_chance.highest_jman * 100):.2f})",
-        picture_class="crystal-crabal",
-    ))
+    crystal_Advice[total].append(crystal.get_additive_note_advice())
+    crystal_Advice[total].append(crystal.get_highest_advice())
+    crystal_Advice[total].append(crystal.get_highest_jman_advice())
 
     for subgroup in crystal_Advice:
         for advice in crystal_Advice[subgroup]:

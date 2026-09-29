@@ -635,6 +635,8 @@ class Account:
             self.stamps['Crystallin'].total_value,
             self.characters,
             self.shrines['Crescent Shrine'].value,
+            moai_head_level=self.sailing.artifacts['Moai Head'].level,
+            max_book_level=self.library.max_book_level,
         )
         self.sneaking.calculate_gemstones_values(
             self.get_current_max_talent("Generational Gemstones")
