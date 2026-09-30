@@ -648,6 +648,7 @@ class Account:
             self.characters.dbs, self.sneaking, self.caverns, self.all_assets,
             self.hat_rack.get_bonus_value('Extra Bones'),
             self.arcade, self.lab_jewels, self.emperor,
+            max_book_level=self.library.max_book_level,
         )
         self.compass.calculate_dust_sources(
             self.characters.wws, self.sneaking, self.all_assets,
