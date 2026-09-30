@@ -14,14 +14,14 @@ from consts.idleon.consts_idleon import (
 
 tome_challenge_details = [
     {
-        'Name': challenge[0]
-        .replace('_(Tap_for_more_info)', '')
-        .replace('_膛', '')
-        .replace('_', ' '),
-        'Target': float(challenge[1]),
-        'Type': int(challenge[2]),
-        'Max Points': int(challenge[3]),
-        'Level Required': get_tome_level_required(NinjaInfo[32].index(str(index))),
+        "Name": challenge[0]
+        .replace("_(Tap_for_more_info)", "")
+        .replace("_膛", "")
+        .replace("_", " "),
+        "Target": float(challenge[1]),
+        "Type": int(challenge[2]),
+        "Max Points": int(challenge[3]),
+        "Level Required": get_tome_level_required(NinjaInfo[32].index(str(index))),
     }
     for index, challenge in enumerate(tome_challenges)
 ]
@@ -45,7 +45,7 @@ tome_breeding_species = [
 ]
 
 # Toilet Paper Postage
-tome_live_talent_max_index = '625'
+tome_live_talent_max_index = "625"
 
 # Star Player, Supernova Player, Calm Basics pts, Special pts
 tome_star_talent_indexes = [8, 17, 275, 622]
@@ -56,6 +56,6 @@ tome_star_shiny_pets = [
     (world - 1, index)
     for world, pets in breeding_species_dict.items()
     for index, pet in pets.items()
-    if pet['ShinyBonus'] == 'Star Talent Pts'
+    if pet["ShinyBonus"] == "Star Talent Pts"
 ]
 tome_star_shiny_per_level = float(RANDOlist[92][tome_star_shiny_bonus_index])

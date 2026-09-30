@@ -45,7 +45,7 @@ def _dig(data, *path, default=0):
 def _values(data) -> list:
     data = safe_loads(data)
     if isinstance(data, dict):
-        return [value for key, value in data.items() if key != 'length']
+        return [value for key, value in data.items() if key != "length"]
     return data if isinstance(data, list) else []
 
 
@@ -60,10 +60,14 @@ def _log(value: float) -> float:
 
 # "SpecialPassives" in `_customBlock_Breeding`. Last updated in v2.531.0
 def _shiny_level(progress: float) -> int:
-    return max([1] + [
-        tier + 2 for tier in range(19)
-        if progress > floor((1 + (tier + 1) ** 1.6) * 1.7 ** (tier + 1))
-    ])
+    return max(
+        [1]
+        + [
+            tier + 2
+            for tier in range(19)
+            if progress > floor((1 + (tier + 1) ** 1.6) * 1.7 ** (tier + 1))
+        ]
+    )
 
 
 # "TalentBannedforAllLV" in source. Last updated in v2.531.0
@@ -73,11 +77,11 @@ def _star_talent_level(talent: int, level: float, bonus_levels: float) -> float:
 
 class TomeChallenge:
     def __init__(self, details: dict, quantity: float, account_level: float):
-        self.name: str = details['Name']
-        self.target: float = details['Target']
-        self.type: int = details['Type']
-        self.max_points: int = details['Max Points']
-        self.level_required: int = details['Level Required']
+        self.name: str = details["Name"]
+        self.target: float = details["Target"]
+        self.type: int = details["Type"]
+        self.max_points: int = details["Max Points"]
+        self.level_required: int = details["Level Required"]
         self.quantity: float = quantity
         self.unlocked: bool = account_level >= self.level_required
 
@@ -108,27 +112,27 @@ class TomeChallenge:
         return ceil(self.percent * self.max_points)
 
 
-class Tome(list[TomeChallenge]):
+class Tome:
     def __init__(self, raw_data: dict):
         quantities, self._talent_maxes, self._star_characters, self._star_account = (
             _get_quantities(raw_data)
         )
         self._account_level: float = quantities[5]
-        cauldrons = safe_loads(raw_data.get('CauldronInfo', []))
+        cauldrons = safe_loads(raw_data.get("CauldronInfo", []))
         self._live_talent_bubble: float = _num(
             _dig(_values(_dig(cauldrons, 3, default={})), 5)
         )
-        options = safe_loads(raw_data.get('OptLacc', []))
+        options = safe_loads(raw_data.get("OptLacc", []))
         self.blue_pages_unlocked: bool = bool(_num(safer_index(options, 196, 0)))
         self.red_pages_unlocked: bool = bool(_num(safer_index(options, 197, 0)))
-        self._rank_scores = raw_data.get('serverVars', {}).get('TomePct')
+        self._rank_scores = raw_data.get("serverVars", {}).get("TomePct")
         self.score: int = 0
         self.percent: float = 100
         self.drop_rate_bonus: float = 0
-        super().__init__(
+        self.challenges: list[TomeChallenge] = [
             TomeChallenge(details, quantities[index], self._account_level)
             for index, details in enumerate(tome_challenge_details)
-        )
+        ]
 
     # "TotalTalentPoints" in source. Last updated in v2.531.0
     def calculate_live_talent_max(self, buncha_banana_bonus: float):
@@ -136,7 +140,7 @@ class Tome(list[TomeChallenge]):
         self._talent_maxes[tome_live_talent_max_index] = max(
             self._talent_maxes.get(tome_live_talent_max_index, 0), live_max
         )
-        self[3] = TomeChallenge(
+        self.challenges[3] = TomeChallenge(
             tome_challenge_details[3],
             sum(self._talent_maxes.values()),
             self._account_level,
@@ -152,19 +156,25 @@ class Tome(list[TomeChallenge]):
             bonus_levels = bonus_talent_levels.get(character_index, 0)
             levels = {
                 talent: _star_talent_level(talent, level, bonus_levels)
-                for talent, level in character['Talents'].items()
+                for talent, level in character["Talents"].items()
             }
             total = (
-                character['Base'] + _js_round(levels[275]) + levels[8] + levels[17]
-                + lava_func('decay', levels[622], 130, 50)
-                + self._star_account + account_bonus
+                character["Base"]
+                + _js_round(levels[275])
+                + levels[8]
+                + levels[17]
+                + lava_func("decay", levels[622], 130, 50)
+                + self._star_account
+                + account_bonus
             )
             best = max(best, floor(total))
-        self[15] = TomeChallenge(tome_challenge_details[15], best, self._account_level)
+        self.challenges[15] = TomeChallenge(
+            tome_challenge_details[15], best, self._account_level
+        )
 
     @property
     def total_points(self) -> int:
-        return sum(challenge.points for challenge in self)
+        return sum(challenge.points for challenge in self.challenges)
 
     def calculate_score(self, manual_score: int | None):
         self.score = self.total_points if manual_score is None else manual_score
@@ -172,7 +182,8 @@ class Tome(list[TomeChallenge]):
         live_scores = sorted(self._rank_scores or [])
         for index, percent in enumerate(tomepct):
             score = (
-                safer_index(live_scores, index, 99999) if live_scores
+                safer_index(live_scores, index, 99999)
+                if live_scores
                 else tomepct[percent]
             )
             if self.score > score:
@@ -190,12 +201,12 @@ class Tome(list[TomeChallenge]):
     def get_bonus_advice(self) -> Advice:
         return Advice(
             label=f"Tome- Red Pages:"
-                  f"<br>+{round(self.drop_rate_bonus, 1):g}% Drop Rate"
-                  f"<br>{self.score:,} Total Tome Points"
-                  f"<br>Increases every 100 points over 8000",
-            picture_class='red-tome-pages',
+            f"<br>+{round(self.drop_rate_bonus, 1):g}% Drop Rate"
+            f"<br>{self.score:,} Total Tome Points"
+            f"<br>Increases every 100 points over 8000",
+            picture_class="red-tome-pages",
             progression=int(self.red_pages_unlocked),
-            goal=1
+            goal=1,
         )
 
 
@@ -208,50 +219,51 @@ def _get_quantities(
         return default if value is None else value
 
     character_count = 0
-    while f'Lv0_{character_count}' in raw_data:
+    while f"Lv0_{character_count}" in raw_data:
         character_count += 1
 
     def per_character(key: str, default) -> list:
-        return [get(f'{key}_{index}', default) for index in range(character_count)]
+        return [get(f"{key}_{index}", default) for index in range(character_count)]
 
-    options = get('OptLacc', [])
+    options = get("OptLacc", [])
 
     def opt(index: int) -> float:
         return _num(_dig(options, index))
 
-    levels = per_character('Lv0', [])
-    cards = get('Cards0', {})
-    found_items = [str(item) for item in get('Cards1', [])]
-    achievements = get('AchieveReg', [])
-    rift = get('Rift', [])
-    spelunk = get('Spelunk', [])
-    ninja = get('Ninja', [])
-    summon = get('Summon', [])
-    holes = get('Holes', [])
-    research = get('Research', [])
-    breeding = get('Breeding', [])
-    sailing = get('Sailing', [])
-    gaming = get('Gaming', [])
-    sprouts = get('GamingSprout', [])
-    royal = get('RoyalG', [])
-    cauldrons = get('CauldronInfo', [])
-    vault = get('UpgVault', [])
+    levels = per_character("Lv0", [])
+    cards = get("Cards0", {})
+    found_items = [str(item) for item in get("Cards1", [])]
+    achievements = get("AchieveReg", [])
+    rift = get("Rift", [])
+    spelunk = get("Spelunk", [])
+    ninja = get("Ninja", [])
+    summon = get("Summon", [])
+    holes = get("Holes", [])
+    research = get("Research", [])
+    breeding = get("Breeding", [])
+    sailing = get("Sailing", [])
+    gaming = get("Gaming", [])
+    sprouts = get("GamingSprout", [])
+    royal = get("RoyalG", [])
+    cauldrons = get("CauldronInfo", [])
+    vault = get("UpgVault", [])
 
     card_tiers = 4 + (_num(_dig(rift, 0)) >= 45) + (_num(_dig(spelunk, 0, 2)) >= 1)
-    six_star_cards = str(_dig(options, 603)).split(',')
-    five_star_cards = str(_dig(options, 155)).split(',')
+    six_star_cards = str(_dig(options, 603)).split(",")
+    five_star_cards = str(_dig(options, 155)).split(",")
 
     # "CardLv" in `_customBlock_RunCodeOfTypeXforThingY`. Last updated in v2.531.0
     def card_level(name: str) -> int:
         count = _num(cards.get(name, 0))
         level = 1 if count > 0 else 0
         for star in range(card_tiers):
-            if name == 'Boss3B':
+            if name == "Boss3B":
                 required = 1.5 * (star + 1 + star // 3) ** 2
             else:
-                required = tome_card_requirements.get(name, 0) * (
-                    star + 1 + star // 3 + 16 * (star // 4) + 100 * (star // 5)
-                ) ** 2
+                required = (
+                    tome_card_requirements.get(name, 0)
+                    * (star + 1 + star // 3 + 16 * (star // 4) + 100 * (star // 5)) ** 2
+                )
             if count > required:
                 level = star + 2
         if name in six_star_cards and level < 7:
@@ -270,60 +282,65 @@ def _get_quantities(
 
     q[0] = sum(
         _num(level)
-        for stamp_type in _values(get('StampLv', []))
+        for stamp_type in _values(get("StampLv", []))
         for level in _values(stamp_type)
     )
     q[1] = max(
         (
             sum(_num(_dig(statue, 0)) for statue in statues)
-            for statues in per_character('StatueLevels', [])
+            for statues in per_character("StatueLevels", [])
         ),
-        default=0
+        default=0,
     )
     q[2] = sum(card_level(name) for name in cards if name in tome_card_requirements)
-    talent_maxes = per_character('SM', {})
+    talent_maxes = per_character("SM", {})
     best_talent_maxes = {
         talent: max(
             [0] + [_num(char_maxes.get(talent, 0)) for char_maxes in talent_maxes]
         )
         for talent in {
-            talent for char_maxes in talent_maxes
-            for talent in char_maxes if talent != 'length'
+            talent
+            for char_maxes in talent_maxes
+            for talent in char_maxes
+            if talent != "length"
         }
     }
     q[3] = sum(best_talent_maxes.values())
-    completed_quests = per_character('QuestComplete', {})
+    completed_quests = per_character("QuestComplete", {})
     q[4] = sum(
         any(_num(char_quests.get(quest, 0)) == 1 for char_quests in completed_quests)
         for quest in SceneNPCquestOrder
     )
     q[5] = sum(_num(_dig(char_levels, 0)) for char_levels in levels)
-    q[6] = sum(_num(_dig(row, task)) for row in get('TaskZZ1', []) for task in range(8))
+    q[6] = sum(_num(_dig(row, task)) for row in get("TaskZZ1", []) for task in range(8))
     q[7] = sum(_num(achievement) == -1 for achievement in achievements)
-    q[8] = max(opt(198), _num(get('MoneyBANK', 0)))
+    q[8] = max(opt(198), _num(get("MoneyBANK", 0)))
     q[9] = opt(208)
-    q[10] = sum(item.startswith('Trophy') for item in found_items)
+    q[10] = sum(item.startswith("Trophy") for item in found_items)
     q[11] = sum(
         max(0, _num(_dig(char_levels, skill)))
-        for char_levels in levels for skill in range(1, 22)
+        for char_levels in levels
+        for skill in range(1, 22)
     )
     q[12] = opt(201)
-    q[13] = _num(_dig(get('TaskZZ0', []), 0, 2))
+    q[13] = _num(_dig(get("TaskZZ0", []), 0, 2))
     q[14] = opt(172)
 
     # "TotalTalentPoints" in source. Last updated in v2.531.0
     star_characters = [
         {
-            'Base': (
-                _num(_dig(char_levels, 0)) - 1
-                + sum(_num(_dig(char_levels, skill)) for skill in range(1, 10)) - 3
+            "Base": (
+                _num(_dig(char_levels, 0))
+                - 1
+                + sum(_num(_dig(char_levels, skill)) for skill in range(1, 10))
+                - 3
             ),
-            'Talents': {
+            "Talents": {
                 talent: _num(char_talents.get(str(talent), 0))
                 for talent in tome_star_talent_indexes
             },
         }
-        for char_levels, char_talents in zip(levels, per_character('SL', {}))
+        for char_levels, char_talents in zip(levels, per_character("SL", {}))
     ]
     star_shiny = sum(
         _js_round(
@@ -334,43 +351,45 @@ def _get_quantities(
         if _num(_dig(breeding, world + 22, index)) > 0
     )
     star_account = (
-        _num(_dig(get('CYTalentPoints', []), 5))
-        + min(5 * card_level('w4b2'), 50)
-        + min(15 * card_level('Boss2C'), 100)
-        + min(4 * card_level('fallEvent1'), 100)
-        + 10 * achieved(212) + 20 * achieved(289) + 20 * achieved(305)
+        _num(_dig(get("CYTalentPoints", []), 5))
+        + min(5 * card_level("w4b2"), 50)
+        + min(15 * card_level("Boss2C"), 100)
+        + min(4 * card_level("fallEvent1"), 100)
+        + 10 * achieved(212)
+        + 20 * achieved(289)
+        + 20 * achieved(305)
         + vault_bonus(53)
         + star_shiny
-        + _num(_dig(get('DungUpg', []), 5, 1))  # Flurbo Shop
+        + _num(_dig(get("DungUpg", []), 5, 1))  # Flurbo Shop
         + 100 * (opt(184) >= 20000)  # Fractal Island
     )
     q[15] = max(
-        (floor(character['Base'] + star_account) for character in star_characters),
-        default=0
+        (floor(character["Base"] + star_account) for character in star_characters),
+        default=0,
     )
-    q[16] = 1 / opt(202) if opt(202) else float('inf')
+    q[16] = 1 / opt(202) if opt(202) else float("inf")
     dungeon_exp = opt(71)
     q[17] = next(
         (rank for rank, exp in enumerate(RANDOlist[29]) if dungeon_exp < _num(exp)), 1
     )
     q[18] = opt(200)
-    q[19] = sum(_num(_dig(sign, 1)) == 1 for sign in get('SSprog', []))
+    q[19] = sum(_num(_dig(sign, 1)) == 1 for sign in get("SSprog", []))
     q[20] = opt(203)
-    q[21] = sum(item.startswith('Obol') for item in found_items)
+    q[21] = sum(item.startswith("Obol") for item in found_items)
     q[22] = sum(
         _num(level)
         for cauldron in range(4)
         for level in _values(_dig(cauldrons, cauldron, default={}))
     )
     q[23] = sum(_num(level) for level in _values(_dig(cauldrons, 4, default={})))
-    sigils = _dig(get('CauldronP2W', []), 4, default=[])
+    sigils = _dig(get("CauldronP2W", []), 4, default=[])
     q[24] = sum(
         _num(_dig(sigils, 1 + 2 * sigil)) + 1 for sigil in range(ceil(len(sigils) / 2))
     )
     q[25] = opt(199)
     q[26] = sum(
-        _js_round(_num(get(f'CYDeliveryBox{box}', 0)))
-        for box in ['Complete', 'Streak', 'Misc']
+        _js_round(_num(get(f"CYDeliveryBox{box}", 0)))
+        for box in ["Complete", "Streak", "Misc"]
     )
     q[27] = opt(204)
     q[28] = opt(205)
@@ -379,44 +398,51 @@ def _get_quantities(
     for sample in range(5):
         q[31 + sample] = opt(211 + sample)
     q[36] = opt(209)
-    q[37] = sum(_num(wave) for wave in _dig(get('TotemInfo', []), 0, default=[]))
+    q[37] = sum(_num(wave) for wave in _dig(get("TotemInfo", []), 0, default=[]))
 
-    kills_left = per_character('KLA', [])
+    kills_left = per_character("KLA", [])
     deathnote_digits = sum(
-        ceil(_log(sum(
-            requirement - _num(_dig(char_kills, map_index, 0, default=requirement))
-            for char_kills in kills_left
-        )))
+        ceil(
+            _log(
+                sum(
+                    requirement
+                    - _num(_dig(char_kills, map_index, 0, default=requirement))
+                    for char_kills in kills_left
+                )
+            )
+        )
         for map_index, requirement in tome_deathnote_maps
     )
-    if numberToLetter(7) in str(_dig(ninja, 102, 9, default='')):
+    if numberToLetter(7) in str(_dig(ninja, 102, 9, default="")):
         deathnote_digits += sum(
             ceil(_log(_num(_dig(ninja, 105, boss))))
             for boss in range(len(NinjaInfo[30]))
         )
     q[38] = deathnote_digits
     q[39] = sum(
-        str(key).startswith('d_') and _num(value) == -1
-        for key, value in get('WeeklyBoss', {}).items()
+        str(key).startswith("d_") and _num(value) == -1
+        for key, value in get("WeeklyBoss", {}).items()
     )
-    q[40] = sum(_num(_dig(get('Refinery', []), salt, 1)) for salt in range(3, 9))
-    q[41] = sum(_num(atom) for atom in get('Atoms', []))
-    q[42] = sum(_num(building) for building in get('Tower', [])[:27])
-    chest_order = get('ChestOrder', [])
+    q[40] = sum(_num(_dig(get("Refinery", []), salt, 1)) for salt in range(3, 9))
+    q[41] = sum(_num(atom) for atom in get("Atoms", []))
+    q[42] = sum(_num(building) for building in get("Tower", [])[:27])
+    chest_order = get("ChestOrder", [])
     q[43] = (
-        _num(_dig(get('ChestQuantity', []), chest_order.index('Critter11A')))
-        if 'Critter11A' in chest_order else 0
+        _num(_dig(get("ChestQuantity", []), chest_order.index("Critter11A")))
+        if "Critter11A" in chest_order
+        else 0
     )
     q[44] = opt(224)
     q[45] = _num(_dig(rift, 0))
     q[46] = max(
-        (_num(_dig(pet, 2)) for pet in get('Pets', []) + get('PetsStored', [])),
-        default=0
+        (_num(_dig(pet, 2)) for pet in get("Pets", []) + get("PetsStored", [])),
+        default=0,
     )
     q[47] = 1000 - opt(220)
     q[48] = sum(
-        _num(_dig(get('Cooking', []), table, upgrade))
-        for table in range(10) for upgrade in range(6, 9)
+        _num(_dig(get("Cooking", []), table, upgrade))
+        for table in range(10)
+        for upgrade in range(6, 9)
     )
 
     # "SpecialPassives" and "2ndMulti" in `_customBlock_Breeding`. v2.531.0
@@ -427,36 +453,38 @@ def _get_quantities(
         shiny_levels += _shiny_level(_num(_dig(breeding, world + 22, index)))
         breedability_multi = (
             1 + log(max(1, (_num(_dig(breeding, world + 13, index)) + 1) ** 0.725))
-            if breedability_unlocked else 1
+            if breedability_unlocked
+            else 1
         )
         breedability_levels += min(9, floor((breedability_multi - 1) ** 0.8) + 1)
     q[49] = shiny_levels
-    q[50] = sum(_num(level) for level in _dig(get('Meals', []), 0, default=[]))
+    q[50] = sum(_num(level) for level in _dig(get("Meals", []), 0, default=[]))
     q[51] = breedability_levels
-    q[52] = sum(max(0, _num(chip)) for chip in _dig(get('Lab', []), 15, default=[]))
-    q[53] = sum(_num(score) for score in get('FamValColosseumHighscores', []))
+    q[52] = sum(max(0, _num(chip)) for chip in _dig(get("Lab", []), 15, default=[]))
+    q[53] = sum(_num(score) for score in get("FamValColosseumHighscores", []))
     q[54] = opt(217)
-    q[55] = 0 if opt(69) < 2 else sum(_num(statue) >= 2 for statue in get('StuG', []))
+    q[55] = 0 if opt(69) < 2 else sum(_num(statue) >= 2 for statue in get("StuG", []))
     q[56] = 1000 - opt(218)
-    q[57] = sum(_num(_dig(boat, 3)) + _num(_dig(boat, 5)) for boat in get('Boats', []))
-    q[58] = max(0, _num(_dig(get('Divinity', []), 25)) - 10)
+    q[57] = sum(_num(_dig(boat, 3)) + _num(_dig(boat, 5)) for boat in get("Boats", []))
+    q[58] = max(0, _num(_dig(get("Divinity", []), 25)) - 10)
     q[59] = _num(_dig(sprouts, 28, 1))
     q[60] = sum(_num(artifact) for artifact in _dig(sailing, 3, default=[]))
     q[61] = _num(_dig(sailing, 1, 0))
     q[62] = max(
-        (_num(_dig(get('Captains', []), captain, 3)) for captain in range(20)),
-        default=0
+        (_num(_dig(get("Captains", []), captain, 3)) for captain in range(20)),
+        default=0,
     )
     q[63] = max(_num(_dig(sprouts, 32, 1)), opt(210))
     q[64] = _num(_dig(gaming, 8))
     q[65] = len(found_items)
     q[66] = _num(_dig(gaming, 0))
     q[67] = 2 ** opt(219)
-    q[68] = len(get('FarmCrop', {}))
+    q[68] = len(get("FarmCrop", {}))
     q[69] = sum(_num(stack) for stack in _dig(ninja, 104, default=[]))
     q[70] = sum(_num(level) for level in _dig(summon, 0, default=[]))
     q[71] = opt(319) + sum(
-        1 if str(win).startswith('Pet')
+        1
+        if str(win).startswith("Pet")
         else sum(win in world for world in DeathNoteMobs)
         for win in _dig(summon, 1, default=[])
     )
@@ -475,15 +503,15 @@ def _get_quantities(
         familiars += slime_value * _num(_dig(summon, 4, familiar))
         slime_value *= familiar + 3
     q[73] = familiars
-    q[74] = len(str(_dig(ninja, 102, 9, default='')))
+    q[74] = len(str(_dig(ninja, 102, 9, default="")))
     q[75] = sum(
-        _num(_dig(get('FamValMinigameHiscores', []), game)) for game in range(4)
+        _num(_dig(get("FamValMinigameHiscores", []), game)) for game in range(4)
     ) + opt(99)
-    q[76] = sum(_num(level) for level in get('PrayOwned', []))
-    q[77] = sum(_num(rank) for rank in _dig(get('FarmRank', []), 0, default=[]))
+    q[76] = sum(_num(level) for level in get("PrayOwned", []))
+    q[77] = sum(_num(rank) for rank in _dig(get("FarmRank", []), 0, default=[]))
     q[78] = opt(221)
     q[79] = opt(222)
-    q[80] = sum(_num(level) for level in get('ArcadeUpg', []))
+    q[80] = sum(_num(level) for level in get("ArcadeUpg", []))
     q[81] = min(1500, vault_bonus(57))
     q[82] = sum(_num(_dig(holes, 11, index)) for index in range(65, 71))
     q[83] = sum(ceil(_log(_num(resource))) for resource in _dig(holes, 9, default=[]))
@@ -501,7 +529,7 @@ def _get_quantities(
     q[94] = _js_round(min(12, opt(353)) + 1)
     q[95] = _js_round(opt(369))
     q[96] = sum(
-        _js_round(_num(get('KRbest', {}).get(f'SummzTrz{stone}', 0)))
+        _js_round(_num(get("KRbest", {}).get(f"SummzTrz{stone}", 0)))
         for stone in range(9)
     )
     q[97] = sum(_num(_dig(spelunk, 13, upgrade)) for upgrade in range(6))
@@ -514,8 +542,8 @@ def _get_quantities(
     q[104] = len(_dig(spelunk, 6, default=[]))
     q[105] = max((_num(_dig(char_levels, 19)) for char_levels in levels), default=0)
     q[106] = opt(443)
-    q[107] = sum(item.startswith('EquipmentNametag') for item in found_items)
-    q[108] = _num(_dig(get('Bubba', []), 1, 8))
+    q[107] = sum(item.startswith("EquipmentNametag") for item in found_items)
+    q[108] = _num(_dig(get("Bubba", []), 1, 8))
     q[109] = len(_dig(spelunk, 46, default=[]))
     q[110] = _num(_dig(research, 7, 4))
     q[111] = len(_dig(research, 11, default=[]))
@@ -527,13 +555,13 @@ def _get_quantities(
     )
     unique_sushi = 0
     for tier in range(sushi_max_tier + 1):
-        if _num(_dig(get('Sushi', []), 5, tier, default=-1)) < 0:
+        if _num(_dig(get("Sushi", []), 5, tier, default=-1)) < 0:
             break
         unique_sushi = tier + 1
     q[116] = unique_sushi
     q[117] = opt(594)
     q[118] = sum(max(0, _num(level)) for level in _dig(royal, 0, default=[]))
-    q[119] = sum(len(outpost) >= 3 for outpost in get('RoyalMaps', []))
+    q[119] = sum(len(outpost) >= 3 for outpost in get("RoyalMaps", []))
     q[120] = sum(_num(grade) for grade in _dig(royal, 5, default=[]))
     q[121] = _num(_dig(research, 7, 9))
     return q, best_talent_maxes, star_characters, star_account
