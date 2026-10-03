@@ -114,6 +114,17 @@ bubbles_dict = {
     for cauldron_index in range(0, len(bubble_cauldron_color_list))  #exclude vials and the water shop
 }
 max_implemented_bubble_index = max(bubbles_dict[0].keys())
+# Prisma bubbles "_8,a1,b2,..." at "OptLacc"[384] in source. Last updated in v2.531.0
+prisma_bubbles_optlacc_index = 384
+# "AlchBubbles" in source: class passive bubble per cauldron.
+# Last updated in v2.531.0
+class_passive_bubble_by_cauldron = {
+    0: ("Warrior", "Warriors Rule"),
+    1: ("Archer", "Archer Or Bust"),
+    2: ("Mage", "Mage Is Best"),
+}
+# "AlchBubbles" in source: only bubbles below this index. Last updated in v2.531.0
+class_passive_bubble_max_index = 30
 
 def getReadableBubbleNames(inputNumber, color):
     try:
@@ -373,16 +384,16 @@ fishing_toolkit_dict = {
 }
 obols_dict = {
     #Drop Rate
-    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop"), 'Base': {'LUK': 1, 'DEF': 1, '%_DROP_CHANCE': 2}},
-    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop"), 'Base': {'LUK': 3, 'DEF': 2, '%_DROP_CHANCE': 3}},
-    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 1, '%_DROP_CHANCE': 4}},
-    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck"), 'Base': {'LUK': 2, '%_DROP_CHANCE': 5}},
-    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck"), 'Base': {'LUK': 3, '%_DROP_CHANCE': 7}},
-    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight"), 'Base': {'WP': 2, 'STR': 3, 'AGI': 3, 'WIS': 3, 'LUK': 3, 'DEF': 5, '%_DROP_CHANCE': 8}},
-    "ObolHyperB0":      {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 5, '%_DROP_CHANCE': 10}},
-    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck"), 'Base': {'LUK': 5, '%_DROP_CHANCE': 10}},
-    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava"), 'Base': {'LUK': 10, '%_DROP_CHANCE': 14}},
-    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_CHANCE': 15}},
+    "ObolBronzePop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolBronzePop"), 'Base': {'LUK': 1, 'DEF': 1, '%_DROP_RATE': 2}},
+    "ObolSilverPop":    {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverPop"), 'Base': {'LUK': 3, 'DEF': 2, '%_DROP_RATE': 3}},
+    "ObolHyper0":       {"Shape": "Circle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 1, '%_DROP_RATE': 4}},
+    "ObolSilverLuck":   {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolSilverLuck"), 'Base': {'LUK': 2, '%_DROP_RATE': 5}},
+    "ObolGoldLuck":     {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolGoldLuck"), 'Base': {'LUK': 3, '%_DROP_RATE': 7}},
+    "ObolKnight":       {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolKnight"), 'Base': {'WP': 2, 'STR': 3, 'AGI': 3, 'WIS': 3, 'LUK': 3, 'DEF': 5, '%_DROP_RATE': 8}},
+    "ObolHyperB0":      {"Shape": "Square", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolHyper0"), 'Base': {'WP': 5, '%_DROP_RATE': 10}},
+    "ObolPlatinumLuck": {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPlatinumLuck"), 'Base': {'LUK': 5, '%_DROP_RATE': 10}},
+    "ObolLava":         {"Shape": "Hexagon", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolLava"), 'Base': {'LUK': 10, '%_DROP_RATE': 14}},
+    "ObolPinkLuck":     {"Shape": "Sparkle", "Bonus": "Drop Rate", "DisplayName": getItemDisplayName("ObolPinkLuck"), 'Base': {'LUK': 7, '%_DROP_RATE': 15}},
 
     #Card Drop Chance
     "ObolBronzeCard":   {"Shape":"Circle", "Bonus": "Card Drop Chance", "DisplayName": getItemDisplayName("ObolBronzeCard"), "Base": {"%_CARD_DROP_CHANCE": 1}},

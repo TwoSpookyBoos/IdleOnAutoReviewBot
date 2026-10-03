@@ -92,6 +92,11 @@ class JellyObstruction:
         self.value = info["Value"]
         self.unlocked = obstructions_defeated > index
 
+    @property
+    def bonus_value(self) -> float:
+        # "RoG_BonusQTY" in source. Last updated in v2.531.0
+        return self.value if self.unlocked else 0
+
     def get_advice(self) -> Advice:
         rendered = (
             self.description
@@ -191,17 +196,17 @@ class JellyOperator:
             * (1 + grid_bonus / 100)
             * (1 + self._fever_bonus(2) / 100)
             * (1 + self.has_bundle_j)
-            * (1 + self._obstruction_value(24) / 100)
+            * (1 + self.get_rog_bonus(24) / 100)
             * self._dps_multi()
             * (1 + self._qty(26) / 100)
             * (1 + self._qty(27) / 100)
             * (1 + atom_bonus / 100)
         )
 
-    def _obstruction_value(self, index: int) -> float:
-        # "RoG_BonusQTY" in source
+    def get_rog_bonus(self, index: int) -> float:
+        # "RoG_BonusQTY" in source. Last updated in v2.531.0
         obstruction = self._obstructions_by_index.get(index)
-        return obstruction.value if obstruction and obstruction.unlocked else 0
+        return obstruction.bonus_value if obstruction else 0
 
     def calculate_bonuses(self, account):
         for upgrade in self.upgrades.values():
@@ -213,7 +218,7 @@ class JellyOperator:
             * (1 + self._qty(11) / 100)
         )
         slots_left = round(
-            self._qty(9) + self._qty(8) + self._obstruction_value(44)
+            self._qty(9) + self._qty(8) + self.get_rog_bonus(44)
             + self.has_bundle_j - self.slot_unlocks_spent
         )
         totals = {

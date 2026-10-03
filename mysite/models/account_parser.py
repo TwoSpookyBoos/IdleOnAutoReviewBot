@@ -81,6 +81,10 @@ def _make_cards(account):
     if unknown_cards:
         logger.error(f"Unknown Card name(s) found: {unknown_cards}")
 
+    # "OptionsListAccount"[603]/[155] in source: card level floors.
+    # Last updated in v2.531.0
+    min_7_cards = set(f"{safer_get(account.raw_optlacc_dict, 603, '')}".split(','))
+    min_6_cards = set(f"{safer_get(account.raw_optlacc_dict, 155, '')}".split(','))
     cards = [
         Card(
             codename=card_values['Card Name'],
@@ -89,7 +93,12 @@ def _make_cards(account):
             count=safer_get(card_counts, card_values['Card Name'], 0),
             coefficient=card_values['Cards For 1star'],
             value_per_level=card_values['Value per Level'],
-            description=card_values['Description']
+            description=card_values['Description'],
+            min_level=(
+                7 if card_values['Card Name'] in min_7_cards
+                else 6 if card_values['Card Name'] in min_6_cards
+                else 0
+            ),
         ) for decoded_enemy_name, card_values in parsed_card_data.items()
     ]
 
@@ -164,6 +173,10 @@ def _parse_switches(account):
         g.autoloot = True
     else:
         account.autoloot = False
+
+    # Shows the switch on when the save has it, like Autoloot
+    if account.vault.potluck_pack_owned:
+        g.potluck_pack = True
 
     account.max_subgroups = 3
     account.library_group_characters = g.library_group_characters
@@ -1079,7 +1092,6 @@ def _parse_w4(account):
     _parse_w4_lab(account)
     _parse_w4_rift(account)
     _parse_w4_breeding(account)
-    _parse_w4_tome(account)
 
 def _parse_w4_cooking(account):
     _parse_w4_cooking_tables(account)
@@ -1108,10 +1120,15 @@ def _parse_w4_cooking_meals(account):
         while len(raw_meals_list[0]) < max_meal_count:
             raw_meals_list[0].append(0)
 
+    # CookMaster[0] in source: meal mastery. Last updated in v2.531.0
+    raw_cook_master = safe_loads(account.raw_data.get('CookMaster', []))
+    raw_mastery_list = safer_index(raw_cook_master, 0, [])
+
     # Count the number of unlocked meals, unlocked meals under 11, and unlocked meals under 30
     for index, details in cooking_meal_dict.items():
         account.meals[details['Name']] = {
             'Level': parse_number(raw_meals_list[0][index], 0),
+            'Mastery': parse_number(safer_index(raw_mastery_list, index, 0), 0),
             'Value': parse_number(raw_meals_list[0][index], 0) * details['BaseValue'],  # Mealmulti applied in calculate section
             'BaseValue': details['BaseValue'],
             'Effect': details['Effect'],
@@ -1141,23 +1158,6 @@ def _parse_w4_cooking_ribbons(account):
             account.meals[meal_name]['RibbonTier'] = 0
             if raw_ribbons:
                 logger.exception(f"Could not retrieve Ribbon for {meal_name}")
-
-def _parse_w4_tome(account):
-    parsed_data = account.raw_data.get('parsedData', {})
-    save_has_score = 'totalTomePoints' in parsed_data
-    manual_score = account.manual_tome_score
-    account.tome = {
-        'Data Present': save_has_score or manual_score is not None,
-        'Total Points': floor(parsed_data['totalTomePoints']) if save_has_score else (manual_score or 0),
-        'Blue Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 196, False), False),
-        'Red Pages Unlocked': safer_convert(safer_get(account.raw_optlacc_dict, 197, False), False),
-        'Bonuses': {
-            'DMG': {},
-            'Skill Efficiency': {},
-            'Drop Rarity': {},
-        },
-        'Tome Percent': 100
-    }
 
 def _parse_w4_lab(account):
     raw_lab = safe_loads(account.raw_data.get("Lab", []))

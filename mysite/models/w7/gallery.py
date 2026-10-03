@@ -1,12 +1,27 @@
+from collections import defaultdict
 from math import ceil, floor
 from dataclasses import dataclass
 
 from consts.consts_general import equipment_by_bonus_dict
 from consts.consts_item_data import ITEM_DATA, ItemBonus
 from consts.idleon.w7.gallery import podium_multi_by_level, nametag_multi_by_level
-from consts.w7.gallery import nametag_max_level, bonus_image
+from consts.idleon.w7.research import minehead_hatrack_bonus_index
+from consts.w7.gallery import (
+    nametag_max_level,
+    bonus_image,
+    prisma_palette_index,
+    prisma_palette_max,
+    exalted_palette_index,
+    exalted_palette_max,
+    killroy_kills_optlacc_index,
+    w6_trophy_codename,
+    gallery_card_codename,
+)
 from models.advice.advice import Advice
+from models.general.companions import Companions
 from models.general.item_definitions import ItemDefinition
+from models.w7.clam_work import ClamWork
+from models.w7.sushi_station import SushiStation
 
 from utils.logging import get_logger
 from utils.number_formatting import parse_number, round_and_trim
@@ -60,6 +75,11 @@ class GalleryTrophy:
         if self.level is None:
             return 1
         return podium_multi_by_level[self.level]
+
+
+def _js_round(value: float) -> int:
+    # JS Math.round, halves up
+    return floor(value + 0.5)
 
 
 def _misc_bonus_stat(item_name: str, slot: int) -> str | None:
@@ -149,6 +169,23 @@ class GalleryMissing:
 class Gallery:
     def __init__(self, raw_data: dict):
         spelunk_info = safe_loads(raw_data.get("Spelunk", []))
+        raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
+        # "KillroyBonuses"(3) in source. Last updated in v2.531.0
+        killroy_kills = parse_number(
+            safer_index(raw_optlacc, killroy_kills_optlacc_index, 0)
+        )
+        self._killroy_bonus = killroy_kills / (200 + killroy_kills) * 10
+        self.gallery_multi = 1.0
+        self._gallery_multi_by_chip = {}
+        self._bonuses_by_chip = {}
+        self._palette_levels = safer_index(spelunk_info, 9, []) or []
+        raw_lore = safer_index(spelunk_info, 0, [])
+        self._has_lore_8 = parse_number(safer_index(raw_lore, 8, 0)) >= 1
+        self.prisma_palette_bonus = 0.0
+        self.exalted_palette_bonus = 0.0
+        self.has_w6_trophy = w6_trophy_codename in safe_loads(
+            raw_data.get("Cards1", [])
+        )
         self._bonuses_total = {
             " Weapon Power": 0,
             " STR": 0,
@@ -170,8 +207,15 @@ class Gallery:
         raw_nametag_level: list[int] = safer_index(spelunk_info, 17, [])
         self.nametag: dict[str, GalleryNametag] = {}
         self._parse_nametag(raw_nametag_level)
+        raw_hatrack: list[str] = safer_index(spelunk_info, 46, [])
+        self.hatrack_count = len(raw_hatrack)
+        self.hatrack: list[ItemDefinition] = [
+            ITEM_DATA[hat] for hat in raw_hatrack if hat in ITEM_DATA
+        ]
+        self.hatrack_multi = 1.0
         # Total bonuses
         self.bonuses = {}
+        self.hatrack_bonuses = {}
 
     def _parse_trophy(self, raw_trophy_index_list: list[int]):
         all_trophy = []
@@ -228,39 +272,195 @@ class Gallery:
             if nametag.level == 0:
                 self.missing.nametag.append(nametag)
 
+    def calculate_palette_bonuses(self, picasso_gaming: float):
+        # Before stamps and prisma, which read these
+        self.prisma_palette_bonus = self.get_palette_decay_bonus(
+            prisma_palette_index, prisma_palette_max, picasso_gaming
+        )
+        self.exalted_palette_bonus = self.get_palette_decay_bonus(
+            exalted_palette_index, exalted_palette_max, picasso_gaming
+        )
+
+    def get_palette_decay_bonus(
+        self, index: int, max_value: float, picasso_gaming: float
+    ) -> float:
+        # "PaletteBonus" in source, decay rows only. Last updated in v2.531.0
+        palette_level = parse_number(safer_index(self._palette_levels, index, 0))
+        return (
+            palette_level / (palette_level + 25) * max_value
+            * (1 + picasso_gaming / 100)
+            * (1 + 0.5 * self._has_lore_8)
+        )
+
     def calculate_bonuses(self, account: "Account"):
-        # TODO other "GalleryBonusMulti" sources in source
-        gallery_multi = 1.0
-        if account.highest_world_reached >= 7 and any(
+        # Section view: any wearer. Drop rate uses each character's chip
+        has_motherboard_chip = account.highest_world_reached >= 7 and any(
             "Silkrode Motherboard" in character.equipped_lab_chips
             for character in account.all_characters
-        ):
-            # As of W7, Silkrode Motherboard no longer doubles the equipped Trophy's own
-            # stat - it instead gives a flat +10% Gallery Bonus Multi (patch notes: "The Lab
-            # Chip that doubled your trophy now gives +10% gallery bonus once you reach W7").
-            gallery_multi += 0.10
-        self._calculate_trophy_bonuses(account, gallery_multi)
-        self._calculate_nametag_bonuses(gallery_multi)
-        for key, value in self._bonuses_total.items():
-            if key == "0":
-                continue
-            self.bonuses[key.split(" ", 1)[1]] = (key, value)
+        )
+        gallery_card_level = next(
+            (
+                card.level for card in account.cards
+                if card.codename == gallery_card_codename
+            ),
+            0,
+        )
+        codfrey_prisma = account.alchemy_bubbles.get_prisma_value("Codfrey Rulz Ok")
+        paragorgia_level = account.coral_reef["Paragorgia Coral"].level
+        deathskull_level = account.sailing["Artifacts"]["Deathskull"]["Level"]
+        showcases_owned = account.gemshop["Purchases"]["Gallery Showcases"]["Owned"]
+        emporium_podium = account.sneaking.emporium["Another Gallery Podium"].value
+        lunarheim_obtained = account.spelunk.caves["Lunarheim"].bonus_obtained
+        superb_gallerium = account.legend_talents["Superb Gallerium"].value
+        event_shop = account.event_points_shop["Bonuses"]
+        plain_showcase = event_shop["Plain Showcase"]["Owned"]
+        worldclass_showcase = event_shop["Worldclass Showcase"]["Owned"]
+        king_of_the_rack = event_shop["King of the Rack"]["Owned"]
+        minehead_hatrack = account.minehead[minehead_hatrack_bonus_index].value
+        clam_work = account.clam_work
+        companions = account.companions
+        sushi_station = account.sushi_station
+        self._gallery_multi_by_chip = {
+            chip: self._calculate_gallery_multi(
+                chip,
+                gallery_card_level,
+                codfrey_prisma,
+                paragorgia_level,
+                clam_work,
+                companions,
+                sushi_station,
+            )
+            for chip in (False, True)
+        }
+        self._set_podium_levels(
+            paragorgia_level,
+            deathskull_level,
+            showcases_owned,
+            emporium_podium,
+            lunarheim_obtained,
+            superb_gallerium,
+            plain_showcase,
+            worldclass_showcase,
+            clam_work,
+            companions,
+        )
+        # Per character chip; section shows the chip once anyone wears it
+        self._bonuses_by_chip = {
+            chip: self._get_bonuses(self._gallery_multi_by_chip[chip])
+            for chip in (False, True)
+        }
+        self.gallery_multi = self._gallery_multi_by_chip[has_motherboard_chip]
+        self.bonuses = self._get_bonuses(self.gallery_multi)
+        self._calculate_hatrack_bonuses(
+            king_of_the_rack, minehead_hatrack, companions, sushi_station
+        )
 
-    def _calculate_trophy_bonuses(self, account: "Account", gallery_multi: float):
+    def _calculate_hatrack_bonuses(
+        self,
+        king_of_the_rack: int,
+        minehead_hatrack: float,
+        companions: "Companions",
+        sushi_station: "SushiStation",
+    ):
+        # "HatrackBonusMulti" in source. Last updated in v2.531.0
+        self.hatrack_multi = 1 + (
+            self.hatrack_count
+            + companions["Wild Boar"].bonus
+            + 10 * king_of_the_rack
+            + minehead_hatrack
+            + sushi_station.get_milestone_bonus_value("Hat Rack Multi")
+        ) / 100
+        # "InitializePremHatBonuses" in source. Last updated in v2.531.0
+        hatrack_total = defaultdict(float)
+        for hat in self.hatrack:
+            _add_item_bonus_to_total(hat.bonus, hatrack_total, self.hatrack_multi)
+        for key, value in hatrack_total.items():
+            if key == "0" or not key.startswith("%"):
+                continue
+            self.hatrack_bonuses[key.split(" ", 1)[1]] = (key, value)
+
+    def get_character_bonus_value(self, name: str, has_motherboard_chip: bool) -> float:
+        # "GalleryBonusMulti" reads the current character's chip
+        bonuses = self._bonuses_by_chip.get(has_motherboard_chip, {})
+        return bonuses.get(name, ("", 0))[1]
+
+    def _get_bonuses(self, gallery_multi: float) -> dict[str, tuple[str, float]]:
+        # Leaves items on this multi for their advice
+        total = dict.fromkeys(self._bonuses_total, 0)
+        for item in [*filter(None, self.podium), *self.inventory]:
+            item.calculate_bonus(gallery_multi)
+            item.add_bonus_to(total)
+        for nametag in self.nametag.values():
+            if nametag.level == 0:
+                continue
+            nametag.calculate_bonus(gallery_multi)
+            nametag.add_bonus_to(total)
+        return {
+            key.split(" ", 1)[1]: (key, value)
+            for key, value in total.items()
+            if key != "0"
+        }
+
+    def _calculate_gallery_multi(
+        self,
+        has_motherboard_chip: bool,
+        gallery_card_level: int,
+        codfrey_prisma: float,
+        paragorgia_level: int,
+        clam_work: "ClamWork",
+        companions: "Companions",
+        sushi_station: "SushiStation",
+    ) -> float:
+        # "GalleryBonusMulti" in source. Last updated in v2.531.0
+        return 1 + (
+            3 * paragorgia_level
+            + 10 * has_motherboard_chip
+            + 3 * clam_work.bonuses[7].obtained
+            + self._killroy_bonus
+            + min(20, codfrey_prisma)
+            + min(10, gallery_card_level)
+            + companions["Bubba the Seal"].bonus
+            + sushi_station.get_milestone_bonus_value("Gallery Bonus Multi")
+        ) / 100
+
+    def _set_podium_levels(
+        self,
+        paragorgia_level: int,
+        deathskull_level: int,
+        showcases_owned: int,
+        emporium_podium: float,
+        lunarheim_obtained: bool,
+        superb_gallerium: float,
+        plain_showcase: int,
+        worldclass_showcase: int,
+        clam_work: "ClamWork",
+        companions: "Companions",
+    ):
         # PodiumsOwned in source. Last update in 2.48 Giftmas Event
         self.podium_count = min(
             19,
             1
-            + ceil(account.coral_reef["Paragorgia Coral"].level / 4)
-            + account.sneaking.emporium["Another Gallery Podium"].value
-            + floor(account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 1)
-            + 2 * int(account.spelunk.caves["Lunarheim"].bonus_obtained)
-            + min(2, account.sailing["Artifacts"]["Deathskull"]["Level"])
-            + account.event_points_shop["Bonuses"]["Plain Showcase"]["Owned"],
+            + ceil(paragorgia_level / 4)
+            + emporium_podium
+            + floor(showcases_owned / 1)
+            + 2 * int(lunarheim_obtained)
+            + min(2, deathskull_level)
+            + plain_showcase,
         )
-        podium_lv4 = self._calculate_podium_lv4(account)
-        podium_lv3 = self._calculate_podium_lv3(account) + podium_lv4
-        podium_lv2 = self._calculate_podium_lv2(account) + podium_lv3
+        podium_lv4 = self._calculate_podium_lv4(
+            companions, worldclass_showcase, deathskull_level
+        )
+        podium_lv3 = (
+            self._calculate_podium_lv3(showcases_owned, deathskull_level)
+            + podium_lv4
+        )
+        podium_lv2 = (
+            self._calculate_podium_lv2(
+                clam_work, companions, showcases_owned,
+                superb_gallerium, deathskull_level,
+            )
+            + podium_lv3
+        )
         for index, podium in enumerate(self.podium):
             if podium is None:
                 continue
@@ -272,47 +472,64 @@ class Gallery:
                 podium.set_level(2)
             else:
                 podium.set_level(1)
-            podium.calculate_bonus(gallery_multi)
-            podium.add_bonus_to(self._bonuses_total)
-        for item in self.inventory:
-            item.calculate_bonus(gallery_multi)
-            item.add_bonus_to(self._bonuses_total)
 
-    def _calculate_podium_lv2(self, account):
-        # PodiumsOwned_Lv2 in source. Last update in 2.48 Giftmas Event
-        deathskull_level = account.sailing["Artifacts"]["Deathskull"]["Level"]
-        return (
-            2 * account.clam_work.bonuses[0].obtained
-            # TODO: + Math.min(2, m._customBlock_RandomEvent("KillroyBonuses", 3, 0))
-            + account.companions["Eamsy Earl"].bonus  # 2, or 3 upgraded
-            + floor(account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 2)
-            + account.legend_talents["Superb Gallerium"].value
+    def _calculate_podium_lv2(
+        self,
+        clam_work: "ClamWork",
+        companions: "Companions",
+        showcases_owned: int,
+        superb_gallerium: float,
+        deathskull_level: int,
+    ) -> int:
+        # "PodiumsOwned_Lv2" in source, Math.round. Last updated in v2.531.0
+        return _js_round(
+            2 * clam_work.bonuses[0].obtained
+            + min(2, self._killroy_bonus)
+            + companions["Eamsy Earl"].bonus  # 2, or 3 upgraded
+            + floor(showcases_owned / 2)
+            + superb_gallerium
             + max(0, min(2, deathskull_level - 2) - min(1, floor(deathskull_level / 5)))
         )
 
-    def _calculate_podium_lv3(self, account):
+    def _calculate_podium_lv3(self, showcases_owned: int, deathskull_level: int) -> int:
         # PodiumsOwned_Lv3 in source. Last update in 2.48 Giftmas Event
-        return floor(
-            account.gemshop["Purchases"]["Gallery Showcases"]["Owned"] / 3
-        ) + min(1, floor(account.sailing["Artifacts"]["Deathskull"]["Level"] / 5))
+        return floor(showcases_owned / 3) + min(1, floor(deathskull_level / 5))
 
-    def _calculate_podium_lv4(self, account):
-        # PodiumsOwned_Lv4 in source. Last update in 2.48 Giftmas Event
-        return (
-            account.companions["RIP Tide"].get_value("Showcase Slot")
-            + account.event_points_shop["Bonuses"]["Worldclass Showcase"]["Owned"]
+    def _calculate_podium_lv4(
+        self,
+        companions: "Companions",
+        worldclass_showcase: int,
+        deathskull_level: int,
+    ) -> int:
+        # "PodiumsOwned_Lv4" in source, Math.round. Last updated in v2.531.0
+        return _js_round(
+            companions["RIP Tide"].get_value("Showcase Slot")
+            + worldclass_showcase
+            + min(1, floor(deathskull_level / 6))
         )
-
-    def _calculate_nametag_bonuses(self, gallery_multi: float):
-        for nametag in self.nametag.values():
-            if nametag.level == 0:
-                continue
-            nametag.calculate_bonus(gallery_multi)
-            nametag.add_bonus_to(self._bonuses_total)
 
     def get_bonus_advice(self, name: str):
         effect, value = self.bonuses[name]
         image = bonus_image.get(name, "placeholder")
         return Advice(label=f"{round_and_trim(value)}{effect}", picture_class=image)
+
+    def get_exalted_palette_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{ Gallery|#gallery }}}} - Honey Yellow Palette: "
+            f"+{round_and_trim(self.exalted_palette_bonus)}%",
+            picture_class="palette-slot",
+        )
+
+    def get_hatrack_bonus_value(self, name: str) -> float:
+        return self.hatrack_bonuses.get(name, ("", 0))[1]
+
+    def get_hatrack_bonus_advice(self, name: str) -> Advice:
+        value = self.get_hatrack_bonus_value(name)
+        return Advice(
+            label=f"Hat Rack - {name}: +{round_and_trim(value)}%"
+            f"<br>{self.hatrack_count} hats, "
+            f"{round_and_trim(self.hatrack_multi)}x multi",
+            picture_class=self.hatrack[-1].name if self.hatrack else "hatrack-stand",
+        )
 
     # TODO Aler if empty podium slot

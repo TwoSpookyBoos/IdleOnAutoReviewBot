@@ -20,7 +20,8 @@ from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-chilled_yarn_multi = [1, 2, 3, 4, 5, 6]
+# "ArtifactBonus" in source, per tier. Last updated in v2.531.0
+chilled_yarn_multi = [1, 2, 3, 4, 5, 6, 7]
 
 def get_max_chilled_yarn_multi():
     return max(chilled_yarn_multi)

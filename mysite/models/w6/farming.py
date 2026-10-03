@@ -1,8 +1,9 @@
 from math import floor, ceil
 from functools import cached_property
 
-from consts.consts_autoreview import ValueToMulti, EmojiType
+from consts.consts_autoreview import MultiToValue, ValueToMulti, EmojiType
 from consts.general.common import percent_break_point
+from consts.general.talents import dank_rank_talent_index
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w6.farming import (
     market_info,
@@ -19,11 +20,14 @@ from consts.w6.farming import (
 )
 
 from models.advice.advice import Advice
+from models.master_classes.grimoire import Grimoire
+from models.w1.upgrade_vault import Vault
 from models.w6.sneaking import Emporium
 
 from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
 from utils.text_formatting import pl
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -462,12 +466,16 @@ class LandRankUpgrade:
             self.max_level = max_land_rank_level
 
     def calculate_bonus(self, multi: float):
+        self.value = self.get_value(multi)
+        self.max_value = (
+            None if self.max_level is None
+            else multi * self._base_value * self.max_level
+        )
+
+    def get_value(self, multi: float) -> float:
         if self.max_level is None:
-            self.value = multi * 1.7 * self._base_value * self.level / (self.level + 80)
-            self.max_value = None
-        else:
-            self.value = multi * self._base_value * self.level
-            self.max_value = multi * self._base_value * self.max_level
+            return multi * 1.7 * self._base_value * self.level / (self.level + 80)
+        return multi * self._base_value * self.level
 
     def get_bonus_advice(
         self, link_to_section: bool = True, level_goal: int = None
@@ -605,13 +613,33 @@ class Farming:
             upgrade = ExoticMarketUpgrade(level, upgrade_info)
             self.exotic_market[upgrade.name] = upgrade
 
+    def get_land_rank_multi(self, dank_rank_level: int) -> float:
+        dank_rank = all_talentsDict[dank_rank_talent_index]
+        dank_rank_multi = lava_func(
+            dank_rank['funcX'], dank_rank_level, dank_rank['x1'], dank_rank['x2']
+        )
+        # "ExoticBonusQTY" 14 in source. Last updated in v2.531.0
+        plump_multi = ValueToMulti(self.exotic_market['PLUMP DATABASE'].value)
+        return max(1, dank_rank_multi) * plump_multi
+
     def calculate_land_rank_bonus(self, multi: float):
         for upgrade in self.land_rank.values():
             upgrade.calculate_bonus(multi)
 
     def calculate_crop_depot_bonus(
-        self, lab_multi: float, grimoire_multi: float, emporium: dict[str, Emporium]
+        self,
+        lab_multi: float,
+        grimoire: Grimoire,
+        vault: Vault,
+        emporium: dict[str, Emporium],
     ):
+        # "CropSCbonMulti" in source: Grimoire 22 + Exotic 40 + Vault 79 share one
+        # multi. Last updated in v2.531.0
+        grimoire_multi = ValueToMulti(
+            MultiToValue(grimoire.upgrades['Superior Crop Research'].total_value)
+            + self.exotic_market['SCIENTERRIFIC'].value
+            + vault.upgrades['Properly Funded Research'].total_value
+        )
         total_multi = lab_multi * grimoire_multi
         self.multi["Depot"] = {
             "Lab": lab_multi,
@@ -690,7 +718,7 @@ class Farming:
             * ValueToMulti(
                 # TODO: Move to alchemy bonus calculate
                 account.alchemy_bubbles["Crop Chapter"].base_value
-                * max(0, floor((account.tome["Total Points"] - 5000) / 2000))
+                * max(0, floor((account.tome.score - 5000) / 2000))
             )
             * ValueToMulti(evo_multi["Vial Value"])
         )

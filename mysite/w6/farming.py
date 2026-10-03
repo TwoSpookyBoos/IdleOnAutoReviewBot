@@ -12,6 +12,7 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_group_tabbed import TabbedAdviceGroup, TabbedAdviceGroupTab
+from models.advice.generators.general import get_upgrade_vault_advice
 from models.w6.farming import Farming
 
 from utils.logging import get_logger
@@ -83,6 +84,8 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
         session_data.account.grimoire.upgrades['Superior Crop Research'].get_advice(
             session_data.account.grimoire.total_upgrades
         ),
+        farming.exotic_market['SCIENTERRIFIC'].get_bonus_advice(),
+        get_upgrade_vault_advice('Properly Funded Research'),
     ]
     cd_tabbed = {
         "Crop Depot Bonuses": (
@@ -345,11 +348,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         f"<br>Total value: {evo_multi['Cropius Final Value']:.3f}%",
         goal=EmojiType.INFINITY.value
     ))
-    crop_chapter_stacks = max(0, (session_data.account.tome['Total Points'] - 5000) // 2000)
+    crop_chapter_stacks = max(0, (session_data.account.tome.score - 5000) // 2000)
     crop_chapter = session_data.account.alchemy_bubbles['Crop Chapter']
     evo_advices[alch].append(crop_chapter.get_advice(
         f": {crop_chapter.base_value:.3}% per 2k Tome Points above 5k"
-        f"<br>{session_data.account.tome['Total Points']:,} Tome Points = {crop_chapter_stacks} stacks"
+        f"<br>{session_data.account.tome.score:,} Tome Points = {crop_chapter_stacks} stacks"
         f"<br>Total: +{round(crop_chapter.base_value * crop_chapter_stacks, 3):g}%",
         goal=EmojiType.INFINITY.value
     ))

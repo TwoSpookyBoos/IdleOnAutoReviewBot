@@ -1,3 +1,4 @@
+from consts.idleon.w7.research import Research
 from utils.safer_data_handling import safer_convert
 from utils.text_formatting import vault_string_cleaner
 
@@ -7,6 +8,14 @@ UpgradeVault = ["Bigger_Damage 8 1.025 0 500 1 0 0 0 +{_Damage._Monsters_hate_th
 vault_dont_scale = [32, 1, 6, 7, 8, 9, 13, 999, 999, 33, 36, 40, 42, 43, 44, 49, 51, 52, 53, 57, 61, 89, 64, 70, 73, 74, 76, 79, 85, 86, 88]
 vault_stack_types = ['Knockout']
 vault_section_indexes = [32, 61, 89]  #Vault Mastery, II, and III's indexes
+
+# "Research"[26]/[29] in source: Glimbo vault slots and scaled flags.
+# Last updated in v2.531.0
+glimbo_vault_indices = [int(value) for value in Research[26]]
+glimbo_scaled_flags = [value == "1" for value in Research[29]]
+# "VaultUpgMaxLV" in source: min(10, 10 * BundlesReceived.bon_u).
+# Last updated in v2.531.0
+bundle_max_level_bonus_cap = 10
 
 
 def _get_vault_section(index: int) -> int:

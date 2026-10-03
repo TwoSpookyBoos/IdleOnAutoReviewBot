@@ -7,14 +7,26 @@ from models.general.character import Character
 
 
 class Card:
-    def __init__(self, codename, name, cardset, count, coefficient, value_per_level, description):
+    def __init__(
+        self,
+        codename,
+        name,
+        cardset,
+        count,
+        coefficient,
+        value_per_level,
+        description,
+        min_level: int = 0
+    ):
         self.codename = codename
         self.count = ceil(float(count))
         self.cardset = cardset
         self.name = name
         self.coefficient = coefficient
-        self.star = self.getStars()
-        self.level = self.star + 1 if self.count > 0 else 0
+        # "CardLv" in source: OptLacc floors apply even unowned.
+        # Last updated in v2.531.0
+        self.star = max(self.getStars(), min_level - 1)
+        self.level = self.star + 1 if self.count > 0 or min_level > 0 else 0
         self.css_class = name + " Card"
         self.diff_to_next = (
             ceil(self.getCardsForStar(self.star + 1)) or sys.maxsize

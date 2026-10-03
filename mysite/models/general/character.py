@@ -1,14 +1,45 @@
+from math import floor
+
+from consts.consts_autoreview import ValueToMulti
 from consts.consts_general import specialized_skills_dict
-from consts.consts_w2 import get_obol_totals, po_box_dict, alchemy_jobs_list
-from consts.consts_w3 import prayers_dict, apoc_names_list
+from consts.consts_w2 import alchemy_jobs_list, get_obol_totals, po_box_dict
+from consts.consts_w3 import apoc_names_list, prayers_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w5 import divinity_divinities_dict
 from consts.idleon.consts_idleon import current_world, expected_talents_dict
 from consts.idleon.lava_func import lava_func
+from consts.general.equipment import (
+    equip_slot_chip_doublers,
+    equip_slot_count,
+    gallery_slot_indexes,
+    gallery_unlock_kills_index,
+    gown_slot_index,
+    hatrack_slot_index,
+    hatrack_unlock_kills_index,
+    tool_slot_count,
+)
+from consts.general.talents import (
+    talent_bonus_banned_above,
+    talent_bonus_banned_indexes,
+    talent_bonus_banned_range,
+)
 from models.general.equipment import Equipment
-from utils.number_formatting import parse_number
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
+from utils.safer_data_handling import safer_index
+
 logger = get_logger(__name__)
+
+
+def talent_bonus_banned(talent_index: int) -> bool:
+    low, high = talent_bonus_banned_range
+    return (
+        low <= talent_index <= high
+        or talent_index in talent_bonus_banned_indexes
+        or talent_index > talent_bonus_banned_above
+    )
+
 
 class Character:
     def __init__(
@@ -41,7 +72,8 @@ class Character:
         equipped_cardset: str,
         equipped_cards: list['Card'] = None,
         equipped_cards_codenames: list[str] = None,
-        equipped_star_signs: list[int] = None
+        equipped_star_signs: list[int] = None,
+        active_talent_preset: int = 0
     ):
 
         self.character_index: int = character_index
@@ -57,10 +89,16 @@ class Character:
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
+        self.arctis_bonus_max = 0
+        self.timmy_talented_bonus = 0
         self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
+        # "PlayerStuff"[1] in source. Last updated in v2.531.0
+        self.active_talent_preset: int = active_talent_preset
+        self.active_super_talents: set[int] = set()
+        self.super_talent_levels: int = 0
         self.current_preset_talent_bar: dict = current_preset_talent_bar
         self.secondary_preset_talent_bar: dict = secondary_preset_talent_bar
         self.fix_talent_bars()
@@ -315,6 +353,70 @@ class Character:
         return 'Arctis' in [
             self.divinity_link, self.current_polytheism_link, self.secondary_polytheism_link
         ]
+
+    # "CardBonusREAL" in source. Last updated in v2.531.0
+    def get_equipped_card_bonus(
+        self, description: str, flopping_multi: float = 1.0
+    ) -> float:
+        return flopping_multi * sum(
+            card.getCurrentValue(optional_character=self)
+            for card in self.equipped_cards
+            if card.description == description
+        )
+
+    def get_bonus_levels(self, talent_index: int, bonus_cap: float = 9999) -> int:
+        if talent_bonus_banned(talent_index):
+            return 0
+        return floor(min(bonus_cap, self.total_bonus_talent_levels))
+
+    # "AllTalentLV" in source. Last updated in v2.531.0
+    def get_talent_level(self, talent_index: int, bonus_cap: float = 9999) -> int:
+        base = self.current_preset_talents.get(str(talent_index), 0)
+        if base <= 0.5 or talent_bonus_banned(talent_index):
+            return base
+        # Super levels skip the cap; active preset only, unlike getbonus2
+        super_levels = self.super_talent_levels * (
+            talent_index in self.active_super_talents
+        )
+        return base + self.get_bonus_levels(talent_index, bonus_cap) + super_levels
+
+    # "GetTalentNumber"(1, t) in source. Last updated in v2.531.0
+    def get_talent_value(self, talent_index: int, bonus_cap: float = 9999) -> float:
+        level = self.get_talent_level(talent_index, bonus_cap)
+        talent = all_talentsDict.get(talent_index)
+        if level <= 0 or talent is None:
+            return 0
+        return lava_func(talent['funcX'], level, talent['x1'], talent['x2'])
+
+    def _kills_left(self, kills_index: int) -> float:
+        return safer_index(self.kill_dict.get(kills_index, [1]), 0, 1)
+
+    @property
+    def gallery_bonus_active(self) -> bool:
+        return self._kills_left(gallery_unlock_kills_index) <= 0
+
+    @property
+    def hatrack_bonus_active(self) -> bool:
+        return self._kills_left(hatrack_unlock_kills_index) <= 0
+
+    # Gear/tool part of "TotalStatsETCmap" in source. Last updated in v2.531.0
+    def get_gear_misc_bonus(self, codename: str, gown_bonus: float) -> float:
+        # Gallery/Hatrack take over their slots once open
+        total = 0
+        for slot in range(equip_slot_count):
+            if self.gallery_bonus_active and slot in gallery_slot_indexes:
+                continue
+            if self.hatrack_bonus_active and slot == hatrack_slot_index:
+                continue
+            value = self.equipment.get_misc_bonus(slot, codename)
+            if equip_slot_chip_doublers.get(slot) in self.equipped_lab_chips:
+                value *= 2
+            if slot == gown_slot_index and gown_bonus >= 1:
+                value *= ValueToMulti(gown_bonus)
+            total += value
+        for slot in range(tool_slot_count):
+            total += self.equipment.get_misc_bonus(slot, codename, tools=True)
+        return total
 
     def __str__(self):
         return self.character_name
