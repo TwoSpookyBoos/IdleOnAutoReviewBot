@@ -608,6 +608,7 @@ breedabilityDaysList = [
     2177232407.5082,
 ]
 breedabilityHearts = [1 + safer_math_pow(x, 1.25) for x in range(0, 11)]
+max_heart_level = len(breedabilityHearts) - 1
 
 
 def getBreedabilityMultiFromDays(days: float) -> float:
@@ -629,4 +630,4 @@ def getBreedabilityHeartFromMulti(multi: float) -> str:
             result += 1
         else:
             break
-    return f"breedability-heart-{result}"
+    return f"breedability-heart-{min(result, max_heart_level)}"

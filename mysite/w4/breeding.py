@@ -16,7 +16,8 @@ from utils.number_formatting import number_to_roman
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType, ValueToMulti
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, breeding_last_arena_bonus_unlock_wave, breeding_total_pets
+from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, \
+    breeding_last_arena_bonus_unlock_wave, breeding_total_pets, max_heart_level
 from consts.consts_w2 import maxable_critter_vials_list
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
 
@@ -147,7 +148,6 @@ def getBreedabilityAdviceGroup():
         key=lambda pet: pet[1]['BreedabilityDays'],
         reverse=True
     )
-    max_heart_level = len(breedabilityHearts) - 1
     total_pet = len(sorted_breedability)
     total_by_heart = {
         f"breedability-heart-{index + 1}": 0 for index in range(0, max_heart_level)
@@ -156,7 +156,8 @@ def getBreedabilityAdviceGroup():
     achievement_7s = 0
     for pet in sorted_breedability:
         achievement_7s += 1 if pet[1]['BreedabilityDays'] >= breedabilityDaysList[-4] and pet[1]['World'] != 4 else 0
-        total_by_heart[pet[1]['BreedabilityHeart']] += 1
+        if pet[1]['BreedabilityHeart'] in total_by_heart:
+            total_by_heart[pet[1]['BreedabilityHeart']] += 1
 
     for heart_index, heart in enumerate(total_by_heart.keys()):
         if total_by_heart[heart] > 0:
