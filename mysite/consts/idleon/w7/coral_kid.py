@@ -19,7 +19,7 @@ coral_kid_upgrades_bonus_base_formulas: list[Callable[[CoralKidUpgradeBonusFormu
     lambda data: 10 * data["level"],
     lambda data: 2 * data["level"],
     lambda data: (data["level"] / (25 + data["level"])) * 20,
-    lambda data: -1,
+    lambda data: data["level"],  # "CoralKidUpgBonus" 3 in source. v2.531.0
     lambda data: 2 * data["level"],
     lambda data: (data["level"] / (40 + data["level"])) * 100
 ]
@@ -28,7 +28,7 @@ coral_kid_upgrades_bonus_final_formulas: list[Callable[[CoralKidUpgradeBonusForm
     coral_kid_upgrades_bonus_base_formulas[0],
     coral_kid_upgrades_bonus_base_formulas[1],
     lambda data: coral_kid_upgrades_bonus_base_formulas[2](data) * data["god_rank"],
-    lambda data: -1,
+    coral_kid_upgrades_bonus_base_formulas[3],
     lambda data: coral_kid_upgrades_bonus_base_formulas[4](data) * data["coral_reef_upgrade_count"],
     coral_kid_upgrades_bonus_base_formulas[5],
 ]

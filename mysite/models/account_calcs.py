@@ -11,7 +11,7 @@ from consts.consts_w1 import get_statue_type_index_from_name, get_seraph_cosmos_
 from consts.consts_w1 import statues_dict
 from consts.consts_w2 import fishing_toolkit_dict, islands_trash_shop_costs, killroy_dict
 from consts.consts_w3 import arbitrary_shrine_goal, arbitrary_shrine_note, buildings_towers, buildings_shrines
-from consts.consts_w4 import tomepct, max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
+from consts.consts_w4 import max_meal_count, max_meal_plate_level, max_nblb_bubbles, max_cooking_ribbon
 from consts.consts_w5 import max_sailing_artifact_level, divinity_offerings_dict, divinity_DivCostAfter3, \
     filter_recipes, filter_never, filter_only_after_gstack
 from models.advice.advice import Advice
@@ -39,7 +39,6 @@ def _calculate_wave_1(account):
     _calculate_w6_emperor(account)
     account.summoning.calculate_winner_bonus_multi(account)
     account.summoning.calculate_bonuses()
-    _calculate_w4_tome(account)
 
 def _calculate_caverns_majiks(account):
     have_doot = account.companions.has("King Doot")
@@ -80,23 +79,26 @@ def _calculate_w2_arcade(account):
     account.arcade.calculate_values(account.companions)
 
 def _calculate_w4_tome(account):
-    raw_tome_pcts = account.raw_data.get('serverVars', {}).get('TomePct')
-    if raw_tome_pcts is not None:
-        raw_tome_pcts = sorted(raw_tome_pcts)
-        parsed_tome_pcts = {}
-        for percent_index, percent in enumerate(tomepct.keys()):
-            try:
-                parsed_tome_pcts[percent] = raw_tome_pcts[percent_index]
-            except:
-                parsed_tome_pcts[percent] = 99999
-        for percent, score in parsed_tome_pcts.items():
-            if account.tome['Total Points'] > score:
-                account.tome['Tome Percent'] = min(account.tome['Tome Percent'], percent)
-    else:
-        for percent, score in tomepct.items():
-            if account.tome['Total Points'] > score:
-                account.tome['Tome Percent'] = min(account.tome['Tome Percent'], percent)
-    # logger.debug(f"{account.tome['Total Points']} tome points = Top {account.tome['Tome Percent']}%")
+    # Dependency: _calculate_w4_meal_multi, bonus talent levels, meritocracy
+    account.tome.calculate_live_talent_max(account.meals['Buncha Banana']['Value'])
+    two_starz = account.alchemy_p2w.sigils['Two Starz']
+    star_scraper = account.bribes['Star Scraper']
+    account.tome.calculate_star_talents(
+        {
+            char.character_index: char.total_bonus_talent_levels
+            for char in account.safe_characters
+        },
+        account.family_bonuses['Wizard'].value
+        + account.stamps['Talent S Stamp'].total_value
+        + floor(account.guild_bonuses['Star Dazzle'].value)
+        # "SigilBonus" in source, v2.531.0: Chilled Yarn's bonus is its tier
+        + two_starz.values[two_starz.level]
+        * (1 + account.sailing['Artifacts']['Chilled Yarn']['Level'])
+        * ValueToMulti(account.meritocracy[21].value)
+        + star_scraper.value * star_scraper.purchased
+        + account.companions['Flying Worm'].bonus
+    )
+    account.tome.calculate_score(account.manual_tome_score)
 
 
 def _calculate_wave_2(account):
@@ -599,7 +601,6 @@ def _calculate_w4(account):
     _calculate_w4_jewel_multi(account)
     _calculate_w4_meal_multi(account)
     _calculate_w4_lab_bonuses(account)
-    _calculate_w4_tome_bonuses(account)
 
 def _calculate_w4_cooking_max_plate_levels(account):
     # Sailing Artifact Increases
@@ -714,6 +715,7 @@ def _calculate_w4_meal_multi(account):
             + account.breeding['Total Shiny Levels']['Bonuses from All Meals']
         )
         * account.summoning.bonuses["Meal Bonuses"].as_multi
+        * account.companions.get_multi('Wickerlight Spirit', 'Meal Bonus')
     )
 
     ribbon_multi_table = []
@@ -755,32 +757,10 @@ def _calculate_w4_lab_bonuses(account):
     account.labBonuses['No Bubble Left Behind']['Value'] = min(max_nblb_bubbles, account.labBonuses['No Bubble Left Behind']['Value'])
 
 def _calculate_w4_tome_bonuses(account):
-    tome_bonus_multi = ValueToMulti(
+    account.tome.calculate_bonuses(ValueToMulti(
         account.grimoire.upgrades['Grey Tome Book'].level
         + MultiToValue(account.armor_sets['Sets']['TROLL SET']['Total Value'])
-    )
-    # DMG
-
-    # Skill Efficiency
-
-    # Drop Rarity
-    account.tome['Bonuses']['Drop Rarity']['Value'] = (
-        account.tome['Red Pages Unlocked']  #Sets the whole value to 0 if player hasn't turned in Red Pages yet
-        * 2
-        * safer_math_pow(
-            floor(
-                max(0, account.tome['Total Points'] - 8000)
-                / 100
-            ),
-            0.7
-        )
-    )
-    for bonus_name, bonus_details in account.tome['Bonuses'].items():
-        account.tome['Bonuses'][bonus_name]['Total Value'] = (
-            bonus_details.get('Value', 0)
-            * tome_bonus_multi
-        )
-    # logger.debug(f"{account.tome['Total Points']} Tome points = +{account.tome['Bonuses']['Drop Rarity']['Value']}% Drop Rate")
+    ))
 
 
 def _calculate_w5(account):
@@ -904,6 +884,8 @@ def _calculate_wave_3(account):
     _calculate_w3_library_max_book_levels(account)
     _calculate_w3_equinox_max_levels(account)
     _calculate_general_character_bonus_talent_levels(account)
+    _calculate_w4_tome(account)
+    _calculate_w4_tome_bonuses(account)
     _calculate_general_crystal_spawn_chance(account)
     _calculate_w6_sneaking_gemstones(account)
     _calculate_w6_sneaking_pristine_chance(account)
@@ -933,6 +915,7 @@ def _calculate_w3_equinox_max_levels(account):
     )
 
 def _calculate_general_character_bonus_talent_levels(account):
+    universe_talent = account.tesseract.upgrades['Universe Talent']
     account.bonus_talents = {
         'Kattelkruk Set': {
             'Value': account.armor_sets['Sets']['KATTLEKRUK SET']['Total Value'],
@@ -993,7 +976,16 @@ def _calculate_general_character_bonus_talent_levels(account):
                      f"/{account.grimoire.upgrades['Skull of Major Talent'].max_level}",
             'Progression': account.grimoire.upgrades['Skull of Major Talent'].level,
             'Goal': account.grimoire.upgrades['Skull of Major Talent'].max_level
-        }
+        },
+        'Universe Talent': {
+            'Value': min(5, universe_talent.total_value),
+            'Image': universe_talent.image,
+            'Label': f"{{{{Tesseract|#the-tesseract}}}}: Universe Talent: "
+                     f"+{min(5, universe_talent.total_value):g}"
+                     f"/{universe_talent.max_level}",
+            'Progression': universe_talent.level,
+            'Goal': universe_talent.max_level
+        },
     }
     account.sum_account_wide_bonus_talents = 0
     for bonusName, bonusValuesDict in account.bonus_talents.items():
@@ -1005,13 +997,21 @@ def _calculate_general_character_bonus_talent_levels(account):
     for char in account.safe_characters:
         character_specific_bonuses = 0
 
-        # Arctis minor link
+        # "DivMinorBonus" in source. Last updated in v2.531.0
+        arctis_base = 15
+        bigp_value = account.alchemy_bubbles['Big P'].base_value
+        coral_kid_multi = ValueToMulti(account.coral_kid[3].level)
+        div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
+        char.arctis_bonus_max = ceil(
+            arctis_base * bigp_value * coral_kid_multi * div_minorlink_value
+        )
         if account.divinity['AccountWideArctis'] or char.isArctisLinked():
-            arctis_base = 15
-            bigp_value = account.alchemy_bubbles['Big P'].base_value
-            div_minorlink_value = char.divinity_level / (char.divinity_level + 60)
-            final_arctis_result = ceil(arctis_base * bigp_value * div_minorlink_value)
-            character_specific_bonuses += final_arctis_result
+            character_specific_bonuses += char.arctis_bonus_max
+
+        # "AllTalentLV" in source. Last updated in v2.531.0
+        if account.gaming['SuperBits']['Timmy Talented']['Unlocked']:
+            char.timmy_talented_bonus = max(0, floor((char.combat_level - 500) / 100))
+        character_specific_bonuses += char.timmy_talented_bonus
 
         # Symbols of Beyond = 1 + 1 per 20 levels
         if any([elite in char.all_classes for elite in ["Blood Berserker", "Divine Knight"]]):

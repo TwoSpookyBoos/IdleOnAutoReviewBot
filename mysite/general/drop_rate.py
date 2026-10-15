@@ -369,18 +369,8 @@ def get_drop_rate_account_advice_group() -> tuple[AdviceGroup, dict]:
             progression=int(troll_set['Owned']),
             goal=1
         ))
-    tome_drop_rate_value = session_data.account.tome['Bonuses']['Drop Rarity']['Total Value']
-    drop_rate_aw_advice[w4].append(Advice(
-        label=f"""Tome- Red Pages:"""
-              f"""<br>+{round(tome_drop_rate_value, 1):g}% Drop Rate"""
-              f"""<br>{f'Unknown, sorry {EmojiType.FROWN.value}' if not session_data.account.tome['Data Present'] else ''}"""
-              f"""{f"{session_data.account.tome['Total Points']:,}" if session_data.account.tome['Data Present'] else ''} Total Tome Points"""
-              f"""<br>Increases every 100 points over 8000""",
-        picture_class='red-tome-pages',
-        progression=session_data.account.tome['Red Pages Unlocked'],
-        goal=1
-    ))
-    world_4_bonus += tome_drop_rate_value
+    drop_rate_aw_advice[w4].append(session_data.account.tome.get_bonus_advice())
+    world_4_bonus += session_data.account.tome.drop_rate_bonus
 
     drop_rate_aw_advice[f"{w4} - +{round(world_4_bonus, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w4)
 

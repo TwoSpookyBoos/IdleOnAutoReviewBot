@@ -54,14 +54,14 @@ def finalize_general_cards():
 
 def finalize_general_combat_levels():
     try:
-        assert get_final_combat_level_required_for_tome() == combatLevels_progressionTiers[-2][1]
+        assert get_final_combat_level_required_for_tome() == combatLevels_progressionTiers[-1][1]
     except AssertionError:
         logger.error(
             f"Total Account Level for Tome out of sync between "
             f"variable {get_final_combat_level_required_for_tome()} and "
-            f"tier {combatLevels_progressionTiers[-2][1]}"
+            f"tier {combatLevels_progressionTiers[-1][1]}"
         )
-        progression_tiers.combatLevels_progressionTiers[-2][1] = get_final_combat_level_required_for_tome()
+        progression_tiers.combatLevels_progressionTiers[-1][1] = get_final_combat_level_required_for_tome()
 
 
 def finalize_w1_stamps():

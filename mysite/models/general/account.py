@@ -32,6 +32,7 @@ from models.w3.salt_lick import SaltLick
 from models.w3.worship import Worship
 from models.w4.lab_chips import LabChips
 from models.w4.rift import Rift
+from models.w4.tome import Tome
 from models.w6.summoning import Summoning
 from models.w6.farming import Farming
 from models.w6.emperor import Emperor
@@ -174,6 +175,7 @@ class Account:
         # W4
         self.lab_chips: LabChips = LabChips(self.raw_data)
         self.rift: Rift = Rift(self.raw_data)
+        self.tome: Tome = Tome(self.raw_data)
         self.cooking = {
             'MealsUnlocked': 0,
             'MealsUnlockedByWorld': {i:0 for i in range(0,9)},

@@ -690,7 +690,7 @@ class Farming:
             * ValueToMulti(
                 # TODO: Move to alchemy bonus calculate
                 account.alchemy_bubbles["Crop Chapter"].base_value
-                * max(0, floor((account.tome["Total Points"] - 5000) / 2000))
+                * max(0, floor((account.tome.score - 5000) / 2000))
             )
             * ValueToMulti(evo_multi["Vial Value"])
         )

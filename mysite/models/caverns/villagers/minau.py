@@ -204,7 +204,7 @@ class Minau(Villager):
             # Account Lv
             sum(account.all_skills["Combat"]) or 0,
             # Tome Score
-            account.tome["Total Points"],
+            account.tome.score,
             # All Skill Lv
             sum(
                 [

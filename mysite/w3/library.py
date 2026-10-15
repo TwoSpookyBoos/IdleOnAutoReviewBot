@@ -1,5 +1,3 @@
-from math import ceil
-
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import arbitrary_es_family_goal
 from consts.idleon.consts_idleon import expected_talents_dict, current_world
@@ -145,7 +143,7 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
 
     #Character Specific
     for char in session_data.account.safe_characters:
-        arctis_max = ceil(15 * session_data.account.alchemy_bubbles['Big P'].base_value * (char.divinity_level / (char.divinity_level + 60)))
+        arctis_max = char.arctis_bonus_max
         arctis_current = arctis_max if session_data.account.divinity['AccountWideArctis'] or char.isArctisLinked() else 0
 
         char_bonus_levels = int(char.max_talents_over_books - session_data.account.sum_account_wide_bonus_talents - session_data.account.library.max_book_level)
@@ -171,6 +169,12 @@ def getBonusLevelAdviceGroup() -> AdviceGroup:
             bonusLevelAdvices[subgroupName].append(Advice(
                 label=f"Symbols of Beyond: +{char.symbols_of_beyond}/{1 + session_data.account.library.max_book_level//20}",
                 picture_class=symbols_image_name
+            ))
+
+        if session_data.account.gaming['SuperBits']['Timmy Talented']['Unlocked']:
+            bonusLevelAdvices[subgroupName].append(Advice(
+                label=f"Superbit: Timmy Talented: +{char.timmy_talented_bonus}",
+                picture_class='red-bits',
             ))
 
         #Character Specific 3 - ES Family Guy
