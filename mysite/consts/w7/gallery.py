@@ -1,5 +1,19 @@
 nametag_max_level = 5
 
+# "OptLacc"[467] in source: Killroy kills. Last updated in v2.531.0
+killroy_kills_optlacc_index = 467
+# "Trophy23" in source: W6 trophy. Last updated in v2.531.0
+w6_trophy_codename = "Trophy23"
+# "w7a11" in source: Gallery Bonus card. Last updated in v2.531.0
+gallery_card_codename = "w7a11"
+
+# "GamingPalette"[28] in source: Violet. Last updated in v2.531.0
+prisma_palette_index = 28
+prisma_palette_max = 6
+# "GamingPalette"[23] in source: Honey Yellow. Last updated in v2.531.0
+exalted_palette_index = 23
+exalted_palette_max = 8
+
 bonus_image = {
     "Weapon Power": "vault-upgrade-10",
     "STR": "str",

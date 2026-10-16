@@ -43,6 +43,28 @@ class FamilyBonuses(dict[str, FamilyBonus]):
         for class_name, info in family_bonuses_dict.items():
             self[class_name] = FamilyBonus(class_name, info)
 
+    # "FamBonusQTYs" in source. Last updated in v2.531.0
+    def get_character_value(
+        self,
+        class_name: str,
+        characters: list[Character],
+        character: Character,
+        family_guy_value: float,
+    ) -> float:
+        # Family Guy only scales it when this character sets the best
+        bonus = self[class_name]
+        best = 0
+        for char in characters:
+            if class_name not in char.all_classes:
+                continue
+            char_value = bonus.value_at_level(char.combat_level)
+            if char_value <= best:
+                continue
+            best = char_value
+            if char is character and family_guy_value > 0:
+                best = char_value * (1 + family_guy_value / 100)
+        return best
+
     def calculate_levels(self, characters: list[Character]):
         for character in characters:
             for class_name in character.all_classes:

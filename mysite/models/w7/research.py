@@ -39,7 +39,7 @@ class ResearchGridUpgrade:
         multi = self.shape_multi * max(1.0, all_multi)
         self.value = self.level * self.base_value_per_level * multi
         self.max_value = self.base_value_per_level * self.max_level * multi
-        self.total_value = round_and_trim(self._calculate_total_value())
+        self.total_value = self._calculate_total_value()
 
     def _calculate_total_value(self) -> float:
         # "Grid_Bonus" variant 2 in source
@@ -95,12 +95,16 @@ class ResearchGridUpgrade:
 
 class GridTotals:
     """Account-wide counts the grid's "Total Bonus" values scale off."""
-    def __init__(self, raw_research_info: list, raw_optlacc: list, has_doot: bool):
+    def __init__(
+        self,
+        raw_research_info: list,
+        raw_optlacc: list,
+        has_doot: bool,
+        glimbo_trades: int,
+    ):
         self.has_doot = has_doot
         self.crowns_reclaimed = len(safer_index(raw_research_info, 11, []))
-        self.glimbo_trades = round(sum(
-            safer_convert(trades, 0.0) for trades in safer_index(raw_research_info, 12, [])
-        ))
+        self.glimbo_trades = glimbo_trades
         observations_unlocked = safer_index(raw_research_info, 2, [])
         observation_levels = safer_index(raw_research_info, 4, [])
         self.observations_found = sum(
@@ -121,8 +125,16 @@ class GridTotals:
 
 
 class ResearchGrid(dict[str, ResearchGridUpgrade]):
-    def __init__(self, raw_research_info: list, raw_optlacc: list, has_doot: bool):
-        self.totals = GridTotals(raw_research_info, raw_optlacc, has_doot)
+    def __init__(
+        self,
+        raw_research_info: list,
+        raw_optlacc: list,
+        has_doot: bool,
+        glimbo_trades: int,
+    ):
+        self.totals = GridTotals(
+            raw_research_info, raw_optlacc, has_doot, glimbo_trades
+        )
         self.all_multi = 1.0
         shape_indexes = safer_index(raw_research_info, 1, [])
         # "Research"[0][173] in source: Divine Design, only pays out alongside King Doot
@@ -226,13 +238,15 @@ class Research:
     # Equinox keys dreams one above the raw "d_<n>" index.
     all_multi_cloud_indexes = (71, 72, 76)
 
-    def __init__(self, raw_data: dict, has_doot: bool):
+    def __init__(self, raw_data: dict, has_doot: bool, glimbo_trades: int):
         research_level = safer_index(safer_get(raw_data, "Lv0_0", []), 20, 0)
         raw_research_info = safe_loads(raw_data.get("Research", []))
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
         if not raw_research_info:
             logger.warning("Research data not present.")
-        self.grid = ResearchGrid(raw_research_info, raw_optlacc, has_doot)
+        self.grid = ResearchGrid(
+            raw_research_info, raw_optlacc, has_doot, glimbo_trades
+        )
         self.observations = Observations(raw_research_info)
         self.posty_notes = PostyNotes(research_level)
 

@@ -1,3 +1,4 @@
+from consts.consts_item_data import raw_item_data
 from consts.general.golden_food import golden_food_data
 from consts.w6.beanstalk import (
     golden_food_max_tier,
@@ -6,11 +7,16 @@ from consts.w6.beanstalk import (
 )
 
 from models.advice.advice import Advice
-from models.general.golden_food import GoldenFood
+from models.general.golden_food import (
+    GoldenFood,
+    GoldenFoodMulti,
+    calculate_golden_food_multis,
+    get_worn_golden_food,
+)
 
-from utils.number_formatting import parse_number
+from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index
-from utils.text_formatting import notateNumber
+from utils.text_formatting import getItemCodeName, notateNumber
 
 from utils.logging import get_logger
 
@@ -91,17 +97,74 @@ class Beanstalk(dict[str, BeanstalkDeposit]):
         raw_optlacc = raw_data.get("OptLacc", [])
         self.unlocked_tier = int(parse_number(safer_index(raw_optlacc, 475, 0), 0) >= 1)
         self.golden_food_multi = 1
+        self.character_multis: dict[int, GoldenFoodMulti] = {}
+        self._character_foods: dict[
+            tuple[int, str], tuple[GoldenFood | None, BeanstalkDeposit | None]
+        ] = {}
+        self.emporium_unlocked = False
 
     def calculate_unlocked_tier(self, emporium):
         tier_1 = emporium["Gold Food Beanstalk"].obtained
         tier_2 = emporium["Supersized Gold Beanstacking"].obtained
+        self.emporium_unlocked = bool(tier_1)
         self.unlocked_tier += int(tier_1) + int(tier_2)
 
-    def calculate_golden_food_multi(self):
-        # TODO: add calculate Golden Food Bonus Multi
-        self.golden_food_multi = 1
+    def calculate_golden_food_multi(self, account):
+        # Per character, section shows the best
+        self._character_foods = {}
+        self.character_multis = calculate_golden_food_multis(account)
+        self.golden_food_multi = max(
+            (multi.total for multi in self.character_multis.values()), default=1
+        )
         return self.golden_food_multi
 
     def calculate_bonuses(self):
         for deposit in self.values():
             deposit.calculate_bonus(self.golden_food_multi)
+
+    def get_deposit_for_effect(self, effect: str) -> BeanstalkDeposit | None:
+        # Only the first deposit counts
+        if not self.emporium_unlocked:
+            return None
+        for deposit in self.values():
+            item = raw_item_data.get(getItemCodeName(deposit.name), {})
+            if item.get("Effect") == effect:
+                return deposit if deposit.tier > 0 else None
+        return None
+
+    def _get_character_foods(
+        self, character, effect: str
+    ) -> tuple[GoldenFood | None, BeanstalkDeposit | None]:
+        key = (character.character_index, effect)
+        if key not in self._character_foods:
+            multi = self.character_multis[character.character_index].total
+            worn = get_worn_golden_food(character, effect)
+            if worn:
+                worn.calculate_bonus(multi)
+            deposit = self.get_deposit_for_effect(effect)
+            if deposit:
+                deposit = BeanstalkDeposit(deposit.name, deposit.tier)
+                deposit.calculate_bonus(multi)
+            self._character_foods[key] = (worn, deposit)
+        return self._character_foods[key]
+
+    def get_golden_food_bonus(self, character, effect: str) -> float:
+        # "GoldFoodBonuses" in source: worn plus Beanstalk. Last updated in v2.531.0
+        worn, deposit = self._get_character_foods(character, effect)
+        worn_value = worn.bonus_value if worn else 0
+        return worn_value + (deposit.bonus_value if deposit else 0)
+
+    def get_golden_food_bonus_advice(self, character, effect: str) -> list[Advice]:
+        multi = self.character_multis[character.character_index].total
+        worn, deposit = self._get_character_foods(character, effect)
+        advices = []
+        if worn:
+            advices.append(worn.get_bonus_advice(worn=True))
+        if deposit:
+            advices.append(deposit.get_bonus_advice())
+        advices.append(Advice(
+            label=f"{{{{Beanstalk|#beanstalk}}}} - Golden Food Multi: "
+            f"{round_and_trim(multi)}x",
+            picture_class="beanstalk",
+        ))
+        return advices

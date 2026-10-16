@@ -49,3 +49,18 @@ for observation in Occurences:
     })
 
 posty_notes_descriptions = [raw.replace("_", " ") for raw in Research[6]]
+
+# "Research"[19]/[20] in source: Minehead opponent bonuses, "BonusQTY".
+# Last updated in v2.531.0
+minehead_bonus_data = [
+    {
+        "Description": description.split("_@_")[0].replace("_", " "),
+        "Value": parse_number(value),
+    }
+    for description, value in zip(Research[19], Research[20])
+]
+# "Research"[7][4] in source. Last updated in v2.531.0
+minehead_opponents_defeated_index = 4
+# "BonusQTY" rows read outside Minehead. Last updated in v2.531.0
+minehead_drop_rate_bonus_index = 0
+minehead_hatrack_bonus_index = 21

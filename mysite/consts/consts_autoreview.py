@@ -40,6 +40,13 @@ switches = [
         "static": "true",
     },
     {
+        "label": "Potluck Pack owned",
+        "name": "potluck_pack",
+        "true": "",
+        "false": "",
+        "static": "true",
+    },
+    {
         "label": "Order groups by tier",
         "name": "order_tiers",
         "true": "",

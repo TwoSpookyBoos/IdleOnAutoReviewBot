@@ -214,7 +214,7 @@ for item_code, item in raw_item_data.items():
     amount = item.get('Amount', None)
     bonus = None
     match _type:
-        case "TROPHY" | "NAMETAG":
+        case "TROPHY" | "NAMETAG" | "PREMIUM_HELMET":
             misc1 = ItemMiscBonus(item["Misc 1 (Text)"], item["Misc 1 (Value)"])
             misc2 = ItemMiscBonus(item["Misc 2 (Text)"], item["Misc 2 (Value)"])
             bonus = ItemBonus(

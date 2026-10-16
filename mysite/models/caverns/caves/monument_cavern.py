@@ -41,9 +41,14 @@ class MonumentBonus:
             )
             monument_bonus_multi = self.cavern._bonus_at(9).value
 
+        multi = max(
+            1,
+            ValueToMulti(cosmos_value + monument_bonus_multi)
+            * ValueToMulti(self.cavern.fountain_boost),
+        )
         if self.scaling_value < 30:
             base_value = self.level * self.scaling_value
-            value = base_value * ValueToMulti(cosmos_value + monument_bonus_multi)
+            value = base_value * multi
         else:
             base_value = 0.1 * ceil(
                 (self.level / (250 + self.level)) * 10 * self.scaling_value
@@ -52,7 +57,7 @@ class MonumentBonus:
                 (self.level / (250 + self.level))
                 * 10
                 * self.scaling_value
-                * ValueToMulti(cosmos_value + monument_bonus_multi)
+                * multi
             )
         return value, base_value
 
@@ -136,6 +141,18 @@ class MonumentCavern(Cavern):
             self.layers_cleared = int(raw_caverns_list[14][1 + 2 * self.monument_index])
         except Exception:
             self.layers_cleared = 0
+
+        # "Fountain_BonTOT" row 13 in source, first 3 monuments only.
+        # Last updated in v2.531.0
+        self.fountain_boost = 0
+        if self.monument_index < 3:
+            try:
+                fountain_level = raw_caverns_list[31][self.monument_index][13]
+                marble = raw_caverns_list[32][self.monument_index][13]
+                marble_multi = 1 if marble == 0 else 1.5 + 0.5 * marble
+                self.fountain_boost = round(marble_multi * fountain_level)
+            except (IndexError, TypeError):
+                self.fountain_boost = 0
 
         self.bonuses: dict[str, MonumentBonus] = {}
         for global_index, bonus_details in monument_bonuses[self.name].items():
