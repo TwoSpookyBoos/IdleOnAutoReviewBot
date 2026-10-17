@@ -111,14 +111,18 @@ class Companions(dict[str, Companion]):
                 level = safer_convert(safer_index(fields, 4, 0), 0)
                 levels[companion_id] = max(levels.get(companion_id, 0), level)
         elif raw_companions is not None:
-            # id-only, no Pet Mart+ level
-            for companion_id in raw_companions:
+            # bare ids, or {'id', 'level'} where level 2 = Pet Mart+
+            for entry in raw_companions:
+                companion_id = entry.get('id') if isinstance(entry, dict) else entry
                 try:
                     companion_id = int(companion_id)
                 except:
-                    logger.warning(f"Unparseable companion Id: {companion_id}. Skipping")
+                    logger.warning(f"Unparseable companion Id: {entry}. Skipping")
                     continue
                 copies[companion_id] = copies.get(companion_id, 0) + 1
+                if isinstance(entry, dict):
+                    level = max(0, safer_convert(entry.get('level', 1), 1) - 1)
+                    levels[companion_id] = max(levels.get(companion_id, 0), level)
         else:
             logger.warning("Companion data not present. Relying only on Switches")
 
