@@ -41,7 +41,7 @@ def getRiftProgressionTiersAdviceGroup():
     meowTheRiftAdvice = ''
     if session_data.account.death_note.rift_meowed == False and session_data.account.death_note.apocalypse_character_index is not None:
         meowTheRiftAdvice = (
-            f"{session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}"
+            f"{session_data.account.characters[session_data.account.death_note.apocalypse_character_index].character_name}"
             f" has not completed a Super CHOW on the Rift yet!"
         )
         rift_Advices["UnlockRewards"].append(Advice(

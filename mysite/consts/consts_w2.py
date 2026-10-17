@@ -424,14 +424,14 @@ islands_dict = {
     'Shimmer Island':   {'Code': 'd', 'Description': 'Do Weekly Challenges for Shimmer Upgrades',},
     'Fractal Island':   {'Code': 'e', 'Description': 'Dump your time candy here for... nothing...?',},
 }
-islands_trash_shop_costs = {
-    'Skelefish Stamp': 20,
-    'Amplestample Stamp': 40,
-    'Golden Sixes Stamp': 80,
-    'Stat Wallstreet Stamp': 300,
-    'Unlock New Bribe Set': 135,
-    'Filthy Damage Special Talent Book': 450,
-    'Trash Tuna Nametag': 1500
+islands_trash_shop = {
+    'Skelefish Stamp': {'Cost': 20, 'Stamp Code': 'StampB47', 'Label': 'Purchase the Skelefish {{ Stamp|#stamps }}'},
+    'Amplestample Stamp': {'Cost': 40, 'Stamp Code': 'StampB32', 'Label': 'Purchase the Amplestample {{ Stamp|#stamps }}'},
+    'Golden Sixes Stamp': {'Cost': 80, 'Stamp Code': 'StampA38', 'Label': 'Purchase the Golden Sixes {{ Stamp|#stamps }}'},
+    'Stat Wallstreet Stamp': {'Cost': 300, 'Stamp Code': 'StampA39', 'Label': 'Purchase the Stat Wallstreet {{ Stamp|#stamps }}'},
+    'Unlock New Bribe Set': {'Cost': 135, 'Label': 'Unlock and Purchase the new {{ Bribes|#bribes}}', 'Image': 'bribes'},
+    'Filthy Damage Special Talent Book': {'Cost': 450},
+    'Trash Tuna Nametag': {'Cost': 1500},
 }
 islands_fractal_rewards_dict = {
     24: {'Reward': '1 in 100000 chance for Master of Nothing Trophy per hour of Nothing AFK', 'Image': 'master-of-nothing'},

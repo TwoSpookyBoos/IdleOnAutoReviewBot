@@ -11,6 +11,7 @@ from consts.consts_w3 import (
     getSkullNames,
 )
 from models.general.enemies import EnemyMap, EnemyWorld, buildMaps
+from models.w3.apocalypse import UnmetApocMap
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -116,44 +117,43 @@ class DeathNote:
                                 kill_count < apoc_amount  #normal trigger for not meeting the apocalypse amount
                                 or apoc_index+1 == len(apoc_amounts_list)  #secondary trigger to make sure every map shows up in Unfiltered
                             ):
-                                all_characters[barbCharacterIndex].addUnmetApoc(
-                                    apoc_names_list[apoc_index],
-                                    self.maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
-                                    [
-                                        self.maps[worldIndex][enemy_map].map_name,  # map name
-                                        apoc_amount - kill_count if apoc_index < len(apoc_amounts_list) - 1 else kill_count,  # kills short of Apoc stack
-                                        # Note: The final entry in apoc_amounts_list is a placeholder used for the unfiltered display with no goal
-                                        min(99, floor(round((kill_count / apoc_amount) * 100))),  # percent toward Apoc stack
-                                        self.maps[worldIndex][enemy_map].monster_image,  # monster image
+                                apoc = all_characters[barbCharacterIndex].apocalypses[apoc_names_list[apoc_index]]
+                                apoc.unmet[self.maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index])].append(
+                                    UnmetApocMap(
+                                        self.maps[worldIndex][enemy_map].map_name,
+                                        # The final apoc amount is a placeholder for the unfiltered display, with no goal
+                                        apoc_amount - kill_count if apoc_index < len(apoc_amounts_list) - 1 else kill_count,
+                                        min(99, floor(round((kill_count / apoc_amount) * 100))),
+                                        self.maps[worldIndex][enemy_map].monster_image,
                                         worldIndex,
-                                        self.maps[worldIndex][enemy_map].monster_name
-                                    ]
+                                        self.maps[worldIndex][enemy_map].monster_name,
+                                    )
                                 )
                             else:
-                                all_characters[barbCharacterIndex].increaseApocTotal(apoc_names_list[apoc_index])
+                                all_characters[barbCharacterIndex].apocalypses[apoc_names_list[apoc_index]].total += 1
                     else:
                         # This condition can be hit when reviewing data from before a World release
                         # For example, JSON data from w5 before w6 is released hits this to populate 0% toward W6 kills
                         # If you get this right after a new world, check that the new world and map indexes are added in consts_w3.apocable_map_index_dict
                         logger.debug(f"barbCharacterIndex {barbCharacterIndex} not in DeathNote.maps[{worldIndex}][{enemy_map}].zow_dict")
                         for apoc_index, apoc_amount in enumerate(apoc_amounts_list):
-                            all_characters[barbCharacterIndex].addUnmetApoc(
-                                apoc_names_list[apoc_index],
-                                self.maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index]),
-                                [
-                                    self.maps[worldIndex][enemy_map].map_name,  # map name
-                                    apoc_amounts_list[apoc_index],  # kills short of zow/chow/meow
-                                    0,  # percent toward zow/chow/meow
-                                    self.maps[worldIndex][enemy_map].monster_image,  # monster image
+                            apoc = all_characters[barbCharacterIndex].apocalypses[apoc_names_list[apoc_index]]
+                            apoc.unmet[self.maps[worldIndex][enemy_map].getRating(apoc_names_list[apoc_index])].append(
+                                UnmetApocMap(
+                                    self.maps[worldIndex][enemy_map].map_name,
+                                    apoc_amounts_list[apoc_index],
+                                    0,
+                                    self.maps[worldIndex][enemy_map].monster_image,
                                     worldIndex,
-                                    self.maps[worldIndex][enemy_map].monster_name
-                                ]
+                                    self.maps[worldIndex][enemy_map].monster_name,
+                                )
                             )
             # Sort them
-            all_characters[barbCharacterIndex].sortApocByProgression()
+            for apoc in all_characters[barbCharacterIndex].apocalypses.values():
+                apoc.sort_by_progression()
 
     def calculate_rift_meowed(self, all_characters: list):
         if self.apocalypse_character_index is None:
             return
-        remaining_maps = all_characters[self.apocalypse_character_index].apoc_dict['MEOW']['Medium Extras']
-        self.rift_meowed = not any(remaining_map[0] == 'The Rift' for remaining_map in remaining_maps)
+        remaining_maps = all_characters[self.apocalypse_character_index].apocalypses['MEOW'].unmet['Medium Extras']
+        self.rift_meowed = not any(remaining_map.map_name == 'The Rift' for remaining_map in remaining_maps)

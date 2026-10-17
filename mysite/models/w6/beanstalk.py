@@ -10,7 +10,6 @@ from models.advice.advice import Advice
 from models.general.golden_food import (
     GoldenFood,
     GoldenFoodMulti,
-    calculate_golden_food_multis,
     get_worn_golden_food,
 )
 
@@ -109,10 +108,10 @@ class Beanstalk(dict[str, BeanstalkDeposit]):
         self.emporium_unlocked = bool(tier_1)
         self.unlocked_tier += int(tier_1) + int(tier_2)
 
-    def calculate_golden_food_multi(self, account):
+    def calculate_golden_food_multi(self, character_multis: dict[int, GoldenFoodMulti]):
         # Per character, section shows the best
         self._character_foods = {}
-        self.character_multis = calculate_golden_food_multis(account)
+        self.character_multis = character_multis
         self.golden_food_multi = max(
             (multi.total for multi in self.character_multis.values()), default=1
         )

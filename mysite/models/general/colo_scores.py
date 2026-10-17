@@ -7,5 +7,6 @@ class ColoScores(dict[int, int]):
     def __init__(self, raw_data: dict):
         super().__init__()
         raw_colo_scores = safe_loads(raw_data.get('FamValColosseumHighscores', []))
+        self.tickets: int = safer_convert(raw_data.get('CYColosseumTickets', 0), 0)
         for colo_index, colo_score in enumerate(raw_colo_scores):
             self[colo_index] = safer_convert(colo_score, 0)

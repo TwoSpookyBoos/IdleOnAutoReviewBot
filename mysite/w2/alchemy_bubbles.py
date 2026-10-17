@@ -3,7 +3,6 @@
 from consts.consts_autoreview import build_subgroup_label, break_you_best
 from consts.consts_w2 import min_NBLB, max_NBLB, at_risk_basic_bubbles, atrisk_advanced_bubbles, atrisk_lithium_bubbles, atrisk_lithium_advanced_bubbles, \
     bubble_cauldron_color_list, nblb_skippable, nblb_max_index
-from consts.consts_w4 import cooking_close_enough
 from consts.w6.farming import max_farming_crops
 from consts.progression_tiers import bubbles_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
@@ -21,7 +20,7 @@ def getBubbleExclusions():
         exclusionsList.append('Cropius Mapper')
 
     #If cooking is nearly finished, exclude Diamond Chef
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         exclusionsList.append('Diamond Chef')
 
     return exclusionsList
@@ -46,7 +45,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
         advanced_today: [],
         advanced: []
     }
-    nblbCount = session_data.account.labBonuses['No Bubble Left Behind']['Value']
+    nblbCount = session_data.account.lab_bonuses['No Bubble Left Behind'].value
     #Create a sorted list of every bubble, including the janky placeholders
     sorted_bubbles = sorted(
         session_data.account.alchemy_bubbles.items(),
@@ -58,7 +57,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     basic_prestring = ''
     lithium_prestring = ''
     basic_poststring = ''
-    if sorted_bubbles_basic and max(session_data.account.all_skills['Laboratory'], default=0) > 1:
+    if sorted_bubbles_basic and max(session_data.account.characters.all_skills['Laboratory'], default=0) > 1:
         try:
             todays_lowest = sorted_bubbles_basic[0][1].level
             todays_highest = sorted_bubbles_basic[nblbCount - 1][1].level
@@ -92,7 +91,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskBasic_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
+                        ' (Printing!)' if session_data.account.printer.is_printing(bubbleValuesDict.material) else '',
                         goal=target
                     ))
 
@@ -116,7 +115,7 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
     sorted_bubbles_lithium = [(k, v) for k, v in sorted_bubbles if min_NBLB <= v.level < max_NBLB and 15 <= v.bubble_index <= 24]
     #lithium_prestring = ''
     lithium_poststring = ''
-    if sorted_bubbles_lithium and max(session_data.account.all_skills['Laboratory'], default=0) > 1:
+    if sorted_bubbles_lithium and max(session_data.account.characters.all_skills['Laboratory'], default=0) > 1:
         try:
             todays_lowest_lithium = sorted_bubbles_lithium[0][1].level
             todays_highest_lithium = sorted_bubbles_lithium[nblbCount - 1][1].level
@@ -148,14 +147,14 @@ def getAtRiskBubblesAdviceGroups() -> list[AdviceGroup]:
                     else:
                         target = max_NBLB
                     atriskLithium_AdviceList[subgroupName].append(bubbleValuesDict.get_advice(
-                        ' (Printing!)' if bubbleValuesDict.material in session_data.account.printer['AllCurrentPrints'] else '',
+                        ' (Printing!)' if session_data.account.printer.is_printing(bubbleValuesDict.material) else '',
                         goal=target
                     ))
 
     atriskLithium_AG = AdviceGroup(
         tier='',
         pre_string=lithium_prestring,
-        advices=atriskLithium_AdviceList if session_data.account.atom_collider['Atoms']['Lithium - Bubble Insta Expander']['Level'] >= 1 else [],
+        advices=atriskLithium_AdviceList if session_data.account.atom_collider['Lithium - Bubble Insta Expander'].level >= 1 else [],
         post_string=lithium_poststring,
         informational=True
     )
@@ -241,7 +240,7 @@ def getBubblesProgressionTiersAdviceGroup():
                         add_subgroup_if_available_slot(bubble_Advices[bubble_type], subgroup_including_percent_label)
                         if subgroup_including_percent_label in bubble_Advices[bubble_type]:
                             bubble = session_data.account.alchemy_bubbles[required_bubble]
-                            printing = bubble.material in session_data.account.printer['AllCurrentPrints']
+                            printing = session_data.account.printer.is_printing(bubble.material)
                             bubble_Advices[bubble_type][subgroup_including_percent_label].append(
                                 bubble.get_advice(
                                     ' (Printing!)' if printing else '',
@@ -289,7 +288,7 @@ def getBubblesProgressionTiersAdviceGroup():
 
 
 def getAlchemyBubblesAdviceSection() -> AdviceSection:
-    highestAlchemyLevel = max(session_data.account.all_skills["Alchemy"])
+    highestAlchemyLevel = max(session_data.account.characters.all_skills["Alchemy"])
     if highestAlchemyLevel < 1:
         bubbles_AdviceSection = AdviceSection(
             name='Bubbles',

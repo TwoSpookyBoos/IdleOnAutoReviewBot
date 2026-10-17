@@ -11,29 +11,24 @@ class EnemyWorld:
     def __init__(self, worldnumber: int, mapsdict: dict):
         self.world_number: int = worldnumber
         self.maps_dict: dict = mapsdict
-        self.lowest_skulls_dict: dict = {}
+        self.maps_by_skull: dict[int, list['EnemyMap']] = {
+            skull_value: [] for skull_value in dn_skull_value_list
+        }
         self.lowest_skull_value: int = -1
         self.total_mk = sum(enemy_map.skull_mk_value for enemy_map in mapsdict.values())
         self.current_lowest_skull_name: str = "None"
         self.next_lowest_skull_name: str = "Normal Skull"
-        for skullValue in dn_skull_value_list:
-            self.lowest_skulls_dict[skullValue] = []
         if len(mapsdict) > 0:
-            for enemy_map_index in self.maps_dict:
-                self.lowest_skulls_dict[self.maps_dict[enemy_map_index].skull_mk_value].append([
-                    self.maps_dict[enemy_map_index].map_name,
-                    self.maps_dict[enemy_map_index].kills_to_next_skull,
-                    self.maps_dict[enemy_map_index].percent_toward_next_skull,
-                    self.maps_dict[enemy_map_index].monster_image,
-                    self.maps_dict[enemy_map_index].kill_count,
-                    self.maps_dict[enemy_map_index].monster_name,
-                ],)
-            for skullDict in self.lowest_skulls_dict:
-                self.lowest_skulls_dict[skullDict] = sorted(self.lowest_skulls_dict[skullDict], key=lambda item: item[2], reverse=True)
-            for skullDict in self.lowest_skulls_dict:
-                if len(self.lowest_skulls_dict[skullDict]) > 0:
-                    if self.lowest_skull_value == -1:
-                        self.lowest_skull_value = skullDict
+            for enemy_map in self.maps_dict.values():
+                self.maps_by_skull[enemy_map.skull_mk_value].append(enemy_map)
+            # Closest to the next skull first
+            for skull_value, maps in self.maps_by_skull.items():
+                self.maps_by_skull[skull_value] = sorted(
+                    maps, key=lambda enemy_map: enemy_map.percent_toward_next_skull, reverse=True
+                )
+            self.lowest_skull_value = next(
+                (skull_value for skull_value, maps in self.maps_by_skull.items() if maps), -1
+            )
             self.current_lowest_skull_name = getSkullNames(self.lowest_skull_value)
             self.next_lowest_skull_name = getNextSkullNames(self.lowest_skull_value)
 
@@ -91,8 +86,6 @@ class EnemyMap:
             return 'Insane'
 
     def updateZOWDict(self, characterIndex: int, KLAValue: float):
-        if characterIndex not in self.zow_dict:
-            self.zow_dict[characterIndex] = {}
         self.zow_dict[characterIndex] = int(abs(float(KLAValue) - self.portal_requirement))
 
     def addRawKLA(self, additionalKills: float):
@@ -100,7 +93,6 @@ class EnemyMap:
             self.kill_count += abs(float(additionalKills) - self.portal_requirement)
         except Exception as reason:
             print(f"models.EnemyMap.addRawKLA()~ Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
-            #logger.warning(f"Unable to add additionalKills value of {type(additionalKills)} {additionalKills} to {self.map_name} because: {reason}")
 
     def generateDNSkull(self):
         self.kill_count = int(self.kill_count)

@@ -11,7 +11,7 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def parseCombatLevels():
-    combatLevels = session_data.account.all_skills["Combat"]
+    combatLevels = session_data.account.characters.all_skills["Combat"]
     equinox3_charactersUnder100 = {}
     equinox11_charactersUnder250 = {}
     equinox23_charactersUnder500 = {}
@@ -98,8 +98,8 @@ def getCombatLevelsAdviceSection() -> AdviceSection:
 
     lvlup_advices = [
         Advice(
-            label=session_data.account.all_characters[characterIndex].character_name,
-            picture_class=session_data.account.all_characters[characterIndex].class_name_icon,
+            label=session_data.account.characters[characterIndex].character_name,
+            picture_class=session_data.account.characters[characterIndex].class_name_icon,
             progression=level,
             goal=goal)
         for characterIndex, level in parsedCombatLevels['equinoxDict'].get(f'under{goal}', dict()).items() if session_data.account.equinox.unlocked

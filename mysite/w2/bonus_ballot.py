@@ -3,7 +3,6 @@ import time
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
@@ -12,27 +11,19 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 def getBonusesAdviceGroup() -> AdviceGroup:
-    bb = session_data.account.ballot['Buffs']
+    ballot = session_data.account.ballot
     current_week = math.floor(time.time() / 604800)
+    is_current_week = current_week == ballot.week
     bb_advice = {
         'Current Bonus': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items() if bonus_index == session_data.account.ballot['CurrentBuff'] and bonus_index != 0
-        ] if current_week == session_data.account.ballot['Week'] else [],
+            buff.get_advice() for buff in ballot.values()
+            if buff.index == ballot.current_buff and buff.index != 0
+        ] if is_current_week else [],
         'On the Ballot': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items() if bonus_index in session_data.account.ballot['OnTheBallot'] and bonus_index != 0
-        ] if current_week == session_data.account.ballot['Week'] else [],
-        'All Bonuses': [
-            Advice(
-                label=f"Bonus {bonus_index}: {bonus_details['Description']}",
-                picture_class=bonus_details['Image'],
-            ) for bonus_index, bonus_details in bb.items()
-        ]
+            buff.get_advice() for buff in ballot.values()
+            if buff.index in ballot.on_the_ballot and buff.index != 0
+        ] if is_current_week else [],
+        'All Bonuses': [buff.get_advice() for buff in ballot.values()]
     }
 
     bb_ag = AdviceGroup(
@@ -49,26 +40,16 @@ def getBallotMultiAdviceGroup():
     voter_rights = session_data.account.equinox.upgrades['Voter Rights']
     summoning_bonus = session_data.account.summoning.bonuses["Ballot Bonus"]
     voter_integrity = session_data.account.caverns.villagers["Cosmos"].majiks.idleon['Voter Integrity']
-    gvb = session_data.account.event_points_shop['Bonuses']['Gilded Vote Button']
-    rvb = session_data.account.event_points_shop['Bonuses']['Royal Vote Button']
-    _, mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
-    _, crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
+    gvb = session_data.account.event_points_shop['Gilded Vote Button']
+    rvb = session_data.account.event_points_shop['Royal Vote Button']
+    mashed_potato_advice = session_data.account.companions['Mashed Potato'].get_advice()
+    crystal_cuttlefish_advice = session_data.account.companions['Crystal Cuttlefish'].get_advice()
     multis_advice = {
-        f"Total Multi: {session_data.account.ballot['BonusMulti']:.2f}x": [
+        f"Total Multi: {session_data.account.ballot.bonus_multi:.2f}x": [
             voter_rights.get_bonus_advice(),
             voter_integrity.get_advice(),
-            Advice(
-                label=f"{{{{Event Shop|#event-shop}}}}: Gilded Vote Button: {gvb['Description']}",
-                picture_class=gvb['Image'],
-                progression=int(gvb['Owned']),
-                goal=1
-            ),
-            Advice(
-                label=f"{{{{Event Shop|#event-shop}}}}: Royal Vote Button: {rvb['Description']}",
-                picture_class=rvb['Image'],
-                progression=int(rvb['Owned']),
-                goal=1
-            ),
+            gvb.get_bonus_advice(),
+            rvb.get_bonus_advice(),
             summoning_bonus.get_bonus_advice(),
             mashed_potato_advice,
             crystal_cuttlefish_advice,
@@ -89,7 +70,7 @@ def getBallotMultiAdviceGroup():
     return multis_ag
 
 def getBonus_BallotAdviceSection() -> AdviceSection:
-    if session_data.account.highest_world_reached < 2:
+    if session_data.account.world_progress.highest_reached < 2:
         bonus_ballot_AdviceSection = AdviceSection(
             name="Bonus Ballot",
             tier='0/0',

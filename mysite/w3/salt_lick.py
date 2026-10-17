@@ -41,7 +41,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     return tiers_ag, overall_SectionTier, max_tier, true_max
 
 def getSaltLickAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Salt Lick']['Level'] < 1:
+    if session_data.account.construction_buildings['Salt Lick'].level < 1:
         saltlick_AdviceSection = AdviceSection(
             name='Salt Lick',
             tier='Not Yet Evaluated',

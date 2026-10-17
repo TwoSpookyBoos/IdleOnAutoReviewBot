@@ -3,6 +3,7 @@ from math import ceil
 
 from consts.caverns.cavern import cavern_names
 from consts.caverns.villager.bolaia import studies_data
+from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import EmojiType, ValueToMulti
 from models.advice.advice import Advice
 from models.caverns.villagers.villager import Villager
@@ -68,7 +69,7 @@ class Studies(list[StudyBonus]):
 
 class Bolaia(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Bolaia", unlock_at=12, role="The Librarian", **kwargs)
+        super().__init__(name="Bolaia", unlock_at=12, role=villager_roles["Bolaia"], **kwargs)
         self.studies = Studies()
 
     def parse_feature(self, raw_caverns_list: list):

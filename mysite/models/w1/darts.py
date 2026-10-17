@@ -1,5 +1,6 @@
-from consts.consts_autoreview import ValueToMulti
+from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.idleon.w1.darts import darts_upgrade_descriptions
+from models.advice.advice import Advice
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_index
 
@@ -21,6 +22,16 @@ class DartsUpgrade:
         elif "}" in self.description:
             self.value = ValueToMulti(self.level)
             self.description = self.description.replace("}", str(self.value))
+
+    def get_advice(self, link_to_section: bool = True) -> Advice:
+        link_to_section_text = "{{ Darts|#darts }} - " if link_to_section else ""
+        return Advice(
+            label=f"{link_to_section_text}Upgrade {self.index + 1}: {self.description}",
+            picture_class=self.image,
+            progression=self.level,
+            goal=EmojiType.INFINITY.value,
+            resource="darts-shop-currency",
+        )
 
 
 class Darts:

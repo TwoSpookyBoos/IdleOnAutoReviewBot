@@ -3,7 +3,6 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 
-from models.advice.generators.w1 import get_darts_advice
 
 
 def get_upgrade_info_group():
@@ -12,7 +11,7 @@ def get_upgrade_info_group():
             label="The shop is located in Winding Willows (Baby Boa)",
             picture_class="baby-boa",
         ),
-        *[get_darts_advice(index, link_to_section=False)[1] for index in session_data.account.darts.upgrades.keys()]
+        *[upgrade.get_advice(link_to_section=False) for upgrade in session_data.account.darts.upgrades.values()]
     ]
     return AdviceGroup(
         pre_string='Upgrades',

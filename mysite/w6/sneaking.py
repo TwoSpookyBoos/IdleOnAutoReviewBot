@@ -63,7 +63,7 @@ def getSneakingProgressionTiersAdviceGroups():
               f"<br>Highest currently specced talent level shown to the right",
         picture_class='generational-gemstones',
         progression=talent_level,
-        goal=max([char.max_talents_over_books for char in session_data.account.all_characters if 'Wind Walker' in char.all_classes], default=100)
+        goal=max([char.max_talents_over_books for char in session_data.account.characters if 'Wind Walker' in char.all_classes], default=100)
     ))
 
     for category in sneaking_AdviceDict:
@@ -98,7 +98,7 @@ def getSneakingProgressionTiersAdviceGroups():
     return sneaking_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def getSneakingAdviceSection() -> AdviceSection:
-    highest_sneaking_level = max(session_data.account.all_skills['Sneaking'])
+    highest_sneaking_level = max(session_data.account.characters.all_skills['Sneaking'])
     if highest_sneaking_level < 1:
         sneaking_AdviceSection = AdviceSection(
             name='Sneaking',

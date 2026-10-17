@@ -2,8 +2,7 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_gem_shop_purchase_advice
-from utils.safer_data_handling import safe_loads, safer_get, safer_convert
+from utils.safer_data_handling import safer_convert
 from utils.logging import get_logger
 from consts.consts_autoreview import break_you_best, EmojiType
 from consts.consts_general import gem_shop_optlacc_dict
@@ -11,7 +10,7 @@ from consts.idleon.consts_idleon import current_world, max_characters
 from consts.w6.farming import max_farming_crops
 from consts.caverns.cavern import max_cavern
 from consts.caverns.villager.minau import max_measurements
-from consts.consts_w4 import cooking_close_enough, breeding_total_pets
+from consts.consts_w4 import breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
 
 
@@ -27,18 +26,14 @@ def try_exclude_DungeonTickets(exclusionLists):
             return
 
     #Scenario 2: Over Rank 40 or 100+ tickets
-    try:
-        playerBoosters = safer_get(session_data.account.raw_optlacc_dict, 76, 1) - 1  #The true value is always 1 less than JSON. Silly Lava
-    except:
-        playerBoosters = 0
-    if session_data.account.dungeons.rank >= 40 or playerBoosters >= 100:
+    if session_data.account.dungeons.rank >= 40 or session_data.account.dungeons.weekly_boosters >= 100:
         if 'Weekly Dungeon Boosters' not in exclusionLists:
             for sublist in exclusionLists:
                 sublist.append('Weekly Dungeon Boosters')
             return
 
 def try_exclude_SoupedUpTube(exclusionLists):
-    sum_LabLevels = sum(session_data.account.all_skills['Laboratory'])
+    sum_LabLevels = sum(session_data.account.characters.all_skills['Laboratory'])
     if sum_LabLevels >= 180:
         for sublist in exclusionLists:
             sublist.append('Souped Up Tube')
@@ -51,27 +46,23 @@ def try_exclude_FluorescentFlaggies(exclusionLists):
     102-104 are red cog-making
     105-107 are purple cog-makingss_through_d_exclusions
     """
-    try:
-        cogList = safe_loads(session_data.account.raw_data.get('CogO', []))
-        cogBlanks = sum(1 for cog in cogList[0:95] if cog == 'Blank')
-        if cogBlanks <= 60:
-            for sublist in exclusionLists:
-                sublist.append('Fluorescent Flaggies')
-    except:
-        pass
+    blank_cog_slots = session_data.account.cog_board.blank_slots
+    if blank_cog_slots is not None and blank_cog_slots <= 60:
+        for sublist in exclusionLists:
+            sublist.append('Fluorescent Flaggies')
 
 def try_exclude_BurningBadBooks(exclusionLists):
-    if session_data.account.construction_buildings['Automation Arm']['Level'] >= 5:
+    if session_data.account.construction_buildings['Automation Arm'].level >= 5:
         for sublist in exclusionLists:
             sublist.append('Burning Bad Books')
 
 def try_exclude_EggCapacity(exclusionLists):
-    if session_data.account.breeding['Total Unlocked Count'] >= breeding_total_pets - 5:
+    if session_data.account.breeding.total_unlocked_count >= breeding_total_pets - 5:
         for sublist in exclusionLists:
             sublist.append('Royal Egg Cap')
 
 def try_exclude_Kitchens(exclusionLists):
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         for sublist in exclusionLists:
             sublist.append('Richelin Kitchen')
 
@@ -79,15 +70,15 @@ def try_exclude_ChestSluggo(exclusionLists):
     # 33 artifacts times 4 tiers each = 132 for v2.26
     # Minus the new 3 lanterns and giants eye, 29 * 2 = 58 expected count when finishing all Ancient artifacts
     # 58/132 = 43.94% of all possibly artifacts. They know what they're getting into at that point.
-    if session_data.account.sum_artifact_tiers >= 58:  #(sailing_artifacts_count * max_sailing_artifact_level) * 0.43:
+    if session_data.account.sailing.artifacts.total_tiers >= 58:  #(sailing_artifacts_count * max_sailing_artifact_level) * 0.43:
         for sublist in exclusionLists:
             sublist.append('Chest Sluggo')
 
 def try_exclude_Gaming(exclusionLists):
     if (
-        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
-        or session_data.account.gaming['FertilizerValue'] >= 420
-        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        session_data.account.gaming.superbits['Isotope Discovery'].unlocked
+        or session_data.account.gaming.fertilizer_value >= 420
+        or session_data.account.gaming.fertilizer_speed >= 500
         or session_data.account.farming.crops.unlocked >= max_farming_crops * 0.75
     ):
         for sublist in exclusionLists:
@@ -95,7 +86,7 @@ def try_exclude_Gaming(exclusionLists):
             sublist.append('Lava Sprouts')
         return
     try:
-        if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+        if session_data.account.gaming.bits_owned >= 1e47:  #Red 100B
             for sublist in exclusionLists:
                 sublist.append('Golden Sprinkler')
                 sublist.append('Lava Sprouts')
@@ -103,7 +94,7 @@ def try_exclude_Gaming(exclusionLists):
         pass
     
 def try_exclude_ConjurorPts(exclusionLists):
-    if session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned'] >= session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.caverns.villagers["Cosmos"].level:
+    if session_data.account.gemshop.purchases['Conjuror Pts'].owned >= session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.caverns.villagers["Cosmos"].level:
         for sublist in exclusionLists:
             sublist.append('Conjuror Pts')
 
@@ -116,7 +107,7 @@ def try_exclude_ParallelVillagers(exclusionLists):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Engineer')
 
-    if session_data.account.caverns.villagers["Cosmos"].level >= (session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.gemshop['Purchases']['Conjuror Pts']['Owned']):
+    if session_data.account.caverns.villagers["Cosmos"].level >= (session_data.account.caverns.villagers["Cosmos"].majiks.max_point - session_data.account.gemshop.purchases['Conjuror Pts'].owned):
         for sublist in exclusionLists:
             sublist.append('Parallel Villagers The Conjuror')
 
@@ -177,12 +168,12 @@ def getGemShopExclusions():
     return s_through_d, practical
 
 def getGemShopAdviceSection() -> AdviceSection:
-    gsp = session_data.account.gemshop['Purchases']
+    gsp = session_data.account.gemshop.purchases
     ss_through_d_exclusions, practical_max_exclusions = getGemShopExclusions()
 
     recommended_stock = {item: count for tier in gemShop_progressionTiers for item, count in tier[2].items()}
     recommended_total = sum(recommended_stock.values())
-    recommended_stock_bought = {k: min(v, gsp[k]['Owned']) for k, v in recommended_stock.items()}
+    recommended_stock_bought = {k: min(v, gsp[k].owned) for k, v in recommended_stock.items()}
     recommended_total_bought = sum(recommended_stock_bought.values())
 
     #Review all tiers
@@ -199,11 +190,11 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                get_gem_shop_purchase_advice(name, False, goal)
+                gsp[name].get_advice(False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in ss_through_d_exclusions
-                and gsp[name]['Owned'] < (goal := int(qty))
+                and gsp[name].owned < (goal := int(qty))
             ],
             informational=True
         )
@@ -218,11 +209,11 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                get_gem_shop_purchase_advice(name, False, goal)
+                gsp[name].get_advice(False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 and name not in practical_max_exclusions
-                and gsp[name]['Owned'] < (goal := int(qty))
+                and gsp[name].owned < (goal := int(qty))
             ],
             informational=True
         ))
@@ -235,11 +226,11 @@ def getGemShopAdviceSection() -> AdviceSection:
             post_string=gemShop_progressionTiers[i][3],
             hide=False,
             advices=[
-                get_gem_shop_purchase_advice(name, False, goal)
+                gsp[name].get_advice(False, goal)
                 for name, qty in gemShop_progressionTiers[i][2].items()
                 if name in recommended_stock_bought
                 #and name not in gemShopExclusions  #Leaving this as a comment here to show intention. DO NOT FILTER!
-                and gsp[name]['Owned'] < (goal := int(qty))
+                and gsp[name].owned < (goal := int(qty))
             ],
             informational=True
         ))
@@ -247,9 +238,9 @@ def getGemShopAdviceSection() -> AdviceSection:
     # FOMO tracked through OptionsListAccount entries
     fomo_advice = []
     for purchase_name, purchase_details in gem_shop_optlacc_dict.items():
-        advice = get_gem_shop_purchase_advice(purchase_name, False)
+        advice = gsp[purchase_name].get_advice(False)
         advice.informational = True
-        advice.completed = False if gsp[purchase_name]['MaxLevel'] == EmojiType.INFINITY.value else None
+        advice.completed = False if gsp[purchase_name].max_level == EmojiType.INFINITY.value else None
         fomo_advice.append(advice)
 
     # FOMO Equipment
@@ -293,6 +284,7 @@ def getGemShopAdviceSection() -> AdviceSection:
     }
     for display, details in fomo_equipment.items():
         prog = safer_convert(session_data.account.all_assets.get(details['Code Name']).amount, 0)
+        prog += details['Code Name'] in session_data.account.hat_rack.codes
         fomo_advice.append(Advice(
             label=display,
             picture_class=details['Image'],

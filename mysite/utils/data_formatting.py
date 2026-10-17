@@ -39,13 +39,13 @@ class HeaderData:
             self.data_source = self.PUBLIC
             self.link_text = app.config[f"{source_string}_PROFILE_TEMPLATE"].format(username=username)
             self.ie_link = f"https://{self.link_text}"
-            self.first_name = session_data.account.names[0]
+            self.first_name = session_data.account.characters.names[0]
         else:
             self.data_source = self.JSON
-            if session_data.account.names[0] == "Character1":
+            if session_data.account.characters.names[0] == "Character1":
                 self.json_error = "NO SORTED LIST OF CHARACTER NAMES FOUND IN DATA. REPLACING WITH GENERIC NUMBER ORDER."
             else:
-                self.first_name = session_data.account.names[0]
+                self.first_name = session_data.account.characters.names[0]
 
         self.__getLastUpdatedTime()
 

@@ -40,17 +40,13 @@ class SkillingCavern(Cavern):
 
     @cached_property
     def resources_remaining(self) -> float:
-        from models.general.session_data import session_data
-
-        discount = session_data.account.caverns.skilling_resource_discount
+        discount = self.caverns.skilling_resource_discount
         base_requirement = math.ceil(
             200 * safer_math_pow(2.2, 1 + self.layers_destroyed)
         )
         return base_requirement / max(1, discount)
 
     def advice_groups(self) -> dict[str, list[Advice]]:
-        from models.general.session_data import session_data
-
         resource_required = self.resources_remaining
         resource_remaining = resource_required - self.resources_collected
         progress_percent = 100 * (self.resources_collected / resource_required)
@@ -73,7 +69,7 @@ class SkillingCavern(Cavern):
                     ),
                     picture_class=self.resource_skill,
                 ),
-                session_data.account.caverns.skilling_resource_discount_advice,
+                self.caverns.skilling_resource_discount_advice,
                 Advice(
                     label=(
                         f"{self.resource_type} remaining to break Layer "

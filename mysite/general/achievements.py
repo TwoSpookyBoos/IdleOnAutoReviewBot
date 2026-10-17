@@ -1,5 +1,4 @@
 from models.general.session_data import session_data
-from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
@@ -16,7 +15,7 @@ logger = get_logger(__name__)
 
 def getAchievementExclusions() -> set[str]:
     exclusionsSet = set()
-    if session_data.account.highest_world_reached >= 6:
+    if session_data.account.world_progress.highest_reached >= 6:
         exclusionsSet.add('Golden Fly')
 
     if (
@@ -26,7 +25,7 @@ def getAchievementExclusions() -> set[str]:
         # This achievement is Steam only- This gives other platforms a way around the requirement
         exclusionsSet.add('Mutant Massacrer')
 
-    if session_data.account.gemshop['Purchases']['Royal Egg Cap']['Owned'] < 2:
+    if session_data.account.gemshop.purchases['Royal Egg Cap'].owned < 2:
         # I wouldn't go spend gems just for this achievement, but you should get it if you already spent the Gems
         exclusionsSet.add('Gilded Shells')
 
@@ -35,14 +34,14 @@ def getAchievementExclusions() -> set[str]:
         exclusionsSet.add('Ink Blot')
 
     if (
-        session_data.account.gaming['SuperBits']['Isotope Discovery']['Unlocked']
-        or session_data.account.gaming['FertilizerValue'] >= 420
-        or session_data.account.gaming['FertilizerSpeed'] >= 500
+        session_data.account.gaming.superbits['Isotope Discovery'].unlocked
+        or session_data.account.gaming.fertilizer_value >= 420
+        or session_data.account.gaming.fertilizer_speed >= 500
         or session_data.account.farming.crops.unlocked >= max_farming_crops * 0.75
     ):
         exclusionsSet.add('Lucky Harvest')
     try:
-        if session_data.account.gaming['BitsOwned'] >= 1e47:  #Red 100B
+        if session_data.account.gaming.bits_owned >= 1e47:  #Red 100B
             exclusionsSet.add('Lucky Harvest')
     except:
         pass
@@ -65,9 +64,9 @@ def getAchievementStatus(achievementName):
             case 'Doctor Repellant':
                 return min(10000, int(session_data.account.farming.crops.get(0, 0))), 10000, 'apple-crop'
             case 'Good Plate':
-                return min(11, max([meal['Level'] for meal in session_data.account.meals.values()], default=0)), 11, ''
+                return min(11, max([meal.level for meal in session_data.account.meals.values()], default=0)), 11, ''
             case 'Bonsai Bonanza':
-                return min(100, session_data.account.achievements[achievementName]['Raw']), 100, 'bonsai'
+                return min(100, session_data.account.achievements[achievementName].raw), 100, 'bonsai'
 
             #Monster Respawn
             case 'Two-Time Savior':
@@ -87,47 +86,47 @@ def getAchievementStatus(achievementName):
             case "Croakin' Froge":
                 return min(250, session_data.account.all_assets.get('Critter1').amount), 250, 'froge'
             case 'Souped Up Salts':
-                return min(10, session_data.account.refinery['Red']['Rank']), 10, session_data.account.refinery['Red']['Image']
+                return min(10, session_data.account.refinery['Red'].rank), 10, session_data.account.refinery['Red'].image
 
             #Other Nice Rewards
             #W2
             case 'Ink Blot':
-                return min(101, session_data.account.achievements[achievementName]['Raw']), 101, 'silver-pen'
+                return min(101, session_data.account.achievements[achievementName].raw), 101, 'silver-pen'
             case 'Vial Junkee':
                 return sum(1 for vial in session_data.account.alchemy_vials.values() if vial.level >= 9), 10, 'vial-9'
             case 'Fruit Salad':
                 return notateNumber('Match', min(1000000, session_data.account.all_assets.get('Bug4').amount), 0, 'K'), '1000K', 'fruitfly'
             #W3
             case 'Checkout Takeout':
-                return min(1000, session_data.account.achievements[achievementName]['Raw']), 1000, 'talent-book-library'
+                return min(1000, session_data.account.achievements[achievementName].raw), 1000, 'talent-book-library'
             #W4
             case 'Cabbage Patch':
-                if session_data.account.meals['Cabbage']['Level'] > 0:
-                    return min(5, session_data.account.cooking['Tables Owned']), 5, 'cooking-table'
+                if session_data.account.meals['Cabbage'].level > 0:
+                    return min(5, session_data.account.cooking.tables_owned), 5, 'cooking-table'
                 else:
                     return 0, 5, 'cabbage'
             case 'Le Pretzel Bleu':
-                if session_data.account.meals['Pretzel']['Level'] > 0:
-                    return min(8,session_data.account.cooking['Tables Owned']), 8, 'cooking-table'
+                if session_data.account.meals['Pretzel'].level > 0:
+                    return min(8,session_data.account.cooking.tables_owned), 8, 'cooking-table'
                 else:
                     return 0, 8, 'pretzel'
             case 'Gilded Shells':
-                return min(12, session_data.account.breeding['Egg Slots']), 12, 'egg-nest'
+                return min(12, session_data.account.breeding.egg_slots), 12, 'egg-nest'
             #W5
             case 'Artifact Finder':
-                return min(15, sum(1 for artifact in session_data.account.sailing['Artifacts'].values() if artifact['Level'] > 0)), 15, ''
+                return min(15, session_data.account.sailing.artifacts.found_count), 15, ''
             case 'Gilded Vessel':
-                return min(100, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 100, 'sailing-ship-tier-4'
+                return min(100, session_data.account.sailing.max_boat_upgrades), 100, 'sailing-ship-tier-4'
             case 'True Naval Captain':
-                return min(20, session_data.account.sailing['BoatsOwned']), 20, ''
+                return min(20, session_data.account.sailing.boats_owned), 20, ''
             case 'Grand Captain':
-                return min(10, max([captain['Level'] for captain in session_data.account.sailing['Captains'].values()], default=0)), 10, 'captain-0-idle'
+                return min(10, session_data.account.sailing.max_captain_level), 10, 'captain-0-idle'
             case 'Voraci Vantasia':
-                return min(500, session_data.account.achievements[achievementName]['Raw']), 500, 'voraci'
+                return min(500, session_data.account.achievements[achievementName].raw), 500, 'voraci'
             case 'Vitamin D-licious':
                 return notateNumber('Match', min(5000000, session_data.account.all_assets.get('LavaB3').amount), 0, 'K'), '5000K', 'orange-slice'
             case 'Maroon Warship':
-                return min(300, max([boat['TotalUpgrades'] for boat in session_data.account.sailing['Boats'].values()], default=0)), 300, 'sailing-ship-tier-6'
+                return min(300, session_data.account.sailing.max_boat_upgrades), 300, 'sailing-ship-tier-6'
             #W6
             case 'Big Time Land Owner':
                 return min(27, session_data.account.farming.total_plots), 27, ''
@@ -143,7 +142,7 @@ def getAchievementStatus(achievementName):
                 return min(58, session_data.account.summoning.regular.total_win), 58, ''
             case _:
                 #logger.debug(f"{achievementName} didn't match a special case")
-                return session_data.account.achievements[achievementName]['Raw'], 'IDK', ''
+                return session_data.account.achievements[achievementName].raw, 'IDK', ''
     except Exception as reason:
         logger.exception(f"Defaulting {achievementName} because {reason}")
         return 0, 1, ''
@@ -160,19 +159,15 @@ def getProgressionTiersAdviceGroup():
     for tierNumber, tierRequirements in achievements_progressionTiers.items():
         subgroupName = f"To reach Tier {tierNumber}"
         for categoryName, categoryAchievementsDict in tierRequirements.items():
-            for achievementName, achievementDetailsDict in categoryAchievementsDict.items():
-                if not session_data.account.achievements.get(achievementName)['Complete'] and achievementName not in exclusionsSet:
+            for achievementName in categoryAchievementsDict:
+                if not session_data.account.achievements.get(achievementName).complete and achievementName not in exclusionsSet:
                     add_subgroup_if_available_slot(achievements_AdviceDict[categoryName], subgroupName)
                     if subgroupName in achievements_AdviceDict[categoryName]:
-                        prog, goal, resource = getAchievementStatus(achievementName)
-                        achievements_AdviceDict[categoryName][subgroupName].append(Advice(
-                            label=f"W{achievementDetailsDict['World']} {achievementName}: {achievementDetailsDict['Reward']}",
-                            picture_class=achievementName,
-                            progression=prog,
-                            goal=goal,
-                            resource=resource,
-                            completed=False
-                        ))
+                        achievements_AdviceDict[categoryName][subgroupName].append(
+                            session_data.account.achievements[achievementName].get_tier_advice(
+                                *getAchievementStatus(achievementName)
+                            )
+                        )
             if subgroupName not in achievements_AdviceDict[categoryName] and tiers[categoryName] == tierNumber - 1:
                 tiers[categoryName] = tierNumber
 

@@ -5,13 +5,10 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from consts.idleon.consts_idleon import pearlable_skills_list, current_world, max_characters
-from consts.idleon.lava_func import lava_func
 from consts.consts_general import cards_max_level
 from consts.w1.stamps import stamp_maxes
 from consts.consts_w2 import max_vial_level
 from consts.consts_w3 import dn_skull_value_list, dn_basic_maps_count
-from consts.consts_w4 import cooking_close_enough
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 
@@ -44,55 +41,20 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
         session_data.account.lab_chips['Omega Motherboard'].get_advice()
     )
     crystal_Advice[aw].append(session_data.account.stamps['Crystallin'].get_advice())
-    crystal_Advice[aw].append(session_data.account.shrine_advices['Crescent Shrine'])
-    crystal_Advice[aw].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
-    crystal_Advice[aw].append(Advice(
-        label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
-        picture_class="moai-head",
-        progression=session_data.account.sailing['Artifacts']['Moai Head']['Level'],
-        goal=1
-    ))
+    crystal_Advice[aw].append(session_data.account.shrines['Crescent Shrine'].get_advice())
+    crystal_Advice[aw].append(session_data.account.shrines.get_chizoar_card_advice())
+    crystal = session_data.account.crystal_spawn_chance
+    crystal_Advice[aw].append(crystal.get_moai_head_advice())
 
     # Character Specific
-    bestCrystalBook = 0
-    for jman in session_data.account.jmans:
-        bestCrystalBook = max(bestCrystalBook, jman.max_talents.get("26", 0))
-    crystal_Advice[cs].append(Advice(
-        label=f"Level {bestCrystalBook}/{session_data.account.library.max_book_level} booked Cmon Out Crystals talent (Jman only)",
-        picture_class="cmon-out-crystals",
-        progression=bestCrystalBook,
-        goal=session_data.account.library.max_book_level
-    ))
-    crystals_4_dayys_multi = 1 + lava_func('decay', 100, 174, 50) / 100
-    crystal_Advice[cs].append(Advice(
-        label=f"Crystals 4 Dayys star talent: {crystals_4_dayys_multi}x at level 100",
-        picture_class="crystals-4-dayys",
-    ))
-    box_value = lava_func('decay', 300, 65, 200)
-    crystal_Advice[cs].append(Advice(
-        label=f"Non Predatory Loot Box: +{box_value:.0f}% at 400 crates",
-        picture_class="non-predatory-loot-box",
-    ))
+    crystal_Advice[cs].append(crystal.get_cmon_out_crystals_advice())
+    crystal_Advice[cs].append(crystal.get_crystals_4_dayys_advice())
+    crystal_Advice[cs].append(crystal.get_non_predatory_box_advice())
 
     # Totals
-    crystal_Advice[total].append(Advice(
-        label=f"Note: Crescent Shrine and PO Box are additive: {1 + ((session_data.account.shrines['Crescent Shrine']['Value'] + box_value) / 100):.3f}x"
-              f"<br>The cards also add together. Everything else is a unique multiplier.",
-        picture_class="shrine-box2"
-    ))
-
-    crystal_Advice[total].append(Advice(
-        label=f"Best Crystal Spawn Chance on Non-Jman:"
-              f" {session_data.account.highest_crystal_spawn_chance * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.highest_crystal_spawn_chance * 100):.2f})",
-        picture_class="crystal-carrot",
-    ))
-    crystal_Advice[total].append(Advice(
-        label=f"Best Crystal Spawn Chance on Jman:"
-              f" {session_data.account.highest_jman_crystal_spawn_chance * 100:.4f}%"
-              f" (1 in {100 / (session_data.account.highest_jman_crystal_spawn_chance * 100):.2f})",
-        picture_class="crystal-crabal",
-    ))
+    crystal_Advice[total].append(crystal.get_additive_note_advice())
+    crystal_Advice[total].append(crystal.get_highest_advice())
+    crystal_Advice[total].append(crystal.get_highest_jman_advice())
 
     for subgroup in crystal_Advice:
         for advice in crystal_Advice[subgroup]:
@@ -112,60 +74,60 @@ def getShortTermAdviceList() -> list[Advice]:
     #Div jail if Goat not unlocked
     quick_divinity_goals = [2, 5]
     for divinity in quick_divinity_goals:
-        if max(session_data.account.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity['Divinities'][divinity]['Unlocked']:
+        if max(session_data.account.characters.all_skills.get("Divinity", [0])) > 0 and not session_data.account.divinity[divinity].unlocked:
             shortterm.append(Advice(
-                label=f"Divinity jail until you unlock {session_data.account.divinity['Divinities'][divinity]['Name']} 🙁",
-                picture_class=session_data.account.divinity['Divinities'][divinity]['Name'],
-                progression=session_data.account.divinity['GodsUnlocked'],
+                label=f"Divinity jail until you unlock {session_data.account.divinity[divinity].name} 🙁",
+                picture_class=session_data.account.divinity[divinity].name,
+                progression=session_data.account.divinity.gods_unlocked,
                 goal=divinity
             ))
             break
-    if not session_data.account.labBonuses['No Bubble Left Behind']['Enabled']:
+    if not session_data.account.lab_bonuses['No Bubble Left Behind'].enabled:
         shortterm.append(Advice(
             label=f"Lab jail until you unlock No Bubble Left Behind 🙁",
             picture_class='no-bubble-left-behind',
         ))
 
     #OBOLS
-    if 10 > session_data.account.obols['Drop Rate']['Square']['Total']:
+    if 10 > session_data.account.obols.count('Drop Rate', 'Square'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Square slots with DK at Sandy Pots"
                   f"<br>Note: Hyper Six Obols are included in your progress",
             picture_class='golden-obol-of-triple-sixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Square']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Square'),
             goal=10  # 4 family, 6 personal
         ))
-    if 6 > session_data.account.obols['Drop Rate']['Hexagon']['Total']:
+    if 6 > session_data.account.obols.count('Drop Rate', 'Hexagon'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Hexagon slots with DK at Sandy Pots"
                   f"<br>Note: W5 Miniboss Obols are included in your progress",
             picture_class='platinum-obol-of-yahtzee-sixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Hexagon']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Hexagon'),
             goal=6  # 4 family, 2 personal
         ))
-    if 5 > session_data.account.obols['Drop Rate']['Sparkle']['Total']:
+    if 5 > session_data.account.obols.count('Drop Rate', 'Sparkle'):
         obols.append(Advice(
             label=f"Farm Dice Obols for Sparkle slots with DK at Sandy Pots",
             picture_class='dementia-obol-of-infinisixes',
             resource='crystal-crabal',
-            progression=session_data.account.obols['Drop Rate']['Sparkle']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Sparkle'),
             goal=5  # 4 family, 1 personal
         ))
-    if 24 > session_data.account.obols['Drop Rate']['Circle']['Total']:
+    if 24 > session_data.account.obols.count('Drop Rate', 'Circle'):
         # If Chocco Chip is owned, POPs last, otherwise POPs first
         obols.insert(0 if session_data.account.lab_chips['Chocolatey Chip'].owned else len(obols), Advice(
             label=f"Farm POP Obols for Circle slots with ES at Gigafrogs"
                   f"<br>Note: Hyper Six Obols are included in your progress",
             picture_class='silver-obol-of-pop-pop',
             resource='gigafrog',
-            progression=session_data.account.obols['Drop Rate']['Circle']['Total'],
+            progression=session_data.account.obols.count('Drop Rate', 'Circle'),
             goal=24  #12 family, 12 personal
         ))
     shortterm += obols
 
-    for char in session_data.account.all_characters:
+    for char in session_data.account.characters:
         if 'Journeyman' not in char.all_classes:
             for mapNumber, details in {
                 1: [1, 'weekly-boss-action-t'],  # Green Mushrooms
@@ -206,7 +168,7 @@ def getCardsAdviceList() -> list[Advice]:
         "Solid Passives": ["Godshard Ore", "Crystal Candalight", "Crystal Capybara", "Samurai Guardian", "Royal Egg", "Domeo Magmus"],
         "Stat% Filler": ["River Spirit", "Blighted Chizoar", "Tremor Wurm", "Stilted Seeker"],
     }
-    if session_data.account.highest_world_reached >= 7:
+    if session_data.account.world_progress.highest_reached >= 7:
         all_cards["Drop Multi"] = ["Coralcave Guardian", "Mantaray"]
         all_cards["Gallery Bonus"] = ["Coralcave Crab"]
     card_advice_limit = 10
@@ -222,14 +184,14 @@ def getCardsAdviceList() -> list[Advice]:
 def getLongTermAdviceList() -> list[Advice]:
     longterm = []
     # 2100 lab for jewels
-    if sum(session_data.account.all_skills.get("Laboratory", [0])) < 2100:
+    if sum(session_data.account.characters.all_skills.get("Laboratory", [0])) < 2100:
         longterm.append(Advice(
             label=f"Lab jail until 2100 total Lab levels for W6 jewels 🙁"
                   f"<br>Note: You probably want to link to Goat and level Divinity at the same time"
                   f"{'<br>Also: Buy Laboratory Bling from Jade Emporium' if not session_data.account.sneaking.emporium['Laboratory Bling'].obtained else ''}",
             picture_class='Laboratory Bling',
             resource='laboratory',
-            progression=sum(session_data.account.all_skills.get("Laboratory", [0])),
+            progression=sum(session_data.account.characters.all_skills.get("Laboratory", [0])),
             goal=2100
         ))
     # Gmush Farming
@@ -246,47 +208,12 @@ def getLongTermAdviceList() -> list[Advice]:
             ))
             break  # Only show the next closest target
 
-    # SB Plunder Kills
-    for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.class_kill_talents['Archlord of the Pirates']['Kills']:
-            goalString = notateNumber("Basic", killTarget, 1)
-            longterm.append(Advice(
-                label=f"Farm more Plunder Kills with Siege Breaker for Drop Rate"
-                      f"<br>Crystal Setup at W5 Citringes for ~20k per day",
-                picture_class='archlord-of-the-pirates',
-                progression=notateNumber("Match", session_data.account.class_kill_talents['Archlord of the Pirates']['Kills'], 2, '', goalString),
-                goal=goalString,
-                resource='pirate-flag'
-            ))
-            break  # Only show the next closest target
-
-    # DK Orb Kills
-    for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.class_kill_talents['King of the Remembered']['Kills']:
-            goalString = notateNumber("Basic", killTarget, 1)
-            longterm.append(Advice(
-                label=f"Farm more Orb stacks with Divine Knight for Printer Output"
-                      f"<br>Crystal Setup at any world you need Crystal loot from",
-                picture_class='king-of-the-remembered',
-                progression=notateNumber("Match", session_data.account.class_kill_talents['King of the Remembered']['Kills'], 2, '', goalString),
-                goal=goalString,
-                resource='orb-of-remembrance'
-            ))
-            break  # Only show the next closest target
-
-    # ES Wormhole Kills
-    for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
-        if killTarget > session_data.account.class_kill_talents['Wormhole Emperor']['Kills']:
-            goalString = notateNumber("Basic", killTarget, 1)
-            longterm.append(Advice(
-                label=f"Farm more Wormhole kills with Elemental Sorcerer for Damage"
-                      f"<br>Generally alongside farming Rare Drops, such as Dark Lanterns",
-                picture_class='wormhole-emperor',
-                progression=notateNumber("Match", session_data.account.class_kill_talents['Wormhole Emperor']['Kills'], 2, '', goalString),
-                goal=goalString,
-                resource='dimensional-wormhole'
-            ))
-            break  # Only show the next closest target
+    # Class kill stacks: SB Plunder, DK Orb, ES Wormhole
+    for talent in session_data.account.class_kill_talents.values():
+        for killTarget in [1e3, 10e3, 32e3, 100e3, 320e3, 1e6]:
+            if killTarget > talent.kills:
+                longterm.append(talent.get_kills_advice(killTarget))
+                break  # Only show the next closest target
 
     # Bubo Liquid Decants
     equinox_note = (
@@ -311,24 +238,24 @@ def getLongTermAdviceList() -> list[Advice]:
 def getDailyAdviceList() -> list[Advice]:
     daily = []
 
-    if session_data.account.daily_particle_clicks_remaining > 0:
+    if session_data.account.reset_counters.particle_clicks_remaining > 0:
         daily.append(Advice(
             label=f"Spend Alternative Particle Clicks for {{{{ Bubbles|#bubbles }}}}",
             picture_class='boron',
-            progression=session_data.account.daily_particle_clicks_remaining
+            progression=session_data.account.reset_counters.particle_clicks_remaining
         ))
 
-    if session_data.account.minigame_plays_remaining > 0:
+    if session_data.account.reset_counters.minigame_plays_remaining > 0:
         daily.append(Advice(
             label=f"Spend remaining daily Minigame plays",
             picture_class='daily-minigame-plays',
-            progression=session_data.account.minigame_plays_remaining
+            progression=session_data.account.reset_counters.minigame_plays_remaining
         ))
-    if session_data.account.daily_world_boss_kills < 300:
+    if session_data.account.reset_counters.world_boss_kills < 300:
         daily.append(Advice(
             label=f"Daily World Boss retries for Gems",
             picture_class='gem',
-            progression=session_data.account.daily_world_boss_kills // 3,
+            progression=session_data.account.reset_counters.world_boss_kills // 3,
             goal=100,
             resource='kruks-volcano-key'
         ))
@@ -343,8 +270,8 @@ def getConsumablesAdviceList() -> list[Advice]:
     consumables = []
 
     #If 30+ Colo tickets owned
-    total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.raw_data.get("CYColosseumTickets", 0)
-    if total_colo_tickets > 300 and session_data.account.highest_world_reached >= 6:
+    total_colo_tickets = session_data.account.stored_assets.get('TixCol').amount + session_data.account.colo_scores.tickets
+    if total_colo_tickets > 300 and session_data.account.world_progress.highest_reached >= 6:
         consumables.append(Advice(
             label=f"{total_colo_tickets} Colo Tickets available",
             picture_class='colosseum-ticket',
@@ -369,10 +296,10 @@ def getConsumablesAdviceList() -> list[Advice]:
         ))
 
     #Pearls and Balloons
-    if session_data.account.highest_world_reached >= 4:
+    if session_data.account.world_progress.highest_reached >= 4:
         # Black Pearls
         if session_data.account.stored_assets.get('Pearl4').amount > 0:
-            black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 30]
+            black_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.characters.all_skills.get(skillName, [0])) < 30]
             if black_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Black Pearls on Skills under level 30:"
@@ -382,7 +309,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
         # Red Pearls
         if session_data.account.stored_assets.get('Pearl6').amount > 0:
-            red_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.all_skills.get(skillName, [0])) < 50]
+            red_pearlable_skills = [skillName for skillName in pearlable_skills_list if min(session_data.account.characters.all_skills.get(skillName, [0])) < 50]
             if red_pearlable_skills:
                 consumables.append(Advice(
                     label=f"Spend Divinity Pearls on Skills under level 50:"
@@ -396,7 +323,7 @@ def getConsumablesAdviceList() -> list[Advice]:
                 + session_data.account.stored_assets.get('ExpBalloon2').amount
                 + session_data.account.stored_assets.get('ExpBalloon3').amount
         ) > 0:
-            balloonable_skills = [skillName for skillName in pearlable_skills_list if sum(session_data.account.all_skills.get(skillName, [0])) < 750]
+            balloonable_skills = [skillName for skillName in pearlable_skills_list if sum(session_data.account.characters.all_skills.get(skillName, [0])) < 750]
             if balloonable_skills:
                 consumables.append(Advice(
                     label=f"Spend Experience Balloons on Skills under 750 Skill Mastery for Printer Output:"
@@ -406,16 +333,16 @@ def getConsumablesAdviceList() -> list[Advice]:
                 ))
 
     # Candy options
-    if session_data.account.highest_world_reached >= 2:
-        if not session_data.account.maestros and session_data.account.jmans:
+    if session_data.account.world_progress.highest_reached >= 2:
+        if not session_data.account.characters.maestros and session_data.account.characters.jmans:
             consumables.append(Advice(
                 label=f"Level any remaining skills for {{{{ Maestro|#secret-class-path }}}} quest."
                       f"<br>Pearls, Balloons, and Candies are all valid here!",
                 picture_class='maestro-icon',
                 resource='x1-hr-time-candy'
             ))
-    if session_data.account.highest_world_reached >= 4:
-        for character in session_data.account.all_characters:
+    if session_data.account.world_progress.highest_reached >= 4:
+        for character in session_data.account.characters:
             try:
                 if (
                     character.elite_class == "None"
@@ -430,13 +357,13 @@ def getConsumablesAdviceList() -> list[Advice]:
                     ))
             except:
                 continue
-        if not session_data.account.vmans:
+        if not session_data.account.characters.vmans:
             consumables.append(Advice(
                 label=f"Candy any remaining kills for {{{{ Voidwalker|#secret-class-path }}}} quest",
                 picture_class='voidwalker-icon',
                 resource='x1-hr-time-candy'
             ))
-    if session_data.account.highest_world_reached >= 6:
+    if session_data.account.world_progress.highest_reached >= 6:
         for worldIndex in range(1, current_world):
             if session_data.account.death_note.worlds[worldIndex].lowest_skull_value < dn_skull_value_list[-1]:
                 consumables.append(Advice(
@@ -444,10 +371,10 @@ def getConsumablesAdviceList() -> list[Advice]:
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))
-        if session_data.account.cooking['MaxRemainingMeals'] > cooking_close_enough and session_data.account.death_note.apocalypse_character_index is not None:
-            if session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].apoc_dict['MEOW']['Total'] < dn_basic_maps_count:
+        if not session_data.account.cooking.close_enough and session_data.account.death_note.apocalypse_character_index is not None:
+            if session_data.account.characters[session_data.account.death_note.apocalypse_character_index].apocalypses['MEOW'].total < dn_basic_maps_count:
                 consumables.append(Advice(
-                    label=f"Candy Super CHOW stacks with {session_data.account.all_characters[session_data.account.death_note.apocalypse_character_index].character_name}",
+                    label=f"Candy Super CHOW stacks with {session_data.account.characters[session_data.account.death_note.apocalypse_character_index].character_name}",
                     picture_class='death-note',
                     resource='x24-hr-time-candy'
                 ))
@@ -550,14 +477,14 @@ def getBuboAdviceGroup() -> AdviceGroup:
     }
 
     sorted_bubos: list[Character] = sorted(
-        session_data.account.bubos, key=lambda toon: toon.combat_level, reverse=True
+        session_data.account.characters.bubos, key=lambda toon: toon.combat_level, reverse=True
     )
     best_bubo = sorted_bubos[0] if len(sorted_bubos) > 0 else None
 
     if best_bubo is None:
         possible_future_bubo = (
-                len(session_data.account.mages) > 0
-                or session_data.account.character_count < max_characters
+                len(session_data.account.characters.mages) > 0
+                or len(session_data.account.characters) < max_characters
         )
         if possible_future_bubo:
             bubo_advice['Best Bubo'] = [
@@ -596,12 +523,12 @@ def getBuboAdviceGroup() -> AdviceGroup:
             Advice(
                 label=f"{{{{ PO|#post-office}}}}: {box_name}",
                 picture_class=box_name,
-                progression=box_details['Level'],
-                goal=box_details['Max Level'],
-                completed=box_details['Level'] >= box_details['Max Level']
+                progression=box_details.level,
+                goal=box_details.max_level,
+                completed=box_details.level >= box_details.max_level
             ) for box_name, box_details in best_bubo.po_boxes_invested.items() if box_name in po_box_names
         ]
-        bubo_advice[po].insert(0, get_upgrade_vault_advice('Daily Mailbox'))
+        bubo_advice[po].insert(0, session_data.account.vault.get_upgrade_advice('Daily Mailbox'))
 
         #Alchemy and Talents
         bad_talent_numbers = [450, 480, 527]  #Energy Bolt, Crazy Concoctions, Tampered Injection
@@ -780,7 +707,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
             completed=True
         ))
         # Note: Sigils are paused during CC if any characters assigned
-        num_assigned_to_sigils = sum([True for char in session_data.account.all_characters if char.alchemy_job_group == 'Sigils'])
+        num_assigned_to_sigils = sum([True for char in session_data.account.characters if char.alchemy_job_group == 'Sigils'])
         move_off_sigils_note = (
             f" I recommend to move your {num_assigned_to_sigils} characters to Liquid Cauldrons during long Active Bubo sessions"
             if num_assigned_to_sigils > 0
@@ -809,7 +736,7 @@ def getBuboAdviceGroup() -> AdviceGroup:
 
 
 def getActiveAdviceSection() -> AdviceSection:
-    # if session_data.account.highest_world_reached < 4:
+    # if session_data.account.world_progress.highest_reached < 4:
     #     active_AdviceSection = AdviceSection(
     #         name="Active",
     #         tier="Not Yet Evaluated",

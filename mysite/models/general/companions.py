@@ -69,11 +69,8 @@ class Companion:
         """Additive `stat` bonus the formula scales out of Value, or 0 if none / unowned."""
         return self._get_bonus(stat, 'value', 0)
 
-    def get_advice(self, value_is_multi: bool = False) -> tuple[int | float, Advice]:
+    def get_advice(self) -> Advice:
         data_present = self._companions.data_present
-        value = self.value * self.owned
-        if value == 0 and value_is_multi:
-            value = 1
         notes = ''
         if not data_present:
             notes += '<br>Note: Could be inaccurate. Companion data not found!'
@@ -81,7 +78,7 @@ class Companion:
             notes += '<br>Upgraded with Pet Mart+'
         elif self.via_token:
             notes += '<br>Bonus granted by a Pet Bonus Token'
-        return value, Advice(
+        return Advice(
             label=f"Companions - {self.name}{'+' if self.upgraded else ''}:"
                   f"<br>{self.description}"
                   f"{notes}",

@@ -5,7 +5,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.logging import get_logger
 
@@ -71,7 +70,7 @@ def getVaultUpgradesAdviceGroup():
     upgrades_AdviceDict = {}
 
     #Upgrades
-    upgrades_AdviceDict['Upgrades'] = [get_upgrade_vault_advice(upgrade_name, link_to_section=False) for upgrade_name in session_data.account.vault.upgrades.keys()]
+    upgrades_AdviceDict['Upgrades'] = [session_data.account.vault.get_upgrade_advice(upgrade_name, link_to_section=False) for upgrade_name in session_data.account.vault.upgrades.keys()]
     upgrades_AdviceDict['Upgrades'].insert(0, Advice(
         label=f"Total Vault Upgrades: {session_data.account.vault.total_upgrades:,}",
         picture_class='upgrade-vault',

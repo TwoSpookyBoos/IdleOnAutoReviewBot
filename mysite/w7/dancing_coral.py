@@ -21,7 +21,7 @@ def get_bonuses_info_group() -> AdviceGroup:
 
 
 def get_dancing_coral_section():
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         dancing_coral_AdviceSection = AdviceSection(
             name='Dancing Coral',
             tier='Not Yet Evaluated',

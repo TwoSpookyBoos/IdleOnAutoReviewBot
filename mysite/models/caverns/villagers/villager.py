@@ -19,6 +19,7 @@ class Villager(ABC):
 
     def __post_init__(self):
         self.title = f"{self.name}, {self.role}"
+        self.caverns = None  # set by Caverns
 
     @abstractmethod
     def parse_feature(self, raw_caverns_list: list):

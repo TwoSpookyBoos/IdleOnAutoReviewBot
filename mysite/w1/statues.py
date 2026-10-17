@@ -1,12 +1,11 @@
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
+from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w1 import statue_type_dict, statue_count, get_statue_type_index_from_name, statue_onyx_stack_size, statue_zenith_stack_size
 from consts.progression_tiers import statues_progressionTiers, true_max_tiers
 from models.general.session_data import session_data
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.safer_data_handling import safer_get
 from utils.logging import get_logger
 
 
@@ -19,7 +18,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     crystal_Advices = []
     deposit_Advices = []
 
-    if not session_data.account.onyx_statues_unlocked:
+    if not session_data.account.statues.onyx_unlocked:
         crystal_Advices.append(Advice(
             label="Complete the Monolith NPC's questline to unlock Onyx Statues",
             picture_class='monolith',
@@ -38,26 +37,26 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     crystal_Advices.append(Advice(
         label=f"Star Talent 'Crystals 4 Dayys' obtained by completing Picnic Stowaway's quest: \"The Last Supper, at Least for Today\"",
         picture_class='crystals-4-dayys',
-        progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.all_characters])),
+        progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.characters])),
         goal=1
     ))
     crystal_Advices.append(Advice(
         label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
         picture_class='moai-head',
-        progression=session_data.account.sailing['Artifacts']['Moai Head']['Level'],
+        progression=session_data.account.sailing.artifacts['Moai Head'].level,
         goal=1
     ))
     crystal_Advices.append(Advice(
         label=f"Minimum 1% (1 in 100) {{{{ Crystal Spawn Chance|#active }}}} on Non-Jman:"
-              f"<br>{session_data.account.highest_crystal_spawn_chance*100:.4f}%"
-              f" (1 in {100/(session_data.account.highest_crystal_spawn_chance*100):.2f})",
+              f"<br>{session_data.account.crystal_spawn_chance.highest*100:.4f}%"
+              f" (1 in {100/(session_data.account.crystal_spawn_chance.highest*100):.2f})",
         picture_class='crystal-carrot',
-        progression=f"{session_data.account.highest_crystal_spawn_chance * 100:.4f}",
+        progression=f"{session_data.account.crystal_spawn_chance.highest * 100:.4f}",
         goal=1,
         unit="%"
     ))
     best_orb_book = 0
-    for dk in session_data.account.dks:
+    for dk in session_data.account.characters.dks:
         best_orb_book = max(best_orb_book, dk.max_talents.get("168", 0))
     crystal_Advices.append(Advice(
         label=f"Level {best_orb_book}/{session_data.account.library.max_book_level} booked Orb of Remembrance talent (Divine Knight only)",
@@ -65,7 +64,7 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=best_orb_book,
         goal=session_data.account.library.max_book_level
     ))
-    tome_DropChance = safer_get(session_data.account.raw_optlacc_dict, 200, 1)
+    tome_DropChance = session_data.account.statues.tome_drop_chance
     crystal_Advices.append(Advice(
         label=f"Minimum 10x Drop Rate (per Tome): {tome_DropChance:.2f}x",
         picture_class='drop-rate',
@@ -100,19 +99,23 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
     )
     return crystal_AG
 
+def getEffectBonusAdvices() -> list[Advice]:
+    statues = session_data.account.statues
+    return [
+        statues.get_voodoo_advice(),
+        statues.get_onyx_advice(session_data.account.sailing.artifacts['The Onyx Lantern'].level),
+        session_data.account.zenith_market['TRUE ZEN'].get_advice(),
+        session_data.account.meritocracy[26].get_bonus_advice(),
+        statues.get_event_shop_advice(session_data.account.event_points_shop['Smiley Statue']),
+        statues.get_dragon_advice(),
+        session_data.account.vault.get_upgrade_advice('Statue Bonanza'),
+        statues.get_total_multi_advice(),
+    ]
+
 def getCurrentLevelsAdviceGroup() -> AdviceGroup:
     advices = {
-        'Effect bonuses': session_data.account.statue_effect_advice,
-        'Statue Effects': [
-            Advice(
-                label=f"Level {details['Level']} {details['Type']} {name}:"
-                      f"<br> +{round(details['Value'], 2):,g}{' ' if not details['Effect'].startswith('%') else ''}{details['Effect']}",
-                picture_class=details['Image'],
-                progression=details['Level'],
-                goal=EmojiType.INFINITY.value,
-                resource=details['Resource']
-            ) for name, details in session_data.account.statues.items()
-        ]
+        'Effect bonuses': getEffectBonusAdvices(),
+        'Statue Effects': [statue.get_advice() for statue in session_data.account.statues.values()]
     }
 
     for category in advices:
@@ -142,32 +145,32 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     # Assess Tiers
     for tier_number, requirements in statues_progressionTiers.items():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
-        for statue_name, statue_details in session_data.account.statues.items():
+        for statue_name, statue in session_data.account.statues.items():
             # Trying to futureproof new tiers - If at least Gold, but not the max tier
-            farm_details = f": {statue_details['Farmer']}" if 0 <= statue_details['TypeNumber'] < len(statue_type_dict) else ''
-            farm_resource = statue_details['Resource'] if 0 <= statue_details['TypeNumber'] < len(statue_type_dict) else ''
+            farm_details = f": {statue.farmer}" if 0 <= statue.type_number < len(statue_type_dict) else ''
+            farm_resource = statue.resource if 0 <= statue.type_number < len(statue_type_dict) else ''
             if statue_name in requirements.get('SpecificLevels', {}):
-                if statue_details['Level'] < requirements['SpecificLevels'][statue_name]:
+                if statue.level < requirements['SpecificLevels'][statue_name]:
                     add_subgroup_if_available_slot(statues_AdviceDict['Tiers'], subgroup_label)
                     if subgroup_label in statues_AdviceDict['Tiers']:
                         statues_AdviceDict['Tiers'][subgroup_label].append(Advice(
                             label=f"Level up {statue_name}{farm_details}",
-                            picture_class=statue_details["Image"],
-                            progression=statue_details['Level'],
+                            picture_class=statue.image,
+                            progression=statue.level,
                             goal=requirements['SpecificLevels'][statue_name],
                             resource=farm_resource
                         ))
             if statue_name in requirements.get('SpecificTypes', []):
-                if statue_details['TypeNumber'] < requirements.get('MinStatueTypeNumber', 0):
+                if statue.type_number < requirements.get('MinStatueTypeNumber', 0):
                     add_subgroup_if_available_slot(statues_AdviceDict['Tiers'], subgroup_label)
                     if subgroup_label in statues_AdviceDict['Tiers']:
                         statues_AdviceDict['Tiers'][subgroup_label].append(Advice(
                             label=f"Raise {statue_name} to {requirements.get('MinStatueType', 'UnknownStatueType')}"
                                   f"{farm_details if requirements.get('MinStatueType', 'UnknownStatueType') != 'Gold' else ''}"
-                                  f"{'<br>Reminder: You need to raise this statue to Gold first!' if requirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' and statue_details['Level'] == 0 else ''}",
-                            picture_class=statue_details['Image'],
-                            progression=statue_details['TypeNumber'] if statue_details['TypeNumber'] < 1 else session_data.account.stored_assets.get(
-                                statue_details['ItemName']).amount,
+                                  f"{'<br>Reminder: You need to raise this statue to Gold first!' if requirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx' and statue.level == 0 else ''}",
+                            picture_class=statue.image,
+                            progression=statue.type_number if statue.type_number < 1 else session_data.account.stored_assets.get(
+                                statue.item_name).amount,
                             goal=(
                                 statue_onyx_stack_size if requirements.get('MinStatueType', 'UnknownStatueType') == 'Onyx'
                                 else statue_zenith_stack_size if requirements.get('MinStatueType', 'UnknownStatueType') == 'Zenith'
@@ -175,13 +178,13 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
                             resource="coins" if requirements.get('MinStatueType', 'UnknownStatueType') == 'Gold' else farm_resource
                         ))
                     if (
-                        session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_onyx_stack_size
-                        and get_statue_type_index_from_name('Gold') <= statue_details['TypeNumber'] < get_statue_type_index_from_name('Onyx')
+                        session_data.account.stored_assets.get(statue.item_name).amount >= statue_onyx_stack_size
+                        and get_statue_type_index_from_name('Gold') <= statue.type_number < get_statue_type_index_from_name('Onyx')
                     ):
                         depositable_onyx_statues += 1
                     if (
-                        session_data.account.stored_assets.get(statue_details['ItemName']).amount >= statue_zenith_stack_size
-                        and get_statue_type_index_from_name('Onyx') <= statue_details['TypeNumber'] < get_statue_type_index_from_name('Zenith')
+                        session_data.account.stored_assets.get(statue.item_name).amount >= statue_zenith_stack_size
+                        and get_statue_type_index_from_name('Onyx') <= statue.type_number < get_statue_type_index_from_name('Zenith')
                     ):
                         depositable_onyx_statues += 1
 
@@ -189,12 +192,12 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
             tier_Statues = tier_number
 
     # Generate Alerts
-    if depositable_onyx_statues > 0 and session_data.account.onyx_statues_unlocked:
+    if depositable_onyx_statues > 0 and session_data.account.statues.onyx_unlocked:
         session_data.account.alerts_Advices['World 1'].append(Advice(
             label=f"You can upgrade {depositable_onyx_statues} {{{{ Statue{pl(depositable_onyx_statues)}|#statues }}}} to Onyx in W1 Town!",
             picture_class='onyx-tools'
         ))
-    if depositable_zenith_statues > 0 and session_data.account.zenith_statues_unlocked:
+    if depositable_zenith_statues > 0 and session_data.account.statues.zenith_unlocked:
         session_data.account.alerts_Advices['World 1'].append(Advice(
             label=f"You can upgrade {depositable_zenith_statues} {{{{ Statue{pl(depositable_zenith_statues)}|#statues }}}} to Zenith in W1 Town!",
             picture_class='zenith-tools'
@@ -212,7 +215,7 @@ def getStatuesAdviceSection() -> AdviceSection:
     # Generate AdviceGroups
     statues_AdviceGroupDict = {}
     statues_AdviceGroupDict['Tiers'], overall_SectionTier, max_tier, true_max = getProgressionTiersAdviceGroup()
-    if session_data.account.maxed_statues < statue_count:
+    if session_data.account.statues.maxed_count < statue_count:
         statues_AdviceGroupDict['Crystals'] = getPreOnyxAdviceGroup()
     statues_AdviceGroupDict['Current'] = getCurrentLevelsAdviceGroup()
 

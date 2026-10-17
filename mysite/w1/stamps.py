@@ -12,7 +12,6 @@ from models.general.session_data import session_data
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_gem_shop_purchase_advice
 from utils.logging import get_logger
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 
@@ -68,22 +67,18 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     }
 
     starsignBase = 0
-    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep']['Unlocked'])
-    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule']['Unlocked'])
-    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller']['Unlocked'])
-    totalStarsignValue = starsignBase * session_data.account.star_sign_extras['SilkrodeNanoMulti'] * session_data.account.star_sign_extras['SeraphMulti']
+    starsignBase += 30 * bool(session_data.account.star_signs['Mr No Sleep'].unlocked)
+    starsignBase += 10 * bool(session_data.account.star_signs['Pack Mule'].unlocked)
+    starsignBase += 5 * bool(session_data.account.star_signs['The OG Skiller'].unlocked)
+    totalStarsignValue = starsignBase * session_data.account.star_signs.silkrode_multi * session_data.account.star_signs.seraph_multi
 
     # Stamps
     capacity_Advices['Stamps'].append(
         session_data.account.sneaking.emporium['Level Exemption'].get_obtained_advice()
     )
-    capacity_Advices['Stamps'].append(Advice(
-        label=f"Lab: Certified Stamp Book: "
-              f"{max(1, 2 * session_data.account.labBonuses['Certified Stamp Book']['Enabled'])}/2x",
-        picture_class="certified-stamp-book",
-        progression=int(session_data.account.labBonuses['Certified Stamp Book']['Enabled']),
-        goal=1
-    ))
+    capacity_Advices['Stamps'].append(
+        session_data.account.lab_bonuses['Certified Stamp Book'].get_bonus_advice()
+    )
     # I'm kinda doubting Lava ever fixes this bug, so hiding it
     # capacity_Advices['Stamps'].append(Advice(
     #     label="Lab Jewel: Pure Opal Navette (lol jk, this is bugged)",
@@ -100,34 +95,32 @@ def getCapacityAdviceGroup() -> AdviceGroup:
     # Account-Wide
     capacity_Advices['Account Wide'].append(session_data.account.bribes['Bottomless Bags'].get_bonus_advice())
     capacity_Advices['Account Wide'].append(session_data.account.guild_bonuses['Rucksack'].get_advice())
-    capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Pantheon Shrine'])
-    capacity_Advices['Account Wide'].append(session_data.account.shrine_advices['Chaotic Chizoar Card'])
-    gemshop_carry_capacity = session_data.account.gemshop['Purchases']['Carry Capacity']
-    capacity_Advices['Account Wide'].append(get_gem_shop_purchase_advice(
-        purchase_name='Carry Capacity',
-        link_to_section=True,
-        secondary_label=f": +{25 * gemshop_carry_capacity['Owned']}/{25 * gemshop_carry_capacity['MaxLevel']}%"
+    capacity_Advices['Account Wide'].append(session_data.account.shrines['Pantheon Shrine'].get_advice())
+    capacity_Advices['Account Wide'].append(session_data.account.shrines.get_chizoar_card_advice())
+    gemshop_carry_capacity = session_data.account.gemshop.purchases['Carry Capacity']
+    capacity_Advices['Account Wide'].append(gemshop_carry_capacity.get_advice(
+        additional_text=f": +{25 * gemshop_carry_capacity.owned}/{25 * gemshop_carry_capacity.max_level}%"
     ))
-    capacity_Advices['Account Wide'].append(session_data.account.star_sign_extras['SeraphAdvice'])
+    capacity_Advices['Account Wide'].append(session_data.account.star_signs.get_seraph_advice())
 
     # Character Specific
-    capacity_Advices['Character Specific'].append(session_data.account.star_sign_extras['SilkrodeNanoAdvice'])
+    capacity_Advices['Character Specific'].append(session_data.account.star_signs.get_silkrode_advice())
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep']['Unlocked']}/30% base",
+        label=f"Starsign: Mr No Sleep: {30 * session_data.account.star_signs['Mr No Sleep'].unlocked}/30% base",
         picture_class='mr-no-sleep',
-        progression=int(session_data.account.star_signs['Mr No Sleep']['Unlocked']),
+        progression=int(session_data.account.star_signs['Mr No Sleep'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule']['Unlocked']}/10% base",
+        label=f"Starsign: Pack Mule: {10 * session_data.account.star_signs['Pack Mule'].unlocked}/10% base",
         picture_class='pack-mule',
-        progression=int(session_data.account.star_signs['Pack Mule']['Unlocked']),
+        progression=int(session_data.account.star_signs['Pack Mule'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller']['Unlocked']}/5% base",
+        label=f"Starsign: The OG Skiller: {5 * session_data.account.star_signs['The OG Skiller'].unlocked}/5% base",
         picture_class='the-og-skiller',
-        progression=int(session_data.account.star_signs['The OG Skiller']['Unlocked']),
+        progression=int(session_data.account.star_signs['The OG Skiller'].unlocked),
         goal=1
     ))
     capacity_Advices['Character Specific'].append(Advice(
@@ -135,7 +128,7 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class='telescope',
     ))
     # This only checks if they are max booked, not if they are actually maxed in either of their presets
-    best_jman_bag_book = max([jman.max_talents.get("78", 0) for jman in session_data.account.jmans], default=0)
+    best_jman_bag_book = max([jman.max_talents.get("78", 0) for jman in session_data.account.characters.jmans], default=0)
     capacity_Advices['Character Specific'].append(Advice(
         label="Jman's Extra Bags talent (Materials only)",
         picture_class='extra-bags',
@@ -151,21 +144,21 @@ def getCapacityAdviceGroup() -> AdviceGroup:
         picture_class='herculean-matty-pouch',
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack']['BonusValue']}/177%",
+        label=f"{{{{ Prayer|#prayers }}}}: Ruck Sack: {session_data.account.prayers['Ruck Sack'].bonus_value}/177%",
         picture_class='ruck-sack',
-        progression=session_data.account.prayers['Ruck Sack']['Level'],
+        progression=session_data.account.prayers['Ruck Sack'].level,
         goal=50
     ))
     capacity_Advices['Character Specific'].append(Advice(
-        label=f"{{{{ Prayer|#prayers }}}}: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen']['CurseString']})",
+        label=f"{{{{ Prayer|#prayers }}}}: REMOVE ZERG RUSHOGEN ({session_data.account.prayers['Zerg Rushogen'].curse_string})",
         picture_class='zerg-rushogen',
         progression=EmojiType.NO.value
     ))
     capacity_Advices['Character Specific'].append(Advice(
         label='Star Talent: Telekinetic Storage',
         picture_class="telekinetic-storage",
-        progression=5 * session_data.account.merits[2][3]['Level'],
-        goal=5 * session_data.account.merits[2][3]['MaxLevel']
+        progression=5 * session_data.account.merits[2][3].level,
+        goal=5 * session_data.account.merits[2][3].max_level
     ))
 
     for group_name in capacity_Advices:
@@ -222,9 +215,9 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
         session_data.account.sneaking.emporium['Ionized Sigils'].get_obtained_advice()
     )
     costReduction_Advices['Uncapped'].append(Advice(
-        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {1 + session_data.account.sailing['Artifacts']['Chilled Yarn']['Level']}x",
+        label=f"{{{{ Artifact|#sailing }}}}: Chilled Yarn increases sigil by {session_data.account.sailing.artifacts.chilled_yarn_multi}x",
         picture_class='chilled-yarn',
-        progression=session_data.account.sailing['Artifacts']['Chilled Yarn']['Level'],
+        progression=session_data.account.sailing.artifacts['Chilled Yarn'].level,
         goal=max_sailing_artifact_level
     ))
 
@@ -255,11 +248,11 @@ def getExaltedAdviceGroup() -> AdviceGroup:
 
     stamps = session_data.account.stamps
     compass = session_data.account.compass
-    gemshop = session_data.account.gemshop['Purchases']
+    gemshop = session_data.account.gemshop.purchases
     atom_collider = session_data.account.atom_collider
 
     exalted_advice[boni].append(Advice(
-        label=f"Total Exalted Bonus: {session_data.account.exalted_stamp_multi:.2f}x",
+        label=f"Total Exalted Bonus: {session_data.account.stamps.exalted_multi:.2f}x",
         picture_class='exalted-stamps'
     ))
     exalted_advice[boni].append(Advice(
@@ -269,24 +262,20 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     exalted_advice[boni].append(Advice(
         label=(
             f"{{{{Atom Collider|#atom-collider}}}}: Aluminium: "
-            f"+{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}"
-            f"/{atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'] * atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Value per Level']}%"
+            f"+{atom_collider['Aluminium - Stamp Supercharger'].level * atom_collider['Aluminium - Stamp Supercharger'].value_per_level}"
+            f"/{atom_collider['Aluminium - Stamp Supercharger'].max_level * atom_collider['Aluminium - Stamp Supercharger'].value_per_level}%"
         ),
         picture_class='aluminium',
-        progression=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['Level'],
-        goal=session_data.account.atom_collider['Atoms']['Aluminium - Stamp Supercharger']['MaxLevel'],
+        progression=session_data.account.atom_collider['Aluminium - Stamp Supercharger'].level,
+        goal=session_data.account.atom_collider['Aluminium - Stamp Supercharger'].max_level,
         resource='particles'
     ))
     exalted_advice[boni].append(
         session_data.account.sneaking.pristine_charms['Jellypick'].get_obtained_advice()
     )
-    emp_set = session_data.account.armor_sets['Sets']['EMPEROR SET']
-    exalted_advice[boni].append(Advice(
-        label=f"{{{{Armor Set|#armor-sets}}}}: Emperor Set: {emp_set['Description']}",
-        picture_class=emp_set['Image'],
-        progression=int(emp_set['Owned']),
-        goal=1
-    ))
+    exalted_advice[boni].append(
+        session_data.account.armor_sets['EMPEROR SET'].get_bonus_advice()
+    )
 
     compass_abs = compass.upgrades['Abomination Slayer XVII']
     exalted_advice[boni].append(Advice(
@@ -298,10 +287,10 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         resource=compass_abs.dust_image
     ))
 
-    extra_exaltedness = session_data.account.event_points_shop['Bonuses']['Extra Exaltedness']
+    extra_exaltedness = session_data.account.event_points_shop['Extra Exaltedness']
     extra_exaltedness_value = 20
     exalted_advice[boni].append(Advice(
-        label=f"{{{{Event Shop|#event-shop}}}}: Extra Exaltedness: +{extra_exaltedness_value * extra_exaltedness['Owned']}/{extra_exaltedness_value}%",
+        label=f"{{{{Event Shop|#event-shop}}}}: Extra Exaltedness: +{extra_exaltedness_value * extra_exaltedness.owned}/{extra_exaltedness_value}%",
         picture_class='event-shop-18'
     ))
 
@@ -325,7 +314,7 @@ def getExaltedAdviceGroup() -> AdviceGroup:
         session_data.account.jelly_operator.obstructions['Fancy Facet'].get_advice()
     )
 
-    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps']['Owned'] + int(extra_exaltedness['Owned'])
+    tot_available = compass.upgrades['Exalted Stamps'].level + gemshop['Exalted Stamps'].owned + int(extra_exaltedness.owned)
 
     exalted_advice[tot].append(Advice(
         label=f"Total Exalted Stamps spent: {compass.total_exalted}/{tot_available}",
@@ -341,10 +330,10 @@ def getExaltedAdviceGroup() -> AdviceGroup:
     ))
     gemshop_exalted_stamps = gemshop['Exalted Stamps']
     exalted_advice[tot].append(Advice(
-        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps['Subsection']}): {gemshop_exalted_stamps['Owned']}",
+        label=f"Exalted Stamps from Gem Shop ({gemshop_exalted_stamps.subsection}): {gemshop_exalted_stamps.owned}",
         picture_class='exalted-stamps',
-        progression=gemshop_exalted_stamps['Owned'],
-        goal=gemshop_exalted_stamps['MaxLevel']
+        progression=gemshop_exalted_stamps.owned,
+        goal=gemshop_exalted_stamps.max_level
     ))
 
     exalted_advice[rec] = [
@@ -402,13 +391,13 @@ def getProgressionTiersAdviceGroup():
         subgroup_label = build_subgroup_label(tier_number, max_tier)
 
         # TotalLevelStamps
-        if session_data.account.stamp_totals.get('Total', 0) < requirements.get('Total Stamp Levels', 0):
+        if session_data.account.stamps.total_levels < requirements.get('Total Stamp Levels', 0):
             add_subgroup_if_available_slot(stamp_Advices['Stamp Levels'], subgroup_label)
             if subgroup_label in stamp_Advices['Stamp Levels']:
                 stamp_Advices['Stamp Levels'][subgroup_label].append(Advice(
                     label='Total Stamp Levels',
                     picture_class='stat-graph-stamp',
-                    progression=session_data.account.stamp_totals.get('Total', 0),
+                    progression=session_data.account.stamps.total_levels,
                     goal=requirements.get('Total Stamp Levels', 0)
                 ))
         if subgroup_label not in stamp_Advices['Stamp Levels'] and tier_StampLevels >= tier_number - 1:

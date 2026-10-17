@@ -142,9 +142,7 @@ class TheWell(Cavern):
 
     @cached_property
     def _schematics(self):
-        from models.general.session_data import session_data
-
-        return session_data.account.caverns.villagers["Kaipu"].schematics
+        return self.caverns.villagers["Kaipu"].schematics
 
     @cached_property
     def buckets(self) -> list[Bucket]:

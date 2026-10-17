@@ -94,7 +94,7 @@ class AlchemyVials(dict[str, Vial]):
         self.mga = vault.upgrades["Vial Overtune"].total_value + (
             (self.maxed_count * 0.02) if rift["VialMastery"].unlocked else 0
         )
-        self.mgb = lab_bonuses["My 1st Chemistry Set"]["Value"]
+        self.mgb = lab_bonuses["My 1st Chemistry Set"].value
         self.total_multi = self.mga * self.mgb
         for vial in self.values():
             vial.calculate_value(self.total_multi)

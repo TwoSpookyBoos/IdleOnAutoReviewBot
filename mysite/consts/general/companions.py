@@ -52,6 +52,8 @@ companion_bonuses = {
     },
     # `CoinDropMulti` and `AllMasterclassDropz`: `1 + Companions(38)`
     'Balloonfish': {'Coins': ('multi', 4.0, 6.0), 'Masterclass Drops': ('multi', 4.0, 6.0)},
+    # `ReefDayGains`: `1 + Companions(40)`
+    'Shellslug': {'Daily Corals': ('multi', 1.75, 2.0)},
     # `min(1.01, 1 + Companions(50) / 2500)` - the cap holds the '+' at 1.01x
     'Santa Snake': {'Class EXP': ('multi', 1.01, 1.01), 'Drop Rate': ('multi', 1.01, 1.01)},
     # `max(.01, 1 - Companions(57) / 100)` on Glimbo_Cost, a divisor. f11 computes 15.02x

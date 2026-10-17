@@ -35,7 +35,7 @@ def get_vote_info_group():
 
 def get_section() -> AdviceSection:
     # Check if player has reached this section
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         return AdviceSection(
             name="Meritocracy",
             tier="",

@@ -29,7 +29,7 @@ def get_totals_group() -> AdviceGroup:
 
 
 def get_section():
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         return AdviceSection(
             name="The Button",
             tier="Not Yet Evaluated",

@@ -1,5 +1,34 @@
+from math import floor
+
+from consts.consts_general import getNextESFamilyBreakpoint
+from consts.consts_w5 import max_sailing_artifact_level
 from models.advice.advice import Advice
+from models.general.achievements import Achievements
+from models.general.merits import Merits
+from models.w3.atom_collider import AtomCollider
+from models.w3.buildings import Buildings
+from models.w5.sailing import Sailing
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
+
+
+class BonusTalentSource:
+    def __init__(
+        self, value: float, image: str, label: str, progression: int, goal: int
+    ):
+        self.value: float = value
+        self.image: str = image
+        self.label: str = label
+        self.progression: int = progression
+        self.goal: int = goal
+
+    def get_advice(self, complete: bool | None = None) -> Advice:
+        return Advice(
+            label=self.label,
+            picture_class=self.image,
+            progression=self.progression,
+            goal=self.goal,
+            complete=complete,
+        )
 
 
 class Library:
@@ -9,21 +38,32 @@ class Library:
         self.static_sum: int = 0
         self.scaling_sum: int = 0
         self.max_book_level: int = 100
+        self.bonus_talents: dict[str, BonusTalentSource] = {}
 
     def calculate_max_book_levels(
-        self, construction_buildings: dict, achievements: dict, atom_collider: dict,
-        sailing: dict, merits: list, saltlick, summoning
+        self, construction_buildings: Buildings, achievements: Achievements, atom_collider: AtomCollider,
+        sailing: Sailing, merits: Merits, saltlick, summoning, *,
+        eldritch_artifacts_unlocked: bool, sovereign_artifacts_obtained: bool, omnipotent_artifacts_obtained: bool
     ):
+        self._library_building = construction_buildings['Talent Book Library']
+        self._checkout_takeout = achievements['Checkout Takeout']
+        self._oxygen = atom_collider['Oxygen - Library Booker']
+        self._fury_relic = sailing.artifacts['Fury Relic']
+        self._merit = merits[2][2]
+        self._saltlick = saltlick.upgrades['Max Book']
+        self.eldritch_artifacts_unlocked = eldritch_artifacts_unlocked
+        self.sovereign_artifacts_obtained = sovereign_artifacts_obtained
+        self.omnipotent_artifacts_obtained = omnipotent_artifacts_obtained
         self.static_sum = (
             0
-            + (25 * (0 < construction_buildings['Talent Book Library']['Level']))
-            + (5 * achievements['Checkout Takeout']['Complete'])
-            + (10 * (0 < atom_collider['Atoms']['Oxygen - Library Booker']['Level']))
-            + (25 * sailing['Artifacts']['Fury Relic']['Level'])
+            + (25 * (0 < construction_buildings['Talent Book Library'].level))
+            + (5 * achievements['Checkout Takeout'].complete)
+            + (10 * (0 < atom_collider['Oxygen - Library Booker'].level))
+            + (25 * sailing.artifacts['Fury Relic'].level)
         )
         self.scaling_sum = (
             0
-            + 2 * merits[2][2]['Level']
+            + 2 * merits[2][2].level
             + 2 * saltlick.upgrades['Max Book'].level
         )
         self.max_book_level = (
@@ -31,8 +71,192 @@ class Library:
             + summoning.bonuses["Library Max"].value
         )
 
+    def get_library_building_advice(self) -> Advice:
+        level = self._library_building.level
+        return Advice(
+            label=f"Construction: Talent Book Library built: "
+                  f"+{25 * (0 < level)}/25",
+            picture_class="talent-book-library",
+            progression=min(1, level),
+            goal=1
+        )
+
+    def get_checkout_takeout_advice(self) -> Advice:
+        complete = self._checkout_takeout.complete
+        return Advice(
+            label=f"W3 Achievement: Checkout Takeout: "
+                  f"+{5 * complete}/5",
+            picture_class="checkout-takeout",
+            progression=int(complete),
+            goal=1
+        )
+
+    def get_oxygen_advice(self) -> Advice:
+        level = self._oxygen.level
+        return Advice(
+            label=f"{{{{Atom Collider|#atom-collider }}}}: Oxygen: "
+                  f"+{10 * (0 < level)}/10",
+            picture_class="oxygen",
+            progression=1 if 0 < level else 0,
+            goal=1
+        )
+
+    def get_fury_relic_advice(self) -> Advice:
+        level = self._fury_relic.level
+        if not self.eldritch_artifacts_unlocked and level == 2:
+            fury_post_string = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
+        elif not self.sovereign_artifacts_obtained and level == 3:
+            fury_post_string = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
+        elif not self.omnipotent_artifacts_obtained and level == 4:
+            fury_post_string = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
+        else:
+            fury_post_string = ''
+        return Advice(
+            label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
+                  f"+{25 * level}/{25 * max_sailing_artifact_level}{fury_post_string}",
+            picture_class='fury-relic',
+            progression=level,
+            goal=max_sailing_artifact_level
+        )
+
+    def get_merit_advice(self) -> Advice:
+        return Advice(
+            label=f"W3 Max Book level Merit: "
+                  f"+{2 * self._merit.level}/10",
+            picture_class="merit-2-2",
+            progression=self._merit.level,
+            goal=self._merit.max_level
+        )
+
+    def get_saltlick_advice(self) -> Advice:
+        return Advice(
+            label=f"{{{{Salt Lick|#salt-lick }}}}: "
+                  f"+{2 * self._saltlick.level}/20",
+            picture_class="salt-lick",
+            progression=self._saltlick.level,
+            goal=10
+        )
+
+    def calculate_checkout_speed(
+        self, *, isotope_discovery: bool, library_checkouts_unlocked: bool, gaming_level: int
+    ):
+        self.isotope_discovery = isotope_discovery
+        self.library_checkouts_unlocked = library_checkouts_unlocked
+        self.gaming_level = gaming_level
+
+    def get_oxygen_speed_advice(self) -> Advice:
+        return Advice(
+            label=f"Oxygen - Library Booker: {2*self._oxygen.level}/60%",
+            picture_class='oxygen',
+            progression=self._oxygen.level,
+            goal=20 + (10 * self.isotope_discovery)
+        )
+
+    def get_library_building_speed_advice(self) -> Advice:
+        building = self._library_building
+        return Advice(
+            label=f"Talent Book Library building: {((building.level-1) * 5)}/"
+                  f"{building.max_level*5}%",
+            picture_class='talent-book-library',
+            progression=building.level,
+            goal=building.max_level
+        )
+
+    def get_library_checkouts_advice(self) -> Advice:
+        return Advice(
+            label='Superbit: Library Checkouts: +1% per Gaming Level',
+            picture_class='green-bits',
+            progression=self.gaming_level if self.library_checkouts_unlocked else 0
+        )
+
+    def get_checkout_takeout_speed_advice(self) -> Advice:
+        complete = self._checkout_takeout.complete
+        return Advice(
+            label=f"W3 Achievement: Checkout Takeout: +{30 * complete}%",
+            picture_class='checkout-takeout',
+            progression=int(complete),
+            goal=1
+        )
+
     def get_checkout_alert_advice(self) -> Advice:
         return Advice(
             label=f"{self.books_ready // 20} perfect {{{{ checkouts|#library }}}} available",
             picture_class='talent-book-library',
         )
+
+    @property
+    def account_wide_bonus_talents(self) -> int:
+        return sum(int(source.value) for source in self.bonus_talents.values())
+
+    def calculate_bonus_talents(
+        self, armor_sets, companions, family_bonuses, equinox, achievements: Achievements,
+        sneaking, grimoire, tesseract
+    ):
+        kattlekruk = armor_sets['KATTLEKRUK SET']
+        rift_slug = companions['Rift Slug']
+        es_family = family_bonuses['Elemental Sorcerer']
+        symbols = equinox.upgrades['Equinox Symbols']
+        maroon_warship = achievements['Maroon Warship'].complete
+        sneaking_mastery = 5 if sneaking.unlocked_mastery >= 3 else 0
+        skull = grimoire.upgrades['Skull of Major Talent']
+        universe_talent = tesseract.upgrades['Universe Talent']
+        self.bonus_talents = {
+            'Kattelkruk Set': BonusTalentSource(
+                kattlekruk.total_value,
+                kattlekruk.image,
+                f"{{{{Set bonus|#armor-sets}}}}: Kattlekruk Set: "
+                f"+{kattlekruk.total_value:g}/{kattlekruk.base_value:g}",
+                int(kattlekruk.owned),
+                1,
+            ),
+            'Rift Slug': BonusTalentSource(
+                rift_slug.bonus,
+                'rift-slug',
+                f"Companion: Rift Slug: +{rift_slug.bonus:g}/{rift_slug.value:g}",
+                int(companions.has('Rift Slug')),
+                1,
+            ),
+            'ES Family': BonusTalentSource(
+                floor(es_family.value),
+                'elemental-sorcerer-icon',
+                f"ES Family Bonus: +{floor(es_family.value)}.<br>Next increase at Class Level: ",
+                es_family.level,
+                getNextESFamilyBreakpoint(es_family.level),
+            ),
+            'Equinox Symbols': BonusTalentSource(
+                symbols.level,
+                'equinox-symbols',
+                f"{{{{ Equinox|#equinox }}}}: Equinox Symbols: +{symbols.level}/{symbols.final_max_level}",
+                symbols.level,
+                symbols.final_max_level,
+            ),
+            'Maroon Warship': BonusTalentSource(
+                1 * maroon_warship,
+                'maroon-warship',
+                f"W5 Achievement: Maroon Warship: +{1 * maroon_warship}/1",
+                1 if maroon_warship else 0,
+                1,
+            ),
+            'Sneaking Mastery': BonusTalentSource(
+                sneaking_mastery,
+                'sneaking-mastery',
+                f"{{{{ Rift|#rift }}}}: Sneaking Mastery: +{sneaking_mastery}/5 (Mastery III)",
+                sneaking.unlocked_mastery,
+                3,
+            ),
+            'Grimoire': BonusTalentSource(
+                skull.level,
+                skull.image,
+                f"{{{{Grimoire|#the-grimoire}}}}: Skull of Major Talent: +{skull.level}/{skull.max_level}",
+                skull.level,
+                skull.max_level,
+            ),
+            'Universe Talent': BonusTalentSource(
+                min(5, universe_talent.total_value),
+                universe_talent.image,
+                f"{{{{Tesseract|#the-tesseract}}}}: Universe Talent: "
+                f"+{min(5, universe_talent.total_value):g}/{universe_talent.max_level}",
+                universe_talent.level,
+                universe_talent.max_level,
+            ),
+        }
