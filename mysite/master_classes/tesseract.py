@@ -1,6 +1,6 @@
 from consts.consts_autoreview import EmojiType, break_you_best, build_subgroup_label
 from consts.idleon.master_classes.tesseract import tesseract_tachyon_list
-from consts.consts_w2 import max_NBLB, max_vial_level
+from consts.consts_w2 import max_NBLB
 from consts.progression_tiers import true_max_tiers, tesseract_progressionTiers
 from models.general.session_data import session_data
 from models.advice.advice import Advice
@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 def find_enemy_map(world_number: int, map_name: str):
     #Look up the account's EnemyMap data for a zone by name, if it's been parsed
-    world = session_data.account.enemy_worlds.get(world_number)
+    world = session_data.account.death_note.worlds.get(world_number)
     if not world:
         return None
     return next((enemy_map for enemy_map in world.maps_dict.values() if enemy_map.map_name == map_name), None)
@@ -146,11 +146,11 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     #Tachyon Multi calculation groups
     currency_advices['Currencies'].append(Advice(
-        label=f"Total Tachyon multi: {tesseract.tachyon_calc['Total']:.3f}x",
+        label=f"Total Tachyon multi: {tesseract.tachyon_multi.total:.3f}x",
         picture_class='tesseract'
     ))
 
-    mga_label = f"Tachyon Multi Group A: {tesseract.tachyon_calc['mga']:.2f}x"
+    mga_label = f"Tachyon Multi Group A: {tesseract.tachyon_multi.mga:.2f}x"
     currency_advices[mga_label] = []
 
     currency_advices[mga_label].append(tesseract.upgrades['Ripple in Spacetime'].get_bonus_advice())
@@ -160,49 +160,38 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
 
     # TODO: Tachyons from Equipment
 
-    lab_jewel = session_data.account.labJewels['Eternal Energy Jewel']
-    lab_jewel_active = lab_jewel['Enabled']
-    currency_advices[mga_label].append(Advice(
-        label=f"Lab Jewel 'Eternal Energy Jewel': +{lab_jewel['Value'] * lab_jewel_active}/{lab_jewel['Value']}% Tachyons",
-        picture_class='deadly-wrath-jewel',
-        progression=int(lab_jewel_active),
-        goal=1
-    ))
+    currency_advices[mga_label].append(
+        session_data.account.lab_jewels['Eternal Energy Jewel'].get_bonus_advice()
+    )
 
     currency_advices[mga_label].append(session_data.account.arcade[50].get_advice())
 
-    mgb_label = f"Tachyon Multi Group B: {tesseract.tachyon_calc['mgb']:.2f}x"
+    mgb_label = f"Tachyon Multi Group B: {tesseract.tachyon_multi.mgb:.2f}x"
 
     emperor_tachyon_bonus = session_data.account.emperor["Arcane Cultist Extra Tachyons"]
     tachyon_bubble = session_data.account.alchemy_bubbles['Tachyon Bubble']
 
     currency_advices[mgb_label] = [
         emperor_tachyon_bonus.get_bonus_advice(),
-        Advice(
-            label=f"{{{{ Alchemy Bubbles|#bubbles }}}} - Tachyon Bubble: +{round_and_trim(tachyon_bubble['BaseValue'])}/250%",
-            picture_class='tachyon-bubble',
-            resource=tachyon_bubble['Material'],
-            progression=tachyon_bubble['Level'],
-            goal=max_NBLB
-        )
+        tachyon_bubble.get_bonus_advice(goal=max_NBLB)
     ]
 
-    mgc_label = f"Bone Multi Group C: {tesseract.tachyon_calc['mgc']:.2f}x"
+    mgc_label = f"Bone Multi Group C: {tesseract.tachyon_multi.mgc:.2f}x"
     currency_advices[mgc_label] = [
         session_data.account.sneaking.pristine_charms[
             'Mystery Fizz'
         ].get_obtained_advice()
     ]
 
-    mgd_label = f"Tachyon Multi Group D: {tesseract.tachyon_calc['mgd']:.2f}x"
+    mgd_label = f"Tachyon Multi Group D: {tesseract.tachyon_multi.mgd:.2f}x"
     currency_advices[mgd_label] = [tesseract.get_backup_energy_advice()]
 
-    mge_label = f"Tachyon Multi Group E: {tesseract.tachyon_calc['mge']:.2f}x"
+    mge_label = f"Tachyon Multi Group E: {tesseract.tachyon_multi.mge:.2f}x"
 
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop['Bundle Data Present'] else ''
-    missing_bundle_data = not session_data.account.gemshop['Bundle Data Present']
-    has_arcanist_pack = session_data.account.gemshop['Bundles']['bun_x']['Owned']
-    ac_pack_value = tesseract.tachyon_calc['mge']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not session_data.account.gemshop.bundle_data_present else ''
+    missing_bundle_data = not session_data.account.gemshop.bundle_data_present
+    has_arcanist_pack = session_data.account.gemshop.bundles['bun_x'].owned
+    ac_pack_value = tesseract.tachyon_multi.mge
     currency_advices[mge_label] = [Advice(
         label=f"Gemshop - Arcane Cultist Pack:"
               f"<br>{ac_pack_value}/1.2x Tachyons"
@@ -212,17 +201,14 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
         goal=1
     )]
 
-    mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_calc['mgf'])}x"
+    mgf_label = f"Tachyon Multi Group F: {round_and_trim(tesseract.tachyon_multi.mgf)}x"
     vial = session_data.account.alchemy_vials["Paper Pint (Chapter Three 'This is Gospel')"]
-    currency_advices[mgf_label] = [Advice(
-        label=f"{{{{ Vial|#vials }}}}: Paper Pint: +{round_and_trim(vial['Value'])}%",
-        picture_class='spelunking-chapter-3',
-        progression=vial['Level'],
-        goal=max_vial_level
+    currency_advices[mgf_label] = [vial.get_advice(
+        full_name=False, picture_class='spelunking-chapter-3'
     )]
 
-    mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_calc['mgg'])}x"
-    _, ballonfish_advice = session_data.account.companions['Balloonfish'].get_advice()
+    mgg_label = f"Tachyon Multi Group G: {round_and_trim(tesseract.tachyon_multi.mgg)}x"
+    ballonfish_advice = session_data.account.companions['Balloonfish'].get_advice()
     currency_advices[mgg_label] = [ballonfish_advice]
 
     for subgroup in currency_advices:
@@ -267,14 +253,14 @@ def get_tesseract_upgrades_advice_group(tesseract) -> AdviceGroup:
 
 def get_tesseract_advice_section() -> AdviceSection:
     #Check if player has reached this section
-    if 'Arcane Cultist' not in session_data.account.classes:
+    if 'Arcane Cultist' not in session_data.account.characters.classes:
         tesseract_advice_section = AdviceSection(
             name="The Tesseract",
             tier="Not Yet Evaluated",
             header="Come back after unlocking an Arcane Cultist in World 6!",
             picture='customized/Tesseract.gif',
             unrated=True,
-            unreached=session_data.account.highest_world_reached < 6,
+            unreached=session_data.account.world_progress.highest_reached < 6,
             completed=False
         )
         return tesseract_advice_section

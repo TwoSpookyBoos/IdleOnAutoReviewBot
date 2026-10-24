@@ -29,8 +29,18 @@ companion_bonuses = {
     'Mallay': {'Drop Rate': ('multi', 1.30, 1.50)},
     # `min(1, Companions(28)) + min(1, CompLV2(28))` on PodiumsOwned_Lv4
     'RIP Tide': {'Showcase Slot': ('value', 1.0, 2.0)},
-    # `FriendBonusXtraMulti`: `1 + 100 * Companions(30) / 100`
-    'Mr Pig': {'Friend Bonuses': ('multi', 2.0, 2.5)},
+    # `FriendBonusXtraMulti`: `1 + (100 * Companions(30) + 25 * CompLV2(44)) / 100`
+    # `FriendBonusSlots`: `2 + Companions(44) + 2 * Companions(30) + EventShop(22)`
+    'Mr Pig': {
+        'Friend Bonuses': ('multi', 2.0, 2.5),
+        'Friend Bonus Slots': ('value', 2.0, 3.0),
+    },
+    # Owl/Orion/Poppy/Bubba bonuses: `1 + Companions(51)`
+    'Santas Little Helper': {'Clicker Bonuses': ('multi', 3.0, 5.0)},
+    'Spearfish': {
+        'Friend Bonuses': ('multi', 1.0, 1.25),
+        'Friend Bonus Slots': ('value', 1.0, 1.0),
+    },
     # `1 + Companions(32)`
     'Whale': {'Class EXP': ('multi', 2.0, 2.5), 'Skill EXP': ('multi', 2.0, 2.5)},
     # `1 + Companions(33)`
@@ -42,6 +52,8 @@ companion_bonuses = {
     },
     # `CoinDropMulti` and `AllMasterclassDropz`: `1 + Companions(38)`
     'Balloonfish': {'Coins': ('multi', 4.0, 6.0), 'Masterclass Drops': ('multi', 4.0, 6.0)},
+    # `ReefDayGains`: `1 + Companions(40)`
+    'Shellslug': {'Daily Corals': ('multi', 1.75, 2.0)},
     # `min(1.01, 1 + Companions(50) / 2500)` - the cap holds the '+' at 1.01x
     'Santa Snake': {'Class EXP': ('multi', 1.01, 1.01), 'Drop Rate': ('multi', 1.01, 1.01)},
     # `max(.01, 1 - Companions(57) / 100)` on Glimbo_Cost, a divisor. f11 computes 15.02x

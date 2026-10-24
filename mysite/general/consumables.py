@@ -7,7 +7,6 @@ from models.general.assets import Assets
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
-from models.advice.generators.general import get_upgrade_vault_advice
 from utils.text_formatting import pl
 from utils.logging import get_logger
 
@@ -85,31 +84,18 @@ def get_inventory_advicegroup() -> AdviceGroup:
     characters_missing_usable_bag_slots = []
 
     inventory = session_data.account.inventory
-    aw_owned = inventory['Account Wide Inventory Slots Owned']
-    aw_max = inventory['Account Wide Inventory Slots Max']
-    awi = inventory['Account Wide Inventory']
-    aw_label = f"Account Wide: {aw_owned}/{aw_max} Inventory Slots for all characters"
+    aw_label = f"Account Wide: {inventory.owned_slots}/{inventory.max_slots} Inventory Slots for all characters"
 
-    inventorySlots_AdviceDict[aw_label] = [
-        Advice(
-            label=f"{entry['Description']}: "
-                  f"{entry['Owned Slots']}/{entry['Max Slots']} slots",
-            picture_class=entry['Image'],
-            progression=int(entry['Owned']),
-            goal=1,
-            resource=entry.get('Resource', '')
-        )
-        for entry in awi.values()
-    ]
+    inventorySlots_AdviceDict[aw_label] = [source.get_advice() for source in inventory.values()]
 
-    for character in session_data.account.all_characters:
+    for character in session_data.account.characters:
         if (
             character.inventory_slots >= inventory_slots_max_usable
             or
             (
                 character.inventory_slots == inventory_slots_max_usable_without_bundles
-                and awi['Autoloot']['Owned'] is False
-                and awi['bon_f']['Owned'] is False
+                and inventory['Autoloot'].owned is False
+                and inventory['bon_f'].owned is False
             )
         ):
             continue
@@ -127,7 +113,7 @@ def get_inventory_advicegroup() -> AdviceGroup:
                     goal=1,
                     completed=False,
                     resource='coins' if bag.type == 'Vendor' else 'smithing' if bag.type == 'Crafted' else ''
-                ) for bag in inventory['Characters Missing Bags'][character.character_index] if bag.pretty_name not in inventory_accountwide_bags
+                ) for bag in inventory.missing_bags(character) if bag.pretty_name not in inventory_accountwide_bags
             ]
 
     for subgroupName in inventorySlots_AdviceDict:
@@ -146,26 +132,19 @@ def get_inventory_advicegroup() -> AdviceGroup:
 def get_storage_advicegroup() -> AdviceGroup:
     storage = session_data.account.storage
 
-    ob_label = f"Other Bonuses: {storage['Other Slots Owned']}/{storage['Other Slots Max']} slots"
-    chests_label = f"Store Chests: {storage['Used Chest Slots']}/{storage_chests_item_slots_max} slots"
+    ob_label = f"Other Bonuses: {storage.other_slots_owned}/{storage.other_slots_max} slots"
+    chests_label = f"Store Chests: {storage.used_chest_slots}/{storage_chests_item_slots_max} slots"
     advices = {
         ob_label: [],
         chests_label: []
     }
 
-    for name, details in storage['Other Storage'].items():
-        if details['Owned Slots'] < details['Max Slots']:
-            if details['Source'] == 'Vault':
-                advices[ob_label].append(get_upgrade_vault_advice(name))
+    for name, source in storage.items():
+        if source.owned_slots < source.max_slots:
+            if source.source == 'Vault':
+                advices[ob_label].append(session_data.account.vault.get_upgrade_advice(name))
             else:
-                #Expected: Event Shop, Construction Building, Gem Shop
-                advices[ob_label].append(Advice(
-                    label=details['Label'],
-                    picture_class=details['Image'],
-                    progression=details['Progression'],
-                    goal=details['Goal'],
-                    resource=details.get('Resource', '') if details['Owned Slots'] < details['Max Slots'] else ''
-                ))
+                advices[ob_label].append(source.get_advice())
 
     advices[chests_label] = [
             Advice(
@@ -175,10 +154,10 @@ def get_storage_advicegroup() -> AdviceGroup:
                 goal=1,
                 completed=False,
                 resource='coins' if chest.type == 'Vendor' else ''
-            ) for chest in storage['Missing Chests']
+            ) for chest in storage.missing_chests
         ]
 
-    total_remaining_slots = max(0, storage['Total Slots Max'] - storage['Total Slots Owned'])
+    total_remaining_slots = max(0, storage.total_slots_max - storage.total_slots_owned)
     group = AdviceGroup(
         tier='',
         pre_string=(

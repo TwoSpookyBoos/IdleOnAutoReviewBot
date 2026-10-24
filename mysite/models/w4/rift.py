@@ -41,10 +41,10 @@ class Rift(dict[str, RiftBonus]):
         for level_required, info in rift_rewards_dict.items():
             self[info['Shorthand']] = RiftBonus(level_required, info, self.level)
 
-    def calculate_unlocked(self, all_quests: list[dict]):
+    def calculate_unlocked(self, quests_by_character: list[dict]):
         # Reaching level 1 isn't the only way in: the Rift Ripper quest unlocks it too
         if not self.unlocked:
-            self.unlocked = any(quests.get('Rift_Ripper1', 0) == 1 for quests in all_quests)
+            self.unlocked = any(quests.get('Rift_Ripper1', 0) == 1 for quests in quests_by_character)
 
     def bonus_at_level(self, level: int) -> RiftBonus:
         """The bonus unlocked at this rift level, or a placeholder for levels that award nothing."""

@@ -40,11 +40,11 @@ combatLevels_progressionTiers = [
     [31, 4000, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Life And Death\"', None, None, None],
     [32, 4300, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Being Tired\"', None, None, None],
     [32, 4600, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Sleeping\"', None, None, None],
-    [33, 4855, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
-    [34, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
-    [35, 5050, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Murder One\"', None, None, None],
-    [36, 5600, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Being Smart\"', None, None, None],
-    [37, 6250, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Materialism\"', None, None, None],
+    [33, 5000, "Family - Sparkle Obol Slot 4", 500, "Credit towards Equinox Dream 23", ""],
+    [34, 5050, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Murder One\"', None, None, None],
+    [35, 5600, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Being Smart\"', None, None, None],
+    [36, 6250, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Materialism\"', None, None, None],
+    [37, 6955, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
 ]
 secret_class_progressionTiers = {
     0: {},

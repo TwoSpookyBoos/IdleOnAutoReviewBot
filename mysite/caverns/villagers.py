@@ -60,7 +60,7 @@ def getEngineerAdviceGroup() -> AdviceGroup:
 
 
 def getConjurorAdviceGroup() -> AdviceGroup:
-    gscp = session_data.account.gemshop["Purchases"]["Conjuror Pts"]
+    gscp = session_data.account.gemshop.purchases["Conjuror Pts"]
     cosmos = session_data.account.caverns.villagers["Cosmos"]
     villager_advice = {"Villager Stats": cosmos.stat_advices()}
     feature_advice = cosmos.feature_advice()
@@ -71,7 +71,7 @@ def getConjurorAdviceGroup() -> AdviceGroup:
         pre_string=f"Level {cosmos.level} {cosmos.title}",
         advices=villager_advice,
         informational=True,
-        completed=cosmos.level + gscp["Owned"] >= cosmos.majiks.max_point,
+        completed=cosmos.level + gscp.owned >= cosmos.majiks.max_point,
     )
     villager_ag.mark_advice_completed()
     return villager_ag

@@ -53,7 +53,7 @@ def get_posty_notes_info_group():
     )
 
 def get_section():
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         return AdviceSection(
             name="Research",
             tier="Not Yet Evaluated",

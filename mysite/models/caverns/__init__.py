@@ -20,6 +20,15 @@ class Caverns:
         game_version = safer_get(raw_data, "DoOnceREAL", 0.00)
         self.villagers: Villagers = Villagers(raw_caverns_list, game_version)
         self.caves: Caves = Caves(raw_caverns_list)
+        # Caves and villagers read each other through their Caverns
+        for part in [*self.villagers.values(), *self.caves.values()]:
+            part.caverns = self
+
+    def link_account_systems(self, jar_talent, stamps, conjuror_pts):
+        # Systems outside Caverns that caves and villagers read
+        self.caves["The Jar"].jar_talent = jar_talent
+        self.caves["The Temple"].stamps = stamps
+        self.villagers["Cosmos"].conjuror_pts = conjuror_pts
 
     @cached_property
     def skilling_resource_discount(self) -> float:

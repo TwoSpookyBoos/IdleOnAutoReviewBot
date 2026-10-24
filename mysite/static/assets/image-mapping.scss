@@ -88,10 +88,12 @@ $id-map: map-merge($id-map, $all-weekly-boss-map);
 @import "construction";
 @import "worship";
 @import "equinox";
+@import "hatrack";
 
 $id-map: map-merge($id-map, $all-construction);
 $id-map: map-merge($id-map, $all-worship);
 $id-map: map-merge($id-map, $equinox);
+$id-map: map-merge($id-map, $hatrack);
 
 //W4
 @import "breeding";

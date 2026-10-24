@@ -1,14 +1,47 @@
-from consts.consts_general import specialized_skills_dict
-from consts.consts_w2 import get_obol_totals, po_box_dict, alchemy_jobs_list
-from consts.consts_w3 import prayers_dict, apoc_names_list
+from math import ceil, floor
+
+from consts.consts_autoreview import ValueToMulti
+from consts.consts_general import inventory_bags_dict, specialized_skills_dict
+from consts.consts_w2 import alchemy_jobs_list, get_obol_totals, po_box_dict
+from consts.consts_w3 import prayers_dict
 from consts.consts_w4 import lab_chips_dict
 from consts.consts_w5 import divinity_divinities_dict
-from consts.idleon.consts_idleon import current_world, expected_talents_dict
+from consts.idleon.consts_idleon import expected_talents_dict
 from consts.idleon.lava_func import lava_func
+from consts.general.equipment import (
+    equip_slot_chip_doublers,
+    equip_slot_count,
+    gallery_slot_indexes,
+    gallery_unlock_kills_index,
+    gown_slot_index,
+    hatrack_slot_index,
+    hatrack_unlock_kills_index,
+    tool_slot_count,
+)
+from consts.general.talents import (
+    talent_bonus_banned_above,
+    talent_bonus_banned_indexes,
+    talent_bonus_banned_range,
+)
 from models.general.equipment import Equipment
-from utils.number_formatting import parse_number
+from models.w2.post_office import PostOfficeBox
+from models.w3.apocalypse import ApocProgress, new_apocalypses
+from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
+from utils.number_formatting import parse_number
+from utils.safer_data_handling import safer_convert, safer_index
+
 logger = get_logger(__name__)
+
+
+def talent_bonus_banned(talent_index: int) -> bool:
+    low, high = talent_bonus_banned_range
+    return (
+        low <= talent_index <= high
+        or talent_index in talent_bonus_banned_indexes
+        or talent_index > talent_bonus_banned_above
+    )
+
 
 class Character:
     def __init__(
@@ -41,7 +74,8 @@ class Character:
         equipped_cardset: str,
         equipped_cards: list['Card'] = None,
         equipped_cards_codenames: list[str] = None,
-        equipped_star_signs: list[int] = None
+        equipped_star_signs: list[int] = None,
+        active_talent_preset: int = 0
     ):
 
         self.character_index: int = character_index
@@ -57,10 +91,17 @@ class Character:
         self.max_talents_over_books: int = 100
         self.symbols_of_beyond = 0
         self.family_guy_bonus = 0
+        self.arctis_bonus_max = 0
+        self.timmy_talented_bonus = 0
+        self.total_bonus_talent_levels: int = 0
         self.current_map_index = current_map_index
         self.max_talents: dict = max_talents
         self.current_preset_talents: dict = current_preset_talents
         self.secondary_preset_talents: dict = secondary_preset_talents
+        # "PlayerStuff"[1] in source. Last updated in v2.531.0
+        self.active_talent_preset: int = active_talent_preset
+        self.active_super_talents: set[int] = set()
+        self.super_talent_levels: int = 0
         self.current_preset_talent_bar: dict = current_preset_talent_bar
         self.secondary_preset_talent_bar: dict = secondary_preset_talent_bar
         self.fix_talent_bars()
@@ -111,54 +152,10 @@ class Character:
         self.secondary_polytheism_link = "Unlinked"
         self.obols = get_obol_totals(obols, obol_upgrades)
 
-        self.po_boxes_invested = {}
-        for poBoxIndex, poBoxValues in po_box_dict.items():
-            try:
-                self.po_boxes_invested[poBoxValues['Name']] = {
-                    'Level': po_boxes[poBoxIndex],
-                    'Max Level': poBoxValues['Max Level'],
-                    'Tab': poBoxValues['Tab'],
-                    'Bonus1Value': lava_func(
-                        poBoxValues['1_funcType'],
-                        po_boxes[poBoxIndex],
-                        poBoxValues['1_x1'],
-                        poBoxValues['1_x2'],
-                    ),
-                    'Bonus1String': '',
-                    'Bonus2Value': lava_func(
-                        poBoxValues['2_funcType'],
-                        po_boxes[poBoxIndex] - poBoxValues['2_minCount'],
-                        poBoxValues['2_x1'],
-                        poBoxValues['2_x2'],
-                    ) if po_boxes[poBoxIndex] >= poBoxValues['2_minCount'] else 0,
-                    'Bonus2String': '',
-                    'Bonus3Value': lava_func(
-                        poBoxValues['3_funcType'],
-                        po_boxes[poBoxIndex] - poBoxValues['3_minCount'],
-                        poBoxValues['3_x1'],
-                        poBoxValues['3_x2'],
-                    ) if po_boxes[poBoxIndex] >= poBoxValues['3_minCount'] else 0,
-                    'Bonus3String': '',
-                }
-                if self.po_boxes_invested[poBoxValues['Name']]['Level'] > 0:
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus1String'] = (
-                        f"{poBoxValues['1_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus1Value']}{poBoxValues['1_post']} {poBoxValues['1_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus2String'] = (
-                        f"{poBoxValues['2_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus2Value']}{poBoxValues['2_post']} {poBoxValues['2_stat']}")
-                    self.po_boxes_invested[poBoxValues['Name']]['Bonus3String'] = (
-                        f"{poBoxValues['3_pre']}{self.po_boxes_invested[poBoxValues['Name']]['Bonus3Value']}{poBoxValues['3_post']} {poBoxValues['3_stat']}")
-            except:
-                self.po_boxes_invested[poBoxValues['Name']] = {
-                    'Level': 0,
-                    'Max Level': poBoxValues['Max Level'],
-                    'Tab': poBoxValues['Tab'],
-                    'Bonus1Value': 0,
-                    'Bonus1String': '',
-                    'Bonus2Value': 0,
-                    'Bonus2String': '',
-                    'Bonus3Value': 0,
-                    'Bonus3String': '',
-                }
+        self.po_boxes_invested: dict[str, PostOfficeBox] = {
+            info['Name']: PostOfficeBox(info, safer_index(po_boxes, index, None))
+            for index, info in po_box_dict.items()
+        }
         self.equipped_lab_chips: list[str] = []
         for chipIndex in equipped_lab_chips:
             if chipIndex != -1:
@@ -168,20 +165,17 @@ class Character:
                     continue
         self.equipped_card_doublers: list[str] = self.get_card_doublers()
 
-        self.apoc_dict: dict = {
-            name: {
-                **{f"Basic W{i} Enemies": list() for i in range(1, current_world+1)},
-                "Easy Extras": [],
-                "Medium Extras": [],
-                "Difficult Extras": [],
-                "Insane": [],
-                "Impossible": [],
-                "Total": 0,
-            }
-            for name in apoc_names_list
-        }
+        self.apocalypses: dict[str, ApocProgress] = new_apocalypses()
         self.equipment = Equipment(raw_data, character_index, self.combat_level >= 1)
-        self.printed_materials = {}
+        # Anvil points bought with cash and with monster materials
+        try:
+            raw_anvil = raw_data[f"AnvilPAstats_{character_index}"]
+            self.anvil_cash_points: int = safer_convert(raw_anvil[1], 0)
+            self.anvil_monster_points: int = safer_convert(raw_anvil[2], 0)
+        except Exception:
+            logger.exception(f"Unable to retrieve AnvilPAstats_{character_index}")
+            self.anvil_cash_points = 0
+            self.anvil_monster_points = 0
 
         self.setPolytheismLink()
 
@@ -257,20 +251,23 @@ class Character:
                 except:
                     self.kill_dict[mapIndex] = [0, 0, 0]
 
-    def addUnmetApoc(self, apocType: str, apocRating: str, mapInfoList: list):
-        self.apoc_dict[apocType][apocRating].append(mapInfoList)
-
-    def increaseApocTotal(self, apocType: str):
-        self.apoc_dict[apocType]["Total"] += 1
-
-    def sortApocByProgression(self):
-        for apocType, difficulties in self.apoc_dict.items():
-            for difficulty, enemies in difficulties.items():
-                if difficulty != "Total":
-                    if len(enemies) > 0:
-                        difficulties[difficulty] = sorted(
-                            enemies, key=lambda item: item[1], reverse=True
-                        )
+    def calculate_inventory_slots(self, account_wide_slots: int):
+        self.inventory_slots = account_wide_slots
+        for bag, slots in self.inventory_bags.items():
+            if int(bag) == 112:
+                continue  # 4th anniversary bag counts account wide
+            if isinstance(slots, int | float | str):
+                self.inventory_slots += parse_number(slots)
+            else:
+                logger.warning(
+                    f"Funky bag value found in {self.character_index}'s bagsDict for bag {bag}: "
+                    f"{type(slots)} {slots}. Searching for expected value."
+                )
+                if int(bag) in inventory_bags_dict:
+                    logger.debug(f"Bag {bag} has a known value: {inventory_bags_dict[int(bag)]}. All is well :)")
+                else:
+                    logger.error(f"Bag {bag} has no known value. Defaulting to 0 :(")
+                self.inventory_slots += inventory_bags_dict.get(int(bag), 0)
 
     def setDivinityStyle(self, styleName: str):
         self.divinity_style = styleName
@@ -293,28 +290,136 @@ class Character:
             except:
                 pass
 
-    def setFamilyGuyBonus(self, value: float):
-        self.family_guy_bonus = value
+    def calculate_bonus_talent_levels(
+        self,
+        account_wide_bonus: int,
+        arctis_linked: bool,
+        big_p_value: float,
+        coral_kid_level: float,
+        timmy_talented: bool,
+        max_book_level: int,
+        es_family_value: float,
+    ):
+        # "OptLacc[430]" in source: Coral Kid boosts the Arctis minor link. Last updated in v2.531.0
+        # "DivMinorBonus" in source: base 15 scaled by divinity level. Last updated in v2.531.0
+        arctis_base = 15 * max(1, big_p_value) * ValueToMulti(round(coral_kid_level))
+        divinity_minor = self.divinity_level / (self.divinity_level + 60)
+        self.arctis_bonus_max = ceil(arctis_base * divinity_minor)
+        character_bonus = self.arctis_bonus_max if arctis_linked else 0
 
-    def setSymbolsOfBeyondMax(self, value: int):
-        self.symbols_of_beyond = 1 + value if value > 0 else 0
+        # "AllTalentLV" in source. Last updated in v2.531.0
+        if timmy_talented:
+            self.timmy_talented_bonus = max(0, floor((self.combat_level - 500) / 100))
+        character_bonus += self.timmy_talented_bonus
 
-    def increase_max_talents_over_books(self, value: int):
-        try:
-            self.max_talents_over_books += value
-        except:
-            pass
+        # Symbols of Beyond: 1 + 1 per 20 levels of the elite's own copy
+        symbols_level = 0
+        if any(elite in self.all_classes for elite in ["Blood Berserker", "Divine Knight"]):
+            symbols_level = self.max_talents.get("149", 0) // 20
+        elif any(elite in self.all_classes for elite in ["Siege Breaker", "Beast Master"]):
+            symbols_level = self.max_talents.get("374", 0) // 20
+        elif any(elite in self.all_classes for elite in ["Elemental Sorcerer", "Bubonic Conjuror"]):
+            symbols_level = self.max_talents.get("539", 0) // 20
+        self.symbols_of_beyond = 1 + symbols_level if symbols_level > 0 else 0
+        character_bonus += self.symbols_of_beyond
 
-    def setPrintedMaterials(self, printDict):
-        self.printed_materials = printDict
+        self.total_bonus_talent_levels = account_wide_bonus + character_bonus
+        self.max_talents_over_books = max_book_level + self.total_bonus_talent_levels
 
-    def setCrystalSpawnChance(self, value: float):
-        self.crystal_spawn_chance = value
+        # Family Guy: floor(ES Family value * Family Guy multi) extra levels
+        if self.class_name == 'Elemental Sorcerer':
+            family_guy_multi = ValueToMulti(lava_func(
+                'decay', self.max_talents_over_books + self.max_talents.get('374', 0), 40, 100
+            ))
+            self.family_guy_bonus = floor(es_family_value * family_guy_multi) - floor(es_family_value)
+            self.max_talents_over_books += self.family_guy_bonus
+
+    def calculate_crystal_spawn_chance(self, account_wide: float, crescent_shrine_value: float):
+        # Assumes Cmon Out Crystals is max booked
+        cmon_out_crystals_multi = max(1, ValueToMulti(lava_func(
+            'decay',
+            self.max_talents_over_books if self.max_talents.get("26", 0) > 0 else 0,
+            300,
+            100
+        )))
+        crystals_4_dayys_multi = max(1, ValueToMulti(lava_func(
+            'decay', self.max_talents.get("619", 0), 174, 50
+        )))
+        shrine_and_po = ValueToMulti(
+            self.po_boxes_invested['Non Predatory Loot Box'].bonus_3_value + crescent_shrine_value
+        )
+        self.crystal_spawn_chance = account_wide * (
+            shrine_and_po * cmon_out_crystals_multi * crystals_4_dayys_multi
+        )
 
     def isArctisLinked(self):
         return 'Arctis' in [
             self.divinity_link, self.current_polytheism_link, self.secondary_polytheism_link
         ]
+
+    # "CardBonusREAL" in source. Last updated in v2.531.0
+    def get_equipped_card_bonus(
+        self, description: str, flopping_multi: float = 1.0
+    ) -> float:
+        return flopping_multi * sum(
+            card.getCurrentValue(optional_character=self)
+            for card in self.equipped_cards
+            if card.description == description
+        )
+
+    def get_bonus_levels(self, talent_index: int, bonus_cap: float = 9999) -> int:
+        if talent_bonus_banned(talent_index):
+            return 0
+        return floor(min(bonus_cap, self.total_bonus_talent_levels))
+
+    # "AllTalentLV" in source. Last updated in v2.531.0
+    def get_talent_level(self, talent_index: int, bonus_cap: float = 9999) -> int:
+        base = self.current_preset_talents.get(str(talent_index), 0)
+        if base <= 0.5 or talent_bonus_banned(talent_index):
+            return base
+        # Super levels skip the cap; active preset only, unlike getbonus2
+        super_levels = self.super_talent_levels * (
+            talent_index in self.active_super_talents
+        )
+        return base + self.get_bonus_levels(talent_index, bonus_cap) + super_levels
+
+    # "GetTalentNumber"(1, t) in source. Last updated in v2.531.0
+    def get_talent_value(self, talent_index: int, bonus_cap: float = 9999) -> float:
+        level = self.get_talent_level(talent_index, bonus_cap)
+        talent = all_talentsDict.get(talent_index)
+        if level <= 0 or talent is None:
+            return 0
+        return lava_func(talent['funcX'], level, talent['x1'], talent['x2'])
+
+    def _kills_left(self, kills_index: int) -> float:
+        return safer_index(self.kill_dict.get(kills_index, [1]), 0, 1)
+
+    @property
+    def gallery_bonus_active(self) -> bool:
+        return self._kills_left(gallery_unlock_kills_index) <= 0
+
+    @property
+    def hatrack_bonus_active(self) -> bool:
+        return self._kills_left(hatrack_unlock_kills_index) <= 0
+
+    # Gear/tool part of "TotalStatsETCmap" in source. Last updated in v2.531.0
+    def get_gear_misc_bonus(self, codename: str, gown_bonus: float) -> float:
+        # Gallery/Hatrack take over their slots once open
+        total = 0
+        for slot in range(equip_slot_count):
+            if self.gallery_bonus_active and slot in gallery_slot_indexes:
+                continue
+            if self.hatrack_bonus_active and slot == hatrack_slot_index:
+                continue
+            value = self.equipment.get_misc_bonus(slot, codename)
+            if equip_slot_chip_doublers.get(slot) in self.equipped_lab_chips:
+                value *= 2
+            if slot == gown_slot_index and gown_bonus >= 1:
+                value *= ValueToMulti(gown_bonus)
+            total += value
+        for slot in range(tool_slot_count):
+            total += self.equipment.get_misc_bonus(slot, codename, tools=True)
+        return total
 
     def __str__(self):
         return self.character_name

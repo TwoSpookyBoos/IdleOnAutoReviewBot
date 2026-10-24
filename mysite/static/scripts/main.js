@@ -25,6 +25,7 @@ const defaults = {
     doot: "off",
     riftslug: "off",
     sheepie: "off",
+    potluck_pack: "off",
     order_tiers: "off",
     library_group_characters: "off",
     hide_overwhelming: "off",

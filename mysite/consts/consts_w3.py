@@ -64,7 +64,6 @@ buildings_dict = {
 }
 # buildings_utilities = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Utility']
 
-buildings_towers = [buildingValuesDict['Name'] for buildingName, buildingValuesDict in buildings_dict.items() if buildingValuesDict['Type'] == 'Tower']
 # Last updated in v2.46 Nov 29
 buildings_tower_max_level = (
     50  # Base

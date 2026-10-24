@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from consts.caverns.cavern import get_resource_image
+from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import EmojiType
 from consts.idleon.caverns.villager.kaipu import available_schematics, schematics_data
 from models.advice.advice import Advice
@@ -12,7 +13,8 @@ logger = get_logger(__name__)
 
 
 class SchematicBonus:
-    def __init__(self, index: int, data: dict, is_bought: bool):
+    def __init__(self, villager: "Kaipu", index: int, data: dict, is_bought: bool):
+        self.villager = villager
         self.name = data["Name"]
         self._template: str = data["Template"]
         self.unlock_order = data["UnlockOrder"]
@@ -24,13 +26,11 @@ class SchematicBonus:
     def level(self):
         if not self.bought:
             return 0
-        from models.general.session_data import session_data
-
         match self.unlock_order:
             case 44:  # Gloomie Lootie
-                return session_data.account.caverns.caves["Grotto"].opals_found
+                return self.villager.caverns.caves["Grotto"].opals_found
             case 81:  # Sanctum of LOOT
-                return session_data.account.caverns.caves["The Temple"].opals_found
+                return self.villager.caverns.caves["The Temple"].opals_found
             case _:
                 return 0
 
@@ -76,7 +76,7 @@ class Schematic(dict[str, SchematicBonus]):
 
 class Kaipu(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Kaipu", unlock_at=2, role="The Engineer", **kwargs)
+        super().__init__(name="Kaipu", unlock_at=2, role=villager_roles["Kaipu"], **kwargs)
         self.schematics = Schematic()
 
     def parse_feature(self, raw_caverns_list: list):
@@ -88,7 +88,7 @@ class Kaipu(Villager):
             logger.warning("Can't sum raw_schematics_list")
         for index, schematic_info in enumerate(schematics_data):
             is_bought = raw_schematics_list[index] > 0
-            bonus = SchematicBonus(index, schematic_info, is_bought)
+            bonus = SchematicBonus(self, index, schematic_info, is_bought)
             self.schematics[bonus.name] = bonus
         self.schematics.unlocked = min(
             available_schematics, 1 + (self.level * 3) + (self.level // 5)

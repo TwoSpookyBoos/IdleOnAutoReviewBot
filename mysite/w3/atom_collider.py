@@ -1,7 +1,6 @@
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label
 from consts.consts_w5 import snail_max_possible_rank
-from consts.consts_w4 import cooking_close_enough
 from consts.consts_w3 import buildings_tower_max_level, collider_storage_limit_list
 from consts.progression_tiers import atoms_progressionTiers
 from models.general.session_data import session_data
@@ -24,9 +23,9 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
     colliderData = session_data.account.atom_collider
 
     try:
-        formatted_particlesOwned = f"{colliderData['Particles']:,.0f}"
+        formatted_particlesOwned = f"{colliderData.particles:,.0f}"
     except:
-        formatted_particlesOwned = f"{colliderData['Particles']}"
+        formatted_particlesOwned = f"{colliderData.particles}"
 
     settings_advice['Information'].append(
         Advice(
@@ -35,74 +34,63 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
         )
     )
 
-    for atomName, atomValues in colliderData['Atoms'].items():
-        settings_advice['Information'].append(
-            Advice(
-                label=(
-                    f"{atomName}: {atomValues['Description']}"
-                    f"<br>({atomValues['Value per Level']} per level)"
-                    if atomName != 'Magnesium - Trap Compounder' else
-                    f"{atomName}: {atomValues['Description']}"
-                    f"<br>{colliderData['Magnesium Days']}/100 days since last retrap"
-                    f"<br>({atomValues['Value per Level']} per level)"
-                ),
-                picture_class=atomName.split(' - ')[0],
-                progression=atomValues['Level'],
-                goal=atomValues['MaxLevel']
-            )
-        )
+    for atom in colliderData.values():
+        settings_advice['Information'].append(atom.get_advice(
+            f"<br>{colliderData.magnesium_days}/100 days since last retrap"
+            if atom.name == 'Magnesium - Trap Compounder' else ''
+        ))
 
     #Alerts
     #Collider is not Off
-    if colliderData['OnOffStatus'] == True:
+    if colliderData.on == True:
         settings_advice['Alerts'].append(
             Advice(
-                label=f"Collider switch status: {'On' if session_data.account.atom_collider['OnOffStatus'] else 'Off'}.<br>Recommended to select Off instead to avoid nuking your storage from a single misclick.",
+                label=f"Collider switch status: {'On' if colliderData.on else 'Off'}.<br>Recommended to select Off instead to avoid nuking your storage from a single misclick.",
                 picture_class='collider-toggle',
             )
         )
 
     #Limit not set to 1050M
-    if colliderData['StorageLimit'] != collider_storage_limit_list[-1]:
+    if colliderData.storage_limit != collider_storage_limit_list[-1]:
         settings_advice['Alerts'].append(
             Advice(
-                label=f"Storage Limit: {session_data.account.atom_collider['StorageLimit']}M<br>Recommend to select {collider_storage_limit_list[-1]}M instead.",
+                label=f"Storage Limit: {colliderData.storage_limit}M<br>Recommend to select {collider_storage_limit_list[-1]}M instead.",
                 picture_class='',
-                progression=session_data.account.atom_collider['StorageLimit'],
+                progression=colliderData.storage_limit,
                 goal=collider_storage_limit_list[-1],
                 unit='M'
             )
         )
 
     #Sodium lower than Snail // 5
-    if session_data.account.gaming['Imports']['Snail']['SnailRank'] < snail_max_possible_rank:
-        if colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] < session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5:
+    if session_data.account.gaming.snail.rank < snail_max_possible_rank:
+        if colliderData['Sodium - Snail Kryptonite'].level < session_data.account.gaming.snail.rank // 5:
             settings_advice['Alerts'].append(
                 Advice(
-                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
-                          f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level']*5}!"
-                          f"<br>Level Sodium to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                    label=f"Snail could reset from Rank {session_data.account.gaming.snail.rank}"
+                          f" to {colliderData['Sodium - Snail Kryptonite'].level*5}!"
+                          f"<br>Level Sodium to {session_data.account.gaming.snail.rank // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming.snail.rank // 5)}.",
                     picture_class="sodium",
-                    progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                    progression=colliderData['Sodium - Snail Kryptonite'].level,
+                    goal=session_data.account.gaming.snail.rank // 5
                 )
             )
             session_data.account.alerts_Advices['World 3'].append(Advice(
-                    label=f"Snail could reset from Rank {session_data.account.gaming['Imports']['Snail']['SnailRank']}"
-                          f" to {colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'] * 5}!"
-                          f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5}"
-                          f" to protect Rank {5 * (session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5)}.",
+                    label=f"Snail could reset from Rank {session_data.account.gaming.snail.rank}"
+                          f" to {colliderData['Sodium - Snail Kryptonite'].level * 5}!"
+                          f"<br>Level {{{{ Sodium|#atom-collider }}}} to {session_data.account.gaming.snail.rank // 5}"
+                          f" to protect Rank {5 * (session_data.account.gaming.snail.rank // 5)}.",
                     picture_class='sodium',
-                    progression=colliderData['Atoms']['Sodium - Snail Kryptonite']['Level'],
-                    goal=session_data.account.gaming['Imports']['Snail']['SnailRank'] // 5
+                    progression=colliderData['Sodium - Snail Kryptonite'].level,
+                    goal=session_data.account.gaming.snail.rank // 5
             ))
 
     currentMaxedTowers = 0
-    if colliderData['Atoms']["Carbon - Wizard Maximizer"]['Level'] < colliderData['Atoms']["Carbon - Wizard Maximizer"]['MaxLevel']:
+    if colliderData["Carbon - Wizard Maximizer"].level < colliderData["Carbon - Wizard Maximizer"].max_level:
         for buildingName, buildingValuesDict in session_data.account.construction_buildings.items():
-            if buildingValuesDict['Type'] == 'Tower':
-                if buildingValuesDict['Level'] >= buildingValuesDict['MaxLevel'] and buildingValuesDict['MaxLevel'] < buildings_tower_max_level:
+            if buildingValuesDict.type == 'Tower':
+                if buildingValuesDict.level >= buildingValuesDict.max_level and buildingValuesDict.max_level < buildings_tower_max_level:
                     currentMaxedTowers += 1
 
     if currentMaxedTowers > 0:
@@ -135,27 +123,20 @@ def getColliderSettingsAdviceGroup() -> AdviceGroup:
 def getMaxLevelAdviceGroup() -> AdviceGroup:
     ml_advice = []
 
-    sp_id = session_data.account.gaming['SuperBits']['Isotope Discovery']
+    sp_id = session_data.account.gaming.superbits['Isotope Discovery']
     ml_advice.append(
         Advice(
             label=f"Purchasing the final SuperBit in Gaming will increase the max level of all Atoms by 10",
             picture_class='red-bits',
-            progression=int(sp_id['Unlocked']),
+            progression=int(sp_id.unlocked),
             goal=1
         )
     )
 
     ml_advice.append(session_data.account.compass.upgrades['Atomic Potential'].get_advice())
 
-    hb = session_data.account.event_points_shop['Bonuses']['Higgs Boson']
-    ml_advice.append(
-        Advice(
-            label=f"{{{{Event Shop|#event-shop}}}}: Higgs Boson: {hb['Description']}",
-            picture_class=hb['Image'],
-            progression=int(hb['Owned']),
-            goal=1
-        )
-    )
+    hb = session_data.account.event_points_shop['Higgs Boson']
+    ml_advice.append(hb.get_bonus_advice())
 
     for advice in ml_advice:
         advice.mark_advice_completed()
@@ -173,41 +154,38 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice = []
 
     cr_advice.append(Advice(
-        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6]['Level'] * 7}/{session_data.account.merits[4][6]['Level'] * 7}%"
+        label=f"W5 Taskboard Merit: {session_data.account.merits[4][6].level * 7}/{session_data.account.merits[4][6].max_level * 7}%"
               f"<br>The in-game display is incorrect. Don't @ me.",
         picture_class='merit-4-6',
-        progression=session_data.account.merits[4][6]['Level'],
-        goal=session_data.account.merits[4][6]['MaxLevel']
+        progression=session_data.account.merits[4][6].level,
+        goal=session_data.account.merits[4][6].max_level
     ))
 
     cr_advice.append(Advice(
-        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level']}"""
-        f"""/{session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']}%""",
+        label=f"""Neon - Damage N' Cheapener: {session_data.account.atom_collider["Neon - Damage N' Cheapener"].level}"""
+        f"""/{session_data.account.atom_collider["Neon - Damage N' Cheapener"].max_level}%""",
         picture_class='neon',
-        progression=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['Level'],
-        goal=session_data.account.atom_collider['Atoms']["Neon - Damage N' Cheapener"]['MaxLevel']
+        progression=session_data.account.atom_collider["Neon - Damage N' Cheapener"].level,
+        goal=session_data.account.atom_collider["Neon - Damage N' Cheapener"].max_level
     ))
 
     cr_advice.append(Advice(
-        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']}/10%",
+        label=f"Superbit: Atom Redux: {10 * session_data.account.gaming.superbits['Atom Redux'].unlocked}/10%",
         picture_class='red-bits',
-        progression=int(session_data.account.gaming['SuperBits']['Atom Redux']['Unlocked']),
+        progression=int(session_data.account.gaming.superbits['Atom Redux'].unlocked),
         goal=1
     ))
 
     cr_advice.append(Advice(
-        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider']['Level'] / 10:.1f}"
-              f"/{session_data.account.construction_buildings['Atom Collider']['MaxLevel'] / 10:.1f}%",
+        label=f"Atom Collider building: {session_data.account.construction_buildings['Atom Collider'].level / 10:.1f}"
+              f"/{session_data.account.construction_buildings['Atom Collider'].max_level / 10:.1f}%",
         picture_class='atom-collider',
-        progression=session_data.account.construction_buildings['Atom Collider']['Level'],
-        goal=session_data.account.construction_buildings['Atom Collider']['MaxLevel']
+        progression=session_data.account.construction_buildings['Atom Collider'].level,
+        goal=session_data.account.construction_buildings['Atom Collider'].max_level
     ))
 
-    cr_advice.append(Advice(
-        label=f"Atom Split bubble: {session_data.account.alchemy_bubbles['Atom Split']['BaseValue']:.2f}/14%",
-        picture_class='atom-split',
-        progression=session_data.account.alchemy_bubbles['Atom Split']['Level'],
-        resource=session_data.account.alchemy_bubbles['Atom Split']['Material']
+    cr_advice.append(session_data.account.alchemy_bubbles['Atom Split'].get_advice(
+        f" bubble: {session_data.account.alchemy_bubbles['Atom Split'].base_value:.2f}/14%"
     ))
 
     cr_advice.append(session_data.account.stamps['Atomic Stamp'].get_advice())
@@ -219,12 +197,12 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     cr_advice.append(session_data.account.compass.upgrades['Atomic Cost Crash'].get_advice())
 
     cr_advice.append(Advice(
-        label=f"Remaining cost: {session_data.account.atom_collider['CostReductionMulti']*100:.2f}%",
+        label=f"Remaining cost: {session_data.account.atom_collider.cost_reduction_multi*100:.2f}%",
         picture_class='particles',
     ))
 
     cr_advice.append(Advice(
-        label=f"Total discount: {session_data.account.atom_collider['CostDiscount']:.2f}% off",
+        label=f"Total discount: {session_data.account.atom_collider.cost_discount:.2f}% off",
         picture_class='particles',
     ))
 
@@ -242,7 +220,7 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 def getAtomExclusionsList() -> list[str]:
     exclusionsList = []
     # If cooking is basically finished thanks to NMLB, exclude Fluoride's cooking speed
-    if session_data.account.cooking['MaxRemainingMeals'] < cooking_close_enough:
+    if session_data.account.cooking.close_enough:
         exclusionsList.append('Fluoride - Void Plate Chef')
 
     return exclusionsList
@@ -257,7 +235,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     max_tier = true_max - optional_tiers
     tier_atomLevels = 0
 
-    player_atoms = session_data.account.atom_collider['Atoms']  # Player Atoms
+    player_atoms = session_data.account.atom_collider  # Player Atoms
     exclusionsList = getAtomExclusionsList()
 
     # Assess Tiers
@@ -265,15 +243,10 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
         subgroup_label = build_subgroup_label(tier_number, max_tier)
         #Atom levels
         for atom_name, level in requirements.get('Atoms', {}).items():
-            if atom_name not in exclusionsList and player_atoms[atom_name]['Level'] < level:
+            if atom_name not in exclusionsList and player_atoms[atom_name].level < level:
                 add_subgroup_if_available_slot(collider_AdviceDict['Atoms'], subgroup_label)
                 if subgroup_label in collider_AdviceDict['Atoms']:
-                    collider_AdviceDict['Atoms'][subgroup_label].append(Advice(
-                        label=atom_name,
-                        picture_class=atom_name.split(' - ')[0],
-                        progression=player_atoms[atom_name]['Level'],
-                        goal=level
-                    ))
+                    collider_AdviceDict['Atoms'][subgroup_label].append(player_atoms[atom_name].get_tier_advice(level))
         if subgroup_label not in collider_AdviceDict['Atoms'] and tier_atomLevels == tier_number - 1:
             tier_atomLevels = tier_number
 
@@ -288,7 +261,7 @@ def getProgressionTiersAdviceGroup() -> tuple[AdviceGroup, int, int, int]:
     return tiers_ag, overall_ColliderTier, max_tier, true_max
 
 def getColliderAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Atom Collider']['Level'] < 1:
+    if session_data.account.construction_buildings['Atom Collider'].level < 1:
         collider_AdviceSection = AdviceSection(
             name='Atom Collider',
             tier='Not Yet Evaluated',

@@ -16,7 +16,7 @@ def getArcadeBonusesAdviceGroup() -> AdviceGroup:
     }
     arcade_Advices['Currency'] = session_data.account.arcade.get_currency_advice()
 
-    _, reindeer_advice = session_data.account.companions['Spirit Reindeer'].get_advice()
+    reindeer_advice = session_data.account.companions['Spirit Reindeer'].get_advice()
     arcade_Advices['Bonuses'] = [reindeer_advice] + [
         upgrade.get_advice(False) for upgrade in session_data.account.arcade.values()
     ]

@@ -15,7 +15,7 @@ def get_upgrade_info_group():
 
 def get_section():
     # Check if player has reached this section
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         return AdviceSection(
             name="Advice Fish",
             tier="Not Yet Evaluated",

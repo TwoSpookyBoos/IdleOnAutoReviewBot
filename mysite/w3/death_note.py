@@ -19,9 +19,9 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
     ags = []
     apoc_name = apoc_names_list[-1]  #This is the Unfiltered placeholder that stores just kill_count without any goal
     difficulty_name = apoc_difficulty_name_list[-2]
-    #logger.debug(f"apocCharactersIndexList: {session_data.account.apocCharactersIndexList}")
-    for character_index in session_data.account.apocCharactersIndexList:
-        char = session_data.account.all_characters[character_index]
+    #logger.debug(f"apocCharactersIndexList: {session_data.account.death_note.apoc_character_indexes}")
+    for character_index in session_data.account.death_note.apoc_character_indexes:
+        char = session_data.account.characters[character_index]
         #logger.debug(f"Generating AdviceGroup for: {char.character_name}")
         advices[char.character_name] = {
             "Scattered Extras": [],
@@ -34,12 +34,12 @@ def getAllKillsDisplaySubgroupedByWorldAdviceGroup():
             "World 7": [],
             #"World 8": [],
         }
-        for enemy in char.apoc_dict[apoc_name][difficulty_name]:
-            subgroupName = f'World {enemy[4]}' if enemy[4] != 0 else 'Scattered Extras'
+        for unmet in char.apocalypses[apoc_name].unmet[difficulty_name]:
+            subgroupName = f'World {unmet.world}' if unmet.world != 0 else 'Scattered Extras'
             advices[char.character_name][subgroupName].append(Advice(
-                label=f"{enemy[5]} in {enemy[0]}",
-                picture_class=enemy[3],
-                goal=f"{enemy[1]:,}"
+                label=f"{unmet.monster_name} in {unmet.map_name}",
+                picture_class=unmet.monster_image,
+                goal=f"{unmet.kills_short:,}"
             ))
     for toon_name, toon_advice_list in advices.items():
         ags.append(AdviceGroup(
@@ -98,9 +98,9 @@ def getDeathNoteProgressionTiersAdviceGroup():
     wows_for_next_tier = 0
 
     # Just shortening the paths
-    apoc_characters_index_list = session_data.account.apocCharactersIndexList
-    apocalypse_character_Index = session_data.account.apocalypse_character_index
-    full_death_note_dict = session_data.account.enemy_worlds
+    apoc_characters_index_list = session_data.account.death_note.apoc_character_indexes
+    apocalypse_character_Index = session_data.account.death_note.apocalypse_character_index
+    full_death_note_dict = session_data.account.death_note.worlds
 
     highest_zow_count = 0
     highest_zow_count_index = None
@@ -111,11 +111,11 @@ def getDeathNoteProgressionTiersAdviceGroup():
             highest_zow_count_index = barb_index
         if highest_chow_count_index is None:
             highest_chow_count_index = barb_index
-        if session_data.account.all_characters[barb_index].apoc_dict['ZOW']['Total'] > highest_zow_count:
-            highest_zow_count = session_data.account.all_characters[barb_index].apoc_dict['ZOW']['Total']
+        if session_data.account.characters[barb_index].apocalypses['ZOW'].total > highest_zow_count:
+            highest_zow_count = session_data.account.characters[barb_index].apocalypses['ZOW'].total
             highest_zow_count_index = barb_index
-        if session_data.account.all_characters[barb_index].apoc_dict['CHOW']['Total'] > highest_chow_count:
-            highest_chow_count = session_data.account.all_characters[barb_index].apoc_dict['CHOW']['Total']
+        if session_data.account.characters[barb_index].apocalypses['CHOW'].total > highest_chow_count:
+            highest_chow_count = session_data.account.characters[barb_index].apocalypses['CHOW'].total
             highest_chow_count_index = barb_index
 
     # Assess Tiers
@@ -142,15 +142,15 @@ def getDeathNoteProgressionTiersAdviceGroup():
                     tier_combo[world_index] = tier[0]
                 else:
                     required_kills = getDNKillRequirement(skull_value=tier[world_index])
-                    for skull_value in full_death_note_dict[world_index].lowest_skulls_dict:
+                    for skull_value in full_death_note_dict[world_index].maps_by_skull:
                         skull_name = dn_skull_value_to_name_dict[skull_value]
                         if skull_value < tier[world_index]:
                             # Looking for previously skipped enemy requirements where {skull_value} < {tier[world_index]}
                             # I promise this should be < not <=. You'll get negative amounts remaining if you use <=
-                            for enemy in full_death_note_dict[world_index].lowest_skulls_dict[skull_value]:
+                            for enemy in full_death_note_dict[world_index].maps_by_skull[skull_value]:
                                 if (
-                                    tier[world_index] < dn_delays.get(enemy[0], {}).get('DelayUntilSkull', 0)
-                                    or tier[0] < dn_delays.get(enemy[0], {}).get('DelayUntilTier', 0)
+                                    tier[world_index] < dn_delays.get(enemy.map_name, {}).get('DelayUntilSkull', 0)
+                                    or tier[0] < dn_delays.get(enemy.map_name, {}).get('DelayUntilTier', 0)
                                 ):
                                     # Skip certain maps until particular Skull values or Tier number
                                     continue
@@ -161,16 +161,16 @@ def getDeathNoteProgressionTiersAdviceGroup():
                                     try:
                                         deathnote_AdviceDict[f'W{world_index}'].append(Advice(
                                             label=(
-                                                f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', required_kills - enemy[4], 0)} remaining)"
+                                                f"{enemy.monster_name} in {enemy.map_name} ({notateNumber('Basic', required_kills - enemy.kill_count, 0)} remaining)"
                                             ),
-                                            picture_class=enemy[3],
-                                            progression=min(99, floor(round(enemy[4]/required_kills * 100))),  #enemy[2]
+                                            picture_class=enemy.monster_image,
+                                            progression=min(99, floor(round(enemy.kill_count/required_kills * 100))),
                                             goal=100,
                                             unit='%',
                                             resource=skull_name
                                         ))
                                     except:
-                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy[0]}")
+                                        logger.exception(f"Failed to find enemy name for W{world_index} {enemy.map_name}")
                     # If all failed requirements were delayed, be sure to increase the Tier as this counts as a Pass
                     if len(deathnote_AdviceDict[f'W{world_index}']) == 0:
                         tier_combo[world_index] = tier[0]
@@ -184,17 +184,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 if highest_zow_count_index is not None:
                     apoc_to_next_tier['ZOW'] = tier[9] - highest_zow_count
                     for difficultyName in apoc_difficulty_name_list:
-                        if len(session_data.account.all_characters[highest_zow_count_index].apoc_dict['ZOW'][difficultyName]) > 0:
+                        if len(session_data.account.characters[highest_zow_count_index].apocalypses['ZOW'].unmet[difficultyName]) > 0:
                             if difficultyName not in deathnote_AdviceDict['ZOW']:
                                 deathnote_AdviceDict['ZOW'][difficultyName] = []
-                            for enemy in session_data.account.all_characters[highest_zow_count_index].apoc_dict['ZOW'][difficultyName]:
-                                deathnote_AdviceDict["ZOW"][difficultyName].append(Advice(
-                                    label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
-                                    picture_class=enemy[3],
-                                    progression=enemy[2],
-                                    goal=100,
-                                    unit='%'
-                                ))
+                            deathnote_AdviceDict["ZOW"][difficultyName].extend(
+                                unmet.get_advice()
+                                for unmet in session_data.account.characters[highest_zow_count_index].apocalypses['ZOW'].unmet[difficultyName]
+                            )
                 else:
                     deathnote_AdviceDict['ZOW'] = [
                         Advice(
@@ -214,17 +210,13 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 if highest_chow_count_index is not None:
                     apoc_to_next_tier['CHOW'] = tier[10] - highest_chow_count
                     for difficultyName in apoc_difficulty_name_list:
-                        if len(session_data.account.all_characters[highest_chow_count_index].apoc_dict['CHOW'][difficultyName]) > 0:
+                        if len(session_data.account.characters[highest_chow_count_index].apocalypses['CHOW'].unmet[difficultyName]) > 0:
                             if difficultyName not in deathnote_AdviceDict['CHOW']:
                                 deathnote_AdviceDict['CHOW'][difficultyName] = []
-                            for enemy in session_data.account.all_characters[highest_chow_count_index].apoc_dict['CHOW'][difficultyName]:
-                                deathnote_AdviceDict["CHOW"][difficultyName].append(Advice(
-                                    label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
-                                    picture_class=enemy[3],
-                                    progression=enemy[2],
-                                    goal=100,
-                                    unit='%'
-                                ))
+                            deathnote_AdviceDict["CHOW"][difficultyName].extend(
+                                unmet.get_advice()
+                                for unmet in session_data.account.characters[highest_chow_count_index].apocalypses['CHOW'].unmet[difficultyName]
+                            )
                 else:
                     deathnote_AdviceDict['CHOW'] = [
                         Advice(
@@ -241,23 +233,19 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 tier_combo['MEOW'] = tier[0]
             else:
                 if apocalypse_character_Index is not None:
-                    if session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total'] >= tier[11]:
+                    if session_data.account.characters[apocalypse_character_Index].apocalypses['MEOW'].total >= tier[11]:
                         tier_combo['MEOW'] = tier[0]
                     else:
-                        meows_for_next_tier = f"({session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total']}/{tier[11]})"
-                        apoc_to_next_tier['MEOW'] = tier[11] - session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW']['Total']
+                        meows_for_next_tier = f"({session_data.account.characters[apocalypse_character_Index].apocalypses['MEOW'].total}/{tier[11]})"
+                        apoc_to_next_tier['MEOW'] = tier[11] - session_data.account.characters[apocalypse_character_Index].apocalypses['MEOW'].total
                         for difficultyName in apoc_difficulty_name_list:
-                            if len(session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]) > 0:
+                            if len(session_data.account.characters[apocalypse_character_Index].apocalypses['MEOW'].unmet[difficultyName]) > 0:
                                 if difficultyName not in deathnote_AdviceDict['MEOW']:
                                     deathnote_AdviceDict['MEOW'][difficultyName] = []
-                                for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['MEOW'][difficultyName]:
-                                    deathnote_AdviceDict["MEOW"][difficultyName].append(Advice(
-                                        label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
-                                        picture_class=enemy[3],
-                                        progression=enemy[2],
-                                        goal=100,
-                                        unit='%'
-                                    ))
+                                deathnote_AdviceDict["MEOW"][difficultyName].extend(
+                                    unmet.get_advice()
+                                    for unmet in session_data.account.characters[apocalypse_character_Index].apocalypses['MEOW'].unmet[difficultyName]
+                                )
                 else:
                     deathnote_AdviceDict['MEOW'] = [
                         Advice(
@@ -274,23 +262,19 @@ def getDeathNoteProgressionTiersAdviceGroup():
                 tier_combo['WOW'] = tier[0]
             else:
                 if apocalypse_character_Index is not None:
-                    if session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total'] >= tier[12]:
+                    if session_data.account.characters[apocalypse_character_Index].apocalypses['WOW'].total >= tier[12]:
                         tier_combo['WOW'] = tier[0]
                     else:
-                        wows_for_next_tier = f"({session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total']}/{tier[12]})"
-                        apoc_to_next_tier['WOW'] = tier[12] - session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW']['Total']
+                        wows_for_next_tier = f"({session_data.account.characters[apocalypse_character_Index].apocalypses['WOW'].total}/{tier[12]})"
+                        apoc_to_next_tier['WOW'] = tier[12] - session_data.account.characters[apocalypse_character_Index].apocalypses['WOW'].total
                         for difficulty_name in apoc_difficulty_name_list:
-                            if len(session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW'][difficulty_name]) > 0:
+                            if len(session_data.account.characters[apocalypse_character_Index].apocalypses['WOW'].unmet[difficulty_name]) > 0:
                                 if difficulty_name not in deathnote_AdviceDict['WOW']:
                                     deathnote_AdviceDict['WOW'][difficulty_name] = []
-                                for enemy in session_data.account.all_characters[apocalypse_character_Index].apoc_dict['WOW'][difficulty_name]:
-                                    deathnote_AdviceDict['WOW'][difficulty_name].append(Advice(
-                                        label=f"{enemy[5]} in {enemy[0]} ({notateNumber('Basic', enemy[1], 0)} remaining)",
-                                        picture_class=enemy[3],
-                                        progression=enemy[2],
-                                        goal=100,
-                                        unit='%'
-                                    ))
+                                deathnote_AdviceDict['WOW'][difficulty_name].extend(
+                                    unmet.get_advice()
+                                    for unmet in session_data.account.characters[apocalypse_character_Index].apocalypses['WOW'].unmet[difficulty_name]
+                                )
 
                 else:
                     deathnote_AdviceDict['WOW'] = [
@@ -322,7 +306,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
             tier=tier_combo['ZOW'],
             pre_string=f"{'You could complete' if tier_combo['ZOW'] >= max_tier else 'Complete'} "
                        f"{apoc_to_next_tier['ZOW']} more ZOW{pl(apoc_to_next_tier['ZOW'])} with "
-                       f"{session_data.account.all_characters[highest_zow_count_index].character_name} {zows_for_next_tier}",
+                       f"{session_data.account.characters[highest_zow_count_index].character_name} {zows_for_next_tier}",
             advices=deathnote_AdviceDict['ZOW'],
             post_string="Aim for 12hrs or less (8k+ KPH) per enemy",
         )
@@ -339,7 +323,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
             tier=tier_combo['CHOW'],
             pre_string=f"{'You could complete' if tier_combo['CHOW'] >= max_tier else 'Complete'} "
                        f"{apoc_to_next_tier['CHOW']} more CHOW{pl(apoc_to_next_tier['CHOW'])} with "
-                       f"{session_data.account.all_characters[highest_chow_count_index].character_name} {chows_for_next_tier}",
+                       f"{session_data.account.characters[highest_chow_count_index].character_name} {chows_for_next_tier}",
             advices=deathnote_AdviceDict['CHOW'],
             post_string="Aim for 12hrs or less (83k+ KPH) per enemy",
         )
@@ -356,7 +340,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
             tier=tier_combo['MEOW'],
             pre_string=f"{'You could complete' if tier_combo['MEOW'] >= max_tier else 'Complete'} "
                        f"{apoc_to_next_tier['MEOW']} more Super CHOW{pl(apoc_to_next_tier['MEOW'])} with "
-                       f"{session_data.account.all_characters[apocalypse_character_Index].character_name} {meows_for_next_tier}",
+                       f"{session_data.account.characters[apocalypse_character_Index].character_name} {meows_for_next_tier}",
             advices=deathnote_AdviceDict['MEOW'],
             post_string=f"Aim for 24hrs or less (4m+ KPH) per enemy",
         )
@@ -373,7 +357,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
             tier=tier_combo['WOW'],
             pre_string=f"{'You could complete' if tier_combo['WOW'] >= max_tier else 'Complete'} "
                        f"{apoc_to_next_tier['WOW']} more WOW{pl(apoc_to_next_tier['WOW'])} with "
-                       f"{session_data.account.all_characters[apocalypse_character_Index].character_name} {wows_for_next_tier}",
+                       f"{session_data.account.characters[apocalypse_character_Index].character_name} {wows_for_next_tier}",
             advices=deathnote_AdviceDict['WOW'],
             post_string='Aim for 10m+ KPH per enemy',
         )
@@ -394,7 +378,7 @@ def getDeathNoteProgressionTiersAdviceGroup():
 
 
 def getDeathNoteAdviceSection() -> AdviceSection:
-    if session_data.account.construction_buildings['Death Note']['Level'] < 1:
+    if session_data.account.construction_buildings['Death Note'].level < 1:
         deathnote_AdviceSection = AdviceSection(
             name='Death Note',
             tier='0/0',
@@ -421,7 +405,7 @@ def getDeathNoteAdviceSection() -> AdviceSection:
         note=(
             "Important! Since you already have 2+ Blood Berserkers, you must complete Super CHOWs and WOWs"
             " with the last one in your character roster, regardless of the platform you play on."
-        ) if len(session_data.account.bbCharactersIndexList) > 1 else ''
+        ) if len(session_data.account.death_note.bb_character_indexes) > 1 else ''
     )
 
     return deathnote_AdviceSection

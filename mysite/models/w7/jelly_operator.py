@@ -92,6 +92,11 @@ class JellyObstruction:
         self.value = info["Value"]
         self.unlocked = obstructions_defeated > index
 
+    @property
+    def bonus_value(self) -> float:
+        # "RoG_BonusQTY" in source. Last updated in v2.531.0
+        return self.value if self.unlocked else 0
+
     def get_advice(self) -> Advice:
         rendered = (
             self.description
@@ -179,31 +184,32 @@ class JellyOperator:
             * 15 / (safer_math_log(best / 50, "Lava") + 20)
         )
 
-    def _currency_multi(self, account) -> float:
+    def _currency_multi(
+        self, grid_bonus: float, atom_bonus: float, arcade_bonus: float
+    ) -> float:
         # "CurrencyMulti" in source
-        grid_bonus = account.research.grid["Jelly Operator Linguistics"].value
-        atoms = account.atom_collider["Atoms"]
-        atom_bonus = atoms["Sulfur - Jelly Bloodcell Juicer"]["Value"]
         return (
             (1 + (self._qty(23) + self._qty(24) + self._qty(25)
                   + self._qty(33) * self.cell_level_total) / 100)
-            * (1 + account.arcade[72].value / 100)
+            * (1 + arcade_bonus / 100)
             * (1 + grid_bonus / 100)
             * (1 + self._fever_bonus(2) / 100)
             * (1 + self.has_bundle_j)
-            * (1 + self._obstruction_value(24) / 100)
+            * (1 + self.get_rog_bonus(24) / 100)
             * self._dps_multi()
             * (1 + self._qty(26) / 100)
             * (1 + self._qty(27) / 100)
             * (1 + atom_bonus / 100)
         )
 
-    def _obstruction_value(self, index: int) -> float:
-        # "RoG_BonusQTY" in source
+    def get_rog_bonus(self, index: int) -> float:
+        # "RoG_BonusQTY" in source. Last updated in v2.531.0
         obstruction = self._obstructions_by_index.get(index)
-        return obstruction.value if obstruction and obstruction.unlocked else 0
+        return obstruction.bonus_value if obstruction else 0
 
-    def calculate_bonuses(self, account):
+    def calculate_bonuses(
+        self, linguistics_grid_bonus: float, sulfur_atom_bonus: float, arcade_bonus: float
+    ):
         for upgrade in self.upgrades.values():
             upgrade.calculate_bonus()
 
@@ -212,8 +218,11 @@ class JellyOperator:
             * (1 + (self._qty(30) + self._qty(31) + self._qty(10)) / 100)
             * (1 + self._qty(11) / 100)
         )
+        currency_multi = self._currency_multi(
+            linguistics_grid_bonus, sulfur_atom_bonus, arcade_bonus
+        )
         slots_left = round(
-            self._qty(9) + self._qty(8) + self._obstruction_value(44)
+            self._qty(9) + self._qty(8) + self.get_rog_bonus(44)
             + self.has_bundle_j - self.slot_unlocks_spent
         )
         totals = {
@@ -221,7 +230,7 @@ class JellyOperator:
             10: f"{floor(100 * exp_multi) / 100}",
             15: f"{round(1 + self._qty(15))}",  # "VirusesAllowed"
             17: f"{round(1 + self._qty(17))}",
-            23: f"{round(100 * self._currency_multi(account)) / 100}",
+            23: f"{round(100 * currency_multi) / 100}",
             29: f"{round_and_trim(1 + (50 + self._qty(29)) / 100)}",  # "RoidMulti"
             32: f"{round_and_trim(self._qty(32) * floor(self.cell_level_total / 10))}",
             33: f"{round_and_trim(self._qty(33) * self.cell_level_total)}",

@@ -30,10 +30,8 @@ class BraveryMonument(MonumentCavern):
 
     @cached_property
     def sword_min(self) -> float:
-        from models.general.session_data import session_data
-
         story_schematic_bought = (
-            session_data.account.caverns.villagers["Kaipu"]
+            self.caverns.villagers["Kaipu"]
             .schematics["The Story Changes Over Time..."]
             .bought
         )
@@ -41,15 +39,13 @@ class BraveryMonument(MonumentCavern):
 
     @cached_property
     def sword_max(self) -> float:
-        from models.general.session_data import session_data
-
         story_schematic_bought = (
-            session_data.account.caverns.villagers["Kaipu"]
+            self.caverns.villagers["Kaipu"]
             .schematics["The Story Changes Over Time..."]
             .bought
         )
         minau_measurement = (
-            session_data.account.caverns.villagers["Minau"].measurements[1].value
+            self.caverns.villagers["Minau"].measurements[1].value
         )
         return (
             25 + (10 * floor(self.hours / 6) * story_schematic_bought)

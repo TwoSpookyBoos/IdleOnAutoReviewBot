@@ -11,7 +11,7 @@ from consts.idleon.w7.the_button import (
 from models.advice.advice import Advice
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_index
+from utils.safer_data_handling import safe_loads, safer_index, safer_math_pow
 from utils.text_formatting import notateNumber
 
 logger = get_logger(__name__)
@@ -75,7 +75,7 @@ class TheButton:
             case "step":
                 requirement = task["Base"] + presses / task["Coefficient"]
             case _:
-                requirement = task["Base"] * (task["Coefficient"] ** presses)
+                requirement = task["Base"] * safer_math_pow(task["Coefficient"], presses)
         requirement = math.ceil(requirement)  # game shows whole numbers only
         description = task["Description"].replace(
             "{", notateNumber("Basic", requirement, 0)

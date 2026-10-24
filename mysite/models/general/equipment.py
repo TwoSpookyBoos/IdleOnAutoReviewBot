@@ -1,3 +1,4 @@
+from consts.consts_item_data import raw_item_data
 from models.general.assets import Asset
 from utils.safer_data_handling import safe_loads, safer_convert
 
@@ -47,3 +48,31 @@ class Equipment:
             self.tools = []
             self.foods = []
             self.inventory = []
+
+    def get_misc_bonus(self, slot: int, codename: str, tools: bool = False) -> float:
+        items = self.tools if tools else self.equips
+        if slot >= len(items):
+            return 0
+        item = items[slot]
+        item_data = raw_item_data.get(item.codename, {})
+        total = 0
+        for line in (1, 2):
+            item_text = item_data.get(f"Misc {line} (Text)", "0")
+            rolled_text = item.stats.get(f"misc_{line}_txt", "0")
+            rolled_value = safer_convert(item.stats.get(f"misc_{line}_val", 0), 0)
+            # Rolled text only when item has none
+            text = rolled_text if item_text == "0" and rolled_value > 0 else item_text
+            if text == codename:
+                base_value = safer_convert(item_data.get(f"Misc {line} (Value)", 0), 0)
+                total += base_value + rolled_value
+        return total
+
+    def get_item_misc_bonus(self, item: Asset, codenames: tuple[str, ...]) -> float:
+        for tools, items in ((False, self.equips), (True, self.tools)):
+            for slot, worn in enumerate(items):
+                if worn is item:
+                    return sum(
+                        self.get_misc_bonus(slot, codename, tools=tools)
+                        for codename in codenames
+                    )
+        return 0

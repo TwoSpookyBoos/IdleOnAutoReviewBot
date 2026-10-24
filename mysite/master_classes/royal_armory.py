@@ -72,7 +72,7 @@ def getRoyalArmoryStatuesAdviceGroup(royal_armory) -> AdviceGroup:
 
 def getRoyalArmoryStatueFlairAdviceGroup(royal_armory) -> AdviceGroup:
     flair_advices = [
-        flair.get_advice(session_data.account.statues[flair.statue_name]['Image'])
+        flair.get_advice(session_data.account.statues[flair.statue_name].image)
         for flair in royal_armory.statue_flairs
     ]
 
@@ -114,14 +114,14 @@ def getRoyalArmoryOrbletMarketAdviceGroup(royal_armory) -> AdviceGroup:
 
 def getRoyalArmoryAdviceSection() -> AdviceSection:
     #Check if player has reached this section
-    if 'Royal Guardian' not in session_data.account.classes:
+    if 'Royal Guardian' not in session_data.account.characters.classes:
         royal_armory_AdviceSection = AdviceSection(
             name="Royal Armory",
             tier="Not Yet Evaluated",
             header="Come back after unlocking a Royal Guardian (Divine Knight's master class)!",
             picture='extracted_sprites/OrbOfVerisimilitude.gif',
             unrated=True,
-            unreached=session_data.account.highest_world_reached < 6,
+            unreached=session_data.account.world_progress.highest_reached < 6,
             completed=False
         )
         return royal_armory_AdviceSection

@@ -49,7 +49,7 @@ def get_obstructions_group() -> AdviceGroup:
 
 
 def get_section():
-    if session_data.account.highest_world_reached < 7:
+    if session_data.account.world_progress.highest_reached < 7:
         return AdviceSection(
             name="Jelly Operator",
             tier="Not Yet Evaluated",

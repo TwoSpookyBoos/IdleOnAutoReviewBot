@@ -8,8 +8,6 @@ from consts.w6.summoning import (
 from models.advice.advice import Advice
 from models.advice.advice_group import AdviceGroup
 from models.advice.advice_section import AdviceSection
-from models.advice.generators.general import get_gem_shop_purchase_advice
-from models.advice.generators.w5 import get_sailing_artifact_advice
 from models.general.session_data import session_data
 
 from utils.logging import get_logger
@@ -96,9 +94,9 @@ def get_bonuses() -> AdviceGroup:
 def get_bonuses_multi() -> AdviceGroup:
     account = session_data.account
     summoning = account.summoning
-    player_group, max_group = summoning.multi["Bonuses"]["Group"]
-    player_mga, player_mgb, player_mgc = player_group
-    _, max_mgb, _ = max_group
+    winner_multi = summoning.winner_multi
+    player_mga, player_mgb, player_mgc = winner_multi.mga, winner_multi.mgb, winner_multi.mgc
+    max_mgb = winner_multi.max_mgb
     mga = f"Multi Group A: {round_and_trim(player_mga)}x"
     mgb = f"Multi Group B: {round_and_trim(player_mgb)}x"
     mgc = f"Multi Group C: {round_and_trim(player_mgc)}x"
@@ -110,10 +108,8 @@ def get_bonuses_multi() -> AdviceGroup:
     )
     # Multi Group B: Gem Shop - King of all Winners
     multi_advices[mgb].append(
-        get_gem_shop_purchase_advice(
-            purchase_name="King Of All Winners",
-            link_to_section=True,
-            secondary_label=f": {round_and_trim(player_mgb)}/{round_and_trim(max_mgb)}x",
+        account.gemshop.purchases["King Of All Winners"].get_advice(
+            additional_text=f": {round_and_trim(player_mgb)}/{round_and_trim(max_mgb)}x",
         )
     )
     # Multi Group C: Summoning Winner Bonuses, some of which apply only to certain upgrades
@@ -123,39 +119,39 @@ def get_bonuses_multi() -> AdviceGroup:
     multi_advices[mgc].append(
         summoning.bonuses["Winner Bonuses"].get_bonus_advice(False)
     )
-    multi_advices[mgc].append(get_sailing_artifact_advice('The Winz Lantern'))
+    multi_advices[mgc].append(session_data.account.sailing.artifacts['The Winz Lantern'].get_advice())
     multi_advices[mgc].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
-              f"+{account.merits[5][4]['Level']}/{account.merits[5][4]['MaxLevel']}%",
+              f"+{account.merits[5][4].level}/{account.merits[5][4].max_level}%",
         picture_class="merit-5-4",
-        progression=account.merits[5][4]["Level"],
-        goal=account.merits[5][4]["MaxLevel"]
+        progression=account.merits[5][4].level,
+        goal=account.merits[5][4].max_level
     ))
     multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Spectre Stars: "
-              f"+{int(account.achievements['Spectre Stars']['Complete'])}/1%",
+              f"+{int(account.achievements['Spectre Stars'].complete)}/1%",
         picture_class="spectre-stars",
-        progression=int(account.achievements['Spectre Stars']['Complete']),
+        progression=int(account.achievements['Spectre Stars'].complete),
         goal=1
     ))
     multi_advices[mgc].append(Advice(
         label=f"W6 Achievement: Regalis My Beloved: "
-              f"+{int(account.achievements['Regalis My Beloved']['Complete'])}/1%",
+              f"+{int(account.achievements['Regalis My Beloved'].complete)}/1%",
         picture_class="regalis-my-beloved",
-        progression=summoning.sanctuary_count if not account.achievements['Regalis My Beloved']['Complete'] else 360,
+        progression=summoning.sanctuary_count if not account.achievements['Regalis My Beloved'].complete else 360,
         goal=360
     ))
     multi_advices[mgc].append(Advice(
         label=f"{{{{Armor Set|#armor-sets}}}}: Godshard Set: "
-              f"+{round(MultiToValue(account.armor_sets['Sets']['GODSHARD SET']['Total Value']), 1):g}"
-              f"/{round(account.armor_sets['Sets']['GODSHARD SET']['Base Value'], 1):g}%",
-        picture_class=account.armor_sets['Sets']['GODSHARD SET']['Image'],
-        progression=int(account.armor_sets['Sets']['GODSHARD SET']['Owned']),
+              f"+{round(MultiToValue(account.armor_sets['GODSHARD SET'].total_value), 1):g}"
+              f"/{round(account.armor_sets['GODSHARD SET'].base_value, 1):g}%",
+        picture_class=account.armor_sets['GODSHARD SET'].image,
+        progression=int(account.armor_sets['GODSHARD SET'].owned),
         goal=1
     ))
-    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop['Bundle Data Present'] else ''
-    missing_bundle_data = not account.gemshop['Bundle Data Present']
-    has_daydreamer_pack = account.gemshop['Bundles']['ban_i']['Owned']
+    missing_bundle_data_txt = '<br>Note: Could be inaccurate. Bundle data not found!' if not account.gemshop.bundle_data_present else ''
+    missing_bundle_data = not account.gemshop.bundle_data_present
+    has_daydreamer_pack = account.gemshop.bundles['ban_i'].owned
     multi_advices[mgc].append(Advice(
         label=f"Gemshop - Daydreamer Pack:"
               f"<br>+{50 * int(has_daydreamer_pack)}/50% Summoning Winner Bonuses"
@@ -165,8 +161,8 @@ def get_bonuses_multi() -> AdviceGroup:
         goal=1
     ))
     # Summary
-    total = round_and_trim(summoning.multi["Bonuses"]["Value"])
-    library_total = round_and_trim(summoning.multi["Library"]["Value"])
+    total = round_and_trim(winner_multi.value)
+    library_total = round_and_trim(winner_multi.library_value)
     multi_advices[summary].append(Advice(
         label=f"Regular Battles Bonuses Multi: {total}x",
         picture_class='summoning'
@@ -201,9 +197,9 @@ def get_upgrades() -> AdviceGroup:
         session_data.account.caverns.caves['Gambit'].bonuses[0].get_bonus_advice()
     )
     upgrades_advice[sources].append(Advice(
-        label=f"{10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned']} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
-        picture_class=session_data.account.event_points_shop['Bonuses']['Summoning Star']['Image'],
-        progression=10 * session_data.account.event_points_shop['Bonuses']['Summoning Star']['Owned'],
+        label=f"{10 * session_data.account.event_points_shop['Summoning Star'].owned} earned from {{{{ Event Shop|#event-shop}}}}: Summoning Star",
+        picture_class=session_data.account.event_points_shop['Summoning Star'].image,
+        progression=10 * session_data.account.event_points_shop['Summoning Star'].owned,
         goal=10
     ))
     upgrades_advice[sources].append(summoning.get_doubler_spent_advice())
@@ -246,7 +242,7 @@ def get_bosses() -> AdviceGroup:
 
 def get_section() -> AdviceSection:
     # Check if player has reached this section
-    highest_summoning_level = max(session_data.account.all_skills["Summoning"])
+    highest_summoning_level = max(session_data.account.characters.all_skills["Summoning"])
     if highest_summoning_level < 1:
         return AdviceSection(
             name="Summoning",
