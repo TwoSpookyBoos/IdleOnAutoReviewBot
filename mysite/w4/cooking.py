@@ -71,7 +71,9 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
             if subgroup_label in cooking_Advices['Tiers']:
                 cooking_Advices['Tiers'][subgroup_label].append(Advice(
                     label="Unlock Fluoride - Void Plate Chef in the {{Atom Collider|#atom-collider}} from W3 Construction skill",
-                    picture_class='fluoride'
+                    picture_class='fluoride',
+                    progression=0,
+                    goal=1
                 ))
 
         #Total meal plate levels
