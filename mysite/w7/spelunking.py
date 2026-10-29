@@ -36,7 +36,7 @@ def get_cave_bonuses_advicegroup() -> AdviceGroup:
 def get_lore_bonuses_tabbed() -> TabbedAdviceGroup:
     lb_tabbed = {
         name: (
-            TabbedAdviceGroupTab(chapter[0].resource, name),
+            TabbedAdviceGroupTab(chapter[0].resource),
             AdviceGroup(
                 tier="",
                 pre_string=name,
