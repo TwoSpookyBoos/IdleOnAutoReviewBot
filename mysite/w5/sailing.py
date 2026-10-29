@@ -41,7 +41,7 @@ def get_sailing_progression_tier_advicegroups():
         'Artifacts': {}
     }
     sailing_AdviceGroups = {}
-    optional_tiers = 0
+    optional_tiers = 1
     true_max = true_max_tiers['Sailing']
     max_tier = true_max - optional_tiers
     tier_Islands = 0
@@ -96,26 +96,13 @@ def get_sailing_progression_tier_advicegroups():
 
         # Outside requirement checks should be at the top of the list
         if session_data.account.sailing.artifacts.total_tiers < total_artifacts:
-            if 'Eldritch' in requirements:
-                if not session_data.account.rift['EldritchArtifact'].unlocked:
+            if 'Artifact Tier' in requirements:
+                if session_data.account.sailing.unlocked_artifact_tier < requirements['Artifact Tier']:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
                     if subgroup_label in sailing_Advices['Artifacts']:
-                        sailing_Advices['Artifacts'][subgroup_label].append(Advice(
-                            label="Unlock Eldritch tier Artifacts by completing {{ Rift|#rift }} 30",
-                            picture_class='eldritch-artifact',
-                            progression=0,
-                            goal=1
-                        ))
-            if 'Sovereign' in requirements:
-                if not session_data.account.sneaking.emporium["Sovereign Artifacts"].obtained:
-                    add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)
-                    if subgroup_label in sailing_Advices['Artifacts']:
-                        sailing_Advices['Artifacts'][subgroup_label].append(Advice(
-                            label="Purchase \"Sovereign Artifacts\" from the {{ Jade Emporium|#sneaking }} in W6",
-                            picture_class='sovereign-artifacts',
-                            progression=0,
-                            goal=1
-                        ))
+                        sailing_Advices['Artifacts'][subgroup_label].append(
+                            session_data.account.sailing.get_artifact_tier_unlock_advice()
+                        )
             if 'ExtraLanterns' in requirements:
                 if not session_data.account.sneaking.emporium['Brighter Lighthouse Bulb'].obtained:
                     add_subgroup_if_available_slot(sailing_Advices['Artifacts'], subgroup_label)

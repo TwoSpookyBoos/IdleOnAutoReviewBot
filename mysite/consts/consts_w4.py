@@ -1,4 +1,5 @@
 import math
+from consts.consts_w5 import max_sailing_artifact_level
 from consts.idleon.consts_idleon import NinjaInfo, current_world
 from utils.safer_data_handling import safer_math_pow
 from utils.number_formatting import parse_number
@@ -42,9 +43,9 @@ def get_final_combat_level_required_for_tome() -> int:
 
 
 max_cooking_tables = 10  # Last updated in v2.528.0
-max_meal_plate_level = (  # 160  # Last updated in v2.523 Aug 1
+max_meal_plate_level = (  # 170  # Last updated in v2.550
     30  #base max level
-    + (10 * 6)  #Causticolumn artifact gives 10 levels and has 6 tiers, base through Transcendent
+    + 10 * max_sailing_artifact_level  #Causticolumn artifact gives 10 levels per tier
     + 10  #Papa Blob's Quality Guarantee in Jade Emporium
     + 10  #Chef Geustloaf's Cutting Edge Philosophy in Jade Emporium
     + 20  #Supreme Head Chef Status upgrade within The Grimoire
