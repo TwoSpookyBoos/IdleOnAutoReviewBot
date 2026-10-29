@@ -257,7 +257,7 @@ def getDailyAdviceList() -> list[Advice]:
             picture_class='gem',
             progression=session_data.account.reset_counters.world_boss_kills // 3,
             goal=100,
-            resource='kruks-volcano-key'
+            resource='kruk-s-volcano-key'
         ))
     return daily
 
