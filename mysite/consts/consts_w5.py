@@ -68,7 +68,7 @@ sailing_islands_list = [
     ['Safari Island', 0, 3], ['Beachy Coast', 4, 6], ['Isolated Woods', 7, 8], ['Rocky Peaks', 9, 11], ['Stormy North', 12, 14],
     ['Snowy South', 15, 16], ['Toxic Bay Inc', 17, 18], ['Candied Island', 19, 20], ['Fungi Meadows', 21, 21], ['Cloudy Quay', 22, 23],
     ['Dungeon Cove', 24, 24], ['Crystal Enclave', 25, 25], ['Petulent Garage', 26, 26], ['Isle of Note', 27, 28], ['The Edge', 29, 32],
-    ["World's End", 33, 36],
+    ["World's End", 33, 36], ['The Maw', 37, 40],
 ]
 for artifact in sailing_artifacts_dict:
     for (island_name, first_artifact_index, final_artifact_index) in sailing_islands_list:

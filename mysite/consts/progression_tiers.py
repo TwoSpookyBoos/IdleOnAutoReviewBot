@@ -1,6 +1,7 @@
 from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
+from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_list
 from utils.logging import get_logger
 logger = get_logger(__name__)
 
@@ -1957,6 +1958,17 @@ divinity_progressionTiers = {
     11: {"MaxDivLevel": 50},
     12: {"MinDivLevel": 40}
 }
+# Artifacts worth taking past Sovereign. Left out: Giants Eye and Dreamcatcher (worthless),
+# Silver Ankh, Billcye Tri and Cloud Urn (Post Office box chance barely grows after Sovereign)
+sailing_important_artifacts = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic', 'Genie Lamp',
+    'Emerald Relic', 'Fun Hippoete', 'Arrowhead', '10 AD Tablet', 'Ashen Urn', 'Amberite',
+    'Triagulon', 'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Gummy Orb',
+    'Fury Relic', 'Weatherbook', 'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates',
+    'The True Lantern', 'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern',
+    'Deathskull', 'Obsidian', 'Pointagon', 'Ender Pearl',
+    'Fang of the Gods', 'Nomenclature', 'Me First Dollar', 'Bloodclot',
+]
 sailing_progressionTiers = {
     0: {},
     1: {
@@ -1978,7 +1990,7 @@ sailing_progressionTiers = {
     },
     3: {
         'Islands Discovered': 5,
-        'Captain And Boats': 9,
+        'Captains And Boats': 9,
         'Artifacts': {
             'Maneki Kat': 1,
             'Ruble Cuble': 1,
@@ -1992,7 +2004,7 @@ sailing_progressionTiers = {
     },
     4: {
         'Islands Discovered': 6,
-        'Captain And Boats': 10,
+        'Captains And Boats': 10,
         'Artifacts': {
             'Amberite': 2,
             'Gold Relic': 2,
@@ -2000,14 +2012,14 @@ sailing_progressionTiers = {
     },
     5: {
         'Islands Discovered': 7,
-        'Captain And Boats': 11,
+        'Captains And Boats': 11,
         'Artifacts': {
             'Jade Rock': 2,
         }
     },
     6: {
         'Islands Discovered': 8,
-        'Captain And Boats': 12,
+        'Captains And Boats': 12,
         'Artifacts': {
             'Triagulon': 1,
             'Billcye Tri': 1,
@@ -2020,28 +2032,28 @@ sailing_progressionTiers = {
     },
     7: {
         'Islands Discovered': 9,
-        'Captain And Boats': 13,
+        'Captains And Boats': 13,
         'Artifacts': {
             'Fury Relic': 2,
         },
     },
     8: {
         'Islands Discovered': 12,
-        'Captain And Boats': 15,
+        'Captains And Boats': 15,
         'Artifacts': {
             'Crystal Steak': 2,
         }
     },
     9: {
         'Islands Discovered': 14,
-        'Captain And Boats': 17,
+        'Captains And Boats': 17,
         'Artifacts': {
             'Socrates': 2,
         }
     },
     10: {
         'Islands Discovered': 15,
-        'Captain And Boats': 19,
+        'Captains And Boats': 19,
         'Artifacts': {
             'Cloud Urn': 1,
             'Weatherbook': 1,
@@ -2050,13 +2062,13 @@ sailing_progressionTiers = {
         }
     },
     11: {
-        'Captain And Boats': 20,
+        'Captains And Boats': 20,
         'Artifacts': {
             'Fauxory Tusk': 3,
             '10 AD Tablet': 3,
             'Fury Relic': 3
         },
-        'Eldritch': True
+        'Artifact Tier': 3
     },
     12: {
         'Artifacts': {
@@ -2129,7 +2141,7 @@ sailing_progressionTiers = {
             'Gold Relic': 4,
             'Amberite': 4
         },
-        'Sovereign': True
+        'Artifact Tier': 4
     },
     17: {
         'Artifacts': {
@@ -2177,11 +2189,37 @@ sailing_progressionTiers = {
     },
     19: {
         'Artifacts': {
-            #These last 2 are worthless, but get them anyway.
-            'Giants Eye': 4,
-            'Dreamcatcher': 4,
+            # World's End and The Maw artifacts, catching up to the rest
+            'Deathskull': 4,
+            'Obsidian': 4,
+            'Pointagon': 4,
+            'Ender Pearl': 4,
+            'Fang of the Gods': 4,
+            'Nomenclature': 4,
+            'Me First Dollar': 4,
+            'Bloodclot': 4,
         },
-    }
+    },
+    20: {
+        'Artifacts': {name: 5 for name in sailing_important_artifacts},
+        'Artifact Tier': 5
+    },
+    21: {
+        'Artifacts': {name: 6 for name in sailing_important_artifacts},
+        'Artifact Tier': 6
+    },
+    22: {
+        'Artifacts': {name: 7 for name in sailing_important_artifacts},
+        'Artifact Tier': 7
+    },
+    23: {
+        # Optional: the rest of the artifacts to max tier, the important ones are done in 22
+        'Artifacts': {
+            name: max_sailing_artifact_level
+            for name in sailing_artifacts_list
+            if name not in sailing_important_artifacts
+        },
+    },
 }
 gaming_progressionTiers = {
     0: {}

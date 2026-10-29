@@ -1,7 +1,7 @@
 from math import floor
 
 from consts.consts_general import getNextESFamilyBreakpoint
-from models.advice.advice import Advice, LabelBuilder
+from models.advice.advice import Advice
 from models.general.achievements import Achievements
 from models.general.merits import Merits
 from models.w3.atom_collider import AtomCollider
@@ -41,8 +41,7 @@ class Library:
 
     def calculate_max_book_levels(
         self, construction_buildings: Buildings, achievements: Achievements, atom_collider: AtomCollider,
-        sailing: Sailing, merits: Merits, saltlick, summoning, *,
-        eldritch_artifacts_unlocked: bool, sovereign_artifacts_obtained: bool, omnipotent_artifacts_obtained: bool
+        sailing: Sailing, merits: Merits, saltlick, summoning
     ):
         self._library_building = construction_buildings['Talent Book Library']
         self._checkout_takeout = achievements['Checkout Takeout']
@@ -50,9 +49,6 @@ class Library:
         self._fury_relic = sailing.artifacts['Fury Relic']
         self._merit = merits[2][2]
         self._saltlick = saltlick.upgrades['Max Book']
-        self.eldritch_artifacts_unlocked = eldritch_artifacts_unlocked
-        self.sovereign_artifacts_obtained = sovereign_artifacts_obtained
-        self.omnipotent_artifacts_obtained = omnipotent_artifacts_obtained
         self.static_sum = (
             0
             + (25 * (0 < construction_buildings['Talent Book Library'].level))
@@ -101,18 +97,7 @@ class Library:
         )
 
     def get_fury_relic_advice(self) -> Advice:
-        level = self._fury_relic.level
-        if not self.eldritch_artifacts_unlocked and level == 2:
-            fury_post_string = '. Eldritch Artifacts are unlocked by reaching {{ Rift|#rift }} 31'
-        elif not self.sovereign_artifacts_obtained and level == 3:
-            fury_post_string = '. Sovereign Artifacts unlock from {{ Jade Emporium|#sneaking }}'
-        elif not self.omnipotent_artifacts_obtained and level == 4:
-            fury_post_string = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
-        else:
-            fury_post_string = ''
-        advice = self._fury_relic.get_advice()
-        advice.label += LabelBuilder(fury_post_string).label
-        return advice
+        return self._fury_relic.get_advice()
 
     def get_merit_advice(self) -> Advice:
         return Advice(
