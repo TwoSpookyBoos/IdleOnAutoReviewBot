@@ -314,6 +314,15 @@ class Cooking:
                     "causticolumn",
                 )
             )
+        if causticolumn_level < 7:
+            # TODO: Verify if player has unlock from Menagerie
+            missing.append(
+                _plate_advice(
+                    f"{artifact}: Verisimilitude Causticolumn. Verisimilitude Artifacts "
+                    "unlock from the Menagerie",
+                    "causticolumn",
+                )
+            )
 
         # Jade Emporium
         for upgrade_name, image in (

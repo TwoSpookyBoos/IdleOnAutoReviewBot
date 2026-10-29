@@ -1,8 +1,7 @@
 from math import floor
 
 from consts.consts_general import getNextESFamilyBreakpoint
-from consts.consts_w5 import max_sailing_artifact_level
-from models.advice.advice import Advice
+from models.advice.advice import Advice, LabelBuilder
 from models.general.achievements import Achievements
 from models.general.merits import Merits
 from models.w3.atom_collider import AtomCollider
@@ -111,13 +110,9 @@ class Library:
             fury_post_string = '. Omnipotent Artifacts unlock from {{ Spelunking|#spelunking }}'
         else:
             fury_post_string = ''
-        return Advice(
-            label=f"{{{{ Artifact|#sailing }}}}: Fury Relic: "
-                  f"+{25 * level}/{25 * max_sailing_artifact_level}{fury_post_string}",
-            picture_class='fury-relic',
-            progression=level,
-            goal=max_sailing_artifact_level
-        )
+        advice = self._fury_relic.get_advice()
+        advice.label += LabelBuilder(fury_post_string).label
+        return advice
 
     def get_merit_advice(self) -> Advice:
         return Advice(
