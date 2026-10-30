@@ -1,5 +1,5 @@
 from consts.consts_w2 import killroy_dict
-from utils.safer_data_handling import safe_loads, safer_get
+from utils.safer_data_handling import safe_loads, safer_convert, safer_get
 
 
 class KillroyUpgrade:
@@ -48,6 +48,18 @@ class Killroy(dict[str, KillroyUpgrade]):
         self.total_fights: int = safer_get(raw_optlacc, 112, 0)
         self.coral_level: int = safer_get(raw_optlacc, 470, 0)
         self.skull_shop: SkullShop = SkullShop(raw_optlacc)
+        # "PrimeKillroyTOT" in source: every KRbest entry that isn't a Summoning trial
+        # ("SummzTrz"). Last updated in v2.550.0
+        raw_kr_best = safe_loads(raw_data.get("KRbest", {}))
+        self.prime_kills: int = round(
+            sum(
+                safer_convert(kills, 0)
+                for key, kills in raw_kr_best.items()
+                if "SummzTrz" not in key
+            )
+            if isinstance(raw_kr_best, dict)
+            else 0
+        )
         for name, info in killroy_dict.items():
             upgrades = safer_get(raw_optlacc, info["UpgradesIndex"], 0)
             self[name] = KillroyUpgrade(name, info, upgrades, self.total_fights)
