@@ -113,7 +113,7 @@ def get_tesseract_currencies_advice_group(tesseract) -> AdviceGroup:
     }
     currency_advices['Currencies'].append(Advice(
         label=f"Total Tachyons Collected: {notateNumber('Basic', tesseract.total_tachyons_collected, 3)}",
-        picture_class='tachion-truth'
+        picture_class='tachyon-truth'
     ))
     if tesseract.arcane_rocks_enabled:
         currency_advices["Currencies"].append(

@@ -22,9 +22,10 @@ def get_resource_image(resource_number: int) -> str:
      0 -  9 -> well ore
     10 - 19 -> harp note
     20 - 29 -> jar rupie
+    30 - 39 -> fountain coin
     Example: 12 -> 'harp-note-2'
     """
-    prefixes = ("well-sediment", "harp-note", "jar-rupie")
+    prefixes = ("well-sediment", "harp-note", "jar-rupie", "fountain-coin")
     idx = resource_number // 10
     if 0 <= idx < len(prefixes):
         return f"{prefixes[idx]}-{resource_number % 10}"

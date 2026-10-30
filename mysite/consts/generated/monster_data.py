@@ -524,6 +524,9 @@ monster_data = {
     "w7b12": {
         "Name": "Dreadnaught Captain"
     },
+    "w7c3": {
+        "Name": "Guppy"
+    },
     "w7e1": {
         "Name": "Whallamus"
     },
@@ -666,7 +669,7 @@ monster_data = {
         "Name": "Spring Splendor"
     },
     "fallEvent1": {
-        "Name": "Falloween Pumpkin"
+        "Name": "Halloween Pumpkin"
     },
     "anni4Event1": {
         "Name": "IdleOn 4th Anniversary"
@@ -682,6 +685,9 @@ monster_data = {
     },
     "anni5Event1": {
         "Name": "IdleOn 5th Anniversary"
+    },
+    "fallEvent2": {
+        "Name": "Halloween Grave"
     },
     "Blank0ramaFiller": {
         "Name": "Nightmare Amarok"
@@ -811,6 +817,15 @@ monster_data = {
     },
     "T2c": {
         "Name": "Gold Champion Troll"
+    },
+    "T3a": {
+        "Name": "Bronze Champion Earl"
+    },
+    "T3b": {
+        "Name": "Silver Champion Earl"
+    },
+    "T3c": {
+        "Name": "Gold Champion Earl"
     },
     "r0a": {
         "Name": "Magician Grub"
@@ -1088,6 +1103,9 @@ monster_data = {
     "Spelunking5": {
         "Name": "Kelp Forest"
     },
+    "Spelunking6": {
+        "Name": "Burned Tunnel"
+    },
     "SpelunkingCard0": {
         "Name": "Fearful Tunnel"
     },
@@ -1105,6 +1123,9 @@ monster_data = {
     },
     "SpelunkingCard5": {
         "Name": "Kelp Forest"
+    },
+    "SpelunkingCard6": {
+        "Name": "Burned Tunnel"
     },
     "ChestA1": {
         "Name": "Bronze Chest(W1)"
@@ -1226,5 +1247,5 @@ monster_data = {
     "Justice_Monument": {
         "Name": "Justice"
     },
-    "_hash": "629fcf125da7a033abcc585c830524626c36615f67b4accca661753694c0daf5"
+    "_hash": "8914f2417c7f46bbe72dd0d935b9aeb096bfcc4b7e8117859d63c6e328a7821e"
 }

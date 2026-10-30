@@ -276,7 +276,7 @@ greenstack_item_difficulty_groups = {
             "Critter11A",
             "Spelunking3",
             # World 7 part 2
-            'Spelunking4', 'Spelunking5',
+            'Spelunking4', 'Spelunking5', 'Spelunking6',
             'Line13',
             "Gfoodcoupon", "Line14",  # Gold Food Coupon, Its Alright Celebration
         ],
@@ -405,7 +405,7 @@ expected_stackables = {
         'Ladle',
         'Spelunking0', 'Spelunking1', 'Spelunking2', 'Spelunking3',
         # World 7 part 2
-        'Spelunking4', 'Spelunking5',
+        'Spelunking4', 'Spelunking5', 'Spelunking6',
         'Line13',
         'ResetCompleted', 'ResetCompletedS',
     ],
@@ -540,7 +540,7 @@ cardset_names = [
     "Events",
 ]
 
-# `CardStuff = function` in source. Last updated in v2.528.0
+# `CardStuff = function` in source. Last updated in v2.550
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -684,7 +684,7 @@ card_raw_data = [
         ["SpelunkingCard3", "F48", "40000", "+{%_Spelunking_EXP", "8", ],
         ["SpelunkingCard4", "F49", "150000", "+{%_Spelunking_AFK_Gain", "2", ],
         ["SpelunkingCard5", "F50", "2500000", "+{%_Spelunking_EXP", "15", ],
-        ["Blank", "A0", "10", "+{%", "3"],
+        ["SpelunkingCard6", "F51", "4000000", "+{%_Spelunking_EXP", "30", ],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
@@ -774,7 +774,7 @@ card_raw_data = [
         ["w7b7", "J19", "6000000", "+{%_Drop_Rate_Multi", "1"],
         ["w7b8", "J20", "10000000", "+{%_Research_EXP_(Passive)", "3", ],
         ["w7b9", "J21", "20000000", "+{%_Drop_Rate_Multi", "1"],
-        ["w7b10", "J22", "30000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b10", "J22", "30000000", "+{%_Lumi_Hourly_Gains_(Passive)", "5"],
         ["w7b11", "J23", "20000000", "+{%_Research_AFK_gain_(Passive)", "1", ],
         ["w7b12", "J24", "40000000", "+{%_Spelunk_Amber_(Passive)", "10", ],
         ["Crystal6", "J99", "2500000", "+{%_Damage_Multi_(Passive)", "1.5", ],
@@ -872,7 +872,7 @@ card_raw_data = [
         ["luckEvent1", "Y22", "5", "+{%_Drop_Rate_(Passive)", "3"],
         ["luckEvent2", "Y23", "5", "+{%_Money_from_Monsters", "4"],
         ["anni5Event1", "Y24", "6", "+{%_Gold_Food_Effect_(Passive)", "5", ],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["fallEvent2", "Y25", "5", "+{%_Total_Damage_(Passive)", "1", ],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
