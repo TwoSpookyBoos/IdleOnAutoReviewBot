@@ -130,12 +130,6 @@ class Sailing:
             for index, info in enumerate(sailing_list)
         }
         self.artifacts: Artifacts = Artifacts(safer_index(raw_sailing, 3, []))
-        # "VerisimilitudeUnlocked" in source: Menagerie[2][0], first Menagerie unlock
-        raw_menagerie = safe_loads(raw_data.get("Menagerie", []))
-        raw_menagerie_unlocks = safer_index(raw_menagerie, 2, [])
-        self._verisimilitude_unlocked: bool = (
-            safer_convert(safer_index(raw_menagerie_unlocks, 0, 0), 0) >= 1
-        )
 
         raw_boats = safe_loads(safe_loads(raw_data.get("Boats", [])))
         self.boats: list[Boat] = [Boat(raw_boat) for raw_boat in raw_boats]
@@ -156,7 +150,8 @@ class Sailing:
             account.sneaking.emporium["Sovereign Artifacts"].obtained,
             account.spelunk.caves["Pebble Cove"].bonus_obtained,
             account.research.grid["Transcendent Artifacts"].level >= 1,
-            self._verisimilitude_unlocked,
+            # "VerisimilitudeUnlocked" in source: the first Menagerie unlock
+            account.menagerie.unlocks[0].owned,
         ]
         return 2 + next(
             (index for index, unlocked in enumerate(tier_unlocks) if not unlocked),

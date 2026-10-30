@@ -14,6 +14,8 @@ class CoralReefBonus:
     def __init__(self, index: int, info: dict, unlocked: bool, level: int):
         self.name = info["Name"]
         self.description = info["Description"]
+        # TODO: Menagerie Unlock 10 gives +3 Max LV to Pillar Coral
+        #  (account.menagerie.unlocks[9].owned)
         self.max_level = info["Max Level"]
         self.image = f"coral-{index}"
         self.unlocked = unlocked

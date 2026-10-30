@@ -38,6 +38,7 @@ from w7 import (
     dancing_coral,
     coral_kid,
     jelly_operator,
+    menagerie,
 )
 
 logger = get_logger(__name__)
@@ -191,6 +192,7 @@ def main(inputData, source_string, runType="web"):
             coral_kid.get_coral_kid_section(),
             clam_work.get_section(),
             jelly_operator.get_section(),
+            menagerie.get_section(),
         ]
     ]
 
