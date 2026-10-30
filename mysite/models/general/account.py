@@ -555,7 +555,7 @@ class Account:
     def _calculate_meals(self):
         self.meals.calculate_values(
             self.lab_jewels['Black Diamond Rhinestone'].active_value,
-            self.breeding.total_shiny_levels['Bonuses from All Meals'],
+            self.breeding.total_shiny_bonus_values['Bonuses from All Meals'],
             self.summoning.bonuses["Meal Bonuses"].as_multi,
             self.companions.get_multi('Wickerlight Spirit', 'Meal Bonus'),
             emperor_set=MultiToValue(self.armor_sets['EMPEROR SET'].total_value),

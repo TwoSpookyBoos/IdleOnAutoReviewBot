@@ -13,42 +13,60 @@ from utils.number_formatting import number_to_roman
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, shiny_days_list, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, \
-    breeding_last_arena_bonus_unlock_wave, breeding_total_pets, max_heart_level
+from consts.consts_w4 import territory_names, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, \
+    breeding_last_arena_bonus_unlock_wave, max_heart_level
 from consts.consts_w2 import maxable_critter_vials_list
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
+from consts.w4.breeding import (
+    shiny_base_max_level,
+    shiny_bonus_exclusions,
+    shiny_bonus_names,
+)
 
 logger = get_logger(__name__)
 
+
 def getShinyExclusions(breeding_dict, progression_tiers_breeding):
-    shinyExclusionsDict = {
-        "Infinite Star Signs": True,
-        "Lower Minimum Travel Time for Sailing": False,
-        "Higher Artifact Find Chance": False,
-        "Base Critter Per Trap": False,
-        "Faster Shiny Pet Lv Up Rate": False
-        }
+    # True as in the recommendation SHOULD be excluded
+    return {
+        shiny_bonus: _is_shiny_bonus_excluded(
+            shiny_bonus, breeding_dict, progression_tiers_breeding
+        )
+        for shiny_bonus in shiny_bonus_exclusions
+    }
 
-    # If Infinite Star Signs are unlocked and the player has less than the highest number required in the tiers,
-    # Set False (as in False, the recommendation should NOT be excluded), otherwise keep the default True
-    highest_iss_in_tiers = max([requirements.get('Shinies', {}).get('Infinite Star Signs', [0])[0] for requirements in progression_tiers_breeding.values()])
-    if (
-        session_data.account.rift['InfiniteStars'].unlocked
-        and sum([pet.shiny_level for pet in breeding_dict.shiny_bonus_pets['Infinite Star Signs']]) < highest_iss_in_tiers
-    ):
-        shinyExclusionsDict['Infinite Star Signs'] = False
 
-    # if all artifacts are Eldritch tier, append True (as in True, the recommendation SHOULD be excluded), otherwise False
-    if session_data.account.sailing.artifacts.total_tiers >= (sailing_artifacts_count * max_sailing_artifact_level):
-        shinyExclusionsDict['Lower Minimum Travel Time for Sailing'] = True
-        shinyExclusionsDict['Higher Artifact Find Chance'] = True
+def _is_shiny_bonus_excluded(
+    shiny_bonus, breeding_dict, progression_tiers_breeding
+) -> bool:
+    account = session_data.account
+    match shiny_bonus:
+        case "Infinite Star Signs":
+            # Excluded unless Infinite Star Signs are unlocked and the player
+            # has less than the highest number required in the tiers
+            highest_iss_in_tiers = max(
+                requirements.get("Shinies", {}).get("Infinite Star Signs", [0])[0]
+                for requirements in progression_tiers_breeding.values()
+            )
+            iss_levels = breeding_dict.total_shiny_levels["Infinite Star Signs"]
+            return not (
+                account.rift["InfiniteStars"].unlocked
+                and iss_levels < highest_iss_in_tiers
+            )
+        case "Lower Minimum Travel Time for Sailing" | "Higher Artifact Find Chance":
+            # Excluded once all artifacts are at max tier
+            max_tiers = sailing_artifacts_count * max_sailing_artifact_level
+            return account.sailing.artifacts.total_tiers >= max_tiers
+        case "Base Critters per Trap":
+            return all(
+                account.alchemy_vials[vial_name].maxed
+                for vial_name in maxable_critter_vials_list
+            )
+        case "Faster Shiny Mob Lv Up Rate":
+            return account.sneaking.emporium["Science Crayon"].obtained
+        case _:
+            raise ValueError(f"No shiny exclusion rule for {shiny_bonus}")
 
-    if all([session_data.account.alchemy_vials[vial_name].maxed for vial_name in maxable_critter_vials_list]):
-        shinyExclusionsDict['Base Critter Per Trap'] = True
-
-    shinyExclusionsDict['Faster Shiny Pet Lv Up Rate'] = session_data.account.sneaking.emporium["Science Crayon"].obtained
-
-    return shinyExclusionsDict
 
 def getTerritoryName(territory_index: int) -> str:
     try:
@@ -62,14 +80,16 @@ def getSpiceImage(territory_index: int) -> str:
     except:
         return f"UnknownSpice-{territory_index}"
 
-def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGroup:
+def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_value) -> AdviceGroup:
     mga = 'Multi Group A- Summoning Winner Bonus'
     mgb = 'Multi Group B- Lamp Wish'
     mgc = 'Multi Group C- Everything Else'
+    mgd = 'Multi Group D- Shiny OverLV'
     sps_adviceDict = {
         mga: [],
         mgb: [],
-        mgc: []
+        mgc: [],
+        mgd: [],
     }
 
 #Multi Group A
@@ -92,7 +112,7 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
         session_data.account.lab_jewels['Emerald Ulthurite'].get_bonus_advice()
     )
     sps_adviceDict[mgc].append(Advice(
-        label=f"Faster Shiny Pet Lv Up Rate Shiny Pets: +{3 * faster_shiny_pet_total_levels}% total",
+        label=f"Faster Shiny Mob Lv Up Rate Shiny Pets: +{faster_shiny_pet_total_value}% total",
         picture_class='green-mushroom-shiny'
     ))
     sps_adviceDict[mgc].append(
@@ -108,6 +128,9 @@ def getShinySpeedSourcesAdviceGroup(faster_shiny_pet_total_levels) -> AdviceGrou
     ))
     sps_adviceDict[mgc].append(session_data.account.star_signs.get_seraph_advice())
     sps_adviceDict[mgc].append(session_data.account.star_signs.get_silkrode_advice())
+
+    # Multi Group D
+    sps_adviceDict[mgd].append(session_data.account.breeding.get_shiny_over_level_advice())
 
     for group_name in sps_adviceDict:
         for advice in sps_adviceDict[group_name]:
@@ -360,9 +383,11 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
     breeding_AdviceGroups = {}
 
     customized_tiers = copy.deepcopy(breeding_progressionTiers)
-    optional_tiers = 4
     true_max = true_max_tiers['Breeding']
-    max_tier = true_max - optional_tiers
+    # Shinies above the base Max Shiny LV are only required once Menagerie unlocks them.
+    # Until then, the Menagerie unlock is the next step after the last required tier
+    shiny_max_unlocked = breeding_dict.max_shiny_level > shiny_base_max_level
+    max_tier = 19 if shiny_max_unlocked else 11
     tier_UnlockedTerritories = 0
     tier_MaxArenaWave = 0
     tier_ShinyLevels = 0
@@ -486,35 +511,43 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
                         if failedRequirement[0] not in breeding_Advices['ShinyLevels']:
                             breeding_Advices['ShinyLevels'][shiny_subgroup_label] = []
                         for possibleShinyPet in failedShinyBonus[failedRequirement[0]]:
-                            breeding_Advices['ShinyLevels'][shiny_subgroup_label].append(Advice(
-                                label=f"{possibleShinyPet.name}: {possibleShinyPet.days_to_shiny_level:,.2f} base days to level",
-                                picture_class=possibleShinyPet.name,
-                                progression=possibleShinyPet.shiny_level,
-                                goal=max(failedRequirement[3], possibleShinyPet.shiny_level),
-                                completed=False
-                            ))
+                            breeding_Advices['ShinyLevels'][shiny_subgroup_label].append(
+                                possibleShinyPet.get_shiny_level_advice(
+                                    max(failedRequirement[3], possibleShinyPet.shiny_level)
+                                )
+                            )
 
         # Max Shinies
-        if 'Max Shinies' not in requirements:
+        if (
+            'Max Shinies' not in requirements
+            # base Max Shiny LV tiers are superseded once Menagerie raises it
+            or (shiny_max_unlocked and requirements['Max Shiny Level'] <= shiny_base_max_level)
+        ):
             if tier_MaxShinyLevels >= tier_number - 1:
                 # free pass
                 tier_MaxShinyLevels = tier_number
         else:
             # if there are actual level requirements
             all_requirements_met = True
+            goal_level = requirements['Max Shiny Level']
             if tier_MaxShinyLevels >= (tier_number - 1):
-                for shiny_type in requirements['Max Shinies']:
-                    for pet_details in breeding_dict.shiny_bonus_pets[shiny_type]:
-                        if pet_details.shiny_level < len(shiny_days_list):
-                            all_requirements_met = False
-                            add_subgroup_if_available_slot(breeding_Advices['MaxShinyLevels'], subgroup_label)
-                            if subgroup_label in breeding_Advices['MaxShinyLevels']:
-                                breeding_Advices['MaxShinyLevels'][subgroup_label].append(Advice(
-                                    label=f"{shiny_type}: {pet_details.name}",
-                                    picture_class=pet_details.name,
-                                    progression=pet_details.shiny_level,
-                                    goal=len(shiny_days_list),
-                                ))
+                # Soonest to level first, across all required bonuses
+                pets = sorted(
+                    (
+                        pet
+                        for shiny_type in requirements['Max Shinies']
+                        for pet in breeding_dict.shiny_bonus_pets[shiny_type]
+                    ),
+                    key=lambda pet: float(pet.days_to_shiny_level),
+                )
+                for pet_details in pets:
+                    if pet_details.shiny_level < goal_level:
+                        all_requirements_met = False
+                        add_subgroup_if_available_slot(breeding_Advices['MaxShinyLevels'], subgroup_label)
+                        if subgroup_label in breeding_Advices['MaxShinyLevels']:
+                            breeding_Advices['MaxShinyLevels'][subgroup_label].append(
+                                pet_details.get_shiny_level_advice(goal_level)
+                            )
 
             if all_requirements_met == True and tier_MaxShinyLevels >= tier_number - 1:
                 tier_MaxShinyLevels = tier_number
@@ -522,6 +555,12 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
     overall_SectionTier = min(true_max, tier_MaxArenaWave, tier_UnlockedTerritories, tier_ShinyLevels, tier_MaxShinyLevels)
 
     # Generate Advice Groups
+    if not shiny_max_unlocked and overall_SectionTier >= max_tier:
+        breeding_AdviceGroups['MaxShinyLevelUnlock'] = AdviceGroup(
+            tier='',
+            pre_string='Raise Max Shiny LV to make more Breeding tiers required',
+            advices=[session_data.account.menagerie.unlocks[11].get_advice()],
+        )
     territories = customized_tiers.get(tier_UnlockedTerritories + 1, {}).get('TerritoriesUnlocked', max_breeding_territories)
     breeding_AdviceGroups['UnlockedTerritories'] = AdviceGroup(
         tier=tier_UnlockedTerritories,
@@ -544,10 +583,19 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
             advices=breeding_Advices['ShinyLevels'],
         )
         if len(breeding_Advices['ShinyLevels']) == 0:
-            maxed_shinies = [pet_info.name for bonus_group in breeding_dict.shiny_bonus_pets.values() for pet_info in bonus_group if pet_info.shiny_level == 20 ]
+            next_tier = customized_tiers.get(tier_MaxShinyLevels + 1, {})
+            goal_level = next_tier.get('Max Shiny Level', breeding_dict.max_shiny_level)
+            required_bonuses = next_tier.get('Max Shinies', shiny_bonus_names)
+            required_pets = [
+                pet
+                for shiny_type in required_bonuses
+                for pet in breeding_dict.shiny_bonus_pets[shiny_type]
+            ]
+            leveled_pets = sum(pet.shiny_level >= goal_level for pet in required_pets)
             breeding_AdviceGroups['MaxShinyLevels'] = AdviceGroup(
                 tier=tier_MaxShinyLevels,
-                pre_string=f'Max level Shinies ({len(maxed_shinies)}/{breeding_total_pets})',
+                pre_string=f'Level Shinies to LV {goal_level} '
+                           f'({leveled_pets}/{len(required_pets)})',
                 advices=breeding_Advices['MaxShinyLevels'],
             )
     return breeding_AdviceGroups, overall_SectionTier, max_tier, true_max
@@ -614,7 +662,7 @@ def getBreedingAdviceSection() -> AdviceSection:
     breedingDict = session_data.account.breeding
     #Generate AdviceGroups
     breeding_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getBreedingProgressionTiersAdviceGroups(breedingDict)
-    breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict.total_shiny_levels['Faster Shiny Pet Lv Up Rate'])
+    breeding_AdviceGroupDict['ShinySpeedSources'] = getShinySpeedSourcesAdviceGroup(breedingDict.total_shiny_bonus_values['Faster Shiny Mob Lv Up Rate'])
     breeding_AdviceGroupDict['ActiveBM'] = getActiveBMAdviceGroup()
     breeding_AdviceGroupDict['Breedability'] = getBreedabilityAdviceGroup()
     breeding_AdviceGroupDict['PetDamage'] = getPetDamageAdviceGroup()

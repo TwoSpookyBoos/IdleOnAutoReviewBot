@@ -1,20 +1,23 @@
+from functools import cached_property
+
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_w4 import (
-    breeding_genetics_list,
-    breeding_shiny_bonus_list,
-    breeding_species_dict,
     breeding_upgrades_dict,
     getBreedabilityHeartFromMulti,
     getBreedabilityMultiFromDays,
     getDaysToNextShinyLevel,
     getShinyLevelFromDays,
     max_breeding_territories,
-    menagerie_shiny_days_list,
-    shiny_days_list,
     slot_unlock_waves_list,
     territory_names,
 )
 from consts.idleon.lava_func import lava_func
+from consts.w4.breeding import (
+    breeding_genetics,
+    pet_species,
+    shiny_base_max_level,
+    shiny_bonus_names,
+)
 from models.advice.advice import Advice
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
@@ -24,35 +27,68 @@ logger = get_logger(__name__)
 
 
 class Pet:
-    def __init__(self, world: int, info: dict):
+    def __init__(self, world: int, info: dict, breeding: "Breeding"):
         self.name: str = info["Name"]
         self.world: int = world
+        self.breeding = breeding
         self.genetic: str = info["Genetic"]
-        self.shiny_bonus: str = info["ShinyBonus"]
+        self.shiny_bonus: str = info["Shiny Bonus"]
+        self.shiny_bonus_description: str = info["Shiny Description"]
+        self.shiny_bonus_per_level: int = info["Shiny Value Per Level"]
         self.unlocked: bool = False
-        self.shiny_level: int = 0
-        self.max_shiny_level: int = len(shiny_days_list)
-        self.days_to_shiny_level: float = 0
+        self.shiny_days: float = 0
         self.breedability_days: float = 0.0
         self.breedability_multi: float = 1
         self.breedability_heart: str = "breedability-heart-1"
 
-    def parse(
-        self,
-        unlocked: bool,
-        shiny_days: float,
-        breedability_days: float,
-        shiny_requirements: list[int],
-    ):
+    def parse(self, unlocked: bool, shiny_days: float, breedability_days: float):
         self.unlocked = unlocked
-        self.max_shiny_level = len(shiny_requirements)
-        self.shiny_level = getShinyLevelFromDays(shiny_days, shiny_requirements)
-        self.days_to_shiny_level = getDaysToNextShinyLevel(
-            shiny_days, shiny_requirements
-        )
+        self.shiny_days = shiny_days
         self.breedability_days = breedability_days
         self.breedability_multi = getBreedabilityMultiFromDays(breedability_days)
         self.breedability_heart = getBreedabilityHeartFromMulti(self.breedability_multi)
+
+    @cached_property
+    def shiny_level(self) -> int:
+        return min(
+            self.breeding.max_shiny_level, getShinyLevelFromDays(self.shiny_days)
+        )
+
+    @cached_property
+    def days_to_shiny_level(self) -> float:
+        if self.shiny_level >= self.breeding.max_shiny_level:
+            return 0
+        return getDaysToNextShinyLevel(self.shiny_days)
+
+    @cached_property
+    def shiny_bonus_value(self) -> int:
+        return self.shiny_bonus_per_level * self.shiny_level
+
+    @cached_property
+    def max_shiny_bonus_value(self) -> int:
+        return self.shiny_bonus_per_level * self.breeding.max_shiny_level
+
+    def get_shiny_level_advice(self, goal: int) -> Advice:
+        label = f"{self.shiny_bonus}: {self.name}"
+        if self.days_to_shiny_level > 0:
+            label += f"<br>{self.days_to_shiny_level:,.2f} base days to level"
+        return Advice(
+            label=label,
+            picture_class=self.name,
+            progression=self.shiny_level,
+            goal=goal,
+        )
+
+    def get_shiny_advice(self) -> Advice:
+        description = self.shiny_bonus_description.replace(
+            "{", f"{self.shiny_bonus_value}/{self.max_shiny_bonus_value}"
+        )
+        return Advice(
+            label=f"{{{{ Breeding|#breeding }}}} - Shiny {self.name}: {description}",
+            picture_class=self.name,
+            progression=self.shiny_level,
+            goal=self.breeding.max_shiny_level,
+        )
 
 
 class BreedingUpgrade:
@@ -76,13 +112,6 @@ class Breeding:
     def __init__(self, raw_data: dict):
         raw_breeding = safe_loads(raw_data.get("Breeding", []))
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
-        raw_menagerie = safe_loads(raw_data.get("Menagerie", []))
-        # "UnlockOwned" 11 in "SpecialPassives" in source. Last updated in v2.550
-        shiny_requirements = (
-            menagerie_shiny_days_list
-            if safer_convert(safer_index(safer_index(raw_menagerie, 2, []), 11, 0), 0) >= 1
-            else shiny_days_list
-        )
         self.egg_slots: int = 3
 
         self.arena_max_wave: int = 0
@@ -128,17 +157,13 @@ class Breeding:
                 unlocked_counts[index + 1] = 0
 
         self.genetics: dict[str, bool] = {
-            genetic: False for genetic in breeding_genetics_list
+            genetic: False for genetic in breeding_genetics
         }
-        self.total_shiny_levels: dict[str, int] = {
-            bonus: 0 for bonus in breeding_shiny_bonus_list
-        }
-        # Shiny bonus to its pets, soonest to level first
-        self.shiny_bonus_pets: dict[str, list[Pet]] = {
-            bonus: [] for bonus in breeding_shiny_bonus_list
+        self._pets_by_shiny_bonus: dict[str, list[Pet]] = {
+            bonus: [] for bonus in shiny_bonus_names
         }
         self.species: dict[int, dict[str, Pet]] = {}
-        for world, world_pets in breeding_species_dict.items():
+        for world, world_pets in enumerate(pet_species, start=1):
             breedability_days = [
                 safer_convert(entry, 0.0)
                 for entry in safer_index(raw_breeding, world + 12, [])
@@ -148,26 +173,92 @@ class Breeding:
                 for entry in safer_index(raw_breeding, world + 21, [])
             ]
             self.species[world] = {}
-            for pet_index, info in world_pets.items():
-                pet = Pet(world, info)
+            for pet_index, info in enumerate(world_pets):
+                pet = Pet(world, info, self)
                 try:
                     pet.parse(
                         unlocked_counts[world] > pet_index,
                         shiny_days[pet_index],
                         breedability_days[pet_index],
-                        shiny_requirements,
                     )
-                    self.total_shiny_levels[pet.shiny_bonus] += pet.shiny_level
                     if pet.unlocked:
                         self.genetics[pet.genetic] = True
                 except Exception:
                     logger.exception(f"Failed to parse breeding pet {pet.name}")
-                    pet = Pet(world, info)
+                    pet = Pet(world, info, self)
                 self.species[world][pet.name] = pet
-                self.shiny_bonus_pets[pet.shiny_bonus].append(pet)
+                self._pets_by_shiny_bonus[pet.shiny_bonus].append(pet)
 
-        for pets in self.shiny_bonus_pets.values():
-            pets.sort(key=lambda pet: float(pet.days_to_shiny_level))
+    @cached_property
+    def max_shiny_level(self) -> int:
+        # "SpecialPassives" "Lv" in source. Last updated in v2.550.0
+        from models.general.session_data import session_data
+
+        unlocked = session_data.account.menagerie.unlocks[11].owned
+        return shiny_base_max_level + 10 * int(unlocked)
+
+    @cached_property
+    def shiny_over_level(self) -> int:
+        # "SpecialzOverLVL" in source: Shiny LVs above the base max. v2.550.0
+        return sum(
+            max(0, pet.shiny_level - shiny_base_max_level)
+            for pets in self.species.values()
+            for pet in pets.values()
+        )
+
+    @cached_property
+    def shiny_over_level_multi(self) -> float:
+        # "ShinySpdMulti" in source. Last updated in v2.550.0
+        return ValueToMulti(10 * self.shiny_over_level)
+
+    def get_shiny_over_level_advice(self) -> Advice:
+        total_pets = sum(len(pets) for pets in self.species.values())
+        max_over_level = (self.max_shiny_level - shiny_base_max_level) * total_pets
+        label = (
+            f"Shiny OverLV (Shiny LVs above {shiny_base_max_level}): "
+            f"{round(self.shiny_over_level_multi, 2)}x"
+        )
+        if max_over_level == 0:
+            label += "<br>Needs {{ Menagerie|#luminous-menagerie }} Unlock 12"
+        return Advice(
+            label=label,
+            picture_class="menagerie-unlock-11",
+            progression=self.shiny_over_level,
+            goal=max(max_over_level, 10 * total_pets),
+        )
+
+    @cached_property
+    def shiny_bonus_pets(self) -> dict[str, list[Pet]]:
+        # Shiny bonus to its pets, soonest to level first
+        return {
+            bonus: sorted(pets, key=lambda pet: float(pet.days_to_shiny_level))
+            for bonus, pets in self._pets_by_shiny_bonus.items()
+        }
+
+    @cached_property
+    def total_shiny_levels(self) -> dict[str, int]:
+        return {
+            bonus: sum(pet.shiny_level for pet in pets)
+            for bonus, pets in self._pets_by_shiny_bonus.items()
+        }
+
+    @cached_property
+    def total_shiny_level_count(self) -> int:
+        # "SpecialPassives" "Lv" in source is at least 1, even for a pet with no shiny
+        # progress. "ShinyBonusS" skips such pets (so `shiny_level` is 0 for them), but
+        # the Tome's shiny levels count them as LV 1. Last updated in v2.550.0
+        return sum(
+            max(1, pet.shiny_level)
+            for pets in self.species.values()
+            for pet in pets.values()
+        )
+
+    @cached_property
+    def total_shiny_bonus_values(self) -> dict[str, int]:
+        return {
+            bonus: sum(pet.shiny_bonus_value for pet in pets)
+            for bonus, pets in self._pets_by_shiny_bonus.items()
+        }
 
     def calculate_egg_slots(self, royal_egg_cap: int, merit_level: int):
         self.egg_slots += (

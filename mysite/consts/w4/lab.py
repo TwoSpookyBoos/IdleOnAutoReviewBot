@@ -31,7 +31,6 @@ lab_sapphire_rhombol_aura_range = 150
 lab_sapphire_rhombol_aura_multi = 1.25
 lab_arena_line_width = 20
 lab_arena_bonus_wave = int(RANDOlist[53][13])
-lab_shiny_line_width_per_level = int(RANDOlist[92][19])
 # Laboratory Bling grants these jewels at total Lab levels
 lab_bling_jewel_levels = {
     "Pure Opal Rhinestone": 700,

@@ -1,6 +1,5 @@
 from consts.consts_general import card_raw_data
 from consts.consts_w4 import (
-    breeding_species_dict,
     get_tome_level_required,
     tome_challenges,
 )
@@ -11,6 +10,7 @@ from consts.idleon.consts_idleon import (
     NinjaInfo,
     RANDOlist,
 )
+from consts.w4.breeding import pet_species
 
 tome_challenge_details = [
     {
@@ -39,9 +39,9 @@ tome_deathnote_maps = [
 
 # `PetStats` worlds, which the save indexes from 0
 tome_breeding_species = [
-    (world - 1, index)
-    for world, pets in breeding_species_dict.items()
-    for index in pets
+    (world, index)
+    for world, pets in enumerate(pet_species)
+    for index in range(len(pets))
 ]
 
 # Toilet Paper Postage
@@ -53,9 +53,9 @@ tome_star_talent_indexes = [8, 17, 275, 622]
 # "ShinyBonusS" in source. Last updated in v2.531.0
 tome_star_shiny_bonus_index = 14
 tome_star_shiny_pets = [
-    (world - 1, index)
-    for world, pets in breeding_species_dict.items()
-    for index, pet in pets.items()
-    if pet["ShinyBonus"] == "Star Talent Pts"
+    (world, index)
+    for world, pets in enumerate(pet_species)
+    for index, pet in enumerate(pets)
+    if pet["Shiny Bonus"] == "Star Talent Pts"
 ]
 tome_star_shiny_per_level = float(RANDOlist[92][tome_star_shiny_bonus_index])

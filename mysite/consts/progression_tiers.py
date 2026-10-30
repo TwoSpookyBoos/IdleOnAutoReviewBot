@@ -1,6 +1,7 @@
 from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
+from consts.w4.breeding import shiny_bonus_names, shiny_bonus_tier
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_list
 from utils.logging import get_logger
 logger = get_logger(__name__)
@@ -1817,7 +1818,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Faster Shiny Pet Lv Up Rate": [24, 6],
+            "Faster Shiny Mob Lv Up Rate": [24, 6],
             "Bonuses from All Meals": [10, 5],
             "Infinite Star Signs": [25, 5],
             "Base Efficiency for All Skills": [20, 5],
@@ -1829,7 +1830,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Base Critter Per Trap": [10, 5],
+            "Base Critters per Trap": [10, 5],
             "Drop Rate": [15, 5],
             "Faster Refinery Speed": [15, 5],
             "Lower Minimum Travel Time for Sailing": [5, 5],
@@ -1843,9 +1844,9 @@ breeding_progressionTiers = {
         "Shinies": {
             "Multikill Per Tier": [20, 5],
             "Higher Artifact Find Chance": [15, 5],
-            "Faster Shiny Pet Lv Up Rate": [28, 7],
+            "Faster Shiny Mob Lv Up Rate": [28, 7],
             "Infinite Star Signs": [37, 7],
-            "Summoning EXP": [10, 5]
+            "Summoning EXP gain": [10, 5]
             },
         "ShinyNotes": ""
         },
@@ -1865,7 +1866,7 @@ breeding_progressionTiers = {
         "ArenaWaves": 200,
         "Shinies": {
             "Drop Rate": [36, 12],
-            "Base Critter Per Trap": [22, 11],
+            "Base Critters per Trap": [22, 11],
             },
         "ShinyNotes": ""
     },
@@ -1874,7 +1875,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Summoning EXP": [22, 11],
+            "Summoning EXP gain": [22, 11],
             "Faster Refinery Speed": [33, 11],
             "Multikill Per Tier": [44, 11],
         },
@@ -1889,25 +1890,49 @@ breeding_progressionTiers = {
         },
         "ShinyNotes": ""
     },
+    # Base Max Shiny LV tiers are a free pass once Menagerie raises it
     13: {
-        'Max Shinies': [
-            'Bonuses from All Meals', 'Drop Rate', 'Summoning EXP',
-            'Base Efficiency for All Skills', 'Multikill Per Tier', 'Faster Refinery Speed'
-        ]
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 20,
     },
     14: {
-        'Max Shinies': [
-            'Farming EXP', 'Lower Minimum Travel Time for Sailing', 'Sail Captain EXP Gain',
-            'Higher Artifact Find Chance', 'Skill EXP', 'Base Critter Per Trap'
-        ]
+        'Max Shinies': shiny_bonus_tier['Useful'],
+        'Max Shiny Level': 20,
     },
     15: {
-        'Max Shinies': [
-            'Faster Shiny Pet Lv Up Rate', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK',
-            'Infinite Star Signs', 'Total Damage',
-            'Tab 4 Talent Pts', 'Tab 3 Talent Pts', 'Tab 2 Talent Pts', 'Tab 1 Talent Pts',
-            'Class EXP', 'Line Width in Lab'
-        ]
+        'Max Shinies': shiny_bonus_tier['Other'],
+        'Max Shiny Level': 20,
+    },
+    # Max Shiny LV 30 needs Luminous Menagerie Unlock 11. Every Shiny LV above 20 on
+    # any pet is +1 OverLV (+10% additive Shiny LV Up Rate), so first level all pets
+    # evenly while that's cheap
+    16: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 21,
+    },
+    17: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 22,
+    },
+    18: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 23,
+    },
+    19: {
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 25,
+    },
+    20: {
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 30,
+    },
+    21: {
+        'Max Shinies': shiny_bonus_tier['Useful'],
+        'Max Shiny Level': 30,
+    },
+    22: {
+        'Max Shinies': shiny_bonus_tier['Other'],
+        'Max Shiny Level': 30,
     },
 
     }
