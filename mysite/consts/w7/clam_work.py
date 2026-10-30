@@ -7,5 +7,8 @@ clam_bonus_img = [
     "coral",
     "coral-0",
     "gallery",
-    "ballot-15",
+    "lumi",
+    "research",
+    "cooking",
+    "spelunking-tool-0",
 ]
