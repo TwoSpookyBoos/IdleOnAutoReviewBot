@@ -1014,7 +1014,7 @@ class Farming:
         )
         self._max_summoning_level = max_summoning_level
         self._mass_irrigation_level = mass_irrigation_level
-        self._highest_farming_level = max(farming_levels)
+        self._highest_farming_level = max(farming_levels, default=0)
         self._cropiovo_unlocked = star_signs["Cropiovo Minor"].unlocked
         self._lil_overgrowth = achievements["Lil' Overgrowth"].complete
         self._skull_shop = skull_shop
@@ -1029,10 +1029,9 @@ class Farming:
                     maps_opened += 1
                     mama_trolls_map_open = mama_trolls_map_open or map_index == 257
         self.magic_bean_unlocked = mama_trolls_map_open
-        highest_farming_level = max(farming_levels, default=0)
         # "ExoticBonusQTY" 4-8 in source: per Farming level above each threshold
         geneology_value = sum(
-            max(0, highest_farming_level - threshold)
+            max(0, self._highest_farming_level - threshold)
             * self.exotic_market[name].value
             for name, threshold in (
                 ("GENEOLOGY I", 50),
