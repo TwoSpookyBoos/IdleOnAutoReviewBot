@@ -16,6 +16,10 @@ glimbo_scaled_flags = [value == "1" for value in Research[29]]
 # "VaultUpgMaxLV" in source: min(10, 10 * BundlesReceived.bon_u).
 # Last updated in v2.531.0
 bundle_max_level_bonus_cap = 10
+# "VaultUpgMaxLV_most" in source: Gilded Awnings adds levels to the "Research"[63] list.
+# Last updated in v2.550
+gilded_awnings_max_level_bonus = 25
+gilded_awnings_vault_indices = {int(value) for value in Research[63]}
 
 
 def _get_vault_section(index: int) -> int:
