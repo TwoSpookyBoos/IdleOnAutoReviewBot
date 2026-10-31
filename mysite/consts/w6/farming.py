@@ -1,7 +1,9 @@
-max_farming_crops = 280  # Last verified as of 2.48 Giftmas Event
-max_farming_value = 10000  # Last verified as of 2.21 The Fixening
-# Base 1 + 10 from Grimoire + 30 from Legend Talents: Extended Database
-max_land_rank_level = 41
+from consts.idleon.w6.farming import seed_dict
+
+# Last crop of the last seed in `SeedInfo = function` in source. Last verified in v2.550
+max_farming_crops = seed_dict["Medal"]["CropIndexEnd"] + 1
+# Before Stalk Value. "CropsBonusValue" in source. Last verified in v2.550
+max_farming_value = 10000
 
 crop_dict = {
     # Basic
@@ -252,9 +254,16 @@ crop_dict = {
     227: {"Name": "T12 Glassy Rose"},
     228: {"Name": "T12 Glassy Onigiri"},
     229: {"Name": "T12 Glassy Corn"},
+    # Medal
+    **{
+        crop_index: {"Name": f"Medal Crop {crop_index - 229}"}
+        for crop_index in range(230, 330)
+    },
 }
 
 crop_evo_breakpoint_list = [
+    # Medal
+    *range(329, 229, -10),
     # Glassy
     229, 219, 209, 199, 189, 179, 169, 159, 149, 139, 129, 119,
     # Mushie

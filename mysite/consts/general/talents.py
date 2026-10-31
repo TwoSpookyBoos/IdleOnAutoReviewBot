@@ -6,6 +6,7 @@ talent_bonus_banned_above = 614
 # Talent indexes in source. Last updated in v2.531.0
 haungry_for_gold_talent_index = 99
 family_guy_talent_index = 144
+mass_irrigation_talent_index = 205
 dank_rank_talent_index = 207
 apocalypse_wow_talent_index = 209
 graded_rate_talent_index = 239

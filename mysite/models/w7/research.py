@@ -151,9 +151,11 @@ class ResearchGrid(dict[str, ResearchGridUpgrade]):
             if info["Name"] == "Name":
                 continue
             level = safer_index(research_levels, index, 0)
-            shape_index = safer_convert(
-                safer_index(shape_indexes, info["Game Index"], -1), -1
-            )
+            # Float default: safer_convert with an int default turns 0 (a real shape)
+            # into the default
+            shape_index = int(safer_convert(
+                safer_index(shape_indexes, info["Game Index"], -1), -1.0
+            ))
             upgrade = ResearchGridUpgrade(self.totals, info, level, shape_index)
             self[upgrade.name] = upgrade
 

@@ -7,6 +7,8 @@ from consts.idleon.w1.upgrade_vault import (
     glimbo_vault_indices,
     glimbo_scaled_flags,
     bundle_max_level_bonus_cap,
+    gilded_awnings_max_level_bonus,
+    gilded_awnings_vault_indices,
 )
 from models.advice.advice import Advice
 from models.general.event_shop import EventShop
@@ -165,7 +167,17 @@ class Vault:
     def calculate(
         self, glimbo: Glimbo, research_grid: ResearchGrid, event_points_shop: EventShop
     ):
-        # "VaultUpgMaxLV" in source; before Mastery scaling. Last updated in v2.531.0
+        # "VaultUpgMaxLV" in source; before Mastery scaling. Last updated in v2.550
+        awnings_bonus = (
+            gilded_awnings_max_level_bonus * event_points_shop['Gilded Awnings'].owned
+        )
+        max_levels = {
+            index: base_max_level
+            + (awnings_bonus if index in gilded_awnings_vault_indices else 0)
+            for index, base_max_level in self._base_max_levels.items()
+        }
+        for index, max_level in max_levels.items():
+            self._by_index[index].max_level = max_level
         glimbo_bogo_level = research_grid["Glimbo BOGO Offer"].level
         glimbo_vip_pass_owned = (
             event_points_shop['Glimbo VIP Pass'].owned
@@ -177,7 +189,7 @@ class Vault:
             trades = safer_index(glimbo.trades_by_slot, slot, 0)
             if glimbo_scaled_flags[slot]:
                 trades *= 1 + glimbo_bogo_level + int(glimbo_vip_pass_owned)
-            upgrade.max_level = round(self._base_max_levels[vault_index] + trades)
+            upgrade.max_level = round(max_levels[vault_index] + trades)
         # guard only; saves stay within max
         for upgrade in self.upgrades.values():
             upgrade.level = min(upgrade.level, upgrade.max_level)
