@@ -519,6 +519,8 @@ class Account:
             sum(self.characters.all_skills["Divinity"]),
             self.coral_reef.total_level,
             self.divinity.god_rank,
+            # "UnlockOwned" 2 in source opens the Coral Kid Singularity page
+            self.menagerie.unlocks[2].owned,
         )
         self.jelly_operator.calculate_bonuses(
             self.research.grid["Jelly Operator Linguistics"].value,
