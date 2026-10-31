@@ -45,7 +45,7 @@ combatLevels_progressionTiers = [
     [34, 5050, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Murder One\"', None, None, None],
     [35, 5600, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Being Smart\"', None, None, None],
     [36, 6250, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Materialism\"', None, None, None],
-    [37, 6955, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
+    [37, 7115, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
 ]
 secret_class_progressionTiers = {
     0: {},
