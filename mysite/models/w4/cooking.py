@@ -316,6 +316,7 @@ class Cooking:
             )
         if causticolumn_level < 7:
             # TODO: Verify if player has unlock from Menagerie
+            #  (account.menagerie.unlocks[0].owned)
             missing.append(
                 _plate_advice(
                     f"{artifact}: Verisimilitude Causticolumn. Verisimilitude Artifacts "

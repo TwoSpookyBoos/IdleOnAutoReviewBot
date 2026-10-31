@@ -79,11 +79,11 @@ class Emperor(dict[str, EmperorBonus]):
 
     def __init__(self, raw_data):
         raw_optlacc = raw_data.get("OptLacc", [])
-        self._last_showdown = safer_convert(safer_index(raw_optlacc, 369, 0), 0)
+        self.last_showdown = safer_convert(safer_index(raw_optlacc, 369, 0), 0)
         self.daily_attempts = 1 + safer_convert(safer_index(raw_optlacc, 382, 0), 0)
         self.attempts = 1 - safer_convert(safer_index(raw_optlacc, 370, 0), 0)
         wins = [0] * len(emperor_bonus_description)
-        for running_total in range(0, self._last_showdown):
+        for running_total in range(0, self.last_showdown):
             fight_index = running_total % 48
             bonus_index = emperor_fight_bonus_index[fight_index]
             wins[bonus_index] += 1
@@ -112,7 +112,7 @@ class Emperor(dict[str, EmperorBonus]):
 
     def get_upcoming_figths_advice(self) -> list[Advice]:
         advice_list = []
-        for next_showdown in range(self._last_showdown, self._last_showdown + 20):
+        for next_showdown in range(self.last_showdown, self.last_showdown + 20):
             fight_index = next_showdown % 48
             bonus_index = emperor_fight_bonus_index[fight_index]
             template, (bonus_type, _) = emperor_bonus_description[bonus_index]
@@ -134,7 +134,7 @@ class Emperor(dict[str, EmperorBonus]):
                     f"<br>HP: {self._calculate_emperor_health(next_showdown)}"
                     f"<br>Reward: {reward}",
                     picture_class=bonus_info["image"],
-                    progression=self._last_showdown,
+                    progression=self.last_showdown,
                     goal=showdown_number,
                 )
             )

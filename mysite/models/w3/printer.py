@@ -19,7 +19,7 @@ from consts.w3.printer import (
 )
 from models.advice.advice import Advice
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_get
+from utils.safer_data_handling import safe_loads, safer_convert, safer_get
 from utils.text_formatting import getItemDisplayName
 
 logger = get_logger(__name__)
@@ -41,6 +41,11 @@ class Printer:
         raw_printer_xtra = safe_loads(raw_data.get("PrinterXtra", []))
         sample_names = raw_print[0::2] + raw_printer_xtra[0:119:2]
         sample_values = raw_print[1::2] + raw_printer_xtra[1:119:2]
+        # `Printer.indexOf(codename) + 1` in source: value in the first "Print" slot
+        # holding a codename, printing or stored. Last updated in v2.550.0
+        self.first_slot_values: dict[str, float] = {}
+        for codename, value in zip(raw_print[0::2], raw_print[1::2]):
+            self.first_slot_values.setdefault(codename, safer_convert(value, 0.0))
 
         for sample_index, codename in enumerate(sample_names):
             if not codename:
