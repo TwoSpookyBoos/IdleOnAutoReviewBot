@@ -16,7 +16,6 @@ from consts.consts_w2 import (
     sigils_dict,
 )
 from consts.consts_w3 import approx_max_talent_level_non_es_non_star, prayers_dict
-from consts.consts_w4 import shiny_days_list
 from consts.consts_w5 import max_sailing_artifact_level
 from consts.general.drop_rate import (
     big_big_hampter_drop_rate,
@@ -1031,10 +1030,10 @@ class DropRate:
         return [
             Advice(
                 label=f"{{{{ Breeding|#breeding }}}} - Shiny {name}: "
-                f"+{pet.shiny_level}/{len(shiny_days_list)}% Drop Rate",
+                f"+{pet.shiny_level}/{pet.max_shiny_level}% Drop Rate",
                 picture_class=name,
                 progression=pet.shiny_level,
-                goal=len(shiny_days_list),
+                goal=pet.max_shiny_level,
             )
             for name, pet in self.shiny_pets
         ]

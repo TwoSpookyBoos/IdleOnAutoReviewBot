@@ -507,10 +507,18 @@ class Account:
         self.advice_fish.calculate_bonuses()
         self.meritocracy.calculate_bonuses()
         self.zenith_market.calculate_bonuses()
+        self.caverns.caves['The Lamp'].calculate_bonuses(
+            self.zenith_market['LAMP BOOST'].value
+        )
         self.research.calculate_bonuses(
             self.companions["Pirate Deckhand"].bonus,
             self.equinox.dreams,
             self.sushi_station.get_milestone_bonus_value("Research Upgrade Bonus Multi"),
+        )
+        self.the_button.calculate_bonuses(
+            # "Companions"(147) in source
+            self.companions['Mantaray'].bonus,
+            self.research.grid['Better Button'].value,
         )
         self.glimbo.calculate_drop_rate_multi(self.research)
         self.sushi_station.calculate_bonuses()
@@ -664,9 +672,15 @@ class Account:
 
         # Farming: Land Rank multi reads talents, crop evo reads summoning
         self.farming.calculate_market_bonus(
-            self.gemshop.purchases['Plot Of Land'].owned, self.merits[5][2].level
+            self.gemshop.purchases['Plot Of Land'].owned,
+            self.merits[5][2].level,
+            self.research.grid["Day 'N' Nite"].value,
         )
-        self.farming.calculate_land_rank_bonus(self.get_current_max_talent("Dank Rank"))
+        self.farming.calculate_land_rank_bonus(
+            self.get_current_max_talent("Dank Rank"),
+            self.grimoire.upgrades['Land Rank Database Maxim'].total_value,
+            self.legend_talents['Extended Database'].value,
+        )
         self.farming.calculate_crop_depot_bonus(
             self.lab_bonuses['Depot Studies PhD'], self.lab_jewels['Pure Opal Rhombol'],
             self.grimoire, self.vault, self.sneaking.emporium,
@@ -690,10 +704,27 @@ class Account:
             self.caverns.caves['The Lamp'].wishes['World 6 Majigers'],
             self.summoning.bonuses,
             max_summoning_level=max(self.characters.all_skills['Summoning'], default=0),
+            mass_irrigation_level=self.get_current_max_talent("Mass Irrigation"),
+            grimoire=self.grimoire,
+            vault=self.vault,
+            monument_value=self.caverns.caves['Wisdom Monument']
+            .bonuses['Farming Crop Evo Chance'].value,
+            sushi_value=self.sushi_station.get_milestone_bonus_value(
+                'Farming Crop Evo Chance'
+            ),
+            button_value=self.the_button.get_bonus_value('Farming Crop Evo Chance'),
+            boony_crowns_value=self.research.grid['Boony Crowns'].total_value,
+            rift_guy_sticker_owned=self.event_points_shop['Rift Guy Sticker'].owned,
+            bettah_stickahs_unlocked=self.gaming.superbits['Bettah Stickahs'].unlocked,
+            card_value=next(
+                card for card in self.cards if card.codename == 'w7b5'
+            ).getCurrentValue(),
         )
         self.farming.calculate_crop_speed(self.alchemy_vials, self.summoning.bonuses)
         self.farming.calculate_bean_bonus(
-            self.sneaking.emporium['Deal Sweetening'].value, self.achievements
+            self.sneaking.emporium['Deal Sweetening'].value,
+            self.achievements,
+            self.vault,
         )
         self.farming.calculate_og(
             self.achievements,
@@ -952,6 +983,9 @@ class Account:
         elif name == "Dank Rank":
             char_list = self.characters.dbs
             talent_num = "207"
+        elif name == "Mass Irrigation":
+            char_list = self.characters.dbs
+            talent_num = "205"
         return max(
             [
                 talent_level + char.total_bonus_talent_levels

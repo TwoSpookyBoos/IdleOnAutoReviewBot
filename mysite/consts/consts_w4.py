@@ -564,11 +564,16 @@ shiny_days_list = [
     8227, 16234, 31633, 60989, 116522,
     220874, 415802, 778022, 1447955, 2681786,
 ]
+# "SpecialPassives" in source: 10 more levels with Menagerie "UnlockOwned" 11.
+# Last updated in v2.550
+menagerie_shiny_days_list = shiny_days_list + [
+    int((1 + level ** 1.6) * 1.7 ** level) for level in range(20, 30)
+]
 
 
-def getShinyLevelFromDays(days: float) -> int:
+def getShinyLevelFromDays(days: float, days_list: list[int] = shiny_days_list) -> int:
     shinyLevel = 0
-    for requirement in shiny_days_list:
+    for requirement in days_list:
         if float(days) > requirement:
             shinyLevel += 1
         else:
@@ -576,13 +581,13 @@ def getShinyLevelFromDays(days: float) -> int:
     return shinyLevel
 
 
-def getDaysToNextShinyLevel(days: float) -> float:
-    shinyLevel = getShinyLevelFromDays(days)
-    if shinyLevel >= len(shiny_days_list):
+def getDaysToNextShinyLevel(days: float, days_list: list[int] = shiny_days_list) -> float:
+    shinyLevel = getShinyLevelFromDays(days, days_list)
+    if shinyLevel >= len(days_list):
         return 0
     else:
         try:
-            daysRemaining = shiny_days_list[shinyLevel] - float(days)
+            daysRemaining = days_list[shinyLevel] - float(days)
             return daysRemaining
         except Exception as reason:
             logger.warning(f"With shinyLevel of {shinyLevel}, Defaulting Shiny days Remaining to 0. Reason: {reason}")

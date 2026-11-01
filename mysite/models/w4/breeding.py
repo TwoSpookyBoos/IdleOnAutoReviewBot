@@ -9,6 +9,8 @@ from consts.consts_w4 import (
     getDaysToNextShinyLevel,
     getShinyLevelFromDays,
     max_breeding_territories,
+    menagerie_shiny_days_list,
+    shiny_days_list,
     slot_unlock_waves_list,
     territory_names,
 )
@@ -29,15 +31,25 @@ class Pet:
         self.shiny_bonus: str = info["ShinyBonus"]
         self.unlocked: bool = False
         self.shiny_level: int = 0
+        self.max_shiny_level: int = len(shiny_days_list)
         self.days_to_shiny_level: float = 0
         self.breedability_days: float = 0.0
         self.breedability_multi: float = 1
         self.breedability_heart: str = "breedability-heart-1"
 
-    def parse(self, unlocked: bool, shiny_days: float, breedability_days: float):
+    def parse(
+        self,
+        unlocked: bool,
+        shiny_days: float,
+        breedability_days: float,
+        shiny_requirements: list[int],
+    ):
         self.unlocked = unlocked
-        self.shiny_level = getShinyLevelFromDays(shiny_days)
-        self.days_to_shiny_level = getDaysToNextShinyLevel(shiny_days)
+        self.max_shiny_level = len(shiny_requirements)
+        self.shiny_level = getShinyLevelFromDays(shiny_days, shiny_requirements)
+        self.days_to_shiny_level = getDaysToNextShinyLevel(
+            shiny_days, shiny_requirements
+        )
         self.breedability_days = breedability_days
         self.breedability_multi = getBreedabilityMultiFromDays(breedability_days)
         self.breedability_heart = getBreedabilityHeartFromMulti(self.breedability_multi)
@@ -64,6 +76,13 @@ class Breeding:
     def __init__(self, raw_data: dict):
         raw_breeding = safe_loads(raw_data.get("Breeding", []))
         raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
+        raw_menagerie = safe_loads(raw_data.get("Menagerie", []))
+        # "UnlockOwned" 11 in "SpecialPassives" in source. Last updated in v2.550
+        shiny_requirements = (
+            menagerie_shiny_days_list
+            if safer_convert(safer_index(safer_index(raw_menagerie, 2, []), 11, 0), 0) >= 1
+            else shiny_days_list
+        )
         self.egg_slots: int = 3
 
         self.arena_max_wave: int = 0
@@ -136,6 +155,7 @@ class Breeding:
                         unlocked_counts[world] > pet_index,
                         shiny_days[pet_index],
                         breedability_days[pet_index],
+                        shiny_requirements,
                     )
                     self.total_shiny_levels[pet.shiny_bonus] += pet.shiny_level
                     if pet.unlocked:
