@@ -159,7 +159,8 @@ class Breeding:
         self.genetics: dict[str, bool] = {
             genetic: False for genetic in breeding_genetics
         }
-        self._pets_by_shiny_bonus: dict[str, list[Pet]] = {
+        # Shiny bonus to its pets, in world order
+        self.shiny_bonus_pets: dict[str, list[Pet]] = {
             bonus: [] for bonus in shiny_bonus_names
         }
         self.species: dict[int, dict[str, Pet]] = {}
@@ -185,7 +186,7 @@ class Breeding:
                 if pet.unlocked:
                     self.genetics[pet.genetic] = True
                 self.species[world][pet.name] = pet
-                self._pets_by_shiny_bonus[pet.shiny_bonus].append(pet)
+                self.shiny_bonus_pets[pet.shiny_bonus].append(pet)
 
     @cached_property
     def max_shiny_level(self) -> int:
@@ -226,18 +227,10 @@ class Breeding:
         )
 
     @cached_property
-    def shiny_bonus_pets(self) -> dict[str, list[Pet]]:
-        # Shiny bonus to its pets, soonest to level first
-        return {
-            bonus: sorted(pets, key=lambda pet: float(pet.days_to_shiny_level))
-            for bonus, pets in self._pets_by_shiny_bonus.items()
-        }
-
-    @cached_property
     def total_shiny_levels(self) -> dict[str, int]:
         return {
             bonus: sum(pet.shiny_level for pet in pets)
-            for bonus, pets in self._pets_by_shiny_bonus.items()
+            for bonus, pets in self.shiny_bonus_pets.items()
         }
 
     @cached_property
@@ -255,7 +248,7 @@ class Breeding:
     def total_shiny_bonus_values(self) -> dict[str, int]:
         return {
             bonus: sum(pet.shiny_bonus_value for pet in pets)
-            for bonus, pets in self._pets_by_shiny_bonus.items()
+            for bonus, pets in self.shiny_bonus_pets.items()
         }
 
     def calculate_egg_slots(self, royal_egg_cap: int, merit_level: int):

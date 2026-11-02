@@ -496,7 +496,11 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
                         requirements['Shinies'][shiny_type][0],
                         requirements['Shinies'][shiny_type][1]],
                     )
-                    failedShinyBonus[shiny_type] = breeding_dict.shiny_bonus_pets[shiny_type]
+                    # Soonest to level first
+                    failedShinyBonus[shiny_type] = sorted(
+                        breeding_dict.shiny_bonus_pets[shiny_type],
+                        key=lambda pet: float(pet.days_to_shiny_level),
+                    )
             if all_requirements_met == True and tier_ShinyLevels >= tier_number - 1:
                 tier_ShinyLevels = tier_number
             else:
