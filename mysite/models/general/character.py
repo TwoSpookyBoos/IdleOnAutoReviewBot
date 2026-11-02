@@ -8,7 +8,9 @@ from consts.consts_w4 import lab_chips_dict
 from consts.consts_w5 import divinity_divinities_dict
 from consts.idleon.consts_idleon import expected_talents_dict
 from consts.idleon.lava_func import lava_func
+from models.advice.advice import Advice
 from consts.general.equipment import (
+    cape_vine_unlock_kills_index,
     equip_slot_chip_doublers,
     equip_slot_count,
     gallery_slot_indexes,
@@ -401,6 +403,22 @@ class Character:
     @property
     def hatrack_bonus_active(self) -> bool:
         return self._kills_left(hatrack_unlock_kills_index) <= 0
+
+    @property
+    def cape_vine_bonus_active(self) -> bool:
+        return self._kills_left(cape_vine_unlock_kills_index) <= 0
+
+    def get_showcase_unlock_advice(
+        self, feature: str, world: int, slot_items: str
+    ) -> Advice:
+        # Gallery/Hatrack/Cape Vine before this character reached their world
+        return Advice(
+            label=f"{self.character_name}: reach World {world} to get {feature} "
+            f"bonuses<br>Until then the equipped {slot_items} still apply",
+            picture_class=self.class_name_icon,
+            progression=0,
+            goal=1,
+        )
 
     # Gear/tool part of "TotalStatsETCmap" in source. Last updated in v2.531.0
     def get_gear_misc_bonus(self, codename: str, gown_bonus: float) -> float:

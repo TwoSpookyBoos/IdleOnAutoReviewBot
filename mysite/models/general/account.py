@@ -65,6 +65,7 @@ from models.w3.salt_lick import SaltLick
 from models.w3.trapping import Trapping
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
+from models.w4.cape_vine import CapeVine
 from models.w4.cooking import Cooking, Meals
 from models.w4.lab import LabBonuses, LabJewels, LabMainframe
 from models.w4.lab_chips import LabChips
@@ -235,6 +236,7 @@ class Account:
         self.rift: Rift = Rift(self.raw_data)
         self.tome: Tome = Tome(self.raw_data)
         self.breeding: Breeding = Breeding(self.raw_data)
+        self.cape_vine: CapeVine = CapeVine(self.raw_data)
         self.meals: Meals = Meals(self.raw_data, self.version)
         self.cooking: Cooking = Cooking(self.raw_data, self.meals)
 

@@ -1,5 +1,8 @@
+from collections.abc import Collection
 from dataclasses import dataclass
 from typing import TypeVar
+
+from utils.number_formatting import round_and_trim
 
 
 @dataclass
@@ -10,6 +13,9 @@ class ItemMiscBonus:
     def __init__(self, effect, value):
         self.effect = effect.replace("_", " ").title()
         self.value = value
+
+    def get_label(self, multi: float = 1) -> str:
+        return f"+{round_and_trim(self.value * multi)}{self.effect}"
 
 
 @dataclass
@@ -22,6 +28,16 @@ class ItemBonus:
     defence: int = 0
     misc1: ItemMiscBonus | None = None
     misc2: ItemMiscBonus | None = None
+
+    def get_misc_bonuses(
+        self, stats: Collection[str] | None = None
+    ) -> list[ItemMiscBonus]:
+        """Non-empty misc bonuses, only `stats` (e.g. "% Drop Rate") if given."""
+        return [
+            misc
+            for misc in (self.misc1, self.misc2)
+            if misc and misc.effect != "0" and (stats is None or misc.effect in stats)
+        ]
 
     def add_to(self, total: dict[str, float], multi: float):
         if multi == 0:

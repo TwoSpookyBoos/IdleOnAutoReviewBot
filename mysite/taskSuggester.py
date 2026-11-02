@@ -19,7 +19,7 @@ from master_classes import grimoire, compass, tesseract, royal_armory
 from w1 import upgrade_vault, stamps, bribes, smithing, statues, starsigns, owl, darts, basketball
 from w2 import alchemy_vials, alchemy_bubbles, alchemy_p2w, alchemy_sigils, post_office, killroy, islands, arcade, bonus_ballot
 from w3 import trapping, refinery, death_note, worship, salt_lick, buildings, equinox, library, sampling, atom_collider, armor_sets
-from w4 import breeding, cooking, rift
+from w4 import breeding, cape_vine, cooking, rift
 from w5 import slab, divinity, sailing, gaming
 from caverns import villagers, shallow_caverns, glowshroom_tunnels, underground_overgrowth
 from w6 import beanstalk, sneaking, farming, summoning, emperor
@@ -157,6 +157,7 @@ def main(inputData, source_string, runType="web"):
             breeding.getBreedingAdviceSection(),
             cooking.getCookingAdviceSection(),
             rift.getRiftAdviceSection(),
+            cape_vine.get_section(),
         ],
         sections_5 := [
             slab.getSlabAdviceSection(),
