@@ -10,6 +10,7 @@ from consts.idleon.consts_idleon import expected_talents_dict
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from consts.general.equipment import (
+    cape_slot_index,
     cape_vine_unlock_kills_index,
     equip_slot_chip_doublers,
     equip_slot_count,
@@ -420,14 +421,30 @@ class Character:
             goal=1,
         )
 
-    # Gear/tool part of "TotalStatsETCmap" in source. Last updated in v2.531.0
+    def get_motherboard_advice(self) -> Advice:
+        # Boosts the Gallery once it takes over the Trophy slot, else doubles the Trophy
+        effect = (
+            "+10% Gallery Bonus Multi"
+            if self.gallery_bonus_active
+            else "Doubles Misc. Bonuses of equipped Trophy"
+        )
+        return Advice(
+            label=f"Lab Chips - Silkrode Motherboard<br>{effect}",
+            picture_class="silkrode-motherboard",
+            progression=int("Silkrode Motherboard" in self.equipped_lab_chips),
+            goal=1,
+        )
+
+    # Gear/tool part of "TotalStatsETCmap" in source. Last updated in v2.561.0
     def get_gear_misc_bonus(self, codename: str, gown_bonus: float) -> float:
-        # Gallery/Hatrack take over their slots once open
+        # Gallery/Hatrack/Cape Vine take over their slots once open
         total = 0
         for slot in range(equip_slot_count):
             if self.gallery_bonus_active and slot in gallery_slot_indexes:
                 continue
             if self.hatrack_bonus_active and slot == hatrack_slot_index:
+                continue
+            if self.cape_vine_bonus_active and slot == cape_slot_index:
                 continue
             value = self.equipment.get_misc_bonus(slot, codename)
             if equip_slot_chip_doublers.get(slot) in self.equipped_lab_chips:

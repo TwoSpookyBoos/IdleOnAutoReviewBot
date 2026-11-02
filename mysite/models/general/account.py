@@ -937,6 +937,7 @@ class Account:
             armor_sets=self.armor_sets,
             hat_rack=self.hat_rack,
             breeding=self.breeding,
+            cape_vine=self.cape_vine,
             tome=self.tome,
             caverns=self.caverns,
             achievements=self.achievements,

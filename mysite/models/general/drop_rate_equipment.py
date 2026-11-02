@@ -102,7 +102,6 @@ def get_equipment_advice_for_stat(
     stat_codenames: tuple[str, ...],
     stat_human_readable_format: str,
     advice_group_prefix: str,
-    highest_world_reached: int,
 ):
     equipment_advice: dict[str, list[Advice]] = {}
     equipment_dict: dict[str, list] = {}
@@ -110,25 +109,16 @@ def get_equipment_advice_for_stat(
     motherboard_equipped = "Silkrode Motherboard" in character.equipped_lab_chips
     software_equipped = "Silkrode Software" in character.equipped_lab_chips
     processor_equipped = "Silkrode Processor" in character.equipped_lab_chips
-    motherboard_boosts_gallery = highest_world_reached >= 7
-    # Gallery/Hatrack take over these slots once open for this character
-    showcased_types = ("Trophy", "Nametag") * character.gallery_bonus_active + (
-        "Premium Hat",
-    ) * character.hatrack_bonus_active
+    # Gallery/Hatrack/Cape Vine take over these slots once open for this character
+    showcased_types = (
+        ("Trophy", "Nametag") * character.gallery_bonus_active
+        + ("Premium Hat",) * character.hatrack_bonus_active
+        + ("Cape",) * character.cape_vine_bonus_active
+    )
 
-    if stat == "DropRate":
-        # Equipping the chip is per-character even though its effect is account-wide
+    if stat == "DropRate" and not character.gallery_bonus_active:
         equipment_advice.setdefault(advice_group_prefix + "Trophy", []).append(
-            Advice(
-                label=(
-                    "Lab Chips - Silkrode Motherboard<br>+10% Trophy Gallery Bonus Multi"
-                    if motherboard_boosts_gallery
-                    else "Lab Chips - Silkrode Motherboard<br>Doubles Misc. Bonuses of equipped Trophy"
-                ),
-                picture_class="silkrode-motherboard",
-                progression=int(motherboard_equipped),
-                goal=1,
-            )
+            character.get_motherboard_advice()
         )
 
     for equipment_name, equipment_data in equipment_by_bonus_dict[stat].items():
@@ -283,7 +273,6 @@ def get_equipment_advice(
     character: Character,
     flat_codenames: tuple[str, ...],
     multi_codenames: tuple[str, ...],
-    highest_world_reached: int,
 ) -> dict[str, list[Advice]]:
     # One section per slot, flat and multi merged
     return merge_equipment_advice_by_slot(
@@ -296,7 +285,6 @@ def get_equipment_advice(
                     flat_codenames,
                     "Drop Rate",
                     "Drop Rate - ",
-                    highest_world_reached,
                 ),
             ),
             (
@@ -307,7 +295,6 @@ def get_equipment_advice(
                     multi_codenames,
                     "Drop Rate Multi",
                     "Drop Rate Multi - ",
-                    highest_world_reached,
                 ),
             ),
         ]

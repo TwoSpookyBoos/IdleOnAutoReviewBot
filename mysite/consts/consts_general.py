@@ -1456,6 +1456,12 @@ equipment_by_bonus_dict = {
         'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
         'Ultra Unboxer': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'ultra-unboxer'},
         # Capes
+        "Lovely Balloon": {
+            "Type": "Cape",
+            "Limited": True,
+            "Misc1": {"Bonus": "DropRate", "Value": 250},
+            "Image": "lovely-balloon",
+        },
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
         'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
         # Nametags
