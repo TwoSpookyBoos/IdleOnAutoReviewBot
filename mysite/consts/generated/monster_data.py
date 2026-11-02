@@ -791,6 +791,9 @@ monster_data = {
     "poppy": {
         "Name": "Poppy"
     },
+    "cathie": {
+        "Name": "Catherine"
+    },
     "fm_frog": {
         "Name": "Abacus Frog"
     },
@@ -1247,5 +1250,5 @@ monster_data = {
     "Justice_Monument": {
         "Name": "Justice"
     },
-    "_hash": "8914f2417c7f46bbe72dd0d935b9aeb096bfcc4b7e8117859d63c6e328a7821e"
+    "_hash": "a7b3de42ec295bea0531645172f23e42c6dfa9140c45e4212ed131f9ddc9c16f"
 }

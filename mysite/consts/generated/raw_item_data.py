@@ -9710,6 +9710,29 @@ raw_item_data = {
         "Upgrade Slots Left": 0,
         "Code (Name)": "EquipmentCape22"
     },
+    "EquipmentCape23": {
+        "Name": "Lovely Balloon",
+        "Sell Price": 1,
+        "Code (Type)": "aCape",
+        "Type": "CAPE",
+        "Level Required (Craft)": 55,
+        "Level Required (Equip)": 1,
+        "Class": "ALL",
+        "Speed": 0,
+        "Reach": 0,
+        "Weapon Power": 20,
+        "STR": 0,
+        "AGI": 0,
+        "WIS": 0,
+        "LUK": 0,
+        "Defence": 0,
+        "Misc 1 (Text)": "%_DROP_RATE",
+        "Misc 1 (Value)": 250,
+        "Misc 2 (Text)": "0",
+        "Misc 2 (Value)": 0,
+        "Upgrade Slots Left": 0,
+        "Code (Name)": "EquipmentCape23"
+    },
     "StampA1": {
         "Name": "Sword Stamp",
         "Sell Price": 500,
@@ -40749,5 +40772,5 @@ raw_item_data = {
         "Description": "fm rat",
         "Code (Name)": "CardsZ27"
     },
-    "_hash": "51d2c06a7eee7f1f27798508952cbb25ef035151b4535c61c9f3fbcdb2fb643a"
+    "_hash": "5bfca30ce340f5982a6c46d53e5a5bbad0d7c8cd7226d1f876baf08e2a7a2036"
 }
