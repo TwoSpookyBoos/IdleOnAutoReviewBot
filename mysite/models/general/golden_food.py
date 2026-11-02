@@ -155,7 +155,7 @@ def calculate_golden_food_multis(
     ]
     beanbie = star_signs["Beanbie Major"]
     infinite_levels = get_infinite_star_sign_levels(
-        breeding.total_shiny_levels["Infinite Star Signs"]
+        breeding.total_shiny_bonus_values["Infinite Star Signs"]
     )
     seraph_unlocked = star_signs["Seraph Cosmos"].unlocked
     cultism_level = tesseract.upgrades["Astrology Cultism"].level

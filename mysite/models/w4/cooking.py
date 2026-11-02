@@ -150,7 +150,7 @@ class Meals(dict[str, Meal]):
     def calculate_values(
         self,
         black_diamond_value: float,
-        shiny_meal_levels: float,
+        shiny_meal_value: float,
         summoning_multi: float,
         wickerlight_multi: float,
         emperor_set: float,
@@ -159,7 +159,7 @@ class Meals(dict[str, Meal]):
         max_summoning_level: int,
     ):
         meal_multi = (
-            ValueToMulti(black_diamond_value + shiny_meal_levels)
+            ValueToMulti(black_diamond_value + shiny_meal_value)
             * summoning_multi
             * wickerlight_multi
         )

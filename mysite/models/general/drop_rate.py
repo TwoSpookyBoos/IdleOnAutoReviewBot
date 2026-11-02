@@ -367,7 +367,7 @@ class DropRate:
         self._chilled_yarn_max = 1
         self._trove_sigil_level = 0
         self._ballot_buff = None
-        self.shiny_pets: list[tuple[str, object]] = []
+        self.shiny_pets: list = []
         self._achievements: dict[str, tuple[int, int, bool]] = {}
         self._archlord = None
         self._sneaking_mastery_level = 0
@@ -622,14 +622,8 @@ class DropRate:
 
         # World 4
         self.world_4 = 0
-        self.shiny_pets = [
-            (name, pet)
-            for species in breeding.species.values()
-            for name, pet in species.items()
-            if pet.shiny_bonus == "Drop Rate"
-        ]
-        for _, pet in self.shiny_pets:
-            self.world_4 += pet.shiny_level
+        self.shiny_pets = breeding.shiny_bonus_pets["Drop Rate"]
+        self.world_4 += breeding.total_shiny_bonus_values["Drop Rate"]
         self.world_4 += tome.drop_rate_bonus
 
         # World 5
@@ -839,7 +833,7 @@ class DropRate:
             dr.seraph_cosmos_multi if dr.seraph_cosmos_unlocked else 1
         )
         infinite_star_sign_levels = get_infinite_star_sign_levels(
-            breeding.total_shiny_levels["Infinite Star Signs"]
+            breeding.total_shiny_bonus_values["Infinite Star Signs"]
         )
         star_signs_total = 0
         for name, drop_rate, _ in drop_rate_star_signs:
@@ -1027,16 +1021,7 @@ class DropRate:
         )
 
     def get_shiny_pet_advice(self) -> list[Advice]:
-        return [
-            Advice(
-                label=f"{{{{ Breeding|#breeding }}}} - Shiny {name}: "
-                f"+{pet.shiny_level}/{pet.max_shiny_level}% Drop Rate",
-                picture_class=name,
-                progression=pet.shiny_level,
-                goal=pet.max_shiny_level,
-            )
-            for name, pet in self.shiny_pets
-        ]
+        return [pet.get_shiny_advice() for pet in self.shiny_pets]
 
     def get_achievement_advice(self, name: str) -> Advice:
         value, cap, complete = self._achievements[name]

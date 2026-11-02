@@ -68,8 +68,7 @@ $breeding-map: (
 // UNIQUE PETS
     green-mushroom-shiny: img('wiki/Green_Mushroom_Shiny.gif'),
     squirrel: img('wiki/Squirrel_Idle.gif'),
-    piggo: img('wiki/Piggo_Idle.gif'),
-    mr-pig: img('wiki/Piggo_Idle.gif'),  //Pet1 as an 'enemy'
+    mr-pig: img('wiki/Piggo_Idle.gif'),
     mallay: img('wiki/Mallay_Idle.gif'),
     whale: img('wiki/Whale_Idle.gif'),
     dig-doug: img('wiki/Dig_Doug_Idle.gif'),
@@ -78,7 +77,7 @@ $breeding-map: (
     chippy: img('wiki/Chippy_Idle.gif'),
     xylobone: map-get($world-monsters, xylobone),
     breeding-bunny: img('wiki/Bunny_Idle.gif'),
-    mecho-mouse: img('wiki/Mecho_Mouse_Idle.gif'),
+    mechanical-mouse: img('wiki/Mecho_Mouse_Idle.gif'),
     panda: img('wiki/Panda_Idle.gif'),
     dog: map-get($world-contents, dog),
     cool-bird: img('wiki/Cool_Bird_Idle.gif'),
