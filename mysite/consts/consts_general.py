@@ -306,6 +306,9 @@ greenstack_item_difficulty_groups = {
         "Base Monster Materials": [
             "w7B10",  # Magmaspike, 1e-8 drop chance
         ],
+        "Colosseum": [
+            "StoneA3", "StoneW3",  # Armor/Weapon Upgrade Stone III
+        ],
     },
     16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
         "Base Monster Materials": [
@@ -317,6 +320,9 @@ greenstack_item_difficulty_groups = {
         ],
         "Boss Drop": [
             "EmpPart",  # Emperor Ribbon - capped by daily Emperor showdown attempts
+        ],
+        "Colosseum": [
+            "StoneA4", "StoneW4",  # Armor/Weapon Upgrade Stone IV
         ],
     }
 }
@@ -459,6 +465,10 @@ expected_stackables = {
         'Quest41',
         'StoneA3b',
         'EmpPart',  # Emperor Ribbon, W6 boss material
+    ],
+    "Colosseum": [
+        # Armor/Weapon Upgrade Stone III/IV, only from chests
+        "StoneA3", "StoneW3", "StoneA4", "StoneW4",
     ],
     'Cheater': [
         'CraftMat2',  # Crimson String

@@ -1,3 +1,4 @@
+from consts.consts_general import gstack_unique_expected
 from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
@@ -146,7 +147,7 @@ greenstack_progressionTiers = {
     5: {'Required Stacks': 300},
     6: {'Required Stacks': 350},
     7: {'Required Stacks': 400},
-    8: {'Required Stacks': 440}
+    8: {"Required Stacks": len(gstack_unique_expected)},  # All expected greenstacks
 }
 achievements_progressionTiers = {
     0: {},
