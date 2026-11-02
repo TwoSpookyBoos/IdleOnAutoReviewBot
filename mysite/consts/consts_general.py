@@ -294,6 +294,7 @@ greenstack_item_difficulty_groups = {
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
             'Coral4', 'w7B1b',
+            'Coral5', 'Coral6', 'w7B11b', 'w7B12b',
             'Quest110',  # Zenith Cluster
         ],
         'Boss Drop': [
@@ -301,6 +302,9 @@ greenstack_item_difficulty_groups = {
             'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
             'ExpBalloon1',  # Small Experience Balloon
             'StoneA3b',
+        ],
+        "Base Monster Materials": [
+            "w7B10",  # Magmaspike, 1e-8 drop chance
         ],
     },
     16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
@@ -310,6 +314,9 @@ greenstack_item_difficulty_groups = {
             "Quest41",  # Flowies
             "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
             "ResetCompleted",
+        ],
+        "Boss Drop": [
+            "EmpPart",  # Emperor Ribbon - capped by daily Emperor showdown attempts
         ],
     }
 }
@@ -347,7 +354,7 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B11', 'w7B12',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B10', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
         'Gfoodcoupon', 'Line9', 'Line14',
         'StoneT1eb', 'StoneAeB', 'StoneWeb',
@@ -441,6 +448,7 @@ expected_stackables = {
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
         'Coral4', 'w7B1b', 'Quest110',
+        'Coral5', 'Coral6', 'w7B11b', 'w7B12b',
         'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     ],
     'Boss Drop': [
@@ -449,10 +457,10 @@ expected_stackables = {
         'Meatloaf', 'Quest17', 'Quest29',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
         'Quest41',
-        'StoneA3b'
+        'StoneA3b',
+        'EmpPart',  # Emperor Ribbon, W6 boss material
     ],
     'Cheater': [
-        'EmpPart',  # W6 Boss Material
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
