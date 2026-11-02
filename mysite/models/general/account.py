@@ -534,6 +534,7 @@ class Account:
             self.research.grid["Jelly Operator Linguistics"].value,
             self.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,
             self.arcade[72].value,
+            self.gemshop.bundles["ban_j"].owned,
         )
         self.gallery.calculate_bonuses(
             highest_world_reached=self.world_progress.highest_reached,

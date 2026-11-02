@@ -1171,7 +1171,7 @@ gem_shop_optlacc_dict = {
 
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
-# Last updated in v2.527 Aug 2026
+# Last updated in v2.561
 gem_shop_bundles_dict = {
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
@@ -1229,7 +1229,13 @@ gem_shop_bundles_dict = {
     'ban_f': 'Boaring Pack',
     'ban_g': 'Armadillo Pack',
     'ban_h': 'Coralcave Guardian Pack',
-    'ban_i': 'Rice Pet Pack',
+    'ban_i': 'Daydreamer Pack',
+    'ban_j': 'Gelatinous Pack',
+    'ban_k': 'Alpha Omega Pack',
+    'ban_l': 'Imperial Power Pack',
+    'ban_m': 'Pack of Magnificence',
+    'ban_n': 'Halloween Pack',
+    'ban_o': "Cathie's Big Day Pack",
 }
 
 #Guild
