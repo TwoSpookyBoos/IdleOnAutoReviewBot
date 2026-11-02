@@ -10,7 +10,6 @@ logger = get_logger(__name__)
 greenstack_item_difficulty_groups = {
     0: {  # The timegated tier
         "Vendor Shops": [
-            "FoodHealth1",
             "CraftMat3",  # W1 Cue Tape
             "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
             "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
@@ -206,11 +205,15 @@ greenstack_item_difficulty_groups = {
         "Rare Drops": [
             # World 7 part 1
             'w7A6',
-            "FoodPotRe1", "JobApplication",
-            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "FoodPotRe1",
             "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "FoodG13", "FoodG14",  # Gold Foods
             "FoodG11", "FoodG12",  # Golden Nigiri, Golden Dumpling
-        ]
+        ],
+        "Boss Drop": [
+            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "JobApplication",  # Dr. Defecaus
+            "Quest41",  # Flowies - Baba Yaga, same drops per kill as Job Application, Colosseum makes it easier
+        ],
     },
     13: {
         "Base Monster Materials": [
@@ -278,7 +281,7 @@ greenstack_item_difficulty_groups = {
             # World 7 part 2
             'Spelunking4', 'Spelunking5', 'Spelunking6',
             'Line13',
-            "Gfoodcoupon", "Line14",  # Gold Food Coupon, Its Alright Celebration
+            "Gfoodcoupon",  # Gold Food Coupon
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
@@ -290,6 +293,8 @@ greenstack_item_difficulty_groups = {
             'Weight3', 'Weight4', 'Weight7', 'Weight13',
             # W5
             'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5', 'Line4', 'Weight9',
+            # W6
+            'Line14',  # Its Alright Celebration, Samurai Guardian only
             # World 7 part 1
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
@@ -314,7 +319,6 @@ greenstack_item_difficulty_groups = {
         "Base Monster Materials": [
             'StoneT1eb', 'StoneAeB', 'StoneWeb',  # Summer Tool/Armor/Weapon Upgrade Stones - event gated
             'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',  # Tempest Bow/Ring Stones
-            "Quest41",  # Flowies
             "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
             "ResetCompleted",
         ],
@@ -362,7 +366,7 @@ expected_stackables = {
         # World 7 part 2
         'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B10', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
-        'Gfoodcoupon', 'Line9', 'Line14',
+        'Gfoodcoupon', 'Line9',
         'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',
     ],
@@ -423,7 +427,6 @@ expected_stackables = {
         'ResetCompleted', 'ResetCompletedS',
     ],
     'Vendor Shops': [
-        'FoodHealth1',
         'FoodHealth18', 'FoodHealth19', 'FoodHealth14', 'FoodHealth15', 'FoodHealth16', 'FoodHealth17',
         'FoodHealth12', 'FoodHealth13', 'FoodPotOr4', 'FoodPotGr4', 'FoodPotRe4',
         'FoodPotYe4', 'OilBarrel6', 'OilBarrel7', 'FoodHealth4', 'FoodHealth9', 'FoodHealth11', 'Quest19', 'CraftMat3',  # Sorted by daily quantity
@@ -431,7 +434,6 @@ expected_stackables = {
         'FoodPotRe2',  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     'Rare Drops': [
-        'JobApplication',  # W1 Rare Drops
         'FoodHealth2', 'FoodHealth3',
         # TODO: Move Statues to their corresponding Crystals
         'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
@@ -450,6 +452,7 @@ expected_stackables = {
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
         'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'ButterBar',  # Gold Foods
+        'Line14',  # W6
         # World 7 part 1
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
@@ -460,7 +463,7 @@ expected_stackables = {
     'Boss Drop': [
         'BabaYagaETC',
         'ExpBalloon1',
-        'Meatloaf', 'Quest17', 'Quest29',
+        'Meatloaf', 'Quest17', 'Quest29', 'JobApplication',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
         'Quest41',
         'StoneA3b',
@@ -495,6 +498,7 @@ expected_stackables = {
     ],
     'Legacy': [  # Previously legitimately obtainable, since removed from the game - not achievable by new players
         'FoodPotMana2',  # Average Mana Potion
+        'FoodHealth1',  # Nomwich - W1 shop stock is too small to greenstack in reasonable time
     ]
 }
 greenstack_amount = 10 ** 7
