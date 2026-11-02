@@ -20,14 +20,19 @@ from consts.w4.breeding import (
 )
 from models.advice.advice import Advice
 from utils.all_talentsDict import all_talentsDict
-from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_get, safer_index
-
-logger = get_logger(__name__)
 
 
 class Pet:
-    def __init__(self, world: int, info: dict, breeding: "Breeding"):
+    def __init__(
+        self,
+        world: int,
+        info: dict,
+        breeding: "Breeding",
+        unlocked: bool,
+        shiny_days: float,
+        breedability_days: float,
+    ):
         self.name: str = info["Name"]
         self.world: int = world
         self.breeding = breeding
@@ -35,18 +40,13 @@ class Pet:
         self.shiny_bonus: str = info["Shiny Bonus"]
         self.shiny_bonus_description: str = info["Shiny Description"]
         self.shiny_bonus_per_level: int = info["Shiny Value Per Level"]
-        self.unlocked: bool = False
-        self.shiny_days: float = 0
-        self.breedability_days: float = 0.0
-        self.breedability_multi: float = 1
-        self.breedability_heart: str = "breedability-heart-1"
-
-    def parse(self, unlocked: bool, shiny_days: float, breedability_days: float):
-        self.unlocked = unlocked
-        self.shiny_days = shiny_days
-        self.breedability_days = breedability_days
-        self.breedability_multi = getBreedabilityMultiFromDays(breedability_days)
-        self.breedability_heart = getBreedabilityHeartFromMulti(self.breedability_multi)
+        self.unlocked: bool = unlocked
+        self.shiny_days: float = shiny_days
+        self.breedability_days: float = breedability_days
+        self.breedability_multi: float = getBreedabilityMultiFromDays(breedability_days)
+        self.breedability_heart: str = getBreedabilityHeartFromMulti(
+            self.breedability_multi
+        )
 
     @cached_property
     def shiny_level(self) -> int:
@@ -174,18 +174,16 @@ class Breeding:
             ]
             self.species[world] = {}
             for pet_index, info in enumerate(world_pets):
-                pet = Pet(world, info, self)
-                try:
-                    pet.parse(
-                        unlocked_counts[world] > pet_index,
-                        shiny_days[pet_index],
-                        breedability_days[pet_index],
-                    )
-                    if pet.unlocked:
-                        self.genetics[pet.genetic] = True
-                except Exception:
-                    logger.exception(f"Failed to parse breeding pet {pet.name}")
-                    pet = Pet(world, info, self)
+                pet = Pet(
+                    world,
+                    info,
+                    self,
+                    unlocked=unlocked_counts[world] > pet_index,
+                    shiny_days=safer_index(shiny_days, pet_index, 0.0),
+                    breedability_days=safer_index(breedability_days, pet_index, 0.0),
+                )
+                if pet.unlocked:
+                    self.genetics[pet.genetic] = True
                 self.species[world][pet.name] = pet
                 self._pets_by_shiny_bonus[pet.shiny_bonus].append(pet)
 
