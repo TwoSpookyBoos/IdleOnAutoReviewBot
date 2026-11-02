@@ -68,6 +68,8 @@ class CharacterDropRate:
     gallery_multi: float = 0
     hatrack: float = 0
     hatrack_multi: float = 0
+    cape_vine: float = 0
+    cape_vine_multi: float = 0
     equipment_multi_total: float = 1
     gown_multi: float = 1
     golden_food: float = 0
@@ -104,7 +106,6 @@ class CharacterDropRate:
     weekly_boss_kills: int = 0
     max_talent_level: int = 0
     character: object = None
-    highest_world_reached: int = 0
 
     def get_equipment_advice(self) -> dict[str, list[Advice]]:
         # Slots with items in both the flat and multi lists get one section
@@ -112,8 +113,55 @@ class CharacterDropRate:
             self.character,
             flat_drop_rate_codenames,
             drop_rate_multi_codenames,
-            self.highest_world_reached,
         )
+
+    def get_showcase_advice(self, highest_reached: int) -> dict[str, list[Advice]]:
+        # Hat Rack/Cape Vine/Gallery apply as this character's equipment, once unlocked
+        # on them. Their items are listed account-wide
+        character = self.character
+        showcases = {}
+        for feature, world, active, value, multi, slot_items in (
+            (
+                "Hat Rack",
+                3,
+                character.hatrack_bonus_active,
+                self.hatrack,
+                self.hatrack_multi,
+                "Premium Hat",
+            ),
+            (
+                "Cape Vine",
+                4,
+                character.cape_vine_bonus_active,
+                self.cape_vine,
+                self.cape_vine_multi,
+                "Cape",
+            ),
+            (
+                "Gallery",
+                7,
+                character.gallery_bonus_active,
+                self.gallery,
+                self.gallery_multi,
+                "Trophy and Nametags",
+            ),
+        ):
+            if highest_reached < world:
+                continue
+            title = (
+                f"{feature} - +{round(value, 1)}% Drop Rate, "
+                f"+{round(multi, 1)}% Drop Rate Multi"
+            )
+            if not active:
+                showcases[title] = [
+                    character.get_showcase_unlock_advice(feature, world, slot_items)
+                ]
+            elif feature == "Gallery":
+                # Gallery bonus depends on this character's Silkrode Motherboard
+                showcases[title] = [character.get_motherboard_advice()]
+            else:
+                showcases[title] = []
+        return showcases
 
     def get_luk_advice(self) -> Advice:
         return Advice(
@@ -348,6 +396,8 @@ class DropRate:
         self.summoning_gm = 0
         self.hatrack = 0
         self.hatrack_multi = 0
+        self.cape_vine = 0
+        self.cape_vine_multi = 0
         self.gallery = 0
         self.gallery_multi = 0
         # Multis
@@ -372,7 +422,6 @@ class DropRate:
         self._archlord = None
         self._sneaking_mastery_level = 0
         self._chizoar_below_max = False
-        self._highest_world_reached = 0
 
     def calculate(
         self,
@@ -400,6 +449,7 @@ class DropRate:
         armor_sets,
         hat_rack,
         breeding,
+        cape_vine,
         tome,
         caverns,
         achievements,
@@ -449,6 +499,7 @@ class DropRate:
             armor_sets=armor_sets,
             hat_rack=hat_rack,
             breeding=breeding,
+            cape_vine=cape_vine,
             tome=tome,
             caverns=caverns,
             achievements=achievements,
@@ -538,6 +589,7 @@ class DropRate:
         armor_sets,
         hat_rack,
         breeding,
+        cape_vine,
         tome,
         caverns,
         achievements,
@@ -625,6 +677,8 @@ class DropRate:
         self.shiny_pets = breeding.shiny_bonus_pets["Drop Rate"]
         self.world_4 += breeding.total_shiny_bonus_values["Drop Rate"]
         self.world_4 += tome.drop_rate_bonus
+        self.cape_vine = cape_vine.get_bonus_value("Drop Rate")
+        self.cape_vine_multi = cape_vine.get_bonus_value("Drop Rate Multi")
 
         # World 5
         self.world_5 = 0
@@ -670,7 +724,6 @@ class DropRate:
         self.world_7 += research.grid["Divine Design"].total_value
         self.gallery = 0
         self.gallery_multi = 0
-        self._highest_world_reached = world_progress.highest_reached
         if world_progress.highest_reached >= 7:
             self.gallery = gallery.bonuses["Drop Rate"][1]
             self.gallery_multi = gallery.bonuses["Drop Rate Multi"][1]
@@ -744,9 +797,7 @@ class DropRate:
         royal_armory,
         farming,
     ) -> CharacterDropRate:
-        dr = CharacterDropRate(
-            character=character, highest_world_reached=self._highest_world_reached
-        )
+        dr = CharacterDropRate(character=character)
         legend_talent_multi = ValueToMulti(
             legend_talents["Flopping a Full House"].value
         )
@@ -794,9 +845,10 @@ class DropRate:
             character.get_gear_misc_bonus(codename, well_dressed)
             for codename in drop_rate_multi_codenames
         )
-        # Gallery/Hatrack join the misc totals once open for this character
+        # Gallery/Hatrack/Cape Vine join the misc totals once open for this character
         gallery_active = character.gallery_bonus_active
         hatrack_active = character.hatrack_bonus_active
+        cape_vine_active = character.cape_vine_bonus_active
         has_motherboard = "Silkrode Motherboard" in character.equipped_lab_chips
         dr.gallery = gallery_active * gallery.get_character_bonus_value(
             "Drop Rate", has_motherboard
@@ -806,8 +858,13 @@ class DropRate:
         )
         dr.hatrack = self.hatrack * hatrack_active
         dr.hatrack_multi = self.hatrack_multi * hatrack_active
+        dr.cape_vine = self.cape_vine * cape_vine_active
+        dr.cape_vine_multi = self.cape_vine_multi * cape_vine_active
         dr.equipment_multi_total = ValueToMulti(
-            dr.equipment_multi + dr.gallery_multi + dr.hatrack_multi
+            dr.equipment_multi
+            + dr.gallery_multi
+            + dr.hatrack_multi
+            + dr.cape_vine_multi
         )
         dr.gown_multi = ValueToMulti(
             character.get_gear_misc_bonus(gown_drop_rate_codename, well_dressed)
@@ -933,6 +990,7 @@ class DropRate:
             + dr.talents
             + dr.gallery
             + dr.hatrack
+            + dr.cape_vine
         )
 
         dr.total = 100

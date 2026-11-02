@@ -13,7 +13,6 @@ from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import (
     safe_loads,
     safer_convert,
-    safer_get,
     safer_index,
     safer_math_log,
     safer_math_pow,
@@ -126,9 +125,6 @@ class JellyOperator:
         self.best_operation_bloodcells = safer_convert(safer_index(misc, 14, 0.0), 0.0)
         # Research[18] in source
         self.slot_unlocks_spent = len(safer_index(raw_research, 18, []))
-        # "Have_ban_j" in source
-        raw_bundles = safe_loads(raw_data.get("BundlesReceived", {}))
-        self.has_bundle_j = int(safer_get(raw_bundles, "ban_j", 0) == 1)
 
         upgrade_levels = safer_index(raw_research, 17, [])
         cell_levels = safer_index(raw_research, 16, [])
@@ -185,7 +181,11 @@ class JellyOperator:
         )
 
     def _currency_multi(
-        self, grid_bonus: float, atom_bonus: float, arcade_bonus: float
+        self,
+        grid_bonus: float,
+        atom_bonus: float,
+        arcade_bonus: float,
+        has_gelatinous_pack: bool,
     ) -> float:
         # "CurrencyMulti" in source
         return (
@@ -194,7 +194,7 @@ class JellyOperator:
             * (1 + arcade_bonus / 100)
             * (1 + grid_bonus / 100)
             * (1 + self._fever_bonus(2) / 100)
-            * (1 + self.has_bundle_j)
+            * (1 + int(has_gelatinous_pack))  # "Have_ban_j" in source
             * (1 + self.get_rog_bonus(24) / 100)
             * self._dps_multi()
             * (1 + self._qty(26) / 100)
@@ -208,7 +208,11 @@ class JellyOperator:
         return obstruction.bonus_value if obstruction else 0
 
     def calculate_bonuses(
-        self, linguistics_grid_bonus: float, sulfur_atom_bonus: float, arcade_bonus: float
+        self,
+        linguistics_grid_bonus: float,
+        sulfur_atom_bonus: float,
+        arcade_bonus: float,
+        has_gelatinous_pack: bool,
     ):
         for upgrade in self.upgrades.values():
             upgrade.calculate_bonus()
@@ -219,11 +223,14 @@ class JellyOperator:
             * (1 + self._qty(11) / 100)
         )
         currency_multi = self._currency_multi(
-            linguistics_grid_bonus, sulfur_atom_bonus, arcade_bonus
+            linguistics_grid_bonus,
+            sulfur_atom_bonus,
+            arcade_bonus,
+            has_gelatinous_pack,
         )
         slots_left = round(
             self._qty(9) + self._qty(8) + self.get_rog_bonus(44)
-            + self.has_bundle_j - self.slot_unlocks_spent
+            + int(has_gelatinous_pack) - self.slot_unlocks_spent
         )
         totals = {
             9: f"{slots_left}",

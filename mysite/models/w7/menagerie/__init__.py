@@ -7,7 +7,7 @@ from models.w7.menagerie.jellyfish import Jellyfishes
 from models.w7.menagerie.mission import MenagerieMission
 from models.w7.menagerie.unlock import MenagerieUnlock
 from utils.logging import get_logger
-from utils.safer_data_handling import safe_loads, safer_convert, safer_get, safer_index
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 logger = get_logger(__name__)
 
@@ -28,10 +28,6 @@ class Menagerie:
         self.shell_req: int = self._shell_req()
         self.visible_unlocks: int = self._unlock_slots(self.rank)
         self.visible_boosts: int = self._boost_slots(self.rank)
-        # "Have_ban_k" in source
-        # TODO: read from Gem Shop once ban_k is in its bundle list
-        raw_bundles = safe_loads(raw_data.get("BundlesReceived", {}))
-        self.has_bundle_k: int = int(safer_get(raw_bundles, "ban_k", 0) == 1)
 
         # "Menagerie"[1] in source: completions per mission
         raw_completions = safer_index(raw_menagerie, 1, [])
@@ -116,6 +112,8 @@ class Menagerie:
         # "Grid_Bonus" 164 mode 1 in source: the grid square's raw level
         missionary_level = account.research.grid["Menagerie Missionary"].level
         emporium = account.sneaking.emporium["Menagerie Maxxing"].obtained
+        # "Have_ban_k" in source
+        has_alpha_omega_pack = account.gemshop.bundles["ban_k"].owned
         return round(
             min(
                 len(self.missions),
@@ -123,6 +121,6 @@ class Menagerie:
                 + self.boosts[0].value
                 + missionary_level
                 + int(emporium)
-                + 3 * self.has_bundle_k,
+                + 3 * int(has_alpha_omega_pack),
             )
         )

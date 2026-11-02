@@ -65,6 +65,7 @@ from models.w3.salt_lick import SaltLick
 from models.w3.trapping import Trapping
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
+from models.w4.cape_vine import CapeVine
 from models.w4.cooking import Cooking, Meals
 from models.w4.lab import LabBonuses, LabJewels, LabMainframe
 from models.w4.lab_chips import LabChips
@@ -235,6 +236,7 @@ class Account:
         self.rift: Rift = Rift(self.raw_data)
         self.tome: Tome = Tome(self.raw_data)
         self.breeding: Breeding = Breeding(self.raw_data)
+        self.cape_vine: CapeVine = CapeVine(self.raw_data)
         self.meals: Meals = Meals(self.raw_data, self.version)
         self.cooking: Cooking = Cooking(self.raw_data, self.meals)
 
@@ -534,6 +536,7 @@ class Account:
             self.research.grid["Jelly Operator Linguistics"].value,
             self.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,
             self.arcade[72].value,
+            self.gemshop.bundles["ban_j"].owned,
         )
         self.gallery.calculate_bonuses(
             highest_world_reached=self.world_progress.highest_reached,
@@ -934,6 +937,7 @@ class Account:
             armor_sets=self.armor_sets,
             hat_rack=self.hat_rack,
             breeding=self.breeding,
+            cape_vine=self.cape_vine,
             tome=self.tome,
             caverns=self.caverns,
             achievements=self.achievements,

@@ -1171,7 +1171,7 @@ gem_shop_optlacc_dict = {
 
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
-# Last updated in v2.527 Aug 2026
+# Last updated in v2.561
 gem_shop_bundles_dict = {
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
@@ -1229,7 +1229,13 @@ gem_shop_bundles_dict = {
     'ban_f': 'Boaring Pack',
     'ban_g': 'Armadillo Pack',
     'ban_h': 'Coralcave Guardian Pack',
-    'ban_i': 'Rice Pet Pack',
+    'ban_i': 'Daydreamer Pack',
+    'ban_j': 'Gelatinous Pack',
+    'ban_k': 'Alpha Omega Pack',
+    'ban_l': 'Imperial Power Pack',
+    'ban_m': 'Pack of Magnificence',
+    'ban_n': 'Halloween Pack',
+    'ban_o': "Cathie's Big Day Pack",
 }
 
 #Guild
@@ -1450,6 +1456,12 @@ equipment_by_bonus_dict = {
         'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
         'Ultra Unboxer': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'ultra-unboxer'},
         # Capes
+        "Lovely Balloon": {
+            "Type": "Cape",
+            "Limited": True,
+            "Misc1": {"Bonus": "DropRate", "Value": 250},
+            "Image": "lovely-balloon",
+        },
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
         'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
         # Nametags
