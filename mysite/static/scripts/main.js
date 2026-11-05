@@ -817,7 +817,56 @@ function initBaseUI() {
     setupSwitchBox()
 }
 
+function setupTooltips() {
+    if (document.getElementById("tooltip-popup")) return
+    const popup = document.createElement("div")
+    popup.id = "tooltip-popup"
+    document.body.appendChild(popup)
+    let anchor = null
+
+    const show = target => {
+        anchor = target
+        popup.innerHTML = target.querySelector(".tooltip-content").innerHTML
+        popup.classList.add("visible")
+        // Measured at the corner, so the old position doesn't squeeze the width
+        popup.style.left = "0px"
+        popup.style.top = "0px"
+        const rect = target.getBoundingClientRect()
+        const margin = 8
+        let top = rect.bottom + margin
+        if (top + popup.offsetHeight > window.innerHeight) {
+            top = rect.top - popup.offsetHeight - margin
+        }
+        // The left edge wins on screens narrower than the popup
+        const left = Math.max(margin, Math.min(
+            rect.left + rect.width / 2 - popup.offsetWidth / 2,
+            window.innerWidth - popup.offsetWidth - margin,
+        ))
+        popup.style.top = `${Math.max(margin, top)}px`
+        popup.style.left = `${left}px`
+    }
+    const hide = () => {
+        anchor = null
+        popup.classList.remove("visible")
+    }
+
+    // focus covers taps on touch devices (the anchor has tabindex), click covers
+    // a repeated tap after scrolling hid the popup, as the focus stays then
+    ["mouseover", "focusin", "click"].forEach(type => document.addEventListener(type, event => {
+        const target = event.target.closest?.(".has-tooltip")
+        if (target && target !== anchor) show(target)
+    }))
+    document.addEventListener("mouseout", event => {
+        if (anchor && !anchor.contains(event.relatedTarget) && document.activeElement !== anchor) hide()
+    })
+    document.addEventListener("focusout", event => {
+        if (event.target === anchor) hide()
+    })
+    document.addEventListener("scroll", hide, true)
+}
+
 function initResultsUI() {
+    setupTooltips()
     setupFolding()
     setupHrefEventActions()
     applyShowMoreButton()

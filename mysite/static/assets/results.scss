@@ -888,6 +888,16 @@ body {
                                             margin: auto 0;
                                         }
 
+                                        // The content is `hidden` in HTML, main.js copies it to the popup
+                                        .has-tooltip {
+                                            cursor: help;
+                                        }
+
+                                        .prog .has-tooltip {
+                                            text-decoration: underline dotted;
+                                            text-underline-offset: 3px;
+                                        }
+
                                         .goal {
                                             padding-right: 20px;
 
@@ -1069,6 +1079,31 @@ body {
 
 #missed-greenstacks img {
     filter: hue-rotate(-110deg) saturate(3);
+}
+
+// Fixed-position popup filled from `.has-tooltip .tooltip-content` by main.js,
+// so it is not clipped by the scrolling advice table
+#tooltip-popup {
+    position: fixed;
+    z-index: 1000;
+    display: none;
+    // Fits narrow screens: 8px margins of main.js and 12px paddings on both sides
+    // unquote, so it's the CSS min(), not the libsass one
+    max-width: unquote("min(320px, calc(100vw - 40px))");
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: hsla(0deg, 0%, 8%, 0.95);
+    color: white;
+    box-shadow: 0 2px 8px hsla(0deg, 0%, 0%, 0.5);
+    pointer-events: none;
+
+    &.visible {
+        display: block;
+    }
+
+    p {
+        margin: 0;
+    }
 }
 
 ::-webkit-scrollbar {
