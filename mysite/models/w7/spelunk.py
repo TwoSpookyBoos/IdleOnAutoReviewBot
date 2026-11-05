@@ -189,6 +189,12 @@ class Spelunk:
         self.exalt_stamp_bonus = round(
             safer_convert(safer_index(raw_exalts, 3, 0), 0.0)
         )
+        # "AllDepthTOT" in source: manic depths (Spelunk[47]) plus normal depths
+        # (Spelunk[1]). Last updated in v2.550.0
+        self.total_depths: int = round(
+            sum(safer_convert(depth, 0) for depth in safer_index(spelunk_info, 47, []))
+            + sum(safer_convert(depth, 0) for depth in safer_index(spelunk_info, 1, []))
+        )
         self.super_talent_presets: dict[int, list[list[int]]] = {
             char_index: [
                 safer_index(spelunk_info, offset + char_index, []) or []

@@ -33,7 +33,8 @@ def get_gallery_item_advice() -> list[Advice]:
     # podium/inventory multi or nametag level (not just whether the item is owned), filtered
     # down to just the Drop Rate/Drop Rate Multi lines since that's all this page cares about.
     gallery = session_data.account.gallery
-    stats = {'DropRate', 'DropRateMulti'}
+    # Most important first
+    stats = ("DropRateMulti", "DropRate")
 
     order = []
     types: dict[str, str] = {}
@@ -63,8 +64,10 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     w5 = 'World 5'
     w6 = 'World 6'
     w7 = 'World 7'
-    hatrack_group = 'World 3 - Hat Rack'
-    gallery_group = 'World 7 - Gallery'
+    # Applied per character, values in their sections
+    hatrack_group = "World 3 - Hat Rack"
+    cape_vine_group = "World 4 - Cape Vine"
+    gallery_group = "World 7 - Gallery"
     companion_group = 'Companions'
     special = 'Special bonuses'
     drop_rate_aw_advice = {
@@ -75,6 +78,7 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         w3: [],
         hatrack_group: [],
         w4: [],
+        cape_vine_group: [],
         w5: [],
         w6: [],
         w7: [],
@@ -247,18 +251,14 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     drop_rate_aw_advice[f"{w3} - +{round(drop_rate.world_3, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w3)
 
-    # Hatrack, applied per character
-    hat_rack = session_data.account.hat_rack
-    if session_data.account.world_progress.highest_reached >= 3:
-        drop_rate_aw_advice[hatrack_group].extend([
-            hat_rack.get_bonus_advice('Drop Rate'),
-            hat_rack.get_bonus_advice('Drop Rate Multi'),
-        ])
-    drop_rate_aw_advice[
-        f"{hatrack_group} - +{round(drop_rate.hatrack, 1)}% Drop Rate, "
-        f"x{round(ValueToMulti(drop_rate.hatrack_multi), 2)} Drop Rate Multi. "
-        f"See character-specific sections"
-    ] = drop_rate_aw_advice.pop(hatrack_group)
+    highest_reached = session_data.account.world_progress.highest_reached
+    if highest_reached >= 3:
+        hat_rack = session_data.account.hat_rack
+        drop_rate_aw_advice[hatrack_group] = [
+            hat_rack.get_bonus_advice("Drop Rate"),
+            hat_rack.get_bonus_advice("Drop Rate Multi"),
+        ]
+    drop_rate_aw_advice[hatrack_group] = drop_rate_aw_advice.pop(hatrack_group)
 
     # World 4
     #########################################
@@ -279,6 +279,13 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     drop_rate_aw_advice[w4].append(session_data.account.tome.get_bonus_advice())
 
     drop_rate_aw_advice[f"{w4} - +{round(drop_rate.world_4, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w4)
+
+    if highest_reached >= 4:
+        cape_vine = session_data.account.cape_vine
+        drop_rate_aw_advice[cape_vine_group] = cape_vine.get_cape_advices(
+            ("% Drop Rate Multi", "% Drop Rate")
+        )
+    drop_rate_aw_advice[cape_vine_group] = drop_rate_aw_advice.pop(cape_vine_group)
 
     # World 5
     #########################################
@@ -352,16 +359,11 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
     divine_design = session_data.account.research.grid['Divine Design']
     drop_rate_aw_advice[w7].append(divine_design.get_bonus_advice())
 
-    # Gallery - Trophies & Nametags, applied per character
-    if session_data.account.world_progress.highest_reached >= 7:
-        drop_rate_aw_advice[gallery_group].extend(get_gallery_item_advice())
-
     drop_rate_aw_advice[f"{w7} - +{round(drop_rate.world_7, 1)}% Total Drop Rate"] = drop_rate_aw_advice.pop(w7)
-    drop_rate_aw_advice[
-        f"{gallery_group} - +{round(drop_rate.gallery, 1)}% Drop Rate, "
-        f"x{round(ValueToMulti(drop_rate.gallery_multi), 2)} Drop Rate Multi. "
-        f"See character-specific sections"
-    ] = drop_rate_aw_advice.pop(gallery_group)
+
+    if highest_reached >= 7:
+        drop_rate_aw_advice[gallery_group] = get_gallery_item_advice()
+    drop_rate_aw_advice[gallery_group] = drop_rate_aw_advice.pop(gallery_group)
 
     # Companions
     #########################################
@@ -509,18 +511,9 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
             for name, progress in drop_rate.card_sets.items()
         ]
 
-        showcase_headers = {
-            (
-                f'{name} - +{round(value, 1)}% Drop Rate, '
-                f'+{round(multi_value, 1)}% Drop Rate Multi'
-                f'{"" if active else " (not unlocked on this character)"}'
-            ): []
-            for name, world, active, value, multi_value in (
-                ('Hat Rack', 3, character.hatrack_bonus_active, dr.hatrack, dr.hatrack_multi),
-                ('Gallery', 7, character.gallery_bonus_active, dr.gallery, dr.gallery_multi),
-            )
-            if session_data.account.world_progress.highest_reached >= world
-        }
+        showcase_advice = dr.get_showcase_advice(
+            session_data.account.world_progress.highest_reached
+        )
 
         equipment_advice_by_slot = dr.get_equipment_advice()
 
@@ -559,16 +552,13 @@ def get_drop_rate_player_advice_groups() -> TabbedAdviceGroup:
                 card_multi_advice,
             f'Family Bonus - x{round_and_trim(dr.family_multi, 3)} Drop Rate':
                 family_advice,
-            f'Equipment Drop Rate - Total: +{round(dr.equipment, 1)}% Drop Rate': [],
+            **showcase_advice,
             (
-                f'Equipment Drop Rate Multi - Total: '
-                f'+{round(dr.equipment_multi, 1)}% Drop Rate Multi '
-                f'(x{round(dr.equipment_multi_total, 2)} '
-                f'with Gallery and Hat Rack)'
+                f"Equipment - +{round(dr.equipment, 1)}% Drop Rate, "
+                f"+{round(dr.equipment_multi, 1)}% Drop Rate Multi"
             ): [],
-            **showcase_headers,
-            f'Gown - x{round_and_trim(dr.gown_multi, 3)} Drop Rate': [],
             **equipment_advice_by_slot,
+            f'Gown - x{round_and_trim(dr.gown_multi, 3)} Drop Rate': [],
             f'Golden Food - +{round(dr.golden_food, 1)}% Drop Rate':
                 golden_food_advice,
             f'Star Signs - +{round(star_signs_bonus, 1)}% Drop Rate': star_signs_advice,

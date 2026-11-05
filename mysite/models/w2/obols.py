@@ -1,7 +1,7 @@
 from collections import Counter
 
 from consts.consts_w2 import get_obol_totals, ignorable_obols_list, obols_dict
-from utils.safer_data_handling import safe_loads
+from utils.safer_data_handling import safe_loads, safer_convert
 
 # Family slots, then each character's personal slots
 equipped_obol_keys = [
@@ -26,6 +26,8 @@ class Obols:
             safe_loads(raw_data.get("ObolEqO1", [])),
             safe_loads(raw_data.get("ObolEqMAPz1", {})),
         )
+        # "CurrenciesOwned.ObolFragments" in source, saved as CYObolFragments
+        self.fragments: float = safer_convert(raw_data.get("CYObolFragments", 0), 0)
 
     def count(self, bonus: str, shape: str) -> int:
         return sum(

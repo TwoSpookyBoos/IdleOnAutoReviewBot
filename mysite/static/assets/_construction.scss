@@ -60,7 +60,8 @@ $atoms: (
     magnesium:  img('data/Atom11.png'),
     aluminium:  img('data/Atom12.png'),
     silicon:    img('data/Atom13.png'),
-    phosphorus: img('data/Atom14.png')
+    phosphorus: img('data/Atom14.png'),
+    sulfur:     img('data/Atom15.png')
 );
 
 $all-construction: map-merge($shrines, $towers);

@@ -17,9 +17,9 @@ from utils.safer_data_handling import safe_loads, safer_get
 logger = get_logger(__name__)
 
 
-def get_infinite_star_sign_levels(infinite_shiny_levels: int) -> int:
+def get_infinite_star_sign_levels(infinite_shiny_value: int) -> int:
     # Passives don't use up infinite levels
-    infinite_levels = infinite_shiny_levels * 2 + 5
+    infinite_levels = infinite_shiny_value + 5
     i = 1
     while i < min(len(starsigns_dict), infinite_levels):
         infinite_levels += int(starsigns_dict[i]["Passive"])

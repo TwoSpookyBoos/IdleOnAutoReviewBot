@@ -19,7 +19,6 @@ from consts.w4.lab import (
     lab_prism_coords,
     lab_sapphire_rhombol_aura_multi,
     lab_sapphire_rhombol_aura_range,
-    lab_shiny_line_width_per_level,
     lab_souped_tube_line_width,
 )
 from models.advice.advice import Advice
@@ -274,10 +273,7 @@ class LabMainframe:
             motherboard_value=motherboard.base_value,
             arena=lab_arena_line_width
             * (breeding.arena_max_wave >= lab_arena_bonus_wave),
-            shiny=sum(
-                round(pet.shiny_level * lab_shiny_line_width_per_level)
-                for pet in breeding.shiny_bonus_pets["Line Width in Lab"]
-            ),
+            shiny=breeding.total_shiny_bonus_values["Line Width in Lab"],
         )
 
     def _calculate_tubes(self, arctis_linked: dict[int, bool], souped_tubes: int):

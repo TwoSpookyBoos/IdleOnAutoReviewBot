@@ -1,5 +1,6 @@
 from math import ceil
 from consts.consts_autoreview import ValueToMulti
+from consts.consts_w5 import max_sailing_artifact_level
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safer_math_pow
 from utils.logging import get_logger
@@ -175,9 +176,9 @@ max_static_book_levels = (
     25  #Construction Building: Talent Level Library
     + 5  #W3 Achievement: Checkout Takeout
     + 10  #Atom Collider: Oxygen (level 1 gives all 10 levels)
-    + 125  #Sailing Artifact: Fury Relic. 25 per tier * 5 tiers
+    + 25 * max_sailing_artifact_level  #Sailing Artifact: Fury Relic. 25 per tier
 
-    # 165 total last updated in v2.46 Nov 29
+    # 215 total last updated in v2.550
 )
 max_scaling_book_levels = (
     10  #World 3 Merit Shop
@@ -192,11 +193,13 @@ max_summoning_book_levels = round(
     * ValueToMulti(50)  #Gem Shop: King of all Winners
     * ValueToMulti(
         1       #Achievement: Spectre Stars
+        + 1     #Achievement: Regalis My Beloved
         + 10    #World 6 Merit Shop
         + 15    #Armor Set bonus: Godshard Set
-        + 125   #Sailing Artifact: Winz Lantern. 25 per tier * 5 tiers
+        + 25 * max_sailing_artifact_level  #Sailing Artifact: Winz Lantern. 25 per tier
+        + 50    #Gem Shop: Daydreamer Pack
     )
-    #69 total last updated in v2.46 Nov 29
+    #96 total last updated in v2.550
 )
 max_overall_book_levels = 100 + max_static_book_levels + max_scaling_book_levels + max_summoning_book_levels
 hardcap_symbols = (max_overall_book_levels // 20) * 20
@@ -954,7 +957,7 @@ apocable_map_index_dict = {
     4: [151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163],
     5: [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
     6: [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264],
-    7: [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 315, 316, 317, 318, 319, 320, 321, 322, 323, 325, 326]
+    7: [301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326]
 }
 dn_basic_maps_count = sum([len(v) for k, v in apocable_map_index_dict.items() if k > 0])
 dn_all_apoc_maps_count = dn_basic_maps_count + len(apocable_map_index_dict[0])

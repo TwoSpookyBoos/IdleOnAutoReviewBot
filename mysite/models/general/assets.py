@@ -47,6 +47,8 @@ class Asset:
             return 'spelunking-chapter-5'
         if codename == "Spelunking5":
             return 'spelunking-chapter-6'
+        if codename == "Spelunking6":
+            return 'spelunking-chapter-7'
         return name
 
     def set_stats(self, stats: dict):

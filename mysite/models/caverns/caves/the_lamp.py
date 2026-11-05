@@ -1,7 +1,7 @@
 from math import floor
 
 from consts.caverns.caves.the_lamp import lamp_wishes
-from consts.consts_autoreview import EmojiType
+from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.idleon.caverns.caves.the_lamp import lamp_world_wish_values
 from models.advice.advice import Advice
 from models.caverns.caves.cavern import Cavern
@@ -29,16 +29,30 @@ class LampWish:
         self.wishes_stored = wishes_stored
         self._cavern_image = cavern_image
 
-        self.value_list = self._value_list()
+        self._base_value_list = self._value_list()
+        self.value_list = self._base_value_list
 
         cost = (
             ". Cost does not increase." if details["DoesCostIncrease"] is False else ""
         )
-        self.description = f"{details['Description']}{cost}"
+        self._description_template = f"{details['Description']}{cost}"
+        self._fill_description()
+
+        self.next_cost = self._next_cost()
+
+    def _fill_description(self):
+        self.description = self._description_template
         for placeholder, value in zip("{}~", self.value_list):
             self.description = self.description.replace(placeholder, str(value), 1)
 
-        self.next_cost = self._next_cost()
+    def calculate_lamp_boost(self, lamp_boost_value: float):
+        # "LampBonuses" in source: "ZenithMarketBonus" 2 scales every world wish.
+        # Last updated in v2.550
+        self.value_list = [
+            round(value * ValueToMulti(lamp_boost_value), 2)
+            for value in self._base_value_list
+        ]
+        self._fill_description()
 
     def _value_list(self) -> list[float]:
         if not self.name.startswith("World "):
@@ -118,6 +132,10 @@ class TheLamp(Cavern):
                 cavern_image=self.image,
             )
             self.wishes[wish.name] = wish
+
+    def calculate_bonuses(self, lamp_boost_value: float):
+        for wish in self.wishes.values():
+            wish.calculate_lamp_boost(lamp_boost_value)
 
     def advice_groups(self) -> dict[str, list[Advice]]:
         return {

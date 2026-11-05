@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_w5 import (
     artifact_tier_names,
@@ -135,6 +137,61 @@ class Sailing:
         self.captains: list[Captain] = [
             Captain(raw_captain) for raw_captain in raw_captains
         ]
+
+    @cached_property
+    def unlocked_artifact_tier(self) -> int:
+        """Highest artifact tier that can be found on the account"""
+        from models.general.session_data import session_data
+
+        account = session_data.account
+        # Tiers 3 and up, each one needs the previous
+        tier_unlocks = [
+            account.rift["EldritchArtifact"].unlocked,
+            account.sneaking.emporium["Sovereign Artifacts"].obtained,
+            account.spelunk.caves["Pebble Cove"].bonus_obtained,
+            account.research.grid["Transcendent Artifacts"].level >= 1,
+            # "VerisimilitudeUnlocked" in source: the first Menagerie unlock
+            account.menagerie.unlocks[0].owned,
+        ]
+        return 2 + next(
+            (index for index, unlocked in enumerate(tier_unlocks) if not unlocked),
+            len(tier_unlocks),
+        )
+
+    def get_artifact_tier_unlock_advice(self) -> Advice:
+        match self.unlocked_artifact_tier + 1:
+            case 3:
+                label = (
+                    "Unlock Eldritch tier Artifacts by completing {{ Rift|#rift }} 30"
+                )
+                picture_class = "eldritch-artifact"
+            case 4:
+                label = (
+                    'Purchase "Sovereign Artifacts" from the '
+                    "{{ Jade Emporium|#sneaking }} in W6"
+                )
+                picture_class = "sovereign-artifacts"
+            case 5:
+                label = (
+                    "Unlock Omnipotent tier Artifacts from the first "
+                    "{{ Spelunking|#spelunking }} cave, Pebble Cove"
+                )
+                picture_class = "spelunking"
+            case 6:
+                label = (
+                    'Unlock "Transcendent Artifacts" in the '
+                    "{{ Research|#research }} Grid"
+                )
+                picture_class = "research"
+            case _:
+                label = "Unlock Verisimilitude tier Artifacts in the Luminous Menagerie"
+                picture_class = "sailing"
+        return Advice(
+            label=label,
+            picture_class=picture_class,
+            progression=0,
+            goal=1,
+        )
 
     @property
     def islands_discovered(self) -> int:

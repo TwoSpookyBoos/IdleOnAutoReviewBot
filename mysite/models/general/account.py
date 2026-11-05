@@ -65,6 +65,7 @@ from models.w3.salt_lick import SaltLick
 from models.w3.trapping import Trapping
 from models.w3.worship import Worship
 from models.w4.breeding import Breeding
+from models.w4.cape_vine import CapeVine
 from models.w4.cooking import Cooking, Meals
 from models.w4.lab import LabBonuses, LabJewels, LabMainframe
 from models.w4.lab_chips import LabChips
@@ -95,6 +96,7 @@ from models.w7.clam_work import ClamWork
 from models.w7.meritocracy import Meritocracy
 from models.w7.gallery import Gallery
 from models.w7.jelly_operator import JellyOperator
+from models.w7.menagerie import Menagerie
 from models.w7.glimbo import Glimbo
 from models.w7.minehead import Minehead
 from models.w7.legend_talents import LegendTalents
@@ -139,7 +141,8 @@ class Account:
             'World 4': [],
             'World 5': [],
             'The Caverns Below': [],
-            'World 6': []
+            'World 6': [],
+            'World 7': []
         }
         #General
         self.world_progress: WorldProgress = WorldProgress(self.raw_data)
@@ -233,6 +236,7 @@ class Account:
         self.rift: Rift = Rift(self.raw_data)
         self.tome: Tome = Tome(self.raw_data)
         self.breeding: Breeding = Breeding(self.raw_data)
+        self.cape_vine: CapeVine = CapeVine(self.raw_data)
         self.meals: Meals = Meals(self.raw_data, self.version)
         self.cooking: Cooking = Cooking(self.raw_data, self.meals)
 
@@ -277,6 +281,7 @@ class Account:
         self.dancing_coral = DancingCoral(self.raw_data)
         self.coral_kid = CoralKid(self.raw_data)
         self.jelly_operator = JellyOperator(self.raw_data)
+        self.menagerie = Menagerie(self.raw_data)
 
     def calculate(self):
         self._calculate_setup()
@@ -504,10 +509,18 @@ class Account:
         self.advice_fish.calculate_bonuses()
         self.meritocracy.calculate_bonuses()
         self.zenith_market.calculate_bonuses()
+        self.caverns.caves['The Lamp'].calculate_bonuses(
+            self.zenith_market['LAMP BOOST'].value
+        )
         self.research.calculate_bonuses(
             self.companions["Pirate Deckhand"].bonus,
             self.equinox.dreams,
             self.sushi_station.get_milestone_bonus_value("Research Upgrade Bonus Multi"),
+        )
+        self.the_button.calculate_bonuses(
+            # "Companions"(147) in source
+            self.companions['Mantaray'].bonus,
+            self.research.grid['Better Button'].value,
         )
         self.glimbo.calculate_drop_rate_multi(self.research)
         self.sushi_station.calculate_bonuses()
@@ -516,11 +529,14 @@ class Account:
             sum(self.characters.all_skills["Divinity"]),
             self.coral_reef.total_level,
             self.divinity.god_rank,
+            # "UnlockOwned" 2 in source opens the Coral Kid Singularity page
+            self.menagerie.unlocks[2].owned,
         )
         self.jelly_operator.calculate_bonuses(
             self.research.grid["Jelly Operator Linguistics"].value,
             self.atom_collider["Sulfur - Jelly Bloodcell Juicer"].value,
             self.arcade[72].value,
+            self.gemshop.bundles["ban_j"].owned,
         )
         self.gallery.calculate_bonuses(
             highest_world_reached=self.world_progress.highest_reached,
@@ -542,7 +558,7 @@ class Account:
     def _calculate_meals(self):
         self.meals.calculate_values(
             self.lab_jewels['Black Diamond Rhinestone'].active_value,
-            self.breeding.total_shiny_levels['Bonuses from All Meals'],
+            self.breeding.total_shiny_bonus_values['Bonuses from All Meals'],
             self.summoning.bonuses["Meal Bonuses"].as_multi,
             self.companions.get_multi('Wickerlight Spirit', 'Meal Bonus'),
             emperor_set=MultiToValue(self.armor_sets['EMPEROR SET'].total_value),
@@ -561,9 +577,6 @@ class Account:
             self.merits,
             self.saltlick,
             self.summoning,
-            eldritch_artifacts_unlocked=self.rift['EldritchArtifact'].unlocked,
-            sovereign_artifacts_obtained=self.sneaking.emporium['Sovereign Artifacts'].obtained,
-            omnipotent_artifacts_obtained=self.spelunk.caves['Pebble Cove'].bonus_obtained,
         )
         self.library.calculate_checkout_speed(
             isotope_discovery=self.gaming.superbits['Isotope Discovery'].unlocked,
@@ -662,9 +675,15 @@ class Account:
 
         # Farming: Land Rank multi reads talents, crop evo reads summoning
         self.farming.calculate_market_bonus(
-            self.gemshop.purchases['Plot Of Land'].owned, self.merits[5][2].level
+            self.gemshop.purchases['Plot Of Land'].owned,
+            self.merits[5][2].level,
+            self.research.grid["Day 'N' Nite"].value,
         )
-        self.farming.calculate_land_rank_bonus(self.get_current_max_talent("Dank Rank"))
+        self.farming.calculate_land_rank_bonus(
+            self.get_current_max_talent("Dank Rank"),
+            self.grimoire.upgrades['Land Rank Database Maxim'].total_value,
+            self.legend_talents['Extended Database'].value,
+        )
         self.farming.calculate_crop_depot_bonus(
             self.lab_bonuses['Depot Studies PhD'], self.lab_jewels['Pure Opal Rhombol'],
             self.grimoire, self.vault, self.sneaking.emporium,
@@ -688,10 +707,27 @@ class Account:
             self.caverns.caves['The Lamp'].wishes['World 6 Majigers'],
             self.summoning.bonuses,
             max_summoning_level=max(self.characters.all_skills['Summoning'], default=0),
+            mass_irrigation_level=self.get_current_max_talent("Mass Irrigation"),
+            grimoire=self.grimoire,
+            vault=self.vault,
+            monument_value=self.caverns.caves['Wisdom Monument']
+            .bonuses['Farming Crop Evo Chance'].value,
+            sushi_value=self.sushi_station.get_milestone_bonus_value(
+                'Farming Crop Evo Chance'
+            ),
+            button_value=self.the_button.get_bonus_value('Farming Crop Evo Chance'),
+            boony_crowns_value=self.research.grid['Boony Crowns'].total_value,
+            rift_guy_sticker_owned=self.event_points_shop['Rift Guy Sticker'].owned,
+            bettah_stickahs_unlocked=self.gaming.superbits['Bettah Stickahs'].unlocked,
+            card_value=next(
+                card for card in self.cards if card.codename == 'w7b5'
+            ).getCurrentValue(),
         )
         self.farming.calculate_crop_speed(self.alchemy_vials, self.summoning.bonuses)
         self.farming.calculate_bean_bonus(
-            self.sneaking.emporium['Deal Sweetening'].value, self.achievements
+            self.sneaking.emporium['Deal Sweetening'].value,
+            self.achievements,
+            self.vault,
         )
         self.farming.calculate_og(
             self.achievements,
@@ -901,6 +937,7 @@ class Account:
             armor_sets=self.armor_sets,
             hat_rack=self.hat_rack,
             breeding=self.breeding,
+            cape_vine=self.cape_vine,
             tome=self.tome,
             caverns=self.caverns,
             achievements=self.achievements,
@@ -950,6 +987,9 @@ class Account:
         elif name == "Dank Rank":
             char_list = self.characters.dbs
             talent_num = "207"
+        elif name == "Mass Irrigation":
+            char_list = self.characters.dbs
+            talent_num = "205"
         return max(
             [
                 talent_level + char.total_bonus_talent_levels

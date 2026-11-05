@@ -161,7 +161,10 @@ class Gallery:
         self.gallery_multi = 1.0
         self._gallery_multi_by_chip = {}
         self._bonuses_by_chip = {}
-        self._palette_levels = safer_index(spelunk_info, 9, []) or []
+        # "Spelunk"[9] in source: Gaming Palette levels
+        self._palette_levels: list[float] = [
+            parse_number(level, 0) for level in safer_index(spelunk_info, 9, []) or []
+        ]
         raw_lore = safer_index(spelunk_info, 0, [])
         self._has_lore_8 = parse_number(safer_index(raw_lore, 8, 0)) >= 1
         self.prisma_palette_bonus = 0.0
@@ -257,11 +260,16 @@ class Gallery:
             exalted_palette_index, exalted_palette_max, picasso_gaming
         )
 
+    @property
+    def total_palette_level(self) -> int:
+        # "TotalPaletteLV" in source. Last updated in v2.550.0
+        return round(sum(self._palette_levels))
+
     def get_palette_decay_bonus(
         self, index: int, max_value: float, picasso_gaming: float
     ) -> float:
         # "PaletteBonus" in source, decay rows only. Last updated in v2.531.0
-        palette_level = parse_number(safer_index(self._palette_levels, index, 0))
+        palette_level = safer_index(self._palette_levels, index, 0)
         return (
             palette_level / (palette_level + 25) * max_value
             * (1 + picasso_gaming / 100)
@@ -327,6 +335,7 @@ class Gallery:
             worldclass_showcase,
             clam_work,
             companions,
+            gemshop.bundles["ban_m"].owned,
         )
         # Per character chip; section shows the chip once anyone wears it
         self._bonuses_by_chip = {
@@ -392,6 +401,7 @@ class Gallery:
         worldclass_showcase: int,
         clam_work: "ClamWork",
         companions: "Companions",
+        has_magnificence_pack: bool,
     ):
         # PodiumsOwned in source. Last update in 2.48 Giftmas Event
         self.podium_count = min(
@@ -405,7 +415,7 @@ class Gallery:
             + plain_showcase,
         )
         podium_lv4 = self._calculate_podium_lv4(
-            companions, worldclass_showcase, deathskull_level
+            companions, worldclass_showcase, deathskull_level, has_magnificence_pack
         )
         podium_lv3 = (
             self._calculate_podium_lv3(showcases_owned, deathskull_level)
@@ -457,12 +467,15 @@ class Gallery:
         companions: "Companions",
         worldclass_showcase: int,
         deathskull_level: int,
+        has_magnificence_pack: bool,
     ) -> int:
-        # "PodiumsOwned_Lv4" in source, Math.round. Last updated in v2.531.0
+        # "PodiumsOwned_Lv4" in source, Math.round. Last updated in v2.561.0
         return _js_round(
             companions["RIP Tide"].get_value("Showcase Slot")
             + worldclass_showcase
             + min(1, floor(deathskull_level / 6))
+            + min(1, floor(deathskull_level / 7))
+            + int(has_magnificence_pack)
         )
 
     def get_bonus_advice(self, name: str):

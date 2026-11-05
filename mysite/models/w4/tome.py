@@ -66,13 +66,13 @@ def _log(value: float) -> float:
     return log(max(value, 1)) / 2.30259
 
 
-# "SpecialPassives" in `_customBlock_Breeding`. Last updated in v2.531.0
-def _shiny_level(progress: float) -> int:
+# "SpecialPassives" in `_customBlock_Breeding`. Last updated in v2.550.0
+def _shiny_level(progress: float, tiers: int) -> int:
     return max(
         [1]
         + [
             tier + 2
-            for tier in range(19)
+            for tier in range(tiers)
             if progress > floor((1 + (tier + 1) ** 1.6) * 1.7 ** (tier + 1))
         ]
     )
@@ -274,7 +274,7 @@ class Tome:
         )
 
 
-# `_customEvent_TomeQTY` in source. Last updated in v2.531.0
+# `_customEvent_TomeQTY` in source. Last updated in v2.550.0
 def _get_quantities(
     raw_data: dict,
 ) -> tuple[list[float], dict[str, float], list[dict], float]:
@@ -311,6 +311,9 @@ def _get_quantities(
     royal = get("RoyalG", [])
     cauldrons = get("CauldronInfo", [])
     vault = get("UpgVault", [])
+    menagerie = get("Menagerie", [])
+    # "UnlockOwned" 11 in "SpecialPassives" in source. Last updated in v2.550.0
+    shiny_tiers = 19 + 10 * (_num(_dig(menagerie, 2, 11)) >= 1)
 
     card_tiers = 4 + (_num(_dig(rift, 0)) >= 45) + (_num(_dig(spelunk, 0, 2)) >= 1)
     six_star_cards = str(_dig(options, 603)).split(",")
@@ -408,7 +411,7 @@ def _get_quantities(
     ]
     star_shiny = sum(
         _js_round(
-            _shiny_level(_num(_dig(breeding, world + 22, index)))
+            _shiny_level(_num(_dig(breeding, world + 22, index)), shiny_tiers)
             * tome_star_shiny_per_level
         )
         for world, index in tome_star_shiny_pets
@@ -509,12 +512,14 @@ def _get_quantities(
         for upgrade in range(6, 9)
     )
 
-    # "SpecialPassives" and "2ndMulti" in `_customBlock_Breeding`. v2.531.0
+    # "SpecialPassives" and "2ndMulti" in `_customBlock_Breeding`. v2.550.0
     shiny_levels = 0
     breedability_levels = 0
     breedability_unlocked = _num(_dig(breeding, 2, 3)) > 0
     for world, index in tome_breeding_species:
-        shiny_levels += _shiny_level(_num(_dig(breeding, world + 22, index)))
+        shiny_levels += _shiny_level(
+            _num(_dig(breeding, world + 22, index)), shiny_tiers
+        )
         breedability_multi = (
             1 + log(max(1, (_num(_dig(breeding, world + 13, index)) + 1) ** 0.725))
             if breedability_unlocked
@@ -628,4 +633,6 @@ def _get_quantities(
     q[119] = sum(len(outpost) >= 3 for outpost in get("RoyalMaps", []))
     q[120] = sum(_num(grade) for grade in _dig(royal, 5, default=[]))
     q[121] = _num(_dig(research, 7, 9))
+    q[122] = _num(_dig(menagerie, 0, 2))
+    q[123] = sum(_num(level) for level in _dig(menagerie, 3, default=[]))
     return q, best_talent_maxes, star_characters, star_account

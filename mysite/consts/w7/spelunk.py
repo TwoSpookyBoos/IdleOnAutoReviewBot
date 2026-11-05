@@ -6,6 +6,7 @@ chapter_name = [
     "No Escape",
     "Sunken Plunder",
     "Kelp Primeval",
+    "Burning Crusade",
 ]
 # "Spelunk[20+c]" and "Spelunk[32+c]" in source: two 12-slot preset blocks.
 # Last updated in v2.531.0
@@ -39,5 +40,9 @@ chapter_bonus_img = [
     "spelunking-tool-0",
     "spelunking-amber-0",
     "spelunking-shop-upgrade-5",
+    "placeholder",
+    "spelunking",
+    "spelunking-shop-upgrade-43",
+    "spelunking-tool-0",
     "placeholder",
 ]

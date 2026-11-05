@@ -10,7 +10,6 @@ logger = get_logger(__name__)
 greenstack_item_difficulty_groups = {
     0: {  # The timegated tier
         "Vendor Shops": [
-            "FoodHealth1",
             "CraftMat3",  # W1 Cue Tape
             "FoodPotRe2", "FoodHealth4", "Quest19",  # W2
             "FoodHealth9", "FoodHealth11", "FoodPotGr3",  #W3
@@ -206,11 +205,15 @@ greenstack_item_difficulty_groups = {
         "Rare Drops": [
             # World 7 part 1
             'w7A6',
-            "FoodPotRe1", "JobApplication",
-            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "FoodPotRe1",
             "FoodG1", "FoodG2", "FoodG3", "FoodG4", "FoodG5", "FoodG6", "FoodG7", "FoodG8", "FoodG10", "FoodG13", "FoodG14",  # Gold Foods
             "FoodG11", "FoodG12",  # Golden Nigiri, Golden Dumpling
-        ]
+        ],
+        "Boss Drop": [
+            "Meatloaf", "Quest29",  # Magic Meatloaf, Chaotic Amarok Slab
+            "JobApplication",  # Dr. Defecaus
+            "Quest41",  # Flowies - Baba Yaga, same drops per kill as Job Application, Colosseum makes it easier
+        ],
     },
     13: {
         "Base Monster Materials": [
@@ -276,9 +279,9 @@ greenstack_item_difficulty_groups = {
             "Critter11A",
             "Spelunking3",
             # World 7 part 2
-            'Spelunking4', 'Spelunking5',
+            'Spelunking4', 'Spelunking5', 'Spelunking6',
             'Line13',
-            "Gfoodcoupon", "Line14",  # Gold Food Coupon, Its Alright Celebration
+            "Gfoodcoupon",  # Gold Food Coupon
         ],
         'Rare Drops': [
             'StoneA2',  #W1 Armor Upgrade Stone II
@@ -290,10 +293,13 @@ greenstack_item_difficulty_groups = {
             'Weight3', 'Weight4', 'Weight7', 'Weight13',
             # W5
             'LavaA1b', 'LavaA5b', 'LavaB3b', 'Key5', 'Line4', 'Weight9',
+            # W6
+            'Line14',  # Its Alright Celebration, Samurai Guardian only
             # World 7 part 1
             'Coral1', 'Coral2', 'Coral3',
             # World 7 part 2
             'Coral4', 'w7B1b',
+            'Coral5', 'Coral6', 'w7B11b', 'w7B12b',
             'Quest110',  # Zenith Cluster
         ],
         'Boss Drop': [
@@ -302,14 +308,25 @@ greenstack_item_difficulty_groups = {
             'ExpBalloon1',  # Small Experience Balloon
             'StoneA3b',
         ],
+        "Base Monster Materials": [
+            "w7B10",  # Magmaspike, 1e-8 drop chance
+        ],
+        "Colosseum": [
+            "StoneA3", "StoneW3",  # Armor/Weapon Upgrade Stone III
+        ],
     },
     16: {  # Technically obtainable, but very unrealistic to farm - Tier 15 is already at capacity
         "Base Monster Materials": [
             'StoneT1eb', 'StoneAeB', 'StoneWeb',  # Summer Tool/Armor/Weapon Upgrade Stones - event gated
             'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',  # Tempest Bow/Ring Stones
-            "Quest41",  # Flowies
             "FoodEvent5", "FoodEvent6", "FoodEvent7", "FoodEvent8",  # Cherry, Lemony, Minto, Milk Choco
             "ResetCompleted",
+        ],
+        "Boss Drop": [
+            "EmpPart",  # Emperor Ribbon - capped by daily Emperor showdown attempts
+        ],
+        "Colosseum": [
+            "StoneA4", "StoneW4",  # Armor/Weapon Upgrade Stone IV
         ],
     }
 }
@@ -347,9 +364,9 @@ expected_stackables = {
         'SpiA1', 'SpiA2', 'SpiA3', 'SpiA4', 'SpiA5', 'SpiB1', 'SpiB2', 'SpiB3', 'SpiB4', 'SpiC1', 'SpiC2', 'SpiD1', 'SpiD2', 'SpiD3',  # W6
         'w7A1', 'w7A2', 'w7A3', 'w7A4', 'w7A5', 'w7A7', 'w7A8', 'w7A9', 'w7A10', 'w7A11', 'w7A12',
         # World 7 part 2
-        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B11', 'w7B12',
+        'w7B1', 'w7B2', 'w7B3', 'w7B4', 'w7B5', 'w7B6', 'w7B7', 'w7B8', 'w7B9', 'w7B10', 'w7B11', 'w7B12',
         'Sewers3', 'Quest15', 'Hgg',  # Specialty Monster Materials
-        'Gfoodcoupon', 'Line9', 'Line14',
+        'Gfoodcoupon', 'Line9',
         'StoneT1eb', 'StoneAeB', 'StoneWeb',
         'StoneTempestB0', 'StoneTempestB1', 'StoneTempestB2', 'StoneTempestR0', 'StoneTempestR1', 'StoneTempestR2',
     ],
@@ -405,12 +422,11 @@ expected_stackables = {
         'Ladle',
         'Spelunking0', 'Spelunking1', 'Spelunking2', 'Spelunking3',
         # World 7 part 2
-        'Spelunking4', 'Spelunking5',
+        'Spelunking4', 'Spelunking5', 'Spelunking6',
         'Line13',
         'ResetCompleted', 'ResetCompletedS',
     ],
     'Vendor Shops': [
-        'FoodHealth1',
         'FoodHealth18', 'FoodHealth19', 'FoodHealth14', 'FoodHealth15', 'FoodHealth16', 'FoodHealth17',
         'FoodHealth12', 'FoodHealth13', 'FoodPotOr4', 'FoodPotGr4', 'FoodPotRe4',
         'FoodPotYe4', 'OilBarrel6', 'OilBarrel7', 'FoodHealth4', 'FoodHealth9', 'FoodHealth11', 'Quest19', 'CraftMat3',  # Sorted by daily quantity
@@ -418,7 +434,6 @@ expected_stackables = {
         'FoodPotRe2',  #Average Life Potion from W2 Shop + Gigafrogs
     ],
     'Rare Drops': [
-        'JobApplication',  # W1 Rare Drops
         'FoodHealth2', 'FoodHealth3',
         # TODO: Move Statues to their corresponding Crystals
         'EquipmentStatues9', 'EquipmentStatues15', 'EquipmentStatues16', 'EquipmentStatues17', 'EquipmentStatues19',
@@ -437,22 +452,28 @@ expected_stackables = {
         'SpiA2b', 'SpiB2b', 'Quest95',  #W6 Rare Drops
         'FoodG1', 'FoodG2', 'FoodG3', 'FoodG4', 'FoodG5', 'FoodG6', 'FoodG7', 'FoodG8', 'FoodG10',  # Gold Foods
         'FoodG11', 'FoodG12', 'FoodG13', 'FoodG14', 'ButterBar',  # Gold Foods
+        'Line14',  # W6
         # World 7 part 1
         'Coral1', 'Coral2', 'Coral3', 'w7A6',
         # World 7 part 2
         'Coral4', 'w7B1b', 'Quest110',
+        'Coral5', 'Coral6', 'w7B11b', 'w7B12b',
         'FoodEvent5', 'FoodEvent6', 'FoodEvent7', 'FoodEvent8',
     ],
     'Boss Drop': [
         'BabaYagaETC',
         'ExpBalloon1',
-        'Meatloaf', 'Quest17', 'Quest29',
+        'Meatloaf', 'Quest17', 'Quest29', 'JobApplication',
         'KrukPart', 'StoneA6', 'StoneW7', 'StoneT6', 'StoneHelm7',
         'Quest41',
-        'StoneA3b'
+        'StoneA3b',
+        'EmpPart',  # Emperor Ribbon, W6 boss material
+    ],
+    "Colosseum": [
+        # Armor/Weapon Upgrade Stone III/IV, only from chests
+        "StoneA3", "StoneW3", "StoneA4", "StoneW4",
     ],
     'Cheater': [
-        'EmpPart',  # W6 Boss Material
         'CraftMat2',  # Crimson String
         'OilBarrel1', 'OilBarrel3', 'OilBarrel4', 'OilBarrel5',  # Oil Barrels
         'PureWater2',  # Alchemy Dense water
@@ -477,6 +498,7 @@ expected_stackables = {
     ],
     'Legacy': [  # Previously legitimately obtainable, since removed from the game - not achievable by new players
         'FoodPotMana2',  # Average Mana Potion
+        'FoodHealth1',  # Nomwich - W1 shop stock is too small to greenstack in reasonable time
     ]
 }
 greenstack_amount = 10 ** 7
@@ -540,7 +562,7 @@ cardset_names = [
     "Events",
 ]
 
-# `CardStuff = function` in source. Last updated in v2.528.0
+# `CardStuff = function` in source. Last updated in v2.550
 card_raw_data = [
     [
         ["mushG", "A0", "5", "+{_Base_HP", "12"],
@@ -684,7 +706,7 @@ card_raw_data = [
         ["SpelunkingCard3", "F48", "40000", "+{%_Spelunking_EXP", "8", ],
         ["SpelunkingCard4", "F49", "150000", "+{%_Spelunking_AFK_Gain", "2", ],
         ["SpelunkingCard5", "F50", "2500000", "+{%_Spelunking_EXP", "15", ],
-        ["Blank", "A0", "10", "+{%", "3"],
+        ["SpelunkingCard6", "F51", "4000000", "+{%_Spelunking_EXP", "30", ],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
         ["Blank", "A0", "10", "+{%", "3"],
@@ -774,7 +796,7 @@ card_raw_data = [
         ["w7b7", "J19", "6000000", "+{%_Drop_Rate_Multi", "1"],
         ["w7b8", "J20", "10000000", "+{%_Research_EXP_(Passive)", "3", ],
         ["w7b9", "J21", "20000000", "+{%_Drop_Rate_Multi", "1"],
-        ["w7b10", "J22", "30000000", "+{%_Drop_Rate_Multi", "1"],
+        ["w7b10", "J22", "30000000", "+{%_Lumi_Hourly_Gains_(Passive)", "5"],
         ["w7b11", "J23", "20000000", "+{%_Research_AFK_gain_(Passive)", "1", ],
         ["w7b12", "J24", "40000000", "+{%_Spelunk_Amber_(Passive)", "10", ],
         ["Crystal6", "J99", "2500000", "+{%_Damage_Multi_(Passive)", "1.5", ],
@@ -872,7 +894,7 @@ card_raw_data = [
         ["luckEvent1", "Y22", "5", "+{%_Drop_Rate_(Passive)", "3"],
         ["luckEvent2", "Y23", "5", "+{%_Money_from_Monsters", "4"],
         ["anni5Event1", "Y24", "6", "+{%_Gold_Food_Effect_(Passive)", "5", ],
-        ["Blank", "A0", "10", "+{%_Base_HP", "3"],
+        ["fallEvent2", "Y25", "5", "+{%_Total_Damage_(Passive)", "1", ],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
         ["Blank", "A0", "10", "+{%_Base_HP", "3"],
@@ -1149,7 +1171,7 @@ gem_shop_optlacc_dict = {
 
 
 # Names of the bundles aren't stored, but descriptions can be found in Source Code: GemPopupBundleMessages = function ()
-# Last updated in v2.527 Aug 2026
+# Last updated in v2.561
 gem_shop_bundles_dict = {
     'bun_a': 'Lava Supporter Pack',
     'bun_b': 'New Year Pack',
@@ -1207,7 +1229,13 @@ gem_shop_bundles_dict = {
     'ban_f': 'Boaring Pack',
     'ban_g': 'Armadillo Pack',
     'ban_h': 'Coralcave Guardian Pack',
-    'ban_i': 'Rice Pet Pack',
+    'ban_i': 'Daydreamer Pack',
+    'ban_j': 'Gelatinous Pack',
+    'ban_k': 'Alpha Omega Pack',
+    'ban_l': 'Imperial Power Pack',
+    'ban_m': 'Pack of Magnificence',
+    'ban_n': 'Halloween Pack',
+    'ban_o': "Cathie's Big Day Pack",
 }
 
 #Guild
@@ -1428,6 +1456,12 @@ equipment_by_bonus_dict = {
         'Lucky Lad': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 7}, 'Image': 'lucky-lad'},
         'Ultra Unboxer': {'Type': 'Trophy', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 3}, 'Image': 'ultra-unboxer'},
         # Capes
+        "Lovely Balloon": {
+            "Type": "Cape",
+            "Limited": True,
+            "Misc1": {"Bonus": "DropRate", "Value": 250},
+            "Image": "lovely-balloon",
+        },
         'Molten Cloak': {'Type': 'Cape', 'Limited': True, 'Misc1': {'Bonus': 'DropRate', 'Value': 30}, 'Image': 'molten-cloak'},
         'Gilded Emperor Wings': {'Type': 'Cape', 'Limited': False, 'Misc1': {'Bonus': 'DropRate', 'Value': 10}, 'Image': 'gilded-emperor-wings'},
         # Nametags

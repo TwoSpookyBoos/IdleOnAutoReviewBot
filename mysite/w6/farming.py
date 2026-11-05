@@ -4,7 +4,7 @@ from consts.consts_autoreview import break_you_best, ValueToMulti, build_subgrou
 from consts.idleon.consts_idleon import max_characters
 from consts.idleon.w6.farming import landrank_list
 from consts.progression_tiers import farming_progressionTiers, true_max_tiers
-from consts.w6.farming import max_farming_crops, max_farming_value
+from consts.w6.farming import max_farming_crops
 
 from models.general.session_data import session_data
 from models.advice.advice import Advice
@@ -63,6 +63,10 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
     return TabbedAdviceGroup(cd_tabbed)
 
 
+def exotic_market_unlocked() -> bool:
+    return session_data.account.spelunk.caves["Blushpit"].bonus_obtained
+
+
 def get_market_bonuses_tabbed() -> TabbedAdviceGroup:
     farming = session_data.account.farming
     mb_tabbed = {
@@ -93,7 +97,7 @@ def get_market_bonuses_tabbed() -> TabbedAdviceGroup:
             ),
         ),
     }
-    if session_data.account.spelunk.caves["Blushpit"].bonus_obtained:
+    if exotic_market_unlocked():
         mb_tabbed["Exotic Market"] = (
             TabbedAdviceGroupTab("exotic-market", "Exotic Market"),
             AdviceGroup(
@@ -152,6 +156,7 @@ def getValueLRSuggies(farming):
     #names = ['Boost', 'Megaboost', 'Superboost']
     min_lr = max(farming.land_rank.min_level, floor(0.8 * farming.land_rank.max_level))
     value = farming.value_multi.doubler
+    value_cap = farming.value_multi.cap
     available_points = farming.land_rank.total_level
     currently_invested = sum([
         farming.land_rank['Production Boost'].level,
@@ -159,7 +164,7 @@ def getValueLRSuggies(farming):
         farming.land_rank['Production Superboost'].level
     ])
     upgrades = [0, 0, 0]
-    while value < max_farming_value and sum(upgrades) < available_points:
+    while value < value_cap and sum(upgrades) < available_points:
         dValue = [
             val_boost(min_lr, upgrades[0] + 1) / val_boost(min_lr, upgrades[0]),
             val_m_s_boost(upgrades[1] + 1, upgrades[2]) / val_m_s_boost(upgrades[1], upgrades[2]) if available_points >= 250 else 1,
@@ -182,7 +187,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     mgd = f"Multi Group D: {val.value_gmo:.2f}x"
     final = (
         f"Conclusion: You are "
-        f"{'NOT ' if val.final_min < max_farming_value else 'over' if val.before_cap_min >= max_farming_value * 1.25 else ''}"
+        f"{'NOT ' if val.final_min < val.cap else 'over' if val.before_cap_min >= val.cap * 1.25 else ''}"
         f"capped on Lowest plots")
     value_advices = {
         final: [],
@@ -193,6 +198,11 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     }
     #MGA
     value_advices[mga].append(farming.get_product_doubler_advice())
+    if exotic_market_unlocked():
+        value_advices[mga].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('DOUBLE PETAL I', 'DOUBLE PETAL II')
+        )
 
     #MGB
     #optimal_upgrades = getValueLRSuggies(farming) if farming['LandRankTotalRanks'] >= 5 else [-1, -1, -1]
@@ -217,15 +227,20 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
 
     #Final
     value_advices[final].append(farming.get_value_lowest_plot_advice())
-    if val.before_cap_min < max_farming_value:
+    if val.before_cap_min < val.cap:
         value_advices[final].append(farming.get_value_highest_plot_advice())
+    if exotic_market_unlocked():
+        value_advices[final].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('STALK VALUE I', 'STALK VALUE II', 'STALK VALUE III')
+        )
 
     value_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Crop Value',
         advices=value_advices,
         informational=True,
-        completed=val.before_cap_min >= max_farming_value
+        completed=val.before_cap_min >= val.cap
     )
     return value_ag
 
@@ -243,6 +258,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     ss = f"Star Sign: {evo_multi.starsign:.3f}x"
     lamp = f"Lamp Wish: {evo_multi.wish:.3f}x"
     misc = f"Misc: {evo_multi.misc:.3f}x"
+    exotic = f"Exotic Market: {evo_multi.exotic:.3g}x"
+    talent = f"Talent: {evo_multi.mass_irrigation:.3f}x"
+    grimoire_vault = f"Grimoire + Vault: {evo_multi.grimoire_vault:.3f}x"
+    monument = f"Monument: {evo_multi.monument:.3f}x"
+    w7_sources = f"World 7: {evo_multi.w7_sources:.3g}x"
     total = f"Total Evo Chance: {evo_multi.total:.3g}x"
     evo_advices = {
         total: [],
@@ -254,6 +274,11 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         summon: [],
         ss: [],
         lamp: [],
+        exotic: [],
+        talent: [],
+        grimoire_vault: [],
+        monument: [],
+        w7_sources: [],
         misc: [],
     }
     #Add Advice lines
@@ -268,9 +293,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     crop_chapter_stacks = evo_multi.crop_chapter_stacks
     crop_chapter = session_data.account.alchemy_bubbles['Crop Chapter']
     evo_advices[alch].append(crop_chapter.get_advice(
-        f": {crop_chapter.base_value:.3}% per 2k Tome Points above 5k"
+        f": {evo_multi.crop_chapter_value:.3}% per 2k Tome Points above 5k"
         f"<br>{evo_multi.tome_score:,} Tome Points = {crop_chapter_stacks} stacks"
-        f"<br>Total: +{round(crop_chapter.base_value * crop_chapter_stacks, 3):g}%",
+        f"<br>Total: +{round(evo_multi.crop_chapter_value * crop_chapter_stacks, 3):g}%",
         goal=EmojiType.INFINITY.value
     ))
 #Vial
@@ -321,6 +346,8 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     evo_advices[lr].append(
         farming.land_rank['Evolution Ultraboost'].get_bonus_advice(False)
     )
+    # Ballot adds to Evolution Boost
+    evo_advices[lr].append(farming.get_evo_ballot_advice())
 
 #SUMMONING
     evo_advices[summon].append(summoning_bonus.get_bonus_advice())
@@ -335,6 +362,41 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
         .wishes['World 6 Majigers']
         .get_bonus_advice(0)
     )
+# Exotic Market
+    if exotic_market_unlocked():
+        evo_advices[exotic].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in (
+                'SPROUTLUCK I', 'SPROUTLUCK II', 'SPROUTLUCK III', 'SPROUTLUCK IV',
+                'GENEOLOGY I', 'GENEOLOGY II', 'GENEOLOGY III', 'GENEOLOGY IV', 'GENEOLOGY V',
+            )
+        )
+# Talent
+    evo_advices[talent].append(farming.get_mass_irrigation_advice())
+# Grimoire + Vault
+    grimoire = session_data.account.grimoire
+    evo_advices[grimoire_vault].append(
+        grimoire.upgrades['Sacrifice of Harvest'].get_advice(grimoire.total_upgrades)
+    )
+    evo_advices[grimoire_vault].append(
+        session_data.account.vault.get_upgrade_advice('Croppius Evolvius')
+    )
+# Monument
+    evo_advices[monument].append(
+        session_data.account.caverns.caves['Wisdom Monument']
+        .bonuses['Farming Crop Evo Chance'].get_advice()
+    )
+# World 7
+    evo_advices[w7_sources].append(
+        session_data.account.sushi_station.milestones['Farming Crop Evo Chance'].get_advice()
+    )
+    evo_advices[w7_sources].append(
+        session_data.account.the_button.bonuses['Farming Crop Evo Chance'].get_advice()
+    )
+    evo_advices[w7_sources].append(farming.get_crop_evo_sticker_advice())
+    evo_advices[w7_sources].append(
+        next(card for card in session_data.account.cards if card.codename == 'w7b5').getAdvice()
+    )
 
 # MISC
     # Achievement
@@ -346,7 +408,6 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     evo_advices[misc].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
     # Account-wide total farming levels of 200 needed to unlock the bonus
     evo_advices[misc].append(farming.get_skill_mastery_advice())
-    evo_advices[misc].append(farming.get_evo_ballot_advice())
 
 #Total
     evo_advices[total].append(farming.get_target_evo_crop_advice())
@@ -367,7 +428,7 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     # Create subgroup labels
     total = f"Total: {farming.speed_multi.total:,.3f}x"
     summon = f"Summoning: {round_and_trim(summoning_speed)}x"
-    vm = f"Vial + Day Market: {farming.speed_multi.vial_market:,.3f}x"
+    vm = f"Vial + Day Market + Exotic: {farming.speed_multi.vial_market:,.3f}x"
     nm = f"Night Market: {farming.speed_multi.night_market:,.3f}x"
     speed_advices = {
         total: [],
@@ -391,6 +452,9 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     speed_advices[vm].append(
         farming.market['Nutritious Soil'].get_bonus_advice()
     )
+    # Exotic Market
+    if exotic_market_unlocked():
+        speed_advices[vm].append(farming.exotic_market['GOGOGROW'].get_bonus_advice())
 #Night Market
     speed_advices[nm].append(farming.market['Super Gmo'].get_bonus_advice())
     speed_advices[nm].append(farming.market['Speed Gmo'].get_bonus_advice())
@@ -407,11 +471,13 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     # Create subgroup labels
     total = f"Total: {farming.bean_multi.total:.2f}x"
     mga = f"Day Market: {farming.bean_multi.day_market:.2f}x"
-    mgb = f"Emporium + Achievement: {farming.bean_multi.emporium_achievement:.2f}x"
+    mgb = f"Emporium + Achievement + Exotic + Vault: {farming.bean_multi.emporium_achievement:.2f}x"
+    mgc = f"Exotic Market Largumes: {farming.bean_multi.largumes:.2f}x"
     bm_advices = {
         total: [],
         mga: [],
-        mgb: []
+        mgb: [],
+        mgc: [],
     }
 
     #Total
@@ -425,6 +491,20 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     )
     #Achievement - Crop Flooding
     bm_advices[mgb].append(farming.get_crop_flooding_advice())
+    #Vault - Bigger Better Beans
+    bm_advices[mgb].append(
+        session_data.account.vault.get_upgrade_advice('Bigger Better Beans')
+    )
+    #Exotic Market
+    if exotic_market_unlocked():
+        bm_advices[mgb].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('LEGUMIOSO I', 'LEGUMIOSO II', 'LEGUMIOSO III')
+        )
+        bm_advices[mgc].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('LARGUMES I', 'LARGUMES II')
+        )
     bm_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Magic Bean Bonus',
@@ -443,6 +523,7 @@ def getOGAdviceGroup(farming):
     ach = f"Achievement: {farming.og_multi.achievement:.2f}x"
     merit = f"Merit: {farming.og_multi.merit:.2f}x"
     pristine = f"Pristine Charm: {farming.og_multi.pristine:.2f}x"
+    exotic = f"Exotic Market: {farming.og_multi.evergrow:.2f}x"
 
     og_advices = {
         total: [],
@@ -452,6 +533,7 @@ def getOGAdviceGroup(farming):
         ach: [],
         merit: [],
         pristine: [],
+        exotic: [],
     }
 #Total
     og_advices[total].append(farming.get_og_total_advice())
@@ -482,6 +564,12 @@ def getOGAdviceGroup(farming):
             'Taffy Disc'
         ].get_obtained_advice()
     )
+    # Exotic Market
+    if exotic_market_unlocked():
+        og_advices[exotic].extend(
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('EVERGROW I', 'EVERGROW II')
+        )
     og_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Overgrowth',
@@ -498,7 +586,7 @@ def getLRExclusions(farming, highestFarmingSkillLevel):
     else:
         if max_farming_crops - 1 in farming.crops:
             exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Evolution')])
-        if farming.value_multi.final_min >= max_farming_value/100:
+        if farming.value_multi.final_min >= farming.value_multi.cap / 100:
             exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Production')])
         if farming.land_rank.min_level >= 120:
             exclusions.extend([v['Name'] for v in landrank_list if v['Name'].startswith('Soil Exp')])
@@ -520,7 +608,11 @@ def getProgressionTiersAdviceGroup(farming, highest_farming_level):
     multis = ['Evolution Gmo', 'Og Fertilizer']
     one_point_landranks = ['Seed of Stealth', 'Seed of Loot', 'Seed of Damage', 'Seed of Stats']
     lr_exclusions = getLRExclusions(farming, highest_farming_level)
-    cost_multi = max(.001, session_data.account.emperor["cheaper Farming Upgrades"].value)
+    # Only Night Market costs get calculated, as Day Market costs are crops
+    cost_multi = (
+        max(.001, session_data.account.emperor["cheaper Farming Upgrades"].value)
+        * farming.night_market_discount
+    )
 
     #Assess Tiers
     for tier_number, requirements in farming_progressionTiers.items():
@@ -714,6 +806,15 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
             session_data.account.emperor["cheaper Farming Upgrades"].get_bonus_advice()
         ]
     }
+    if exotic_market_unlocked():
+        cost_Advices["Day Market Discount"] = [
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('BETTER DAY I', 'BETTER DAY II')
+        ]
+        cost_Advices["Night Market Discount"] = [
+            farming.exotic_market[name].get_bonus_advice()
+            for name in ('BETTER NIGHT I', 'BETTER NIGHT II')
+        ]
     cost_ag = AdviceGroup(
         tier='',
         pre_string='Sources of Cost Discount',

@@ -150,6 +150,7 @@ $hard-resources: (
 	one-way-opening-card: img('data/2CardsF48.png'),
   plunder-cranny-card: img('data/2CardsF49.png'),
   kelp-forest-card: img('data/2CardsF50.png'),
+  burned-tunnel-card: img('data/2CardsF51.png'),
 );
 $hyperion-nebula: (
 	hyperion-nebula: img('data/CardSet6.png'),
@@ -290,7 +291,7 @@ $bosses-n-nightmares: (
 	domeo-magmus-card: img('data/2CardsZ24.png'),
 	demented-spiritlord-card: img('data/2CardsZ25.png'),
 	glunko-the-massive-card: img('data/2CardsZ26.png'),
-	verminous: img('data/2CardsZ27.png')
+	verminous-card: img('data/2CardsZ27.png'),
 );
 $events: (
 	events: img("data/CardSet25.png"),
@@ -312,13 +313,14 @@ $events: (
 	giant-rose-card: img('data/2CardsY15.png'),
 	bubbulyte-card: img('data/2CardsY16.png'),
 	spring-splendor-card: img('data/2CardsY17.png'),
-	falloween-pumpkin-card: img('data/2CardsY18.png'),
+	halloween-pumpkin-card: img('data/2CardsY18.png'),
 	idleon-4th-anniversary-card: img('data/2CardsY19.png'),
 	bort-the-cornhusk-card: img('data/2CardsY20.png'),
   big-ol-giftmas-box-card: img('data/2CardsY21.png'),
   luckulyte-card: img('data/2CardsY22.png'),
   potluck-card: img('data/2CardsY23.png'),
   idleon-5th-anniversary-card: img('data/2CardsY24.png'),
+  halloween-grave-card: img('data/2CardsY25.png'),
 );
 
 $all-cards: map-merge($blunder-hills, $easy-resources);

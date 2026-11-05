@@ -52,4 +52,5 @@ bonus_image = {
     "Kills In World 6": "ballot-5",
     "Kills In World 7": "ballot-5",
     "Bigger Damage": "meritocracy-5",
+    "Research Exp": "research",
 }

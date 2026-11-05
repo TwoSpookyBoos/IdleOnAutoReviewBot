@@ -1,4 +1,5 @@
 from consts.idleon.consts_idleon import NinjaInfo
+from consts.idleon.w7.research import Research
 
 from utils.number_formatting import parse_number
 
@@ -23,7 +24,7 @@ market_info = [
 
 depot_bonus = NinjaInfo[31]
 # scaling info from "CropSCbonus" in _customBlock_FarmingStuffs in source.
-# Last update v2.48 14 Jan 2026
+# Last updated in v2.550
 crop_depot_list = [
     {
         "EmporiumUnlockName": "Reinforced Science Pencil",
@@ -106,6 +107,15 @@ crop_depot_list = [
         "x2": 0,
         "Image": "depot-fancy-pen",
     },
+    {
+        "EmporiumUnlockName": "Science Chalk",
+        "Name": "Chalk",
+        "Bonus": depot_bonus[9].replace("_", " "),
+        "funcType": "add",
+        "x1": 1,
+        "x2": 0,
+        "Image": "science-chalk",
+    },
 ]
 
 landrank_list = [
@@ -146,3 +156,8 @@ exotic_market_info = [
     for name, description, crop_index, max_value, scaling_type, _ in MarketExoticInfo
     if name != "NAME_MAGNI"
 ]
+
+# "Research"[25] in source: bonus per Sticker of each type. Last updated in v2.550
+sticker_bonus_per_count = [parse_number(value) for value in Research[25]]
+# "StickerBonus" 4 in source: boosts Crop Evolution
+crop_evo_sticker_index = 4

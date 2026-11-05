@@ -10,7 +10,7 @@ from consts.idleon.consts_idleon import current_world, max_characters
 from consts.w6.farming import max_farming_crops
 from consts.caverns.cavern import max_cavern
 from consts.caverns.villager.minau import max_measurements
-from consts.consts_w4 import breeding_total_pets
+from consts.w4.breeding import breeding_total_pets
 from consts.progression_tiers import gemShop_progressionTiers
 
 

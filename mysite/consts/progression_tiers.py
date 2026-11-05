@@ -1,6 +1,9 @@
+from consts.consts_general import gstack_unique_expected
 from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.w3.equinox import equinox_unlock_dreams
 from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
+from consts.w4.breeding import shiny_bonus_names, shiny_bonus_tier
+from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_list
 from utils.logging import get_logger
 logger = get_logger(__name__)
 
@@ -44,7 +47,7 @@ combatLevels_progressionTiers = [
     [34, 5050, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Murder One\"', None, None, None],
     [35, 5600, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Being Smart\"', None, None, None],
     [36, 6250, '{{Advice Fish|#advice-fish}} - Unlock \"Advice On Materialism\"', None, None, None],
-    [37, 6955, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
+    [37, 7115, "Unlock all Tome challenges", 500, "Credit towards Equinox Dream 23", ""],
 ]
 secret_class_progressionTiers = {
     0: {},
@@ -145,7 +148,7 @@ greenstack_progressionTiers = {
     5: {'Required Stacks': 300},
     6: {'Required Stacks': 350},
     7: {'Required Stacks': 400},
-    8: {'Required Stacks': 440}
+    8: {"Required Stacks": len(gstack_unique_expected)},  # All expected greenstacks
 }
 achievements_progressionTiers = {
     0: {},
@@ -1551,8 +1554,8 @@ deathNote_progressionTiers = [
     [22, 20, 20, 20, 20, 20, 20,    0, 0,   80, 80, 80, 80, ""],
     [23, 20, 20, 20, 20, 20, 20,    0, 0,   84, 84, 83, 82, ""],
     [24, 20, 20, 20, 20, 20, 20,    0, 0,   86, 86, 86, 85, ""],
-    [25, 20, 20, 20, 20, 20, 20,   20, 0,  107, 107, 107, 107, ""], # Add W7 mob to zow, chow, meow, wow + skull tier
-    [26, 20, 20, 20, 20, 20, 20,   20, 0,  109, 109, 109, 109, ""]  # Max zow, chow, meow, wow
+    [25, 20, 20, 20, 20, 20, 20,   20, 0,  108, 108, 108, 108, ""], # Add W7 mob to zow, chow, meow, wow + skull tier
+    [26, 20, 20, 20, 20, 20, 20,   20, 0,  110, 110, 110, 110, ""]  # Max zow, chow, meow, wow
 ]
 buildingsPostBuffs_progressionTiers = [
     [0, "Unlock", [], "", ""],
@@ -1816,7 +1819,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Faster Shiny Pet Lv Up Rate": [24, 6],
+            "Faster Shiny Mob Lv Up Rate": [24, 6],
             "Bonuses from All Meals": [10, 5],
             "Infinite Star Signs": [25, 5],
             "Base Efficiency for All Skills": [20, 5],
@@ -1828,7 +1831,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Base Critter Per Trap": [10, 5],
+            "Base Critters per Trap": [10, 5],
             "Drop Rate": [15, 5],
             "Faster Refinery Speed": [15, 5],
             "Lower Minimum Travel Time for Sailing": [5, 5],
@@ -1842,9 +1845,9 @@ breeding_progressionTiers = {
         "Shinies": {
             "Multikill Per Tier": [20, 5],
             "Higher Artifact Find Chance": [15, 5],
-            "Faster Shiny Pet Lv Up Rate": [28, 7],
+            "Faster Shiny Mob Lv Up Rate": [28, 7],
             "Infinite Star Signs": [37, 7],
-            "Summoning EXP": [10, 5]
+            "Summoning EXP gain": [10, 5]
             },
         "ShinyNotes": ""
         },
@@ -1864,7 +1867,7 @@ breeding_progressionTiers = {
         "ArenaWaves": 200,
         "Shinies": {
             "Drop Rate": [36, 12],
-            "Base Critter Per Trap": [22, 11],
+            "Base Critters per Trap": [22, 11],
             },
         "ShinyNotes": ""
     },
@@ -1873,7 +1876,7 @@ breeding_progressionTiers = {
         "TerritoriesUnlocked": 24,
         "ArenaWaves": 200,
         "Shinies": {
-            "Summoning EXP": [22, 11],
+            "Summoning EXP gain": [22, 11],
             "Faster Refinery Speed": [33, 11],
             "Multikill Per Tier": [44, 11],
         },
@@ -1888,25 +1891,49 @@ breeding_progressionTiers = {
         },
         "ShinyNotes": ""
     },
+    # Base Max Shiny LV tiers are a free pass once Menagerie raises it
     13: {
-        'Max Shinies': [
-            'Bonuses from All Meals', 'Drop Rate', 'Summoning EXP',
-            'Base Efficiency for All Skills', 'Multikill Per Tier', 'Faster Refinery Speed'
-        ]
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 20,
     },
     14: {
-        'Max Shinies': [
-            'Farming EXP', 'Lower Minimum Travel Time for Sailing', 'Sail Captain EXP Gain',
-            'Higher Artifact Find Chance', 'Skill EXP', 'Base Critter Per Trap'
-        ]
+        'Max Shinies': shiny_bonus_tier['Useful'],
+        'Max Shiny Level': 20,
     },
     15: {
-        'Max Shinies': [
-            'Faster Shiny Pet Lv Up Rate', 'Base WIS', 'Base STR', 'Base AGI', 'Base LUK',
-            'Infinite Star Signs', 'Total Damage',
-            'Tab 4 Talent Pts', 'Tab 3 Talent Pts', 'Tab 2 Talent Pts', 'Tab 1 Talent Pts',
-            'Class EXP', 'Line Width in Lab'
-        ]
+        'Max Shinies': shiny_bonus_tier['Other'],
+        'Max Shiny Level': 20,
+    },
+    # Max Shiny LV 30 needs Luminous Menagerie Unlock 11. Every Shiny LV above 20 on
+    # any pet is +1 OverLV (+10% additive Shiny LV Up Rate), so first level all pets
+    # evenly while that's cheap
+    16: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 21,
+    },
+    17: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 22,
+    },
+    18: {
+        'Max Shinies': shiny_bonus_names,
+        'Max Shiny Level': 23,
+    },
+    19: {
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 25,
+    },
+    20: {
+        'Max Shinies': shiny_bonus_tier['Important'],
+        'Max Shiny Level': 30,
+    },
+    21: {
+        'Max Shinies': shiny_bonus_tier['Useful'],
+        'Max Shiny Level': 30,
+    },
+    22: {
+        'Max Shinies': shiny_bonus_tier['Other'],
+        'Max Shiny Level': 30,
     },
 
     }
@@ -1957,6 +1984,17 @@ divinity_progressionTiers = {
     11: {"MaxDivLevel": 50},
     12: {"MinDivLevel": 40}
 }
+# Artifacts worth taking past Sovereign. Left out: Giants Eye and Dreamcatcher (worthless),
+# Silver Ankh, Billcye Tri and Cloud Urn (Post Office box chance barely grows after Sovereign)
+sailing_important_artifacts = [
+    'Moai Head', 'Maneki Kat', 'Ruble Cuble', 'Fauxory Tusk', 'Gold Relic', 'Genie Lamp',
+    'Emerald Relic', 'Fun Hippoete', 'Arrowhead', '10 AD Tablet', 'Ashen Urn', 'Amberite',
+    'Triagulon', 'Frost Relic', 'Chilled Yarn', 'Causticolumn', 'Jade Rock', 'Gummy Orb',
+    'Fury Relic', 'Weatherbook', 'Crystal Steak', 'Trilobite Rock', 'Opera Mask', 'Socrates',
+    'The True Lantern', 'The Onyx Lantern', 'The Shim Lantern', 'The Winz Lantern',
+    'Deathskull', 'Obsidian', 'Pointagon', 'Ender Pearl',
+    'Fang of the Gods', 'Nomenclature', 'Me First Dollar', 'Bloodclot',
+]
 sailing_progressionTiers = {
     0: {},
     1: {
@@ -1978,7 +2016,7 @@ sailing_progressionTiers = {
     },
     3: {
         'Islands Discovered': 5,
-        'Captain And Boats': 9,
+        'Captains And Boats': 9,
         'Artifacts': {
             'Maneki Kat': 1,
             'Ruble Cuble': 1,
@@ -1992,7 +2030,7 @@ sailing_progressionTiers = {
     },
     4: {
         'Islands Discovered': 6,
-        'Captain And Boats': 10,
+        'Captains And Boats': 10,
         'Artifacts': {
             'Amberite': 2,
             'Gold Relic': 2,
@@ -2000,14 +2038,14 @@ sailing_progressionTiers = {
     },
     5: {
         'Islands Discovered': 7,
-        'Captain And Boats': 11,
+        'Captains And Boats': 11,
         'Artifacts': {
             'Jade Rock': 2,
         }
     },
     6: {
         'Islands Discovered': 8,
-        'Captain And Boats': 12,
+        'Captains And Boats': 12,
         'Artifacts': {
             'Triagulon': 1,
             'Billcye Tri': 1,
@@ -2020,28 +2058,28 @@ sailing_progressionTiers = {
     },
     7: {
         'Islands Discovered': 9,
-        'Captain And Boats': 13,
+        'Captains And Boats': 13,
         'Artifacts': {
             'Fury Relic': 2,
         },
     },
     8: {
         'Islands Discovered': 12,
-        'Captain And Boats': 15,
+        'Captains And Boats': 15,
         'Artifacts': {
             'Crystal Steak': 2,
         }
     },
     9: {
         'Islands Discovered': 14,
-        'Captain And Boats': 17,
+        'Captains And Boats': 17,
         'Artifacts': {
             'Socrates': 2,
         }
     },
     10: {
         'Islands Discovered': 15,
-        'Captain And Boats': 19,
+        'Captains And Boats': 19,
         'Artifacts': {
             'Cloud Urn': 1,
             'Weatherbook': 1,
@@ -2050,13 +2088,13 @@ sailing_progressionTiers = {
         }
     },
     11: {
-        'Captain And Boats': 20,
+        'Captains And Boats': 20,
         'Artifacts': {
             'Fauxory Tusk': 3,
             '10 AD Tablet': 3,
             'Fury Relic': 3
         },
-        'Eldritch': True
+        'Artifact Tier': 3
     },
     12: {
         'Artifacts': {
@@ -2129,7 +2167,7 @@ sailing_progressionTiers = {
             'Gold Relic': 4,
             'Amberite': 4
         },
-        'Sovereign': True
+        'Artifact Tier': 4
     },
     17: {
         'Artifacts': {
@@ -2177,11 +2215,37 @@ sailing_progressionTiers = {
     },
     19: {
         'Artifacts': {
-            #These last 2 are worthless, but get them anyway.
-            'Giants Eye': 4,
-            'Dreamcatcher': 4,
+            # World's End and The Maw artifacts, catching up to the rest
+            'Deathskull': 4,
+            'Obsidian': 4,
+            'Pointagon': 4,
+            'Ender Pearl': 4,
+            'Fang of the Gods': 4,
+            'Nomenclature': 4,
+            'Me First Dollar': 4,
+            'Bloodclot': 4,
         },
-    }
+    },
+    20: {
+        'Artifacts': {name: 5 for name in sailing_important_artifacts},
+        'Artifact Tier': 5
+    },
+    21: {
+        'Artifacts': {name: 6 for name in sailing_important_artifacts},
+        'Artifact Tier': 6
+    },
+    22: {
+        'Artifacts': {name: 7 for name in sailing_important_artifacts},
+        'Artifact Tier': 7
+    },
+    23: {
+        # Optional: the rest of the artifacts to max tier, the important ones are done in 22
+        'Artifacts': {
+            name: max_sailing_artifact_level
+            for name in sailing_artifacts_list
+            if name not in sailing_important_artifacts
+        },
+    },
 }
 gaming_progressionTiers = {
     0: {}

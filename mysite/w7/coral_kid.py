@@ -4,16 +4,18 @@ from models.advice.advice_section import AdviceSection
 from models.general.session_data import session_data
 
 
-def get_bonuses_info_group() -> AdviceGroup:
+def get_bonuses_info_group(pre_string: str, singularity: bool) -> AdviceGroup:
     advices: list[Advice] = [
-        bonus.get_advice() for bonus in session_data.account.coral_kid.values()
+        bonus.get_advice()
+        for bonus in session_data.account.coral_kid.values()
+        if (bonus.index >= 6) == singularity
     ]
 
     for advice in advices:
         advice.mark_advice_completed()
 
     return AdviceGroup(
-        pre_string='Bonuses',
+        pre_string=pre_string,
         advices=advices,
         tier='',
         informational=True
@@ -31,7 +33,10 @@ def get_coral_kid_section():
         )
         return coral_kid_AdviceSection
 
-    groups = [get_bonuses_info_group()]
+    groups = [
+        get_bonuses_info_group('Bonuses', singularity=False),
+        get_bonuses_info_group('Singularity Bonuses', singularity=True),
+    ]
     return AdviceSection(
         name='Coral Kid',
         tier='',
