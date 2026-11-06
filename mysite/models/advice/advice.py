@@ -49,6 +49,7 @@ class Advice(AdviceBase):
         progression: numeric (usually), how far towards the goal did the item progress?
         goal: the target level or amount of the advice
         unit (str): if there is one, usually "%" or x
+        progression_tooltip (str): HTML shown on hovering/tapping the progression
     """
 
     def __init__(
@@ -64,6 +65,7 @@ class Advice(AdviceBase):
             overwhelming: bool = False,
             optional: bool = False,
             potential: Any = "",
+            progression_tooltip: str = "",
             **extra
     ):
         super().__init__(**extra)
@@ -73,6 +75,7 @@ class Advice(AdviceBase):
             picture_class = f"x{picture_class}"
         self.picture_class: str = picture_class
         self.potential: str = str(potential)
+        self.progression_tooltip: str = progression_tooltip
         self.unit: str = unit
         self.value_format: str = value_format
         self.resource: str = kebab(resource)
@@ -105,6 +108,14 @@ class Advice(AdviceBase):
 
         resource = f' resource-{_escape_text(self.resource)} lazy' if self.resource else ""
         arrow = "" if self.progression and self.goal else "-hidden"
+        progression = _escape_text(self.progression)
+        if self.progression_tooltip:
+            # Shown by setupTooltips() in main.js
+            progression = (
+                f'<span class="has-tooltip" tabindex="0">{progression}'
+                f'<span class="tooltip-content" hidden>{self.progression_tooltip}</span>'
+                "</span>"
+            )
 
         return Markup(
             f'<li class="advice {css_class} lazy"{data_attrs}>'
@@ -113,7 +124,7 @@ class Advice(AdviceBase):
             f'<span class="progress-bar secondary"{secondary}></span>'
             f'</span> {label} </li>'
             f'<li class="resource{resource}"{data_attrs}></li>'
-            f'<li class="prog"{data_attrs}>{_escape_text(self.progression)}</li>'
+            f'<li class="prog"{data_attrs}>{progression}</li>'
             f'<li class="arrow{arrow}"{data_attrs}></li>'
             f'<li class="goal {status}"{data_attrs}>{_escape_text(self.goal)}</li>'
         )
