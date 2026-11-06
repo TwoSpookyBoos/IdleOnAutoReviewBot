@@ -1291,11 +1291,12 @@ vials_progressionTiers = {
         'Notes': ''
     },
     31: {
-        'Unlocked': 86,
-        'Maxed': 83,
+        'Unlocked': 87,
+        'Maxed': 84,
         'Recommended': [
             "Shipinabottle (Pirate Ship Figurine)",
-            "Canteen Read (Chapter Six 'Kelp Primeval')"
+            "Canteen Read (Chapter Six 'Kelp Primeval')",
+            "Spiked Drink (Magmaspike)"
         ],
         'Notes': ''
     },
