@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from consts.consts_autoreview import ValueToMulti
+from consts.consts_autoreview import EmojiType, ValueToMulti
 from models.advice.advice import Advice
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import notateNumber
@@ -64,4 +64,5 @@ class MenagerieBoost:
             label=label,
             picture_class=f"menagerie-boost-{self.index}",
             progression=self.level,
+            goal=EmojiType.INFINITY.value,
         )
