@@ -809,6 +809,9 @@ class Account:
             supreme_wiring_owned=self.event_points_shop['Supreme Wiring'].owned,
             biggole_mole_bonus=self.companions['Biggole Mole'].bonus,
             moon_of_print=self.compass.upgrades['Moon of Print'],
+            yet_another_printer_multi=(
+                self.legend_talents["Yet Another Printer Multi"]
+            ),
             death_bringers=self.characters.dks,
             max_book_level=self.library.max_book_level,
             king_of_the_remembered_kills=(
