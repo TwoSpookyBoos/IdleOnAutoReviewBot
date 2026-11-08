@@ -8,9 +8,9 @@ from consts.caverns.villager.minau import (
 )
 from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import EmojiType, ValueToMulti
-from consts.general.common import percent_break_point
 from models.advice.advice import Advice
 from models.caverns.villagers.villager import Villager
+from utils.misc.next_break_point_tooltip import next_break_point_tooltip
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safer_convert, safer_math_log
 from utils.text_formatting import notateNumber
@@ -79,6 +79,10 @@ class MeasurementScale:
 
 
 class MeasurementBonus:
+    # "MeasurementBaseBonus" in source: base * L / (100 + L),
+    # so it's the level giving half of the base
+    _HALF_LEVEL = 100
+
     def __init__(self, index: int, data: dict, level: int):
         self.level = level
         self.value = 0
@@ -89,18 +93,16 @@ class MeasurementBonus:
         self._scale_index = data["ScaleIndex"]
         self._resource = get_resource_image(data["ResourceIndex"])
         self._image = f"measurement-{index}"
-        self._next_breakpoint = ""
+        self._majik_multi = 1
 
     def calculate_bonus(self, majik_multi: float, scale: list[MeasurementScale]):
         # "MeasurementBaseBonus" in source. Last update v2.497
         if self._is_linear:
             self.value = self._base_value * self.level
         else:
-            self.value = self._base_value * (self.level / (100 + self.level))
-            self._current_percent = self.level / (100 + self.level)
-            self._next_breakpoint = self._get_next_breakpoint(
-                self._current_percent, majik_multi
-            )
+            self._current_percent = self.level / (self._HALF_LEVEL + self.level)
+            self.value = self._base_value * self._current_percent
+        self._majik_multi = majik_multi
         self.value *= majik_multi
         self._value_by_level = self.value
         self._scale = scale[self._scale_index]
@@ -112,42 +114,38 @@ class MeasurementBonus:
             progression = "Linear"
             goal = EmojiType.INFINITY.value
             unit = ""
+            tooltip = ""
         else:
-            value_by_level = f"+{self._value_by_level:.2f}% {self._template}"
+            bonus = self._format_bonus(self._value_by_level)
+            value_by_level = f"{bonus} {self._template}"
             progression = f"{self._current_percent * 100:.2f}"
             goal = 100
             unit = "%"
+            tooltip = next_break_point_tooltip(
+                self._value_by_level,
+                self._base_value * self._majik_multi,
+                self._HALF_LEVEL,
+                self._format_bonus,
+            )
         return Advice(
             label=(
                 f"Level {self.level}<br>"
                 f"Base: {value_by_level}<br>"
                 f"x{self._scale.as_multi:.3f} ({self._scale.display})<br>"
                 f"Total: +{self.value:,.2f}%"
-                f"{self._next_breakpoint}"
             ),
             picture_class=self._image,
             progression=progression,
             goal=goal,
             resource=self._resource,
             unit=unit,
+            progression_tooltip=tooltip,
         )
 
-    def _get_next_breakpoint(self, current_percent: float, majik_multi: float) -> str:
-        for percent in percent_break_point:
-            if current_percent < percent:
-                next_level = self._get_percent_level(percent)
-                next_value = self._base_value * percent * majik_multi
-                next_bonus = f"+{round_and_trim(next_value)}%"
-                return (
-                    f"<br>Next Breakpoint:"
-                    f"<br>Level {next_level} ({percent:.0%}): {next_bonus}"
-                )
-        return ""
-
-    def _get_percent_level(self, percent: float) -> int | None:
-        if percent >= 1.0 or percent < 0:
-            return None
-        return int(100 * percent / (1 - percent))
+    @staticmethod
+    def _format_bonus(value: float) -> str:
+        # Base bonus, without the scale, as in "Base:" of the label
+        return f"+{round_and_trim(value)}%"
 
     def get_bonus_advice(self) -> Advice:
         return Advice(
@@ -169,7 +167,9 @@ class Measurements(list[MeasurementBonus]):
 
 class Minau(Villager):
     def __init__(self, **kwargs):
-        super().__init__(name="Minau", unlock_at=7, role=villager_roles["Minau"], **kwargs)
+        super().__init__(
+            name="Minau", unlock_at=7, role=villager_roles["Minau"], **kwargs
+        )
         self.measurements = Measurements()
         self.gloomie_kills: float = 0
 

@@ -394,6 +394,8 @@ $farming-ui: (
     exotic-market: img('data/FarmStT3.png'),
     farming-og: img('extracted_sprites/farming_og.png'),
     crop-evo-sticker: img('data/FarmStickerB4.png'),
+    // Glyph "準" of font 564, drawn on Exotic Market upgrades with an Organic Label
+    organic-label: img('w6/farming/organic-label.png'),
 );
 
 $all-farming: map-merge($seed-gifs, $all-crops);
