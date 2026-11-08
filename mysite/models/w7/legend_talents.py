@@ -1,22 +1,49 @@
 from functools import cached_property
 
 from consts.consts_autoreview import ValueToMulti
-from consts.w7.legend_talents import legend_talents_bonuses
+from consts.w7.legend_talents import (
+    legend_talents_bonuses,
+    legend_talents_grid_max_level_bonuses,
+    legend_talents_menagerie_max_level_indexes,
+)
 from models.advice.advice import Advice
 from utils.safer_data_handling import safe_loads, safer_index
 
 
 class LegendTalent:
-    def __init__(self, talents: "LegendTalents", name: str, info: dict, level: int):
+    def __init__(
+        self, talents: "LegendTalents", index: int, name: str, info: dict, level: int
+    ):
         self.talents = talents
+        self.index = index
         self.name = name
         self.level = level
-        self.max_level = info["Max Level"]
+        self._base_max_level = info["Max Level"]
         self.image = info["Image"]
         self.display_order = info["Display Order"]
         self._base_value = info["Base Value"]
         self._bonus_template = info["Bonus"]
         self._description_template = info["Description"]
+
+    @cached_property
+    def max_level(self) -> int:
+        # "LegendTalent_MaxLV" in source. Last updated in v2.561.0
+        from models.general.session_data import session_data
+
+        account = session_data.account
+        max_level = self._base_max_level
+        # "Grid_Bonus" mode 1 in source: the grid square's raw level
+        max_level += sum(
+            account.research.grid[square].level
+            for square, indexes in legend_talents_grid_max_level_bonuses.items()
+            if self.index in indexes
+        )
+        if (
+            self.index in legend_talents_menagerie_max_level_indexes
+            and account.menagerie.unlocks[19].owned
+        ):
+            max_level += 3
+        return max_level
 
     @cached_property
     def value(self) -> float:
@@ -73,4 +100,5 @@ class LegendTalents(dict[str, LegendTalent]):
     def __init__(self, raw_data: dict):
         levels: list[int] = safer_index(safe_loads(raw_data.get("Spelunk", [])), 18, [])
         for index, (name, info) in enumerate(legend_talents_bonuses.items()):
-            self[name] = LegendTalent(self, name, info, safer_index(levels, index, 0))
+            level = safer_index(levels, index, 0)
+            self[name] = LegendTalent(self, index, name, info, level)

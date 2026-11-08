@@ -73,7 +73,6 @@ royal_armory_statue_flair_names = [
     'No Flair', 'Common Flair', 'Grand Flair', 'Superior Flair',
     'Elegant Flair', 'Illustrious Flair', 'Mesmerizing Flair',
 ]
-royal_armory_statue_flair_max_level = 3
 
 # OrbletMarket
 royal_armory_orblet_market_list = ["EMULSION 2 50 5 1 1 {%_chance_to_get_1M_statues_worth_of_Statue_EXP_when_a_Zenith_Cluster_is_formed!".split(" "), "HYDRATION 3 1.08 200 5 1 +{%_Resource_Collection_for_all_Outposts".split(" "), "TALENTED 5 1.120 100 1 1 +{_Talent_Points_for_Royal_Guardians".split(" "), "FULL_CLEAR 10 1.250 50 1 4 +{%_extra_kills_for_Clearing_Mobs_in_order_to_build_new_outposts!".split(" "), "GLORIFICATION 25 1.250 50 4 1 $".split(" "), "INTERVENE 20 1.125 100 1 1 }x_higher_chance_for_Regal_Intervention_to_trigger!".split(" "), "STRONK_RANK 50 1.200 50 5 1 All_kingdom_units_generate_Rank_EXP_+{%_faster".split(" "), "BARGAIN 100 1.50 25 10 1 All_Masterclass_upgrades_cost_+{%_less_than_before".split(" "), "LONG_RANGE 200 1.105 20 1 1 All_Outposts_get_+{px_longer_connection_range".split(" "), "PARCHMORE 500 1.150 100 1 1 +{%_Parchment_of_Enchantment_Drop_Rate_from_Verminous_Rats".split(" ")]

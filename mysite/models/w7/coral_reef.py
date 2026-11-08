@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.w7.coral_reef import coral_reef_bonus_data
 from models.advice.advice import Advice
@@ -12,17 +14,28 @@ from utils.safer_data_handling import (
 
 class CoralReefBonus:
     def __init__(self, index: int, info: dict, unlocked: bool, level: int):
+        self.index = index
         self.name = info["Name"]
         self.description = info["Description"]
-        # TODO: Menagerie Unlock 10 gives +3 Max LV to Pillar Coral
-        #  (account.menagerie.unlocks[9].owned)
-        self.max_level = info["Max Level"]
+        self._base_max_level = info["Max Level"]
         self.image = f"coral-{index}"
         self.unlocked = unlocked
         self.level = level
         self.next_cost = int(
             info["Coefficient"] * safer_math_pow(info["Exponent Base"], self.level, 0)
         )
+
+    @cached_property
+    def max_level(self) -> int:
+        match self.index:
+            case 3:
+                # Menagerie Unlock 10 rewrites `CoralReef[3][1]` 12 -> 15 in source
+                from models.general.session_data import session_data
+
+                owned = session_data.account.menagerie.unlocks[9].owned
+                return self._base_max_level + 3 * int(owned)
+            case _:
+                return self._base_max_level
 
     def get_advice(self) -> Advice:
         unlock_or_upgrade_text = "Level up" if self.unlocked else "Unlock"

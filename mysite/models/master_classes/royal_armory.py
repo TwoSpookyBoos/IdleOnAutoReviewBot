@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_w1 import statues_dict
 from consts.general.talents import graded_rate_talent_index
@@ -8,10 +10,11 @@ from consts.idleon.master_classes.royal_armory import (
     royal_armory_statue_unlock_odds_denom, royal_armory_statue_images,
     royal_armory_statue_marble_images,
     royal_armory_statue_bonus_names, royal_armory_statue_bonus_base, royal_armory_statue_bonus_increment,
-    royal_armory_statue_flair_names, royal_armory_statue_flair_max_level,
+    royal_armory_statue_flair_names,
 )
 from models.advice.advice import Advice
 from models.general.character import Character
+from models.w7.menagerie.unlock import MenagerieUnlock
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index, safer_convert
@@ -111,12 +114,30 @@ class RoyalStatue:
 
 class StatueFlair:
     # Spends Marble to boost the EXISTING W1 Statues, tracked in a separate levels array (`RoyalG[22]`).
-    def __init__(self, index: int, statue_name: str, level: int, max_level: int):
+    def __init__(
+        self,
+        index: int,
+        statue_name: str,
+        base_level: int,
+        royal_armory: "RoyalArmory",
+    ):
         self.index = index
         self.statue_name = statue_name
-        self.level = level
-        self.max_level = max_level
-        self.flair_name = royal_armory_statue_flair_names[min(level, len(royal_armory_statue_flair_names) - 1)]
+        self._base_level = base_level
+        self.royal_armory = royal_armory
+
+    @property
+    def max_level(self) -> int:
+        return self.royal_armory.statue_flair_max_level
+
+    @cached_property
+    def level(self) -> int:
+        return min(self.max_level, self._base_level)
+
+    @cached_property
+    def flair_name(self) -> str:
+        names = royal_armory_statue_flair_names
+        return names[min(self.level, len(names) - 1)]
 
     def get_advice(self, statue_image: str) -> Advice:
         return Advice(
@@ -230,8 +251,8 @@ class RoyalArmory:
             StatueFlair(
                 index=statue_index,
                 statue_name=statues_dict[statue_index]['Name'],
-                level=min(royal_armory_statue_flair_max_level, int(safer_index(raw_flairs, statue_index, 0))),
-                max_level=royal_armory_statue_flair_max_level,
+                base_level=int(safer_index(raw_flairs, statue_index, 0)),
+                royal_armory=self,
             )
             for statue_index in statues_dict
         ]
@@ -309,3 +330,15 @@ class RoyalArmory:
             progression=self.outposts_glorified,
             goal=self.outposts_built,
         )
+
+    @cached_property
+    def _elegant_flair_unlock(self) -> MenagerieUnlock:
+        # Menagerie Unlock 18 adds the Elegant tier
+        from models.general.session_data import session_data
+
+        return session_data.account.menagerie.unlocks[17]
+
+    @cached_property
+    def statue_flair_max_level(self) -> int:
+        # "SF_maxLV" in source
+        return 3 + int(self._elegant_flair_unlock.owned)

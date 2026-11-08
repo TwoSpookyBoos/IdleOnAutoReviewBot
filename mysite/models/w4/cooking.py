@@ -9,9 +9,11 @@ from consts.consts_w4 import (
     max_meal_count,
     max_meal_plate_level,
 )
+from consts.consts_w5 import artifact_tier_names, max_sailing_artifact_level
 from models.advice.advice import Advice
 from models.master_classes.grimoire import GrimoireUpgrade
 from models.w6.sneaking import Emporium
+from models.w7.menagerie.unlock import MenagerieUnlock
 from models.w7.spelunk import SpelunkCave
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -251,10 +253,10 @@ class Cooking:
     def calculate_max_plate_level(
         self,
         causticolumn_level: int,
-        eldritch_unlocked: bool,
         emporium: dict[str, Emporium],
         supreme_head_chef: GrimoireUpgrade,
         lunarheim: SpelunkCave,
+        menagerie_unlock: MenagerieUnlock,
     ):
         missing = self.missing_plate_upgrades
         artifact = "{{ Artifact|#sailing }}"
@@ -262,68 +264,10 @@ class Cooking:
 
         # Sailing Artifact tiers, https://idleon.wiki/wiki/Sailing#Artifacts
         self.max_plate_level += 10 * int(causticolumn_level)
-        if causticolumn_level < 1:
-            missing.append(
-                _plate_advice(f"{artifact}: Base Causticolumn", "causticolumn")
-            )
-        if causticolumn_level < 2:
-            missing.append(
-                _plate_advice(f"{artifact}: Ancient Causticolumn", "causticolumn")
-            )
-        if causticolumn_level < 3:
-            if eldritch_unlocked:
-                missing.append(
-                    _plate_advice(f"{artifact}: Eldritch Causticolumn", "causticolumn")
-                )
-            else:
-                missing.append(
-                    _plate_advice(
-                        f"{artifact}: Eldritch Causticolumn. Eldritch Artifacts are "
-                        "unlocked by completing {{ Rift|#rift }} 30",
-                        "eldritch-artifact",
-                    )
-                )
-        if causticolumn_level < 4:
-            if emporium["Sovereign Artifacts"].obtained:
-                missing.append(
-                    _plate_advice(f"{artifact}: Sovereign Causticolumn", "causticolumn")
-                )
-            else:
-                missing.append(
-                    _plate_advice(
-                        f"{artifact}: Sovereign Causticolumn. Sovereign Artifacts "
-                        f"unlock from {emporium_link}",
-                        "sovereign-artifacts",
-                    )
-                )
-        if causticolumn_level < 5:
-            # TODO: Verify if player has upgrade from first Spelunking Cave
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Omnipotent Causticolumn. Omnipotent Artifacts unlock "
-                    "from the first Spelunking Cave",
-                    "causticolumn",
-                )
-            )
-        if causticolumn_level < 6:
-            # TODO: Verify if player has upgrade from Research
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Transcendent Causticolumn. Transcendent Artifacts "
-                    "unlock from Research",
-                    "causticolumn",
-                )
-            )
-        if causticolumn_level < 7:
-            # TODO: Verify if player has unlock from Menagerie
-            #  (account.menagerie.unlocks[0].owned)
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Verisimilitude Causticolumn. Verisimilitude Artifacts "
-                    "unlock from the Menagerie",
-                    "causticolumn",
-                )
-            )
+        # Where to unlock each Artifact tier is shown in Sailing
+        for tier in range(causticolumn_level + 1, max_sailing_artifact_level + 1):
+            label = f"{artifact}: {artifact_tier_names[tier]} Causticolumn"
+            missing.append(_plate_advice(label, "causticolumn"))
 
         # Jade Emporium
         for upgrade_name, image in (
@@ -360,6 +304,12 @@ class Cooking:
             self.max_plate_level += 30
         else:
             missing.append(lunarheim.get_unlock_advice())
+
+        # Luminous Menagerie
+        if menagerie_unlock.owned:
+            self.max_plate_level += 10
+        else:
+            missing.append(menagerie_unlock.get_advice(link_to_section=True))
 
 
 def _plate_advice(

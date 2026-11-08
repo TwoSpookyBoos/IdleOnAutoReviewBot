@@ -491,10 +491,10 @@ class Account:
         # W4
         self.cooking.calculate_max_plate_level(
             self.sailing.artifacts['Causticolumn'].level,
-            self.rift['EldritchArtifact'].unlocked,
             self.sneaking.emporium,
             self.grimoire.upgrades['Supreme Head Chef Status'],
             self.spelunk.caves["Lunarheim"],
+            self.menagerie.unlocks[20],
         )
         self.lab_bonuses.calculate_nblb(
             self.lab_jewels['Pyrite Rhinestone'].enabled,

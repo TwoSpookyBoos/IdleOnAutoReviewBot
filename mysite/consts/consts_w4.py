@@ -43,13 +43,14 @@ def get_final_combat_level_required_for_tome() -> int:
 
 
 max_cooking_tables = 10  # Last updated in v2.528.0
-max_meal_plate_level = (  # 170  # Last updated in v2.550
+max_meal_plate_level = (  # 180  # Last updated in v2.561
     30  #base max level
     + 10 * max_sailing_artifact_level  #Causticolumn artifact gives 10 levels per tier
     + 10  #Papa Blob's Quality Guarantee in Jade Emporium
     + 10  #Chef Geustloaf's Cutting Edge Philosophy in Jade Emporium
     + 20  #Supreme Head Chef Status upgrade within The Grimoire
     + 30  #Defeat the Boss of the Lunarheim Cave within Spelunking
+    + 10  # Luminous Menagerie Unlock 21
 )
     
 max_cooking_ribbon = 25  # `"RibbonsMaxLV" ==` in source. Last updated in v2.528.0
