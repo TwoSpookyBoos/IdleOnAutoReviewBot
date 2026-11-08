@@ -1,7 +1,7 @@
 from consts.consts_general import gstack_unique_expected
 from consts.consts_w3 import library_subgroup_tiers, old_library_subgroup_tiers, max_trapping_critter_types
 from consts.w3.equinox import equinox_unlock_dreams
-from consts.consts_w4 import max_meal_plate_level, cooking_close_enough
+from consts.consts_w4 import max_meal_plate_level, cooking_close_enough, nmlb_max_level
 from consts.w4.breeding import shiny_bonus_names, shiny_bonus_tier
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_list
 from utils.logging import get_logger
@@ -1963,9 +1963,10 @@ cooking_progressionTiers = {
     8: {'AllMealsUnlockedByWorld': 7},
     9: {'AllMealsUnlockedByWorld': 8},
     10: {'TotalMealsUnder11': 0, 'TotalMealsUnder30': 0},
-    11: {'MaxPlateLevel': max_meal_plate_level},
-    12: {'MaxRemainingMeals': cooking_close_enough},
-    13: {'MaxRemainingMeals': 0}
+    11: {"MaxPlateLevel": nmlb_max_level, "TotalMealsUnderNMLBMax": 0},
+    12: {'MaxPlateLevel': max_meal_plate_level},
+    13: {'MaxRemainingMeals': cooking_close_enough},
+    14: {'MaxRemainingMeals': 0}
 }
 
 ###WORLD 5 PROGRESSION TIERS###

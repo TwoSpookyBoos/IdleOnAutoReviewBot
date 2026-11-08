@@ -52,6 +52,8 @@ max_meal_plate_level = (  # 180  # Last updated in v2.561
     + 30  #Defeat the Boss of the Lunarheim Cave within Spelunking
     + 10  # Luminous Menagerie Unlock 21
 )
+# No Meal Left Behind doesn't level meals past this. Last updated in v2.561
+nmlb_max_level = 150
     
 max_cooking_ribbon = 25  # `"RibbonsMaxLV" ==` in source. Last updated in v2.528.0
 cooking_close_enough = 1500  # Last updated in v2.523 2026-08-01

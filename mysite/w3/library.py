@@ -263,8 +263,8 @@ def getTalentExclusions() -> list:
     if "Voidwalker" in session_data.account.characters.classes:
         talentExclusions.append(319)
 
-    #If cooking is basically finished thanks to NMLB, exclude Cooking talents
-    if session_data.account.cooking.close_enough:
+    #If every meal is maxed, exclude Cooking talents
+    if session_data.account.cooking.all_meals_maxed:
         talentExclusions.extend([148, 146, 147, 59])
         # 148: {"Name": "Overflowing Ladle", "Tab": "Blood Berserker"},
         # 146: {"Name": "Apocalypse Chow", "Tab": "Blood Berserker"},
