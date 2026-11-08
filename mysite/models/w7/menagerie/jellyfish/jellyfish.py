@@ -52,3 +52,9 @@ class Jellyfish(ABC):
         if self.unlocked:
             return self._feature_advices()
         return [self.get_unlock_advice()]
+
+    def get_unlock_advice(self, link_to_section: bool = False) -> Advice | None:
+        if self.unlocked:
+            return None
+        unlock = self.menagerie.unlocks[self.unlock_index]
+        return unlock.get_advice(link_to_section=link_to_section)

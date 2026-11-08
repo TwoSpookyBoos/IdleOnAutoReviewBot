@@ -20,6 +20,14 @@ $royal-armory-statues: (
     royal-statue-6: img('data/RoyalStatue6.png'),
 );
 
+// Glyph "吃" from each flair's font ("StatueFlairs" in source)
+$royal-armory-statue-flairs: (
+    common-flair:   img('master_classes/royal_armory/CommonFlair.png'),
+    grand-flair:    img('master_classes/royal_armory/GrandFlair.png'),
+    superior-flair: img('master_classes/royal_armory/SuperiorFlair.png'),
+    elegant-flair:  img('master_classes/royal_armory/ElegantFlair.png'),
+);
+
 // order is per in-game ordering, not RAupg's own file numbering - verified against first 27 upgrades - hopefully lava names these correctly down the road
 $royal-armory-upgrades: (
     royal-armory-upgrade-0: img('data/RAupg30.png'),
@@ -128,3 +136,4 @@ $royal-armory-resources: (
 $all-royal-armory: map-merge($royal-armory-items, $royal-armory-upgrades);
 $all-royal-armory: map-merge($all-royal-armory, $royal-armory-resources);
 $all-royal-armory: map-merge($all-royal-armory, $royal-armory-statues);
+$all-royal-armory: map-merge($all-royal-armory, $royal-armory-statue-flairs);

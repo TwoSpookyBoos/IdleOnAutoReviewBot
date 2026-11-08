@@ -92,7 +92,9 @@ def get_section() -> AdviceSection:
         )
 
     session_data.account.add_alert_list(
-        "World 7", [mission.get_claim_alert() for mission in menagerie.missions]
+        "World 7",
+        [mission.get_claim_alert() for mission in menagerie.missions]
+        + [menagerie.jellyfish["Blue Jellyfish"].get_deposit_alert()],
     )
     groups = {
         "Shells": get_shells_group(),
