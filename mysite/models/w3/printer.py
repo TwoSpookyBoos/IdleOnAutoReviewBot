@@ -7,15 +7,15 @@ from consts.idleon.consts_idleon import skill_index_list
 from consts.idleon.lava_func import lava_func
 from consts.w3.printer import (
     biggole_mole_max_days,
-    gold_relic_default_max_days,
-    gold_relic_max_days,
     harriep_output_multi,
     king_of_the_remembered_talent,
     moon_of_print_max_days,
     skill_mastery_base_output,
     skill_mastery_output_level,
+    skill_mastery_output_skills,
     supreme_wiring_max_days,
     wired_in_output_multi,
+    yet_another_printer_multi_max_days,
 )
 from models.advice.advice import Advice
 from utils.logging import get_logger
@@ -36,6 +36,7 @@ class Printer:
         self.supreme_wiring_days: int = safer_get(raw_optlacc, 323, 0)
         self.biggole_mole_days: int = safer_get(raw_optlacc, 354, 0)
         self.moon_of_print_days: int = safer_get(raw_optlacc, 364, 0)
+        self.yet_another_printer_multi_days: int = safer_get(raw_optlacc, 479, 0)
 
         raw_print = safe_loads(raw_data.get("Print", [0, 0, 0, 0, 0, "Blank"]))[5:]
         raw_printer_xtra = safe_loads(raw_data.get("PrinterXtra", []))
@@ -130,6 +131,7 @@ class Printer:
         supreme_wiring_owned: bool,
         biggole_mole_bonus: float,
         moon_of_print,
+        yet_another_printer_multi,
         death_bringers: list,
         max_book_level: int,
         king_of_the_remembered_kills: int,
@@ -140,24 +142,21 @@ class Printer:
         harriep_unlocked: bool,
     ):
         self.has_king_doot = has_king_doot
-        self.skill_mastery_base = skill_mastery_base_output * skill_mastery_unlocked
+        # The base is added even with Skill Mastery locked; per-skill ranks are not
+        self.skill_mastery_base = skill_mastery_base_output
+        self.skill_mastery_unlocked = skill_mastery_unlocked
         # Combat excluded
-        self.skill_mastery_eligible = len(skill_index_list) - 1
-        self.skill_mastery_bonus = sum(
-            [
-                1
-                for name, levels in all_skills.items()
-                if name != "Combat" and sum(levels) >= skill_mastery_output_level
-            ]
+        eligible_skills = skill_index_list[1 : 1 + skill_mastery_output_skills]
+        self.skill_mastery_eligible = len(eligible_skills)
+        self.skill_mastery_bonus = skill_mastery_unlocked * sum(
+            1
+            for name in eligible_skills
+            if sum(all_skills.get(name, [])) >= skill_mastery_output_level
         )
-        self.skill_mastery_multi = ValueToMulti(
-            self.skill_mastery_base + self.skill_mastery_bonus
-        )
+        self.skill_mastery_value = self.skill_mastery_base + self.skill_mastery_bonus
 
         self.gold_relic_level = gold_relic_level
-        self.gold_relic_max_days = gold_relic_max_days.get(
-            gold_relic_level, gold_relic_default_max_days
-        )
+        self.gold_relic_max_days = self._gold_relic_max_days(gold_relic_level)
         self.gold_relic_multi = ValueToMulti(
             self.gold_relic_days * goldrelic_multis_dict.get(gold_relic_level, 0)
         )
@@ -175,31 +174,49 @@ class Printer:
             moon_of_print_max_days, self.moon_of_print_days
         )
         self.moon_of_print_multi = ValueToMulti(
-            moon_of_print_max_days * moon_of_print.unlocked * moon_of_print.total_value
+            self.moon_of_print_counted_days
+            * moon_of_print.unlocked
+            * moon_of_print.total_value
+        )
+        self._yet_another_printer_multi = yet_another_printer_multi
+        self.yet_another_printer_multi_counted_days = min(
+            yet_another_printer_multi_max_days, self.yet_another_printer_multi_days
+        )
+        self.yet_another_printer_multi_multi = ValueToMulti(
+            self.yet_another_printer_multi_counted_days
+            * yet_another_printer_multi.value
         )
 
         self._calculate_king_of_the_remembered(
             death_bringers, max_book_level, king_of_the_remembered_kills
         )
-        charm_multi = ValueToMulti(lolly_flower)
+        # Skill Mastery and Lolly Flower share one additive group in source
+        self.skill_mastery_lolly_multi = ValueToMulti(
+            self.skill_mastery_value + lolly_flower
+        )
         self.lab_multi_aw = wired_in_output_multi if has_king_doot else 1
         self.lab_multi_cs = wired_in_output_multi if wired_in_enabled else 1
         self.harriep_multi_aw = harriep_output_multi if has_king_doot else 1
         self.harriep_multi_cs = harriep_output_multi if harriep_unlocked else 1
         self.account_output_multi = (
             1
-            * self.skill_mastery_multi
+            * self.skill_mastery_lolly_multi
             * self.gold_relic_multi
             * self.king_of_the_remembered_multi
-            * charm_multi
             * ballot_multi
             * self.lab_multi_aw
             * self.harriep_multi_aw
             * self.supreme_wiring_multi
             * self.biggole_mole_multi
             * self.moon_of_print_multi
+            * self.yet_another_printer_multi_multi
         )
         self.character_output_multi = self.lab_multi_cs * self.harriep_multi_cs
+
+    @staticmethod
+    def _gold_relic_max_days(level: int) -> int:
+        # Cap on OptLacc[125] growth, `20 + 20 * Sailing[3][4]` in source
+        return 20 + 20 * level
 
     def _calculate_king_of_the_remembered(
         self, death_bringers: list, max_book_level: int, kills: int
@@ -318,18 +335,17 @@ class Printer:
         )
 
     def get_skill_mastery_advice(self) -> Advice:
-        max_multi = ValueToMulti(
-            skill_mastery_base_output + self.skill_mastery_eligible
-        )
+        max_value = skill_mastery_base_output + self.skill_mastery_eligible
+        locked = "" if self.skill_mastery_unlocked else " (Skill Mastery locked)"
         return Advice(
-            label=f"{{{{Rift|#rift}}}}: Skill Mastery unlocked: "
-            f"{self.skill_mastery_base}/{skill_mastery_base_output}%"
+            label=f"{{{{Rift|#rift}}}}: Skill Mastery: "
+            f"base {self.skill_mastery_base}%"
             f"<br>Additional 1% per Skill at {skill_mastery_output_level}: "
-            f"{self.skill_mastery_bonus}/{self.skill_mastery_eligible}%",
+            f"{self.skill_mastery_bonus}/{self.skill_mastery_eligible}%{locked}",
             picture_class="skill-mastery",
-            progression=f"{self.skill_mastery_multi:.2f}",
-            goal=f"{max_multi:.2f}",
-            unit="x",
+            progression=self.skill_mastery_value,
+            goal=max_value,
+            unit="%",
         )
 
     def get_king_of_the_remembered_advice(self) -> Advice:
@@ -384,6 +400,20 @@ class Printer:
             picture_class=mop.image,
             progression=self.moon_of_print_counted_days,
             goal=moon_of_print_max_days,
+        )
+
+    def get_yet_another_printer_multi_advice(self) -> Advice:
+        talent = self._yet_another_printer_multi
+        days = self.yet_another_printer_multi_counted_days
+        max_days = yet_another_printer_multi_max_days
+        return Advice(
+            label=f"{{{{ Legend Talent|#legend-talents }}}}: {talent.name} "
+            f"(Lv {talent.level}/{talent.max_level}):"
+            f"<br>{self.yet_another_printer_multi_multi:.2f}x "
+            f"({days}/{max_days} days)",
+            picture_class=talent.image,
+            progression=days,
+            goal=max_days,
         )
 
     def best_sample(self, name: str) -> float:
