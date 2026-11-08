@@ -1,26 +1,25 @@
-from math import ceil, floor
 from functools import cached_property
+from math import ceil, floor
 
-from consts.consts_autoreview import MultiToValue, ValueToMulti, EmojiType
-from consts.general.common import percent_break_point
+from consts.consts_autoreview import EmojiType, MultiToValue, ValueToMulti
 from consts.general.talents import dank_rank_talent_index, mass_irrigation_talent_index
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w6.farming import (
-    crop_evo_sticker_index,
-    sticker_bonus_per_count,
-    market_info,
-    exotic_market_info,
     crop_depot_list,
+    crop_evo_sticker_index,
+    exotic_market_info,
     landrank_list,
+    market_info,
     seed_dict,
+    sticker_bonus_per_count,
 )
 from consts.w6.farming import (
-    max_farming_crops,
     crop_dict,
-    max_farming_value,
     crop_evo_breakpoint_list,
+    exotic_market_caps,
+    max_farming_crops,
+    max_farming_value,
 )
-
 from models.advice.advice import Advice
 from models.caverns.caves.the_lamp import LampWish
 from models.general.achievements import Achievements
@@ -33,7 +32,9 @@ from models.w4.cooking import Meals
 from models.w4.lab import LabBonus, LabJewel
 from models.w4.rift import RiftBonus
 from models.w6.sneaking import Emporium
-
+from utils.all_talentsDict import all_talentsDict
+from utils.logging import get_logger
+from utils.misc.next_break_point_tooltip import next_break_point_tooltip
 from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import (
     safe_loads,
@@ -42,8 +43,6 @@ from utils.safer_data_handling import (
     safer_math_pow,
 )
 from utils.text_formatting import pl
-from utils.all_talentsDict import all_talentsDict
-from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -151,7 +150,7 @@ class Crops(dict[int, float]):
             return seed_dict["Basic"]["EvoBase"] * safer_math_pow(
                 info["EvoCoefficient"], seed_num - 2
             )
-        except:
+        except Exception:
             logger.exception(
                 f"Evo chance of {seed_name}#{seed_num}(#{crop_index}) not calculated"
             )
@@ -400,6 +399,10 @@ def _get_crop_image(crop_index: int) -> str:
 
 
 class ExoticMarketUpgrade:
+    # "ExoticBonusQTY" in source: scaling type 1 is coef * L / (L + 1000),
+    # so it's the level giving half of the cap
+    _HALF_LEVEL = 1000
+
     def __init__(self, level: int, info: dict, is_organic: bool = False):
         self.level = level
         self.name = info["Name"]
@@ -408,7 +411,12 @@ class ExoticMarketUpgrade:
         self._is_organic = is_organic
         # "Spelunk"[50] in source: Organic upgrades give double
         self._coefficient = info["Coefficient"] * (2 if is_organic else 1)
+        self._cap = exotic_market_caps.get(self.name)
         self._scaling_type = info["ScalingType"]
+        # "$" marks a whole bonus, it's rounded up in source
+        self._is_whole = "$" in self._template
+        self._is_multi = "}" in self._template
+        self._unit = "x" if self._is_multi else "%"
         self.value = 0
         self._max_value = None
 
@@ -416,7 +424,9 @@ class ExoticMarketUpgrade:
         # "ExoticBonusQTY" in source. Last updated in v2.550
         match self._scaling_type:
             case 1:
-                self.value = self._coefficient * self.level / (self.level + 1000)
+                self.value = (
+                    self._coefficient * self.level / (self.level + self._HALF_LEVEL)
+                )
                 self._max_value = self._coefficient
             case 0:
                 self.value = self._coefficient * self.level
@@ -425,65 +435,81 @@ class ExoticMarketUpgrade:
                     f"Unknown scaling type ({self._scaling_type})"
                     f" of exotic upgrade '{self.name}'"
                 )
-        if self.name == "FREEXOTIC":
-            self.value = min(50, self.value)
-            self._max_value = min(50, self._max_value)
+        if self._cap is not None:
+            self.value = min(self._cap, self.value)
+            self._max_value = min(self._cap, self._max_value)
+        if self._is_whole:
+            # "$" bonus is used as Math.ceil(...) in source
+            self.value = ceil(self.value)
 
     def get_bonus_advice(self, link_to_section: bool = True) -> Advice:
         label = ""
         if link_to_section:
             label += "{{Exotic Market|#farming }} - "
         label += f"{self.name}:<br>"
-        is_multi = "}" in self._template
-        value = f"{_display_value(is_multi, self.value)}"
+        value = f"{_display_value(self._is_multi, self.value)}"
         if self._max_value is not None:
-            value += f"/{_display_value(is_multi, self._max_value)}"
+            value += f"/{_display_value(self._is_multi, self._max_value)}"
         bonus = (
             self._template.replace("{", value).replace("}", value).replace("$", value)
         )
         if not link_to_section:
             label += f"Level {self.level}: {bonus}"
-            if self._max_value is not None:
-                current_percent = self.value / self._max_value
-                progress = f"{current_percent:.2%}"
+            if self._is_whole and self._max_value is not None:
+                # Whole numbers, so the progress is counted in them
+                progress = self.value
+                goal = self._max_value
+            elif self._max_value is not None:
+                progress = f"{self._current_percent:.2%}"
                 goal = "100%"
-                for percent in percent_break_point:
-                    if current_percent < percent:
-                        next_level, next_bonus = self._get_percent_info(percent)
-                        label += (
-                            f"<br>Next Breakpoint:"
-                            f"<br>Level {next_level} ({percent:.0%}): {next_bonus}"
-                        )
-                        break
             else:
                 progress = "Linear"
                 goal = EmojiType.INFINITY.value
-                label += f"<br>+{self._coefficient} per level"
         else:
             label += bonus
             progress = self.level
             goal = EmojiType.INFINITY.value
-        if self._is_organic:
-            label += "<br>Organic: bonus doubled"
         return Advice(
             label=label,
             picture_class=_get_crop_image(self._crop_index),
             progression=progress,
             goal=goal,
+            resource="organic-label" if self._is_organic else "",
+            progression_tooltip="" if link_to_section else self._get_level_tooltip(),
         )
 
-    def _get_percent_info(self, percent: float) -> tuple[int, str] | None:
-        if percent >= 1.0 or percent < 0 or self._max_value is None:
-            return None
-        is_multi = "}" in self._template
-        next_value = f"{_display_value(is_multi, self._max_value * percent)}"
-        next_bonus = self._template.replace("{", next_value).replace("}", next_value)
-        match self._scaling_type:
-            case 1:
-                next_level = int(1000 * percent / (1 - percent))
-                return next_level, next_bonus
-            case _:
-                return None
+    @property
+    def _current_percent(self) -> float:
+        return self.value / self._max_value
+
+    def _get_level_tooltip(self) -> str:
+        if self._max_value is None:
+            return f"<p>+{self._coefficient} per level</p>"
+        if self._is_whole:
+            return "".join(f"<p>{line}</p>" for line in self._get_whole_bonuses_left())
+        return next_break_point_tooltip(
+            self.value,
+            self._max_value,
+            self._HALF_LEVEL,
+            self._format_bonus,
+            # A capped bonus stops below the coefficient the formula tends to
+            curve_max=self._coefficient,
+        )
+
+    def _format_bonus(self, value: float) -> str:
+        return f"{_display_value(self._is_multi, value):,}{self._unit}"
+
+    def _get_whole_bonuses_left(self) -> list[str]:
+        # A "$" bonus is shown rounded up, so the caps are its whole values.
+        # Organic doubles it before the rounding, so they are every 1 as well
+        lines = []
+        for bonus in range(self.value + 1, ceil(self._max_value) + 1):
+            # Rounded up to `bonus` once the value exceeds `bonus - 1`
+            previous = bonus - 1
+            exact_level = self._HALF_LEVEL * previous / (self._coefficient - previous)
+            level = floor(round(exact_level, 6)) + 1
+            lines.append(f"{bonus} at level {level:,}")
+        return lines
 
 
 class LandRankUpgrade:
@@ -544,7 +570,7 @@ class LandRank(dict[str, LandRankUpgrade]):
             self.total_level = sum(land_rank_levels)
             self.min_level = min([v for v in land_rank_levels if v > 0], default=0)
             self.max_level = max(land_rank_levels, default=0)
-        except:
+        except Exception:
             self.levels = land_rank_levels
             self.total_level = 0
             self.min_level = 0
@@ -888,7 +914,7 @@ class Farming:
         fifth_column_max_level = round(
             1
             + database_maxim_value
-            + ceil(self.exotic_market["DATADIGGING"].value)
+            + self.exotic_market["DATADIGGING"].value
             + extended_database_value
         )
         for upgrade in self.land_rank.values():

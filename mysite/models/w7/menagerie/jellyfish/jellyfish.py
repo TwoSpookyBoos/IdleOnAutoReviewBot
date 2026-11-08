@@ -39,6 +39,15 @@ class Jellyfish(ABC):
             return True
         return self.menagerie.unlocks[self.unlock_index].owned
 
+    def get_unlock_advice(self) -> Advice:
+        unlock = self.menagerie.unlocks[self.unlock_index]
+        return Advice(
+            label=f"Needs Menagerie Unlock {unlock.index + 1}: {unlock.description}",
+            picture_class=f"menagerie-unlock-{unlock.index}",
+            progression=0,
+            goal=1,
+        )
+
     def get_advices(self) -> list[Advice]:
         if self.unlocked:
             return self._feature_advices()

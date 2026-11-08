@@ -200,6 +200,7 @@ versions_patches = {
     389: "v2.531.0 Jelly Operator",
     395: "v2.540.0 Lumi Menagerie",
     398: "v2.550.0 Halloween Event",
+    399: "v2.561.0 Cape Vine",
 }
 lowest_accepted_version = 297  # 297.x was the W7 release patch
 ignorable_labels: tuple = ('Weekly Ballot',)
