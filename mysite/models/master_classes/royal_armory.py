@@ -12,6 +12,7 @@ from consts.idleon.master_classes.royal_armory import (
     royal_armory_statue_bonus_names, royal_armory_statue_bonus_base, royal_armory_statue_bonus_increment,
     royal_armory_statue_flair_names,
 )
+from consts.master_classes.royal_armory import statue_flair_base_max_level
 from models.advice.advice import Advice
 from models.general.character import Character
 from models.w7.menagerie.unlock import MenagerieUnlock
@@ -136,16 +137,27 @@ class StatueFlair:
 
     @cached_property
     def flair_name(self) -> str:
-        names = royal_armory_statue_flair_names
-        return names[min(self.level, len(names) - 1)]
+        return self.flair_name_at(self.level)
 
     def get_advice(self, statue_image: str) -> Advice:
+        # No Flair has no icon
         return Advice(
             label=f"{self.statue_name} Flair: {self.flair_name}",
             picture_class=statue_image,
+            resource=self.flair_name if self.level > 0 else "",
             progression=self.level,
             goal=self.max_level,
         )
+
+    @classmethod
+    def get_base_max_level_advice(cls) -> Advice:
+        base_name = cls.flair_name_at(statue_flair_base_max_level)
+        return Advice(label=f"Base max Flair: {base_name}", picture_class=base_name)
+
+    @staticmethod
+    def flair_name_at(level: int) -> str:
+        names = royal_armory_statue_flair_names
+        return names[min(level, len(names) - 1)]
 
 
 class OrbletMarketUpgrade:
@@ -341,4 +353,10 @@ class RoyalArmory:
     @cached_property
     def statue_flair_max_level(self) -> int:
         # "SF_maxLV" in source
-        return 3 + int(self._elegant_flair_unlock.owned)
+        return statue_flair_base_max_level + int(self._elegant_flair_unlock.owned)
+
+    def get_statue_flair_max_level_advices(self) -> list[Advice]:
+        return [
+            StatueFlair.get_base_max_level_advice(),
+            self._elegant_flair_unlock.get_advice(link_to_section=True),
+        ]
