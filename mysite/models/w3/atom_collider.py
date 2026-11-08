@@ -104,6 +104,7 @@ class AtomCollider(dict[str, Atom]):
         isotope_discovery: bool,
         atomic_potential_upgrade: CompassUpgrade,
         higgs_boson: bool,
+        menagerie_boost_value: float,
     ):
         atomic_potential = (
             atomic_potential_upgrade.total_value
@@ -117,6 +118,7 @@ class AtomCollider(dict[str, Atom]):
                 atom.max_level += atomic_potential
             if higgs_boson:
                 atom.max_level += 20
+            atom.max_level += round(menagerie_boost_value)
 
     def calculate_costs(
         self,

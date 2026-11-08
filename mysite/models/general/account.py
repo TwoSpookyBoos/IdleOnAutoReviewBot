@@ -474,6 +474,7 @@ class Account:
             self.gaming.superbits['Isotope Discovery'].unlocked,
             self.compass.upgrades['Atomic Potential'],
             self.event_points_shop['Higgs Boson'].owned,
+            self.menagerie.boosts[17].value,
         )
         self.atom_collider.calculate_costs(
             self.merits[4][6].level,
