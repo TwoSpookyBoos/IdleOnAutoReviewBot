@@ -909,9 +909,6 @@ class Account:
             envelopes=self.gaming.envelopes,
             superbits=self.gaming.superbits,
             sodium_level=self.atom_collider['Sodium - Snail Kryptonite'].level,
-            treble_notes=(
-                self.caverns.caves['The Harp'].notes['Treble Note'].amount
-            ),
             final_ballad=self.caverns.villagers['Kaipu'].schematics[
                 'Final Ballad of the Snail'
             ],

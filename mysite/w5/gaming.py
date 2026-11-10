@@ -24,7 +24,10 @@ def getSnailInformationGroup() -> AdviceGroup:
         elif snail.sodium_too_low:
             snail_AdviceDict[current_rank_group_label] = [snail.get_sodium_too_low_advice()]
         else:
-            snail_AdviceDict['General'].append(snail.get_final_ballad_advice())
+            schematics = session_data.account.caverns.villagers["Kaipu"].schematics
+            snail_AdviceDict['General'].append(
+                schematics["Final Ballad of the Snail"].get_bonus_advice()
+            )
 
             # Current Rank Info
             snail_AdviceDict[current_rank_group_label] = [snail.get_encouragement_advice(snail.rank, "Step 1")]

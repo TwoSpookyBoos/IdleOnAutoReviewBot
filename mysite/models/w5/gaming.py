@@ -1,8 +1,6 @@
 import collections
 import functools
-import math
 
-from consts.consts_autoreview import EmojiType
 from consts.consts_w5 import (
     gaming_superbits_dict,
     snail_first_consecration_rank,
@@ -218,7 +216,6 @@ class Snail:
         envelopes,
         superbits: dict,
         sodium_level: int,
-        treble_notes: float,
         final_ballad,
     ):
         self.floored_envelopes = safer_convert(envelopes, 0)
@@ -232,14 +229,7 @@ class Snail:
         self.maxed = self.rank >= self.max_rank
         self.sodium_too_low = self.sodium_safety_level + 5 <= self.rank
 
-        self._final_ballad = final_ballad
-        self.final_ballad_bonus = 1.0
-        self.treble_stacks = 0
-        if final_ballad.bought:
-            self.treble_stacks = int(
-                math.log10(treble_notes) if treble_notes > 0 else 0
-            )
-            self.final_ballad_bonus = 1 + 0.04 * self.treble_stacks
+        self.final_ballad_bonus = final_ballad.as_multi
 
         self.encouragement_info = {}
         self.safety_thresholds = {}
@@ -288,24 +278,6 @@ class Snail:
             label="{{ Sodium|#atom-collider }} too low to safely level the Snail "
             "any further!",
             picture_class="sodium",
-        )
-
-    def get_final_ballad_advice(self) -> Advice:
-        if self._final_ballad.bought:
-            return Advice(
-                label=f"<br>{self.treble_stacks} Trebel Note stacks for a bonus of "
-                f"{self.final_ballad_bonus:0.2f}x",
-                picture_class=self._final_ballad.image,
-                progression=self.treble_stacks,
-                goal=EmojiType.INFINITY.value,
-                resource="harp-note-3",
-            )
-        return Advice(
-            label="{{ Schematic|#villagers }}: Final Ballad of the Snail is NOT "
-            "acquired",
-            picture_class=self._final_ballad.image,
-            progression=0,
-            goal=1,
         )
 
     def get_encouragement_advice(self, level: int, label_prefix: str) -> Advice:
