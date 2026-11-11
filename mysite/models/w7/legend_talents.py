@@ -7,6 +7,7 @@ from consts.w7.legend_talents import (
     legend_talents_menagerie_max_level_indexes,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.safer_data_handling import safe_loads, safer_index
 
 
@@ -28,8 +29,6 @@ class LegendTalent:
     @cached_property
     def max_level(self) -> int:
         # "LegendTalent_MaxLV" in source. Last updated in v2.561.0
-        from models.general.session_data import session_data
-
         account = session_data.account
         max_level = self._base_max_level
         # "Grid_Bonus" mode 1 in source: the grid square's raw level

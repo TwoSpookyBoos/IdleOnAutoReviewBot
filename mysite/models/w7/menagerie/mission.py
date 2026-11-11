@@ -5,6 +5,7 @@ from math import ceil, floor
 from typing import TYPE_CHECKING
 
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.safer_data_handling import safer_math_log
 from utils.text_formatting import notateNumber
 
@@ -30,8 +31,6 @@ class MenagerieMission:
     @cached_property
     def progress(self) -> float | None:
         # "MissionProg" in source. Last updated in v2.550.0
-        from models.general.session_data import session_data
-
         account = session_data.account
         challenges = account.tome.challenges
         match self.index:

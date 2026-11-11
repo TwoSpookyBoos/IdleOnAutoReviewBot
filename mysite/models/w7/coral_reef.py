@@ -3,6 +3,7 @@ from functools import cached_property
 from consts.consts_autoreview import EmojiType, ValueToMulti
 from consts.w7.coral_reef import coral_reef_bonus_data
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import (
     safe_loads,
@@ -30,8 +31,6 @@ class CoralReefBonus:
         match self.index:
             case 3:
                 # Menagerie Unlock 10 rewrites `CoralReef[3][1]` 12 -> 15 in source
-                from models.general.session_data import session_data
-
                 owned = session_data.account.menagerie.unlocks[9].owned
                 return self._base_max_level + 3 * int(owned)
             case _:

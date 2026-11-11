@@ -10,6 +10,7 @@ from consts.consts_w5 import (
     sailing_list,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.logging import get_logger
 from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
@@ -141,8 +142,6 @@ class Sailing:
     @cached_property
     def unlocked_artifact_tier(self) -> int:
         """Highest artifact tier that can be found on the account"""
-        from models.general.session_data import session_data
-
         account = session_data.account
         # Tiers 3 and up, each one needs the previous
         tier_unlocks = [

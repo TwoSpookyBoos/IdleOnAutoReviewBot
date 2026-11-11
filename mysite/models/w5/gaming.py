@@ -12,6 +12,7 @@ from consts.w5.gaming import (
     snail_target_confidence_levels,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -229,8 +230,6 @@ class Snail:
     @cached_property
     def sodium_safety_level(self) -> int:
         # Depends on: atom_collider['Sodium - Snail Kryptonite']
-        from models.general.session_data import session_data
-
         atom = session_data.account.atom_collider["Sodium - Snail Kryptonite"]
         return atom.level * 5
 
@@ -241,8 +240,6 @@ class Snail:
     @cached_property
     def _final_ballad_multi(self) -> float:
         # Depends on: caverns.villagers['Kaipu'].schematics
-        from models.general.session_data import session_data
-
         schematics = session_data.account.caverns.villagers["Kaipu"].schematics
         return schematics["Final Ballad of the Snail"].as_multi
 
