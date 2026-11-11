@@ -119,9 +119,6 @@ class Kaipu(Villager):
             available_schematics, 1 + (self.level * 3) + (self.level // 5)
         )
 
-    def calculate_bonuses(self):
-        pass
-
     @cached_property
     def max_useful_level(self) -> int:
         needed_level = 29

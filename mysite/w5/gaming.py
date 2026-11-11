@@ -5,7 +5,7 @@ from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
-from consts.consts_w5 import snail_max_possible_rank, snail_first_consecration_rank
+from consts.consts_w5 import snail_max_possible_rank
 
 logger = get_logger(__name__)
 
@@ -30,25 +30,13 @@ def getSnailInformationGroup() -> AdviceGroup:
             )
 
             # Current Rank Info
-            snail_AdviceDict[current_rank_group_label] = [snail.get_encouragement_advice(snail.rank, "Step 1")]
-            num_encourage = snail.encouragement_info[snail.rank][0]
-            if snail.rank > snail_first_consecration_rank and num_encourage > 0:
-                snail_AdviceDict[current_rank_group_label].append(snail.get_consecrated_advice())
-            else:
-                snail_AdviceDict[current_rank_group_label].extend(snail.get_safety_advices())
+            snail_AdviceDict[current_rank_group_label] = snail.get_level_up_advices()
 
             # All relevant encouragement info
-            subgroup_label = 'Relevant Encouragement Info (for resets or advancement)'
-            snail_AdviceDict[subgroup_label] = []
-
-            for level in range(snail.min_rank, snail.target_rank):
-                rank_type = (
-                    'Previous' if level < snail.rank
-                    else 'Future' if level > snail.rank
-                    else 'Current'
-                )
-
-                snail_AdviceDict[subgroup_label].append(snail.get_encouragement_advice(level, f"{rank_type} Rank {level}"))
+            subgroup_label = "Relevant Encouragement Info (for resets or advancement)"
+            snail_AdviceDict[subgroup_label] = (
+                snail.get_relevant_encouragement_advices()
+            )
 
     for subgroup in snail_AdviceDict:
         for advice in snail_AdviceDict[subgroup]:
