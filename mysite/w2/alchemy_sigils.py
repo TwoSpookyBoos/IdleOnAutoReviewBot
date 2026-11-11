@@ -31,6 +31,22 @@ def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     )
     return speed_AdviceGroup
 
+
+def get_sigil_bonus_multi_advice_group() -> AdviceGroup:
+    sigils = session_data.account.alchemy_p2w.sigils
+    advices = sigils.get_bonus_multi_advices()
+    for advice in advices:
+        advice.mark_advice_completed()
+    multi = round_and_trim(sigils.bonus_multi)
+    max_multi = round_and_trim(sigils.max_bonus_multi)
+    return AdviceGroup(
+        tier="",
+        pre_string=f"Sources of Sigil Bonus multi. Grand total: {multi}/{max_multi}x",
+        advices=advices,
+        informational=True,
+    )
+
+
 def getSigilsProgressionTiersAdviceGroup():
     sigils_Advices = {
         'Sigils': {}
@@ -122,6 +138,7 @@ def getAlchemySigilsAdviceSection() -> AdviceSection:
         return sigils_AdviceSection
     sigils_AdviceGroupDict, overall_SectionTier, max_tier, true_max = getSigilsProgressionTiersAdviceGroup()
     sigils_AdviceGroupDict['Speed'] = getSigilSpeedAdviceGroup(overall_SectionTier >= max_tier)
+    sigils_AdviceGroupDict["Bonus Multi"] = get_sigil_bonus_multi_advice_group()
 
     # #Generate AdviceSection
     tier_section = f"{overall_SectionTier}/{max_tier}"

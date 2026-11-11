@@ -13,7 +13,8 @@ logger = get_logger(__name__)
 
 
 class Sigil:
-    def __init__(self, name: str, info: dict):
+    def __init__(self, sigils: "Sigils", name: str, info: dict):
+        self.sigils: Sigils = sigils
         self.name: str = name
         self.index: int = info["Index"]
         self.description: str = info["Description"]
@@ -41,22 +42,11 @@ class Sigil:
     @property
     def value(self) -> float:
         # "SigilBonus" in source. Last updated in v2.561.0
-        # Depends on: sailing.artifacts['Chilled Yarn'], meritocracy[21]
-        account = session_data.account
-        return (
-            self.values[min(self.level, max_sigil_level)]
-            * account.sailing.artifacts["Chilled Yarn"].as_multi
-            * ValueToMulti(account.meritocracy[21].value)
-        )
+        return self.values[min(self.level, max_sigil_level)] * self.sigils.bonus_multi
 
     @property
     def max_value(self) -> float:
-        account = session_data.account
-        return (
-            self.values[max_sigil_level]
-            * account.sailing.artifacts["Chilled Yarn"].max_multi
-            * ValueToMulti(account.meritocracy[21].value)
-        )
+        return self.values[max_sigil_level] * self.sigils.max_bonus_multi
 
     def get_bonus_advice(self, link_to_section: bool = True) -> Advice:
         link_text = "{{ Sigils|#sigils }} - " if link_to_section else ""
@@ -73,7 +63,7 @@ class Sigils(dict[str, Sigil]):
     def __init__(self, raw_sigils: list):
         super().__init__()
         for name, info in sigils_dict.items():
-            sigil = Sigil(name, info)
+            sigil = Sigil(self, name, info)
             sigil.player_hours = safer_convert(
                 safer_index(raw_sigils, sigil.index, 0), 0.0
             )
@@ -85,6 +75,29 @@ class Sigils(dict[str, Sigil]):
     def calculate_precharge_levels(self, has_ionized_sigils: bool):
         for sigil in self.values():
             sigil.calculate_precharge_level(has_ionized_sigils)
+
+    @cached_property
+    def bonus_multi(self) -> float:
+        # "SigilBonus" in source. Last updated in v2.561.0
+        # Depends on: sailing.artifacts['Chilled Yarn'], meritocracy[21]
+        account = session_data.account
+        return account.sailing.artifacts["Chilled Yarn"].as_multi * ValueToMulti(
+            account.meritocracy[21].value
+        )
+
+    @cached_property
+    def max_bonus_multi(self) -> float:
+        account = session_data.account
+        return account.sailing.artifacts["Chilled Yarn"].max_multi * ValueToMulti(
+            account.meritocracy[21].value
+        )
+
+    def get_bonus_multi_advices(self) -> list[Advice]:
+        account = session_data.account
+        return [
+            account.sailing.artifacts["Chilled Yarn"].get_bonus_advice(),
+            account.meritocracy[21].get_bonus_advice(),
+        ]
 
     @cached_property
     def _speed_multis(self) -> dict[str, float]:
@@ -125,15 +138,11 @@ class Sigils(dict[str, Sigil]):
         supercharge_advice.completed = not practical_maxed
         willow_vial = account.alchemy_vials["Willow Sippy (Willow Logs)"]
         tuttle_vial = account.alchemy_vials["Turtle Tisane (Tuttle)"]
-        chilled_yarn = account.sailing.artifacts["Chilled Yarn"]
         return {
             f"Multi Group A: {multis['A']:.3f}x": [
                 self._get_vial_junkee_advice(),
                 supercharge_advice,
                 self["Pea Pod"].get_bonus_advice(link_to_section=False),
-                chilled_yarn.get_bonus_advice(
-                    "(Already applied to Pea Pod Sigil above)"
-                ),
                 willow_vial.get_advice(f"+{willow_vial.value:.3f}"),
                 account.stamps["Sigil Stamp"].get_advice(),
             ],

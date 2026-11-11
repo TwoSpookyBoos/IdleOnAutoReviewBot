@@ -199,10 +199,6 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
     costReduction_Advices['Uncapped'].append(
         session_data.account.alchemy_p2w.sigils["Envelope Pile"].get_bonus_advice()
     )
-    chilled_yarn = session_data.account.sailing.artifacts["Chilled Yarn"]
-    costReduction_Advices['Uncapped'].append(
-        chilled_yarn.get_bonus_advice("Note: Improves the Envelope Pile Sigil")
-    )
 
     for group_name in costReduction_Advices:
         for advice in costReduction_Advices[group_name]:
