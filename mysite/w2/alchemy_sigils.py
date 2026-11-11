@@ -17,54 +17,7 @@ logger = get_logger(__name__)
 
 def getSigilSpeedAdviceGroup(practical_maxed: bool) -> AdviceGroup:
     sigils = session_data.account.alchemy_p2w.sigils
-    willow_vial = session_data.account.alchemy_vials['Willow Sippy (Willow Logs)']
-    summoning_bonus = session_data.account.summoning.bonuses["Sigil SPD"]
-    tuttle_vial = session_data.account.alchemy_vials['Turtle Tisane (Tuttle)']
-    ballot_buff = session_data.account.ballot[17]
-
-    mga_label = f"Multi Group A: {sigils.speed_multi_a:.3f}x"
-    mgb_label = f"Summoning: {round_and_trim(sigils.speed_multi_b)}x"
-    mgc_label = f"Multi Group C: {sigils.speed_multi_c:.3f}x"
-    mgd_label = f"Multi Group D: {sigils.speed_multi_d:.3f}x"
-    mge_label = f"Multi Group E: {sigils.speed_multi_e:.3f}x"
-    mgf_label = f"Multi Group F: {round_and_trim(sigils.speed_multi_f)}x"
-
-    speed_Advice = {
-        mga_label: [],
-        mgb_label: [],
-        mgc_label: [],
-        mgd_label: [],
-        mge_label: [],
-        mgf_label: [],
-    }
-
-    # Multi Group A
-    speed_Advice[mga_label].append(sigils.get_vial_junkee_advice())
-    sigil_supercharge = session_data.account.gemshop.purchases['Sigil Supercharge']
-    gsss_advice = sigil_supercharge.get_advice(
-        additional_text=f": +{20 * sigil_supercharge.owned}/{20 * sigil_supercharge.max_level}%"
-    )
-    gsss_advice.completed = not practical_maxed
-    speed_Advice[mga_label].append(gsss_advice)
-    speed_Advice[mga_label].append(sigils.get_peapod_advice())
-    speed_Advice[mga_label].append(sigils.get_chilled_yarn_advice())
-    speed_Advice[mga_label].append(willow_vial.get_advice(f"+{willow_vial.value:.3f}"))
-    speed_Advice[mga_label].append(session_data.account.stamps['Sigil Stamp'].get_advice())
-
-    # Multi Group B
-    speed_Advice[mgb_label].append(summoning_bonus.get_bonus_advice())
-
-    # Multi Group C
-    speed_Advice[mgc_label].append(tuttle_vial.get_advice(f"{sigils.speed_multi_c:.3f}x"))
-
-    # Multi Group D
-    speed_Advice[mgd_label].append(ballot_buff.get_bonus_advice())
-
-    # Multi Group E
-    speed_Advice[mge_label].append(session_data.account.arcade[43].get_advice())
-
-    # Multi Group F
-    speed_Advice[mgf_label].append(session_data.account.legend_talents['Big Sig Fig'].get_advice())
+    speed_Advice = sigils.get_speed_advices(practical_maxed)
 
     for group_name in speed_Advice:
         for advice in speed_Advice[group_name]:

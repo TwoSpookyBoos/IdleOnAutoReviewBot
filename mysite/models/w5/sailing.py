@@ -50,6 +50,37 @@ class Artifact:
             goal=max_sailing_artifact_level,
         )
 
+    @property
+    def value(self) -> int:
+        return self._value_at(self.level)
+
+    @property
+    def max_value(self) -> int:
+        return self._value_at(max_sailing_artifact_level)
+
+    @property
+    def as_multi(self) -> float:
+        return ValueToMulti(self.value)
+
+    def _value_at(self, level: int) -> int:
+        # "ArtifactBonus" in source. Last updated in v2.561.0
+        match self.index:
+            case 16:  # Chilled Yarn: base 1 x tier, read as a multi
+                return 100 * level
+            case _:
+                return 0
+
+    def get_bonus_advice(self, note: str, link_to_section: bool = True) -> Advice:
+        link_text = "{{ Artifact|#sailing }} - " if link_to_section else ""
+        multi = round_and_trim(self.as_multi)
+        max_multi = round_and_trim(ValueToMulti(self.max_value))
+        return Advice(
+            label=f"{link_text}{self.name}: {multi}/{max_multi}x<br>{note}",
+            picture_class=self.image,
+            progression=self.level,
+            goal=max_sailing_artifact_level,
+        )
+
 
 class Artifacts(dict[str, Artifact]):
     def __init__(self, raw_levels: list):
@@ -65,15 +96,6 @@ class Artifacts(dict[str, Artifact]):
     @property
     def found_count(self) -> int:
         return sum(artifact.level > 0 for artifact in self.values())
-
-    @property
-    def chilled_yarn_multi(self) -> int:
-        # "ArtifactBonus" in source: base 1 x tier. Last updated in v2.531.0
-        return 1 + self["Chilled Yarn"].level
-
-    @property
-    def max_chilled_yarn_multi(self) -> int:
-        return 1 + max_sailing_artifact_level
 
 
 class Island:

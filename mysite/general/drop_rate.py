@@ -226,10 +226,15 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
 
     # Artifacts- Chilled Yarn
     # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    if drop_rate.chilled_yarn_level < max_sailing_artifact_level:
-        drop_rate_aw_advice[w2].append(drop_rate.get_chilled_yarn_advice())
+    chilled_yarn = session_data.account.sailing.artifacts["Chilled Yarn"]
+    if chilled_yarn.level < max_sailing_artifact_level:
+        drop_rate_aw_advice[w2].append(
+            chilled_yarn.get_bonus_advice("Note: Improves the sigil below")
+        )
     # Alchemy - Sigils - Trove
-    drop_rate_aw_advice[w2].append(drop_rate.get_trove_sigil_advice())
+    drop_rate_aw_advice[w2].append(
+        session_data.account.alchemy_p2w.sigils["Trove"].get_bonus_advice()
+    )
 
     drop_rate_aw_advice[w2].append(drop_rate.get_ballot_advice())
 
