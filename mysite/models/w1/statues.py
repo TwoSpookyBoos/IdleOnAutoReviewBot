@@ -9,11 +9,11 @@ from consts.consts_w1 import (
     statue_type_dict,
     statues_dict,
 )
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from models.general.character import Character
 from models.general.event_shop import EventShopBonus
+from models.general.session_data import session_data
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -124,7 +124,7 @@ class Statues(dict[str, Statue]):
     def calculate_values(
         self,
         voodoo_talent_levels: list[int],
-        onyx_lantern_level: int,
+        onyx_lantern_multi: float,
         true_zen_value: float,
         meritocracy_value: float,
         smiley_statue_owned: bool,
@@ -141,7 +141,7 @@ class Statues(dict[str, Statue]):
                 default=0,
             )
         )
-        self.onyx_multi = 2 + 0.3 * onyx_lantern_level
+        self.onyx_multi = onyx_lantern_multi
         self.zenith_multi = ValueToMulti(50 + floor(true_zen_value))
         self.merit_multi = ValueToMulti(meritocracy_value)
         self.event_shop_multi = ValueToMulti(30 * smiley_statue_owned)
@@ -162,15 +162,18 @@ class Statues(dict[str, Statue]):
             picture_class="voodoo-statufication",
         )
 
-    def get_onyx_advice(self, onyx_lantern_level: int) -> Advice:
+    def get_onyx_advice(self) -> Advice:
+        # Depends on: sailing.artifacts['The Onyx Lantern']
+        onyx_lantern = session_data.account.sailing.artifacts["The Onyx Lantern"]
+        if onyx_lantern.level > 0:
+            return onyx_lantern.get_bonus_advice(
+                "Higher bonuses from Onyx or higher Statues"
+            )
         return Advice(
-            label=f"Onyx base bonus: {2 * self.onyx_unlocked}/2x"
-            f"<br>Total including {{{{The Onyx Lantern |  #sailing}}}}: "
-            f"{round(self.onyx_multi, 1):g}/{2 + (0.3 * max_sailing_artifact_level)}x",
+            label=f"Onyx base bonus: {2 * self.onyx_unlocked}/2x",
             picture_class="onyx-tools",
-            progression=onyx_lantern_level,
-            goal=max_sailing_artifact_level,
-            resource="the-onyx-lantern",
+            progression=int(self.onyx_unlocked),
+            goal=1,
         )
 
     def get_event_shop_advice(self, smiley_statue: EventShopBonus) -> Advice:

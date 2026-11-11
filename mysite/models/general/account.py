@@ -330,7 +330,7 @@ class Account:
             self.sneaking.pristine_charms["Crystal Comb"].value,
             self.gemshop.purchases["King Of All Winners"],
             self.merits[5][4],
-            self.sailing.artifacts["The Winz Lantern"].level,
+            self.sailing.artifacts["The Winz Lantern"],
             self.achievements,
             self.armor_sets["GODSHARD SET"].total_value,
             self.gemshop.bundles["ban_i"].owned,
@@ -491,7 +491,7 @@ class Account:
 
         # W4
         self.cooking.calculate_max_plate_level(
-            self.sailing.artifacts['Causticolumn'].level,
+            self.sailing.artifacts['Causticolumn'],
             self.sneaking.emporium,
             self.grimoire.upgrades['Supreme Head Chef Status'],
             self.spelunk.caves["Lunarheim"],
@@ -499,7 +499,7 @@ class Account:
         )
         self.lab_bonuses.calculate_nblb(
             self.lab_jewels['Pyrite Rhinestone'].enabled,
-            self.sailing.artifacts['Amberite'].level,
+            self.sailing.artifacts['Amberite'],
             self.gaming.superbits['Moar Bubbles'].unlocked,
             self.gaming.superbits['Even Moar Bubbles'].unlocked,
             self.merits[3][6].level,
@@ -647,7 +647,6 @@ class Account:
             self.stamps['Crystallin'].total_value,
             self.characters,
             self.shrines['Crescent Shrine'].value,
-            moai_head_level=self.sailing.artifacts['Moai Head'].level,
             max_book_level=self.library.max_book_level,
         )
         self.sneaking.calculate_gemstones_values(
@@ -739,7 +738,7 @@ class Account:
         # Reads wave 3 talent levels
         self.statues.calculate_values(
             [char.max_talents.get('56', 0) for char in self.characters.vmans],
-            self.sailing.artifacts['The Onyx Lantern'].level,
+            self.sailing.artifacts['The Onyx Lantern'].as_multi,
             self.zenith_market['TRUE ZEN'].value,
             self.meritocracy[26].value,
             self.event_points_shop['Smiley Statue'].owned,
@@ -802,7 +801,7 @@ class Account:
         self.printer.calculate_output(
             skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
             all_skills=self.characters.all_skills,
-            gold_relic_level=self.sailing.artifacts['Gold Relic'].level,
+            gold_relic=self.sailing.artifacts['Gold Relic'],
             supreme_wiring_owned=self.event_points_shop['Supreme Wiring'].owned,
             biggole_mole_bonus=self.companions['Biggole Mole'].bonus,
             moon_of_print=self.compass.upgrades['Moon of Print'],

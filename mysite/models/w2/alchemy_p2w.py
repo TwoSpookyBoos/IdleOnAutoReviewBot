@@ -54,7 +54,7 @@ class Sigil:
         account = session_data.account
         return (
             self.values[max_sigil_level]
-            * ValueToMulti(account.sailing.artifacts["Chilled Yarn"].max_value)
+            * account.sailing.artifacts["Chilled Yarn"].max_multi
             * ValueToMulti(account.meritocracy[21].value)
         )
 

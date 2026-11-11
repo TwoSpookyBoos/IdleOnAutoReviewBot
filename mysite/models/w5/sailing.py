@@ -35,6 +35,9 @@ class Artifact:
         ).get(level, info["Description"])
         self.form: str | None = artifact_tier_names.get(level)
         self.form_bonus: str = info["FormBonuses"].get(level, "Unknown Bonus")
+        self._base_value: int | float = info["BaseValue"]
+        self._form_bonuses: dict[int, str] = info["FormBonuses"]
+        self._form_values: dict[int, int | float] = info["Values"]
 
     def get_advice(
         self, include_island_name: bool = False, link_to_section: bool = True
@@ -51,34 +54,79 @@ class Artifact:
         )
 
     @property
-    def value(self) -> int:
+    def value(self) -> int | float:
         return self._value_at(self.level)
 
     @property
-    def max_value(self) -> int:
+    def max_value(self) -> int | float:
         return self._value_at(max_sailing_artifact_level)
 
     @property
     def as_multi(self) -> float:
-        return ValueToMulti(self.value)
+        return self._multi(self.value)
 
-    def _value_at(self, level: int) -> int:
+    @property
+    def max_multi(self) -> float:
+        return self._multi(self.max_value)
+
+    def _value_at(self, level: int) -> int | float:
         # "ArtifactBonus" in source. Last updated in v2.561.0
+        # The effective bonus: the main one, `ArtifactBonus(index, 0)`, is combined
+        # with the form's own one, `ArtifactBonus(index, 1)`, as their readers do
+        if level == 0:
+            return 0
+        value = self._base_value
+        # Forms either multiply the main bonus by the tier or add a bonus of their own
+        if self._form_bonuses[level].startswith("The artifact's main bonus is"):
+            value *= level
+        form_value = self._form_values[level]
         match self.index:
-            case 16:  # Chilled Yarn: base 1 x tier, read as a multi
-                return 100 * level
-            case _:
+            case 0:  # Moai Head: shrine level up speed, %. Shrines apply everywhere
+                return form_value
+            case 4:  # Gold Relic: 3D Printer sample growth, % per day: 2 + form
+                return 2 + form_value
+            case 12:  # Amberite: No Bubble Left Behind bubbles: 1 + form
+                return value + form_value
+            case 16:  # Chilled Yarn: read as `1 + value` in source, kept as % here
+                return 100 * value
+            case 1 | 3 | 5 | 8 | 11 | 13 | 23 | 25 | 27 | 29:
+                # Scaled by other systems in source, not modelled yet
                 return 0
+            case _:
+                return value
 
-    def get_bonus_advice(self, note: str, link_to_section: bool = True) -> Advice:
+    def _multi(self, value: int | float) -> float:
+        match self.index:
+            case 30:  # The Onyx Lantern: on top of the base 2x of Onyx statues
+                return ValueToMulti(100 + value)
+            case _:
+                return ValueToMulti(value)
+
+    def get_bonus_advice(self, note: str = "", link_to_section: bool = True) -> Advice:
         link_text = "{{ Artifact|#sailing }} - " if link_to_section else ""
-        multi = round_and_trim(self.as_multi)
-        max_multi = round_and_trim(ValueToMulti(self.max_value))
+        note_text = f"<br>{note}" if note else ""
+        goal = max_sailing_artifact_level
+        match self.index:
+            case 0:  # Moai Head: the main bonus is unlocked by the first tier
+                bonus = "Shrines apply everywhere"
+                goal = 1
+            case 16 | 30 | 35:
+                multi = round_and_trim(self.as_multi)
+                max_multi = round_and_trim(self.max_multi)
+                bonus = f"{multi}/{max_multi}x"
+            case 12 | 17 | 21:
+                value = round_and_trim(self.value)
+                max_value = round_and_trim(self.max_value)
+                bonus = f"+{value}/{max_value}"
+            case _:
+                value = round_and_trim(self.value)
+                max_value = round_and_trim(self.max_value)
+                bonus = f"+{value}/{max_value}%"
         return Advice(
-            label=f"{link_text}{self.name}: {multi}/{max_multi}x<br>{note}",
+            label=f"{link_text}{self.name}: {bonus}{note_text}",
             picture_class=self.image,
             progression=self.level,
-            goal=max_sailing_artifact_level,
+            goal=goal,
         )
 
 
@@ -289,7 +337,8 @@ class Sailing:
             ValueToMulti(slab_sovereignty.value) * slab_sovereignty.enabled
         )
         self.ad_tablet_bonus = (
-            (4 * self.ad_tablet_level * ((slab_count - 500) // 10)) * sovereignty_multi
+            (self.artifacts["10 AD Tablet"].value * ((slab_count - 500) // 10))
+            * sovereignty_multi
             if slab_count >= 500
             else 0
         )
@@ -357,8 +406,7 @@ class Sailing:
 
     def get_ad_tablet_advice(self) -> Advice:
         return Advice(
-            label=f"{{{{ Sailing|#sailing }}}}: Level {self.ad_tablet_level} "
-            f"10 AD Tablet: +{self.ad_tablet_bonus}%",
+            label=f"Level {self.ad_tablet_level} 10 AD Tablet: +{self.ad_tablet_bonus}%",
             picture_class="10-ad-tablet",
             progression=self.ad_tablet_level,
             goal=max_sailing_artifact_level,

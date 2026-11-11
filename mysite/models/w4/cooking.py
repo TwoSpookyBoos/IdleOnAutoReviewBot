@@ -14,6 +14,7 @@ from consts.consts_w5 import artifact_tier_names, max_sailing_artifact_level
 from models.advice.advice import Advice
 from models.general.session_data import session_data
 from models.master_classes.grimoire import GrimoireUpgrade
+from models.w5.sailing import Artifact
 from models.w6.sneaking import Emporium
 from models.w7.menagerie.unlock import MenagerieUnlock
 from models.w7.spelunk import SpelunkCave
@@ -296,7 +297,7 @@ class Cooking:
 
     def calculate_max_plate_level(
         self,
-        causticolumn_level: int,
+        causticolumn: Artifact,
         emporium: dict[str, Emporium],
         supreme_head_chef: GrimoireUpgrade,
         lunarheim: SpelunkCave,
@@ -307,9 +308,9 @@ class Cooking:
         emporium_link = "{{ Jade Emporium|#sneaking }}"
 
         # Sailing Artifact tiers, https://idleon.wiki/wiki/Sailing#Artifacts
-        self.max_plate_level += 10 * int(causticolumn_level)
+        self.max_plate_level += causticolumn.value
         # Where to unlock each Artifact tier is shown in Sailing
-        for tier in range(causticolumn_level + 1, max_sailing_artifact_level + 1):
+        for tier in range(causticolumn.level + 1, max_sailing_artifact_level + 1):
             label = f"{artifact}: {artifact_tier_names[tier]} Causticolumn"
             missing.append(_plate_advice(label, "causticolumn"))
 
