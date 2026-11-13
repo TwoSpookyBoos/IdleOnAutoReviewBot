@@ -1,17 +1,20 @@
+from functools import cached_property
 from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_w4 import (
-    cooking_close_enough,
     cooking_meal_dict,
     max_cooking_ribbon,
     max_cooking_tables,
     max_meal_count,
     max_meal_plate_level,
+    nmlb_max_level,
 )
+from consts.consts_w5 import artifact_tier_names, max_sailing_artifact_level
 from models.advice.advice import Advice
 from models.master_classes.grimoire import GrimoireUpgrade
 from models.w6.sneaking import Emporium
+from models.w7.menagerie.unlock import MenagerieUnlock
 from models.w7.spelunk import SpelunkCave
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
@@ -237,24 +240,68 @@ class Cooking:
         return (max_meal_count * max_meal_plate_level) - self._meals.total_levels
 
     @property
-    def close_enough(self) -> bool:
-        # Few enough levels left that cooking speed stops mattering
-        return self.max_remaining_meals < cooking_close_enough
+    def all_meals_maxed(self) -> bool:
+        # Nothing left to cook, so cooking speed stops mattering
+        return self.max_remaining_meals <= 0
+
+    @property
+    def meals_under_nmlb_max(self) -> int:
+        return self._meals.below(nmlb_max_level)
+
+    @cached_property
+    def nmlb_levels_per_day(self) -> int:
+        # "No Meal Left Behind" daily trigger in source. Last updated in v2.561
+        from models.general.session_data import session_data
+
+        account = session_data.account
+        emporium = account.sneaking.emporium["No Meal Left Behind"].obtained
+        sacred_methods_pack = account.gemshop.bundles["bun_s"].owned
+        return int(emporium) + 2 * int(sacred_methods_pack)
 
     @property
     def nmlb_days(self) -> int:
+        # Each trigger levels the lowest meal, so every meal needs its own triggers
+        if self.nmlb_levels_per_day == 0:
+            return 0
         return sum(
-            ceil((max_meal_plate_level - meal.level) / 3)
+            ceil(max(0, nmlb_max_level - meal.level) / self.nmlb_levels_per_day)
             for meal in self._meals.values()
+        )
+
+    @property
+    def nmlb_remaining_levels(self) -> int:
+        return sum(max(0, nmlb_max_level - meal.level) for meal in self._meals.values())
+
+    def get_nmlb_advice(self) -> Advice:
+        meals_left = self.meals_under_nmlb_max
+        label = (
+            f"Level up the remaining {meals_left} meal{pl(meals_left)} "
+            f"to {nmlb_max_level}<br>{self.nmlb_remaining_levels:,} remaining levels"
+        )
+        if self.nmlb_levels_per_day > 0:
+            label += (
+                f" = {self.nmlb_days:,} NMLB triggers. No Meal Left Behind "
+                f"helps you up to level {nmlb_max_level}"
+            )
+        else:
+            label += (
+                '<br>Purchase "No Meal Left Behind" from the '
+                "{{ Jade Emporium|#sneaking }}: it levels up your lowest meal daily"
+            )
+        return Advice(
+            label=label,
+            picture_class="no-meal-left-behind",
+            progression=max_meal_count - meals_left,
+            goal=max_meal_count,
         )
 
     def calculate_max_plate_level(
         self,
         causticolumn_level: int,
-        eldritch_unlocked: bool,
         emporium: dict[str, Emporium],
         supreme_head_chef: GrimoireUpgrade,
         lunarheim: SpelunkCave,
+        menagerie_unlock: MenagerieUnlock,
     ):
         missing = self.missing_plate_upgrades
         artifact = "{{ Artifact|#sailing }}"
@@ -262,68 +309,10 @@ class Cooking:
 
         # Sailing Artifact tiers, https://idleon.wiki/wiki/Sailing#Artifacts
         self.max_plate_level += 10 * int(causticolumn_level)
-        if causticolumn_level < 1:
-            missing.append(
-                _plate_advice(f"{artifact}: Base Causticolumn", "causticolumn")
-            )
-        if causticolumn_level < 2:
-            missing.append(
-                _plate_advice(f"{artifact}: Ancient Causticolumn", "causticolumn")
-            )
-        if causticolumn_level < 3:
-            if eldritch_unlocked:
-                missing.append(
-                    _plate_advice(f"{artifact}: Eldritch Causticolumn", "causticolumn")
-                )
-            else:
-                missing.append(
-                    _plate_advice(
-                        f"{artifact}: Eldritch Causticolumn. Eldritch Artifacts are "
-                        "unlocked by completing {{ Rift|#rift }} 30",
-                        "eldritch-artifact",
-                    )
-                )
-        if causticolumn_level < 4:
-            if emporium["Sovereign Artifacts"].obtained:
-                missing.append(
-                    _plate_advice(f"{artifact}: Sovereign Causticolumn", "causticolumn")
-                )
-            else:
-                missing.append(
-                    _plate_advice(
-                        f"{artifact}: Sovereign Causticolumn. Sovereign Artifacts "
-                        f"unlock from {emporium_link}",
-                        "sovereign-artifacts",
-                    )
-                )
-        if causticolumn_level < 5:
-            # TODO: Verify if player has upgrade from first Spelunking Cave
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Omnipotent Causticolumn. Omnipotent Artifacts unlock "
-                    "from the first Spelunking Cave",
-                    "causticolumn",
-                )
-            )
-        if causticolumn_level < 6:
-            # TODO: Verify if player has upgrade from Research
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Transcendent Causticolumn. Transcendent Artifacts "
-                    "unlock from Research",
-                    "causticolumn",
-                )
-            )
-        if causticolumn_level < 7:
-            # TODO: Verify if player has unlock from Menagerie
-            #  (account.menagerie.unlocks[0].owned)
-            missing.append(
-                _plate_advice(
-                    f"{artifact}: Verisimilitude Causticolumn. Verisimilitude Artifacts "
-                    "unlock from the Menagerie",
-                    "causticolumn",
-                )
-            )
+        # Where to unlock each Artifact tier is shown in Sailing
+        for tier in range(causticolumn_level + 1, max_sailing_artifact_level + 1):
+            label = f"{artifact}: {artifact_tier_names[tier]} Causticolumn"
+            missing.append(_plate_advice(label, "causticolumn"))
 
         # Jade Emporium
         for upgrade_name, image in (
@@ -360,6 +349,12 @@ class Cooking:
             self.max_plate_level += 30
         else:
             missing.append(lunarheim.get_unlock_advice())
+
+        # Luminous Menagerie
+        if menagerie_unlock.owned:
+            self.max_plate_level += 10
+        else:
+            missing.append(menagerie_unlock.get_advice(link_to_section=True))
 
 
 def _plate_advice(

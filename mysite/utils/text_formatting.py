@@ -95,7 +95,9 @@ def format_character_name(name: str) -> tuple[str, InputType]:
     input_type, formatted_name = next(group for group in groups.items() if group[1])
     input_type = InputType(input_type)
     formatted_name = re.sub(r'\W', "_", formatted_name)
-    if input_type != InputType.IT:
+    # Toolbox names are case-sensitive; a bare name is tried there too, and
+    # getJSONfromAPI lowercases it for IE/LB
+    if input_type not in (InputType.IT, InputType.ALL):
         formatted_name = formatted_name.lower()
     # logger.debug(f"{name = }, {formatted_name = }")
     return formatted_name, input_type

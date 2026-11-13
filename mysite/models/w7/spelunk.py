@@ -1,24 +1,24 @@
+from math import floor
+
 from consts.consts_autoreview import EmojiType, ValueToMulti
-from consts.general.common import percent_break_point
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w7.spelunk import (
-    spelunking_cave_list,
     spelunk_chapters,
-    spelunk_shop_upgrades
+    spelunk_shop_upgrades,
+    spelunking_cave_list,
 )
 from consts.w7.spelunk import (
-    chapter_name,
     chapter_bonus_img,
+    chapter_name,
     shop_upgrade_image_indexes,
     super_talent_preset_offsets,
     super_talent_preset_slots,
 )
-
 from models.advice.advice import Advice
-
-from utils.number_formatting import round_and_trim
-from utils.safer_data_handling import safe_loads, safer_index, safer_convert
 from utils.logging import get_logger
+from utils.misc.next_break_point_tooltip import next_break_point_tooltip
+from utils.number_formatting import round_and_trim
+from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 logger = get_logger(__name__)
 
@@ -68,6 +68,12 @@ class LoreBonus:
         self._value_per_level = 0
         self.max_value = None
         self.resource = f"spelunking-chapter-{chapter_index + 1}"
+        if "{%" in self._template:
+            self._unit = "%"
+        elif "}x" in self._template:
+            self._unit = "x"
+        else:
+            self._unit = ""
 
     def calculate_bonus(self, multi):
         multi = self._multi_by_artifact * multi
@@ -89,24 +95,19 @@ class LoreBonus:
         if self.max_value is not None:
             value += f"/{round_and_trim(self.max_value)}"
         bonus = self._template.replace("{", value).replace("}", value)
+        tooltip = ""
         if not link_to_section:
             label += f"Level {self.level}: {bonus}"
             if self.max_value is not None:
-                current_percent = self.value / self.max_value
+                # The 1x of decayMulti at level 0 gives nothing
+                current_percent = self.value / self.max_value if self.level else 0
                 progress = f"{current_percent:.2%}"
                 goal = "100%"
-                for percent in percent_break_point:
-                    if current_percent < percent:
-                        next_level, next_bonus = self._get_percent_info(percent)
-                        label += (
-                            "<br>Next Breakpoint:"
-                            f"<br>Level {next_level} ({percent:.0%}): {next_bonus}"
-                        )
-                        break
+                tooltip = self._get_break_point_tooltip()
             else:
                 progress = "Linear"
                 goal = EmojiType.INFINITY.value
-                label += f"<br>+{self._value_per_level} per level"
+                tooltip = f"<p>+{round_and_trim(self._value_per_level)} per level</p>"
             label += f"<br>Required pages: {self._min_page}"
         else:
             label += bonus
@@ -118,15 +119,31 @@ class LoreBonus:
             resource=self.resource,
             progression=progress,
             goal=goal,
+            progression_tooltip=tooltip,
         )
 
-    def _get_percent_info(self, percent: float) -> tuple[int, str] | None:
-        if percent >= 1.0 or percent < 0 or self.max_value is None:
-            return None
-        next_value = f"{round_and_trim(self.max_value * percent)}"
-        next_bonus = self._template.replace("{", next_value).replace("}", next_value)
-        next_level = int(self._x2 * percent / (1 - percent))
-        return next_level, next_bonus
+    def _get_break_point_tooltip(self) -> str:
+        # decayMulti starts from 1x times the multi, (1 + x1) times less than max
+        start = 0
+        if self._lava_fun == "decayMulti":
+            start = self.max_value / (1 + self._x1)
+        # A "}x" bonus is used as max(1, value) in source, it works only above 1x
+        if self._unit == "x" and self.value <= 1 < self.max_value:
+            # Inverse of start + (max - start) * L / (L + x2) = 1,
+            # the last level not above 1x
+            level = floor(round(self._x2 * (1 - start) / (self.max_value - 1), 6))
+            return f"<p>Starts working after level {level:,}, once above 1x</p>"
+        # Both decay functions grow by L / (L + x2), so x2 is the half level
+        return next_break_point_tooltip(
+            self.value,
+            self.max_value,
+            self._x2,
+            self._format_bonus,
+            start,
+        )
+
+    def _format_bonus(self, value: float) -> str:
+        return f"{round_and_trim(value)}{self._unit}"
 
 
 class SpelunkShopUpgrade:

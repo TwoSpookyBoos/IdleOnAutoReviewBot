@@ -138,6 +138,10 @@ def getMaxLevelAdviceGroup() -> AdviceGroup:
     hb = session_data.account.event_points_shop['Higgs Boson']
     ml_advice.append(hb.get_bonus_advice())
 
+    menagerie = session_data.account.menagerie
+    if menagerie.unlocked:
+        ml_advice.append(menagerie.boosts[17].get_bonus_advice())
+
     for advice in ml_advice:
         advice.mark_advice_completed()
 
@@ -219,8 +223,8 @@ def getCostReductionAdviceGroup() -> AdviceGroup:
 
 def getAtomExclusionsList() -> list[str]:
     exclusionsList = []
-    # If cooking is basically finished thanks to NMLB, exclude Fluoride's cooking speed
-    if session_data.account.cooking.close_enough:
+    # If every meal is maxed, exclude Fluoride's cooking speed
+    if session_data.account.cooking.all_meals_maxed:
         exclusionsList.append('Fluoride - Void Plate Chef')
 
     return exclusionsList

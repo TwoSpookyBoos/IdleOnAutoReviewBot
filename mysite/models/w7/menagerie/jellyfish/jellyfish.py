@@ -39,17 +39,22 @@ class Jellyfish(ABC):
             return True
         return self.menagerie.unlocks[self.unlock_index].owned
 
+    def get_unlock_advice(self) -> Advice:
+        unlock = self.menagerie.unlocks[self.unlock_index]
+        return Advice(
+            label=f"Needs Menagerie Unlock {unlock.index + 1}: {unlock.description}",
+            picture_class=f"menagerie-unlock-{unlock.index}",
+            progression=0,
+            goal=1,
+        )
+
     def get_advices(self) -> list[Advice]:
         if self.unlocked:
             return self._feature_advices()
+        return [self.get_unlock_advice()]
+
+    def get_unlock_advice(self, link_to_section: bool = False) -> Advice | None:
+        if self.unlocked:
+            return None
         unlock = self.menagerie.unlocks[self.unlock_index]
-        return [
-            Advice(
-                label=(
-                    f"Needs Menagerie Unlock {unlock.index + 1}: {unlock.description}"
-                ),
-                picture_class=f"menagerie-unlock-{unlock.index}",
-                progression=0,
-                goal=1,
-            )
-        ]
+        return unlock.get_advice(link_to_section=link_to_section)

@@ -474,6 +474,7 @@ class Account:
             self.gaming.superbits['Isotope Discovery'].unlocked,
             self.compass.upgrades['Atomic Potential'],
             self.event_points_shop['Higgs Boson'].owned,
+            self.menagerie.boosts[17].value,
         )
         self.atom_collider.calculate_costs(
             self.merits[4][6].level,
@@ -491,10 +492,10 @@ class Account:
         # W4
         self.cooking.calculate_max_plate_level(
             self.sailing.artifacts['Causticolumn'].level,
-            self.rift['EldritchArtifact'].unlocked,
             self.sneaking.emporium,
             self.grimoire.upgrades['Supreme Head Chef Status'],
             self.spelunk.caves["Lunarheim"],
+            self.menagerie.unlocks[20],
         )
         self.lab_bonuses.calculate_nblb(
             self.lab_jewels['Pyrite Rhinestone'].enabled,
@@ -809,6 +810,9 @@ class Account:
             supreme_wiring_owned=self.event_points_shop['Supreme Wiring'].owned,
             biggole_mole_bonus=self.companions['Biggole Mole'].bonus,
             moon_of_print=self.compass.upgrades['Moon of Print'],
+            yet_another_printer_multi=(
+                self.legend_talents["Yet Another Printer Multi"]
+            ),
             death_bringers=self.characters.dks,
             max_book_level=self.library.max_book_level,
             king_of_the_remembered_kills=(

@@ -1,23 +1,22 @@
-from typing import Optional
 from functools import cached_property
+from typing import Optional
 
 from consts.consts_autoreview import ValueToMulti
 from consts.general.talents import generational_gemstones_talent_index
 from consts.idleon.lava_func import lava_func
 from consts.idleon.w6.sneaking import (
-    pristine_charms_info,
     gemstones_info,
     jade_emporium,
     jade_emporium_order,
+    pristine_charms_info,
 )
 from consts.w6.sneaking import pristine_charm_images_override
 from models.advice.advice import Advice
-
 from utils.all_talentsDict import all_talentsDict
+from utils.logging import get_logger
+from utils.misc.next_break_point_tooltip import next_break_point_tooltip
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_index
-
-from utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -52,6 +51,9 @@ class PristineCharm:
 
 
 class Gemstone:
+    # The scaling part grows by L / (L + 1000), so it's the level giving half of it
+    _HALF_LEVEL = 1000
+
     def __init__(self, name: str, info: dict, level: int):
         self._name = name
         self._level = level
@@ -62,6 +64,7 @@ class Gemstone:
         self.value = 0.0
         self._percent = 0
         self._description = info["Description"]
+        self._unit = "" if name == "Firefrost" else "%"
 
     @cached_property
     def as_multi(self):
@@ -71,7 +74,7 @@ class Gemstone:
         if self._level == 0:
             return
         self._net_value = self._base_value + self._scaling_value * (
-            self._level / (self._level + 1000)
+            self._level / (self._level + self._HALF_LEVEL)
         )
         if self._name == "Moissanite":
             self.value = self._net_value
@@ -80,26 +83,36 @@ class Gemstone:
         self._percent = 100 * self._net_value / self._max_value
 
     def get_bonus_advice(self) -> Advice:
+        total = ""
+        if self._net_value != self.value and self._name != "Moissanite":
+            total = f"<br>Total: {self._format_bonus(self.value)}"
+        total_note = ""
+        if self._name == "Emerald":
+            total_note = f" = {round_and_trim(1 / self.as_multi, 4)}x cost multiplier"
         label = (
             f"{self._name}: {self._description}"
             f"<br>Level {self._level}: "
-            f"+{round_and_trim(self._net_value)}/{self._max_value}"
-            f"{'%' if self._name != 'Firefrost' else ''} "
+            f"+{round_and_trim(self._net_value)}/{self._max_value}{self._unit} "
+            f"{total}{total_note}"
         )
-        if self._net_value != self.value and self._name != "Moissanite":
-            label += (
-                f"<br>Total: +{round_and_trim(self.value)}"
-                f"{'%' if self._name != 'Firefrost' else ''}"
-            )
-        if self._name == "Emerald":
-            label += f" = {round_and_trim(1 / self.as_multi, 4)}x cost multiplier"
         return Advice(
             label=label,
             picture_class=self._name,
             progression=round_and_trim(self._percent),
             goal=100,
             unit="%",
+            progression_tooltip=next_break_point_tooltip(
+                self._net_value,
+                self._max_value,
+                self._HALF_LEVEL,
+                self._format_bonus,
+                # The base value comes with the first level
+                self._base_value,
+            ),
         )
+
+    def _format_bonus(self, value: float) -> str:
+        return f"+{round_and_trim(value)}{self._unit}"
 
 
 class Emporium:
