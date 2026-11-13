@@ -11,12 +11,11 @@ from consts.consts_general import (
     key_cards,
 )
 from consts.consts_monster_data import decode_monster_name
-from consts.consts_w3 import approx_max_talent_level_star_talents
+from consts.consts_w3 import approx_max_talent_level_non_es_non_star
 from consts.general.cards import (
     base_card_drop_chance,
     base_player_max_card_stars,
     card_champ_bubble_goal,
-    cardiovascular_max_level,
     max_8ball_keychain_card_drop_chance,
     max_obol_card_drop_chance,
     pokaminni_card_drop_chance,
@@ -246,10 +245,11 @@ class Cards(list[Card]):
         return sum(progress.rank for progress in self.cardset_progress.values())
 
     @cached_property
-    def _cards_galore_bonus(self) -> float:
-        # JMAN ONLY
-        return talents["Cards Galore"].value_at_level(
-            approx_max_talent_level_star_talents
+    def _cardiovascular_max_level(self) -> int:
+        # Star talent: no bonus levels ("TalentBannedforAllLV" in source, index > 614)
+        # Depends on: characters max talent levels
+        return session_data.account.characters.get_max_talent_level(
+            talents["Cardiovascular!"]
         )
 
     @cached_property
@@ -259,7 +259,7 @@ class Cards(list[Card]):
         # guild_bonuses['C2 Card Spotter'], alchemy_bubbles['Card Champ']
         account = session_data.account
         cardiovascular = talents["Cardiovascular!"].value_at_level(
-            cardiovascular_max_level
+            self._cardiovascular_max_level
         )
         cardiovascular_multi = round(ValueToMulti(cardiovascular), 2)
         pokaminni_unlocked = account.star_signs["Pokaminni"].unlocked
@@ -279,6 +279,10 @@ class Cards(list[Card]):
             max_obol_card_drop_chance + max_8ball_keychain_card_drop_chance
         )
         card_champ_bubble = account.alchemy_bubbles["Card Champ"].base_value
+        # JMAN ONLY
+        cards_galore = talents["Cards Galore"].value_at_level(
+            approx_max_talent_level_non_es_non_star
+        )
         return {
             # Multi Group A: all other bonuses
             "A": round(
@@ -294,7 +298,7 @@ class Cards(list[Card]):
             "A Jman": round(
                 (
                     before_cards_galore
-                    + self._cards_galore_bonus
+                    + cards_galore
                     + card_spotter
                     + max_equipment_bonus
                     + card_champ_bubble
@@ -355,16 +359,18 @@ class Cards(list[Card]):
                 ),
             ],
             "Multi Group A - class-specific": [
-                Advice(
-                    label=f"Cards Galore Talent: +{self._cards_galore_bonus:.2f}% "
-                    f"if maxed (Jman only)",
-                    picture_class="cards-galore",
+                talents["Cards Galore"].get_bonus_advice(
+                    "Journeyman Talent",
+                    approx_max_talent_level_non_es_non_star,
+                    "% Card Drop Chance",
+                    note="Jman only",
                 )
             ],
             f"Multi Group B: {multis['B']}x (character-specific)": [
-                Advice(
-                    label=f'Star Talent "Cardiovascular!": {multis["B"]}x if maxed',
-                    picture_class="cardiovascular",
+                talents["Cardiovascular!"].get_bonus_advice(
+                    "Star Talent",
+                    self._cardiovascular_max_level,
+                    "% Card Drop Chance",
                 )
             ],
         }
