@@ -12,6 +12,7 @@ from consts.consts_w4 import (
 )
 from consts.consts_w5 import artifact_tier_names, max_sailing_artifact_level
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from models.master_classes.grimoire import GrimoireUpgrade
 from models.w6.sneaking import Emporium
 from models.w7.menagerie.unlock import MenagerieUnlock
@@ -251,8 +252,6 @@ class Cooking:
     @cached_property
     def nmlb_levels_per_day(self) -> int:
         # "No Meal Left Behind" daily trigger in source. Last updated in v2.561
-        from models.general.session_data import session_data
-
         account = session_data.account
         emporium = account.sneaking.emporium["No Meal Left Behind"].obtained
         sacred_methods_pack = account.gemshop.bundles["bun_s"].owned

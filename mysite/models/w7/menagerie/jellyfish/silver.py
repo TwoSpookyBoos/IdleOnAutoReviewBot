@@ -1,5 +1,6 @@
 from consts.w7.menagerie import silver_jelly_max_levels
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from models.w7.menagerie.jellyfish.jellyfish import Jellyfish
 from utils.number_formatting import round_and_trim
 from utils.text_formatting import notateNumber
@@ -27,8 +28,6 @@ class SilverJellyfish(Jellyfish):
         ) * 1.056**self.trash_level
 
     def _feature_advices(self) -> list[Advice]:
-        from models.general.session_data import session_data
-
         fragments = session_data.account.obols.fragments
         advices = []
         for label, level, max_level, cost in (

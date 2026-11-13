@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from consts.consts_autoreview import EmojiType
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
 if TYPE_CHECKING:
@@ -57,8 +58,6 @@ class MenagerieShells:
         )
 
     def get_advices(self) -> list[Advice]:
-        from models.general.session_data import session_data
-
         account = session_data.account
         return [
             self.get_rank_advice(),

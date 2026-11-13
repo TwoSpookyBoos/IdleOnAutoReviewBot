@@ -19,6 +19,7 @@ from consts.w4.breeding import (
     shiny_bonus_names,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.all_talentsDict import all_talentsDict
 from utils.safer_data_handling import safe_loads, safer_convert, safer_get, safer_index
 
@@ -191,8 +192,6 @@ class Breeding:
     @cached_property
     def max_shiny_level(self) -> int:
         # "SpecialPassives" "Lv" in source. Last updated in v2.550.0
-        from models.general.session_data import session_data
-
         unlocked = session_data.account.menagerie.unlocks[11].owned
         return shiny_base_max_level + 10 * int(unlocked)
 

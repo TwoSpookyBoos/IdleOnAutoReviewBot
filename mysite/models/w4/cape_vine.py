@@ -6,6 +6,7 @@ from consts.consts_item_data import ITEM_DATA
 from consts.w4.cape_vine import cape_vine_capes
 from models.advice.advice import Advice
 from models.general.item_definitions import ItemDefinition
+from models.general.session_data import session_data
 from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -86,16 +87,12 @@ class CapeVine:
 
     @cached_property
     def golden_vines(self) -> int:
-        from models.general.session_data import session_data
-
         # "GoldCapeVinesOwned" in source. Last updated in v2.561.0
         bundle_owned = session_data.account.gemshop.bundles["ban_o"].owned
         return 1 + self._golden_vines_asked + 3 * bundle_owned
 
     @cached_property
     def multi(self) -> float:
-        from models.general.session_data import session_data
-
         # "CapevineBonusMulti" in source, Golden Vine part. Last updated in v2.561.0
         catherine = session_data.account.companions["Catherine"].bonus
         return 1 + (self.deposited_count + catherine) / 100
@@ -150,8 +147,6 @@ class CapeVine:
         )
 
     def get_golden_vines_advice(self) -> Advice:
-        from models.general.session_data import session_data
-
         # Asked with the current character in source, so any character's class Lv
         highest_level = max(
             (character.combat_level for character in session_data.account.characters),
@@ -167,8 +162,6 @@ class CapeVine:
         )
 
     def get_bundle_advice(self) -> Advice:
-        from models.general.session_data import session_data
-
         gemshop = session_data.account.gemshop
         bundle = gemshop.bundles["ban_o"]
         return Advice(
