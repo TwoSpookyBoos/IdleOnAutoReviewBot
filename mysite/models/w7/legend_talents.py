@@ -5,6 +5,7 @@ from consts.w7.legend_talents import (
     legend_talents_bonuses,
     legend_talents_grid_max_level_bonuses,
     legend_talents_menagerie_max_level_indexes,
+    legend_talents_menagerie_unlock_names,
 )
 from models.advice.advice import Advice
 from models.general.session_data import session_data
@@ -45,8 +46,15 @@ class LegendTalent:
         return max_level
 
     @cached_property
+    def unlocked(self) -> bool:
+        if self.index in legend_talents_menagerie_unlock_names:
+            # Depends on: menagerie.unlocks[14]
+            return session_data.account.menagerie.unlocks[14].owned
+        return True
+
+    @cached_property
     def value(self) -> float:
-        return self._base_value * self.level
+        return self._base_value * self.level if self.unlocked else 0
 
     @cached_property
     def _next_value(self) -> float:
@@ -84,9 +92,12 @@ class LegendTalent:
 
     def get_advice(self, link_to_section: bool = True) -> Advice:
         link = "{{ Legend Talent|#legend-talents }} - " if link_to_section else ""
-        next_level_text = (
-            f"<br>Next Lv: {self.bonus}" if self.level < self.max_level else ""
-        )
+        if not self.unlocked:
+            next_level_text = "<br>Unlocked by Menagerie Unlock 15"
+        elif self.level < self.max_level:
+            next_level_text = f"<br>Next Lv: {self.bonus}"
+        else:
+            next_level_text = ""
         return Advice(
             label=f"{link}{self.name}: {self.description}{next_level_text}",
             picture_class=self.image,

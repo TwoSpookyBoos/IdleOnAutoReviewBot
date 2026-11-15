@@ -3,8 +3,14 @@ from consts.idleon.w7.spelunk import Spelunky
 from utils.number_formatting import parse_number
 
 legend_talents_order = Spelunky[26]
+# Menagerie Unlock 15 renames these `filler` rows of `LegendTalents`, which unlocks them
+# (`UnlockOwned 14` in source). Last updated in v2.561.0
+legend_talents_menagerie_unlock_names = {
+    40: "Minehead_My_Beloved",
+    41: "Two_Time_Jelly_Operation",
+}
 legend_talents_bonuses = {
-    name.replace("_", " "): {
+    legend_talents_menagerie_unlock_names.get(index, name).replace("_", " "): {
         "Max Level": parse_number(max_level, -1),
         "Base Value": parse_number(base_value, 0),
         "Bonus": bonus.replace("_", " "),
@@ -15,7 +21,7 @@ legend_talents_bonuses = {
     for index, (name, max_level, base_value, _, bonus, description) in enumerate(
         LegendTalents
     )
-    if name.lower() != "filler"
+    if index in legend_talents_menagerie_unlock_names or name.lower() != "filler"
 }
 
 # "LegendTalent_MaxLV" in source: Research Grid squares adding their raw level to the
