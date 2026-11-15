@@ -27,6 +27,7 @@ from models.general.character import Character
 from models.w4.breeding import Breeding
 from models.w4.cooking import Meals
 from models.w4.lab_chips import LabChip
+from models.w5.sailing import Artifact
 from utils.all_talentsDict import all_talentsDict
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import kebab
@@ -75,7 +76,7 @@ class LabBonuses(dict[str, LabBonus]):
     def calculate_nblb(
         self,
         pyrite_rhinestone: bool,
-        amberite_level: int,
+        amberite: Artifact,
         moar_bubbles: bool,
         even_moar_bubbles: bool,
         merit_level: int,
@@ -85,7 +86,7 @@ class LabBonuses(dict[str, LabBonus]):
         nblb.value = (
             3
             + pyrite_rhinestone
-            + amberite_level
+            + amberite.value
             + moar_bubbles
             + even_moar_bubbles
             + merit_level

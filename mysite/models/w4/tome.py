@@ -164,8 +164,6 @@ class Tome:
         talent_s_stamp_value: float,
         star_dazzle_value: float,
         two_starz: Sigil,
-        chilled_yarn_multi: float,
-        meritocracy_value: float,
         star_scraper: Bribe,
         flying_worm_bonus: float,
     ):
@@ -176,11 +174,7 @@ class Tome:
             wizard_family_value
             + talent_s_stamp_value
             + floor(star_dazzle_value)
-            # "SigilBonus" in source: Chilled Yarn's bonus is its tier.
-            # Last updated in v2.531.0
-            + two_starz.values[two_starz.level]
-            * chilled_yarn_multi
-            * ValueToMulti(meritocracy_value)
+            + two_starz.value
             + star_scraper.value * star_scraper.purchased
             + flying_worm_bonus
         )

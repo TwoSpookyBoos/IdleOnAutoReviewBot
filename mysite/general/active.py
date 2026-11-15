@@ -44,7 +44,9 @@ def getCrystalSpawnChanceAdviceGroup() -> AdviceGroup:
     crystal_Advice[aw].append(session_data.account.shrines['Crescent Shrine'].get_advice())
     crystal_Advice[aw].append(session_data.account.shrines.get_chizoar_card_advice())
     crystal = session_data.account.crystal_spawn_chance
-    crystal_Advice[aw].append(crystal.get_moai_head_advice())
+    crystal_Advice[aw].append(
+        session_data.account.sailing.artifacts["Moai Head"].get_bonus_advice()
+    )
 
     # Character Specific
     crystal_Advice[cs].append(crystal.get_cmon_out_crystals_advice())

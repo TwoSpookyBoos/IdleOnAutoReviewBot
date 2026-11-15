@@ -57,7 +57,7 @@ def get_lore_multi_advicegroup() -> AdviceGroup:
     spelunk = session_data.account.spelunk
     total = f"Total Bonus Multi: {round_and_trim(spelunk.lore_multi)}x"
     mga = f"Multi Group A: {round_and_trim(spelunk.lore_multi)}x"
-    lb_Advices = {total: [], mga: [session_data.account.sailing.artifacts["Pointagon"].get_advice()]}
+    lb_Advices = {total: [], mga: [session_data.account.sailing.artifacts["Pointagon"].get_bonus_advice()]}
     for advice_list in lb_Advices.values():
         for advice in advice_list:
             advice.mark_advice_completed()

@@ -249,7 +249,7 @@ class Spelunk:
 
     def calculate_lore_bonus(self, artifact):
         # "ChapterBonus" in source. Last upgrade 2.48 Giftmas Event
-        self.lore_multi = ValueToMulti(30 * artifact.level)
+        self.lore_multi = artifact.as_multi
         for chapter_bonuses in self.lore.values():
             for bonus in chapter_bonuses:
                 bonus.calculate_bonus(self.lore_multi)
