@@ -11,6 +11,7 @@ def next_break_point_tooltip(
     format_bonus: Callable[[float], str],
     start_value: float = 0.0,
     curve_max: float | None = None,
+    format_level: Callable[[int], str] = lambda level: f"level {level:,}",
 ) -> str:
     """Tooltip HTML with the first break point above `value`.
 
@@ -18,7 +19,8 @@ def next_break_point_tooltip(
     `curve_max` is what the formula tends to, given when the bonus is capped below
     it by `max_value`. The break points are percents of `max_value`, the ones not
     above `start_value` are skipped. `format_bonus` turns a break point bonus into
-    the displayed text. Empty once the last one is reached.
+    the displayed text, `format_level` the level reaching it. Empty once the last one
+    is reached.
     """
     if curve_max is None:
         curve_max = max_value
@@ -34,6 +36,7 @@ def next_break_point_tooltip(
         # round() drops float noise, e.g. 18999.999... for 95%
         level = ceil(round(half_level * growth / (1 - growth), 6))
         return (
-            f"<p>{percent:.0%} at level {level:,} with bonus {format_bonus(bonus)}</p>"
+            f"<p>{percent:.0%} at {format_level(level)} "
+            f"with bonus {format_bonus(bonus)}</p>"
         )
     return ""

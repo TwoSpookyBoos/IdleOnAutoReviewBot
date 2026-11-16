@@ -16,7 +16,7 @@ from models.general.event_shop import EventShopBonus
 from models.general.session_data import session_data
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from utils.number_formatting import parse_number
+from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import kebab
 
@@ -29,7 +29,7 @@ vault_statues = [statues_dict[i]["Name"] for i in [0, 1, 2, 6]]
 
 
 class Statue:
-    def __init__(self, info: dict, level: int, type_number: int):
+    def __init__(self, info: dict, level: int, type_number: int, best_character: str):
         self.name: str = info["Name"]
         self.item_name: str = info["ItemName"]
         self.effect: str = info["Effect"]
@@ -41,17 +41,24 @@ class Statue:
         self.type: str = statue_type_dict.get(type_number, "UnknownType")
         self.image: str = kebab(f"{self.type} {self.name}")
         self.value: float = self.base_value
+        # A Normal statue counts the logged in character's level, `level` is the
+        # highest of them
+        self.best_character: str = best_character if type_number == 0 else ""
 
     def calculate_value(self, multis: list[float]):
         self.value = self.base_value * self.level
         for multi in multis:
             self.value *= multi
 
-    def get_advice(self) -> Advice:
+    def get_advice(self, link_to_section: bool = True) -> Advice:
         spacer = " " if not self.effect.startswith("%") else ""
+        link = "{{ Statues|#statues }} - " if link_to_section else ""
+        note = ""
+        if self.best_character:
+            note = f"<br>Only on {self.best_character}, the highest level"
         return Advice(
-            label=f"Level {self.level} {self.type} {self.name}:"
-            f"<br> +{round(self.value, 2):,g}{spacer}{self.effect}",
+            label=f"{link}{self.type} {self.name}:"
+            f"<br> +{round_and_trim(self.value):,}{spacer}{self.effect}{note}",
             picture_class=self.image,
             progression=self.level,
             goal=EmojiType.INFINITY.value,
@@ -78,6 +85,7 @@ class Statues(dict[str, Statue]):
 
         # Normal statues level per character; Gold+ share across all
         levels = [0] * statue_count
+        best_characters = [""] * statue_count
         for char in characters:
             try:
                 raw_char_statues = safe_loads(
@@ -89,14 +97,18 @@ class Statues(dict[str, Statue]):
                             f"Statue index {index} missing from statues_dict"
                         )
                         continue
-                    levels[index] = max(levels[index], raw_statue[0])
+                    if raw_statue[0] > levels[index]:
+                        levels[index] = raw_statue[0]
+                        best_characters[index] = char.character_name
             except Exception as e:
                 logger.warning(
                     f"Statue levels error, Character{char.character_index}: {e}"
                 )
 
         for index, info in statues_dict.items():
-            self[info["Name"]] = Statue(info, levels[index], raw_types[index])
+            self[info["Name"]] = Statue(
+                info, levels[index], raw_types[index], best_characters[index]
+            )
 
         self.voodoo_multi: float = 1
         self.onyx_multi: float = 1

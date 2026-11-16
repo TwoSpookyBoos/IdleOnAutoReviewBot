@@ -11,13 +11,13 @@ from consts.w7.gallery import (
     prisma_palette_max,
     exalted_palette_index,
     exalted_palette_max,
-    killroy_kills_optlacc_index,
     w6_trophy_codename,
     gallery_card_codename,
 )
 from models.advice.advice import Advice
 from models.general.companions import Companions
 from models.general.item_definitions import ItemDefinition
+from models.general.session_data import session_data
 from models.w7.clam_work import ClamWork
 from models.w7.sushi_station import SushiStation
 
@@ -152,12 +152,6 @@ class GalleryMissing:
 class Gallery:
     def __init__(self, raw_data: dict):
         spelunk_info = safe_loads(raw_data.get("Spelunk", []))
-        raw_optlacc = safe_loads(raw_data.get("OptLacc", []))
-        # "KillroyBonuses"(3) in source. Last updated in v2.531.0
-        killroy_kills = parse_number(
-            safer_index(raw_optlacc, killroy_kills_optlacc_index, 0)
-        )
-        self._killroy_bonus = killroy_kills / (200 + killroy_kills) * 10
         self.gallery_multi = 1.0
         self._gallery_multi_by_chip = {}
         self._bonuses_by_chip = {}
@@ -378,11 +372,12 @@ class Gallery:
         sushi_station: "SushiStation",
     ) -> float:
         # "GalleryBonusMulti" in source. Last updated in v2.531.0
+        # Depends on: killroy.skull_shop['Gallery']
         return 1 + (
             3 * paragorgia_level
             + 10 * has_motherboard_chip
             + 3 * clam_work.bonuses[7].obtained
-            + self._killroy_bonus
+            + session_data.account.killroy.skull_shop["Gallery"].value
             + min(20, codfrey_prisma)
             + min(10, gallery_card_level)
             + companions["Bubba the Seal"].bonus
@@ -449,9 +444,11 @@ class Gallery:
         deathskull_level: int,
     ) -> int:
         # "PodiumsOwned_Lv2" in source, Math.round. Last updated in v2.531.0
+        # Depends on: killroy.skull_shop['Gallery']
+        killroy_bonus = session_data.account.killroy.skull_shop["Gallery"].value
         return _js_round(
             2 * clam_work.bonuses[0].obtained
-            + min(2, self._killroy_bonus)
+            + min(2, killroy_bonus)
             + companions["Eamsy Earl"].bonus  # 2, or 3 upgraded
             + floor(showcases_owned / 2)
             + superb_gallerium

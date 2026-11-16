@@ -1043,7 +1043,6 @@ class Farming:
         self._highest_farming_level = max(farming_levels, default=0)
         self._cropiovo_unlocked = star_signs["Cropiovo Minor"].unlocked
         self._lil_overgrowth = achievements["Lil' Overgrowth"].complete
-        self._skull_shop = skull_shop
         self._skill_mastery_unlocked = skill_mastery.unlocked
         self._evo_ballot = ballot_buff
         maps_opened = 0
@@ -1091,7 +1090,7 @@ class Farming:
             farming_levels,
             skill_mastery.unlocked,
             achievements["Lil' Overgrowth"].complete,
-            skull_shop.crop_multi,
+            skull_shop["Crop Evolution"].value,
             lamp_wish.value_list[0],
             summoning_bonuses["Crop EVO"].as_multi,
             exotic=self._get_exotic_multi(
@@ -1324,15 +1323,6 @@ class Farming:
             picture_class="lil-overgrowth",
             progression=int(self._lil_overgrowth),
             goal=1,
-        )
-
-    def get_skull_shop_advice(self) -> Advice:
-        shop = self._skull_shop
-        return Advice(
-            label=f"Killroy Skull Shop: {shop.crop_multi:.3f}x"
-            f"<br>1 purchase: +{shop.next_crop_multi - shop.crop_multi:.3f}x",
-            picture_class="killroy-crop-evolution",
-            progression=shop.crop_purchases,
         )
 
     def get_skill_mastery_advice(self) -> Advice:

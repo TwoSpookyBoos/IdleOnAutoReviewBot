@@ -1,7 +1,5 @@
 nametag_max_level = 5
 
-# "OptLacc"[467] in source: Killroy kills. Last updated in v2.531.0
-killroy_kills_optlacc_index = 467
 # "Trophy23" in source: W6 trophy. Last updated in v2.531.0
 w6_trophy_codename = "Trophy23"
 # "w7a11" in source: Gallery Bonus card. Last updated in v2.531.0
