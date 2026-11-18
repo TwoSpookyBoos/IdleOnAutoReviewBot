@@ -179,14 +179,14 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             boaty_bubble.get_bonus_advice(goal=max_NBLB)
         ],
         f'Multi Group B: {sailing.speed_multi_b}x': [
-            goharut.get_blessing_advice(f": +{sailing.goharut_bonus}%")
+            goharut.blessing.get_bonus_advice()
         ],
         f'Multi Group C: {sailing.speed_multi_c}x': [
-            purrmep.get_blessing_advice(f": +{sailing.purrmep_blessing_bonus}%")
+            purrmep.blessing.get_bonus_advice()
         ],
         f'Multi Group D: {sailing.speed_multi_d}x': [sailing.get_ballot_advice()],
         f'Multi Group E: {sailing.speed_multi_e}x': [
-            bagur.get_blessing_advice(f": +{sailing.bagur_bonus}%"),
+            bagur.blessing.get_bonus_advice(),
             sailing.get_ad_tablet_advice(),
             session_data.account.stamps['Sailboat Stamp'].get_advice(),
             session_data.account.statues["Boat Statue"].get_advice(),

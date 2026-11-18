@@ -322,16 +322,16 @@ class Sailing:
             2,
         )
         # Groups B and C: Goharut and Purrmep blessings
-        self.goharut_bonus = 4 * goharut.blessing_level
+        self.goharut_bonus = goharut.blessing.value
         self.speed_multi_b = round(ValueToMulti(self.goharut_bonus), 2)
-        self.purrmep_blessing_bonus = 3 * purrmep.blessing_level
+        self.purrmep_blessing_bonus = purrmep.blessing.value
         self.speed_multi_c = round(ValueToMulti(self.purrmep_blessing_bonus), 2)
         # Group D: Ballot
         self._ballot_buff = ballot_buff
         self.ballot_multi = ValueToMulti(ballot_buff.active * ballot_buff.value)
         self.speed_multi_d = round(self.ballot_multi, 2)
         # Group E: everything else
-        self.bagur_bonus = 5 * bagur.blessing_level
+        self.bagur_bonus = bagur.blessing.value
         self.ad_tablet_level = self.artifacts["10 AD Tablet"].level
         sovereignty_multi = (
             ValueToMulti(slab_sovereignty.value) * slab_sovereignty.enabled
