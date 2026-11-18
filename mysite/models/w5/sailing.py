@@ -92,6 +92,10 @@ class Artifact:
                 return value + form_value
             case 16:  # Chilled Yarn: read as `1 + value` in source, kept as % here
                 return 100 * value
+            case 2 | 10 | 18 | 20:  # Slab artifacts: per 10 Slab items above 500
+                # Depends on: slab
+                slab = session_data.account.slab
+                return value * slab.bonus_multi * slab.bonus_steps(500, 10)
             case 1 | 3 | 5 | 8 | 11 | 13 | 23 | 25 | 27 | 29:
                 # Scaled by other systems in source, not modelled yet
                 return 0
@@ -278,22 +282,6 @@ class Sailing:
         return max((captain.level for captain in self.captains), default=0)
 
     @cached_property
-    def _ad_tablet_bonus(self) -> int | float:
-        # Depends on: slab, lab_bonuses['Slab Sovereignty']
-        account = session_data.account
-        slab_count = len(account.slab)
-        slab_sovereignty = account.lab_bonuses["Slab Sovereignty"]
-        sovereignty_multi = (
-            ValueToMulti(slab_sovereignty.value) * slab_sovereignty.enabled
-        )
-        return (
-            (self.artifacts["10 AD Tablet"].value * ((slab_count - 500) // 10))
-            * sovereignty_multi
-            if slab_count >= 500
-            else 0
-        )
-
-    @cached_property
     def _skill_mastery_bonus(self) -> int:
         # "RiftSkillBonus,12" in source: Sailing rank above 1 is 200+ total levels
         # Depends on: rift['SkillMastery'], characters
@@ -351,7 +339,7 @@ class Sailing:
             "E": 1
             + (
                 divinity.named("Bagur").blessing.value
-                + self._ad_tablet_bonus
+                + self.artifacts["10 AD Tablet"].value
                 + account.stamps["Sailboat Stamp"].total_value
                 + account.statues["Boat Statue"].value
                 + account.meals["Popped Corn"].value
@@ -400,7 +388,7 @@ class Sailing:
             f"Multi Group D: {multis['D']}x": [account.ballot[24].get_bonus_advice()],
             f"Multi Group E: {multis['E']}x": [
                 divinity.named("Bagur").blessing.get_bonus_advice(),
-                self._get_ad_tablet_advice(),
+                self.artifacts["10 AD Tablet"].get_bonus_advice(),
                 account.stamps["Sailboat Stamp"].get_advice(),
                 account.statues["Boat Statue"].get_advice(),
                 account.meals["Popped Corn"].get_bonus_advice(),
@@ -417,15 +405,6 @@ class Sailing:
                 account.legend_talents["Davey Jones Returns"].get_advice(),
             ],
         }
-
-    def _get_ad_tablet_advice(self) -> Advice:
-        level = self.artifacts["10 AD Tablet"].level
-        return Advice(
-            label=f"Level {level} 10 AD Tablet: +{self._ad_tablet_bonus}%",
-            picture_class="10-ad-tablet",
-            progression=level,
-            goal=max_sailing_artifact_level,
-        )
 
     def _get_skill_mastery_advice(self) -> Advice:
         unlocked = self._skill_mastery_bonus > 0
