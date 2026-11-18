@@ -1,6 +1,8 @@
 from functools import cached_property
+from math import prod
 
 from consts.consts_autoreview import ValueToMulti
+from consts.consts_w2 import max_NBLB
 from consts.consts_w5 import (
     artifact_tier_names,
     captain_buffs,
@@ -274,128 +276,131 @@ class Sailing:
     def max_captain_level(self) -> int:
         return max((captain.level for captain in self.captains), default=0)
 
-    def calculate_speed(
-        self,
-        *,
-        purrmep,
-        goharut,
-        bagur,
-        characters: list,
-        crawler_level: int,
-        kattlekruk_level: int,
-        boaty_bubble: float,
-        big_p: float,
-        ballot_buff,
-        slab_count: int,
-        slab_sovereignty,
-        sailboat_stamp: float,
-        boat_statue,
-        popped_corn: float,
-        oj_jooce: float,
-        skill_mastery_unlocked: bool,
-        total_sailing_level: int,
-        msa_sailing: bool,
-        total_worship_waves: int,
-        c_shanti_unlocked: bool,
-        davey_jones_owned: int,
-        davey_jones_returns: float,
-    ):
-        # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
-        # Group A: Purrmep Minor Link, Cards, Bubble
-        self._purrmep = purrmep
-        self.purrmep_linked = next(
-            (char for char in characters if char.divinity_link == "Purrmep"), None
-        )
-        self.purrmep_minor_bonus = 0
-        if self.purrmep_linked is not None:
-            level = self.purrmep_linked.divinity_level
-            self.purrmep_minor_bonus = level / (60 + level) * big_p * 50
-        self.speed_multi_a = round(
-            1
-            + (
-                self.purrmep_minor_bonus
-                + 4 * crawler_level
-                + 6 * kattlekruk_level
-                + boaty_bubble
-            )
-            / 125,
-            2,
-        )
-        # Groups B and C: Goharut and Purrmep blessings
-        self.goharut_bonus = goharut.blessing.value
-        self.speed_multi_b = round(ValueToMulti(self.goharut_bonus), 2)
-        self.purrmep_blessing_bonus = purrmep.blessing.value
-        self.speed_multi_c = round(ValueToMulti(self.purrmep_blessing_bonus), 2)
-        # Group D: Ballot
-        self._ballot_buff = ballot_buff
-        self.ballot_multi = ValueToMulti(ballot_buff.active * ballot_buff.value)
-        self.speed_multi_d = round(self.ballot_multi, 2)
-        # Group E: everything else
-        self.bagur_bonus = bagur.blessing.value
-        self.ad_tablet_level = self.artifacts["10 AD Tablet"].level
+    @cached_property
+    def _ad_tablet_bonus(self) -> int | float:
+        # Depends on: slab, lab_bonuses['Slab Sovereignty']
+        account = session_data.account
+        slab_count = len(account.slab)
+        slab_sovereignty = account.lab_bonuses["Slab Sovereignty"]
         sovereignty_multi = (
             ValueToMulti(slab_sovereignty.value) * slab_sovereignty.enabled
         )
-        self.ad_tablet_bonus = (
+        return (
             (self.artifacts["10 AD Tablet"].value * ((slab_count - 500) // 10))
             * sovereignty_multi
             if slab_count >= 500
             else 0
         )
-        self.skill_mastery_unlocked = skill_mastery_unlocked
-        self.total_sailing_level = total_sailing_level
-        self.msa_sailing = msa_sailing
-        self.total_worship_waves = total_worship_waves
-        self.c_shanti_unlocked = c_shanti_unlocked
-        self.speed_multi_e = round(
-            1
-            + (
-                self.bagur_bonus
-                + self.ad_tablet_bonus
-                + sailboat_stamp
-                + boat_statue.value
-                + popped_corn
-                + oj_jooce
-                + skill_mastery_unlocked * (total_sailing_level > 200) * 15
-                + msa_sailing * (total_worship_waves // 10)
-                + c_shanti_unlocked * 20
-            )
-            / 125,
-            2,
-        )
-        # Group F: Davey Jones. "DaveyJonesBonus" in source
-        self.speed_multi_f = round_and_trim(
-            ValueToMulti(50 * davey_jones_owned + davey_jones_returns)
-        )
-        self.speed_multi = round(
-            self.speed_multi_a
-            * self.speed_multi_b
-            * self.speed_multi_c
-            * self.speed_multi_d
-            * self.speed_multi_e
-            * self.speed_multi_f,
-            2,
-        )
 
-    def get_speed_advice(self) -> Advice:
-        return Advice(
-            label=f"Total Sailing Speed bonus: {self.speed_multi}x",
-            picture_class="sailing",
-        )
+    @cached_property
+    def _speed_multis(self) -> dict[str, float]:
+        # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
+        # Depends on: divinity, cards, alchemy_bubbles['Boaty Bubble'], ballot[24],
+        # stamps['Sailboat Stamp'], statues['Boat Statue'], meals['Popped Corn'],
+        # alchemy_vials['Oj Jooce (Orange Slice)'], rift['SkillMastery'],
+        # characters, gaming.superbits['MSA Sailing'], worship,
+        # star_signs['C. Shanti Minor'], gemshop.purchases['Davey Jones Training'],
+        # legend_talents['Davey Jones Returns']
+        account = session_data.account
+        divinity = account.divinity
+        ballot_buff = account.ballot[24]
+        skill_mastery_unlocked = account.rift["SkillMastery"].unlocked
+        total_sailing_level = sum(account.characters.all_skills["Sailing"])
+        msa_sailing = account.gaming.superbits["MSA Sailing"].unlocked
+        total_worship_waves = account.worship.total_waves
+        c_shanti_unlocked = account.star_signs["C. Shanti Minor"].unlocked
+        davey_jones_owned = account.gemshop.purchases["Davey Jones Training"].owned
+        davey_jones_returns = account.legend_talents["Davey Jones Returns"].value
+        return {
+            "A": round(
+                1
+                + (
+                    divinity.named("Purrmep").minor.value
+                    + 4 * account.cards.named("Crawler").level
+                    + 6 * account.cards.named("Kattlekruk").level
+                    + account.alchemy_bubbles["Boaty Bubble"].base_value
+                )
+                / 125,
+                2,
+            ),
+            "B": round(ValueToMulti(divinity.named("Goharut").blessing.value), 2),
+            "C": round(ValueToMulti(divinity.named("Purrmep").blessing.value), 2),
+            "D": round(ValueToMulti(ballot_buff.active * ballot_buff.value), 2),
+            "E": round(
+                1
+                + (
+                    divinity.named("Bagur").blessing.value
+                    + self._ad_tablet_bonus
+                    + account.stamps["Sailboat Stamp"].total_value
+                    + account.statues["Boat Statue"].value
+                    + account.meals["Popped Corn"].value
+                    + account.alchemy_vials["Oj Jooce (Orange Slice)"].value
+                    + skill_mastery_unlocked * (total_sailing_level > 200) * 15
+                    + msa_sailing * (total_worship_waves // 10)
+                    + c_shanti_unlocked * 20
+                )
+                / 125,
+                2,
+            ),
+            # "DaveyJonesBonus" in source
+            "F": round_and_trim(
+                ValueToMulti(50 * davey_jones_owned + davey_jones_returns)
+            ),
+        }
 
-    def get_purrmep_minor_advice(self) -> Advice:
-        return Advice(
-            label=f"Anyone Minor Linked to {self._purrmep.name}: "
-            f"+{self.purrmep_minor_bonus:.2f}%",
-            picture_class=self._purrmep.name,
-            progression=int(self.purrmep_linked is not None),
-            goal=1,
-        )
+    @cached_property
+    def speed_multi(self) -> float:
+        return round(prod(self._speed_multis.values()), 2)
 
-    def get_ballot_advice(self) -> Advice:
-        buff = self._ballot_buff
+    def get_speed_advices(self) -> dict[str, list[Advice]]:
+        account = session_data.account
+        multis = self._speed_multis
+        divinity = account.divinity
+        oj_jooce = account.alchemy_vials["Oj Jooce (Orange Slice)"]
+        return {
+            f"Total: {self.speed_multi}x": [
+                Advice(
+                    label=f"Total Sailing Speed bonus: {self.speed_multi}x",
+                    picture_class="sailing",
+                )
+            ],
+            f"Multi Group A: {multis['A']}x": [
+                divinity.named("Purrmep").minor.get_bonus_advice(),
+                account.cards.named("Crawler").getAdvice(),
+                account.cards.named("Kattlekruk").getAdvice(),
+                account.alchemy_bubbles["Boaty Bubble"].get_bonus_advice(
+                    goal=max_NBLB
+                ),
+            ],
+            f"Multi Group B: {multis['B']}x": [
+                divinity.named("Goharut").blessing.get_bonus_advice()
+            ],
+            f"Multi Group C: {multis['C']}x": [
+                divinity.named("Purrmep").blessing.get_bonus_advice()
+            ],
+            f"Multi Group D: {multis['D']}x": [self._get_ballot_advice()],
+            f"Multi Group E: {multis['E']}x": [
+                divinity.named("Bagur").blessing.get_bonus_advice(),
+                self._get_ad_tablet_advice(),
+                account.stamps["Sailboat Stamp"].get_advice(),
+                account.statues["Boat Statue"].get_advice(),
+                account.meals["Popped Corn"].get_bonus_advice(),
+                oj_jooce.get_advice(full_name=False),
+                self._get_skill_mastery_advice(),
+                self._get_msa_advice(),
+                self._get_c_shanti_advice(),
+            ],
+            f"Multi Group F: {multis['F']}x": [
+                account.gemshop.purchases["Davey Jones Training"].get_advice(),
+                account.legend_talents["Davey Jones Returns"].get_advice(),
+            ],
+        }
+
+    def _get_ballot_advice(self) -> Advice:
+        buff = session_data.account.ballot[24]
+        ballot_multi = ValueToMulti(buff.active * buff.value)
         return Advice(
-            label=f"Weekly Ballot: {round(self.ballot_multi, 2)}x/"
+            label=f"Weekly Ballot: {round(ballot_multi, 2)}x/"
             f"{round(buff.multi, 2)}x"
             f"<br>(Buff {'is Active' if buff.active else 'is Inactive'})",
             picture_class=buff.image,
@@ -403,38 +408,48 @@ class Sailing:
             goal=1,
         )
 
-    def get_ad_tablet_advice(self) -> Advice:
+    def _get_ad_tablet_advice(self) -> Advice:
+        level = self.artifacts["10 AD Tablet"].level
         return Advice(
-            label=f"Level {self.ad_tablet_level} 10 AD Tablet: +{self.ad_tablet_bonus}%",
+            label=f"Level {level} 10 AD Tablet: +{self._ad_tablet_bonus}%",
             picture_class="10-ad-tablet",
-            progression=self.ad_tablet_level,
+            progression=level,
             goal=max_sailing_artifact_level,
         )
 
-    def get_skill_mastery_advice(self) -> Advice:
-        unlocked = self.skill_mastery_unlocked and self.total_sailing_level >= 200
+    def _get_skill_mastery_advice(self) -> Advice:
+        account = session_data.account
+        total_sailing_level = sum(account.characters.all_skills["Sailing"])
+        msa_sailing = account.gaming.superbits["MSA Sailing"].unlocked
+        unlocked = (
+            account.rift["SkillMastery"].unlocked and total_sailing_level >= 200
+        )
         return Advice(
             label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: "
             f"{'+15%' if unlocked else 'Locked.'}",
             picture_class="skill-mastery",
-            progression=self.msa_sailing * self.total_sailing_level,
+            progression=msa_sailing * total_sailing_level,
             goal=200,
         )
 
-    def get_msa_advice(self, max_total_waves: int) -> Advice:
+    def _get_msa_advice(self) -> Advice:
+        account = session_data.account
+        msa_sailing = account.gaming.superbits["MSA Sailing"].unlocked
+        total_worship_waves = account.worship.total_waves
         return Advice(
-            label=f"MSA Sailing: +{self.msa_sailing * self.total_worship_waves // 10}% "
+            label=f"MSA Sailing: +{msa_sailing * total_worship_waves // 10}% "
             f"(+1% per 10 waves in Worship)",
             picture_class="worship",
-            progression=self.total_worship_waves,
-            goal=max_total_waves,
+            progression=total_worship_waves,
+            goal=account.worship.max_total_waves,
         )
 
-    def get_c_shanti_advice(self) -> Advice:
-        status = "+20% if equipped" if self.c_shanti_unlocked else "Locked."
+    def _get_c_shanti_advice(self) -> Advice:
+        unlocked = session_data.account.star_signs["C. Shanti Minor"].unlocked
+        status = "+20% if equipped" if unlocked else "Locked."
         return Advice(
             label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {status}",
             picture_class="c-shanti-minor",
-            progression=int(self.c_shanti_unlocked),
+            progression=int(unlocked),
             goal=1,
         )
