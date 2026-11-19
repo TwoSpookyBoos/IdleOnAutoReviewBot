@@ -189,7 +189,7 @@ def get_sailing_speed_advicegroup() -> AdviceGroup:
             bagur.get_blessing_advice(f": +{sailing.bagur_bonus}%"),
             sailing.get_ad_tablet_advice(),
             session_data.account.stamps['Sailboat Stamp'].get_advice(),
-            sailing.get_boat_statue_advice(),
+            session_data.account.statues["Boat Statue"].get_advice(),
             session_data.account.meals['Popped Corn'].get_bonus_advice(),
             session_data.account.alchemy_vials['Oj Jooce (Orange Slice)'].get_advice(full_name=False),
             sailing.get_skill_mastery_advice(),

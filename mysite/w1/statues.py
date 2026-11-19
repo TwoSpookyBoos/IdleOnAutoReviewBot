@@ -112,7 +112,10 @@ def getEffectBonusAdvices() -> list[Advice]:
 def getCurrentLevelsAdviceGroup() -> AdviceGroup:
     advices = {
         'Effect bonuses': getEffectBonusAdvices(),
-        'Statue Effects': [statue.get_advice() for statue in session_data.account.statues.values()]
+        'Statue Effects': [
+            statue.get_advice(link_to_section=False)
+            for statue in session_data.account.statues.values()
+        ]
     }
 
     for category in advices:

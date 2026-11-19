@@ -342,7 +342,6 @@ class Sailing:
             if slab_count >= 500
             else 0
         )
-        self._boat_statue = boat_statue
         self.skill_mastery_unlocked = skill_mastery_unlocked
         self.total_sailing_level = total_sailing_level
         self.msa_sailing = msa_sailing
@@ -354,7 +353,7 @@ class Sailing:
                 self.bagur_bonus
                 + self.ad_tablet_bonus
                 + sailboat_stamp
-                + (boat_statue.type != "Normal") * boat_statue.value
+                + boat_statue.value
                 + popped_corn
                 + oj_jooce
                 + skill_mastery_unlocked * (total_sailing_level > 200) * 15
@@ -410,15 +409,6 @@ class Sailing:
             picture_class="10-ad-tablet",
             progression=self.ad_tablet_level,
             goal=max_sailing_artifact_level,
-        )
-
-    def get_boat_statue_advice(self) -> Advice:
-        statue = self._boat_statue
-        gold_note = "(must be at least gold)" if statue.type == "Normal" else ""
-        return Advice(
-            label=f"Level {statue.level} Boat Statue: "
-            f"+{(statue.type != 'Normal') * statue.value:.2f}% {gold_note}",
-            picture_class=statue.image,
         )
 
     def get_skill_mastery_advice(self) -> Advice:

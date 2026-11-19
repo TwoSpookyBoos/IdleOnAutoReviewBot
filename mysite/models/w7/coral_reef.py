@@ -1,10 +1,9 @@
 from functools import cached_property
 
-from consts.consts_autoreview import EmojiType, ValueToMulti
+from consts.consts_autoreview import ValueToMulti
 from consts.w7.coral_reef import coral_reef_bonus_data
 from models.advice.advice import Advice
 from models.general.session_data import session_data
-from utils.number_formatting import round_and_trim
 from utils.safer_data_handling import (
     safe_loads,
     safer_convert,
@@ -73,103 +72,81 @@ class CoralReef(dict[str, CoralReefBonus]):
 
         self.total_level = sum(bonus.level for bonus in self.values())
 
-    def calculate_daily_corals(
-        self,
-        *,
-        shellslug_multi: float,
-        coolral_owned: bool,
-        more_coral_owned: int,
-        coral_kid: float,
-        dancing_coral: float,
-        clam_work_level: int,
-        killroy_coral_level: int,
-        corale_stamp: float,
-        scale_on_ice: float,
-        coral_restoration: float,
-        arcade_bonus: float,
-        coral_conservationism: float,
-        demonblub_card: float,
-        coral_statue,
-    ):
+    @cached_property
+    def _daily_corals_multis(self) -> dict[str, float]:
         # `"ReefDayGains" == e` in source. Last updated in v2.46 Dec 7
-        self.base_daily_corals = 10
-        # Groups A-C
-        self.shellslug_multi = shellslug_multi
-        self.coolral_owned = coolral_owned
-        self.coolral_multi = 1 + 0.3 * coolral_owned
-        self.more_coral_multi = 1 + 0.2 * more_coral_owned
-        # Group D
-        self.clam_work_level = clam_work_level
-        self.clam_work_value = 20 if clam_work_level > 5 else 0
-        self.killroy_coral_level = killroy_coral_level
-        self.killroy_coral_value = round_and_trim(
-            killroy_coral_level / (250 + killroy_coral_level) * 25, 0
-        )
-        self._coral_statue = coral_statue
-        self.multi_group_d_value = sum(
+        # Depends on: companions['Shellslug'], event_points_shop['Coolral'],
+        # gemshop.purchases['More Coral'], coral_kid[5], dancing_coral[0], clam_work,
+        # killroy.skull_shop['Daily Coral'], stamps['Corale Stamp'],
+        # alchemy_vials['Scale On Ice (Scaled Fragment)'],
+        # legend_talents['Coral Restoration'], arcade[57],
+        # sneaking.emporium['Coral Conservationism'], cards['Demonblub'],
+        # statues['Coral Statue']
+        account = session_data.account
+        multi_group_d_value = sum(
             (
-                coral_kid,
-                dancing_coral,
-                self.clam_work_value,
-                self.killroy_coral_value,
-                corale_stamp,
-                scale_on_ice,
-                coral_restoration,
-                arcade_bonus,
-                coral_conservationism,
-                demonblub_card,
-                coral_statue.value,
+                account.coral_kid[5].value,
+                account.dancing_coral[0].value,
+                account.clam_work.daily_corals_bonus,
+                account.killroy.skull_shop["Daily Coral"].value,
+                account.stamps["Corale Stamp"].total_value,
+                account.alchemy_vials["Scale On Ice (Scaled Fragment)"].value,
+                account.legend_talents["Coral Restoration"].value,
+                account.arcade[57].value,
+                account.sneaking.emporium["Coral Conservationism"].value,
+                account.cards.named("Demonblub").getCurrentValue(),
+                account.statues["Coral Statue"].value,
             )
         )
-        self.multi_group_d_mult = ValueToMulti(self.multi_group_d_value)
-        self.total_daily_corals = (
-            self.base_daily_corals
-            * self.shellslug_multi
-            * self.coolral_multi
-            * self.more_coral_multi
-            * self.multi_group_d_mult
-        )
+        return {
+            "A": account.companions["Shellslug"].get_multi("Daily Corals"),
+            "B": 1 + 0.3 * account.event_points_shop["Coolral"].owned,
+            "C": 1 + 0.2 * account.gemshop.purchases["More Coral"].owned,
+            "D": ValueToMulti(multi_group_d_value),
+        }
 
-    def get_base_daily_corals_advice(self) -> Advice:
-        return Advice(
-            label=f"Base daily corals: {self.base_daily_corals}",
-            picture_class="coral",
-            completed=True,
+    def get_daily_corals_advices(self) -> dict[str, list[Advice]]:
+        account = session_data.account
+        multis = self._daily_corals_multis
+        base_daily_corals = 10
+        total_daily_corals = (
+            base_daily_corals * multis["A"] * multis["B"] * multis["C"] * multis["D"]
         )
-
-    def get_coolral_advice(self) -> Advice:
-        return Advice(
-            label=f"{{{{ Event Shop|#event-shop }}}} - Coolral: "
-            f"x{self.coolral_multi}/x1.3 Daily Corals",
-            resource="event-point",
-            picture_class="event-shop-25",
-            progression=int(self.coolral_owned),
-            goal=1,
+        more_coral_advice = account.gemshop.purchases["More Coral"].get_advice(
+            additional_text=f": x{multis['C']}/x3.0 Daily Corals"
         )
-
-    def get_clam_work_advice(self) -> Advice:
-        return Advice(
-            label=f"Clam Work: +{self.clam_work_value}% Daily Corals past level 5",
-            picture_class="clam-pearl",
-            progression=self.clam_work_level,
-            goal=6,
-        )
-
-    def get_killroy_advice(self) -> Advice:
-        return Advice(
-            label=f"Killroy: +{self.killroy_coral_value:g}% Daily Corals",
-            picture_class="killroy-skull",
-            progression=self.killroy_coral_level,
-            goal=EmojiType.INFINITY.value,
-        )
-
-    def get_coral_statue_advice(self) -> Advice:
-        statue = self._coral_statue
-        gold_note = "(must be at least gold)" if statue.type == "Normal" else ""
-        return Advice(
-            label=f"Level {statue.level} Coral Statue: +{statue.value:.2f}% "
-            f"{gold_note}",
-            picture_class=statue.image,
-            progression=statue.level,
-            goal=EmojiType.INFINITY.value,
-        )
+        coral_conservationism = account.sneaking.emporium["Coral Conservationism"]
+        return {
+            f"Total daily corals: {round(total_daily_corals, 2):g}": [],
+            f"Base: {base_daily_corals}": [
+                Advice(
+                    label=f"Base daily corals: {base_daily_corals}",
+                    picture_class="coral",
+                    completed=True,
+                )
+            ],
+            f"Multi Group A: x{round(multis['A'], 2):g}": [
+                account.companions["Shellslug"].get_advice()
+            ],
+            f"Multi Group B: x{round(multis['B'], 2):g}": [
+                account.event_points_shop["Coolral"].get_bonus_advice()
+            ],
+            f"Multi Group C: x{round(multis['C'], 2):g}": [more_coral_advice],
+            f"Multi Group D: x{round(multis['D'], 2):g}": [
+                account.coral_kid[5].get_advice(),
+                account.dancing_coral[0].get_advice(),
+                account.clam_work.get_daily_corals_advice(),
+                account.killroy.skull_shop["Daily Coral"].get_bonus_advice(),
+                account.stamps["Corale Stamp"].get_advice(),
+                account.alchemy_vials["Scale On Ice (Scaled Fragment)"].get_advice(
+                    additional_text=" Daily Corals",
+                    full_name=False,
+                    resource="scaled-fragment",
+                ),
+                account.legend_talents["Coral Restoration"].get_advice(),
+                account.arcade[57].get_advice(),
+                coral_conservationism.get_obtained_advice(),
+                account.cards.named("Demonblub").getAdvice(),
+                account.statues["Coral Statue"].get_advice(),
+            ],
+        }

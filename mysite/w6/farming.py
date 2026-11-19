@@ -404,7 +404,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     # Achievement
     evo_advices[misc].append(farming.get_lil_overgrowth_advice())
     #Killroy
-    evo_advices[misc].append(farming.get_skull_shop_advice())
+    evo_advices[misc].append(
+        session_data.account.killroy.skull_shop["Crop Evolution"].get_bonus_advice()
+    )
     #Skill Mastery
     # Verify Skill Mastery itself is unlocked from The Rift
     evo_advices[misc].append(session_data.account.rift['SkillMastery'].get_bonus_advice())

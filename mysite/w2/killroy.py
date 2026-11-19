@@ -172,6 +172,18 @@ def getKillroyAdviceSection() -> AdviceSection:
     #Generate AdviceGroup
     killroy_AdviceGroups = {}
     killroy_AdviceGroups['Future'] = getKillroyUpgradeRecommendationsAdviceGroup()
+    skull_shop_advices = [
+        bonus.get_bonus_advice(link_to_section=False)
+        for bonus in session_data.account.killroy.skull_shop.values()
+        if bonus.unlocked
+    ]
+    if skull_shop_advices:
+        killroy_AdviceGroups["Skull Shop"] = AdviceGroup(
+            tier="",
+            pre_string="Skull Shop bonuses",
+            advices=skull_shop_advices,
+            informational=True,
+        )
 
     #Generate AdviceSection
     overall_SectionTier = min(true_max, tier_Killroy)
