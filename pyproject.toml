@@ -19,6 +19,13 @@ dependencies = [
 line-length = 88
 src = ["mysite"]
 
+[tool.pyright]
+include = ["mysite"]
+extraPaths = ["mysite"]
+pythonVersion = "3.10"
+venvPath = "."
+venv = ".venv"
+
 [tool.ruff.lint]
 preview = true
 select = ["E", "F", "I"]

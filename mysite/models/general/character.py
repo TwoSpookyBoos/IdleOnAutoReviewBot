@@ -5,7 +5,7 @@ from consts.consts_general import inventory_bags_dict, specialized_skills_dict
 from consts.consts_w2 import alchemy_jobs_list, get_obol_totals, po_box_dict
 from consts.consts_w3 import prayers_dict
 from consts.consts_w4 import lab_chips_dict
-from consts.consts_w5 import divinity_divinities_dict
+from consts.w5.divinity import divinity_gods
 from consts.idleon.consts_idleon import expected_talents_dict
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
@@ -283,13 +283,16 @@ class Character:
             try:
                 current_preset_level = self.current_preset_talents.get("505", 0)
                 if current_preset_level > 0:
-                    self.current_polytheism_link = divinity_divinities_dict[(current_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+                    # "Bonus_Minor" in source: `GodsInfo[lvl % 10]`
+                    god = divinity_gods[current_preset_level % 10]
+                    self.current_polytheism_link = god["Name"]
             except:
                 pass
             try:
                 secondary_preset_level = self.secondary_preset_talents.get("505", 0)
                 if secondary_preset_level > 0:
-                    self.secondary_polytheism_link = divinity_divinities_dict[(secondary_preset_level % 10) - 1]['Name']  #Dict starts at 1 for Snake, not 0
+                    god = divinity_gods[secondary_preset_level % 10]
+                    self.secondary_polytheism_link = god["Name"]
             except:
                 pass
 

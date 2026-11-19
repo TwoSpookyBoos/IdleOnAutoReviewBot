@@ -1,8 +1,5 @@
 from collections import defaultdict
 
-from consts.consts_w2 import max_NBLB
-
-from models.general.cards import Card
 from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
@@ -160,47 +157,7 @@ def get_sailing_progression_tier_advicegroups():
     return sailing_AdviceGroups, overall_SectionTier, max_tier, true_max
 
 def get_sailing_speed_advicegroup() -> AdviceGroup:
-    sailing = session_data.account.sailing
-    divinity = session_data.account.divinity
-    purrmep = divinity.named('Purrmep')
-    goharut = divinity.named('Goharut')
-    bagur = divinity.named('Bagur')
-    crawler: Card = next(card for card in session_data.account.cards if card.name == 'Crawler')
-    kattlekruk: Card = next(card for card in session_data.account.cards if card.name == 'Kattlekruk')
-    boaty_bubble = session_data.account.alchemy_bubbles['Boaty Bubble']
-    multi_total = sailing.speed_multi
-
-    speed_advices = {
-        f'Total: {multi_total}x': [sailing.get_speed_advice()],
-        f'Multi Group A: {sailing.speed_multi_a}x': [
-            sailing.get_purrmep_minor_advice(),
-            crawler.getAdvice(),
-            kattlekruk.getAdvice(),
-            boaty_bubble.get_bonus_advice(goal=max_NBLB)
-        ],
-        f'Multi Group B: {sailing.speed_multi_b}x': [
-            goharut.get_blessing_advice(f": +{sailing.goharut_bonus}%")
-        ],
-        f'Multi Group C: {sailing.speed_multi_c}x': [
-            purrmep.get_blessing_advice(f": +{sailing.purrmep_blessing_bonus}%")
-        ],
-        f'Multi Group D: {sailing.speed_multi_d}x': [sailing.get_ballot_advice()],
-        f'Multi Group E: {sailing.speed_multi_e}x': [
-            bagur.get_blessing_advice(f": +{sailing.bagur_bonus}%"),
-            sailing.get_ad_tablet_advice(),
-            session_data.account.stamps['Sailboat Stamp'].get_advice(),
-            session_data.account.statues["Boat Statue"].get_advice(),
-            session_data.account.meals['Popped Corn'].get_bonus_advice(),
-            session_data.account.alchemy_vials['Oj Jooce (Orange Slice)'].get_advice(full_name=False),
-            sailing.get_skill_mastery_advice(),
-            sailing.get_msa_advice(session_data.account.worship.max_total_waves),
-            sailing.get_c_shanti_advice(),
-        ],
-        f'Multi Group F: {sailing.speed_multi_f}x': [
-            session_data.account.gemshop.purchases['Davey Jones Training'].get_advice(),
-            session_data.account.legend_talents['Davey Jones Returns'].get_advice()
-        ]
-    }
+    speed_advices = session_data.account.sailing.get_speed_advices()
 
     for subgroup in speed_advices:
         for advice in speed_advices[subgroup]:

@@ -5,33 +5,32 @@ from models.advice.advice import Advice
 from models.advice.advice_section import AdviceSection
 from models.advice.advice_group import AdviceGroup
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
-from utils.safer_data_handling import safer_convert
 from utils.text_formatting import pl, notateNumber
 from utils.logging import get_logger
 
 from consts.consts_autoreview import (
     break_you_best, EmojiType
 )
-from consts.consts_w5 import divinity_offerings_dict, divinity_styles_dict, div_level_reasons_dict, divinity_arctis_breakpoints, getDivinityNameFromIndex, \
-    getOfferingNameFromIndex, getStyleNameFromIndex
+from consts.w5.divinity import (
+    divinity_arctis_breakpoints,
+    divinity_level_reasons,
+    divinity_offerings,
+)
 from consts.progression_tiers import divinity_progressionTiers, true_max_tiers
 
 logger = get_logger(__name__)
 
 
 def getDivLevelReason(inputLevel: int) -> str:
-    return div_level_reasons_dict.get(inputLevel, "")
+    return divinity_level_reasons.get(inputLevel, "")
 
 def getOfferingsAdviceGroup():
     offerings_Advices = {
         'Available Offerings': [],
         'Strategy': []
     }
-    low_offering = session_data.account.divinity.low_offering
-    high_offering = session_data.account.divinity.high_offering
-    divinity_points = session_data.account.divinity.points
-    low_offering_goal = session_data.account.divinity.low_offering_goal
-    high_offering_goal = session_data.account.divinity.high_offering_goal
+    divinity = session_data.account.divinity
+    divinity_points = divinity.points
 
     try:
         offerings_Advices['Available Offerings'].append(Advice(
@@ -41,31 +40,21 @@ def getOfferingsAdviceGroup():
     except:
         pass
 
-    low_purchases = safer_convert(divinity_points//low_offering_goal, 0)
-    offerings_Advices["Available Offerings"].append(Advice(
-        label=f"{divinity_offerings_dict.get(low_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(low_offering)}"
-              f"{f'<br>Could be bought {low_purchases} time{pl(low_purchases)}' if divinity_points >= low_offering_goal else ''}",
-        picture_class=divinity_offerings_dict.get(low_offering, {}).get('Image', ''),
-        progression=f"{max(0, min(1, divinity_points / max(1, low_offering_goal))):.2%}",
-        goal='100%'
-    ))
-
-    high_purchases = safer_convert(divinity_points//high_offering_goal, 0)
-    offerings_Advices["Available Offerings"].append(Advice(
-        label=f"{divinity_offerings_dict.get(high_offering, {}).get('Chance', 1)}% Offering: {getOfferingNameFromIndex(high_offering)}"
-              f"{f'<br>Could be bought {high_purchases} time{pl(high_purchases)}' if divinity_points >= high_offering_goal else ''}",
-        picture_class=divinity_offerings_dict.get(high_offering, {}).get('Image', ''),
-        progression=f"{max(0, min(1, divinity_points / max(1, high_offering_goal))):.2%}",
-        goal='100%'
-    ))
-    offerings_Advices['Strategy'].append(Advice(
-        label='Option 1: Choose the high offering if 100% Chance, otherwise choose low offering.',
-        picture_class=divinity_offerings_dict.get(5, {}).get('Image', ''),
-    ))
-    offerings_Advices["Strategy"].append(Advice(
-        label=f'Option 2: Always choose low offering and pray {EmojiType.PRAY.value}',
-        picture_class=divinity_offerings_dict.get(0, {}).get('Image', ''),
-    ))
+    offerings_Advices["Available Offerings"].extend(divinity.get_offering_advices())
+    offerings_Advices["Strategy"].append(
+        Advice(
+            label="Option 1: Choose the high offering if 100% Chance, "
+            "otherwise choose low offering.",
+            picture_class=divinity_offerings[5]["Image"],
+        )
+    )
+    offerings_Advices["Strategy"].append(
+        Advice(
+            label=f"Option 2: Always choose low offering and pray "
+            f"{EmojiType.PRAY.value}",
+            picture_class=divinity_offerings[0]["Image"],
+        )
+    )
 
     for subgroup in offerings_Advices:
         for advice in offerings_Advices[subgroup]:
@@ -84,8 +73,8 @@ def getBlessingsAdviceGroup():
     blessings_AdviceList = []
 
     for god in session_data.account.divinity.values():
-        if god.unlocked and god.blessing_level < 100:
-            blessings_AdviceList.append(god.get_blessing_advice())
+        if god.unlocked and god.blessing.level < 100:
+            blessings_AdviceList.append(god.blessing.get_advice())
 
     blessings_AdviceGroup = AdviceGroup(
         tier='',
@@ -96,28 +85,9 @@ def getBlessingsAdviceGroup():
     return blessings_AdviceGroup
 
 def getStylesInfoAdviceGroup(highest_divinity_level: int) -> AdviceGroup:
-    styles_AdviceDict = {
-        'Highest Points per hour': [],
-        'Highest EXP per hour': []
-    }
-    # Points Styles Info
-    for style in [7, 6, 2, 4, 1, 0]:
-        if highest_divinity_level >= divinity_styles_dict[style].get('UnlockLevel', 0):
-            styles_AdviceDict['Highest Points per hour'].append(Advice(
-                label=f"{divinity_styles_dict[style].get('Points', 0)}/hr: {getStyleNameFromIndex(style)}",
-                picture_class=getStyleNameFromIndex(style),
-                completed=True
-            ))
-
-    # EXP Styles Info
-    for style in [7, 6, 4, 5, 1, 3, 2, 0]:
-        if highest_divinity_level >= divinity_styles_dict[style].get('UnlockLevel', 0):
-            styles_AdviceDict['Highest EXP per hour'].append(Advice(
-                label=f"{divinity_styles_dict[style].get('Exp', 0)}/hr: {getStyleNameFromIndex(style)} {divinity_styles_dict[style].get('Notes', '')}",
-                picture_class=getStyleNameFromIndex(style),
-                completed=True
-            ))
-
+    styles_AdviceDict = session_data.account.divinity.get_style_advices(
+        highest_divinity_level
+    )
     styles_AdviceGroup = AdviceGroup(
         tier='',
         pre_string='Unlocked Styles',
@@ -296,9 +266,10 @@ def getDivinityProgressionTierAdviceGroups(lowest_divinity_level, highest_divini
             anyRequirementFailed = True
             add_subgroup_if_available_slot(divinity_AdviceDict['TieredProgress'], subgroupName)
             if subgroupName in divinity_AdviceDict['TieredProgress']:
+                god = session_data.account.divinity[tierRequirements['GodsUnlocked']]
                 divinity_AdviceDict['TieredProgress'][subgroupName].append(Advice(
-                    label=f"Unlock {getDivinityNameFromIndex(tierRequirements.get('GodsUnlocked', 0))}",
-                    picture_class=getDivinityNameFromIndex(tierRequirements.get('GodsUnlocked', 0)),
+                    label=f"Unlock {god.name}",
+                    picture_class=god.name,
                     progression=0,
                     goal=1
                 ))

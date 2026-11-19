@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 from consts.caverns.villager.roles import villager_roles
 from consts.consts_autoreview import ValueToMulti
-from consts.consts_w5 import divinity_divinities_dict
 from consts.idleon.caverns.villager.cosmos import majiks
+from consts.w5.divinity import divinity_gods
 from models.advice.advice import Advice
 from models.caverns.villagers.villager import Villager
 from utils.logging import get_logger
@@ -108,13 +108,13 @@ class Cosmos(Villager):
         pocket_majik = self.majiks.idleon["Pocket Divinity"]
         pocket_majik.link = []
         for entry_index, entry_value in enumerate(raw_pocket_div_links):
-            god_index = int(entry_value) + 1
-            if god_index == 0 or entry_index >= pocket_majik.level:
+            god_index = int(entry_value)
+            if god_index == -1 or entry_index >= pocket_majik.level:
                 break
-            if god_index not in divinity_divinities_dict:
-                logger.exception(f"Unknown God in Pocket Divinity #{god_index}")
+            if not 0 <= god_index < len(divinity_gods):
+                logger.exception(f"Unknown God index {god_index} in Pocket Divinity")
                 continue
-            pocket_majik.link.append(divinity_divinities_dict[god_index]["Name"])
+            pocket_majik.link.append(divinity_gods[god_index]["Name"])
 
     def calculate_bonuses(self, have_doot: bool):
         if have_doot:

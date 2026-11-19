@@ -10,6 +10,7 @@ Run from `mysite/`:
 - Tests: `python -m pytest tests/`
 - Lint: `ruff check <files>`
 - Format: `ruff format <files>`
+- Type check: `pyright <files>` (configured in `pyproject.toml` to use `.venv`)
 
 ## Models
 
@@ -66,5 +67,5 @@ a field private.
 
 - Code follows `ruff format`. Bring the code you change to it where possible, but don't
   reformat untouched parts of a file in the same change.
-- For files with pre-existing lint debt, compare `ruff check` counts before/after rather
-  than expecting zero.
+- For files with pre-existing lint or type debt, compare `ruff check` and `pyright`
+  counts before/after rather than expecting zero.
