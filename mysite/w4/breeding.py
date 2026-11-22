@@ -13,7 +13,7 @@ from utils.number_formatting import number_to_roman
 
 from consts.consts_autoreview import break_you_best, build_subgroup_label, EmojiType
 from consts.consts_w5 import max_sailing_artifact_level, sailing_artifacts_count
-from consts.consts_w4 import territory_names, breedabilityDaysList, breedabilityHearts, max_breeding_territories, max_meal_plate_level, \
+from consts.consts_w4 import territory_names, breedabilityDaysList, breedabilityHearts, max_breeding_territories, \
     breeding_last_arena_bonus_unlock_wave, max_heart_level
 from consts.consts_w2 import maxable_critter_vials_list
 from consts.progression_tiers import breeding_progressionTiers, true_max_tiers
@@ -606,38 +606,7 @@ def getBreedingProgressionTiersAdviceGroups(breeding_dict):
 
 def getPetDamageAdviceGroup():
     breeding = session_data.account.breeding
-    multi_total = breeding.pet_damage_multi
-    multi_group_a = breeding.pet_damage_multi_a
-    multi_group_b = breeding.pet_damage_multi_b
-    croissant_meal = session_data.account.meals['Croissant']
-    wedding_cake_meal = session_data.account.meals['Wedding Cake']
-
-    pet_damage_advices = {
-        f'Total: {multi_total}x': [breeding.get_pet_damage_advice()],
-        f'Multi Group A: {round(multi_group_a, 2)}x': [
-            breeding.upgrades['Blooming Axe'].get_advice()
-        ],
-        f'Multi Group B: {round(multi_group_b, 2)}x': [
-            session_data.account.alchemy_vials['Electrolyte (Condensed Zap)'].get_advice(full_name=False),
-            breeding.get_barley_lost_advice(),
-            Advice(
-                label=f'{{{{ Meal|#cooking }}}} - Croissant: +{croissant_meal.value:.2f}%',
-                picture_class=croissant_meal.image,
-                progression=croissant_meal.level,
-                goal=max_meal_plate_level
-            ),
-            Advice(
-                label=f'{{{{ Meal|#cooking }}}} - Wedding Cake: +{wedding_cake_meal.value:.2f}%',
-                picture_class=wedding_cake_meal.image,
-                progression=wedding_cake_meal.level,
-                goal=max_meal_plate_level
-            ),
-            breeding.get_arena_spirit_advice(),
-            breeding.get_power_bowower_advice(),
-            session_data.account.arcade[30].get_advice(),
-            session_data.account.vault.get_upgrade_advice('Pet Punchies')
-        ]
-    }
+    pet_damage_advices = breeding.get_pet_damage_advices()
     for subgroup in pet_damage_advices:
         for advice in pet_damage_advices[subgroup]:
             advice.mark_advice_completed()
