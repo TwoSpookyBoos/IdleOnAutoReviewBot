@@ -1,4 +1,5 @@
 import re
+from consts.idleon.w5.sailing import DeathskullDescriptions
 from utils.number_formatting import parse_number
 from utils.text_formatting import numeral_list, numberToLetter, number_to_numeral
 from utils.logging import get_logger
@@ -12,27 +13,23 @@ max_sailing_artifact_level = len(artifact_tier_names) - 1  #Get rid of the Undis
 # clamped by `Math.min`
 max_sailing_chests = 34
 
-#`ArtifactInfo = function ()` in source. Last updated in v2.550
+#`ArtifactInfo = function ()` in source. Last updated in v2.561
 ArtifactInfo = ["Moai_Head 10 5 1 Get_bonuses_from_all_shrines_from_any_map!_You_must_be_in_same_map/world_to_level_them_up_though. All_shrines_level_up_+100%_faster! 100 All_shrines_level_up_+200%_faster! 200 All_shrines_level_up_+300%_faster! 300 All_shrines_level_up_+400%_faster! 400 All_shrines_level_up_+500%_faster! 500 All_shrines_level_up_+750%_faster! 750".split(" ",),"Maneki_Kat 10 10 2 +{%_coins_from_all_monsters_per_class_level_of_your_highest_leveled_character._Total_Bonus:_+}%_coins The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Ruble_Cuble 10 25 1 +{%_Total_Dmg_for_every_10_items_found_after_500,_as_shown_at_The_Slab._@_Total_Bonus:_+}%_dmg The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Fauxory_Tusk 10 100 1 +{%_artifact_find_chance_per_sailing_LV._@_Total_Bonus:_+}%_artifact_chance The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Gold_Relic 10 12 1 All_3d_printer_samples_grow_by_+2%_per_day_for_40_days._Resets_when_taking_a_sample._Bonus_shown_in_3d_Printer. Samples_grow_by_2.5%_for_60_days_instead! 0.5 Samples_grow_by_3%_for_80_days_instead! 1 Samples_grow_by_5%_for_100_days_instead! 3 Samples_grow_by_6%_for_120_days_instead! 4 Samples_grow_by_7%_for_140_days_instead! 5 Samples_grow_by_10%_for_160_days_instead! 8".split(" ",),"Genie_Lamp 10 40 2 +{%_loot_value_from_sailing_chests_per_Sailing_Lv._@_Total_Bonus:_+}%_loot_value The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Silver_Ankh 10 150 1 Unlocks_a_new_Post_Office_crate_to_spend_P.O._boxes_on! 25%_chance_for_+1_box_when_completing_post_office_orders! 25 50%_chance_for_+1_box_when_completing_post_office_orders! 50 75%_chance_for_+1_box_when_completing_post_office_orders! 75 90%_chance_for_+1_box_when_completing_post_office_orders! 90 95%_chance_for_+1_box_when_completing_post_office_orders! 95 99%_chance_for_+1_box_when_completing_post_office_orders! 99".split(" ",),"Emerald_Relic 10 25 1 Convert_treasures_into_gold_bars!_Go_see_Blobby_G,_the_goldbar_blobulyte,_on_the_docks_for_info. Get_1.30x_more_gold_bars_from_converting! 50 Get_1.60x_more_gold_bars_from_converting! 80 Get_1.90x_more_gold_bars_from_converting! 110 Get_2.50x_more_gold_bars_from_converting! 170 Get_3.20x_more_gold_bars_from_converting! 240 Get_5.00x_more_gold_bars_from_converting! 420".split(" ",),"Fun_Hippoete 10 200 6 +{%_total_dmg_per_power_of_10_Construction_Build_Rate._@_Total_Bonus:_+}%_dmg The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Arrowhead 10 30 1 Enables_you_to_manage_which_chest_rarities_your_captains_deliver!_Helps_declutter_your_loot_pile. 1.25x_higher_chance_to_get_rare_chests! 25 1.50x_higher_chance_to_get_rare_chests! 50 1.70x_higher_chance_to_get_rare_chests! 70 1.90x_higher_chance_to_get_rare_chests! 90 2.10x_higher_chance_to_get_rare_chests! 110 2.50x_higher_chance_to_get_rare_chests! 150".split(" ",),"10_AD_Tablet 10 80 4 +{%_Sailing_Speed_for_every_10_items_found_after_500,_as_shown_at_The_Slab._@_Total_Bonus:_+}%_speed The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Ashen_Urn 10 250 1 +{%_Divinity_gain_per_class_level_of_your_highest_leveled_character,_up_to_Lv_200. Applies_up_to_character_level_400_instead! 200 Applies_up_to_character_level_600_instead! 400 Applies_up_to_character_level_800_instead! 600 Applies_up_to_character_level_1000_instead! 800 Applies_up_to_character_level_1200_instead! 1000 Applies_up_to_character_level_1600_instead! 1400".split(" ",),"Amberite 10 40 1 The_lab_bonus_'No_Bubble_Left_Behind'_affects_+{_more_bubbles! Affects_+1_additional_bubbles_per_day! 1 Affects_+2_additional_bubbles_per_day! 2 Affects_+3_additional_bubbles_per_day! 3 Affects_+4_additional_bubbles_per_day! 4 Affects_+5_additional_bubbles_per_day! 5 Affects_+6_additional_bubbles_per_day! 6".split(" ",),"Triagulon 10 125 15 +{%_cooking_speed_per_power_of_10_Turkey_owned._@_Total_Bonus:_+}%_Spd The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Billcye_Tri 10 300 1 Unlocks_a_new_Post_Office_crate_to_spend_P.O._boxes_on! 25%_chance_for_+1_box_when_completing_post_office_orders! 25 50%_chance_for_+1_box_when_completing_post_office_orders! 50 75%_chance_for_+1_box_when_completing_post_office_orders! 75 90%_chance_for_+1_box_when_completing_post_office_orders! 90 95%_chance_for_+1_box_when_completing_post_office_orders! 95 99%_chance_for_+1_box_when_completing_post_office_orders! 99".split(" ",),"Frost_Relic 10 100 30 +{%_Efficiency_for_all_skills_in_World_1,_World_2,_and_World_3! The_artifact's_main_bonus_is_doubled! 30 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Chilled_Yarn 10 400 1 All_the_Sigils_in_alchemy_give_2x_their_displayed_bonus._Ancient_will_give_3x,_not_4x,_just_FYI The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Causticolumn 10 150 10 +{_Max_Level_for_all_cooking_meals._Jade_plates_here_we_come! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Jade_Rock 10 500 3 +{%_Divinity_for_every_10_items_found_after_500,_as_shown_at_The_Slab._@_Total_Bonus:_+}%_Divinity The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Dreamcatcher 10 200 2 Your_loot_pile_can_hold_+{_more_sailing_chests_at_once!_What_a_dream_situation! The_artifact's_main_bonus_is_doubled! 25 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Gummy_Orb 10 600 15 +{%_bits_for_every_10_items_found_after_500,_as_shown_at_The_Slab._@_Total_Bonus:_+}%_bits The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Fury_Relic 10 700 25 +{_Max_Talent_Book_LV_at_the_library. The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Cloud_Urn 10 300 1 Unlocks_a_new_Post_Office_crate_to_spend_P.O._boxes_on! 25%_chance_for_+1_box_when_completing_post_office_orders! 25 50%_chance_for_+1_box_when_completing_post_office_orders! 50 80%_chance_for_+1_box_when_completing_post_office_orders! 80 95%_chance_for_+1_box_when_completing_post_office_orders! 95 97%_chance_for_+1_box_when_completing_post_office_orders! 97 99%_chance_for_+1_box_when_completing_post_office_orders! 99".split(" ",),"Weatherbook 10 800 10 +{%_bits_gained_in_the_Gaming_Garden_per_gaming_lv._@_Total_Bonus:_+}%_bits The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Giants_Eye 10 900 25 +{%_Shiny_Mob_breed_chance_per_day._Stacks_until_successfully_breeding_a_shiny! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Crystal_Steak 10 1000 2 +{%_total_damage_per_100_main_stat,_STR_AGI_WIS_or_LUK_based_on_your_class._Total_Bonus:_+}%_dmg The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Trilobite_Rock 10 1100 25 +{%_multikill_per_damage_tier. The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Opera_Mask 10 1200 1 +{%_total_damage_per_power_of_10_gold_bars_owned_in_sailing._Total_Bonus:_+}%_dmg The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Socrates 10 1300 10 +{%_all_stats._STR,_AGI,_WIS_and_LUK. The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"The_True_Lantern 10 1400 15 +{%_total_dmg_per_power_of_10_Particles_owned_in_atom_collider._@_Total_Bonus:_+}%_dmg The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"The_Onyx_Lantern 10 4000 30 Onyx_Statues_now_give_2.30x_their_bonus,_instead_of_just_2.0x! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"The_Shim_Lantern 10 12000 1 Shimmer_bonuses_from_World_2_Islands_give_2x_their_bonus!_Further_boosts_to_this_are_3x,_4x,_etc The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"The_Winz_Lantern 10 50000 25 All_Winner_Bonuses_from_Summoning_are_1.25x_Bigger! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Deathskull 10 3000000 1 $ The_artifact_gives_+2_Gallery_Slots_instead_of_just_1! 1 The_artifact_also_gives_+1_Grade_to_a_Gallery_Slot! 1 The_artifact_also_gives_+1_Grade_to_1_more_Gallery_Slots! 1 The_artifact_also_gives_+2_Grades_to_a_Gallery_Slot! 1 The_artifact_also_gives_+3_Grades_to_a_Gallery_Slot! 1 The_artifact_also_gives_+3_Grades_to_a_2nd_Gallery_Slot! 1".split(" ",),"Obsidian 10 25000000 1 +1_Legend_Talent_PTS_to_spend_at_Whallamus_in_World_7! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Pointagon 10 5000000 30 All_Chapter_Lore_bonuses_in_Spelunking_are_1.30x_Bigger! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Ender_Pearl 10 100000000 25 +1%_Research_AFK_gains_rate! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Fang_of_the_Gods 10 200000000 1 +1_Research_PTS_to_spend_on_buying_Research_Grid_upgrades_in_World_7! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Nomenclature 10 400000000 50 All_damage_dealt_in_Mr._Minehead's_Depth_Charge_is_1.50x_bigger! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Me_First_Dollar 10 700000000 100 You_earn_2.00x_more_Bucks_from_the_Sushi_Station! The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),"Bloodclot 10 1500000000 10 All_damage_dealt_during_Jelly_Operations_is_1.10x_bigger The_artifact's_main_bonus_is_doubled! 1 The_artifact's_main_bonus_is_tripled! 1 The_artifact's_main_bonus_is_quadrupled! 1 The_artifact's_main_bonus_is_quintupled! 1 The_artifact's_main_bonus_is_sixtupled! 1 The_artifact's_main_bonus_is_seventupled! 1".split(" ",),]  # fmt: skip # noqa
 sailing_artifacts_list = [
     data[0].replace('_', ' ')
     for data in ArtifactInfo
 ]
 sailing_artifacts_description_overrides = {
-    #This janky ass substitution is handled in code when drawing the UI. I only found it by searching for the string shown in-game.
-    'Deathskull': {
-        0: 'Gives_+1_Gallery_Slots_for_Trophies_in_World_7!'.replace('_', ' '),
-        1: 'Gives_+1_Gallery_Slots_for_Trophies_in_World_7!'.replace('_', ' '),
-        2: 'Gives_+2_Gallery_Slots_for_Trophies!'.replace('_', ' '),
-        3: 'Gives_+2_Gallery_Slots_and_makes_1_of_them_Featured_grade!'.replace('_', ' '),
-        4: 'Gives_+2_Gallery_Slots_and_makes_both_of_them_Featured_grade!'.replace('_', ' '),
-        5: 'Gives_+2_Gallery_Slots_and_makes_1_of_them_Featured_grade_and_1_of_them_Masterpiece!'.replace('_', ' '),
-    }
+    "Deathskull": {
+        level: description.replace("_", " ")
+        for level, description in enumerate(DeathskullDescriptions)
+    },
 }
 sailing_artifacts_dict = {
     index: {
         'Name': name.replace('_', ' '),
         'Description': basedesc.split('Total_Bonus')[0].replace('_', ' ').replace('@', '').replace('{', basevalue),
+        "BaseValue": parse_number(basevalue),
         'FormBonuses': {
             0: '',  #Matching to level 0 in the JSON means not discovered
             1: 'Ancient Form Not Found',  #Matches to level 1 in the JSON meaning only the base form is discovered
@@ -85,9 +82,6 @@ sailing_list = [
     for index, entry in enumerate(sailing_islands_list, start=1)
 ]
 captain_buffs = ['Boat Speed', 'Loot Value', 'Cloud Discover Rate', 'Artifact Find Chance', 'Rare Chest Chance', 'None']
-goldrelic_multis_dict = {
-    key: (value + 2 if key != 0 else value) for key, value in sailing_artifacts_dict[4]['Values'].items()
-}
 
 #Gaming
 def _parse_gaming_superbits(raw_game_data):
@@ -120,186 +114,6 @@ def _parse_gaming_superbits(raw_game_data):
 gaming_superbits_dict = _parse_gaming_superbits([["x1.03₣_per_Achievement_you've_unlocked_(}).___Total_bonus:_x{₣","1","9","Bits_Per|Achievement",],["+1_Max_Evolution_for_all_plants._This_is_20x_rarer_than_normal_evolutions","3","10","Plant|evo",],["All_obols_give_+40%_more_STR/AGI/WIS/LUK_than_what_they_say_they_do!","2","12","obol_stat|booster",],["MSA_now_gives_+1%_bonus_Sailing_Speed_per_10_total_Waves","5","16","MSA|Sailing",],["+20%_chance_for_+1_more_bubble_boosted_by_No_Bubble_Left_Behind","1","22","Moar|Bubbles",],["+1_Max_Evolution_for_all_plants._This_one_is_5000x_rarer_than_normal","3","44","Plant|evo",],["+5_Max_HP_for_Worship_Totem_during_Tower_Defence_summon_battle","2","11","Worship|Totem_HP",],["Unlock_the_Totalizer_for_the_Miniature_Soul_Apparatus_(MSA)_in_World_3","5","13","MSA|Totalizer",],["All_shrines_level_up_+50%_faster_than_normal","5","14","Shrine|Speed",],["If_no_Prayers_equipped,_get_1/5th_bonus_of_all_prayers,_and_no_curses","3","17","No_more|Praying",],["+15%_chance_for_Double_Exp_whenever_claiming_AFK_gains","2","23","Double|Exp",],["MSA_now_gives_+1%_bonus_Class_EXP_per_10_total_Waves","4","38","MSA|Class_EXP",],["+1%_Library_Checkout_Speed_per_Gaming_Lv.___Total_Bonus:_+{%_Spd","4","19","Library|Checkouts",],["MSA_now_gives_+10%_bonus_Meal_Cooking_speed_per_10_total_Waves","2","20","MSA|Mealing",],["All_spice_claimed,_either_manually_or_automatically,_is_worth_1.5x_more.","4","25","Spice|Is_Nice",],["+10_Max_HP_for_Worship_Totem_during_Tower_Defence_summon_battle","4","31","Worship|Totem_HPr",],["MSA_now_gives_+1%_bonus_Skill_Exp_per_10_total_Waves","4","41","MSA|Skill_EXP",],["All_spice_claimed,_either_manually_or_automatically,_is_worth_2x_more.","5","47","Spice|Is_Nicer",],["+1_Max_Evolution_for_all_plants._This_one_is_250x_rarer_than_normal","2","27","Plant|evo",],["Your_lowest_Leveled_character_gets_1.5x_Class_EXP","4","29","Noobie|Gains",],["MSA_now_gives_+50%_Bits_for_Gaming_per_10_total_Waves","5","33","MSA|Big_Bits",],["All_atom_upgrading_is_now_10%_cheaper","2","36","Atom|Redux",],["+30%_chance_for_+1_more_bubble_boosted_by_No_Bubble_Left_Behind","4","45","Even_Moar|Bubbles",],["All_atoms_now_have_+10_Max_LV","2","50","Isotope|Discovery",],["1.01x_Class_EXP_per_Spelunk_Discovery.___________Total_Bonus:_{x_EXP","5","51","Classy|Discoveries",],["Adds_a_new_bonus_to_The_Slab:_+%_Total_Spelunking_POW","2","53","Slabby|Spelunking",],["1.02x_Artifact_chance_per_Spelunk_Discovery.__________Total_Bonus:_{x","6","55","Artifacto|Discoveries",],["MSA_now_gives_+2.5%_Spelunking_POW_per_10_Waves_over_300","6","58","MSA|Spelunking",],["+20%_Palette_Luck_per_Snail_LV_over_25.________Total_Bonus:_+{%_Luck","6","65","Lucky|Snail",],["The_Immortal_Snail_now_has_+10_Max_LV","5","71","Snail|Genesis",],["The_Immortal_Snail_now_has_+5_Max_LV","3","52","Snail|Omega",],["Monument_reward_multi_increases_normally_for_+10_more_days","9","54","Monument|Infimulti",],["1.05x_Collectible_chance_per_Spelunk_Discovery._______Total_Bonus:_{x","8","57","Jar_Jar|Collectible",],["Collect_Ultimate_Cogs_while_there_are_5+_left_to_get_a_Jewel_Cog_(1/day)","2","59","Jewel|Cogs",],["Adds_a_new_bonus_to_The_Slab:_+%_Research_EXP_gain","3","67","Slabby|Research",],["+10_Max_LV_for_Equinox_upgrades","4","73","Equinox|Unending",],["Can_use_Spelunking_tools_you_don't_have_enough_stamina_for","6","58","Any_tool|Any_time",],["The_Squirrel_now_has_a_new_3rd_upgrade_to_spend_acorns_on","7","61","Squirrel|Triad",],["+1%_Palette_Luck_per_Total_Colour_LVs.________Total_Bonus:_+{%_Luck","6","64","Colourful|Luck",],["If_no_Prayers_equipped,_get_2/5th_bonus_of_all_prayers,_and_no_curses","2","69","Prayers|Begone",],["The_Immortal_Snail_now_has_+10_Max_LV","5","70","Snail|Zenith",],["Adds_a_new_bonus_to_slab_when_W7_Skill_3_comes_out","7","76","Slabby|Something",],["+1_Palette_Colour_Slot,_and_2x_total_Palette_Luck!","3","60","Bigger|Palette",],["Bolaia_studies_ALSO_adjacent_caverns,_not_just_the_selected_one!","6","63","Peripheral|Vision",],["MSA_now_gives_+0.3%_Research_EXP_per_10_Waves_over_300","1","68","MSA|Research",],["+3%_Palette_Luck_per_Gaming_LV_over_200._______Total_Bonus:_+{%_Luck","3","72","Gamer|Luck",],["MSA_will_give_a_bonus_for_W7_skill_3_when_released...","6","74","MSA|Something",],["+1_LV_for_all_Talents_per_100_Class_LV_over_500.______Total_Bonus:_+{_LV","8","78","Timmy|Talented",],["+1_Max_Evolution_for_all_plants._This_is_250Kx_rarer_than_normal_evolutions","1","70","Plant|evo",],["The_Palette_bonus_from_'Peachy_Pink'_is_2x_bigger_now","3","73","Peachier|Peach",],["Earn_1.50x_more_King_Tokens_to_spend_on_King_Rat's_upgrades","5","76","A_Kings|Ransom",],["The_Palette_bonus_from_'Ocean_Blue'_is_2x_bigger_now","6","79","Bluer|Ocean",],["The_Palette_bonus_from_'Red_Orange'_is_2x_bigger_now","8","83","Redder|Orange",],["If_no_Prayers_equipped,_get_3/5th_bonus_of_all_prayers,_and_no_curses","4","87","Prayers|Aint_Meta",],["The_Palette_bonus_from_'Offwhite'_is_2x_bigger_now","2","72","Further|Offcolour",],["+2%_Megacrop_chance_per_Farming_LV_over_300__Total_Bonus:_{x_Chance","6","77","Mo_Stickers|Mo_Bonusers",],["Adds_a_new_Bits_Gain_multi_based_on_best_Log_Minigame_highscore","1","84","Pro_Log|Flipper",],["+1_Max_Evolution_for_all_plants._This_is_10Mx_rarer_than_normal_evolutions","8","86","Plant|evo",],["The_Palette_bonus_from_'Neon_Tree'_is_2x_bigger_now","5","90","Everybody|Talks",],["All_the_'2x_Palette_bonus_from_specific_colours'_upgrades_now_give_2.5x","4","93","Colourier|Colours",],["Boosts_odds_of_finding_one_of_King_Rat's_Crowns_by_1.50x","9","75","Royal|Flora",],["The_Palette_bonus_from_'Babby_Blue'_is_2x_bigger_now","1","86","Babbiest|Blue",],["All_Farming_Stickers_give_1.20x_higher_bonuses_now_and_forever","1","92","Bettah|Stickahs",],["1.10x_Class_EXP_for_all_players","3","96","Experienced|Gamer",],["1.10x_Damage_Multi_for_all_players,_unaffected_by_DMG_scaling","7","98","Destructive|Gamer",],["1.30x_Palette_Luck,_straight_up_multiplier_for_your_colouring_needs","1","100","Artistic|Gamer",],["Opponents_in_Mr._Minehead's_Depth_Charge_always_have_1_less_mine.","1","80","Less|Charge",],["Your_sushi_generate_+100%_more_Bucks_at_the_Sushi_Station!","2","89","Small|Gratuity",],["Boosts_your_Cooking_Mastery_EXP_gain_rate_by_1.40x","4","100","Cooking|Master",],["You?_Buying_THIS??_YOU'RE_BROOOOKE!!!","2","150","Not|Happening",],["Aint_no_way_I'm_lettin'_ya_buy_this_here_upgrade,_no_way_no_how.","2","150","No|Way",],["Yea,_what_he_said.", "2", "150", "No|How"],])
 snail_max_possible_rank = 49  # Snail 49->50 is currently impossible
 snail_first_consecration_rank = 25
-
-#Divinity
-divinity_divinities_dict = {
-    1: {
-        "Name": "Snehebatu",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'green-bits'
-    },
-    2: {
-        "Name": "Arctis",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'sailing-treasure-0'
-    },
-    3: {
-        "Name": "Nobisect",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'red-bits'
-    },
-    4: {
-        "Name": "Harriep",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'coins'
-    },
-    5: {
-        "Name": "Goharut",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'red-bits'
-    },
-    6: {
-        "Name": "Omniphau",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'particles'
-    },
-    7: {
-        "Name": "Purrmep",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'coins'
-    },
-    8: {
-        "Name": "Flutterbis",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'particles'
-    },
-    9: {
-        "Name": "Kattlekruk",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'purple-bits'
-    },
-    10: {
-        "Name": "Bagur",
-        "Unlocked": False,
-        "BlessingLevel": 0,
-        'BlessingMaterial': 'particles'
-    },
-    }
-divinity_offerings_dict = {
-    0: {
-        "Name":"Olive Branch",
-        "Image":"offering-1",
-        "Chance":1,
-    },
-    1: {
-        "Name": "Incense",
-        "Image": "offering-5",
-        "Chance": 5,
-    },
-    2: {
-        "Name": "Giftbox",
-        "Image": "offering-10",
-        "Chance": 10,
-    },
-    3: {
-        "Name": "Tithe",
-        "Image": "offering-25",
-        "Chance": 25,
-    },
-    4: {
-        "Name": "Hearty Meal",
-        "Image": "offering-50",
-        "Chance": 50,
-    },
-    5: {
-        "Name": "Sacrifice",
-        "Image": "offering-100",
-        "Chance": 100,
-    },
-}
-divinity_styles_dict = {
-    0: {
-        "Name": "Kinesis",
-        "UnlockLevel": 1,
-        "Points": 1,
-        "Exp": 1,
-    },
-    1: {
-        "Name": "Chakra",
-        "UnlockLevel": 5,
-        "Points": 2,
-        "Exp": 2,
-    },
-    2: {
-        "Name": "Focus",
-        "UnlockLevel": 10,
-        "Points": 4,
-        "Exp": 1,
-    },
-    3: {
-        "Name": "Mantra",
-        "UnlockLevel": 15,
-        "Points": 0,
-        "Exp": 1,
-        "Notes": "(To all characters)"
-    },
-    4: {
-        "Name": "Vitalic",
-        "UnlockLevel": 25,
-        "Points": 2,
-        "Exp": 7,
-    },
-    5: {
-        "Name": "TranQi",
-        "UnlockLevel": 40,
-        "Points": 0,
-        "Exp": 3,
-        "Notes": "(Even when not Meditating)"
-    },
-    6: {
-        "Name": "Zen",
-        "UnlockLevel": 60,
-        "Points": 8,
-        "Exp": 8,
-    },
-    7: {
-        "Name": "Mindful",
-        "UnlockLevel": 80,
-        "Points": 15,
-        "Exp": 10,
-    },
-}
-div_level_reasons_dict = {
-    0: "",
-    2: "to activate Doot",
-    40: "to unlock the TranQi Style.",
-    50: "to unlock the Multitool Stamp from Poigu's quest."
-}
-divinity_DivCostAfter3 = 40  # Last verified as of v2.12 Ballot
-divinity_arctis_breakpoints = {
-    12: { 60:  841,  61:  602,  62:  467,  63:  380,  64:  319,  65:  275,  66:  241},
-    13: { 72:  841,  73:  647,  74:  525,  75:  441,  76:  379,  77:  332,  78:  295},
-    14: { 85: 1331,  86:  986,  87:  782,  88:  648,  89:  522,  90:  481,  91:  425,  92:  381},
-    15: {102: 1641, 103: 1246, 104: 1004, 105:  841, 106:  722, 107:  633, 108:  564, 109:  508, 110:  462},
-    16: {122: 3601, 123: 2401, 124: 1801, 125: 1441, 126: 1201, 127: 1029, 128:  901, 129:  801, 130:  721},
-    17: {150: 4441, 151: 3101, 152: 2383, 153: 1936, 154: 1631, 155: 1409, 156: 1241, 157: 1002},
-    18: {188: 5983, 189: 4302, 190: 3361, 191: 2759, 192: 2341, 193: 2033, 194: 1798, 195: 1612},
-    19: {244: 6041, 245: 4841, 246: 4041, 247: 3469, 248: 3041, 249: 2707, 250: 2441},
-    20: {332: 6731, 333: 5817, 334: 5123, 335: 4579, 336: 4141, 337: 3780, 338: 3478}
-}
-
-def getDivinityNameFromIndex(inputValue: int) -> str:
-    if inputValue == 0:
-        return "Unlinked"
-    return divinity_divinities_dict.get(inputValue, {"Name": f"UnknownDivinity{inputValue}"}).get("Name")
-
-
-def getOfferingNameFromIndex(inputValue):
-    return divinity_offerings_dict.get(inputValue, {"Name": f"UnknownOffering{inputValue}"}).get("Name")
-
-
-def getStyleNameFromIndex(inputValue: int) -> str:
-    return divinity_styles_dict.get(inputValue, {"Name": f"UnknownStyle{inputValue}"}).get("Name")
-
 
 #Slab
 # `SlabItemSort = function` in source. Last updated in v2.561.0

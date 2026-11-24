@@ -51,7 +51,7 @@ def getBookLevelAdviceGroup() -> AdviceGroup:
         library.get_library_building_advice(),
         library.get_checkout_takeout_advice(),
         library.get_oxygen_advice(),
-        library.get_fury_relic_advice(),
+        session_data.account.sailing.artifacts["Fury Relic"].get_bonus_advice(),
     ]
 
     #Scaling Sources

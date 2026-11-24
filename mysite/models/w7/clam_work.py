@@ -33,3 +33,12 @@ class ClamWork:
         for bonus_index in range(len(clam_bonus)):
             bonuses.append(ClamBonus(bonus_index, self.level > bonus_index))
         self.bonuses = bonuses
+        self.daily_corals_bonus = 20 if self.level > 5 else 0
+
+    def get_daily_corals_advice(self) -> Advice:
+        return Advice(
+            label=f"Clam Work: +{self.daily_corals_bonus}% Daily Corals past level 5",
+            picture_class="clam-pearl",
+            progression=self.level,
+            goal=6,
+        )

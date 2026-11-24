@@ -1,4 +1,5 @@
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from models.w7.menagerie.jellyfish.jellyfish import Jellyfish
 from utils.text_formatting import notateNumber
 
@@ -29,8 +30,6 @@ class BlueJellyfish(Jellyfish):
 
     @property
     def _ladles_in_storage(self) -> float:
-        from models.general.session_data import session_data
-
         return session_data.account.stored_assets.get("Ladle").amount
 
     def _deposit_label(self, jellyfish: str) -> str:

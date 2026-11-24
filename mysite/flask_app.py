@@ -194,8 +194,7 @@ def results() -> Response | str:
         response = error, 403
 
     except ProfileNotFound as e:
-        dirname = create_and_populate_log_files(None, headerData, e.log_msg, name_or_data, e)
-        error = e.msg_display.format(dirname)
+        error = e.msg_display
         response = error, 404
 
     except EmptyResponse as e:

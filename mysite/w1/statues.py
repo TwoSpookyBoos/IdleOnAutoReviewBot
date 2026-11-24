@@ -40,12 +40,9 @@ def getPreOnyxAdviceGroup() -> AdviceGroup:
         progression=int(any([char.max_talents.get('619', 0) > 0 for char in session_data.account.characters])),
         goal=1
     ))
-    crystal_Advices.append(Advice(
-        label=f"{{{{ Sailing|#sailing }}}}: Moai Head artifact to apply Shrines everywhere",
-        picture_class='moai-head',
-        progression=session_data.account.sailing.artifacts['Moai Head'].level,
-        goal=1
-    ))
+    crystal_Advices.append(
+        session_data.account.sailing.artifacts["Moai Head"].get_bonus_advice()
+    )
     crystal_Advices.append(Advice(
         label=f"Minimum 1% (1 in 100) {{{{ Crystal Spawn Chance|#active }}}} on Non-Jman:"
               f"<br>{session_data.account.crystal_spawn_chance.highest*100:.4f}%"
@@ -103,7 +100,7 @@ def getEffectBonusAdvices() -> list[Advice]:
     statues = session_data.account.statues
     return [
         statues.get_voodoo_advice(),
-        statues.get_onyx_advice(session_data.account.sailing.artifacts['The Onyx Lantern'].level),
+        statues.get_onyx_advice(),
         session_data.account.zenith_market['TRUE ZEN'].get_advice(),
         session_data.account.meritocracy[26].get_bonus_advice(),
         statues.get_event_shop_advice(session_data.account.event_points_shop['Smiley Statue']),
@@ -115,7 +112,10 @@ def getEffectBonusAdvices() -> list[Advice]:
 def getCurrentLevelsAdviceGroup() -> AdviceGroup:
     advices = {
         'Effect bonuses': getEffectBonusAdvices(),
-        'Statue Effects': [statue.get_advice() for statue in session_data.account.statues.values()]
+        'Statue Effects': [
+            statue.get_advice(link_to_section=False)
+            for statue in session_data.account.statues.values()
+        ]
     }
 
     for category in advices:

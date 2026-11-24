@@ -14,7 +14,6 @@ from consts.idleon.w6.summoning import (
     summoning_stone_boss_base_hp,
     summoning_upgrades,
 )
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.w6.summoning import (
     summoning_bonus_img,
     summoning_boss_info,
@@ -28,6 +27,7 @@ from consts.consts_monster_data import decode_monster_name
 from models.advice.advice import Advice
 from models.general.achievements import Achievements
 from models.general.gem_shop import GemShopPurchase
+from models.w5.sailing import Artifact
 from models.general.merits import Merit
 
 from utils.logging import get_logger
@@ -369,7 +369,7 @@ class Summoning:
         crystal_comb_value: float,
         king_of_all_winners: GemShopPurchase,
         winner_merit: Merit,
-        winz_lantern_level: int,
+        winz_lantern: Artifact,
         achievements: Achievements,
         godshard_set_value: float,
         daydreamer_pack_owned: bool,
@@ -387,7 +387,7 @@ class Summoning:
         # Multi Group C: Summoning Winner Bonuses
         max_mgc_library = ValueToMulti(
             # 19 == t ? Library bonus's index
-            (25 * max_sailing_artifact_level)
+            winz_lantern.max_value
             + winner_merit.max_level  # World 6 Merit Shop
             + 1  # Spectre Stars achievement
             + 1  # Regalis My Beloved achievement
@@ -395,7 +395,7 @@ class Summoning:
             + 50  # Gem Shop - Daydreamer Pack (ban_i)
         )
         player_mgc_rest = ValueToMulti(
-            (25 * winz_lantern_level)
+            winz_lantern.value
             + winner_merit.level
             + int(achievements["Spectre Stars"].complete)
             + int(achievements["Regalis My Beloved"].complete)
@@ -406,7 +406,7 @@ class Summoning:
             + emperor_winner_value
         )
         player_mgc_library = ValueToMulti(
-            (25 * winz_lantern_level)
+            winz_lantern.value
             + winner_merit.level
             + int(achievements["Spectre Stars"].complete)
             + int(achievements["Regalis My Beloved"].complete)

@@ -1,6 +1,8 @@
 from functools import cached_property
+from math import prod
 
 from consts.consts_autoreview import ValueToMulti
+from consts.consts_w2 import max_NBLB
 from consts.consts_w5 import (
     artifact_tier_names,
     captain_buffs,
@@ -10,6 +12,8 @@ from consts.consts_w5 import (
     sailing_list,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
+from models.w1.star_signs import get_infinite_star_sign_levels
 from utils.logging import get_logger
 from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
@@ -34,6 +38,9 @@ class Artifact:
         ).get(level, info["Description"])
         self.form: str | None = artifact_tier_names.get(level)
         self.form_bonus: str = info["FormBonuses"].get(level, "Unknown Bonus")
+        self._base_value: int | float = info["BaseValue"]
+        self._form_bonuses: dict[int, str] = info["FormBonuses"]
+        self._form_values: dict[int, int | float] = info["Values"]
 
     def get_advice(
         self, include_island_name: bool = False, link_to_section: bool = True
@@ -47,6 +54,86 @@ class Artifact:
             picture_class=self.image,
             progression=self.level,
             goal=max_sailing_artifact_level,
+        )
+
+    @property
+    def value(self) -> int | float:
+        return self._value_at(self.level)
+
+    @property
+    def max_value(self) -> int | float:
+        return self._value_at(max_sailing_artifact_level)
+
+    @property
+    def as_multi(self) -> float:
+        return self._multi(self.value)
+
+    @property
+    def max_multi(self) -> float:
+        return self._multi(self.max_value)
+
+    def _value_at(self, level: int) -> int | float:
+        # "ArtifactBonus" in source. Last updated in v2.561.0
+        # The effective bonus: the main one, `ArtifactBonus(index, 0)`, is combined
+        # with the form's own one, `ArtifactBonus(index, 1)`, as their readers do
+        if level == 0:
+            return 0
+        value = self._base_value
+        # Forms either multiply the main bonus by the tier or add a bonus of their own
+        if self._form_bonuses[level].startswith("The artifact's main bonus is"):
+            value *= level
+        form_value = self._form_values[level]
+        match self.index:
+            case 0:  # Moai Head: shrine level up speed, %. Shrines apply everywhere
+                return form_value
+            case 4:  # Gold Relic: 3D Printer sample growth, % per day: 2 + form
+                return 2 + form_value
+            case 12:  # Amberite: No Bubble Left Behind bubbles: 1 + form
+                return value + form_value
+            case 16:  # Chilled Yarn: read as `1 + value` in source, kept as % here
+                return 100 * value
+            case 2 | 10 | 18 | 20:  # Slab artifacts: per 10 Slab items above 500
+                # Depends on: slab
+                slab = session_data.account.slab
+                return value * slab.bonus_multi * slab.bonus_steps(500, 10)
+            case 1 | 3 | 5 | 8 | 11 | 13 | 23 | 25 | 27 | 29:
+                # Scaled by other systems in source, not modelled yet
+                return 0
+            case _:
+                return value
+
+    def _multi(self, value: int | float) -> float:
+        match self.index:
+            case 30:  # The Onyx Lantern: on top of the base 2x of Onyx statues
+                return ValueToMulti(100 + value)
+            case _:
+                return ValueToMulti(value)
+
+    def get_bonus_advice(self, note: str = "", link_to_section: bool = True) -> Advice:
+        link_text = "{{ Artifact|#sailing }} - " if link_to_section else ""
+        note_text = f"<br>{note}" if note else ""
+        goal = max_sailing_artifact_level
+        match self.index:
+            case 0:  # Moai Head: the main bonus is unlocked by the first tier
+                bonus = "Shrines apply everywhere"
+                goal = 1
+            case 16 | 30 | 35:
+                multi = round_and_trim(self.as_multi)
+                max_multi = round_and_trim(self.max_multi)
+                bonus = f"{multi}/{max_multi}x"
+            case 12 | 17 | 21:
+                value = round_and_trim(self.value)
+                max_value = round_and_trim(self.max_value)
+                bonus = f"+{value}/{max_value}"
+            case _:
+                value = round_and_trim(self.value)
+                max_value = round_and_trim(self.max_value)
+                bonus = f"+{value}/{max_value}%"
+        return Advice(
+            label=f"{link_text}{self.name}: {bonus}{note_text}",
+            picture_class=self.image,
+            progression=self.level,
+            goal=goal,
         )
 
 
@@ -64,15 +151,6 @@ class Artifacts(dict[str, Artifact]):
     @property
     def found_count(self) -> int:
         return sum(artifact.level > 0 for artifact in self.values())
-
-    @property
-    def chilled_yarn_multi(self) -> int:
-        # "ArtifactBonus" in source: base 1 x tier. Last updated in v2.531.0
-        return 1 + self["Chilled Yarn"].level
-
-    @property
-    def max_chilled_yarn_multi(self) -> int:
-        return 1 + max_sailing_artifact_level
 
 
 class Island:
@@ -141,8 +219,6 @@ class Sailing:
     @cached_property
     def unlocked_artifact_tier(self) -> int:
         """Highest artifact tier that can be found on the account"""
-        from models.general.session_data import session_data
-
         account = session_data.account
         # Tiers 3 and up, each one needs the previous
         tier_unlocks = [
@@ -205,177 +281,167 @@ class Sailing:
     def max_captain_level(self) -> int:
         return max((captain.level for captain in self.captains), default=0)
 
-    def calculate_speed(
-        self,
-        *,
-        purrmep,
-        goharut,
-        bagur,
-        characters: list,
-        crawler_level: int,
-        kattlekruk_level: int,
-        boaty_bubble: float,
-        big_p: float,
-        ballot_buff,
-        slab_count: int,
-        slab_sovereignty,
-        sailboat_stamp: float,
-        boat_statue,
-        popped_corn: float,
-        oj_jooce: float,
-        skill_mastery_unlocked: bool,
-        total_sailing_level: int,
-        msa_sailing: bool,
-        total_worship_waves: int,
-        c_shanti_unlocked: bool,
-        davey_jones_owned: int,
-        davey_jones_returns: float,
-    ):
-        # "BoatSpeed" in source. Last updated in v2.49 Dec 24 2025
-        # Group A: Purrmep Minor Link, Cards, Bubble
-        self._purrmep = purrmep
-        self.purrmep_linked = next(
-            (char for char in characters if char.divinity_link == "Purrmep"), None
+    @cached_property
+    def _skill_mastery_bonus(self) -> int:
+        # "RiftSkillBonus,12" in source: Sailing rank above 1 is 200+ total levels
+        # Depends on: rift['SkillMastery'], characters
+        account = session_data.account
+        total_sailing_level = sum(account.characters.all_skills["Sailing"])
+        unlocked = account.rift["SkillMastery"].unlocked
+        return 17 * (unlocked and total_sailing_level >= 200)
+
+    @cached_property
+    def _c_shanti_bonus(self) -> float:
+        # `StarSigns["63"]` in source is for the logged in character: the best one
+        # Depends on: star_signs, breeding, characters
+        account = session_data.account
+        infinite_levels = get_infinite_star_sign_levels(
+            account.breeding.total_shiny_bonus_values["Infinite Star Signs"]
         )
-        self.purrmep_minor_bonus = 0
-        if self.purrmep_linked is not None:
-            level = self.purrmep_linked.divinity_level
-            self.purrmep_minor_bonus = level / (60 + level) * big_p * 50
-        self.speed_multi_a = round(
-            1
+        c_shanti = account.star_signs["C. Shanti Minor"]
+        seraph_multi = account.star_signs.seraph_multi
+        return max(
+            (
+                c_shanti.value_for(char, 20, infinite_levels, seraph_multi)
+                for char in account.characters.safe
+            ),
+            default=0,
+        )
+
+    @cached_property
+    def _speed_multis(self) -> dict[str, float]:
+        # "BoatSpeed" in source. Last updated in v2.561.0
+        # Not modelled yet: the per boat part of "DaveyJonesBonus"
+        # Depends on: divinity, cards, alchemy_bubbles['Boaty Bubble'], ballot[24],
+        # stamps['Sailboat Stamp'], statues['Boat Statue'], meals['Popped Corn'],
+        # alchemy_vials['Oj Jooce (Orange Slice)'], gaming.superbits['MSA Sailing'],
+        # worship, vault.upgrades['Speedy Sailing'],
+        # gemshop.purchases['Davey Jones Training'],
+        # legend_talents['Davey Jones Returns']
+        account = session_data.account
+        divinity = account.divinity
+        msa_sailing = account.gaming.superbits["MSA Sailing"].unlocked
+        total_worship_waves = account.worship.total_waves
+        davey_jones_owned = account.gemshop.purchases["Davey Jones Training"].owned
+        davey_jones_returns = account.legend_talents["Davey Jones Returns"].value
+        return {
+            "A": 1
             + (
-                self.purrmep_minor_bonus
-                + 4 * crawler_level
-                + 6 * kattlekruk_level
-                + boaty_bubble
+                divinity.named("Purrmep").minor.value
+                + 4 * account.cards.named("Crawler").level
+                + 6 * account.cards.named("Kattlekruk").level
+                + account.alchemy_bubbles["Boaty Bubble"].base_value
             )
             / 125,
-            2,
-        )
-        # Groups B and C: Goharut and Purrmep blessings
-        self.goharut_bonus = 4 * goharut.blessing_level
-        self.speed_multi_b = round(ValueToMulti(self.goharut_bonus), 2)
-        self.purrmep_blessing_bonus = 3 * purrmep.blessing_level
-        self.speed_multi_c = round(ValueToMulti(self.purrmep_blessing_bonus), 2)
-        # Group D: Ballot
-        self._ballot_buff = ballot_buff
-        self.ballot_multi = ValueToMulti(ballot_buff.active * ballot_buff.value)
-        self.speed_multi_d = round(self.ballot_multi, 2)
-        # Group E: everything else
-        self.bagur_bonus = 5 * bagur.blessing_level
-        self.ad_tablet_level = self.artifacts["10 AD Tablet"].level
-        sovereignty_multi = (
-            ValueToMulti(slab_sovereignty.value) * slab_sovereignty.enabled
-        )
-        self.ad_tablet_bonus = (
-            (4 * self.ad_tablet_level * ((slab_count - 500) // 10)) * sovereignty_multi
-            if slab_count >= 500
-            else 0
-        )
-        self._boat_statue = boat_statue
-        self.skill_mastery_unlocked = skill_mastery_unlocked
-        self.total_sailing_level = total_sailing_level
-        self.msa_sailing = msa_sailing
-        self.total_worship_waves = total_worship_waves
-        self.c_shanti_unlocked = c_shanti_unlocked
-        self.speed_multi_e = round(
-            1
+            "B": ValueToMulti(divinity.named("Goharut").blessing.value),
+            "C": ValueToMulti(divinity.named("Purrmep").blessing.value),
+            "D": account.ballot[24].active_multi,
+            "E": 1
             + (
-                self.bagur_bonus
-                + self.ad_tablet_bonus
-                + sailboat_stamp
-                + (boat_statue.type != "Normal") * boat_statue.value
-                + popped_corn
-                + oj_jooce
-                + skill_mastery_unlocked * (total_sailing_level > 200) * 15
+                divinity.named("Bagur").blessing.value
+                + self.artifacts["10 AD Tablet"].value
+                + account.stamps["Sailboat Stamp"].total_value
+                + account.statues["Boat Statue"].value
+                + account.meals["Popped Corn"].value
+                + account.alchemy_vials["Oj Jooce (Orange Slice)"].value
+                + self._skill_mastery_bonus
                 + msa_sailing * (total_worship_waves // 10)
-                + c_shanti_unlocked * 20
+                + self._c_shanti_bonus
+                + account.vault.upgrades["Speedy Sailing"].total_value
             )
             / 125,
-            2,
-        )
-        # Group F: Davey Jones. "DaveyJonesBonus" in source
-        self.speed_multi_f = round_and_trim(
-            ValueToMulti(50 * davey_jones_owned + davey_jones_returns)
-        )
-        self.speed_multi = round(
-            self.speed_multi_a
-            * self.speed_multi_b
-            * self.speed_multi_c
-            * self.speed_multi_d
-            * self.speed_multi_e
-            * self.speed_multi_f,
-            2,
-        )
+            # "DaveyJonesBonus" in source
+            "F": ValueToMulti(50 * davey_jones_owned + davey_jones_returns),
+        }
 
-    def get_speed_advice(self) -> Advice:
-        return Advice(
-            label=f"Total Sailing Speed bonus: {self.speed_multi}x",
-            picture_class="sailing",
-        )
+    @cached_property
+    def speed_multi(self) -> float:
+        return prod(self._speed_multis.values())
 
-    def get_purrmep_minor_advice(self) -> Advice:
-        return Advice(
-            label=f"Anyone Minor Linked to {self._purrmep.name}: "
-            f"+{self.purrmep_minor_bonus:.2f}%",
-            picture_class=self._purrmep.name,
-            progression=int(self.purrmep_linked is not None),
-            goal=1,
-        )
+    def get_speed_advices(self) -> dict[str, list[Advice]]:
+        account = session_data.account
+        multis = {
+            group: round_and_trim(multi) for group, multi in self._speed_multis.items()
+        }
+        total = round_and_trim(self.speed_multi)
+        divinity = account.divinity
+        oj_jooce = account.alchemy_vials["Oj Jooce (Orange Slice)"]
+        return {
+            f"Total: {total}x": [
+                Advice(
+                    label=f"Total Sailing Speed bonus: {total}x",
+                    picture_class="sailing",
+                )
+            ],
+            f"Multi Group A: {multis['A']}x": [
+                divinity.named("Purrmep").minor.get_bonus_advice(),
+                account.cards.named("Crawler").getAdvice(),
+                account.cards.named("Kattlekruk").getAdvice(),
+                account.alchemy_bubbles["Boaty Bubble"].get_bonus_advice(goal=max_NBLB),
+            ],
+            f"Multi Group B: {multis['B']}x": [
+                divinity.named("Goharut").blessing.get_bonus_advice()
+            ],
+            f"Multi Group C: {multis['C']}x": [
+                divinity.named("Purrmep").blessing.get_bonus_advice()
+            ],
+            f"Multi Group D: {multis['D']}x": [account.ballot[24].get_bonus_advice()],
+            f"Multi Group E: {multis['E']}x": [
+                divinity.named("Bagur").blessing.get_bonus_advice(),
+                self.artifacts["10 AD Tablet"].get_bonus_advice(),
+                account.stamps["Sailboat Stamp"].get_advice(),
+                account.statues["Boat Statue"].get_advice(),
+                account.meals["Popped Corn"].get_bonus_advice(),
+                oj_jooce.get_advice(full_name=False),
+                self._get_skill_mastery_advice(),
+                self._get_msa_advice(),
+                account.vault.get_upgrade_advice("Speedy Sailing"),
+                self._get_c_shanti_advice(),
+                account.star_signs.get_seraph_advice(),
+                account.star_signs.get_silkrode_advice(),
+            ],
+            f"Multi Group F: {multis['F']}x": [
+                account.gemshop.purchases["Davey Jones Training"].get_advice(),
+                account.legend_talents["Davey Jones Returns"].get_advice(),
+            ],
+        }
 
-    def get_ballot_advice(self) -> Advice:
-        buff = self._ballot_buff
+    def _get_skill_mastery_advice(self) -> Advice:
+        unlocked = self._skill_mastery_bonus > 0
+        status = f"+{self._skill_mastery_bonus}%" if unlocked else "Locked."
         return Advice(
-            label=f"Weekly Ballot: {round(self.ballot_multi, 2)}x/"
-            f"{round(buff.multi, 2)}x"
-            f"<br>(Buff {'is Active' if buff.active else 'is Inactive'})",
-            picture_class=buff.image,
-            progression=int(buff.active),
-            goal=1,
-        )
-
-    def get_ad_tablet_advice(self) -> Advice:
-        return Advice(
-            label=f"{{{{ Sailing|#sailing }}}}: Level {self.ad_tablet_level} "
-            f"10 AD Tablet: +{self.ad_tablet_bonus}%",
-            picture_class="10-ad-tablet",
-            progression=self.ad_tablet_level,
-            goal=max_sailing_artifact_level,
-        )
-
-    def get_boat_statue_advice(self) -> Advice:
-        statue = self._boat_statue
-        gold_note = "(must be at least gold)" if statue.type == "Normal" else ""
-        return Advice(
-            label=f"Level {statue.level} Boat Statue: "
-            f"+{(statue.type != 'Normal') * statue.value:.2f}% {gold_note}",
-            picture_class=statue.image,
-        )
-
-    def get_skill_mastery_advice(self) -> Advice:
-        unlocked = self.skill_mastery_unlocked and self.total_sailing_level >= 200
-        return Advice(
-            label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery > 200: "
-            f"{'+15%' if unlocked else 'Locked.'}",
+            label=f"{{{{ Rift|#rift }}}} - Sailing Skill Mastery 200: {status}",
             picture_class="skill-mastery",
-            progression=self.msa_sailing * self.total_sailing_level,
-            goal=200,
+            progression=int(unlocked),
+            goal=1,
         )
 
-    def get_msa_advice(self, max_total_waves: int) -> Advice:
+    def _get_msa_advice(self) -> Advice:
+        account = session_data.account
+        msa_sailing = account.gaming.superbits["MSA Sailing"].unlocked
+        total_worship_waves = account.worship.total_waves
         return Advice(
-            label=f"MSA Sailing: +{self.msa_sailing * self.total_worship_waves // 10}% "
+            label=f"MSA Sailing: +{msa_sailing * total_worship_waves // 10}% "
             f"(+1% per 10 waves in Worship)",
             picture_class="worship",
-            progression=self.total_worship_waves,
-            goal=max_total_waves,
+            progression=total_worship_waves,
+            goal=account.worship.max_total_waves,
         )
 
-    def get_c_shanti_advice(self) -> Advice:
-        status = "+20% if equipped" if self.c_shanti_unlocked else "Locked."
+    def _get_c_shanti_advice(self) -> Advice:
+        star_signs = session_data.account.star_signs
+        unlocked = star_signs["C. Shanti Minor"].unlocked
+        if not unlocked:
+            status = "Locked."
+        elif self._c_shanti_bonus:
+            status = f"+{round_and_trim(self._c_shanti_bonus)}%"
+        else:
+            # What `value_for` gives once it is equipped
+            equipped_bonus = round_and_trim(20 * star_signs.seraph_multi)
+            status = f"+{equipped_bonus}% if equipped"
         return Advice(
             label=f"{{{{ Star Signs|#star-signs }}}} - C. Shanti Minor: {status}",
             picture_class="c-shanti-minor",
-            progression=int(self.c_shanti_unlocked),
+            progression=int(unlocked),
             goal=1,
         )

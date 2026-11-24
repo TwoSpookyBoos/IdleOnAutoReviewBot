@@ -330,7 +330,7 @@ class Account:
             self.sneaking.pristine_charms["Crystal Comb"].value,
             self.gemshop.purchases["King Of All Winners"],
             self.merits[5][4],
-            self.sailing.artifacts["The Winz Lantern"].level,
+            self.sailing.artifacts["The Winz Lantern"],
             self.achievements,
             self.armor_sets["GODSHARD SET"].total_value,
             self.gemshop.bundles["ban_i"].owned,
@@ -491,7 +491,7 @@ class Account:
 
         # W4
         self.cooking.calculate_max_plate_level(
-            self.sailing.artifacts['Causticolumn'].level,
+            self.sailing.artifacts['Causticolumn'],
             self.sneaking.emporium,
             self.grimoire.upgrades['Supreme Head Chef Status'],
             self.spelunk.caves["Lunarheim"],
@@ -499,7 +499,7 @@ class Account:
         )
         self.lab_bonuses.calculate_nblb(
             self.lab_jewels['Pyrite Rhinestone'].enabled,
-            self.sailing.artifacts['Amberite'].level,
+            self.sailing.artifacts['Amberite'],
             self.gaming.superbits['Moar Bubbles'].unlocked,
             self.gaming.superbits['Even Moar Bubbles'].unlocked,
             self.merits[3][6].level,
@@ -604,7 +604,7 @@ class Account:
             super_talent_levels=self.super_talent_levels,
         )
 
-        # Tome reads meals, stamps, meritocracy and bonus talent levels
+        # Tome reads meals, stamps and bonus talent levels
         self.tome.calculate_live_talent_max(self.meals['Buncha Banana'].value)
         self.tome.calculate_star_talents(
             self.characters.safe,
@@ -612,8 +612,6 @@ class Account:
             self.stamps['Talent S Stamp'].total_value,
             self.guild_bonuses['Star Dazzle'].value,
             self.alchemy_p2w.sigils['Two Starz'],
-            self.sailing.artifacts.chilled_yarn_multi,
-            self.meritocracy[21].value,
             self.bribes['Star Scraper'],
             self.companions['Flying Worm'].bonus,
         )
@@ -649,7 +647,6 @@ class Account:
             self.stamps['Crystallin'].total_value,
             self.characters,
             self.shrines['Crescent Shrine'].value,
-            moai_head_level=self.sailing.artifacts['Moai Head'].level,
             max_book_level=self.library.max_book_level,
         )
         self.sneaking.calculate_gemstones_values(
@@ -741,7 +738,7 @@ class Account:
         # Reads wave 3 talent levels
         self.statues.calculate_values(
             [char.max_talents.get('56', 0) for char in self.characters.vmans],
-            self.sailing.artifacts['The Onyx Lantern'].level,
+            self.sailing.artifacts['The Onyx Lantern'].as_multi,
             self.zenith_market['TRUE ZEN'].value,
             self.meritocracy[26].value,
             self.event_points_shop['Smiley Statue'].owned,
@@ -756,8 +753,6 @@ class Account:
             family_bonuses=self.family_bonuses,
             death_note=self.death_note,
             sigils=self.alchemy_p2w.sigils,
-            artifacts=self.sailing.artifacts,
-            meritocracy=self.meritocracy,
             star_signs=self.star_signs,
             breeding=self.breeding,
             tesseract=self.tesseract,
@@ -806,7 +801,7 @@ class Account:
         self.printer.calculate_output(
             skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
             all_skills=self.characters.all_skills,
-            gold_relic_level=self.sailing.artifacts['Gold Relic'].level,
+            gold_relic=self.sailing.artifacts['Gold Relic'],
             supreme_wiring_owned=self.event_points_shop['Supreme Wiring'].owned,
             biggole_mole_bonus=self.companions['Biggole Mole'].bonus,
             moon_of_print=self.compass.upgrades['Moon of Print'],
@@ -823,98 +818,6 @@ class Account:
             has_king_doot=self.companions.has('King Doot'),
             wired_in_enabled=self.lab_bonuses['Wired In'].enabled,
             harriep_unlocked=self.divinity[4].unlocked,
-        )
-        self.breeding.calculate_pet_damage(
-            electrolyte_vial=self.alchemy_vials['Electrolyte (Condensed Zap)'].value,
-            barley_lost=self.achievements['Barley Lost'].complete,
-            croissant=self.meals['Croissant'].value,
-            wedding_cake=self.meals['Wedding Cake'].value,
-            characters=self.characters.safe,
-            power_bowower_unlocked=self.star_signs['Power Bowower'].unlocked,
-            arcade_bonus=self.arcade[30].value,
-            vault_pet_punchies=self.vault.upgrades['Pet Punchies'].total_value,
-        )
-        self.sailing.calculate_speed(
-            purrmep=self.divinity.named('Purrmep'),
-            goharut=self.divinity.named('Goharut'),
-            bagur=self.divinity.named('Bagur'),
-            characters=self.characters.safe,
-            crawler_level=next(c.level for c in self.cards if c.name == 'Crawler'),
-            kattlekruk_level=next(
-                c.level for c in self.cards if c.name == 'Kattlekruk'
-            ),
-            boaty_bubble=self.alchemy_bubbles['Boaty Bubble'].base_value,
-            big_p=self.alchemy_bubbles['Big P'].base_value,
-            ballot_buff=next(
-                buff for buff in self.ballot.values()
-                if 'Sailing Speed' in buff.description
-            ),
-            slab_count=len(self.slab),
-            slab_sovereignty=self.lab_bonuses['Slab Sovereignty'],
-            sailboat_stamp=self.stamps['Sailboat Stamp'].total_value,
-            boat_statue=self.statues['Boat Statue'],
-            popped_corn=self.meals['Popped Corn'].value,
-            oj_jooce=self.alchemy_vials['Oj Jooce (Orange Slice)'].value,
-            skill_mastery_unlocked=self.rift['SkillMastery'].unlocked,
-            total_sailing_level=sum(self.characters.all_skills['Sailing']),
-            msa_sailing=self.gaming.superbits['MSA Sailing'].unlocked,
-            total_worship_waves=self.worship.total_waves,
-            c_shanti_unlocked=self.star_signs['C. Shanti Minor'].unlocked,
-            davey_jones_owned=self.gemshop.purchases['Davey Jones Training'].owned,
-            davey_jones_returns=self.legend_talents['Davey Jones Returns'].value,
-        )
-        self.coral_reef.calculate_daily_corals(
-            shellslug_multi=self.companions['Shellslug'].get_multi('Daily Corals'),
-            coolral_owned=self.event_points_shop['Coolral'].owned,
-            more_coral_owned=self.gemshop.purchases['More Coral'].owned,
-            coral_kid=self.coral_kid[5].value,
-            dancing_coral=self.dancing_coral[0].value,
-            clam_work_level=self.clam_work.level,
-            killroy_coral_level=self.killroy.coral_level,
-            corale_stamp=self.stamps['Corale Stamp'].total_value,
-            scale_on_ice=self.alchemy_vials['Scale On Ice (Scaled Fragment)'].value,
-            coral_restoration=self.legend_talents['Coral Restoration'].value,
-            arcade_bonus=self.arcade[57].value,
-            coral_conservationism=self.sneaking.emporium['Coral Conservationism'].value,
-            demonblub_card=next(
-                c for c in self.cards if c.name == 'Demonblub'
-            ).getCurrentValue(),
-            coral_statue=self.statues['Coral Statue'],
-        )
-        self.cards.calculate(
-            ruby_cards_unlocked=self.rift['RubyCards'].unlocked,
-            rustbelt_03_obtained=self.spelunk.caves['Rustbelt 03'].bonus_obtained,
-            five_aces_bribe=self.bribes['Five Aces in the Deck'].bonus,
-            pokaminni_unlocked=self.star_signs['Pokaminni'].unlocked,
-            anearful_vial=self.alchemy_vials['Anearful (Glublin Ear)'].value,
-            card_stamp=self.stamps['Card Stamp'].total_value,
-            card_spotter=self.guild_bonuses['C2 Card Spotter'].value,
-            card_champ_bubble=self.alchemy_bubbles['Card Champ'].base_value,
-        )
-        self.alchemy_p2w.sigils.calculate_speed(
-            chilled_yarn=self.sailing.artifacts['Chilled Yarn'],
-            chilled_yarn_multi=self.sailing.artifacts.chilled_yarn_multi,
-            max_chilled_yarn_multi=self.sailing.artifacts.max_chilled_yarn_multi,
-            vial_junkee=self.achievements['Vial Junkee'].complete,
-            sigil_supercharge_owned=self.gemshop.purchases['Sigil Supercharge'].owned,
-            willow_vial=self.alchemy_vials['Willow Sippy (Willow Logs)'].value,
-            sigil_stamp=self.stamps['Sigil Stamp'].total_value,
-            summoning_multi=self.summoning.bonuses['Sigil SPD'].as_multi,
-            tuttle_vial=self.alchemy_vials['Turtle Tisane (Tuttle)'].value,
-            ballot_multi=self.ballot[17].active_multi,
-            arcade_bonus=self.arcade[43].value,
-            big_sig_fig=self.legend_talents['Big Sig Fig'].value,
-        )
-        self.gaming.snail.calculate(
-            envelopes=self.gaming.envelopes,
-            superbits=self.gaming.superbits,
-            sodium_level=self.atom_collider['Sodium - Snail Kryptonite'].level,
-            treble_notes=(
-                self.caverns.caves['The Harp'].notes['Treble Note'].amount
-            ),
-            final_ballad=self.caverns.villagers['Kaipu'].schematics[
-                'Final Ballad of the Snail'
-            ],
         )
         # Reads nearly everything, so last
         self.drop_rate.calculate(

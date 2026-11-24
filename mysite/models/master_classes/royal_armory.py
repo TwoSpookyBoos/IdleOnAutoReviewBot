@@ -15,6 +15,7 @@ from consts.idleon.master_classes.royal_armory import (
 from consts.master_classes.royal_armory import statue_flair_base_max_level
 from models.advice.advice import Advice
 from models.general.character import Character
+from models.general.session_data import session_data
 from models.w7.menagerie.unlock import MenagerieUnlock
 from utils.logging import get_logger
 from utils.number_formatting import round_and_trim
@@ -346,8 +347,6 @@ class RoyalArmory:
     @cached_property
     def _elegant_flair_unlock(self) -> MenagerieUnlock:
         # Menagerie Unlock 18 adds the Elegant tier
-        from models.general.session_data import session_data
-
         return session_data.account.menagerie.unlocks[17]
 
     @cached_property

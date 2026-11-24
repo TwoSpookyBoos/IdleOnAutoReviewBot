@@ -46,7 +46,6 @@ class Library:
         self._library_building = construction_buildings['Talent Book Library']
         self._checkout_takeout = achievements['Checkout Takeout']
         self._oxygen = atom_collider['Oxygen - Library Booker']
-        self._fury_relic = sailing.artifacts['Fury Relic']
         self._merit = merits[2][2]
         self._saltlick = saltlick.upgrades['Max Book']
         self.static_sum = (
@@ -54,7 +53,7 @@ class Library:
             + (25 * (0 < construction_buildings['Talent Book Library'].level))
             + (5 * achievements['Checkout Takeout'].complete)
             + (10 * (0 < atom_collider['Oxygen - Library Booker'].level))
-            + (25 * sailing.artifacts['Fury Relic'].level)
+            + sailing.artifacts['Fury Relic'].value
         )
         self.scaling_sum = (
             0
@@ -95,9 +94,6 @@ class Library:
             progression=1 if 0 < level else 0,
             goal=1
         )
-
-    def get_fury_relic_advice(self) -> Advice:
-        return self._fury_relic.get_advice()
 
     def get_merit_advice(self) -> Advice:
         return Advice(

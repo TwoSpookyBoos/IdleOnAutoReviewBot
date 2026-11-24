@@ -8,7 +8,6 @@ from consts.idleon.w7.research import minehead_drop_rate_bonus_index
 from consts.w3.equinox import drop_rate_dream_number
 from consts.consts_autoreview import ValueToMulti, EmojiType
 from consts.consts_general import cards_max_level, equipment_by_bonus_dict
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.general.friend_bonuses import friend_bonus_drop_rate_index
 from models.general.session_data import session_data
 
@@ -224,12 +223,10 @@ def get_drop_rate_account_advice_group() -> AdviceGroup:
         cap=droppin_loads_value_breakpoints[-1][1]
     ))
 
-    # Artifacts- Chilled Yarn
-    # Temporary bonus line, disappears when maxed. Buffed value is included in the DR line below
-    if drop_rate.chilled_yarn_level < max_sailing_artifact_level:
-        drop_rate_aw_advice[w2].append(drop_rate.get_chilled_yarn_advice())
     # Alchemy - Sigils - Trove
-    drop_rate_aw_advice[w2].append(drop_rate.get_trove_sigil_advice())
+    drop_rate_aw_advice[w2].append(
+        session_data.account.alchemy_p2w.sigils["Trove"].get_bonus_advice()
+    )
 
     drop_rate_aw_advice[w2].append(drop_rate.get_ballot_advice())
 

@@ -9,14 +9,8 @@ from consts.consts_w1 import (
     get_seraph_cosmos_summ_level_goal,
     seraph_max,
 )
-from consts.consts_w2 import (
-    max_sigil_level,
-    obols_max_bonuses_dict,
-    po_box_dict,
-    sigils_dict,
-)
+from consts.consts_w2 import obols_max_bonuses_dict, po_box_dict
 from consts.consts_w3 import approx_max_talent_level_non_es_non_star, prayers_dict
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.general.drop_rate import (
     big_big_hampter_drop_rate,
     boss_battle_spillover_talent_index,
@@ -390,7 +384,6 @@ class DropRate:
         self.deathbringer_pack = 0
         self.obols_family = 0
         self.trove_sigil = 0
-        self.trove_sigil_max = 0
         self.ballot = 0
         self.big_big_hampter = 0
         self.summoning_gm = 0
@@ -412,10 +405,6 @@ class DropRate:
         self._bundle_data_present = True
         self._has_deathbringer_pack = False
         self._has_island_explorer_pack = False
-        self.chilled_yarn_level = 0
-        self._chilled_yarn_multi = 1
-        self._chilled_yarn_max = 1
-        self._trove_sigil_level = 0
         self._ballot_buff = None
         self.shiny_pets: list = []
         self._achievements: dict[str, tuple[int, int, bool]] = {}
@@ -641,25 +630,7 @@ class DropRate:
         self.obols_family = obols.family_bonus_totals.get("Total%_DROP_RATE", 0)
         self.world_2 += self.obols_family
         self.world_2 += alchemy_bubbles["Droppin Loads"].base_value
-        self.chilled_yarn_level = artifacts["Chilled Yarn"].level
-        self._chilled_yarn_multi = artifacts.chilled_yarn_multi
-        self._chilled_yarn_max = artifacts.max_chilled_yarn_multi
-        trove_level = alchemy_p2w.sigils["Trove"].level
-        self._trove_sigil_level = trove_level
-        trove_values = sigils_dict["Trove"]["Values"]
-        try:
-            self.trove_sigil = trove_values[trove_level] * artifacts.chilled_yarn_multi
-        except (IndexError, KeyError):
-            logger.error(
-                f"Trove Sigil Level of {trove_level} not present in 'sigils_dict'. "
-                f"Defaulting to max_sigil_level of {max_sigil_level}"
-            )
-            self.trove_sigil = (
-                trove_values[max_sigil_level] * artifacts.max_chilled_yarn_multi
-            )
-        self.trove_sigil_max = (
-            trove_values[max_sigil_level] * artifacts.max_chilled_yarn_multi
-        )
+        self.trove_sigil = alchemy_p2w.sigils["Trove"].value
         self.world_2 += self.trove_sigil
         self._ballot_buff = ballot[27]
         self.ballot = ballot[27].value * ballot[27].active
@@ -1044,26 +1015,6 @@ class DropRate:
             picture_class="hyper-six-obol",
             progression=self.obols_family,
             goal=cap,
-        )
-
-    def get_chilled_yarn_advice(self) -> Advice:
-        return Advice(
-            label=f"{{{{ Artifacts|#artifacts }}}} - Chilled Yarn: "
-            f"{round(self._chilled_yarn_multi, 1):g}/"
-            f"{round(self._chilled_yarn_max, 1):g}x Sigil Bonuses"
-            f"<br>Note: Improves the sigil below",
-            picture_class="chilled-yarn",
-            progression=self.chilled_yarn_level,
-            goal=max_sailing_artifact_level,
-        )
-
-    def get_trove_sigil_advice(self) -> Advice:
-        return Advice(
-            label=f"{{{{ Sigils|#sigils }}}} - Trove Sigil: "
-            f"+{self.trove_sigil}/{self.trove_sigil_max}% Drop Rate",
-            picture_class="trove",
-            progression=self._trove_sigil_level,
-            goal=max_sigil_level,
         )
 
     def get_ballot_advice(self) -> Advice:

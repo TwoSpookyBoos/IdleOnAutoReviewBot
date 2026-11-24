@@ -2,7 +2,6 @@ from collections import defaultdict
 
 from consts.consts_autoreview import break_you_best
 from consts.consts_general import star_tiers, max_card_stars
-from consts.general.cards import card_champ_bubble_goal
 from consts.progression_tiers import true_max_tiers
 from models.general.session_data import session_data
 
@@ -34,39 +33,7 @@ def getUnlockableAdviceGroup(cards, groups):
         groups.append(group_unlockable)
 
 def getCardDropChanceAdviceGroup(groups):
-    cards = session_data.account.cards
-    five_aces = session_data.account.bribes['Five Aces in the Deck']
-    anearful_vial = session_data.account.alchemy_vials['Anearful (Glublin Ear)']
-    guild_bonus = session_data.account.guild_bonuses['C2 Card Spotter']
-    card_champ_bubble = session_data.account.alchemy_bubbles['Card Champ']
-
-    card_drop_chance_advices = {
-        f'Total: {cards.drop_chance}x ({cards.drop_chance_jman}x if Jman)': [
-            cards.get_drop_chance_advice()
-        ],
-        f'Base Chance: +20%': [cards.get_base_drop_chance_advice()],
-        f'Multi Group A: {cards.drop_chance_multi_a}x ({cards.drop_chance_multi_a_jman}x if Jman)': [],
-        f'Multi Group A - account-wide': [
-            five_aces.get_bonus_advice(),
-            anearful_vial.get_advice(full_name=False),
-            session_data.account.stamps['Card Stamp'].get_advice(),
-            card_champ_bubble.get_bonus_advice(goal=card_champ_bubble_goal),
-            guild_bonus.get_advice()
-        ],
-        f'Multi Group A - character-specific': [
-            cards.named('Gigafrog').getAdvice(),
-            cards.named('Snelbie').getAdvice(),
-            cards.named('Sir Stache').getAdvice(),
-            cards.named('Egggulyte').getAdvice(),
-            cards.get_pokaminni_advice(),
-            cards.get_obols_advice(),
-            cards.get_keychains_advice(),
-        ],
-        f'Multi Group A - class-specific': [cards.get_cards_galore_advice()],
-        f'Multi Group B: {cards.drop_chance_multi_b}x (character-specific)': [
-            cards.get_cardiovascular_advice()
-        ],
-    }
+    card_drop_chance_advices = session_data.account.cards.get_drop_chance_advices()
 
     for subgroup in card_drop_chance_advices:
         for advice in card_drop_chance_advices[subgroup]:

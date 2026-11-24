@@ -2,7 +2,6 @@ import math
 
 from consts.consts_autoreview import ValueToMulti
 from consts.consts_w3 import printer_all_indexes_being_printed
-from consts.consts_w5 import goldrelic_multis_dict
 from consts.idleon.consts_idleon import skill_index_list
 from consts.idleon.lava_func import lava_func
 from consts.w3.printer import (
@@ -18,6 +17,7 @@ from consts.w3.printer import (
     yet_another_printer_multi_max_days,
 )
 from models.advice.advice import Advice
+from models.w5.sailing import Artifact
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_get
 from utils.text_formatting import getItemDisplayName
@@ -127,7 +127,7 @@ class Printer:
         *,
         skill_mastery_unlocked: bool,
         all_skills: dict[str, list[int]],
-        gold_relic_level: int,
+        gold_relic: Artifact,
         supreme_wiring_owned: bool,
         biggole_mole_bonus: float,
         moon_of_print,
@@ -155,11 +155,9 @@ class Printer:
         )
         self.skill_mastery_value = self.skill_mastery_base + self.skill_mastery_bonus
 
-        self.gold_relic_level = gold_relic_level
-        self.gold_relic_max_days = self._gold_relic_max_days(gold_relic_level)
-        self.gold_relic_multi = ValueToMulti(
-            self.gold_relic_days * goldrelic_multis_dict.get(gold_relic_level, 0)
-        )
+        self.gold_relic_level = gold_relic.level
+        self.gold_relic_max_days = self._gold_relic_max_days(gold_relic.level)
+        self.gold_relic_multi = ValueToMulti(self.gold_relic_days * gold_relic.value)
 
         self.supreme_wiring_counted_days = min(
             supreme_wiring_max_days, self.supreme_wiring_days
