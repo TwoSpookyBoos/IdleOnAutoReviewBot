@@ -62,7 +62,7 @@ def try_exclude_EggCapacity(exclusionLists):
             sublist.append('Royal Egg Cap')
 
 def try_exclude_Kitchens(exclusionLists):
-    if session_data.account.cooking.close_enough:
+    if session_data.account.cooking.all_meals_maxed:
         for sublist in exclusionLists:
             sublist.append('Richelin Kitchen')
 

@@ -4,7 +4,6 @@ from functools import cached_property
 from consts.consts_autoreview import EmojiType, MultiToValue, ValueToMulti
 from consts.consts_item_data import ITEM_DATA, raw_item_data
 from consts.consts_w1 import get_seraph_cosmos_multi
-from consts.consts_w2 import max_sigil_level, sigils_dict
 from consts.general.talents import (
     apocalypse_wow_talent_index,
     haungry_for_gold_talent_index,
@@ -113,8 +112,6 @@ def calculate_golden_food_multis(
     family_bonuses,
     death_note,
     sigils,
-    artifacts,
-    meritocracy,
     star_signs,
     breeding,
     tesseract,
@@ -145,14 +142,6 @@ def calculate_golden_food_multis(
         else 0
     )
 
-    sigil = sigils["Emoji Veggie"]
-    sigil_multi = (
-        artifacts.chilled_yarn_multi
-        * ValueToMulti(meritocracy[21].value)
-    )
-    sigil_value = sigils_dict["Emoji Veggie"]["Values"][
-        min(sigil.level, max_sigil_level)
-    ]
     beanbie = star_signs["Beanbie Major"]
     infinite_levels = get_infinite_star_sign_levels(
         breeding.total_shiny_bonus_values["Infinite Star Signs"]
@@ -168,7 +157,7 @@ def calculate_golden_food_multis(
         "Golden Apple Stamp": stamps["Golden Apple Stamp"].total_value,
         "Nutty Crafter Achievement": 5 * achievements["Nutty Crafter"].complete,
         "Shimmeron Bubble": 0,
-        "Emoji Veggie Sigil": sigil_value * sigil_multi,
+        "Emoji Veggie Sigil": sigils["Emoji Veggie"].value,
         "Yumi Peachring Meal": meals["Yumi Peachring"].value,
         "Beanbie Major Star Sign": 0,
         "Gold from Lead Bribe": bribes["Gold from Lead"].bonus,

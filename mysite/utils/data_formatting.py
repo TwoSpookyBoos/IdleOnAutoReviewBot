@@ -88,6 +88,10 @@ def getJSONfromAPI(runType, username="scoli", source_string=InputType.ALL):
             if runType == "web":
                 logger.info(f"~~~ Getting JSON from {api_name} API: {url} ~~~")
             headers = {"Content-Type": "text/json", "method": "GET"}
+            if api_name == "IT":
+                # Toolbox profiles API allowlists our Origin
+                headers["Origin"] = app.config["FQDN"]
+                headers["User-Agent"] = f"IdleOnAutoReview/1.0 (+{app.config['FQDN']})"
             response = requests.get(url, headers=headers)
 
             if response.status_code in [204, 403, 404]:

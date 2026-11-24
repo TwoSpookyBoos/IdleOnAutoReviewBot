@@ -140,6 +140,13 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
         cs_label: [],
         aw_label: [],
     }
+    additive_label = (
+        f"Account Wide - Additive Group: {printer.skill_mastery_lolly_multi:.2f}x"
+    )
+    po_Advices[additive_label] = [
+        printer.get_skill_mastery_advice(),
+        lolly_flower.get_obtained_advice(),
+    ]
 
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
     # If Doot is not owned, these are Character Specific. Otherwise, they are account-wide
@@ -148,7 +155,6 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     po_Advices[doot_subgroup].append(printer.get_harriep_advice())
 
     # Account Wide
-    po_Advices[aw_label].append(printer.get_skill_mastery_advice())
     po_Advices[aw_label].append(printer.get_king_of_the_remembered_advice())
     po_Advices[aw_label].append(printer.get_gold_relic_advice())
     po_Advices[aw_label].append(printer.get_supreme_wiring_advice())
@@ -157,8 +163,7 @@ def getPrinterOutputAdviceGroup() -> AdviceGroup:
     po_Advices[aw_label].append(biggole_mole_advice)
 
     po_Advices[aw_label].append(printer.get_moon_of_print_advice())
-
-    po_Advices[aw_label].append(lolly_flower.get_obtained_advice())
+    po_Advices[aw_label].append(printer.get_yet_another_printer_multi_advice())
 
     po_Advices[aw_label].append(ballot_buff.get_bonus_advice())
 

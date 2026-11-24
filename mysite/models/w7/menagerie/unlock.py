@@ -24,8 +24,9 @@ class MenagerieUnlock:
         # "UpgUnlocked" 1 in source
         return self.index < self.menagerie.visible_unlocks
 
-    def get_advice(self) -> Advice:
-        label = f"Unlock {self.index + 1}: {self.description}"
+    def get_advice(self, link_to_section: bool = False) -> Advice:
+        link = "{{ Menagerie|#luminous-menagerie }} " if link_to_section else ""
+        label = f"{link}Unlock {self.index + 1}: {self.description}"
         if self.tooltip:
             label += f"<br>{self.tooltip}"
         if not self.owned:

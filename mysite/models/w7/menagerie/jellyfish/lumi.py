@@ -13,17 +13,6 @@ class LumiJellyfish(Jellyfish):
         menagerie = self.menagerie
         advices = [
             Advice(
-                label=(
-                    f"Menagerie Rank {menagerie.rank}:"
-                    f" {menagerie.shells}/{menagerie.shell_req} Shells"
-                    f" to Rank {menagerie.rank + 1}"
-                    "<br>Claim Missions and buy Shells from the Pink Jellyfish"
-                ),
-                picture_class="menagerie-shell",
-                progression=menagerie.shells,
-                goal=menagerie.shell_req,
-            ),
-            Advice(
                 label=f"Lumi: {notateNumber('Basic', menagerie.lumi, 2)}",
                 picture_class="lumi",
             ),

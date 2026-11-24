@@ -1,17 +1,26 @@
 from functools import cached_property
 
 from consts.consts_autoreview import ValueToMulti
-from consts.w7.legend_talents import legend_talents_bonuses
+from consts.w7.legend_talents import (
+    legend_talents_bonuses,
+    legend_talents_grid_max_level_bonuses,
+    legend_talents_menagerie_max_level_indexes,
+    legend_talents_menagerie_unlock_names,
+)
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.safer_data_handling import safe_loads, safer_index
 
 
 class LegendTalent:
-    def __init__(self, talents: "LegendTalents", name: str, info: dict, level: int):
+    def __init__(
+        self, talents: "LegendTalents", index: int, name: str, info: dict, level: int
+    ):
         self.talents = talents
+        self.index = index
         self.name = name
         self.level = level
-        self.max_level = info["Max Level"]
+        self._base_max_level = info["Max Level"]
         self.image = info["Image"]
         self.display_order = info["Display Order"]
         self._base_value = info["Base Value"]
@@ -19,8 +28,33 @@ class LegendTalent:
         self._description_template = info["Description"]
 
     @cached_property
+    def max_level(self) -> int:
+        # "LegendTalent_MaxLV" in source. Last updated in v2.561.0
+        account = session_data.account
+        max_level = self._base_max_level
+        # "Grid_Bonus" mode 1 in source: the grid square's raw level
+        max_level += sum(
+            account.research.grid[square].level
+            for square, indexes in legend_talents_grid_max_level_bonuses.items()
+            if self.index in indexes
+        )
+        if (
+            self.index in legend_talents_menagerie_max_level_indexes
+            and account.menagerie.unlocks[19].owned
+        ):
+            max_level += 3
+        return max_level
+
+    @cached_property
+    def unlocked(self) -> bool:
+        if self.index in legend_talents_menagerie_unlock_names:
+            # Depends on: menagerie.unlocks[14]
+            return session_data.account.menagerie.unlocks[14].owned
+        return True
+
+    @cached_property
     def value(self) -> float:
-        return self._base_value * self.level
+        return self._base_value * self.level if self.unlocked else 0
 
     @cached_property
     def _next_value(self) -> float:
@@ -58,9 +92,12 @@ class LegendTalent:
 
     def get_advice(self, link_to_section: bool = True) -> Advice:
         link = "{{ Legend Talent|#legend-talents }} - " if link_to_section else ""
-        next_level_text = (
-            f"<br>Next Lv: {self.bonus}" if self.level < self.max_level else ""
-        )
+        if not self.unlocked:
+            next_level_text = "<br>Unlocked by Menagerie Unlock 15"
+        elif self.level < self.max_level:
+            next_level_text = f"<br>Next Lv: {self.bonus}"
+        else:
+            next_level_text = ""
         return Advice(
             label=f"{link}{self.name}: {self.description}{next_level_text}",
             picture_class=self.image,
@@ -73,4 +110,5 @@ class LegendTalents(dict[str, LegendTalent]):
     def __init__(self, raw_data: dict):
         levels: list[int] = safer_index(safe_loads(raw_data.get("Spelunk", [])), 18, [])
         for index, (name, info) in enumerate(legend_talents_bonuses.items()):
-            self[name] = LegendTalent(self, name, info, safer_index(levels, index, 0))
+            level = safer_index(levels, index, 0)
+            self[name] = LegendTalent(self, index, name, info, level)

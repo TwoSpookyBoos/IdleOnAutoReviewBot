@@ -1,8 +1,6 @@
 import collections
-import functools
-import math
+from functools import cache, cached_property
 
-from consts.consts_autoreview import EmojiType
 from consts.consts_w5 import (
     gaming_superbits_dict,
     snail_first_consecration_rank,
@@ -14,6 +12,7 @@ from consts.w5.gaming import (
     snail_target_confidence_levels,
 )
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -35,7 +34,7 @@ def get_snail_reset_target(snail_rank):
 
 
 # Cache the info since iteration is involved in the computation
-@functools.cache
+@cache
 def get_snail_level_up_info(final_ballad_bonus, target_confidence_levels):
     def success_chance(snail_level, encouragement):
         if snail_level < snail_first_consecration_rank:
@@ -207,57 +206,53 @@ def get_snail_level_up_info(final_ballad_bonus, target_confidence_levels):
 
 
 class Snail:
-    def __init__(self, raw_snail: list):
+    def __init__(self, gaming: "Gaming", raw_snail: list, envelopes: int):
+        self.gaming = gaming
         self.level: int = safer_index(raw_snail, 0, 0)
         self.rank: int = safer_index(raw_snail, 1, 0)
         self.encouragements: int = safer_index(raw_snail, 2, 0)
+        self.envelopes: int = envelopes
 
-    def calculate(
-        self,
-        *,
-        envelopes,
-        superbits: dict,
-        sodium_level: int,
-        treble_notes: float,
-        final_ballad,
-    ):
-        self.floored_envelopes = safer_convert(envelopes, 0)
-        self.sodium_safety_level = sodium_level * 5
-        self.max_rank = snail_base_max_rank
-        for superbit_name, bonus_levels in snail_superbit_ranks:
-            if superbits[superbit_name].unlocked:
-                self.max_rank += bonus_levels
+    @cached_property
+    def max_rank(self) -> int:
+        max_rank = snail_base_max_rank + sum(
+            bonus_levels
+            for superbit_name, bonus_levels in snail_superbit_ranks
+            if self.gaming.superbits[superbit_name].unlocked
+        )
         # Don't try impossible ranks
-        self.max_rank = min(self.max_rank, snail_max_possible_rank)
-        self.maxed = self.rank >= self.max_rank
-        self.sodium_too_low = self.sodium_safety_level + 5 <= self.rank
+        return min(max_rank, snail_max_possible_rank)
 
-        self._final_ballad = final_ballad
-        self.final_ballad_bonus = 1.0
-        self.treble_stacks = 0
-        if final_ballad.bought:
-            self.treble_stacks = int(
-                math.log10(treble_notes) if treble_notes > 0 else 0
-            )
-            self.final_ballad_bonus = 1 + 0.04 * self.treble_stacks
+    @property
+    def maxed(self) -> bool:
+        return self.rank >= self.max_rank
 
-        self.encouragement_info = {}
-        self.safety_thresholds = {}
-        self.min_rank = 0
-        self.target_rank = 0
-        self.encouragements_short_by = 0
-        if self.rank > 0 and not self.maxed and not self.sodium_too_low:
-            self.encouragement_info, self.safety_thresholds = get_snail_level_up_info(
-                self.final_ballad_bonus, snail_target_confidence_levels
-            )
-            self.min_rank = get_snail_reset_target(self.rank)
-            self.target_rank = min(
-                max(self.encouragement_info.keys()) + 1,
-                self.sodium_safety_level + 5,
-                self.max_rank,
-            )
-            num_encourage = self.encouragement_info[self.rank][0]
-            self.encouragements_short_by = max(0, num_encourage - self.encouragements)
+    @cached_property
+    def sodium_safety_level(self) -> int:
+        # Depends on: atom_collider['Sodium - Snail Kryptonite']
+        atom = session_data.account.atom_collider["Sodium - Snail Kryptonite"]
+        return atom.level * 5
+
+    @property
+    def sodium_too_low(self) -> bool:
+        return self.sodium_safety_level + 5 <= self.rank
+
+    @cached_property
+    def _final_ballad_multi(self) -> float:
+        # Depends on: caverns.villagers['Kaipu'].schematics
+        schematics = session_data.account.caverns.villagers["Kaipu"].schematics
+        return schematics["Final Ballad of the Snail"].as_multi
+
+    @property
+    def _can_level_up(self) -> bool:
+        return self.rank > 0 and not self.maxed and not self.sodium_too_low
+
+    # Read only by advice methods that check _can_level_up first
+    @property
+    def _level_up_info(self) -> tuple[dict, dict]:
+        return get_snail_level_up_info(
+            self._final_ballad_multi, snail_target_confidence_levels
+        )
 
     def get_rank_advice(self) -> Advice:
         return Advice(
@@ -273,7 +268,7 @@ class Snail:
 
     def get_envelopes_advice(self) -> Advice:
         return Advice(
-            label=f"Envelopes owned: {self.floored_envelopes}",
+            label=f"Envelopes owned: {self.envelopes}",
             picture_class="snail-envelope",
         )
 
@@ -290,26 +285,9 @@ class Snail:
             picture_class="sodium",
         )
 
-    def get_final_ballad_advice(self) -> Advice:
-        if self._final_ballad.bought:
-            return Advice(
-                label=f"<br>{self.treble_stacks} Trebel Note stacks for a bonus of "
-                f"{self.final_ballad_bonus:0.2f}x",
-                picture_class=self._final_ballad.image,
-                progression=self.treble_stacks,
-                goal=EmojiType.INFINITY.value,
-                resource="harp-note-3",
-            )
-        return Advice(
-            label="{{ Schematic|#villagers }}: Final Ballad of the Snail is NOT "
-            "acquired",
-            picture_class=self._final_ballad.image,
-            progression=0,
-            goal=1,
-        )
-
-    def get_encouragement_advice(self, level: int, label_prefix: str) -> Advice:
-        num_encourage, s_chance, r_chance = self.encouragement_info[level]
+    def _get_encouragement_advice(self, level: int, label_prefix: str) -> Advice:
+        encouragement_info, _ = self._level_up_info
+        num_encourage, s_chance, r_chance = encouragement_info[level]
         return Advice(
             label=f"{label_prefix}: Encourage the snail {num_encourage} times."
             f"<br>Game will display {s_chance:0.2%} success, {r_chance:0.2%} "
@@ -320,38 +298,69 @@ class Snail:
             resource="snail-envelope",
         )
 
-    def get_consecrated_advice(self) -> Advice:
-        num_encourage = self.encouragement_info[self.rank][0]
+    def get_level_up_advices(self) -> list[Advice]:
+        if not self._can_level_up:
+            return []
+        encouragement_info, _ = self._level_up_info
+        num_encourage, _, _ = encouragement_info[self.rank]
+        advices = [self._get_encouragement_advice(self.rank, "Step 1")]
+        if self.rank > snail_first_consecration_rank and num_encourage > 0:
+            advices.append(
+                self._get_step_2_advice(
+                    "Feel free to try a level up, you're protected by consecration! "
+                    "(Remember to encourage again if it fails and resets)",
+                    goal=num_encourage,
+                )
+            )
+        else:
+            advices.extend(self._get_safety_advices())
+        return advices
+
+    def get_relevant_encouragement_advices(self) -> list[Advice]:
+        if not self._can_level_up:
+            return []
+        min_rank = get_snail_reset_target(self.rank)
+        target_rank = min(self.sodium_safety_level + 5, self.max_rank)
+        advices = []
+        for level in range(min_rank, target_rank):
+            if level < self.rank:
+                rank_type = "Previous"
+            elif level > self.rank:
+                rank_type = "Future"
+            else:
+                rank_type = "Current"
+            advices.append(
+                self._get_encouragement_advice(level, f"{rank_type} Rank {level}")
+            )
+        return advices
+
+    def _get_step_2_advice(self, label: str, goal: int) -> Advice:
+        encouragement_info, _ = self._level_up_info
+        num_encourage, _, _ = encouragement_info[self.rank]
+        encouragements_short_by = max(0, num_encourage - self.encouragements)
         return Advice(
-            label="Step 2: Feel free to try a level up, you're protected by "
-            "consecration! (Remember to encourage again if it fails and resets)",
+            label=f"Step 2: {label}",
             picture_class="snail-envelope",
-            progression=max(0, self.floored_envelopes - self.encouragements_short_by),
-            goal=num_encourage,
+            progression=max(0, self.envelopes - encouragements_short_by),
+            goal=goal,
         )
 
-    def get_safety_advices(self) -> list[Advice]:
+    def _get_safety_advices(self) -> list[Advice]:
+        _, safety_thresholds = self._level_up_info
         advices = []
         levels = snail_target_confidence_levels
         for target_idx, target_confidence in enumerate(levels):
-            mail_needed, overall_chance = self.safety_thresholds[
-                self.rank, target_confidence
-            ]
-            # Skip a level that needs no more mail than the next one
-            if (
-                target_idx + 1 < len(levels)
-                and mail_needed
-                == self.safety_thresholds[self.rank, levels[target_idx + 1]][0]
-            ):
-                continue
+            mail_needed, _ = safety_thresholds[self.rank, target_confidence]
+            if target_idx + 1 < len(levels):
+                next_confidence = levels[target_idx + 1]
+                next_mail_needed, _ = safety_thresholds[self.rank, next_confidence]
+                # Skip a level that needs no more mail than the next one
+                if mail_needed == next_mail_needed:
+                    continue
             advices.append(
-                Advice(
-                    label=f"Step 2: Choose a safety level. {target_confidence:.1%} "
+                self._get_step_2_advice(
+                    f"Choose a safety level. {target_confidence:.1%} "
                     f"safety = {mail_needed} unspent mail",
-                    picture_class="snail-envelope",
-                    progression=max(
-                        0, self.floored_envelopes - self.encouragements_short_by
-                    ),
                     goal=mail_needed,
                 )
             )
@@ -367,13 +376,13 @@ class Gaming:
         self.bits_owned: float = safer_convert(safer_index(raw_gaming, 0, 0.0), 0.0)
         self.fertilizer_value = 0
         self.fertilizer_speed = 0
-        self.envelopes = 0
+        envelopes = 0
         unlocked_codes = ""
         if len(raw_gaming) >= 14:
             self.fertilizer_value = raw_gaming[1]
             self.fertilizer_speed = raw_gaming[2]
             unlocked_codes = str(raw_gaming[12])
-            self.envelopes = raw_gaming[13]
+            envelopes = safer_convert(raw_gaming[13], 0)
 
         self.superbits: dict[str, SuperBit] = {
             name: SuperBit(name, info, unlocked_codes)
@@ -382,4 +391,4 @@ class Gaming:
 
         # [32] = Snail Import
         raw_sprouts = safe_loads(raw_data.get("GamingSprout", []))
-        self.snail: Snail = Snail(safer_index(raw_sprouts, 32, []))
+        self.snail: Snail = Snail(self, safer_index(raw_sprouts, 32, []), envelopes)

@@ -119,7 +119,9 @@ def get_bonuses_multi() -> AdviceGroup:
     multi_advices[mgc].append(
         summoning.bonuses["Winner Bonuses"].get_bonus_advice(False)
     )
-    multi_advices[mgc].append(session_data.account.sailing.artifacts['The Winz Lantern'].get_advice())
+    multi_advices[mgc].append(
+        session_data.account.sailing.artifacts["The Winz Lantern"].get_bonus_advice()
+    )
     multi_advices[mgc].append(Advice(
         label=f"W6 Larger Winner bonuses merit: "
               f"+{account.merits[5][4].level}/{account.merits[5][4].max_level}%",

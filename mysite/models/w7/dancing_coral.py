@@ -3,6 +3,7 @@ import math
 from consts.consts_autoreview import ValueToMulti
 from consts.idleon.w7.dancing_coral import dancing_coral_bonus_data
 from models.advice.advice import Advice
+from models.general.session_data import session_data
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 
@@ -84,8 +85,6 @@ class DancingCoralBonus:
 
     @property
     def owned_cost_items(self) -> int:
-        from models.general.session_data import session_data
-
         match self.index:
             case 0:
                 return session_data.account.coral_reef.town_corals

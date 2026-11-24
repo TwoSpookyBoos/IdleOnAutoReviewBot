@@ -4,6 +4,16 @@ from consts.idleon.w6.farming import seed_dict
 max_farming_crops = seed_dict["Medal"]["CropIndexEnd"] + 1
 # Before Stalk Value. "CropsBonusValue" in source. Last verified in v2.550
 max_farming_value = 10000
+# Exotic upgrades capped in source. Last verified in v2.561
+exotic_market_caps = {
+    # "ExoticBonusQTY"
+    "FREEXOTIC": 50,
+    # "MarketCostQTY": a discount works only up to 90%
+    "BETTER DAY I": 90,
+    "BETTER DAY II": 90,
+    "BETTER NIGHT I": 90,
+    "BETTER NIGHT II": 90,
+}
 
 crop_dict = {
     # Basic

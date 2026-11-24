@@ -13,10 +13,15 @@ $killroy-etc: (
 );
 
 $killroy-skull-shop: (
-    killroy-third-battle: img('wiki/Killroy_Skull_Shop_11.png'),
-    killroy-artifact-chance: img('wiki/Killroy_Skull_Shop_12.png'),
-    killroy-crop-evolution: img('wiki/Killroy_Skull_Shop_14.png'),
-    killroy-jade: img('wiki/Killroy_Skull_Shop_15.png'),
+    // cropped from 1x/font-652.png and 1x/font-726.png
+    killroy-skull-shop-11: img('w2/killroy/SkullShop11.png'),
+    killroy-skull-shop-13: img('w2/killroy/SkullShop13.png'),
+    killroy-skull-shop-14: img('w2/killroy/SkullShop14.png'),
+    killroy-skull-shop-15: img('w2/killroy/SkullShop15.png'),
+    killroy-skull-shop-16: img('w2/killroy/SkullShop16.png'),
+    killroy-skull-shop-17: img('w2/killroy/SkullShop17.png'),
+    killroy-skull-shop-18: img('w2/killroy/SkullShop18.png'),
+    killroy-skull-shop-19: img('w2/killroy/SkullShop19.png'),
 );
 
 $all-killroy: map-merge($killroy-upgrades, $killroy-etc);

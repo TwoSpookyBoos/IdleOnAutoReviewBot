@@ -1,5 +1,6 @@
 from consts.idleon.consts_idleon import max_characters
 from models.general.character import Character
+from models.general.talents import Talent
 from utils.data_formatting import getCharacterDetails
 
 
@@ -65,6 +66,13 @@ class Characters(list[Character]):
             )
             # Character has no account access
             char.super_talent_levels = super_talent_levels
+
+    def get_max_talent_level(self, talent: Talent) -> int:
+        # "SkillLevelsMAX" in source: per-character talent max levels from the save
+        return max(
+            (char.max_talents.get(str(talent.index), 0) for char in self.safe),
+            default=0,
+        )
 
     def _with_class(self, *class_names: str) -> list[Character]:
         return [

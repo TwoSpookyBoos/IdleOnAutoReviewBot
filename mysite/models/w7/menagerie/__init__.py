@@ -2,9 +2,11 @@ from functools import cached_property
 from math import floor
 
 from consts.w7.menagerie import menagerie_boosts, menagerie_missions, menagerie_unlocks
+from models.general.session_data import session_data
 from models.w7.menagerie.boost import MenagerieBoost
 from models.w7.menagerie.jellyfish import Jellyfishes
 from models.w7.menagerie.mission import MenagerieMission
+from models.w7.menagerie.shells import MenagerieShells
 from models.w7.menagerie.unlock import MenagerieUnlock
 from utils.logging import get_logger
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
@@ -63,6 +65,7 @@ class Menagerie:
             for index, info in enumerate(menagerie_boosts)
         ]
         self.jellyfish: Jellyfishes = Jellyfishes(raw_menagerie, self)
+        self.shell_sources: MenagerieShells = MenagerieShells(raw_data, self)
 
     def _shell_req(self) -> int:
         # "ShellEXPreq" in source. Last updated in v2.550.0
@@ -103,11 +106,14 @@ class Menagerie:
             rank += 1
         return rank
 
+    @property
+    def unlocked(self) -> bool:
+        account = session_data.account
+        return account.world_progress.highest_reached >= 7 and self.rank >= 1
+
     @cached_property
     def visible_missions(self) -> int:
         # "UpgUnlocked" 0 in source
-        from models.general.session_data import session_data
-
         account = session_data.account
         # "Grid_Bonus" 164 mode 1 in source: the grid square's raw level
         missionary_level = account.research.grid["Menagerie Missionary"].level

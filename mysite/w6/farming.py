@@ -34,7 +34,9 @@ def get_depot_tabbed(farming) -> TabbedAdviceGroup:
         session_data.account.grimoire.upgrades['Superior Crop Research'].get_advice(
             session_data.account.grimoire.total_upgrades
         ),
-        farming.exotic_market['SCIENTERRIFIC'].get_bonus_advice(),
+        farming.exotic_market["SCIENTERRIFIC"].get_bonus_advice(
+            link_to_section=False
+        ),
         session_data.account.vault.get_upgrade_advice('Properly Funded Research'),
     ]
     cd_tabbed = {
@@ -200,7 +202,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
     value_advices[mga].append(farming.get_product_doubler_advice())
     if exotic_market_unlocked():
         value_advices[mga].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('DOUBLE PETAL I', 'DOUBLE PETAL II')
         )
 
@@ -231,7 +233,7 @@ def getCropValueAdviceGroup(farming) -> AdviceGroup:
         value_advices[final].append(farming.get_value_highest_plot_advice())
     if exotic_market_unlocked():
         value_advices[final].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('STALK VALUE I', 'STALK VALUE II', 'STALK VALUE III')
         )
 
@@ -365,7 +367,7 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
 # Exotic Market
     if exotic_market_unlocked():
         evo_advices[exotic].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in (
                 'SPROUTLUCK I', 'SPROUTLUCK II', 'SPROUTLUCK III', 'SPROUTLUCK IV',
                 'GENEOLOGY I', 'GENEOLOGY II', 'GENEOLOGY III', 'GENEOLOGY IV', 'GENEOLOGY V',
@@ -402,7 +404,9 @@ def getEvoChanceAdviceGroup(farming: Farming, highest_farming_level) -> AdviceGr
     # Achievement
     evo_advices[misc].append(farming.get_lil_overgrowth_advice())
     #Killroy
-    evo_advices[misc].append(farming.get_skull_shop_advice())
+    evo_advices[misc].append(
+        session_data.account.killroy.skull_shop["Crop Evolution"].get_bonus_advice()
+    )
     #Skill Mastery
     # Verify Skill Mastery itself is unlocked from The Rift
     evo_advices[misc].append(session_data.account.rift['SkillMastery'].get_bonus_advice())
@@ -454,7 +458,9 @@ def getSpeedAdviceGroup(farming) -> AdviceGroup:
     )
     # Exotic Market
     if exotic_market_unlocked():
-        speed_advices[vm].append(farming.exotic_market['GOGOGROW'].get_bonus_advice())
+        speed_advices[vm].append(
+            farming.exotic_market["GOGOGROW"].get_bonus_advice(link_to_section=False)
+        )
 #Night Market
     speed_advices[nm].append(farming.market['Super Gmo'].get_bonus_advice())
     speed_advices[nm].append(farming.market['Speed Gmo'].get_bonus_advice())
@@ -498,11 +504,11 @@ def getBeanMultiAdviceGroup(farming) -> AdviceGroup:
     #Exotic Market
     if exotic_market_unlocked():
         bm_advices[mgb].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('LEGUMIOSO I', 'LEGUMIOSO II', 'LEGUMIOSO III')
         )
         bm_advices[mgc].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('LARGUMES I', 'LARGUMES II')
         )
     bm_ag = AdviceGroup(
@@ -567,7 +573,7 @@ def getOGAdviceGroup(farming):
     # Exotic Market
     if exotic_market_unlocked():
         og_advices[exotic].extend(
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('EVERGROW I', 'EVERGROW II')
         )
     og_ag = AdviceGroup(
@@ -808,11 +814,11 @@ def getCostDiscountAdviceGroup(farming) -> AdviceGroup:
     }
     if exotic_market_unlocked():
         cost_Advices["Day Market Discount"] = [
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('BETTER DAY I', 'BETTER DAY II')
         ]
         cost_Advices["Night Market Discount"] = [
-            farming.exotic_market[name].get_bonus_advice()
+            farming.exotic_market[name].get_bonus_advice(link_to_section=False)
             for name in ('BETTER NIGHT I', 'BETTER NIGHT II')
         ]
     cost_ag = AdviceGroup(

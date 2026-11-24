@@ -46,22 +46,23 @@ $utilities: (
 
 $atoms: (
     particles:  img('wiki/Atoms.png'),
-    hydrogen:   img('data/Atom0.png'),
-    helium:     img('data/Atom1.png'),
-    lithium:    img('data/Atom2.png'),
-    beryllium:  img('data/Atom3.png'),
-    boron:      img('data/Atom4.png'),
-    carbon:     img('data/Atom5.png'),
-    nitrogen:   img('data/Atom6.png'),
-    oxygen:     img('data/Atom7.png'),
-    fluoride:   img('data/Atom8.png'),
-    neon:       img('data/Atom9.png'),
-    sodium:     img('data/Atom10.png'),
-    magnesium:  img('data/Atom11.png'),
-    aluminium:  img('data/Atom12.png'),
-    silicon:    img('data/Atom13.png'),
-    phosphorus: img('data/Atom14.png'),
-    sulfur:     img('data/Atom15.png')
+    hydrogen:   img('w3/atom_collider/Atom0.png'),
+    helium:     img('w3/atom_collider/Atom1.png'),
+    lithium:    img('w3/atom_collider/Atom2.png'),
+    beryllium:  img('w3/atom_collider/Atom3.png'),
+    boron:      img('w3/atom_collider/Atom4.png'),
+    carbon:     img('w3/atom_collider/Atom5.png'),
+    nitrogen:   img('w3/atom_collider/Atom6.png'),
+    oxygen:     img('w3/atom_collider/Atom7.png'),
+    fluoride:   img('w3/atom_collider/Atom8.png'),
+    neon:       img('w3/atom_collider/Atom9.png'),
+    sodium:     img('w3/atom_collider/Atom10.png'),
+    magnesium:  img('w3/atom_collider/Atom11.png'),
+    aluminium:  img('w3/atom_collider/Atom12.png'),
+    silicon:    img('w3/atom_collider/Atom13.png'),
+    phosphorus: img('w3/atom_collider/Atom14.png'),
+    sulfur:     img('w3/atom_collider/Atom15.png'),
+    chlorine:   img('w3/atom_collider/Atom16.png')
 );
 
 $all-construction: map-merge($shrines, $towers);

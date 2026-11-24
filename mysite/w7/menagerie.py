@@ -29,6 +29,17 @@ def get_jellyfish_tabbed() -> TabbedAdviceGroup:
     )
 
 
+def get_shells_group() -> AdviceGroup:
+    group = AdviceGroup(
+        pre_string="Shells",
+        advices=session_data.account.menagerie.shell_sources.get_advices(),
+        tier="",
+        informational=True,
+    )
+    group.mark_advice_completed()
+    return group
+
+
 def get_missions_group() -> AdviceGroup:
     missions = session_data.account.menagerie.missions
     advices = [mission.get_advice() for mission in missions if mission.visible]
@@ -68,7 +79,7 @@ def get_boosts_group() -> AdviceGroup:
 
 def get_section() -> AdviceSection:
     menagerie = session_data.account.menagerie
-    if session_data.account.world_progress.highest_reached < 7 or menagerie.rank < 1:
+    if not menagerie.unlocked:
         return AdviceSection(
             name=section_name,
             tier="Not Yet Evaluated",
@@ -81,9 +92,12 @@ def get_section() -> AdviceSection:
         )
 
     session_data.account.add_alert_list(
-        "World 7", [mission.get_claim_alert() for mission in menagerie.missions]
+        "World 7",
+        [mission.get_claim_alert() for mission in menagerie.missions]
+        + [menagerie.jellyfish["Blue Jellyfish"].get_deposit_alert()],
     )
     groups = {
+        "Shells": get_shells_group(),
         "Missions": get_missions_group(),
         "Unlocks": get_unlocks_group(),
         "Boosts": get_boosts_group(),

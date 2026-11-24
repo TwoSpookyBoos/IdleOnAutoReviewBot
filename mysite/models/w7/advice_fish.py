@@ -1,17 +1,19 @@
 from consts.consts_autoreview import ValueToMulti
-from consts.general.common import percent_break_point
 from consts.idleon.w7.advice_fish import advice_fish_upgrade_data
-
 from models.advice.advice import Advice
-
-from utils.safer_data_handling import safe_loads, safer_index
-from utils.number_formatting import round_and_trim
 from utils.logging import get_logger
+from utils.misc.next_break_point_tooltip import next_break_point_tooltip
+from utils.number_formatting import round_and_trim
+from utils.safer_data_handling import safe_loads, safer_index
 
 logger = get_logger(__name__)
 
 
 class AdviceFishUpgrade:
+    # "BigFishBonuses" in source: max * L / (L + 100),
+    # so it's the level giving half of the max
+    _HALF_LEVEL = 100
+
     def __init__(self, info: dict, level: int, index: int):
         self.level = level
         self.name = info["Name"]
@@ -19,52 +21,44 @@ class AdviceFishUpgrade:
         self.max_value = info["MaxValue"]
         self.value = 0
         self._image = f"advice-fish-{index}"
+        self._unit = "%" if "{" in self._template else "x"
 
     def get_bonus_advice(self, link_to_section: bool = True) -> Advice:
         label = ""
         if link_to_section:
             label += "{{Advice Fish|#advice-fish}} - "
-        if "{" in self._template:
-            value = self.value
-            max_value = self.max_value
-        else:
-            value = ValueToMulti(self.value)
-            max_value = ValueToMulti(self.max_value)
-        bonus = f"{round_and_trim(value)}/{round_and_trim(max_value)}"
+        bonus = f"{self._format_value(self.value)}/{self._format_value(self.max_value)}"
         bonus_description = self._template.replace("{", bonus).replace("}", bonus)
         label += f"{self.name}:<br>Level {self.level}: {bonus_description}"
         current_percent = self.value / self.max_value
-        for percent in percent_break_point:
-            if current_percent < percent:
-                next_level, next_bonus = self._get_percent_info(percent)
-                label += (
-                    "<br>Next Breakpoint:"
-                    f"<br> Level {next_level} ({percent:.0%}): {next_bonus}"
-                )
-                break
+        tooltip = ""
+        if not link_to_section:
+            tooltip = next_break_point_tooltip(
+                self.value,
+                self.max_value,
+                self._HALF_LEVEL,
+                self._format_bonus,
+            )
         return Advice(
             label=label,
             picture_class=self._image,
             resource="coins",
             goal="100%",
-            progression=f"{self.value / self.max_value:.2%}",
+            progression=f"{current_percent:.2%}",
+            progression_tooltip=tooltip,
         )
 
-    def _get_percent_info(self, percent: float) -> tuple[int, str] | None:
-        if percent >= 1.0 or percent < 0:
-            return None
-        next_value = self.max_value * percent
-        if "{" in self._template:
-            next_value = f"{round_and_trim(next_value)}"
-        else:
-            next_value = f"{round_and_trim(ValueToMulti(next_value))}"
-        next_bonus = self._template.replace("{", next_value).replace("}", next_value)
-        next_level = int(100 * percent / (1 - percent))
-        return next_level, next_bonus
+    def _format_value(self, value: float) -> str:
+        if self._unit == "%":
+            return f"{round_and_trim(value)}"
+        return f"{round_and_trim(ValueToMulti(value))}"
+
+    def _format_bonus(self, value: float) -> str:
+        return f"{self._format_value(value)}{self._unit}"
 
     def calculate_bonus(self):
         # "BigFishBonuses" in source. Last update 2.48 Giftmas Event
-        self.value = self.max_value * self.level / (self.level + 100)
+        self.value = self.max_value * self.level / (self.level + self._HALF_LEVEL)
         # TODO: "isBigFishUpgUnlocked" in source
         # TODO: "BigFishUpgLVREQ" in source
 

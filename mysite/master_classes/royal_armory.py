@@ -82,7 +82,10 @@ def getRoyalArmoryStatueFlairAdviceGroup(royal_armory) -> AdviceGroup:
     flair_ag = AdviceGroup(
         tier='',
         pre_string='Statue Flair',
-        advices=flair_advices,
+        advices={
+            "Max Flair Level": royal_armory.get_statue_flair_max_level_advices(),
+            "Statues": flair_advices,
+        },
         informational=True,
     )
     flair_ag.remove_empty_subgroups()

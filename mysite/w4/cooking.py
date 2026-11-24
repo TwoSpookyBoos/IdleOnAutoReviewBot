@@ -7,7 +7,13 @@ from models.advice.advice_group import AdviceGroup
 from utils.logging import get_logger
 
 from consts.consts_autoreview import break_you_best, AdviceType, build_subgroup_label
-from consts.consts_w4 import max_meal_count, max_meal_plate_level, cooking_close_enough, meal_counts_by_world
+from consts.consts_w4 import (
+    cooking_close_enough,
+    max_meal_count,
+    max_meal_plate_level,
+    meal_counts_by_world,
+    nmlb_max_level,
+)
 from utils.misc.add_subgroup_if_available_slot import add_subgroup_if_available_slot
 from utils.text_formatting import pl
 
@@ -154,30 +160,48 @@ def getCookingProgressionTiersAdviceGroups(highest_cooking_skill_level, cooking,
             add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
             if subgroup_label in cooking_Advices['Tiers']:
                 cooking_Advices['Tiers'][subgroup_label].append(Advice(
-                    label=f"Unlock max level {max_meal_plate_level} plates",
+                    label=f"Unlock max level {requirements['MaxPlateLevel']} plates",
                     picture_class=session_data.account.meals['Turkey of Thank'].image,
                     progression=cooking.max_plate_level,
-                    goal=max_meal_plate_level
+                    goal=requirements['MaxPlateLevel']
                 ))
+
+        # All meals up to the No Meal Left Behind max
+        nmlb_meals_goal = requirements.get("TotalMealsUnderNMLBMax")
+        if (
+            nmlb_meals_goal is not None
+            and cooking.meals_under_nmlb_max > nmlb_meals_goal
+        ):
+            add_subgroup_if_available_slot(cooking_Advices["Tiers"], subgroup_label)
+            if subgroup_label in cooking_Advices["Tiers"]:
+                cooking_Advices["Tiers"][subgroup_label].append(
+                    cooking.get_nmlb_advice()
+                )
 
         #MaxRemainingMeals
         if cooking.max_remaining_meals > requirements.get('MaxRemainingMeals', 9999999999999):
             good_enough_note = (
-                f"<br>Note: This goal is reduced {cooking_close_enough:,} below the true max level to account "
-                f"for when ladle generation cannot keep up with meal level costs. You can probably let NMLB "
-                f"coast until more Cooking Speed becomes available later."\
+                f"<br>Note: The last {cooking_close_enough:,} levels are the most expensive, "
+                f"so they are left for the optional final tier"
                 if requirements.get('MaxRemainingMeals', 9999999999999) != 0 else '')
             add_subgroup_if_available_slot(cooking_Advices['Tiers'], subgroup_label)
             if subgroup_label in cooking_Advices['Tiers']:
                 cooking_Advices['Tiers'][subgroup_label].append(Advice(
                     label=f"Finish all {max_meal_count} meals to level {max_meal_plate_level}"
-                          f"<br>{cooking.current_remaining_meals:,} remaining levels = "
-                          f"{cooking.nmlb_days} NMLB triggers to go!"
+                          f"<br>{cooking.current_remaining_meals:,} remaining levels. "
+                          f"NMLB doesn't level meals past {nmlb_max_level}, "
+                          f"from here it's cooking speed and Blue Jellyfish Ladles"
                           f"{good_enough_note}",
                     picture_class=session_data.account.meals['Turkey of Thank'].image,
                     progression=cooking.total_meal_levels,
                     goal=max(0, cooking.max_total_meal_levels - requirements.get('MaxRemainingMeals', 9999999999999))
                 ))
+                jellyfishes = session_data.account.menagerie.jellyfish
+                jellyfish_advice = jellyfishes["Blue Jellyfish"].get_unlock_advice(
+                    link_to_section=True
+                )
+                if jellyfish_advice is not None:
+                    cooking_Advices["Tiers"][subgroup_label].append(jellyfish_advice)
 
         # Final tier check
         if subgroup_label not in cooking_Advices['Tiers'] and tier_Cooking == tier_number - 1:
@@ -289,7 +313,7 @@ def getCurrentTierStrategyAdviceGroup(cooking, dchef_level, atom_fluoride_level,
             if vman.secondary_preset_talents.get('59', 0) >= bestBMPresetLevel:
                 bestBMPresetLevel = vman.secondary_preset_talents.get('59', 0)
 
-        if not cooking.close_enough:
+        if not cooking.all_meals_maxed:
             if not anyVWMaxBooked:
                 session_data.account.alerts_Advices['World 4'].append(Advice(
                     label="No Voidwalkers with {{ Blood Marrow|#cooking }} talent max booked!",
@@ -316,7 +340,7 @@ def getCurrentTierStrategyAdviceGroup(cooking, dchef_level, atom_fluoride_level,
                 currenttier_Advices.append(Advice(
                     label=f"{AdviceType.INFO.value} - Current possible: {cooking.meals_unlocked}/{max_meal_count} meals, "
                           f"{current_maxMealLevel}/{max_meal_plate_level} plate levels"
-                          f"<br>{current_remainingMeals} meal levels = {cooking.nmlb_days} NMLB triggers to go!",
+                          f"<br>{current_remainingMeals} meal levels to go!",
                     picture_class=session_data.account.meals['Turkey of Thank'].image,
                     progression=cooking.total_meal_levels,
                     goal=cooking.meals_unlocked * current_maxMealLevel,

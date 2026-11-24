@@ -1,5 +1,6 @@
 import sys
 from dataclasses import dataclass
+from functools import cached_property
 from math import ceil, floor
 
 from consts.consts_autoreview import ValueToMulti
@@ -10,20 +11,19 @@ from consts.consts_general import (
     key_cards,
 )
 from consts.consts_monster_data import decode_monster_name
-from consts.consts_w3 import approx_max_talent_level_star_talents
+from consts.consts_w3 import approx_max_talent_level_non_es_non_star
 from consts.general.cards import (
     base_card_drop_chance,
     base_player_max_card_stars,
-    cardiovascular_max_level,
-    cards_galore_talent_index,
+    card_champ_bubble_goal,
     max_8ball_keychain_card_drop_chance,
     max_obol_card_drop_chance,
     pokaminni_card_drop_chance,
 )
-from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from models.general.character import Character
-from utils.all_talentsDict import all_talentsDict
+from models.general.session_data import session_data
+from models.general.talents import talents
 from utils.logging import get_logger
 from utils.number_formatting import parse_number
 from utils.safer_data_handling import safe_loads, safer_get
@@ -223,183 +223,166 @@ class Cards(list[Card]):
     def named(self, name: str) -> Card:
         return next(card for card in self if card.name == name)
 
-    def calculate(
-        self,
-        *,
-        ruby_cards_unlocked: bool,
-        rustbelt_03_obtained: bool,
-        five_aces_bribe: float,
-        pokaminni_unlocked: bool,
-        anearful_vial: float,
-        card_stamp: float,
-        card_spotter: float,
-        card_champ_bubble: float,
-    ):
-        self.player_max_card_stars = (
+    @cached_property
+    def player_max_card_stars(self) -> int:
+        # Depends on: rift['RubyCards'], spelunk.caves['Rustbelt 03']
+        account = session_data.account
+        return (
             base_player_max_card_stars
-            + (1 * ruby_cards_unlocked)
-            + (1 * rustbelt_03_obtained)
+            + (1 * account.rift["RubyCards"].unlocked)
+            + (1 * account.spelunk.caves["Rustbelt 03"].bonus_obtained)
         )
-        self.cardset_progress: dict[str, CardSetProgress] = {
+
+    @cached_property
+    def cardset_progress(self) -> dict[str, CardSetProgress]:
+        return {
             name: cardset.get_progress(self.player_max_card_stars)
             for name, cardset in self.cardsets.items()
         }
-        self.cardset_rank_total = sum(
-            progress.rank for progress in self.cardset_progress.values()
-        )
-        self._calculate_drop_chance(
-            five_aces_bribe=five_aces_bribe,
-            pokaminni_unlocked=pokaminni_unlocked,
-            anearful_vial=anearful_vial,
-            card_stamp=card_stamp,
-            card_spotter=card_spotter,
-            card_champ_bubble=card_champ_bubble,
+
+    @cached_property
+    def cardset_rank_total(self) -> int:
+        return sum(progress.rank for progress in self.cardset_progress.values())
+
+    @cached_property
+    def _cardiovascular_max_level(self) -> int:
+        # Star talent: no bonus levels ("TalentBannedforAllLV" in source, index > 614)
+        # Depends on: characters max talent levels
+        return session_data.account.characters.get_max_talent_level(
+            talents["Cardiovascular!"]
         )
 
-    def _calculate_drop_chance(
-        self,
-        *,
-        five_aces_bribe: float,
-        pokaminni_unlocked: bool,
-        anearful_vial: float,
-        card_stamp: float,
-        card_spotter: float,
-        card_champ_bubble: float,
-    ):
-        # Multi Group B: Cardiovascular
-        cardiovascular = next(
-            talent
-            for talent in all_talentsDict.values()
-            if talent["name"] == "Cardiovascular!"
+    @cached_property
+    def _drop_chance_multis(self) -> dict[str, float]:
+        # Depends on: bribes['Five Aces in the Deck'], star_signs['Pokaminni'],
+        # alchemy_vials['Anearful (Glublin Ear)'], stamps['Card Stamp'],
+        # guild_bonuses['C2 Card Spotter'], alchemy_bubbles['Card Champ']
+        account = session_data.account
+        cardiovascular = talents["Cardiovascular!"].value_at_level(
+            self._cardiovascular_max_level
         )
-        self.cardiovascular_bonus = round(
-            ValueToMulti(
-                lava_func(
-                    cardiovascular["funcX"],
-                    cardiovascular_max_level,
-                    cardiovascular["x1"],
-                    cardiovascular["x2"],
-                )
-            ),
-            2,
+        cardiovascular_multi = round(ValueToMulti(cardiovascular), 2)
+        pokaminni_unlocked = account.star_signs["Pokaminni"].unlocked
+        # Summed left to right in this order; Cards Galore goes after Card Stamp
+        before_cards_galore = (
+            account.bribes["Five Aces in the Deck"].bonus
+            + int(pokaminni_unlocked) * pokaminni_card_drop_chance
+            + 5 * self.named("Gigafrog").level
+            + 8 * self.named("Snelbie").level
+            + 9 * self.named("Sir Stache").level
+            + 1 * self.named("Egggulyte").level
+            + account.alchemy_vials["Anearful (Glublin Ear)"].value
+            + account.stamps["Card Stamp"].total_value
         )
-        self.drop_chance_multi_b = round(self.cardiovascular_bonus, 2)
-
-        # Multi Group A: all other bonuses
-        self.pokaminni_unlocked = pokaminni_unlocked
-        # JMAN ONLY
-        cards_galore = all_talentsDict[cards_galore_talent_index]
-        self.cards_galore_bonus = lava_func(
-            cards_galore["funcX"],
-            approx_max_talent_level_star_talents,
-            cards_galore["x1"],
-            cards_galore["x2"],
-        )
-        gigafrog = 5 * self.named("Gigafrog").level
-        snelbie = 8 * self.named("Snelbie").level
-        sir_stache = 9 * self.named("Sir Stache").level
-        egggulyte = 1 * self.named("Egggulyte").level
+        card_spotter = account.guild_bonuses["C2 Card Spotter"].value
         max_equipment_bonus = (
             max_obol_card_drop_chance + max_8ball_keychain_card_drop_chance
         )
-        pokaminni_bonus = int(pokaminni_unlocked) * pokaminni_card_drop_chance
-        self.drop_chance_multi_a = round(
-            (
-                five_aces_bribe
-                + pokaminni_bonus
-                + gigafrog
-                + snelbie
-                + sir_stache
-                + egggulyte
-                + anearful_vial
-                + card_stamp
-                + card_spotter
-                + max_equipment_bonus
-                + card_champ_bubble
-            )
-            / 100,
-            2,
+        card_champ_bubble = account.alchemy_bubbles["Card Champ"].base_value
+        # JMAN ONLY
+        cards_galore = talents["Cards Galore"].value_at_level(
+            approx_max_talent_level_non_es_non_star
         )
-        self.drop_chance_multi_a_jman = round(
-            (
-                five_aces_bribe
-                + pokaminni_bonus
-                + gigafrog
-                + snelbie
-                + sir_stache
-                + egggulyte
-                + anearful_vial
-                + card_stamp
-                + self.cards_galore_bonus
-                + card_spotter
-                + max_equipment_bonus
-                + card_champ_bubble
-            )
-            / 100,
-            2,
-        )
+        return {
+            # Multi Group A: all other bonuses
+            "A": round(
+                (
+                    before_cards_galore
+                    + card_spotter
+                    + max_equipment_bonus
+                    + card_champ_bubble
+                )
+                / 100,
+                2,
+            ),
+            "A Jman": round(
+                (
+                    before_cards_galore
+                    + cards_galore
+                    + card_spotter
+                    + max_equipment_bonus
+                    + card_champ_bubble
+                )
+                / 100,
+                2,
+            ),
+            # Multi Group B: Cardiovascular
+            "B": cardiovascular_multi,
+        }
 
-        # Total
-        self.drop_chance = round(
-            base_card_drop_chance
-            + self.drop_chance_multi_a * self.drop_chance_multi_b,
-            2,
-        )
-        self.drop_chance_jman = round(
-            base_card_drop_chance
-            + self.drop_chance_multi_a_jman * self.drop_chance_multi_b,
-            2,
-        )
+    def get_drop_chance_advices(self) -> dict[str, list[Advice]]:
+        account = session_data.account
+        multis = self._drop_chance_multis
+        total = round(base_card_drop_chance + multis["A"] * multis["B"], 2)
+        total_jman = round(base_card_drop_chance + multis["A Jman"] * multis["B"], 2)
+        return {
+            f"Total: {total}x ({total_jman}x if Jman)": [
+                Advice(
+                    label=f"Total Card Drop Chance bonus: {total}x "
+                    f"({total_jman}x if Jman)",
+                    picture_class="dementia-obol-of-cards",
+                )
+            ],
+            "Base Chance: +20%": [
+                Advice(
+                    label="Passive +20% bonus. Not multiplied by other Multi Groups",
+                    picture_class="",
+                )
+            ],
+            f"Multi Group A: {multis['A']}x ({multis['A Jman']}x if Jman)": [],
+            "Multi Group A - account-wide": [
+                account.bribes["Five Aces in the Deck"].get_bonus_advice(),
+                account.alchemy_vials["Anearful (Glublin Ear)"].get_advice(
+                    full_name=False
+                ),
+                account.stamps["Card Stamp"].get_advice(),
+                account.alchemy_bubbles["Card Champ"].get_bonus_advice(
+                    goal=card_champ_bubble_goal
+                ),
+                account.guild_bonuses["C2 Card Spotter"].get_advice(),
+            ],
+            "Multi Group A - character-specific": [
+                self.named("Gigafrog").getAdvice(),
+                self.named("Snelbie").getAdvice(),
+                self.named("Sir Stache").getAdvice(),
+                self.named("Egggulyte").getAdvice(),
+                self._get_pokaminni_advice(),
+                Advice(
+                    label=f"Full Card Drop Chance Obols: "
+                    f"+{max_obol_card_drop_chance}%<br>Both personal and family, "
+                    f"all rerolled for +1% Card Drop Chance",
+                    picture_class="dementia-obol-of-cards",
+                ),
+                Advice(
+                    label="2x 8 Ball Keychains: 2x +10%",
+                    picture_class="x8-ball-chain",
+                ),
+            ],
+            "Multi Group A - class-specific": [
+                talents["Cards Galore"].get_bonus_advice(
+                    "Journeyman Talent",
+                    approx_max_talent_level_non_es_non_star,
+                    "% Card Drop Chance",
+                    note="Jman only",
+                )
+            ],
+            f"Multi Group B: {multis['B']}x (character-specific)": [
+                talents["Cardiovascular!"].get_bonus_advice(
+                    "Star Talent",
+                    self._cardiovascular_max_level,
+                    "% Card Drop Chance",
+                )
+            ],
+        }
 
-    def get_drop_chance_advice(self) -> Advice:
-        return Advice(
-            label=f"Total Card Drop Chance bonus: {self.drop_chance}x "
-            f"({self.drop_chance_jman}x if Jman)",
-            picture_class="dementia-obol-of-cards",
-        )
-
-    def get_base_drop_chance_advice(self) -> Advice:
-        return Advice(
-            label="Passive +20% bonus. Not multiplied by other Multi Groups",
-            picture_class="",
-        )
-
-    def get_pokaminni_advice(self) -> Advice:
+    def _get_pokaminni_advice(self) -> Advice:
+        unlocked = session_data.account.star_signs["Pokaminni"].unlocked
         status = (
-            f"+{pokaminni_card_drop_chance}% if equipped"
-            if self.pokaminni_unlocked
-            else "Locked."
+            f"+{pokaminni_card_drop_chance}% if equipped" if unlocked else "Locked."
         )
         return Advice(
             label=f"{{{{ Star Signs|#star-signs }}}} - Pokaminni: {status}",
             picture_class="pokaminni",
-            progression=int(self.pokaminni_unlocked),
+            progression=int(unlocked),
             goal=1,
-        )
-
-    def get_obols_advice(self) -> Advice:
-        return Advice(
-            label=f"Full Card Drop Chance Obols: +{max_obol_card_drop_chance}%"
-            f"<br>Both personal and family, all rerolled for +1% Card Drop Chance",
-            picture_class="dementia-obol-of-cards",
-        )
-
-    def get_keychains_advice(self) -> Advice:
-        return Advice(
-            label="2x 8 Ball Keychains: 2x +10%",
-            picture_class="x8-ball-chain",
-        )
-
-    def get_cards_galore_advice(self) -> Advice:
-        return Advice(
-            label=f"Cards Galore Talent: +{self.cards_galore_bonus:.2f}% "
-            f"if maxed (Jman only)",
-            picture_class="cards-galore",
-        )
-
-    def get_cardiovascular_advice(self) -> Advice:
-        return Advice(
-            label=f'Star Talent "Cardiovascular!": '
-            f"{self.cardiovascular_bonus}x if maxed",
-            picture_class="cardiovascular",
         )

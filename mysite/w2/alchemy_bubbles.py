@@ -19,8 +19,8 @@ def getBubbleExclusions():
     if session_data.account.farming.crops.unlocked >= max_farming_crops or session_data.account.farming.market['Evolution Gmo'].level > 20:
         exclusionsList.append('Cropius Mapper')
 
-    #If cooking is nearly finished, exclude Diamond Chef
-    if session_data.account.cooking.close_enough:
+    #If every meal is maxed, exclude Diamond Chef
+    if session_data.account.cooking.all_meals_maxed:
         exclusionsList.append('Diamond Chef')
 
     return exclusionsList

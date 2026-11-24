@@ -25,10 +25,8 @@ class CrystalSpawnChance:
         characters: Characters,
         crescent_shrine_value: float,
         *,
-        moai_head_level: int,
         max_book_level: int,
     ):
-        self.moai_head_level = moai_head_level
         self.max_book_level = max_book_level
         self.crescent_shrine_value = crescent_shrine_value
         self.best_cmon_out_book = 0
@@ -74,15 +72,6 @@ class CrystalSpawnChance:
                 if "Journeyman" in char.all_classes
             ),
             default=base_crystal_chance,
-        )
-
-    def get_moai_head_advice(self) -> Advice:
-        return Advice(
-            label="{{ Sailing|#sailing }}: Moai Head artifact to apply Shrines "
-            "everywhere",
-            picture_class="moai-head",
-            progression=self.moai_head_level,
-            goal=1,
         )
 
     def get_cmon_out_crystals_advice(self) -> Advice:

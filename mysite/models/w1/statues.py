@@ -9,14 +9,14 @@ from consts.consts_w1 import (
     statue_type_dict,
     statues_dict,
 )
-from consts.consts_w5 import max_sailing_artifact_level
 from consts.idleon.lava_func import lava_func
 from models.advice.advice import Advice
 from models.general.character import Character
 from models.general.event_shop import EventShopBonus
+from models.general.session_data import session_data
 from utils.all_talentsDict import all_talentsDict
 from utils.logging import get_logger
-from utils.number_formatting import parse_number
+from utils.number_formatting import parse_number, round_and_trim
 from utils.safer_data_handling import safe_loads, safer_convert, safer_index
 from utils.text_formatting import kebab
 
@@ -29,7 +29,7 @@ vault_statues = [statues_dict[i]["Name"] for i in [0, 1, 2, 6]]
 
 
 class Statue:
-    def __init__(self, info: dict, level: int, type_number: int):
+    def __init__(self, info: dict, level: int, type_number: int, best_character: str):
         self.name: str = info["Name"]
         self.item_name: str = info["ItemName"]
         self.effect: str = info["Effect"]
@@ -41,17 +41,24 @@ class Statue:
         self.type: str = statue_type_dict.get(type_number, "UnknownType")
         self.image: str = kebab(f"{self.type} {self.name}")
         self.value: float = self.base_value
+        # A Normal statue counts the logged in character's level, `level` is the
+        # highest of them
+        self.best_character: str = best_character if type_number == 0 else ""
 
     def calculate_value(self, multis: list[float]):
         self.value = self.base_value * self.level
         for multi in multis:
             self.value *= multi
 
-    def get_advice(self) -> Advice:
+    def get_advice(self, link_to_section: bool = True) -> Advice:
         spacer = " " if not self.effect.startswith("%") else ""
+        link = "{{ Statues|#statues }} - " if link_to_section else ""
+        note = ""
+        if self.best_character:
+            note = f"<br>Only on {self.best_character}, the highest level"
         return Advice(
-            label=f"Level {self.level} {self.type} {self.name}:"
-            f"<br> +{round(self.value, 2):,g}{spacer}{self.effect}",
+            label=f"{link}{self.type} {self.name}:"
+            f"<br> +{round_and_trim(self.value):,}{spacer}{self.effect}{note}",
             picture_class=self.image,
             progression=self.level,
             goal=EmojiType.INFINITY.value,
@@ -78,6 +85,7 @@ class Statues(dict[str, Statue]):
 
         # Normal statues level per character; Gold+ share across all
         levels = [0] * statue_count
+        best_characters = [""] * statue_count
         for char in characters:
             try:
                 raw_char_statues = safe_loads(
@@ -89,14 +97,18 @@ class Statues(dict[str, Statue]):
                             f"Statue index {index} missing from statues_dict"
                         )
                         continue
-                    levels[index] = max(levels[index], raw_statue[0])
+                    if raw_statue[0] > levels[index]:
+                        levels[index] = raw_statue[0]
+                        best_characters[index] = char.character_name
             except Exception as e:
                 logger.warning(
                     f"Statue levels error, Character{char.character_index}: {e}"
                 )
 
         for index, info in statues_dict.items():
-            self[info["Name"]] = Statue(info, levels[index], raw_types[index])
+            self[info["Name"]] = Statue(
+                info, levels[index], raw_types[index], best_characters[index]
+            )
 
         self.voodoo_multi: float = 1
         self.onyx_multi: float = 1
@@ -124,7 +136,7 @@ class Statues(dict[str, Statue]):
     def calculate_values(
         self,
         voodoo_talent_levels: list[int],
-        onyx_lantern_level: int,
+        onyx_lantern_multi: float,
         true_zen_value: float,
         meritocracy_value: float,
         smiley_statue_owned: bool,
@@ -141,7 +153,7 @@ class Statues(dict[str, Statue]):
                 default=0,
             )
         )
-        self.onyx_multi = 2 + 0.3 * onyx_lantern_level
+        self.onyx_multi = onyx_lantern_multi
         self.zenith_multi = ValueToMulti(50 + floor(true_zen_value))
         self.merit_multi = ValueToMulti(meritocracy_value)
         self.event_shop_multi = ValueToMulti(30 * smiley_statue_owned)
@@ -162,15 +174,18 @@ class Statues(dict[str, Statue]):
             picture_class="voodoo-statufication",
         )
 
-    def get_onyx_advice(self, onyx_lantern_level: int) -> Advice:
+    def get_onyx_advice(self) -> Advice:
+        # Depends on: sailing.artifacts['The Onyx Lantern']
+        onyx_lantern = session_data.account.sailing.artifacts["The Onyx Lantern"]
+        if onyx_lantern.level > 0:
+            return onyx_lantern.get_bonus_advice(
+                "Higher bonuses from Onyx or higher Statues"
+            )
         return Advice(
-            label=f"Onyx base bonus: {2 * self.onyx_unlocked}/2x"
-            f"<br>Total including {{{{The Onyx Lantern |  #sailing}}}}: "
-            f"{round(self.onyx_multi, 1):g}/{2 + (0.3 * max_sailing_artifact_level)}x",
+            label=f"Onyx base bonus: {2 * self.onyx_unlocked}/2x",
             picture_class="onyx-tools",
-            progression=onyx_lantern_level,
-            goal=max_sailing_artifact_level,
-            resource="the-onyx-lantern",
+            progression=int(self.onyx_unlocked),
+            goal=1,
         )
 
     def get_event_shop_advice(self, smiley_statue: EventShopBonus) -> Advice:

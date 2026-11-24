@@ -53,7 +53,7 @@ def _load_banned_accounts(mtime):  # mtime is the cache key
 def maybe_ban(username, runType):
     bannedAccountsList = _load_banned_accounts((Path(app.static_folder) / "banned.yaml").stat().st_mtime)
 
-    if username in bannedAccountsList:
+    if username.lower() in bannedAccountsList:
         if runType == "consoleTest":
             return "Banned"
 
